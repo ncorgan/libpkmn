@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -249,5 +249,27 @@ public class CSharpGUITest
         Assert.AreEqual(typeListComboBox.Items.Count, 18);
         Assert.AreEqual(typeListComboBox.Items[0], "Normal");
         Assert.AreEqual(typeListComboBox.Items[17], "Fairy");
+    }
+
+    [Test]
+    public void PokemonImageTest()
+    {
+        PKMN.Pokemon pokemon = new PKMN.Pokemon("Bulbasaur", "Red", "", 5);
+
+        // These calls succeeding is enough to show that the image (or the image
+        // generated for Mono) was loaded successfully.
+        Image pokemonIcon = pokemon.Icon;
+        Image pokemonSprite = pokemon.Sprite;
+    }
+
+    [Test]
+    public void PokemonDatabaseEntryImageTest()
+    {
+        PKMN.Database.PokemonEntry pokemonEntry = new PKMN.Database.PokemonEntry("Bulbasaur", "Red", "");
+
+        // These calls succeeding is enough to show that the image (or the image
+        // generated for Mono) was loaded successfully.
+        pokemonEntry.GetIcon(false);
+        pokemonEntry.GetSprite(false,false);
     }
 }

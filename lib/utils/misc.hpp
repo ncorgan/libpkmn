@@ -36,12 +36,13 @@ namespace pkmn {
         *reinterpret_cast<ptr_type*>(dst_ptr) = *reinterpret_cast<ptr_type*>(src_ptr);
     }
 
-    template <typename map_type>
-    static std::vector<std::string> map_keys_to_vector(
+    template <typename map_type, typename key_type = std::string>
+    static std::vector<key_type> map_keys_to_vector(
         const map_type& map
     )
     {
-        std::vector<std::string> ret;
+        std::vector<key_type> ret;
+
         for(const auto& map_pair: map)
         {
             ret.emplace_back(map_pair.first);

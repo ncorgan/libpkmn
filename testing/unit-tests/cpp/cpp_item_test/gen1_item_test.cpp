@@ -66,7 +66,7 @@ static void check_pksav_struct(
 }
 
 static void gen1_item_list_test_common(
-    pkmn::item_list::sptr list 
+    pkmn::item_list::sptr list
 ) {
     // Make sure item slots start as correctly empty.
     test_item_list_empty_slots(list);

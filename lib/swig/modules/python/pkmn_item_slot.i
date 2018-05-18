@@ -1,31 +1,17 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016,2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
  */
 
 %{
-    #include <pkmn/item_slot.hpp>
+    #include "cpp_wrappers/item_slot.hpp"
 %}
 
-%include <python/stl_macros.i>
+%include <attribute.i>
 
-%extend pkmn::item_slot {
-    %pythoncode %{
-        def __eq__(self, rhs):
-            if self is rhs:
-                return True
-            elif not isinstance(rhs, item_slot):
-                return False
-            else:
-                return (self.item == rhs.item) and \
-                       (self.amount == rhs.amount)
+%attribute(pkmn::swig::item_slot, std::string, item, get_item, set_item);
+%attribute(pkmn::swig::item_slot, int, amount, get_amount, set_amount);
 
-        def __ne__(self, rhs):
-            return not (self == rhs)
-    %}
-}
-
-%include <pkmn/item_slot.hpp>
-PKMN_PYTHON_VECTOR(pkmn::item_slot, item_slot_list)
+%include "cpp_wrappers/item_slot.hpp"

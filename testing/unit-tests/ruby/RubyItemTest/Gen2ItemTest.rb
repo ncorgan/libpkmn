@@ -1,6 +1,6 @@
 #!/usr/bin/ruby
 #
-# Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+# Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
 #
 # Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
 # or copy at http://opensource.org/licenses/MIT)
@@ -39,6 +39,7 @@ class Gen2ItemTest < ItemTest
             ["Bicycle", "Master Ball", "HM01"]
         )
 
+
         # Make sure we can't add items from other generations.
         item_class_test_invalid_items(
             item_pocket,
@@ -46,11 +47,10 @@ class Gen2ItemTest < ItemTest
         )
 
         # Start adding and removing items, and make sure the numbers are accurate.
-        item_list_test_add_remove(
-            item_pocket,
-            ["Potion", "HP Up", "Wht Apricorn", "Lucky Egg",
-             "Flower Mail", "Burn Heal", "PSNCureBerry", "Stick"]
-        )
+        test_items = ["Potion", "HP Up", "Wht Apricorn", "Lucky Egg",
+                      "Flower Mail", "Burn Heal", "PSNCureBerry", "Stick"]
+        item_list_test_setting_items(item_pocket, test_items)
+        item_list_test_add_remove(item_pocket, test_items)
 
         assert_operator(item_pocket.valid_items.length, :>, 0)
     end
@@ -91,12 +91,11 @@ class Gen2ItemTest < ItemTest
             end
         end
 
-        # Start adding and removing items, and make sure the numbers are valid.
-        item_list_test_add_remove(
-            key_item_pocket,
-            ["Bicycle", "Basement Key", "SecretPotion", "Mystery Egg",
-             "Silver Wing", "Lost Item", "SquirtBottle", "Rainbow Wing"]
-        )
+        # Start adding and removing items, and make sure the numbers are accurate.
+        test_items = ["Bicycle", "Basement Key", "SecretPotion", "Mystery Egg",
+                      "Silver Wing", "Lost Item", "SquirtBottle", "Rainbow Wing"]
+        item_list_test_setting_items(key_item_pocket, test_items)
+        item_list_test_add_remove(key_item_pocket, test_items)
 
         assert_operator(key_item_pocket.valid_items.length, :>, 0)
     end
@@ -124,11 +123,10 @@ class Gen2ItemTest < ItemTest
         )
 
         # Start adding and removing items, and make sure the numbers are accurate.
-        item_list_test_add_remove(
-            ball_pocket,
-            ["Great Ball", "Poké Ball", "Park Ball", "Fast Ball",
-             "Master Ball", "Friend Ball", "Love Ball", "Level Ball"]
-        )
+        test_items = ["Great Ball", "Poké Ball", "Park Ball", "Fast Ball",
+                      "Master Ball", "Friend Ball", "Love Ball", "Level Ball"]
+        item_list_test_setting_items(ball_pocket, test_items)
+        item_list_test_add_remove(ball_pocket, test_items)
 
         assert_operator(ball_pocket.valid_items.length, :>, 0)
     end
@@ -205,10 +203,8 @@ class Gen2ItemTest < ItemTest
         )
 
         # Start adding and removing items, and make sure the numbers are accurate.
-        item_list_test_add_remove(
-            pc,
-            @@ALL_POCKET_ITEM_NAMES
-        )
+        item_list_test_setting_items(pc, @@ALL_POCKET_ITEM_NAMES)
+        item_list_test_add_remove(pc, @@ALL_POCKET_ITEM_NAMES)
 
         full_item_list = PKMN::Database::get_item_list(pc.game)
         assert_equal(pc.valid_items.length, full_item_list.length)

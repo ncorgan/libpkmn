@@ -14,6 +14,8 @@
 #include "database/database_common.hpp"
 #include "database/id_to_string.hpp"
 
+#include "exception_internal.hpp"
+
 #include "utils/misc.hpp"
 
 #include <pkmn/exception.hpp>
@@ -93,19 +95,17 @@ namespace pkmn {
                );
     }
 
-    pkmn::item_list::sptr item_bag_impl::get_pocket(
+    const pkmn::item_list::sptr& item_bag_impl::get_pocket(
         const std::string &name
     )
     {
-        // TODO: use new enforce function
-        try
-        {
-            return _item_pockets.at(name);
-        }
-        catch(const std::exception&)
-        {
-            throw std::invalid_argument("Invalid pocket name.");
-        }
+        pkmn::enforce_value_in_map_keys(
+            "Pocket name",
+            name,
+            _item_pockets
+        );
+
+        return _item_pockets.at(name);
     }
 
     const pkmn::item_pockets_t& item_bag_impl::get_pockets()

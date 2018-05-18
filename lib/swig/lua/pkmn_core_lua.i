@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -8,25 +8,24 @@
 %include <lua/lua_init.i>
 PKMN_LUA_INIT
 
+// Will be called on import
+
+%{
+    #include "private_exports.hpp"
+%}
+
+namespace pkmn { namespace priv {
+    void initialize_database_connection();
+}}
+
 %import <pkmn_database_lua.i>
 %import <pkmn_stl_lua.i>
 
-%{
-    #include <pkmn/game_save.hpp>
-    #include <pkmn/item_slot.hpp>
-    #include <pkmn/item_list.hpp>
-    #include <pkmn/move_slot.hpp>
-%}
-
-%ignore from_file;
-%ignore make;
-%ignore get_native;
-%ignore get_native_pc_data;
-%ignore get_native_party_data;
+// Attribute Maps
+%include <lua/pkmn_attribute_maps.i>
 
 // Item Slot
-%include <pkmn/item_slot.hpp>
-PKMN_LUA_VECTOR(pkmn::item_slot, item_slot_list)
+%include <lua/pkmn_item_slot.i>
 
 // Item List
 %include <lua/pkmn_item_list.i>
@@ -34,14 +33,12 @@ PKMN_LUA_VECTOR(pkmn::item_slot, item_slot_list)
 // Item Bag
 %include <lua/pkmn_item_bag.i>
 
-// Move Slot
-%include <pkmn/move_slot.hpp>
-PKMN_LUA_VECTOR(pkmn::move_slot, move_slot_list)
-
 // Pokédex
+%include <lua/pkmn_pokedex_helpers.i>
 %include <lua/pkmn_pokedex.i>
 
 // Pokémon
+%include <lua/pkmn_pokemon_helpers.i>
 %include <lua/pkmn_pokemon.i>
 
 // Pokémon Box
@@ -53,11 +50,7 @@ PKMN_LUA_VECTOR(pkmn::move_slot, move_slot_list)
 // Pokémon PC
 %include <lua/pkmn_pokemon_pc.i>
 
-// Time Duration
-%include <pkmn/types/time_duration.hpp>
-
 // Game Save
-%include <pkmn/game_save.hpp>
-PKMN_LUA_SPTR(game_save)
+%include <lua/pkmn_game_save.i>
 
 %include <pkmn_statics.i>

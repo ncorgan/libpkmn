@@ -12,6 +12,7 @@ ADD_CUSTOM_COMMAND(
     DEPENDS ${header_files}
     OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/csharp_CamelCase.i
     COMMAND ${PYTHON_EXECUTABLE} ${PKMN_SOURCE_DIR}/scripts/generate_CamelCase.py --language=csharp --include-dir=${PKMN_SOURCE_DIR}/include --output=${CMAKE_CURRENT_BINARY_DIR}/csharp_CamelCase.i
+    COMMAND ${PYTHON_EXECUTABLE} ${PKMN_SOURCE_DIR}/scripts/generate_CamelCase.py --language=csharp --include-dir=${PKMN_SOURCE_DIR}/lib/swig/modules/cpp_wrappers --output=${CMAKE_CURRENT_BINARY_DIR}/csharp_CamelCase.i
     COMMENT "Generating csharp_CamelCase.i"
 )
 ADD_CUSTOM_TARGET(
@@ -24,6 +25,7 @@ ADD_CUSTOM_COMMAND(
     DEPENDS ${PKMN_SOURCE_DIR}/scripts/generate_swig_docstrings.py
     OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/pkmn_csharp_docs.i
     COMMAND ${PYTHON_EXECUTABLE} ${PKMN_SOURCE_DIR}/scripts/generate_swig_docstrings.py --language=csharp --include-dir=${PKMN_SOURCE_DIR}/include --output-dir=${CMAKE_CURRENT_BINARY_DIR}
+    COMMAND ${PYTHON_EXECUTABLE} ${PKMN_SOURCE_DIR}/scripts/generate_swig_docstrings.py --language=csharp --include-dir=${PKMN_SOURCE_DIR}/lib/swig/modules/cpp_wrappers --output-dir=${CMAKE_CURRENT_BINARY_DIR}
     COMMENT "Generating C# XML docs"
 )
 ADD_CUSTOM_TARGET(

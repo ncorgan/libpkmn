@@ -6,102 +6,78 @@
  */
 
 %{
-    #include <pkmn/item_list.hpp>
+    #include "cpp_wrappers/item_list.hpp"
 %}
 
-%typemap(csimports) pkmn::item_list "
+%include <attribute.i>
+
+%typemap(csimports) pkmn::swig::item_list "
 using System;
-using System.Runtime.InteropServices;
-using Database;"
+using System.Runtime.InteropServices;"
 
-%typemap(csimports) std::shared_ptr<pkmn::item_list> "
-using System;
-using System.Runtime.InteropServices;
-using Database;"
+%ignore pkmn::swig::item_list::item_list();
+%ignore pkmn::swig::item_list::item_list(const pkmn::item_list::sptr&);
 
-%rename(item_list_base) pkmn::item_list;
-%rename(AsList) as_vector;
+// Needed for equality check.
+%csmethodmodifiers pkmn::swig::item_list::cptr() "private";
 
-%csmethodmodifiers pkmn::item_list::get_name() "private";
-%csmethodmodifiers pkmn::item_list::get_game() "private";
-%csmethodmodifiers pkmn::item_list::get_capacity() "private";
-%csmethodmodifiers pkmn::item_list::get_num_items() "private";
-%csmethodmodifiers pkmn::item_list::at(int) "private";
-%csmethodmodifiers pkmn::item_list::set_item(int, pkmn::database::item_entry const&) "private";
-%csmethodmodifiers pkmn::item_list::get_valid_items() "private";
-%csmethodmodifiers std::shared_ptr<pkmn::item_list>::__cptr "private";
-%csmethodmodifiers std::shared_ptr<pkmn::item_list>::__sptr_eq "private";
+// Underlying function for indexing.
+%csmethodmodifiers pkmn::swig::item_list::at(int) "private";
 
-%typemap(cscode) std::shared_ptr<pkmn::item_list> %{
-    public string Name {
-        get { return GetName(); }
+// Convert getter/setter functions into attributes for more idiomatic C#.
+
+%attributestring(pkmn::swig::item_list, std::string, Name, get_name);
+%attributestring(pkmn::swig::item_list, std::string, Game, get_game);
+%attribute(pkmn::swig::item_list, int, Length, get_capacity);
+%attribute(pkmn::swig::item_list, int, NumItems, get_num_items);
+%attributeval(pkmn::swig::item_list, %arg(std::vector<std::string>), ValidItems, get_valid_items);
+
+%typemap(cscode) pkmn::swig::item_list
+%{
+    public ItemSlot this[int index]
+    {
+        get { return At(index); }
     }
 
-    public string Game {
-        get { return GetGame(); }
-    }
-
-    public int Capacity {
-        get { return GetCapacity(); }
-    }
-
-    public int NumItems {
-        get { return GetNumItems(); }
-    }
-
-    public StringList ValidItems {
-        get { return GetValidItems(); }
-    }
-
-    /// <summary>Gets the item slot at the given index.</summary>
-    /// <exception cref="System.SystemException">If index is invalid</exception>
-    /// <param name="index">Index</param>
-    public ItemSlot this[int index] {
-        get {
-            return this.At(index);
-        }
-    }
-
-    /// <summary>Compares two ItemList instances to determine value equality.</summary>
-    /// <remarks>
-    /// Returns true if the internal shared_ptrs' pointers are equal.
-    /// </remarks>
-    /// <param name="rhs">ItemList with which to compare self</param>
-    /// <returns>Whether or not ItemList instances are equal</returns>
-    /// </remarks>
-    public bool Equals(ItemList rhs) {
-        if(rhs == null) {
+    public bool Equals(ItemList other)
+    {
+        if(other == null)
+        {
             return false;
-        } else if(this == rhs) {
+        }
+        else if(this == other)
+        {
             return true;
-        } else {
-            return this.__sptr_eq(rhs);
+        }
+        else
+        {
+            return (this.Cptr() == other.Cptr());
         }
     }
 
-    /// <summary>Compares an instance of ItemList to a C# object.</summary>
-    /// <param name="rhs">Object with which to compare self</param>
-    /// <returns>Whether or not ItemList and Object are equal</returns>
-    public override bool Equals(System.Object rhs) {
-        if(rhs == null) {
+    public override bool Equals(System.Object other)
+    {
+        if(other == null)
+        {
             return false;
         }
 
-        ItemList rhsSptr = rhs as ItemList;
-        if(rhsSptr == null) {
+        ItemList otherAsItemList = other as ItemList;
+        if(otherAsItemList == null)
+        {
             return false;
-        } else {
-            return this.Equals(rhsSptr);
+        }
+        else
+        {
+            return this.Equals(otherAsItemList);
         }
     }
 
-    /// <summary>Generates a unique hash code for the given ItemList.</summary>
-    /// <returns>Unique hash code</returns>
-    public override int GetHashCode() {
-        return HashCodeBuilder.Create().AddValue<ulong>(__cptr())
+    public override int GetHashCode()
+    {
+        return HashCodeBuilder.Create().AddValue<ulong>(Cptr())
                               .ToHashCode();
     }
 %}
 
-%include <pkmn/item_list.hpp>
-%template(ItemList) std::shared_ptr<pkmn::item_list>;
+%include "cpp_wrappers/item_list.hpp"

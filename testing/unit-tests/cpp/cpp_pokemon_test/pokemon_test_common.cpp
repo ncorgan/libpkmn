@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -758,11 +758,11 @@ static void test_setting_stats(
     pokemon->set_current_hp(0);
     EXPECT_EQ(0, pokemon->get_current_hp());
 
-    pokemon->set_current_hp(stats.at("HP"));
-    EXPECT_EQ(stats.at("HP"), pokemon->get_current_hp());
-
     pokemon->set_current_hp(stats.at("HP")-1);
     EXPECT_EQ(stats.at("HP")-1, pokemon->get_current_hp());
+
+    pokemon->set_current_hp(stats.at("HP"));
+    EXPECT_EQ(stats.at("HP"), pokemon->get_current_hp());
 
     // Set the HP stat to lower than the current HP, and make sure it's
     // updated.

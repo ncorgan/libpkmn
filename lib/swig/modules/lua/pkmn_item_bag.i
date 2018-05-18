@@ -1,35 +1,39 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
  */
 
 %{
-    #include <pkmn/item_bag.hpp>
+    #include "cpp_wrappers/item_bag.hpp"
 %}
 
-%include <std_string.i>
+%include <attribute.i>
 
-%include <pkmn/item_bag.hpp>
+%ignore pkmn::swig::item_bag::item_bag();
+%ignore pkmn::swig::item_bag::item_bag(const pkmn::item_bag::sptr&);
+%ignore pkmn::swig::item_bag::cptr();
+%ignore pkmn::swig::item_bag::get_pocket(const std::string&);
 
-%extend std::shared_ptr<pkmn::item_bag> {
+// Convert getter/setter functions into attributes for more idiomatic Lua.
 
-    pkmn::item_list::sptr __getitem__(
-        const std::string &key
-    ) {
-        return self->get()->get_pocket(key);
+%attributestring(pkmn::swig::item_bag, std::string, game, get_game);
+%attributeval(pkmn::swig::item_bag, %arg(std::vector<std::string>), pocket_names, get_pocket_names);
+
+%extend pkmn::swig::item_bag
+{
+    pkmn::swig::item_list __getitem__(
+        const std::string& pocket_name
+    )
+    {
+        return self->get_pocket(pocket_name);
     }
 
-    bool __eq__(
-        const pkmn::item_bag::sptr &rhs
-    ) {
-        return (self->get() == rhs.get());
+    size_t __len(void*)
+    {
+        return int(self->get_pocket_names().size());
     }
-
-    int __len(void*) {
-        return int(self->get()->get_pockets().size());
-    }
-
 }
-%template(item_bag_sptr) std::shared_ptr<pkmn::item_bag>;
+
+%include "cpp_wrappers/item_bag.hpp"

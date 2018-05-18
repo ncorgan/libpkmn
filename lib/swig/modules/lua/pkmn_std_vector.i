@@ -45,16 +45,12 @@ namespace std {
 			// simply throws a string, which causes a lua error
 			T __getitem__(unsigned int idx) throw (std::out_of_range)
 			{
-                if (idx == 0)
-                    throw std::out_of_range("Lua lists are 1-based");
 				if (idx>self->size())
 					throw std::out_of_range("in vector::__getitem__()");
 				return (*self)[idx-1];
 			}
 			void __setitem__(unsigned int idx,T val) throw (std::out_of_range)
 			{
-                if (idx == 0)
-                    throw std::out_of_range("Lua lists are 1-based");
 				if (idx>self->size())
 					throw std::out_of_range("in vector::__setitem__()");
 				(*self)[idx-1]=val;

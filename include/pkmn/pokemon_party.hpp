@@ -29,13 +29,13 @@ namespace pkmn {
 
             virtual int get_num_pokemon() = 0;
 
-            virtual pkmn::pokemon::sptr get_pokemon(
+            virtual const pkmn::pokemon::sptr& get_pokemon(
                 int index
             ) = 0;
 
             virtual void set_pokemon(
                 int index,
-                pkmn::pokemon::sptr new_pokemon
+                const pkmn::pokemon::sptr& new_pokemon
             ) = 0;
 
             virtual const pkmn::pokemon_list_t& as_vector() = 0;

@@ -177,10 +177,20 @@ void get_random_pokemon(
         // Keep going until one is holdable.
         do
         {
-            error = pkmn_pokemon_set_held_item(
-                        pokemon_ptr,
-                        internal_item_list_ptr->strings[rand() % internal_item_list_ptr->length]
-                    );
+            const char* p_item =
+                internal_item_list_ptr->strings[rand() % internal_item_list_ptr->length];
+
+            if(strstr(p_item, "Scent") == NULL)
+            {
+                error = pkmn_pokemon_set_held_item(
+                            pokemon_ptr,
+                            internal_item_list_ptr->strings[rand() % internal_item_list_ptr->length]
+                        );
+            }
+            else
+            {
+                continue;
+            }
         } while(error == PKMN_ERROR_INVALID_ARGUMENT);
         PKMN_TEST_ASSERT_SUCCESS(error);
 

@@ -29,7 +29,7 @@ namespace pkmn {
 
             std::string get_game() override final;
 
-            pkmn::item_list::sptr get_pocket(
+            const pkmn::item_list::sptr& get_pocket(
                 const std::string &name
             ) override final;
 

@@ -184,6 +184,7 @@ namespace pkmn
         _init_markings_map();
         set_level(level);
         _update_moves(-1);
+        _populate_party_data();
 
         if(_database_entry.get_species_id() == UNOWN_ID)
         {
@@ -214,6 +215,7 @@ namespace pkmn
         _init_gcn_contest_stats_map();
         _init_markings_map();
         _update_moves(-1);
+        _update_stat_map();
 
         if(_database_entry.get_species_id() == UNOWN_ID)
         {
@@ -243,6 +245,7 @@ namespace pkmn
         _init_gcn_contest_stats_map();
         _init_markings_map();
         _update_moves(-1);
+        _update_stat_map();
 
         if(_database_entry.get_species_id() == UNOWN_ID)
         {
@@ -272,6 +275,7 @@ namespace pkmn
         _init_gcn_contest_stats_map();
         _init_markings_map();
         _update_moves(-1);
+        _update_stat_map();
 
         if(_database_entry.get_species_id() == UNOWN_ID)
         {
@@ -341,12 +345,6 @@ namespace pkmn
                         ret = std::make_shared<pokemon_gcnimpl>(xd_pokemon);
                     }
 
-                    // Some Gamecube-specific indices don't match up.
-                    if(_database_entry.get_game_id() != game_id)
-                    {
-                        ret->set_held_item(get_held_item());
-                    }
-
                     ret->set_level_met(get_level());
                 }
                 else
@@ -360,6 +358,12 @@ namespace pkmn
                     ret = std::make_shared<pokemon_gbaimpl>(pksav_pokemon, game_id);
                 }
 
+                // Some Gamecube-specific indices don't match up. This will
+                // also catch attempts to send over invalid items.
+                if(_database_entry.get_game_id() != game_id)
+                {
+                    ret->set_held_item(get_held_item());
+                }
                 ret->set_original_game(get_original_game());
                 break;
 

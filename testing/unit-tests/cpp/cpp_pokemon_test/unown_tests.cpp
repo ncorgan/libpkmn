@@ -96,10 +96,8 @@ TEST_P(gen3_unown_test, gen3_unown_test) {
                                     );
         EXPECT_EQ(*form_iter, unown->get_form());
 
-        if(game != "Colosseum" and game != "XD") {
-            EXPECT_TRUE(fs::exists(unown->get_icon_filepath()));
-            EXPECT_TRUE(fs::exists(unown->get_sprite_filepath()));
-        }
+        EXPECT_TRUE(fs::exists(unown->get_icon_filepath()));
+        EXPECT_TRUE(fs::exists(unown->get_sprite_filepath()));
     }
 
     // Make sure setting the personality properly sets the form.

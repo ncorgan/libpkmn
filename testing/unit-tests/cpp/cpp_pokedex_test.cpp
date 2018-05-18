@@ -148,6 +148,7 @@ TEST_P(pokedex_test, pokedex_test)
         }
     }
     EXPECT_EQ(num_pokemon_seen, size_t(pokedex->get_num_seen()));
+    EXPECT_EQ(num_pokemon_seen, pokedex->get_all_seen().size());
 
     while(caught_pokemon_nums.size() < num_pokemon_caught)
     {
@@ -161,6 +162,7 @@ TEST_P(pokedex_test, pokedex_test)
         }
     }
     EXPECT_EQ(num_pokemon_caught, size_t(pokedex->get_num_caught()));
+    EXPECT_EQ(num_pokemon_caught, pokedex->get_all_caught().size());
 
     // Check underlying native representations.
 
@@ -197,21 +199,26 @@ TEST_P(pokedex_test, pokedex_test)
             break;
     }
 
-    // Remove all entries.
+    // Remove all entries. Do this in reverse because adding a Pokémon as
+    // having been caught also makes it having been seen.
 
-    for(int pokemon_num: seen_pokemon_nums)
+    std::vector<std::string> all_seen = pokedex->get_all_seen();
+    for(const std::string& species: all_seen)
     {
-        pokedex->set_has_seen(all_pokemon[pokemon_num-1], false);
-        EXPECT_FALSE(pokedex->has_seen(all_pokemon[pokemon_num-1]));
+        pokedex->set_has_seen(species, false);
+        EXPECT_FALSE(pokedex->has_seen(species));
     }
     EXPECT_EQ(0, pokedex->get_num_seen());
+    EXPECT_EQ(0ULL, pokedex->get_all_seen().size());
 
-    for(int pokemon_num: caught_pokemon_nums)
+    std::vector<std::string> all_caught = pokedex->get_all_caught();
+    for(const std::string& species: all_caught)
     {
-        pokedex->set_has_caught(all_pokemon[pokemon_num-1], false);
-        EXPECT_FALSE(pokedex->has_caught(all_pokemon[pokemon_num-1]));
+        pokedex->set_has_caught(species, false);
+        EXPECT_FALSE(pokedex->has_caught(species));
     }
     EXPECT_EQ(0, pokedex->get_num_caught());
+    EXPECT_EQ(0ULL, pokedex->get_all_caught().size());
 
     // Check underlying native representations again.
 

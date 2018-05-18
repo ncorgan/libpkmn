@@ -11,15 +11,20 @@ local items_tests = require("items_tests")
 
 local gen1_items_tests = {}
 
-gen1_items_tests.invalid_generation_items = {
+gen1_items_tests.invalid_generation_items =
+{
     "Amulet Coin", "Apicot Berry", "Air Mail",
     "Air Balloon", "Aqua Suit"
 };
 
 
-function gen1_items_tests.test_item_list_common(items, game)
-    luaunit.assertEquals(#items, items:get_capacity())
+gen1_items_tests.valid_item_names =
+{
+    "Potion", "Great Ball", "Ether", "PP Up",
+    "TM34", "Moon Stone", "Bicycle", "Full Heal"
+}
 
+function gen1_items_tests.test_item_list_common(items, game)
     -- Make sure item slots start as correctly empty.
     items_tests.item_list_test_empty_slot(items)
 
@@ -33,46 +38,45 @@ function gen1_items_tests.test_item_list_common(items, game)
     )
 
     -- Start adding and removing stuff, and make sure the numbers are accurate.
+    items_tests.item_list_test_setting_items(
+        items,
+        gen1_items_tests.valid_item_names
+    )
     items_tests.item_list_test_add_remove(
         items,
-        {"Potion", "Great Ball", "Ether", "PP Up",
-         "TM34", "Moon Stone", "Bicycle", "Full Heal"}
+        gen1_items_tests.valid_item_names
     )
 
-    local valid_items = items:get_valid_items()
     local full_item_list = pkmn.database.get_item_list(game)
-    luaunit.assertEquals(#valid_items, #full_item_list)
+    luaunit.assertEquals(#items.valid_items, #full_item_list)
 end
 
 function gen1_items_tests.test_item_list(items, game)
     -- Check unchanging and initial values.
-    luaunit.assertEquals(items:get_name(), "Items")
-    luaunit.assertEquals(items:get_game(), game)
-    luaunit.assertEquals(items:get_capacity(), 20)
-    luaunit.assertEquals(items:get_num_items(), 0)
+    luaunit.assertEquals(items.name, "Items")
+    luaunit.assertEquals(items.game, game)
+    luaunit.assertEquals(#items, 20)
+    luaunit.assertEquals(items.num_items, 0)
 
     gen1_items_tests.test_item_list_common(items, game)
 end
 
 function gen1_items_tests.test_item_pc(pc, game)
     -- Check unchanging and initial values.
-    luaunit.assertEquals(pc:get_name(), "PC")
-    luaunit.assertEquals(pc:get_game(), game)
-    luaunit.assertEquals(pc:get_capacity(), 50)
-    luaunit.assertEquals(pc:get_num_items(), 0)
+    luaunit.assertEquals(pc.name, "PC")
+    luaunit.assertEquals(pc.game, game)
+    luaunit.assertEquals(#pc, 50)
+    luaunit.assertEquals(pc.num_items, 0)
 
     gen1_items_tests.test_item_list_common(pc, game)
 end
 
 function gen1_items_tests.test_item_bag(bag, game)
     -- Check unchanging and initial values.
-    luaunit.assertEquals(bag:get_game(), game)
+    luaunit.assertEquals(bag.game, game)
+    luaunit.assertEquals(#bag, 1)
 
-    local pockets = bag:get_pockets()
-    luaunit.assertEquals(#pockets, 1)
-    luaunit.assertTrue(pockets:has_key("Items"))
-
-    gen1_items_tests.test_item_list(pockets["Items"], game)
+    gen1_items_tests.test_item_list(bag["Items"], game)
 
     -- Confirm items from later generations can't be added.
     items_tests.item_bag_test_invalid_items(
@@ -81,7 +85,7 @@ function gen1_items_tests.test_item_bag(bag, game)
     )
 
     -- Make sure adding items through the bag adds to the pocket.
-    luaunit.assertEquals(pockets["Items"]:get_num_items(), 0)
+    luaunit.assertEquals(bag["Items"].num_items, 0)
 
     local items = {"Potion", "Great Ball", "Ether", "PP Up",
                    "TM34", "Moon Stone", "Bicycle", "Full Heal"}
@@ -91,11 +95,11 @@ function gen1_items_tests.test_item_bag(bag, game)
     end
     for i = 1, #items
     do
-        luaunit.assertEquals(pockets["Items"][i].item, items[i])
-        luaunit.assertEquals(pockets["Items"][i].amount, i)
+        luaunit.assertEquals(bag["Items"][i].item, items[i])
+        luaunit.assertEquals(bag["Items"][i].amount, i)
     end
-    luaunit.assertEquals(pockets["Items"][9].item, "None")
-    luaunit.assertEquals(pockets["Items"][9].amount, 0)
+    luaunit.assertEquals(bag["Items"][9].item, "None")
+    luaunit.assertEquals(bag["Items"][9].amount, 0)
 
     for i = 1, #items
     do
@@ -103,8 +107,8 @@ function gen1_items_tests.test_item_bag(bag, game)
     end
     for i = 1, #items+1
     do
-        luaunit.assertEquals(pockets["Items"][i].item, "None")
-        luaunit.assertEquals(pockets["Items"][i].amount, 0)
+        luaunit.assertEquals(bag["Items"][i].item, "None")
+        luaunit.assertEquals(bag["Items"][i].amount, 0)
     end
 end
 

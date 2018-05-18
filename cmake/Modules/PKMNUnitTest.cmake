@@ -66,6 +66,7 @@ MACRO(PKMN_ADD_TEST test_name test_cmd)
         )
         SET(RUBYLIB
             "${PKMN_BINARY_DIR}/lib/swig/ruby"
+            "${PKMN_SOURCE_DIR}/testing/unit-tests/pkmntest/ruby"
         )
         IF(MINGW)
             SET(LIBRARY_PATHS
@@ -174,6 +175,7 @@ MACRO(PKMN_ADD_TEST test_name test_cmd)
             STRING(REPLACE ";" ":" LIBRARY_PATHS "${LIBRARY_PATHS}")
             STRING(REPLACE ";" ":" CLASSPATH "${CLASSPATH}")
             STRING(REPLACE ";" ":" PYTHONPATH "${PYTHONPATH}")
+            STRING(REPLACE ";" ":" RUBYLIB "${RUBYLIB}")
             CONFIGURE_FILE(
                 ${TESTS_SOURCE_DIR}/unit_test_template.sh.in
                 ${CMAKE_CURRENT_BINARY_DIR}/${test_name}.sh
@@ -241,7 +243,7 @@ MACRO(PKMN_ADD_CSHARP_TEST test_name test_srcs test_dlls)
 ENDMACRO(PKMN_ADD_CSHARP_TEST)
 
 MACRO(PKMN_ADD_LUA_TEST test_name)
-    SET(CMD "\"${LUA_INTERPRETER}\" \"${CMAKE_CURRENT_SOURCE_DIR}/${test_name}.lua\"")
+    SET(CMD "\"${LUA_INTERPRETER}\" \"${CMAKE_CURRENT_SOURCE_DIR}/${test_name}.lua\" -o TAP -v")
     PKMN_ADD_TEST(${test_name} ${CMD})
 ENDMACRO(PKMN_ADD_LUA_TEST test_name)
 

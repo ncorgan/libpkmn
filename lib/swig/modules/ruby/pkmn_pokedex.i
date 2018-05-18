@@ -1,16 +1,30 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-%include <ruby/stl_macros.i>
-
 %{
-    #include <pkmn/pokedex.hpp>
+    #include "cpp_wrappers/pokedex.hpp"
 %}
 
-%include <std_string.i>
+%import <ruby/pkmn_pokedex_helpers.i>
 
-PKMN_RUBY_SPTR(pokedex, Pokedex)
+%include <attribute.i>
+
+%ignore pkmn::swig::pokedex::pokedex();
+%ignore pkmn::swig::pokedex::pokedex(const pkmn::pokedex::sptr&);
+%ignore pkmn::swig::pokedex::pokedex(const pkmn::swig::pokedex&);
+
+// Convert getter/setter functions into attributes for more idiomatic Ruby.
+
+%attributestring(pkmn::swig::pokedex, std::string, game, get_game);
+%attribute(pkmn::swig::pokedex, int, num_seen, get_num_seen);
+%attributeval(pkmn::swig::pokedex, pkmn::swig::pokedex_has_seen_helper, seen_pokemon_hash, get_has_seen);
+%attributeval(pkmn::swig::pokedex, %arg(std::vector<std::string>), all_seen, get_all_seen);
+%attribute(pkmn::swig::pokedex, int, num_caught, get_num_caught);
+%attributeval(pkmn::swig::pokedex, pkmn::swig::pokedex_has_caught_helper, caught_pokemon_hash, get_has_caught);
+%attributeval(pkmn::swig::pokedex, %arg(std::vector<std::string>), all_caught, get_all_caught);
+
+%include "cpp_wrappers/pokedex.hpp"

@@ -1,43 +1,44 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
  */
 
 %{
-    #include <pkmn/item_list.hpp>
+    #include "cpp_wrappers/item_list.hpp"
+
+    #include <pkmn/exception.hpp>
 %}
 
-%include <std_string.i>
+%include <attribute.i>
 
-%rename(as_list) as_vector;
-%include <pkmn/item_list.hpp>
+%ignore pkmn::swig::item_list::item_list();
+%ignore pkmn::swig::item_list::item_list(const pkmn::item_list::sptr&);
+%ignore pkmn::swig::item_list::cptr();
+%ignore pkmn::swig::item_list::at(int);
+%ignore pkmn::swig::item_list::get_capacity();
 
-%extend std::shared_ptr<pkmn::item_list> {
+// Convert getter/setter functions into attributes for more idiomatic Lua.
 
-    const pkmn::item_slot& __getitem__(
-        int index
-    ) throw (std::out_of_range)
-    {
-        if (index == 0)
-            throw std::out_of_range("Lua lists are 1-based");
-        return self->get()->as_vector().at(index-1);
-    }
+%attributestring(pkmn::swig::item_list, std::string, name, get_name);
+%attributestring(pkmn::swig::item_list, std::string, game, get_game);
+%attribute(pkmn::swig::item_list, int, num_items, get_num_items);
+%attributeval(pkmn::swig::item_list, %arg(std::vector<std::string>), valid_items, get_valid_items);
 
-    bool __eq__(
-        const pkmn::item_list::sptr &rhs
+%extend pkmn::swig::item_list
+{
+    pkmn::swig::item_slot __getitem__(
+        size_t position
     )
     {
-        return (self->get() == rhs.get());
+        return self->at(int(position));
     }
 
-    int __len(void*)
+    size_t __len(void*)
     {
-        return int(self->get()->get_capacity());
+        return self->get_capacity();
     }
-
 }
-%template(item_list_sptr) std::shared_ptr<pkmn::item_list>;
 
-PKMN_LUA_MAP(std::string, pkmn::item_list::sptr, item_pockets);
+%include "cpp_wrappers/item_list.hpp"

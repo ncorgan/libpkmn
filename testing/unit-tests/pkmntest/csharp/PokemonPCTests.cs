@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -10,84 +10,63 @@ using NUnit.Framework;
 
 namespace PKMNTest {
 
-public class PokemonPCTests {
-
-    internal static int GameToGeneration(
-        string game
-    ) {
-        if(game.Equals("Red") || game.Equals("Blue") || game.Equals("Yellow")) {
-            return 1;
-        } else if(game.Equals("Gold") || game.Equals("Silver") || game.Equals("Crystal")) {
-            return 2;
-        } else if(game.Equals("Ruby") || game.Equals("Sapphire") || game.Equals("Emerald") ||
-                  game.Equals("FireRed") || game.Equals("LeafGreen") ||
-                  game.Equals("Colosseum") || game.Equals("XD")) {
-            return 3;
-        } else {
-            return 0;
-        }
-    }
-
-    internal static void TestEmptyPokemonBox(
-        PKMN.PokemonBox box,
-        string game
-    ) {
-        int generation = GameToGeneration(game);
-
-        Assert.AreEqual(box.Game, game);
-
-        if(generation == 1) {
-            Assert.Throws<ApplicationException>(
-                delegate {
-                    string name = box.Name;
-                }
-            );
-        } else {
-            Assert.AreEqual(box.Name, "");
-        }
-
-        // Make sure trying to get a Pokémon at an invalid index fails.
-        Assert.Throws<IndexOutOfRangeException>(
-            delegate {
-                PKMN.Pokemon pokemon = box[-1];
-            }
-        );
-        Assert.Throws<IndexOutOfRangeException>(
-            delegate {
-                PKMN.Pokemon pokemon = box[box.Count];
-            }
-        );
-
-        for(int i = 0; i < box.Count; ++i) {
+public class PokemonPCTests
+{
+    private static void TestEmptyPokemonBox(
+        PKMN.PokemonBox box
+    )
+    {
+        for(int i = 0; i < box.Length; ++i)
+        {
             Assert.AreEqual(box[i].Species, "None");
-            Assert.AreEqual(box[i].Game, game);
+            Assert.AreEqual(box[i].Game, box.Game);
 
-            for(int j = 0; j < box[i].Moves.Count; ++j) {
+            for(int j = 0; j < box[i].Moves.Count; ++j)
+            {
                 Assert.AreEqual(box[i].Moves[j].Move, "None");
                 Assert.AreEqual(box[i].Moves[j].PP, 0);
             }
         }
+
+        // Make sure trying to get a Pokémon at an invalid index fails.
+        Assert.Throws<IndexOutOfRangeException>(
+            delegate
+            {
+                PKMN.Pokemon pokemon = box[-1];
+            }
+        );
+        Assert.Throws<IndexOutOfRangeException>(
+            delegate
+            {
+                PKMN.Pokemon pokemon = box[box.Length];
+            }
+        );
     }
 
-    internal static void TestBoxName(
+    private static void TestBoxName(
         PKMN.PokemonBox box
-    ) {
-        int generation = GameToGeneration(box.Game);
+    )
+    {
+        int generation = Util.GameToGeneration(box.Game);
 
-        if(generation == 1) {
+        if(generation == 1)
+        {
+            // The getter shouldn't throw by convention, but the setter will.
+
+            Assert.AreEqual(box.Name, "");
+
             Assert.Throws<ApplicationException>(
-                delegate {
+                delegate
+                {
                     box.Name = "ABCDEFGH";
                 }
             );
-            Assert.Throws<ApplicationException>(
-                delegate {
-                    string name = box.Name;
-                }
-            );
-        } else {
+        }
+        else
+        {
             Assert.Throws<ArgumentOutOfRangeException>(
-                delegate {
+                delegate
+                {
                     box.Name = "ABCDEFGHI";
                 }
             );
@@ -97,23 +76,28 @@ public class PokemonPCTests {
         }
     }
 
-    internal static void TestSettingPokemon(
-        PKMN.PokemonBox box
-    ) {
-        int generation = GameToGeneration(box.Game);
+    private static void TestSettingPokemon(
+        PKMN.PokemonBox box,
+        string[] validOtherGames,
+        string invalidOtherGame
+    )
+    {
+        int generation = Util.GameToGeneration(box.Game);
 
         PKMN.Pokemon originalFirst = box[0];
         PKMN.Pokemon originalSecond = box[1];
 
         // Make sure we can't set Pokémon at invalid indices.
         Assert.Throws<IndexOutOfRangeException>(
-            delegate {
+            delegate
+            {
                 box[-1] = originalFirst;
             }
         );
         Assert.Throws<IndexOutOfRangeException>(
-            delegate {
-                box[box.Count] = originalSecond;
+            delegate
+            {
+                box[box.Length] = originalSecond;
             }
         );
 
@@ -134,7 +118,8 @@ public class PokemonPCTests {
 
         // Make sure we can't copy a Pokémon to itself.
         Assert.Throws<ArgumentOutOfRangeException>(
-            delegate {
+            delegate
+            {
                 box[1] = box[1];
             }
         );
@@ -153,9 +138,11 @@ public class PokemonPCTests {
         Assert.AreEqual(box.NumPokemon, 3);
 
         // Check that Pokémon can be placed non-contiguously in the correct games.
-        if(generation <= 2) {
+        if(generation <= 2)
+        {
             Assert.Throws<ArgumentOutOfRangeException>(
-                delegate {
+                delegate
+                {
                     box[1] = originalFirst;
                 }
             );
@@ -163,13 +150,16 @@ public class PokemonPCTests {
             Assert.AreEqual(box[1].Species, "Charmander");
 
             Assert.Throws<IndexOutOfRangeException>(
-                delegate {
+                delegate
+                {
                     box[4] = bulbasaur;
                 }
             );
             Assert.AreEqual(box.NumPokemon, 3);
             Assert.AreEqual(box[4].Species, "None");
-        } else {
+        }
+        else
+        {
             box[1] = originalFirst;
             Assert.AreEqual(box.NumPokemon, 2);
             Assert.AreEqual(box[1].Species, "None");
@@ -196,57 +186,93 @@ public class PokemonPCTests {
         Assert.AreEqual(bulbasaur.Species, "Bulbasaur");
         Assert.AreEqual(charmander.Species, "Charmander");
         Assert.AreEqual(squirtle.Species, "Squirtle");
+
+        // Make sure converting Pokémon before putting them in the box works (or doesn't)
+        // as expected.
+        foreach(string validGame in validOtherGames)
+        {
+            PKMN.Pokemon pikachu = new PKMN.Pokemon("Pikachu", validGame, "", 50);
+            Assert.AreEqual(validGame, pikachu.Game);
+
+            box[3] = pikachu;
+            Assert.AreEqual("Pikachu", box[3].Species);
+            Assert.AreEqual(box.Game, box[3].Game);
+            Assert.AreEqual(50, box[3].Level);
+        }
+
+        PKMN.Pokemon invalidPikachu = new PKMN.Pokemon("Pikachu", invalidOtherGame, "", 50);
+        Assert.Throws<ArgumentOutOfRangeException>(
+            delegate
+            {
+                box[3] = invalidPikachu;
+            }
+        );
     }
 
     public static void TestPokemonBox(
         PKMN.PokemonBox box,
-        string game
-    ) {
-        TestEmptyPokemonBox(box, game);
+        string[] validOtherGames,
+        string invalidOtherGame
+    )
+    {
+        TestEmptyPokemonBox(box);
         TestBoxName(box);
-        TestSettingPokemon(box);
+        TestSettingPokemon(box, validOtherGames, invalidOtherGame);
     }
 
-    internal static void TestEmptyPokemonPC(
-        PKMN.PokemonPC PC,
-        string game
-    ) {
-        Assert.AreEqual(PC.Game, game);
-
-        for(int i = 0; i < PC.Count; ++i) {
-            TestEmptyPokemonBox(PC[i], game);
+    private static void TestEmptyPokemonPC(
+        PKMN.PokemonPC PC
+    )
+    {
+        for(int i = 0; i < PC.Length; ++i)
+        {
+            Assert.AreEqual(PC[i].Game, PC.Game);
+            TestEmptyPokemonBox(PC[i]);
         }
     }
 
-    internal static void TestBoxNames(
+    private static void TestBoxNames(
         PKMN.PokemonPC PC
-    ) {
-        int generation = GameToGeneration(PC.Game);
+    )
+    {
+        int generation = Util.GameToGeneration(PC.Game);
 
-        if(generation == 1) {
+        if(generation == 1)
+        {
+            Assert.AreEqual(PC.BoxNames.Count, 0);
+
             Assert.Throws<ApplicationException>(
-                delegate {
+                delegate
+                {
                     PC[0].Name = "ABCDEFGH";
                 }
             );
-        } else {
-            for(int i = 0; i < PC.Count; ++i) {
+        }
+        else
+        {
+            for(int i = 0; i < PC.Length; ++i)
+            {
                 string boxName = String.Format("BOX{0}", i+1);
                 PC[i].Name = boxName;
             }
 
-            for(int i = 0; i < PC.BoxNames.Count; ++i) {
+            for(int i = 0; i < PC.BoxNames.Count; ++i)
+            {
                 string expectedBoxName = String.Format("BOX{0}", i+1);
                 Assert.AreEqual(PC.BoxNames[i], expectedBoxName);
             }
         }
     }
 
-    internal static void TestSettingPokemonInBoxes(
-        PKMN.PokemonPC PC
-    ) {
-        for(int i = 0; i < PC.Count; ++i) {
-            TestSettingPokemon(PC[i]);
+    private static void TestSettingPokemonInBoxes(
+        PKMN.PokemonPC PC,
+        string[] validOtherGames,
+        string invalidOtherGame
+    )
+    {
+        for(int i = 0; i < PC.Length; ++i)
+        {
+            TestSettingPokemon(PC[i], validOtherGames, invalidOtherGame);
             Assert.AreEqual(PC[i][0].Species, "Squirtle");
             Assert.AreEqual(PC[i][1].Species, "Charmander");
         }
@@ -254,11 +280,13 @@ public class PokemonPCTests {
 
     public static void TestPokemonPC(
         PKMN.PokemonPC PC,
-        string game
-    ) {
-        TestEmptyPokemonPC(PC, game);
+        string[] validOtherGames,
+        string invalidOtherGame
+    )
+    {
+        TestEmptyPokemonPC(PC);
         TestBoxNames(PC);
-        TestSettingPokemonInBoxes(PC);
+        TestSettingPokemonInBoxes(PC, validOtherGames, invalidOtherGame);
     }
 }
 

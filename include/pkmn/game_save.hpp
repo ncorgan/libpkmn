@@ -275,29 +275,29 @@ namespace pkmn {
              *
              * \throws pkmn::feature_not_in_game_error if the save is from a Gamecube game
              */
-            virtual pkmn::pokedex::sptr get_pokedex() = 0;
+            virtual const pkmn::pokedex::sptr& get_pokedex() = 0;
 
             /*!
              * @brief Returns the trainer's Pokémon party.
              */
-            virtual pkmn::pokemon_party::sptr get_pokemon_party() = 0;
+            virtual const pkmn::pokemon_party::sptr& get_pokemon_party() = 0;
 
             /*!
              * @brief Returns the trainer's Pokémon PC.
              */
-            virtual pkmn::pokemon_pc::sptr get_pokemon_pc() = 0;
+            virtual const pkmn::pokemon_pc::sptr& get_pokemon_pc() = 0;
 
             /*!
              * @brief Returns the trainer's item bag.
              */
-            virtual pkmn::item_bag::sptr get_item_bag() = 0;
+            virtual const pkmn::item_bag::sptr& get_item_bag() = 0;
 
             /*!
              * @brief Returns the trainer's item PC (Generation I-III).
              *
              * \throws pkmn::feature_not_in_game_error if the save is from Generation IV+
              */
-            virtual pkmn::item_list::sptr get_item_pc() = 0;
+            virtual const pkmn::item_list::sptr& get_item_pc() = 0;
 
             #ifndef __DOXYGEN__
             game_save() {};

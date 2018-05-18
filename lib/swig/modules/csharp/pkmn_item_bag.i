@@ -6,80 +6,80 @@
  */
 
 %{
-    #include <pkmn/item_bag.hpp>
+    #include "cpp_wrappers/item_bag.hpp"
 %}
 
-%rename(item_bag_base) pkmn::item_bag;
+%include <attribute.i>
 
-%csmethodmodifiers pkmn::item_bag::get_game() "private";
-%csmethodmodifiers pkmn::item_bag::get_pocket(const std::string&) "private";
-%csmethodmodifiers pkmn::item_bag::get_pockets() "private";
-%csmethodmodifiers pkmn::item_bag::get_pocket_names() "private";
-%csmethodmodifiers std::shared_ptr<pkmn::item_bag>::__cptr "private";
-%csmethodmodifiers std::shared_ptr<pkmn::item_bag>::__sptr_eq "private";
+%typemap(csimports) pkmn::swig::item_bag "
+using System;
+using System.Runtime.InteropServices;"
 
-%typemap(cscode) std::shared_ptr<pkmn::item_bag> %{
-    public string Game {
-        get { return GetGame(); }
+%ignore pkmn::swig::item_bag::item_bag();
+%ignore pkmn::swig::item_bag::item_bag(const pkmn::item_bag::sptr&);
+
+// Needed for equality check.
+%csmethodmodifiers pkmn::swig::item_bag::cptr() "private";
+
+// Underlying function for indexing.
+%csmethodmodifiers pkmn::swig::item_bag::get_pocket(const std::string&) "private";
+
+// Convert getter/setter functions into attributes for more idiomatic C#.
+
+%attributestring(pkmn::swig::item_bag, std::string, Game, get_game);
+%attributeval(pkmn::swig::item_bag, %arg(std::vector<std::string>), PocketNames, get_pocket_names);
+
+%typemap(cscode) pkmn::swig::item_bag
+%{
+    public ItemList this[string pocketName]
+    {
+        get { return GetPocket(pocketName); }
     }
 
-    public ItemPockets Pockets {
-        get { return GetPockets(); }
+    public int Count
+    {
+        get { return PocketNames.Count; }
     }
 
-    public StringList PocketNames {
-        get { return GetPocketNames(); }
-    }
-
-    /// <summary>Gets the pocket with the given name.</summary>
-    /// <exception cref="System.SystemException">If index is invalid</exception>
-    /// <param name="key">Key</param>
-    public ItemList this[string key] {
-        get {
-            return this.GetPocket(key);
-        }
-    }
-
-    /// <summary>Compares two ItemBag instances to determine value equality.</summary>
-    /// <remarks>
-    /// Returns true if the internal shared_ptrs' pointers are equal.
-    /// </remarks>
-    /// <param name="rhs">ItemBag with which to compare self</param>
-    /// <returns>Whether or not ItemBag instances are equal</returns>
-    /// </remarks>
-    public bool Equals(ItemBag rhs) {
-        if(rhs == null) {
+    public bool Equals(ItemBag other)
+    {
+        if(other == null)
+        {
             return false;
-        } else if(this == rhs) {
+        }
+        else if(this == other)
+        {
             return true;
-        } else {
-            return this.__sptr_eq(rhs);
+        }
+        else
+        {
+            return (this.Cptr() == other.Cptr());
         }
     }
 
-    /// <summary>Compares an instance of ItemBag to a C# object.</summary>
-    /// <param name="rhs">Object with which to compare self</param>
-    /// <returns>Whether or not ItemBag and Object are equal</returns>
-    public override bool Equals(System.Object rhs) {
-        if(rhs == null) {
+    public override bool Equals(System.Object other)
+    {
+        if(other == null)
+        {
             return false;
         }
 
-        ItemBag rhsSptr = rhs as ItemBag;
-        if(rhsSptr == null) {
+        ItemBag otherAsItemBag = other as ItemBag;
+        if(otherAsItemBag == null)
+        {
             return false;
-        } else {
-            return this.Equals(rhsSptr);
+        }
+        else
+        {
+            return this.Equals(otherAsItemBag);
         }
     }
 
-    /// <summary>Generates a unique hash code for the given ItemBag.</summary>
-    /// <returns>Unique hash code</returns>
-    public override int GetHashCode() {
-        return HashCodeBuilder.Create().AddValue<ulong>(__cptr())
-                                       .ToHashCode();
+    public override int GetHashCode()
+    {
+        return HashCodeBuilder.Create().AddValue<ulong>(Cptr())
+                              .ToHashCode();
     }
 %}
 
-%include <pkmn/item_bag.hpp>
-%template(ItemBag) std::shared_ptr<pkmn::item_bag>;
+%include "cpp_wrappers/item_bag.hpp"

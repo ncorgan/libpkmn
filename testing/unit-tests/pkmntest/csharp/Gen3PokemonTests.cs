@@ -8,286 +8,128 @@
 using System;
 using NUnit.Framework;
 
-namespace PKMNTest {
+namespace PKMNTest
+{
 
-public class Gen3PokemonTests {
-
-    private static string[] Markings = {"Circle", "Triangle", "Square", "Heart"};
+public class Gen3PokemonTests
+{
     private static string[] ContestTypes = {"Cool", "Beauty", "Cute", "Smart", "Tough"};
-    private static string[] ContestLevels = {"", " Super", " Hyper", " Master"};
+    private static string[] ContestLevels = {"Super", "Hyper", "Master"};
     private static string[] Ribbons = {"Champion", "Winning", "Victory", "Artist",
                                        "Effort", "Marine", "Land", "Sky",
                                        "Country", "National", "Earth", "World"};
-    private static string[] Stats = {"HP", "Attack", "Defense", "Speed",
-                                     "Special Attack", "Special Defense"};
-    private static Random rng = new Random();
 
-    public static void UnownFormTest(
-        string game
-    ) {
-        PKMN.Database.PokemonEntry unownEntry = new PKMN.Database.PokemonEntry("Unown", game, "");
-        foreach(string form in unownEntry.Forms) {
-            PKMN.Pokemon unownFromLetter = new PKMN.Pokemon("Unown", game, form, 5);
-            Assert.AreEqual(unownFromLetter.Form, form);
-        }
-
-        // Make sure setting the personality properly sets the form.
-        PKMN.Pokemon unown = new PKMN.Pokemon("Unown", game, "A", 5);
-        unown.Personality = 0x4C07DE71;
-        Assert.AreEqual(unown.Form, "B");
-
-        // Make sure setting the form properly sets the personality.
-        foreach(string form in unownEntry.Forms) {
-            unown.Form = form;
-            Assert.AreEqual(unown.Form, form);
-            string formFromPersonality = PKMN.Calculations.Gen3UnownForm(
-                                             unown.Personality
-                                         );
-            Assert.AreEqual(formFromPersonality, form);
-        }
-    }
-
-    private static void CheckMarkingsMap(
-        PKMN.StringBoolDict markingsMap
-    ) {
-        Assert.AreEqual(markingsMap.Count, 4);
-        foreach(string marking in Markings) {
-            Assert.IsTrue(markingsMap.ContainsKey(marking));
-            Assert.IsFalse(markingsMap[marking]);
-        }
-
-        Assert.IsFalse(markingsMap.ContainsKey("Star"));
-        Assert.IsFalse(markingsMap.ContainsKey("Diamond"));
-    }
-
-    private static void CheckRibbonsMap(
-        PKMN.StringBoolDict ribbonsMap
-    ) {
-        Assert.AreEqual(ribbonsMap.Count, 32);
-
-        // Check contest ribbons.
-        foreach(string contestType in ContestTypes) {
-            foreach(string contestLevel in ContestLevels) {
-                string ribbonName = contestType + contestLevel;
-                Assert.IsTrue(ribbonsMap.ContainsKey(ribbonName));
-                Assert.IsFalse(ribbonsMap[ribbonName]);
-            }
-        }
-
-        // Check other ribbons.
-        foreach(string ribbon in Ribbons) {
-            Assert.IsTrue(ribbonsMap.ContainsKey(ribbon));
-            Assert.IsFalse(ribbonsMap[ribbon]);
-        }
-    }
-
-    private static void CheckContestStatsMap(
-        PKMN.StringIntDict contestStatsMap
-    ) {
-        Assert.AreEqual(contestStatsMap.Count, 6);
-
-        foreach(string stat in ContestTypes) {
-            Assert.IsTrue(contestStatsMap.ContainsKey(stat));
-            Assert.AreEqual(contestStatsMap[stat], 0);
-        }
-
-        Assert.IsTrue(contestStatsMap.ContainsKey("Feel"));
-        Assert.AreEqual(contestStatsMap["Feel"], 0);
-
-        Assert.IsFalse(contestStatsMap.ContainsKey("Sheen"));
-    }
-
-    private static void CheckStatsMap(
-        PKMN.StringIntDict statsMap
-    ) {
-        Assert.AreEqual(statsMap.Count, 6);
-
-        foreach(string stat in Stats) {
-            Assert.IsTrue(statsMap.ContainsKey(stat));
-        }
-
-        Assert.IsFalse(statsMap.ContainsKey("Special"));
-    }
-
-    private static void MarkingsTest(
+    static private void CheckInitialRibbonMap(
         PKMN.Pokemon pokemon
-    ) {
-        foreach(string marking in Markings) {
-            Assert.IsFalse(pokemon.Markings[marking]);
-            pokemon.SetMarking(marking, true);
-            Assert.IsTrue(pokemon.Markings[marking]);
-        }
-    }
+    )
+    {
+        foreach(string contestType in ContestTypes)
+        {
+            Assert.IsTrue(pokemon.Ribbons.ContainsKey(contestType));
+            Assert.IsFalse(pokemon.Ribbons[contestType]);
 
-    private static void RibbonsTest(
-        PKMN.Pokemon pokemon
-    ) {
-        // Check contest ribbons.
-        foreach(string contestType in ContestTypes) {
-            foreach(string contestLevel in ContestLevels) {
-                string ribbonName = contestType + contestLevel;
+            foreach(string contestLevel in ContestLevels)
+            {
+                string ribbonName = contestType + " " + contestLevel;
+                Assert.IsTrue(pokemon.Ribbons.ContainsKey(ribbonName));
                 Assert.IsFalse(pokemon.Ribbons[ribbonName]);
-                pokemon.SetRibbon(ribbonName, true);
-                Assert.IsTrue(pokemon.Ribbons[ribbonName]);
             }
         }
 
-        // Check other ribbons.
-        foreach(string ribbon in Ribbons) {
+        foreach(string ribbon in Ribbons)
+        {
+            Assert.IsTrue(pokemon.Ribbons.ContainsKey(ribbon));
             Assert.IsFalse(pokemon.Ribbons[ribbon]);
-            pokemon.SetRibbon(ribbon, true);
+        }
+    }
+
+    static private void TestContestRibbons(
+        PKMN.Pokemon pokemon
+    )
+    {
+        foreach(string contestType in ContestTypes)
+        {
+            string ribbonName = contestType;
+            string superRibbonName = contestType + " Super";
+            string hyperRibbonName = contestType + " Hyper";
+            string masterRibbonName = contestType + " Master";
+
+            pokemon.Ribbons[hyperRibbonName] = true;
+            Assert.IsTrue(pokemon.Ribbons[ribbonName]);
+            Assert.IsTrue(pokemon.Ribbons[superRibbonName]);
+            Assert.IsTrue(pokemon.Ribbons[hyperRibbonName]);
+            Assert.IsFalse(pokemon.Ribbons[masterRibbonName]);
+
+            pokemon.Ribbons[superRibbonName] = false;
+            Assert.IsTrue(pokemon.Ribbons[ribbonName]);
+            Assert.IsFalse(pokemon.Ribbons[superRibbonName]);
+            Assert.IsFalse(pokemon.Ribbons[hyperRibbonName]);
+            Assert.IsFalse(pokemon.Ribbons[masterRibbonName]);
+        }
+    }
+
+    static private void TestRibbons(
+        PKMN.Pokemon pokemon
+    )
+    {
+        foreach(string ribbon in Ribbons)
+        {
+            pokemon.Ribbons[ribbon] = true;
             Assert.IsTrue(pokemon.Ribbons[ribbon]);
         }
     }
 
-    private static void ContestStatsTest(
-        PKMN.Pokemon pokemon
-    ) {
-        foreach(string contestType in ContestTypes) {
-            Assert.AreEqual(pokemon.ContestStats[contestType], 0);
-            int val = rng.Next(0,256);
-            pokemon.SetContestStat(contestType, val);
-            Assert.AreEqual(pokemon.ContestStats[contestType], val);
-        }
-    }
-
-    private static void EVsTest(
-        PKMN.Pokemon pokemon
-    ) {
-        Assert.Throws<ArgumentOutOfRangeException>(
-            delegate {
-                pokemon.SetEV("Not a stat", 0);
-            }
-        );
-        Assert.Throws<IndexOutOfRangeException>(
-            delegate {
-                pokemon.SetEV("HP", -1);
-            }
-        );
-        Assert.Throws<IndexOutOfRangeException>(
-            delegate {
-                pokemon.SetEV("HP", 256);
-            }
-        );
-
-        foreach(string stat in Stats) {
-            int val = rng.Next(0,256);
-            pokemon.SetEV(stat, val);
-            Assert.AreEqual(pokemon.EVs[stat], val);
-        }
-    }
-
-    private static void IVsTest(
-        PKMN.Pokemon pokemon
-    ) {
-        Assert.Throws<ArgumentOutOfRangeException>(
-            delegate {
-                pokemon.SetIV("Not a stat", 0);
-            }
-        );
-        Assert.Throws<IndexOutOfRangeException>(
-            delegate {
-                pokemon.SetIV("HP", -1);
-            }
-        );
-        Assert.Throws<IndexOutOfRangeException>(
-            delegate {
-                pokemon.SetIV("HP", 32);
-            }
-        );
-
-        foreach(string stat in Stats) {
-            int val = rng.Next(0,32);
-            pokemon.SetIV(stat, val);
-            Assert.AreEqual(pokemon.IVs[stat], val);
-        }
-    }
-
-    public static void PokemonTest(
-        string game
-    ) {
-        string species = "Torchic";
+    static public void PokemonTest(
+        string game,
+        string species
+    )
+    {
         PKMN.Pokemon pokemon = new PKMN.Pokemon(species, game, "", 30);
 
-        /*
-         * Check known starting values, and confirm that we can't query values
-         * that didn't exist in Generation III.
-         */
-        Assert.AreEqual(pokemon.Species, species);
-        Assert.AreEqual(pokemon.Form, "Standard");
-        Assert.AreEqual(pokemon.Game, game);
-        Assert.AreEqual(pokemon.Nickname, species.ToUpper());
-        Assert.AreEqual(pokemon.HeldItem, "None");
-        Assert.AreEqual(pokemon.OriginalTrainerName, PKMN.Pokemon.DEFAULT_TRAINER_NAME);
-        Assert.AreEqual(pokemon.OriginalTrainerPublicID, (PKMN.Pokemon.DEFAULT_TRAINER_ID & 0xFFFF));
-        Assert.AreEqual(pokemon.OriginalTrainerSecretID, ((PKMN.Pokemon.DEFAULT_TRAINER_ID & 0xFFFF0000) >> 16));
-        Assert.AreEqual(pokemon.OriginalTrainerID, PKMN.Pokemon.DEFAULT_TRAINER_ID);
-        Assert.AreEqual(pokemon.OriginalTrainerGender, "Male");
-        Assert.AreEqual(pokemon.CurrentTrainerFriendship, pokemon.DatabaseEntry.BaseFriendship);
-        Assert.AreEqual(pokemon.Ability, "Blaze");
-        Assert.AreEqual(pokemon.Ball, "Premier Ball");
-        Assert.AreEqual(pokemon.LevelMet, pokemon.Level);
+        PokemonTestParams testParams;
+        bool isGamecube = (game.Equals("Colosseum") || game.Equals("XD"));
 
-        Assert.Throws<ApplicationException>(
-            delegate {
-                pokemon.GetLocationMet(true);
-            }
-        );
-
-        if(game.Equals("Colosseum") || game.Equals("XD"))
+        if(isGamecube)
         {
-            Assert.AreEqual(pokemon.GetLocationMet(false), "Distant land");
-            Assert.AreEqual(pokemon.OriginalGame, "Colosseum/XD");
+            testParams = new PokemonTestParams(
+                                 "Great Ball",
+                                 new string[]{"Friend Ball", "Heal Ball"},
+                                 "Razz Berry",
+                                 new string[]{"Berry", "Mach Bike"},
+                                 "Distant land",
+                                 new string[]{"Phenac City", "Orre Colosseum"},
+                                 new string[]{"New Bark Town", "Twinleaf Town"},
+                                 new string[]{"Swallow", "Flamethrower", "Return", "Fire Blast"},
+                                 new string[]{"Roost", "Flame Burst"},
+                                 new string[]{"Ruby", "Sapphire", "Emerald", "FireRed", "LeafGreen", "Colosseum/XD", "Colosseum", "XD"},
+                                 new string[]{"Gold", "HeartGold"}
+                             );
         }
         else
         {
-            Assert.AreEqual(pokemon.GetLocationMet(false), "Fateful encounter");
-            Assert.AreEqual(pokemon.OriginalGame, pokemon.Game);
-        }
-        Assert.AreEqual(
-            pokemon.Experience,
-            pokemon.DatabaseEntry.GetExperienceAtLevel(30)
-        );
-        Assert.AreEqual(pokemon.Level, 30);
-
-        CheckMarkingsMap(pokemon.Markings);
-        CheckRibbonsMap(pokemon.Ribbons);
-        CheckContestStatsMap(pokemon.ContestStats);
-
-        foreach(PKMN.MoveSlot moveSlot in pokemon.Moves) {
-            Assert.AreEqual(moveSlot.Move, "None");
-            Assert.AreEqual(moveSlot.PP, 0);
+            testParams = new PokemonTestParams(
+                                 "Great Ball",
+                                 new string[]{"Friend Ball", "Heal Ball"},
+                                 "Razz Berry",
+                                 new string[]{"Berry", "Mach Bike"},
+                                 "Fateful encounter",
+                                 new string[]{"Petalburg Woods", "Viridian Forest"},
+                                 new string[]{"New Bark Town", "Twinleaf Town"},
+                                 new string[]{"Swallow", "Flamethrower", "Return", "Fire Blast"},
+                                 new string[]{"Shadow Sky", "Roost"},
+                                 new string[]{"Ruby", "Sapphire", "Emerald", "FireRed", "LeafGreen", "Colosseum/XD", "Colosseum", "XD"},
+                                 new string[]{"Gold", "HeartGold"}
+                             );
         }
 
-        CheckStatsMap(pokemon.EVs);
-        CheckStatsMap(pokemon.IVs);
-        CheckStatsMap(pokemon.Stats);
+        PokemonTestCommon.TestCommon(pokemon, testParams);
 
-        if(!game.Equals("Colosseum") && !game.Equals("XD"))
-        {
-            Assert.IsTrue(System.IO.File.Exists(pokemon.IconFilepath));
-            Assert.IsTrue(System.IO.File.Exists(pokemon.SpriteFilepath));
-        }
-
-        /*
-         * Make sure the getters and setters agree. Also make sure it fails when
-         * expected.
-         */
-        Assert.Throws<ArgumentOutOfRangeException>(
-            delegate {
-                pokemon.Nickname = "";
-            }
-        );
-        Assert.Throws<ArgumentOutOfRangeException>(
-            delegate {
-                pokemon.Nickname = "Too long nickname";
-            }
-        );
-
-        pokemon.Nickname = "foobarbaz";
-        Assert.AreEqual(pokemon.Nickname, "foobarbaz");
+        CheckInitialRibbonMap(pokemon);
+        TestContestRibbons(pokemon);
+        TestRibbons(pokemon);
 
         // Gender and personality are tied, so make sure they affect each other.
+
         pokemon.Gender = "Female";
         Assert.Less((pokemon.Personality & 0xFF), 0xFF);
         pokemon.Gender = "Male";
@@ -299,214 +141,33 @@ public class Gen3PokemonTests {
         Assert.AreEqual(pokemon.Gender, "Male");
 
         // Setting shininess should affect personality.
-        pokemon.IsShiny = false;
-        Assert.IsFalse(pokemon.IsShiny);
-        uint personality = pokemon.Personality;
-        if(!game.Equals("Colosseum") && !game.Equals("XD"))
-        {
-            Assert.IsTrue(System.IO.File.Exists(pokemon.SpriteFilepath));
 
-            // This will fail if "shiny" is anywhere in the filepath.
-            Assert.AreEqual(pokemon.SpriteFilepath.IndexOf("shiny"), -1);
-        }
+        pokemon.IsShiny = false;
+        uint nonShinyPersonality = pokemon.Personality;
 
         pokemon.IsShiny = true;
-        Assert.IsTrue(pokemon.IsShiny);
-        Assert.AreNotEqual(pokemon.Personality, personality);
-        if(!game.Equals("Colosseum") && !game.Equals("XD"))
+        Assert.AreNotEqual(pokemon.Personality, nonShinyPersonality);
+
+        // Shadow Pokémon should only work in Gamecube games.
+
+        if(isGamecube)
         {
-            Assert.IsTrue(System.IO.File.Exists(pokemon.SpriteFilepath));
-            Assert.AreNotEqual(pokemon.SpriteFilepath.IndexOf("shiny"), -1);
+            string shadowSpecies = game.Equals("Colosseum") ? "Ledian" : "Ledyba";
+
+            PKMN.Pokemon shadowPokemon = new PKMN.Pokemon(shadowSpecies, game, "", 50);
+            Assert.AreEqual(shadowPokemon.Form, "Standard");
+            shadowPokemon.Form = "Shadow";
+            Assert.AreEqual(shadowPokemon.Form, "Shadow");
         }
-
-        Assert.Throws<ArgumentOutOfRangeException>(
-            delegate {
-                pokemon.HeldItem = "Not an item";
-            }
-        );
-
-        // Not in this game.
-        Assert.Throws<ArgumentOutOfRangeException>(
-            delegate {
-                pokemon.HeldItem = "Berry";
-            }
-        );
-
-        // Not holdable.
-        Assert.Throws<ArgumentOutOfRangeException>(
-            delegate {
-                pokemon.HeldItem = "Mach Bike";
-            }
-        );
-
-        Assert.AreEqual(pokemon.HeldItem, "None");
-
-        pokemon.HeldItem = "Razz Berry";
-        Assert.AreEqual(pokemon.HeldItem, "Razz Berry");
-
-        Assert.Throws<ArgumentOutOfRangeException>(
-            delegate {
-                pokemon.OriginalTrainerName = "";
-            }
-        );
-        Assert.Throws<ArgumentOutOfRangeException>(
-            delegate {
-                pokemon.OriginalTrainerName = "Too long trainer name";
-            }
-        );
-
-        pokemon.OriginalTrainerName = "foobar";
-        Assert.AreEqual(pokemon.OriginalTrainerName, "foobar");
-
-        pokemon.OriginalTrainerID = 0x1234ABCD;
-        Assert.AreEqual(pokemon.OriginalTrainerID, 0x1234ABCD);
-        Assert.AreEqual(pokemon.OriginalTrainerPublicID, 0xABCD);
-        Assert.AreEqual(pokemon.OriginalTrainerSecretID, 0x1234);
-
-        pokemon.OriginalTrainerPublicID = 0x1A2B;
-        Assert.AreEqual(pokemon.OriginalTrainerID, 0x12341A2B);
-        Assert.AreEqual(pokemon.OriginalTrainerPublicID, 0x1A2B);
-        Assert.AreEqual(pokemon.OriginalTrainerSecretID, 0x1234);
-
-        pokemon.OriginalTrainerSecretID = 0x3C4D;
-        Assert.AreEqual(pokemon.OriginalTrainerID, 0x3C4D1A2B);
-        Assert.AreEqual(pokemon.OriginalTrainerPublicID, 0x1A2B);
-        Assert.AreEqual(pokemon.OriginalTrainerSecretID, 0x3C4D);
-
-        pokemon.OriginalTrainerGender = "Male";
-        Assert.AreEqual(pokemon.OriginalTrainerGender, "Male");
-        pokemon.OriginalTrainerGender = "Female";
-        Assert.AreEqual(pokemon.OriginalTrainerGender, "Female");
-        Assert.Throws<ArgumentOutOfRangeException>(
-            delegate {
-                pokemon.OriginalTrainerGender = "Genderless";
-            }
-        );
-
-        pokemon.CurrentTrainerFriendship = 123;
-        Assert.AreEqual(pokemon.CurrentTrainerFriendship, 123);
-
-        Assert.Throws<IndexOutOfRangeException>(
-            delegate {
-                pokemon.CurrentTrainerFriendship = -1;
-            }
-        );
-        Assert.Throws<IndexOutOfRangeException>(
-            delegate {
-                pokemon.CurrentTrainerFriendship = 256;
-            }
-        );
-
-        pokemon.Ability = "Blaze";
-        Assert.AreEqual(pokemon.Ability, "Blaze");
-        Assert.Throws<ArgumentOutOfRangeException>(
-            delegate {
-                pokemon.Ability = "None";
-            }
-        );
-
-        // Invalid
-        Assert.Throws<ArgumentOutOfRangeException>(
-            delegate {
-                pokemon.Ability = "Torrent";
-            }
-        );
-
-        // Hidden ability
-        Assert.Throws<ArgumentOutOfRangeException>(
-            delegate {
-                pokemon.Ability = "Speed Boost";
-            }
-        );
-
-        Assert.AreEqual(pokemon.Ability, "Blaze");
-
-        pokemon.Ball = "Great Ball";
-        Assert.AreEqual(pokemon.Ball, "Great Ball");
-
-        // Not in Generation III
-        Assert.Throws<ArgumentOutOfRangeException>(
-            delegate {
-                pokemon.Ball = "Friend Ball";
-            }
-        );
-        Assert.AreEqual(pokemon.Ball, "Great Ball");
-
-        pokemon.LevelMet = 67;
-        Assert.AreEqual(pokemon.LevelMet, 67);
-
-        Assert.Throws<IndexOutOfRangeException>(
-            delegate {
-                pokemon.LevelMet = -1;
-            }
-        );
-        Assert.Throws<IndexOutOfRangeException>(
-            delegate {
-                pokemon.LevelMet = 101;
-            }
-        );
-
-        string location;
-        if(game.Equals("FireRed") || game.Equals("LeafGreen")) {
-            location = "Viridian Forest";
-        } else if(game.Equals("Colosseum") || game.Equals("XD")) {
-            location = "Phenac City";
-        } else {
-            location = "Petalburg Woods";
+        else
+        {
+            Assert.Throws<ArgumentOutOfRangeException>(
+                delegate
+                {
+                    new PKMN.Pokemon("Ledyba", game, "Shadow", 50);
+                }
+            );
         }
-        pokemon.SetLocationMet(location, false);
-        Assert.AreEqual(pokemon.GetLocationMet(false), location);
-
-        Assert.Throws<ApplicationException>(
-            delegate {
-                pokemon.SetLocationMet(location, true);
-            }
-        );
-
-        pokemon.OriginalGame = "Ruby";
-        Assert.AreEqual(pokemon.OriginalGame, "Ruby");
-
-        Assert.Throws<ArgumentOutOfRangeException>(
-            delegate {
-                pokemon.OriginalGame = "Not a game";
-            }
-        );
-        Assert.Throws<ArgumentOutOfRangeException>(
-            delegate {
-                pokemon.OriginalGame = "Red"; // Impossible
-            }
-        );
-        Assert.Throws<ArgumentOutOfRangeException>(
-            delegate {
-                pokemon.OriginalGame = "HeartGold"; // From a later game
-            }
-        );
-        Assert.AreEqual(pokemon.OriginalGame, "Ruby");
-
-        pokemon.Personality = 0x7F3AB3A8;
-        Assert.AreEqual(pokemon.Personality, 0x7F3AB3A8);
-
-        Assert.Throws<IndexOutOfRangeException>(
-            delegate {
-                pokemon.SetContestStat("Cool", -1);
-            }
-        );
-        Assert.Throws<IndexOutOfRangeException>(
-            delegate {
-                pokemon.SetContestStat("Cool", 256);
-            }
-        );
-        Assert.Throws<ArgumentOutOfRangeException>(
-            delegate {
-                pokemon.SetContestStat("Not a stat", 1);
-            }
-        );
-
-        MarkingsTest(pokemon);
-        RibbonsTest(pokemon);
-        ContestStatsTest(pokemon);
-        EVsTest(pokemon);
-        IVsTest(pokemon);
     }
 }
 

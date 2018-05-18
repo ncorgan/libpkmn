@@ -29,7 +29,7 @@ namespace pkmn {
 
             virtual int get_num_boxes() = 0;
 
-            virtual pkmn::pokemon_box::sptr get_box(
+            virtual const pkmn::pokemon_box::sptr& get_box(
                 int index
             ) = 0;
 

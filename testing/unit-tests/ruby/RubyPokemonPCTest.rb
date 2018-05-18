@@ -1,50 +1,22 @@
 #!/usr/bin/ruby
 #
-# Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+# Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
 #
 # Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
 # or copy at http://opensource.org/licenses/MIT)
 #
 
 require "PKMN"
+require "PKMNTest"
 
 require "minitest/autorun"
 
-class PokemonPCTest < MiniTest::Test
+class PokemonPCTest < PKMNTest
     @@GAMES = ["Red", "Blue", "Yellow",
                "Gold", "Silver", "Crystal",
                "Ruby", "Sapphire", "Emerald",
                "FireRed", "LeafGreen",
                "Colosseum", "XD"]
-
-    @@GAME_GENERATIONS = {
-        "Red" => 1,
-        "Blue" => 1,
-        "Yellow" => 1,
-        "Gold" => 2,
-        "Silver" => 2,
-        "Crystal" => 2,
-        "Ruby" => 3,
-        "Sapphire" => 3,
-        "Emerald" => 3,
-        "FireRed" => 3,
-        "LeafGreen" => 3,
-        "Colosseum" => 3,
-        "XD" => 3,
-        "Diamond" => 4,
-        "Pearl" => 4,
-        "Platinum" => 4,
-        "HeartGold" => 4,
-        "SoulSilver" => 4,
-        "Black" => 5,
-        "White" => 5,
-        "Black 2" => 5,
-        "White 2" => 5,
-        "X" => 6,
-        "Y" => 6,
-        "Omega Ruby" => 6,
-        "Alpha Sapphire" => 6
-    }
 
     def _pokemon_box_test_common(box)
         generation = @@GAME_GENERATIONS[box.game]
@@ -56,9 +28,8 @@ class PokemonPCTest < MiniTest::Test
             box.name = "ABCDEFGH"
             assert_equal("ABCDEFGH", box.name)
         else
-            assert_raises RuntimeError do
-                box.name
-            end
+            # The getter won't throw, but the setter will.
+            assert_equal("", box.name)
             assert_raises RuntimeError do
                 box.name = "ABCDEFGH"
             end
@@ -185,9 +156,7 @@ class PokemonPCTest < MiniTest::Test
                 assert_equal(pc.box_names[i], box_name)
             end
         else
-            assert_raises RuntimeError do
-                pc.box_names
-            end
+            assert_equal(0, pc.box_names.length)
         end
 
         pc.each do |box|

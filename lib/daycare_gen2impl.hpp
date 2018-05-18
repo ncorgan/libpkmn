@@ -22,14 +22,14 @@ namespace pkmn {
             void set_levelup_pokemon(
                 int position,
                 const pkmn::pokemon::sptr& new_pokemon
-            );
+            ) override final;
 
             int get_levelup_pokemon_capacity() override final;
 
             void set_breeding_pokemon(
                 int position,
                 const pkmn::pokemon::sptr& new_pokemon
-            );
+            ) override final;
 
             int get_breeding_pokemon_capacity() override final;
 

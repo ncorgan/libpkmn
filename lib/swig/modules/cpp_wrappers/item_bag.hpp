@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -14,6 +14,8 @@
 #include <pkmn/exception.hpp>
 #include <pkmn/item_bag.hpp>
 
+#include <boost/assert.hpp>
+
 namespace pkmn { namespace swig {
 
     /*
@@ -26,61 +28,87 @@ namespace pkmn { namespace swig {
     class item_bag
     {
         public:
-            item_bag():
-                _item_bag(nullptr)
-            {}
-
-            item_bag(
+            explicit item_bag(
                 const pkmn::item_bag::sptr& cpp_item_bag
             ): _item_bag(cpp_item_bag)
             {
+                BOOST_ASSERT(_item_bag.get() != nullptr);
             }
 
-            item_bag(
+            explicit item_bag(
                 const std::string& game
             ): _item_bag(pkmn::item_bag::make(game))
             {
+                BOOST_ASSERT(_item_bag.get() != nullptr);
             }
 
-            bool operator==(
-                const item_bag& rhs
-            ) const
+            inline std::string get_game()
             {
-                return (_item_bag == rhs._item_bag);
-            }
+                BOOST_ASSERT(_item_bag.get() != nullptr);
 
-            std::string get_game()
-            {
                 return _item_bag->get_game();
             }
 
-            pkmn::swig::item_list get_pocket(
+            inline pkmn::swig::item_list get_pocket(
                 const std::string& name
             )
             {
+                BOOST_ASSERT(_item_bag.get() != nullptr);
+
                 return pkmn::swig::item_list(_item_bag->get_pocket(name));
             }
 
-            const std::vector<std::string>& get_pocket_names()
+            // Copy the vector, since the const in the reference
+            // is casted away.
+            inline std::vector<std::string> get_pocket_names()
             {
+                BOOST_ASSERT(_item_bag.get() != nullptr);
+
                 return _item_bag->get_pocket_names();
             }
 
-            void add(
+            inline void add(
                 const std::string& item,
                 int amount
             )
             {
+                BOOST_ASSERT(_item_bag.get() != nullptr);
+
                 _item_bag->add(item, amount);
             }
 
-            void remove(
+            inline void remove(
                 const std::string& item,
                 int amount
             )
             {
+                BOOST_ASSERT(_item_bag.get() != nullptr);
+
                 _item_bag->remove(item, amount);
             }
+
+#ifdef SWIGCSHARP
+            inline uintmax_t cptr()
+            {
+                BOOST_ASSERT(_item_bag.get() != nullptr);
+
+                return uintmax_t(_item_bag.get());
+            }
+#else
+            inline bool operator==(const item_bag& rhs) const
+            {
+                BOOST_ASSERT(_item_bag.get() != nullptr);
+
+                return (_item_bag == rhs._item_bag);
+            }
+
+            inline bool operator!=(const item_bag& rhs) const
+            {
+                BOOST_ASSERT(_item_bag.get() != nullptr);
+
+                return !operator==(rhs);
+            }
+#endif
 
         private:
             pkmn::item_bag::sptr _item_bag;

@@ -44,12 +44,7 @@
 %ignore get_native;
 %ignore make;
 
-#if !defined(SWIGLUA) && !defined(SWIGPYTHON)
-%ignore operator ==;
-%ignore operator !=;
-%ignore operator +;
-%ignore operator +=;
-#endif
+%ignore *::operator=;
 
 // SWIG needs to know about it, but we don't want it wrapped.
 %import <pkmn/types/class_with_attributes.hpp>

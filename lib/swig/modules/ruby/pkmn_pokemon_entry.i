@@ -1,50 +1,50 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-%include <ruby/stl_macros.i>
-
 %{
     #include <pkmn/database/pokemon_entry.hpp>
 %}
 
-%rename("name") pkmn::database::pokemon_entry::get_name() const;
-%rename("game") pkmn::database::pokemon_entry::get_game() const;
-%rename("species") pkmn::database::pokemon_entry::get_species() const;
-%rename("pokedex_entry") pkmn::database::pokemon_entry::get_pokedex_entry() const;
-%rename("height") pkmn::database::pokemon_entry::get_height() const;
-%rename("weight") pkmn::database::pokemon_entry::get_weight() const;
-%rename("chance_male") pkmn::database::pokemon_entry::get_chance_male() const;
-%rename("chance_female") pkmn::database::pokemon_entry::get_chance_female() const;
-%rename("has_gender_differences?") pkmn::database::pokemon_entry::has_gender_differences() const;
-%rename("base_friendship") pkmn::database::pokemon_entry::get_base_friendship() const;
-%rename("types") pkmn::database::pokemon_entry::get_types() const;
-%rename("abilities") pkmn::database::pokemon_entry::get_abilities() const;
-%rename("hidden_ability") pkmn::database::pokemon_entry::get_hidden_ability() const;
-%rename("egg_groups") pkmn::database::pokemon_entry::get_egg_groups() const;
-%rename("base_stats") pkmn::database::pokemon_entry::get_base_stats() const;
-%rename("EV_yields") pkmn::database::pokemon_entry::get_EV_yields() const;
-%rename("experience_yield") pkmn::database::pokemon_entry::get_experience_yield() const;
-%rename("levelup_moves") pkmn::database::pokemon_entry::get_levelup_moves() const;
-%rename("tm_hm_moves") pkmn::database::pokemon_entry::get_tm_hm_moves() const;
-%rename("egg_moves") pkmn::database::pokemon_entry::get_egg_moves() const;
-%rename("tutor_moves") pkmn::database::pokemon_entry::get_tutor_moves() const;
-%rename("forms") pkmn::database::pokemon_entry::get_forms() const;
-%rename("evolutions") pkmn::database::pokemon_entry::get_evolutions() const;
-%rename("icon_filepath") pkmn::database::pokemon_entry::get_icon_filepath() const;
-%rename("sprite_filepath") pkmn::database::pokemon_entry::get_sprite_filepath() const;
+%include <attribute.i>
 
-%rename("form") pkmn::database::pokemon_entry::get_form() const;
-%rename("form=") pkmn::database::pokemon_entry::set_form(const std::string&);
+// Convert getter/setter functions into attributes for more idiomatic Ruby.
+
+%attributestring(pkmn::database::pokemon_entry, std::string, name, get_name);
+%attributestring(pkmn::database::pokemon_entry, std::string, game, get_game);
+%attributestring(pkmn::database::pokemon_entry, std::string, species, get_species);
+%attributestring(pkmn::database::pokemon_entry, std::string, pokedex_entry, get_pokedex_entry);
+%attributestring(pkmn::database::pokemon_entry, std::string, form, get_form, set_form);
+%attribute(pkmn::database::pokemon_entry, float, height, get_height);
+%attribute(pkmn::database::pokemon_entry, float, weight, get_weight);
+%attribute(pkmn::database::pokemon_entry, float, chance_male, get_chance_male);
+%attribute(pkmn::database::pokemon_entry, float, chance_female, get_chance_female);
+%attribute(pkmn::database::pokemon_entry, bool, has_gender_differences, has_gender_differences);
+%attribute(pkmn::database::pokemon_entry, int, base_friendship, get_base_friendship);
+%attributeval(pkmn::database::pokemon_entry, %arg(std::pair<std::string, std::string>), types, get_types);
+%attributeval(pkmn::database::pokemon_entry, %arg(std::pair<std::string, std::string>), abilities, get_abilities);
+%attributestring(pkmn::database::pokemon_entry, std::string, hidden_ability, get_hidden_ability);
+%attributeval(pkmn::database::pokemon_entry, %arg(std::pair<std::string, std::string>), egg_groups, get_egg_groups);
+%attributeval(pkmn::database::pokemon_entry, %arg(std::map<std::string, int>), base_stats, get_base_stats);
+%attributeval(pkmn::database::pokemon_entry, %arg(std::map<std::string, int>), EV_yields, get_EV_yields);
+%attribute(pkmn::database::pokemon_entry, int, experience_yield, get_experience_yield);
+%attributeval(pkmn::database::pokemon_entry, %arg(std::vector<pkmn::database::levelup_move>), levelup_moves, get_levelup_moves);
+%attributeval(pkmn::database::pokemon_entry, %arg(std::vector<pkmn::database::move_entry>), tm_hm_moves, get_tm_hm_moves);
+%attributeval(pkmn::database::pokemon_entry, %arg(std::vector<pkmn::database::move_entry>), egg_moves, get_egg_moves);
+%attributeval(pkmn::database::pokemon_entry, %arg(std::vector<pkmn::database::move_entry>), tutor_moves, get_tutor_moves);
+%attributeval(pkmn::database::pokemon_entry, %arg(std::vector<std::string>), forms, get_forms);
+%attributeval(pkmn::database::pokemon_entry, %arg(std::vector<pkmn::database::pokemon_entry>), evolutions, get_evolutions);
 
 %ignore pkmn::database::pokemon_entry::get_species_id;
 %ignore pkmn::database::pokemon_entry::get_pokemon_id;
 %ignore pkmn::database::pokemon_entry::get_form_id;
 %ignore pkmn::database::pokemon_entry::get_pokemon_index;
 %ignore pkmn::database::pokemon_entry::get_game_id;
+
 %include <pkmn/database/pokemon_entry.hpp>
 
-PKMN_RUBY_VECTOR(pkmn::database::pokemon_entry, PokemonEntryList);
+%include <ruby/stl_macros.i>
+PKMN_RUBY_VECTOR(pkmn::database::pokemon_entry, PokemonEntryList)

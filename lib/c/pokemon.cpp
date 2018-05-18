@@ -5,7 +5,7 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-#include "c_enum_maps.hpp"
+#include "enum_maps.hpp"
 #include "cpp_to_c.hpp"
 #include "error_internal.hpp"
 #include "exception_internal.hpp"
@@ -295,9 +295,10 @@ enum pkmn_error pkmn_pokemon_get_condition(
 
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
         std::string condition = internal_ptr->cpp->get_condition();
-        BOOST_ASSERT(pkmn::c::CONDITION_BIMAP.left.count(condition) > 0);
 
-        *condition_out = pkmn::c::CONDITION_BIMAP.left.at(condition);
+        const pkmn::c::condition_bimap_t& condition_bimap = pkmn::c::get_condition_bimap();
+        BOOST_ASSERT(condition_bimap.left.count(condition) > 0);
+        *condition_out = condition_bimap.left.at(condition);
     )
 }
 
@@ -310,14 +311,16 @@ enum pkmn_error pkmn_pokemon_set_condition(
     pkmn_pokemon_internal_t* internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
+        const pkmn::c::condition_bimap_t& condition_bimap = pkmn::c::get_condition_bimap();
+
         pkmn::enforce_value_in_map_keys(
             "Condition",
             condition,
-            pkmn::c::CONDITION_BIMAP.right
+            condition_bimap.right
         );
 
         internal_ptr->cpp->set_condition(
-            pkmn::c::CONDITION_BIMAP.right.at(condition)
+            condition_bimap.right.at(condition)
         );
     )
 }
@@ -368,9 +371,10 @@ enum pkmn_error pkmn_pokemon_get_gender(
 
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
         std::string gender = internal_ptr->cpp->get_gender();
-        BOOST_ASSERT(pkmn::c::GENDER_BIMAP.left.count(gender) > 0);
 
-        *gender_out = pkmn::c::GENDER_BIMAP.left.at(gender);
+        const pkmn::c::gender_bimap_t& gender_bimap = pkmn::c::get_gender_bimap();
+        BOOST_ASSERT(gender_bimap.left.count(gender) > 0);
+        *gender_out = gender_bimap.left.at(gender);
     )
 }
 
@@ -383,14 +387,16 @@ enum pkmn_error pkmn_pokemon_set_gender(
     pkmn_pokemon_internal_t* internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
+        const pkmn::c::gender_bimap_t& gender_bimap = pkmn::c::get_gender_bimap();
+
         pkmn::enforce_value_in_map_keys(
             "Gender",
             gender,
-            pkmn::c::GENDER_BIMAP.right
+            gender_bimap.right
         );
 
         internal_ptr->cpp->set_gender(
-            pkmn::c::GENDER_BIMAP.right.at(gender)
+            gender_bimap.right.at(gender)
         );
     )
 }
@@ -507,9 +513,10 @@ enum pkmn_error pkmn_pokemon_get_original_trainer_info(
         if(internal_ptr->generation >= 2)
         {
             std::string original_trainer_gender = internal_ptr->cpp->get_original_trainer_gender();
-            BOOST_ASSERT(pkmn::c::GENDER_BIMAP.left.count(original_trainer_gender) > 0);
 
-            trainer_info.gender = pkmn::c::GENDER_BIMAP.left.at(original_trainer_gender);
+            const pkmn::c::gender_bimap_t& gender_bimap = pkmn::c::get_gender_bimap();
+            BOOST_ASSERT(gender_bimap.left.count(original_trainer_gender) > 0);
+            trainer_info.gender = gender_bimap.left.at(original_trainer_gender);
         }
 
         *original_trainer_info_out = std::move(trainer_info);
@@ -582,14 +589,16 @@ enum pkmn_error pkmn_pokemon_set_original_trainer_gender(
     pkmn_pokemon_internal_t* internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
+        const pkmn::c::gender_bimap_t& gender_bimap = pkmn::c::get_gender_bimap();
+
         pkmn::enforce_value_in_map_keys(
             "Original trainer gender",
             original_trainer_gender,
-            pkmn::c::GENDER_BIMAP.right
+            gender_bimap.right
         );
 
         internal_ptr->cpp->set_original_trainer_gender(
-            pkmn::c::GENDER_BIMAP.right.at(original_trainer_gender)
+            gender_bimap.right.at(original_trainer_gender)
         );
     )
 }
@@ -886,7 +895,7 @@ enum pkmn_error pkmn_pokemon_get_markings(
 
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
         const pkmn::c::marking_bimap_t& marking_bimap = (internal_ptr->generation == 3) ?
-            pkmn::c::GEN3_MARKING_BIMAP : pkmn::c::MARKING_BIMAP;
+            pkmn::c::get_gen3_marking_bimap() : pkmn::c::get_marking_bimap();
 
         copy_map_to_buffer(
             internal_ptr->cpp->get_markings(),
@@ -910,7 +919,7 @@ enum pkmn_error pkmn_pokemon_set_has_marking(
 
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
         const pkmn::c::marking_bimap_t& marking_bimap = (internal_ptr->generation == 3) ?
-            pkmn::c::GEN3_MARKING_BIMAP : pkmn::c::MARKING_BIMAP;
+            pkmn::c::get_gen3_marking_bimap() : pkmn::c::get_marking_bimap();
 
         pkmn::enforce_value_in_map_keys(
             "Marking",
@@ -1003,7 +1012,7 @@ enum pkmn_error pkmn_pokemon_get_contest_stats(
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
         copy_map_to_buffer(
             internal_ptr->cpp->get_contest_stats(),
-            pkmn::c::CONTEST_STAT_BIMAP,
+            pkmn::c::get_contest_stat_bimap(),
             contest_stats_buffer_out,
             contest_stat_buffer_size,
             PKMN_NUM_CONTEST_STATS,
@@ -1022,14 +1031,16 @@ enum pkmn_error pkmn_pokemon_set_contest_stat(
     pkmn_pokemon_internal_t* internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
+        const pkmn::c::contest_stat_bimap_t& contest_stat_bimap = pkmn::c::get_contest_stat_bimap();
+
         pkmn::enforce_value_in_map_keys(
             "Contest stat",
             contest_stat,
-            pkmn::c::CONTEST_STAT_BIMAP.right
+            contest_stat_bimap.right
         );
 
         internal_ptr->cpp->set_contest_stat(
-            pkmn::c::CONTEST_STAT_BIMAP.right.at(contest_stat),
+            contest_stat_bimap.right.at(contest_stat),
             value
         );
     )
@@ -1099,7 +1110,7 @@ enum pkmn_error pkmn_pokemon_get_EVs(
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
         copy_map_to_buffer(
             internal_ptr->cpp->get_EVs(),
-            pkmn::c::STAT_BIMAP,
+            pkmn::c::get_stat_bimap(),
             EVs_buffer_out,
             stat_buffer_size,
             PKMN_NUM_STATS,
@@ -1118,14 +1129,16 @@ enum pkmn_error pkmn_pokemon_set_EV(
     pkmn_pokemon_internal_t* internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
+        const pkmn::c::stat_bimap_t& stat_bimap = pkmn::c::get_stat_bimap();
+
         pkmn::enforce_value_in_map_keys(
             "Stat",
             stat,
-            pkmn::c::STAT_BIMAP.right
+            stat_bimap.right
         );
 
         internal_ptr->cpp->set_EV(
-            pkmn::c::STAT_BIMAP.right.at(stat),
+            stat_bimap.right.at(stat),
             value
         );
     )
@@ -1145,7 +1158,7 @@ enum pkmn_error pkmn_pokemon_get_IVs(
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
         copy_map_to_buffer(
             internal_ptr->cpp->get_IVs(),
-            pkmn::c::STAT_BIMAP,
+            pkmn::c::get_stat_bimap(),
             IVs_buffer_out,
             stat_buffer_size,
             PKMN_NUM_STATS,
@@ -1164,14 +1177,16 @@ enum pkmn_error pkmn_pokemon_set_IV(
     pkmn_pokemon_internal_t* internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
+        const pkmn::c::stat_bimap_t& stat_bimap = pkmn::c::get_stat_bimap();
+
         pkmn::enforce_value_in_map_keys(
             "Stat",
             stat,
-            pkmn::c::STAT_BIMAP.right
+            stat_bimap.right
         );
 
         internal_ptr->cpp->set_IV(
-            pkmn::c::STAT_BIMAP.right.at(stat),
+            stat_bimap.right.at(stat),
             value
         );
     )
@@ -1191,7 +1206,7 @@ enum pkmn_error pkmn_pokemon_get_stats(
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
         copy_map_to_buffer(
             internal_ptr->cpp->get_stats(),
-            pkmn::c::STAT_BIMAP,
+            pkmn::c::get_stat_bimap(),
             stats_buffer_out,
             stat_buffer_size,
             PKMN_NUM_STATS,

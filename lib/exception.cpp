@@ -31,13 +31,4 @@ namespace pkmn {
         str(boost::format("%s not in %s")
             % feature.c_str() % game.c_str())
        ) {}
-
-    pksav_error::pksav_error(
-        int pksav_error_code
-    ): std::runtime_error(
-          str(boost::format("PKSav returned the following error: \"%s\"")
-              % pksav_strerror(::pksav_error(pksav_error_code)))
-                               // TODO: remove :: after exception is removed
-       ) {}
-
 }

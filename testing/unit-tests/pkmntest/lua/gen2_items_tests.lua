@@ -17,10 +17,9 @@ gen2_items_tests.wrong_generation_all_pocket_items = {"Black Sludge", "Poffin It
 function gen2_items_tests.test_item_pocket(item_pocket, game)
     -- Check unchanging and initial values.
     luaunit.assertEquals(#item_pocket, 20)
-    luaunit.assertEquals(item_pocket:get_name(), "Items")
-    luaunit.assertEquals(item_pocket:get_game(), game)
-    luaunit.assertEquals(item_pocket:get_capacity(), 20)
-    luaunit.assertEquals(item_pocket:get_num_items(), 0)
+    luaunit.assertEquals(item_pocket.name, "Items")
+    luaunit.assertEquals(item_pocket.game, game)
+    luaunit.assertEquals(item_pocket.num_items, 0)
 
     -- Make sure item slots start as correctly empty.
     items_tests.item_list_test_empty_slot(item_pocket)
@@ -33,26 +32,34 @@ function gen2_items_tests.test_item_pocket(item_pocket, game)
         item_pocket,
         {"Bicycle", "Master Ball", "HM01"}
     )
-    luaunit.assertEquals(item_pocket:get_num_items(), 0)
+    luaunit.assertEquals(item_pocket.num_items, 0)
 
     -- Start adding and removing stuff, and make sure the numbers are accurate.
+
+    local item_names =
+    {
+        "Potion", "HP Up", "Wht Apricorn", "Lucky Egg",
+        "Flower Mail", "Burn Heal", "PSNCureBerry", "Stick"
+    }
+
+    items_tests.item_list_test_setting_items(
+        item_pocket,
+        item_names
+    )
     items_tests.item_list_test_add_remove(
         item_pocket,
-        {"Potion", "HP Up", "Wht Apricorn", "Lucky Egg",
-         "Flower Mail", "Burn Heal", "PSNCureBerry", "Stick"}
+        item_names
     )
 
-    local valid_items = item_pocket:get_valid_items()
-    luaunit.assertTrue(#valid_items > 0)
+    luaunit.assertTrue(#item_pocket.valid_items > 0)
 end
 
 function gen2_items_tests.test_key_item_pocket(key_item_pocket, game)
     -- Check unchanging and initial values.
     luaunit.assertEquals(#key_item_pocket, 26)
-    luaunit.assertEquals(key_item_pocket:get_name(), "KeyItems")
-    luaunit.assertEquals(key_item_pocket:get_game(), game)
-    luaunit.assertEquals(key_item_pocket:get_capacity(), 26)
-    luaunit.assertEquals(key_item_pocket:get_num_items(), 0)
+    luaunit.assertEquals(key_item_pocket.name, "KeyItems")
+    luaunit.assertEquals(key_item_pocket.game, game)
+    luaunit.assertEquals(key_item_pocket.num_items, 0)
 
     -- Make sure item slots start as correctly empty.
     items_tests.item_list_test_empty_slot(key_item_pocket)
@@ -65,7 +72,7 @@ function gen2_items_tests.test_key_item_pocket(key_item_pocket, game)
         key_item_pocket,
         {"Potion", "Master Ball", "HM01"}
     )
-    luaunit.assertEquals(key_item_pocket:get_num_items(), 0)
+    luaunit.assertEquals(key_item_pocket.num_items, 0)
 
     -- Crystal-specific items
     if game == "Crystal"
@@ -78,30 +85,38 @@ function gen2_items_tests.test_key_item_pocket(key_item_pocket, game)
     else
         for i = 1, #gen2_items_tests.crystal_items
         do
-            luaunit.assertError(pkmn.item_list_sptr.add, key_item_pocket, gen2_items_tests.crystal_items[i], 1)
-            luaunit.assertError(pkmn.item_list_sptr.remove, key_item_pocket, gen2_items_tests.crystal_items[i], 1)
+            luaunit.assertError(pkmn.item_list.add, key_item_pocket, gen2_items_tests.crystal_items[i], 1)
+            luaunit.assertError(pkmn.item_list.remove, key_item_pocket, gen2_items_tests.crystal_items[i], 1)
         end
     end
-    luaunit.assertEquals(key_item_pocket:get_num_items(), 0)
+    luaunit.assertEquals(key_item_pocket.num_items, 0)
 
     -- Start adding and removing stuff, and make sure the numbers are accurate.
+    local item_names =
+    {
+        "Bicycle", "Basement Key", "SecretPotion", "Mystery Egg",
+        "Silver Wing", "Lost Item", "SquirtBottle", "Rainbow Wing"
+    }
+
+    items_tests.item_list_test_setting_items(
+        key_item_pocket,
+        item_names
+    )
     items_tests.item_list_test_add_remove(
         key_item_pocket,
-        {"Bicycle", "Basement Key", "SecretPotion", "Mystery Egg",
-         "Silver Wing", "Lost Item", "SquirtBottle", "Rainbow Wing"}
+        item_names
     )
 
-    valid_items = key_item_pocket:get_valid_items()
+    valid_items = key_item_pocket.valid_items
     luaunit.assertTrue(#valid_items > 0)
 end
 
 function gen2_items_tests.test_ball_pocket(ball_pocket, game)
     -- Check unchanging and initial values.
     luaunit.assertEquals(#ball_pocket, 12)
-    luaunit.assertEquals(ball_pocket:get_name(), "Balls")
-    luaunit.assertEquals(ball_pocket:get_game(), game)
-    luaunit.assertEquals(ball_pocket:get_capacity(), 12)
-    luaunit.assertEquals(ball_pocket:get_num_items(), 0)
+    luaunit.assertEquals(ball_pocket.name, "Balls")
+    luaunit.assertEquals(ball_pocket.game, game)
+    luaunit.assertEquals(ball_pocket.num_items, 0)
 
     -- Make sure item slots start as correctly empty.
     items_tests.item_list_test_empty_slot(ball_pocket)
@@ -114,26 +129,34 @@ function gen2_items_tests.test_ball_pocket(ball_pocket, game)
         ball_pocket,
         {"Potion", "Bicycle", "HM01"}
     )
-    luaunit.assertEquals(ball_pocket:get_num_items(), 0)
+    luaunit.assertEquals(ball_pocket.num_items, 0)
 
     -- Start adding and removing stuff, and make sure the numbers are accurate.
+    local item_names =
+    {
+        "Great Ball", "Poké Ball", "Park Ball", "Fast Ball",
+        "Master Ball", "Friend Ball", "Love Ball", "Level Ball"
+    }
+
+    items_tests.item_list_test_setting_items(
+        ball_pocket,
+        item_names
+    )
     items_tests.item_list_test_add_remove(
         ball_pocket,
-        {"Great Ball", "Poké Ball", "Park Ball", "Fast Ball",
-         "Master Ball", "Friend Ball", "Love Ball", "Level Ball"}
+        item_names
     )
 
-    local valid_items = ball_pocket:get_valid_items()
+    local valid_items = ball_pocket.valid_items
     luaunit.assertTrue(#valid_items > 0)
 end
 
 function gen2_items_tests.test_tmhm_pocket(tmhm_pocket, game)
     -- Check unchanging and initial values.
     luaunit.assertEquals(#tmhm_pocket, 57)
-    luaunit.assertEquals(tmhm_pocket:get_name(), "TM/HM")
-    luaunit.assertEquals(tmhm_pocket:get_game(), game)
-    luaunit.assertEquals(tmhm_pocket:get_capacity(), 57)
-    luaunit.assertEquals(tmhm_pocket:get_num_items(), 0)
+    luaunit.assertEquals(tmhm_pocket.name, "TM/HM")
+    luaunit.assertEquals(tmhm_pocket.game, game)
+    luaunit.assertEquals(tmhm_pocket.num_items, 0)
 
     -- Make sure item slots start as correctly empty.
     for i = 1, 50
@@ -157,14 +180,14 @@ function gen2_items_tests.test_tmhm_pocket(tmhm_pocket, game)
         tmhm_pocket,
         {"Potion", "Master Ball", "Bicycle"}
     )
-    luaunit.assertEquals(tmhm_pocket:get_num_items(), 0)
+    luaunit.assertEquals(tmhm_pocket.num_items, 0)
 
     -- Start adding and removing stuff, and make sure the numbers are accurate.
     for i = 1, 50
     do
         local name = string.format("TM%02d", i)
         tmhm_pocket:add(name, 50)
-        luaunit.assertEquals(tmhm_pocket:get_num_items(), i)
+        luaunit.assertEquals(tmhm_pocket.num_items, i)
         luaunit.assertEquals(tmhm_pocket[i].item, name)
         luaunit.assertEquals(tmhm_pocket[i].amount, 50)
     end
@@ -172,7 +195,7 @@ function gen2_items_tests.test_tmhm_pocket(tmhm_pocket, game)
     do
         local name = string.format("TM%02d", i)
         tmhm_pocket:remove(name, 50)
-        luaunit.assertEquals(tmhm_pocket:get_num_items(), i-1)
+        luaunit.assertEquals(tmhm_pocket.num_items, i-1)
         luaunit.assertEquals(tmhm_pocket[i].item, name)
         luaunit.assertEquals(tmhm_pocket[i].amount, 0)
     end
@@ -180,7 +203,7 @@ function gen2_items_tests.test_tmhm_pocket(tmhm_pocket, game)
     do
         local name = string.format("HM%02d", i)
         tmhm_pocket:add(name, 1)
-        luaunit.assertEquals(tmhm_pocket:get_num_items(), i)
+        luaunit.assertEquals(tmhm_pocket.num_items, i)
         luaunit.assertEquals(tmhm_pocket[50+i].item, name)
         luaunit.assertEquals(tmhm_pocket[50+i].amount, 1)
     end
@@ -188,22 +211,21 @@ function gen2_items_tests.test_tmhm_pocket(tmhm_pocket, game)
     do
         local name = string.format("HM%02d", i)
         tmhm_pocket:remove(name, 1)
-        luaunit.assertEquals(tmhm_pocket:get_num_items(), i-1)
+        luaunit.assertEquals(tmhm_pocket.num_items, i-1)
         luaunit.assertEquals(tmhm_pocket[50+i].item, name)
         luaunit.assertEquals(tmhm_pocket[50+i].amount, 0)
     end
 
-    local valid_items = tmhm_pocket:get_valid_items()
+    local valid_items = tmhm_pocket.valid_items
     luaunit.assertEquals(#tmhm_pocket, 57)
 end
 
 function gen2_items_tests.test_pc(pc, game)
     -- Check unchanging and initial values.
     luaunit.assertEquals(#pc, 50)
-    luaunit.assertEquals(pc:get_name(), "PC")
-    luaunit.assertEquals(pc:get_game(), game)
-    luaunit.assertEquals(pc:get_capacity(), 50)
-    luaunit.assertEquals(pc:get_num_items(), 0)
+    luaunit.assertEquals(pc.name, "PC")
+    luaunit.assertEquals(pc.game, game)
+    luaunit.assertEquals(pc.num_items, 0)
 
     -- Make sure item slots start as correctly empty.
     items_tests.item_list_test_empty_slot(pc)
@@ -212,41 +234,44 @@ function gen2_items_tests.test_pc(pc, game)
     items_tests.item_list_test_out_of_range_error(pc, "Potion")
 
     -- Start adding and removing stuff, and make sure the numbers are accurate.
+    local item_names =
+    {
+        "Potion", "Bicycle", "Great Ball", "TM28",
+        "Berry", "SquirtBottle", "Friend Ball", "HM01"
+    }
+
+    items_tests.item_list_test_setting_items(
+        pc,
+        item_names
+    )
     items_tests.item_list_test_add_remove(
         pc,
-        {"Potion", "Bicycle", "Great Ball", "TM28",
-         "Berry", "SquirtBottle", "Friend Ball", "HM01"}
+        item_names
     )
 
-    local valid_items = pc:get_valid_items()
+    local valid_items = pc.valid_items
     local full_item_list = pkmn.database.get_item_list(game)
     luaunit.assertEquals(#valid_items, #full_item_list)
 end
 
 function gen2_items_tests.test_item_bag(bag, game)
     -- Check unchanging and initial values.
-    luaunit.assertEquals(bag:get_game(), game)
+    luaunit.assertEquals(bag.game, game)
+    luaunit.assertEquals(#bag, 4)
 
-    local pockets = bag:get_pockets()
-    luaunit.assertEquals(#pockets, 4)
-    luaunit.assertTrue(pockets:has_key("Items"))
-    luaunit.assertTrue(pockets:has_key("KeyItems"))
-    luaunit.assertTrue(pockets:has_key("Balls"))
-    luaunit.assertTrue(pockets:has_key("TM/HM"))
-
-    gen2_items_tests.test_item_pocket(pockets["Items"], game)
-    gen2_items_tests.test_key_item_pocket(pockets["KeyItems"], game)
-    gen2_items_tests.test_ball_pocket(pockets["Balls"], game)
-    gen2_items_tests.test_tmhm_pocket(pockets["TM/HM"], game)
+    gen2_items_tests.test_item_pocket(bag["Items"], game)
+    gen2_items_tests.test_key_item_pocket(bag["KeyItems"], game)
+    gen2_items_tests.test_ball_pocket(bag["Balls"], game)
+    gen2_items_tests.test_tmhm_pocket(bag["TM/HM"], game)
 
     local items = {"Potion", "Bicycle", "Great Ball", "TM28",
                    "Berry", "SquirtBottle", "Friend Ball", "HM01"}
-    
+
     -- Make sure adding items through the bag adds to the proper pockets.
-    luaunit.assertEquals(bag["Items"]:get_num_items(), 0)
-    luaunit.assertEquals(bag["KeyItems"]:get_num_items(), 0)
-    luaunit.assertEquals(bag["Balls"]:get_num_items(), 0)
-    luaunit.assertEquals(bag["TM/HM"]:get_num_items(), 0)
+    luaunit.assertEquals(bag["Items"].num_items, 0)
+    luaunit.assertEquals(bag["KeyItems"].num_items, 0)
+    luaunit.assertEquals(bag["Balls"].num_items, 0)
+    luaunit.assertEquals(bag["TM/HM"].num_items, 0)
     for i = 1, #items
     do
         bag:add(items[i], 5)

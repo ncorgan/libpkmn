@@ -14,4 +14,9 @@
     %include <csharp_CamelCase.i>
     %include <csharp/stl_macros.i>
     %typemap(csclassmodifiers) SWIGTYPE "public partial class"
+
+    %ignore operator ==;
+    %ignore operator !=;
+    %ignore operator +;
+    %ignore operator +=;
 %enddef

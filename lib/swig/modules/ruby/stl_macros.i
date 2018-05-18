@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -9,7 +9,7 @@
 
 %include <std_map.i>
 %include <std_pair.i>
-%include <std_vector.i>
+%include <ruby/pkmn_std_vector.i>
 
 %define PKMN_RUBY_MAP(cpp_key, cpp_val, ruby_name)
     %extend std::map<cpp_key, cpp_val > {

@@ -8,17 +8,23 @@
 #ifndef INCLUDED_PKMN_PKSAV_PKSAV_CALL_HPP
 #define INCLUDED_PKMN_PKSAV_PKSAV_CALL_HPP
 
+#include "exception_internal.hpp"
+
 #include <pksav/error.h>
 
 #include <pkmn/exception.hpp>
 
-// TODO: remove :: when exception moved
+#include <boost/format.hpp>
+
 #define PKSAV_CALL(...) \
 { \
-    enum ::pksav_error error = __VA_ARGS__; \
-    if(error) \
+    enum pksav_error status = __VA_ARGS__; \
+    if(status != PKSAV_ERROR_NONE) \
     { \
-        throw pkmn::pksav_error(error); \
+        pkmn::throw_internal_error<std::runtime_error>( \
+            str(boost::format("PKSav returned the following error: \"%s\"") \
+                % pksav_strerror(status)) \
+        ); \
     } \
 }
 

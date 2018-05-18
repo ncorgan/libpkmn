@@ -33,6 +33,7 @@ SET(pkmn_c_sources
     ${pkmn_c_utils_sources}
     build_info.cpp
     cpp_to_c.cpp
+    enum_maps.cpp
     error.cpp
     game_save.cpp
     item_bag.cpp

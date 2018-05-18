@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+# Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
 #
 # Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
 # or copy at http://opensource.org/licenses/MIT)
@@ -1077,7 +1077,7 @@ class calculations_test(unittest.TestCase):
         with self.assertRaises(ValueError):
             personality = pkmn.calculations.generate_personality(
                               "Charmander",
-                              pkmn.DEFAULT_TRAINER_ID,
+                              pkmn.pokemon.DEFAULT_TRAINER_ID,
                               True,
                               "Torrent",
                               "Male",
@@ -1088,7 +1088,7 @@ class calculations_test(unittest.TestCase):
         with self.assertRaises(ValueError):
             personality = pkmn.calculations.generate_personality(
                               "Charmander",
-                              pkmn.DEFAULT_TRAINER_ID,
+                              pkmn.pokemon.DEFAULT_TRAINER_ID,
                               True,
                               "Blaze",
                               "Not a gender",
@@ -1099,7 +1099,7 @@ class calculations_test(unittest.TestCase):
         with self.assertRaises(ValueError):
             personality = pkmn.calculations.generate_personality(
                               "Charmander",
-                              pkmn.DEFAULT_TRAINER_ID,
+                              pkmn.pokemon.DEFAULT_TRAINER_ID,
                               True,
                               "Blaze",
                               "Male",
@@ -1152,7 +1152,7 @@ class calculations_test(unittest.TestCase):
         # Test and validate a valid call.
         personality = pkmn.calculations.generate_personality(
                           "Charmander",
-                          pkmn.DEFAULT_TRAINER_ID,
+                          pkmn.pokemon.DEFAULT_TRAINER_ID,
                           True,
                           "Blaze",
                           "Male",
@@ -1160,7 +1160,7 @@ class calculations_test(unittest.TestCase):
                       )
         self.assertTrue(
             pkmn.calculations.modern_shiny(
-                personality, pkmn.DEFAULT_TRAINER_ID
+                personality, pkmn.pokemon.DEFAULT_TRAINER_ID
             )
         )
         self.assertEquals(
@@ -1294,8 +1294,8 @@ class calculations_test(unittest.TestCase):
             )
 
         for entry in pokemon_with_size_checks:
-            height = entry.get_height()
-            species = entry.get_name()
+            height = entry.height
+            species = entry.name
 
             for i in range(10):
                 size = pkmn.calculations.pokemon_size(

@@ -14,6 +14,7 @@
 
 #include <boost/format.hpp>
 
+#include <cstring>
 #include <stdexcept>
 #include <string>
 
@@ -83,9 +84,6 @@ void pkmn_set_error(
         __VA_ARGS__ ; \
         pkmn_set_error("None"); \
         return PKMN_ERROR_NONE; \
-    } catch(const pkmn::pksav_error &e) { \
-        pkmn_set_error(e.what()); \
-        return PKMN_ERROR_PKSAV_ERROR; \
     } catch(const pkmn::unimplemented_error &e) { \
         pkmn_set_error(e.what()); \
         return PKMN_ERROR_UNIMPLEMENTED_ERROR; \
@@ -121,7 +119,14 @@ void pkmn_set_error(
         return PKMN_ERROR_UNDERFLOW_ERROR; \
     } catch(const std::runtime_error &e) { \
         pkmn_set_error(e.what()); \
-        return PKMN_ERROR_RUNTIME_ERROR; \
+        if(strstr(e.what(), "Internal error") != nullptr) \
+        { \
+            return PKMN_ERROR_INTERNAL_ERROR; \
+        } \
+        else \
+        { \
+            return PKMN_ERROR_RUNTIME_ERROR; \
+        } \
     } catch(const std::exception &e) { \
         pkmn_set_error(e.what()); \
         return PKMN_ERROR_STD_EXCEPTION; \
@@ -139,10 +144,6 @@ void pkmn_set_error(
         pkmn_set_error("None"); \
         h->last_error = "None"; \
         return PKMN_ERROR_NONE; \
-    } catch(const pkmn::pksav_error &e) { \
-        pkmn_set_error(e.what()); \
-        h->last_error = e.what(); \
-        return PKMN_ERROR_PKSAV_ERROR; \
     } catch(const pkmn::unimplemented_error &e) { \
         pkmn_set_error(e.what()); \
         h->last_error = e.what(); \
@@ -190,7 +191,14 @@ void pkmn_set_error(
     } catch(const std::runtime_error &e) { \
         pkmn_set_error(e.what()); \
         h->last_error = e.what(); \
-        return PKMN_ERROR_RUNTIME_ERROR; \
+        if(strstr(e.what(), "Internal error") != nullptr) \
+        { \
+            return PKMN_ERROR_INTERNAL_ERROR; \
+        } \
+        else \
+        { \
+            return PKMN_ERROR_RUNTIME_ERROR; \
+        } \
     } catch(const std::exception &e) { \
         pkmn_set_error(e.what()); \
         h->last_error = e.what(); \
@@ -210,10 +218,6 @@ void pkmn_set_error(
         pkmn_set_error("None"); \
         h->last_error = "None"; \
         return PKMN_ERROR_NONE; \
-    } catch(const pkmn::pksav_error &e) { \
-        pkmn_set_error(e.what()); \
-        h->last_error = e.what(); \
-        return PKMN_ERROR_PKSAV_ERROR; \
     } catch(const pkmn::unimplemented_error &e) { \
         pkmn_set_error(e.what()); \
         h->last_error = e.what(); \

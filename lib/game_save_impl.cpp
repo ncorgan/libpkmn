@@ -55,9 +55,6 @@ namespace pkmn {
         "Colosseum/XD"
     };
 
-    BOOST_STATIC_CONSTEXPR size_t GB_SAVE_SIZE  = 0x8000;
-    BOOST_STATIC_CONSTEXPR size_t GBA_SAVE_SIZE = 0x10000;
-
     BOOST_STATIC_CONSTEXPR size_t GCN_COLOSSEUM_BIN_SIZE = 0x60000;
     BOOST_STATIC_CONSTEXPR size_t GCN_COLOSSEUM_GCI_SIZE = 0x60040;
     BOOST_STATIC_CONSTEXPR size_t GCN_XD_BIN_SIZE = 0x56000;
@@ -284,27 +281,27 @@ namespace pkmn {
         return pkmn::database::game_id_to_name(_game_id);
     }
 
-    pkmn::pokedex::sptr game_save_impl::get_pokedex()
+    const pkmn::pokedex::sptr& game_save_impl::get_pokedex()
     {
         return _pokedex;
     }
 
-    pkmn::pokemon_party::sptr game_save_impl::get_pokemon_party()
+    const pkmn::pokemon_party::sptr& game_save_impl::get_pokemon_party()
     {
         return _pokemon_party;
     }
 
-    pkmn::pokemon_pc::sptr game_save_impl::get_pokemon_pc()
+    const pkmn::pokemon_pc::sptr& game_save_impl::get_pokemon_pc()
     {
         return _pokemon_pc;
     }
 
-    pkmn::item_bag::sptr game_save_impl::get_item_bag()
+    const pkmn::item_bag::sptr& game_save_impl::get_item_bag()
     {
         return _item_bag;
     }
 
-    pkmn::item_list::sptr game_save_impl::get_item_pc()
+    const pkmn::item_list::sptr& game_save_impl::get_item_pc()
     {
         return _item_pc;
     }

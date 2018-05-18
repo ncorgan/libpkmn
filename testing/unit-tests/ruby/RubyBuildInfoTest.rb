@@ -1,6 +1,6 @@
 #!/usr/bin/ruby
 #
-# Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+# Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
 #
 # Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
 # or copy at http://opensource.org/licenses/MIT)
@@ -13,6 +13,11 @@ require "test/unit"
 
 # For these tests, just make sure the wrapper constant works as intended.
 class RubyBuildInfoTest < Test::Unit::TestCase
+
+    def test_pkmn_version
+        assert(PKMN::VERSION.length > 0)
+    end
+
     def test_boost_version
         assert(PKMN::BuildInfo::BOOST_VERSION.length > 0)
     end

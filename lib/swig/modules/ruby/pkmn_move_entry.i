@@ -1,32 +1,36 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-%include <ruby/stl_macros.i>
-
 %{
     #include <pkmn/database/move_entry.hpp>
 %}
 
-%rename("name") pkmn::database::move_entry::get_name() const;
-%rename("game") pkmn::database::move_entry::get_game() const;
-%rename("type") pkmn::database::move_entry::get_type() const;
-%rename("description") pkmn::database::move_entry::get_description() const;
-%rename("target") pkmn::database::move_entry::get_target() const;
-%rename("damage_class") pkmn::database::move_entry::get_damage_class() const;
-%rename("base_power") pkmn::database::move_entry::get_base_power() const;
-%rename("accuracy") pkmn::database::move_entry::get_accuracy() const;
-%rename("priority") pkmn::database::move_entry::get_priority() const;
-%rename("effect") pkmn::database::move_entry::get_effect() const;
-%rename("contest_type") pkmn::database::move_entry::get_contest_type() const;
-%rename("contest_effect") pkmn::database::move_entry::get_contest_effect() const;
-%rename("super_contest_effect") pkmn::database::move_entry::get_super_contest_effect() const;
+%include <attribute.i>
+
+// Convert getter/setter functions into attributes for more idiomatic Ruby.
+
+%attributestring(pkmn::database::move_entry, std::string, name, get_name);
+%attributestring(pkmn::database::move_entry, std::string, game, get_game);
+%attributestring(pkmn::database::move_entry, std::string, type, get_type);
+%attributestring(pkmn::database::move_entry, std::string, description, get_description);
+%attributestring(pkmn::database::move_entry, std::string, target, get_target);
+%attributestring(pkmn::database::move_entry, std::string, damage_class, get_damage_class);
+%attribute(pkmn::database::move_entry, int, base_power, get_base_power);
+%attribute(pkmn::database::move_entry, float, accuracy, get_accuracy);
+%attribute(pkmn::database::move_entry, int, priority, get_priority);
+%attributestring(pkmn::database::move_entry, std::string, effect, get_effect);
+%attributestring(pkmn::database::move_entry, std::string, contest_type, get_contest_type);
+%attributestring(pkmn::database::move_entry, std::string, contest_effect, get_contest_effect);
+%attributestring(pkmn::database::move_entry, std::string, super_contest_effect, get_super_contest_effect);
 
 %ignore pkmn::database::move_entry::get_move_id;
 %ignore pkmn::database::move_entry::get_game_id;
+
 %include <pkmn/database/move_entry.hpp>
 
-PKMN_RUBY_VECTOR(pkmn::database::move_entry, MoveEntryList);
+%include <ruby/stl_macros.i>
+PKMN_RUBY_VECTOR(pkmn::database::move_entry, MoveEntryList)

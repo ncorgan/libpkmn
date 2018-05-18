@@ -5,6 +5,8 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
+#include "pksav/pksav_call.hpp"
+
 #include "c/cpp_to_c.hpp"
 #include "c/error_internal.hpp"
 
@@ -84,10 +86,10 @@ enum pkmn_error throw_feature_not_in_game_error(
 }
 
 enum pkmn_error throw_pksav_error(
-    enum pksav_error pksav_error_code
+    pksav_error pksav_error_code
 ) {
     PKMN_CPP_TO_C(
-        throw pkmn::pksav_error(int(pksav_error_code));
+        PKSAV_CALL(pksav_error_code)
     )
 }
 
@@ -117,8 +119,8 @@ TEST(cpp_to_c_test, exception_to_error_code_test) {
     EXPECT_STREQ("feature_not_in_game_error", pkmn_strerror());
 
     error = throw_pksav_error(PKSAV_ERROR_INVALID_SAVE);
-    EXPECT_EQ(PKMN_ERROR_PKSAV_ERROR, error);
-    EXPECT_STREQ("PKSav returned the following error: \"Invalid save file\"", pkmn_strerror());
+    EXPECT_EQ(PKMN_ERROR_INTERNAL_ERROR, error);
+    EXPECT_STREQ("Internal error: PKSav returned the following error: \"Invalid save file\"", pkmn_strerror());
 
     error = throw_pkmn_unimplemented_error();
     EXPECT_EQ(PKMN_ERROR_UNIMPLEMENTED_ERROR, error);
@@ -217,11 +219,11 @@ enum pkmn_error throw_feature_not_in_game_error_with_handle(
 }
 
 enum pkmn_error throw_pksav_error_with_handle(
-    enum pksav_error pksav_error_code,
+    pksav_error pksav_error_code,
     pkmn_test_handle_t* handle
 ) {
     PKMN_CPP_TO_C_WITH_HANDLE(handle,
-        throw pkmn::pksav_error(int(pksav_error_code));
+        PKSAV_CALL(pksav_error_code)
     )
 }
 
@@ -265,9 +267,9 @@ TEST(cpp_to_c_test, exception_to_error_code_with_handle_test) {
     error = throw_pksav_error_with_handle(
         PKSAV_ERROR_INVALID_SAVE, &test_handle
     );
-    EXPECT_EQ(PKMN_ERROR_PKSAV_ERROR, error);
-    EXPECT_EQ("PKSav returned the following error: \"Invalid save file\"", test_handle.last_error);
-    EXPECT_STREQ("PKSav returned the following error: \"Invalid save file\"", pkmn_strerror());
+    EXPECT_EQ(PKMN_ERROR_INTERNAL_ERROR, error);
+    EXPECT_EQ("Internal error: PKSav returned the following error: \"Invalid save file\"", test_handle.last_error);
+    EXPECT_STREQ("Internal error: PKSav returned the following error: \"Invalid save file\"", pkmn_strerror());
 
     error = throw_pkmn_unimplemented_error_with_handle(&test_handle);
     EXPECT_EQ(PKMN_ERROR_UNIMPLEMENTED_ERROR, error);

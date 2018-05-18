@@ -123,7 +123,7 @@ namespace pkmn {
     POKEMON_BOX_GBIMPL_TEMPLATE
     void POKEMON_BOX_GBIMPL_CLASS::set_pokemon(
         int index,
-        pkmn::pokemon::sptr new_pokemon
+        const pkmn::pokemon::sptr& new_pokemon
     )
     {
         int num_pokemon = get_num_pokemon();

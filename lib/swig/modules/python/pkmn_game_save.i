@@ -1,54 +1,38 @@
 /*
- * Copyright (c) 2018 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
  */
 
 %{
-    #include <pkmn/game_save.hpp>
+    #include "cpp_wrappers/game_save.hpp"
 %}
 
-%rename(__get_time_played) get_time_played;
-%rename(__set_time_played) set_time_played;
+%include <attribute.i>
 
-%ignore detect_type;
-%include <pkmn/game_save.hpp>
+%ignore pkmn::swig::game_save::game_save();
+%ignore pkmn::swig::game_save::game_save(const pkmn::game_save::sptr&);
+%ignore pkmn::swig::game_save::cptr();
 
-%extend std::shared_ptr<pkmn::game_save> {
-    %pythoncode %{
-        def get_time_played(self):
-            import datetime
+// Convert getter/setter functions into attributes for more idiomatic Python.
 
-            internal_time_played = self.__get_time_played()
+%attributestring(pkmn::swig::game_save, std::string, game, get_game);
+%attributestring(pkmn::swig::game_save, std::string, filepath, get_filepath);
+%attributestring(pkmn::swig::game_save, std::string, trainer_name, get_trainer_name, set_trainer_name);
+%attribute(pkmn::swig::game_save, uint16_t, trainer_public_id, get_trainer_public_id, set_trainer_public_id);
+%attribute(pkmn::swig::game_save, uint16_t, trainer_secret_id, get_trainer_secret_id, set_trainer_secret_id);
+%attribute(pkmn::swig::game_save, uint32_t, trainer_id, get_trainer_id, set_trainer_id);
+%attributestring(pkmn::swig::game_save, std::string, trainer_gender, get_trainer_gender, set_trainer_gender);
+%attributestring(pkmn::swig::game_save, std::string, rival_name, get_rival_name, set_rival_name);
+%attribute(pkmn::swig::game_save, int, money, get_money, set_money);
+%attributeval(pkmn::swig::game_save, pkmn::swig::pokedex, pokedex, get_pokedex);
+%attributeval(pkmn::swig::game_save, pkmn::swig::pokemon_party, pokemon_party, get_pokemon_party);
+%attributeval(pkmn::swig::game_save, pkmn::swig::pokemon_pc, pokemon_pc, get_pokemon_pc);
+%attributeval(pkmn::swig::game_save, pkmn::swig::item_bag, item_bag, get_item_bag);
+%attributeval(pkmn::swig::game_save, pkmn::swig::item_list, item_pc, get_item_pc);
+%attributeval(pkmn::swig::game_save, %arg(pkmn::swig::numeric_attribute_map<pkmn::game_save>), numeric_attributes, get_numeric_attributes);
+%attributeval(pkmn::swig::game_save, %arg(pkmn::swig::string_attribute_map<pkmn::game_save>), string_attributes, get_string_attributes);
+%attributeval(pkmn::swig::game_save, %arg(pkmn::swig::boolean_attribute_map<pkmn::game_save>), boolean_attributes, get_boolean_attributes);
 
-            # A frame is 1/60 of a second, so we need to convert this
-            # to milliseconds.
-            frames_to_milliseconds = (1000.0 / 60.0)
-            milliseconds = internal_time_played.frames * frames_to_milliseconds
-
-            return datetime.timedelta(
-                       hours=internal_time_played.hours,
-                       minutes=internal_time_played.minutes,
-                       seconds=internal_time_played.seconds,
-                       milliseconds=milliseconds
-                   )
-
-        def set_time_played(self, time_played):
-            if not "datetime.timedelta" in str(type(time_played)):
-                raise TypeError("Expected type \"datetime.timedelta\", got {0}".format(type(time_played)))
-
-            microseconds_to_frames = (60.0 / 1000000.0)
-
-            hours = time_played.seconds // 3600
-            minutes = (time_played.seconds // 60) % 60
-            seconds = time_played.seconds % 60
-            frames = int(time_played.microseconds * microseconds_to_frames)
-
-            internal_time_played = time_duration_internal(
-                                       hours, minutes, seconds, frames
-                                   )
-            self.__set_time_played(internal_time_played)
-    %}
-}
-%template(game_save_sptr) std::shared_ptr<pkmn::game_save>;
+%include "cpp_wrappers/game_save.hpp"

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -9,20 +9,23 @@
     #include <pkmn/database/item_entry.hpp>
 %}
 
-%extend pkmn::database::item_entry {
-    %pythoncode %{
-        def __eq__(self, rhs):
-            if self is rhs:
-                return True
-            elif not isinstance(rhs, item_entry):
-                return False
-            else:
-                return (self.get_name() == rhs.get_name()) and \
-                       (self.get_game() == rhs.get_game())
+%include <attribute.i>
 
-        def __ne__(self, rhs):
-            return not (self == rhs)
-    %}
-}
+// Convert getter/setter functions into attributes for more idiomatic Python.
+
+%attributestring(pkmn::database::item_entry, std::string, name, get_name);
+%attributestring(pkmn::database::item_entry, std::string, game, get_game);
+%attributestring(pkmn::database::item_entry, std::string, category, get_category);
+%attributestring(pkmn::database::item_entry, std::string, pocket, get_pocket);
+%attributestring(pkmn::database::item_entry, std::string, description, get_description);
+%attribute(pkmn::database::item_entry, int, cost, get_cost);
+%attribute(pkmn::database::item_entry, bool, is_holdable, holdable);
+%attribute(pkmn::database::item_entry, int, fling_power, get_fling_power);
+%attributestring(pkmn::database::item_entry, std::string, fling_effect, get_fling_effect);
+
+%ignore pkmn::database::item_entry::get_item_id;
+%ignore pkmn::database::item_entry::get_item_index;
+%ignore pkmn::database::item_entry::get_item_list_id;
+%ignore pkmn::database::item_entry::get_game_id;
 
 %include <pkmn/database/item_entry.hpp>

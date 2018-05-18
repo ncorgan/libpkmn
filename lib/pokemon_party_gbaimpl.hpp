@@ -30,7 +30,7 @@ namespace pkmn {
 
             void set_pokemon(
                 int index,
-                pkmn::pokemon::sptr new_pokemon
+                const pkmn::pokemon::sptr& new_pokemon
             ) override final;
 
         private:

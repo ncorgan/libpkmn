@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -18,14 +18,11 @@ PKMN_LUA_INIT
     #include <pkmn/database/pokemon_entry.hpp>
 %}
 
-%include <pkmn/database/item_entry.hpp>
-%include <pkmn/database/lists.hpp>
+%include <lua/pkmn_item_entry.i>
+%include <lua/pkmn_move_entry.i>
+%include <lua/pkmn_pokemon_entry.i>
 
-%include <pkmn/database/move_entry.hpp>
-PKMN_LUA_VECTOR(pkmn::database::move_entry, move_entry_list)
+%include <pkmn/database/lists.hpp>
 
 %include <pkmn/database/levelup_move.hpp>
 PKMN_LUA_VECTOR(pkmn::database::levelup_move, levelup_moves)
-
-%include <pkmn/database/pokemon_entry.hpp>
-PKMN_LUA_VECTOR(pkmn::database::pokemon_entry, pokemon_entry_list)

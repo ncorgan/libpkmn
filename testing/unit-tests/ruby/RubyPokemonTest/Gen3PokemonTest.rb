@@ -26,16 +26,16 @@ class Gen3PokemonTest < PokemonTest
 
     def _check_initial_ribbons_map(pokemon)
         @@CONTEST_TYPES.each do |contest_type|
-            assert(pokemon.ribbons.has_key?(contest_type))
+            assert(pokemon.ribbons.keys.include?(contest_type))
 
             @@CONTEST_LEVELS.each do |contest_level|
                 ribbon_name = contest_type + " " + contest_level
-                assert(pokemon.ribbons.has_key?(ribbon_name))
+                assert(pokemon.ribbons.keys.include?(ribbon_name))
             end
         end
 
         @@RIBBONS.each do |ribbon|
-            assert(pokemon.ribbons.has_key?(ribbon))
+            assert(pokemon.ribbons.keys.include?(ribbon))
         end
     end
 
@@ -81,9 +81,9 @@ class Gen3PokemonTest < PokemonTest
 
         # Setting shininess should affect personality.
         pokemon.is_shiny = false
-        assert(!pokemon.is_shiny?)
+        assert(!pokemon.is_shiny)
         pokemon.is_shiny = true
-        assert(pokemon.is_shiny?)
+        assert(pokemon.is_shiny)
 
         _check_initial_ribbons_map(pokemon)
         _test_contest_ribbons(pokemon)

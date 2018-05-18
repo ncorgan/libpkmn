@@ -6,6 +6,7 @@
  */
 
 #include "exception_internal.hpp"
+#include "pksav/pksav_call.hpp"
 
 #include <pkmn/exception.hpp>
 
@@ -55,14 +56,20 @@ TEST(cpp_exception_test, test_feature_not_in_game_error)
 TEST(cpp_exception_test, test_pksav_error)
 {
     // Source: https://github.com/ncorgan/pksav/blob/master/lib/error.c
-    const std::string expected_msg = "PKSav returned the following error: \"File I/O error\"";
+    const std::string expected_msg =
+        "Internal error: PKSav returned the following error: \"File I/O error\"";
 
-    try {
-        throw pkmn::pksav_error(PKSAV_ERROR_FILE_IO);
+    try
+    {
+        PKSAV_CALL(PKSAV_ERROR_FILE_IO)
         FAIL() << "Did not throw";
-    } catch(const pkmn::pksav_error& e) {
+    }
+    catch(const std::runtime_error& e)
+    {
         EXPECT_EQ(expected_msg, std::string(e.what()));
-    } catch(...) {
+    }
+    catch(...)
+    {
         FAIL() << "Did not throw pkmn::pksav_error";
     }
 }

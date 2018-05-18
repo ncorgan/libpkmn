@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -9,12 +9,15 @@ using System;
 using NUnit.Framework;
 
 [TestFixture]
-public class CSharpEqualityHashCodeTest {
+public class CSharpEqualityHashCodeTest
+{
     /*
      * LibPKMN classes
      */
+
     [Test]
-    public void HiddenPowerTest() {
+    public void HiddenPowerTest()
+    {
         PKMN.HiddenPower hiddenPower = new PKMN.HiddenPower("Normal", 30);
 
         PKMN.HiddenPower hiddenPowerSame = new PKMN.HiddenPower("Normal", 30);
@@ -33,7 +36,8 @@ public class CSharpEqualityHashCodeTest {
     }
 
     [Test]
-    public void ItemEntryTest() {
+    public void ItemEntryTest()
+    {
         PKMN.Database.ItemEntry itemEntry = new PKMN.Database.ItemEntry("Potion", "Red");
 
         PKMN.Database.ItemEntry itemEntrySame = new PKMN.Database.ItemEntry("Potion", "Red");
@@ -52,46 +56,29 @@ public class CSharpEqualityHashCodeTest {
     }
 
     [Test]
-    public void ItemSlotTest() {
-        PKMN.ItemSlot itemSlot = new PKMN.ItemSlot("Potion", 10);
-        PKMN.ItemSlot itemSlotSame = new PKMN.ItemSlot("Potion", 10);
-        PKMN.ItemSlot itemSlotDifferentItem = new PKMN.ItemSlot("Great Ball", 10);
-        PKMN.ItemSlot itemSlotDifferentAmount = new PKMN.ItemSlot("Potion", 5);
-
-        Assert.AreEqual(itemSlot, itemSlot);
-        Assert.AreEqual(itemSlot, itemSlotSame);
-        Assert.AreEqual(itemSlot.GetHashCode(), itemSlotSame.GetHashCode());
-
-        Assert.AreNotEqual(itemSlot, itemSlotDifferentItem);
-        Assert.AreNotEqual(itemSlot.GetHashCode(), itemSlotDifferentItem.GetHashCode());
-
-        Assert.AreNotEqual(itemSlot, itemSlotDifferentAmount);
-        Assert.AreNotEqual(itemSlot.GetHashCode(), itemSlotDifferentAmount.GetHashCode());
-    }
-
-    [Test]
-    public void LevelupMoveTest() {
+    public void LevelupMoveTest()
+    {
         PKMN.Database.LevelupMove levelupMove = new PKMN.Database.LevelupMove(
-                                               new PKMN.Database.MoveEntry("Scratch", "Red"),
-                                               10
-                                           );
+                                                        new PKMN.Database.MoveEntry("Scratch", "Red"),
+                                                        10
+                                                    );
 
         PKMN.Database.LevelupMove levelupMoveSame = new PKMN.Database.LevelupMove(
-                                                   new PKMN.Database.MoveEntry("Scratch", "Red"),
-                                                   10
-                                               );
+                                                            new PKMN.Database.MoveEntry("Scratch", "Red"),
+                                                            10
+                                                        );
         PKMN.Database.LevelupMove levelupMoveDifferentMove = new PKMN.Database.LevelupMove(
-                                                            new PKMN.Database.MoveEntry("Tackle", "Red"),
-                                                            10
-                                                        );
+                                                                     new PKMN.Database.MoveEntry("Tackle", "Red"),
+                                                                     10
+                                                                 );
         PKMN.Database.LevelupMove levelupMoveDifferentGame = new PKMN.Database.LevelupMove(
-                                                            new PKMN.Database.MoveEntry("Scratch", "Blue"),
-                                                            10
-                                                        );
+                                                                     new PKMN.Database.MoveEntry("Scratch", "Blue"),
+                                                                     10
+                                                                 );
         PKMN.Database.LevelupMove levelupMoveDifferentLevel = new PKMN.Database.LevelupMove(
-                                                             new PKMN.Database.MoveEntry("Scratch", "Red"),
-                                                             5
-                                                         );
+                                                                      new PKMN.Database.MoveEntry("Scratch", "Red"),
+                                                                      5
+                                                                  );
 
         Assert.AreEqual(levelupMove, levelupMove);
         Assert.AreEqual(levelupMove, levelupMoveSame);
@@ -108,7 +95,8 @@ public class CSharpEqualityHashCodeTest {
     }
 
     [Test]
-    public void MoveEntryTest() {
+    public void MoveEntryTest()
+    {
         PKMN.Database.MoveEntry moveEntry = new PKMN.Database.MoveEntry("Scratch", "Red");
 
         PKMN.Database.MoveEntry moveEntrySame = new PKMN.Database.MoveEntry("Scratch", "Red");
@@ -147,7 +135,8 @@ public class CSharpEqualityHashCodeTest {
     }
 
     [Test]
-    public void PokemonEntryTest() {
+    public void PokemonEntryTest()
+    {
         PKMN.Database.PokemonEntry pokemonEntry = new PKMN.Database.PokemonEntry("Venusaur", "Omega Ruby", "");
 
         PKMN.Database.PokemonEntry pokemonEntrySame = new PKMN.Database.PokemonEntry("Venusaur", "Omega Ruby", "");
@@ -170,7 +159,8 @@ public class CSharpEqualityHashCodeTest {
     }
 
     [Test]
-    public void SpindaCoordsTest() {
+    public void SpindaCoordsTest()
+    {
         PKMN.SpindaCoords spindaCoords = new PKMN.SpindaCoords(5, 10);
 
         PKMN.SpindaCoords spindaCoordsSame = new PKMN.SpindaCoords(5, 10);
@@ -193,7 +183,8 @@ public class CSharpEqualityHashCodeTest {
     }
 
     [Test]
-    public void SpindaSpotsTest() {
+    public void SpindaSpotsTest()
+    {
         PKMN.SpindaSpots spindaSpots = new PKMN.SpindaSpots(
                                                new PKMN.SpindaCoords(1, 2),
                                                new PKMN.SpindaCoords(3, 4),
@@ -231,83 +222,79 @@ public class CSharpEqualityHashCodeTest {
         Assert.AreNotEqual(spindaSpots.GetHashCode(), spindaSpotsShuffled.GetHashCode());
     }
 
+    [Test]
+    public void PokedexHelpersTest()
+    {
+        PKMN.Pokedex pokedex = new PKMN.Pokedex("Ruby");
+
+        // The Pokemon class and its helpers all use the underlying pointer
+        // in generating their hash codes. Make sure these aren't equal.
+
+        Assert.AreNotEqual(pokedex.GetHashCode(), pokedex.SeenPokemonMap.GetHashCode());
+        Assert.AreNotEqual(pokedex.GetHashCode(), pokedex.CaughtPokemonMap.GetHashCode());
+        Assert.AreNotEqual(pokedex.SeenPokemonMap.GetHashCode(), pokedex.CaughtPokemonMap.GetHashCode());
+    }
+
+    [Test]
+    public void PokemonHelpersTest()
+    {
+        PKMN.Pokemon pokemon = new PKMN.Pokemon("Mew", "Ruby", "", 70);
+
+        // The Pokemon class and its helpers all use the underlying pointer
+        // in generating their hash codes. Make sure these aren't equal.
+
+        Assert.AreNotEqual(pokemon.GetHashCode(), pokemon.EVs.GetHashCode());
+        Assert.AreNotEqual(pokemon.GetHashCode(), pokemon.IVs.GetHashCode());
+        Assert.AreNotEqual(pokemon.GetHashCode(), pokemon.ContestStats.GetHashCode());
+        Assert.AreNotEqual(pokemon.GetHashCode(), pokemon.Markings.GetHashCode());
+        Assert.AreNotEqual(pokemon.GetHashCode(), pokemon.Ribbons.GetHashCode());
+        Assert.AreNotEqual(pokemon.GetHashCode(), pokemon.Moves.GetHashCode());
+        Assert.AreNotEqual(pokemon.GetHashCode(), pokemon.NumericAttributes.GetHashCode());
+        Assert.AreNotEqual(pokemon.GetHashCode(), pokemon.StringAttributes.GetHashCode());
+
+        Assert.AreNotEqual(pokemon.EVs.GetHashCode(), pokemon.IVs.GetHashCode());
+        Assert.AreNotEqual(pokemon.EVs.GetHashCode(), pokemon.ContestStats.GetHashCode());
+        Assert.AreNotEqual(pokemon.EVs.GetHashCode(), pokemon.Markings.GetHashCode());
+        Assert.AreNotEqual(pokemon.EVs.GetHashCode(), pokemon.Ribbons.GetHashCode());
+        Assert.AreNotEqual(pokemon.EVs.GetHashCode(), pokemon.Moves.GetHashCode());
+        Assert.AreNotEqual(pokemon.EVs.GetHashCode(), pokemon.NumericAttributes.GetHashCode());
+        Assert.AreNotEqual(pokemon.EVs.GetHashCode(), pokemon.StringAttributes.GetHashCode());
+
+        Assert.AreNotEqual(pokemon.IVs.GetHashCode(), pokemon.ContestStats.GetHashCode());
+        Assert.AreNotEqual(pokemon.IVs.GetHashCode(), pokemon.Markings.GetHashCode());
+        Assert.AreNotEqual(pokemon.IVs.GetHashCode(), pokemon.Ribbons.GetHashCode());
+        Assert.AreNotEqual(pokemon.IVs.GetHashCode(), pokemon.Moves.GetHashCode());
+        Assert.AreNotEqual(pokemon.IVs.GetHashCode(), pokemon.NumericAttributes.GetHashCode());
+        Assert.AreNotEqual(pokemon.IVs.GetHashCode(), pokemon.StringAttributes.GetHashCode());
+
+        Assert.AreNotEqual(pokemon.ContestStats.GetHashCode(), pokemon.Markings.GetHashCode());
+        Assert.AreNotEqual(pokemon.ContestStats.GetHashCode(), pokemon.Ribbons.GetHashCode());
+        Assert.AreNotEqual(pokemon.ContestStats.GetHashCode(), pokemon.Moves.GetHashCode());
+        Assert.AreNotEqual(pokemon.ContestStats.GetHashCode(), pokemon.NumericAttributes.GetHashCode());
+        Assert.AreNotEqual(pokemon.ContestStats.GetHashCode(), pokemon.StringAttributes.GetHashCode());
+
+        Assert.AreNotEqual(pokemon.Markings.GetHashCode(), pokemon.Ribbons.GetHashCode());
+        Assert.AreNotEqual(pokemon.Markings.GetHashCode(), pokemon.Moves.GetHashCode());
+        Assert.AreNotEqual(pokemon.Markings.GetHashCode(), pokemon.NumericAttributes.GetHashCode());
+        Assert.AreNotEqual(pokemon.Markings.GetHashCode(), pokemon.StringAttributes.GetHashCode());
+
+        Assert.AreNotEqual(pokemon.Ribbons.GetHashCode(), pokemon.Moves.GetHashCode());
+        Assert.AreNotEqual(pokemon.Ribbons.GetHashCode(), pokemon.NumericAttributes.GetHashCode());
+        Assert.AreNotEqual(pokemon.Ribbons.GetHashCode(), pokemon.StringAttributes.GetHashCode());
+
+        Assert.AreNotEqual(pokemon.Moves.GetHashCode(), pokemon.NumericAttributes.GetHashCode());
+        Assert.AreNotEqual(pokemon.Moves.GetHashCode(), pokemon.StringAttributes.GetHashCode());
+
+        Assert.AreNotEqual(pokemon.NumericAttributes.GetHashCode(), pokemon.StringAttributes.GetHashCode());
+    }
+
     /*
      * STL containers
      */
-    [Test]
-    public void StringBoolDictTest() {
-        PKMN.StringBoolDict stringBoolDict = new PKMN.StringBoolDict();
-        stringBoolDict["key1"] = true;
-        stringBoolDict["key2"] = false;
-        stringBoolDict["key3"] = true;
-        stringBoolDict["key4"] = false;
-        stringBoolDict["key5"] = true;
-
-        PKMN.StringBoolDict stringBoolDictSame = new PKMN.StringBoolDict();
-        stringBoolDictSame["key5"] = true;
-        stringBoolDictSame["key4"] = false;
-        stringBoolDictSame["key3"] = true;
-        stringBoolDictSame["key2"] = false;
-        stringBoolDictSame["key1"] = true;
-
-        PKMN.StringBoolDict stringBoolDictReversed = new PKMN.StringBoolDict();
-        stringBoolDictReversed["key1"] = false;
-        stringBoolDictReversed["key2"] = true;
-        stringBoolDictReversed["key3"] = false;
-        stringBoolDictReversed["key4"] = true;
-        stringBoolDictReversed["key5"] = false;
-
-        PKMN.StringBoolDict stringBoolDictShuffled = new PKMN.StringBoolDict();
-        stringBoolDictShuffled["key1"] = false;
-        stringBoolDictShuffled["key2"] = true;
-        stringBoolDictShuffled["key3"] = false;
-        stringBoolDictShuffled["key4"] = true;
-        stringBoolDictShuffled["key5"] = true;
-
-        Assert.AreEqual(stringBoolDict, stringBoolDict);
-        Assert.AreEqual(stringBoolDict, stringBoolDictSame);
-        Assert.AreEqual(stringBoolDict.GetHashCode(), stringBoolDictSame.GetHashCode());
-
-        Assert.AreNotEqual(stringBoolDict, stringBoolDictReversed);
-        Assert.AreNotEqual(stringBoolDict.GetHashCode(), stringBoolDictReversed.GetHashCode());
-
-        Assert.AreNotEqual(stringBoolDict, stringBoolDictShuffled);
-        Assert.AreNotEqual(stringBoolDict.GetHashCode(), stringBoolDictShuffled.GetHashCode());
-    }
 
     [Test]
-    public void StringStringDictTest() {
-        PKMN.StringStringDict stringStringDict = new PKMN.StringStringDict();
-        stringStringDict["key1"] = "abc";
-        stringStringDict["key2"] = "def";
-        stringStringDict["key3"] = "ghi";
-        stringStringDict["key4"] = "jkl";
-        stringStringDict["key5"] = "mno";
-
-        PKMN.StringStringDict stringStringDictSame = new PKMN.StringStringDict();
-        stringStringDictSame["key5"] = "mno";
-        stringStringDictSame["key4"] = "jkl";
-        stringStringDictSame["key3"] = "ghi";
-        stringStringDictSame["key2"] = "def";
-        stringStringDictSame["key1"] = "abc";
-
-        PKMN.StringStringDict stringStringDictShuffled = new PKMN.StringStringDict();
-        stringStringDictShuffled["key1"] = "jkl";
-        stringStringDictShuffled["key2"] = "abc";
-        stringStringDictShuffled["key3"] = "mno";
-        stringStringDictShuffled["key4"] = "def";
-        stringStringDictShuffled["key5"] = "ghi";
-
-        Assert.AreEqual(stringStringDict, stringStringDict);
-        Assert.AreEqual(stringStringDict, stringStringDictSame);
-        Assert.AreEqual(stringStringDict.GetHashCode(), stringStringDictSame.GetHashCode());
-
-        Assert.AreNotEqual(stringStringDict, stringStringDictShuffled);
-        Assert.AreNotEqual(stringStringDict.GetHashCode(), stringStringDictShuffled.GetHashCode());
-    }
-
-    [Test]
-    public void StringIntDictTest() {
+    public void StringIntDictTest()
+    {
         PKMN.StringIntDict stringIntDict = new PKMN.StringIntDict();
         stringIntDict["key1"] = 12;
         stringIntDict["key2"] = 34;
@@ -338,7 +325,8 @@ public class CSharpEqualityHashCodeTest {
     }
 
     [Test]
-    public void IntPairTest() {
+    public void IntPairTest()
+    {
         PKMN.IntPair intPair = new PKMN.IntPair(123, 456);
 
         PKMN.IntPair intPairSame = new PKMN.IntPair(123, 456);
@@ -361,7 +349,8 @@ public class CSharpEqualityHashCodeTest {
     }
 
     [Test]
-    public void StringPairTest() {
+    public void StringPairTest()
+    {
         PKMN.StringPair stringPair = new PKMN.StringPair("abc", "def");
 
         PKMN.StringPair stringPairSame = new PKMN.StringPair("abc", "def");
@@ -384,7 +373,8 @@ public class CSharpEqualityHashCodeTest {
     }
 
     [Test]
-    public void StringListTest() {
+    public void StringListTest()
+    {
         PKMN.StringList stringList = new PKMN.StringList();
         stringList.Add("abc");
         stringList.Add("def");
@@ -415,67 +405,8 @@ public class CSharpEqualityHashCodeTest {
     }
 
     [Test]
-    public void ItemPocketsTest() {
-        // Test values
-        PKMN.ItemList itemList1 = new PKMN.ItemList("Items", "Red");
-        PKMN.ItemList itemList2 = new PKMN.ItemList("Balls", "Gold");
-        PKMN.ItemList itemList3 = new PKMN.ItemList("Berries", "Ruby");
-
-        // Test values with same data, different underlying memory
-        PKMN.ItemList itemList4 = new PKMN.ItemList("Items", "Red");
-        PKMN.ItemList itemList5 = new PKMN.ItemList("Balls", "Gold");
-        PKMN.ItemList itemList6 = new PKMN.ItemList("Berries", "Ruby");
-
-        PKMN.ItemPockets itemPockets = new PKMN.ItemPockets();
-        itemPockets["key1"] = itemList1;
-        itemPockets["key2"] = itemList2;
-        itemPockets["key3"] = itemList3;
-
-        PKMN.ItemPockets itemPocketsSame = new PKMN.ItemPockets();
-        itemPocketsSame["key3"] = itemList3;
-        itemPocketsSame["key2"] = itemList2;
-        itemPocketsSame["key1"] = itemList1;
-
-        PKMN.ItemPockets itemPocketsDifferentMemory = new PKMN.ItemPockets();
-        itemPocketsDifferentMemory["key1"] = itemList4;
-        itemPocketsDifferentMemory["key2"] = itemList5;
-        itemPocketsDifferentMemory["key3"] = itemList6;
-
-        Assert.AreEqual(itemPockets, itemPockets);
-        Assert.AreEqual(itemPockets, itemPocketsSame);
-        Assert.AreEqual(itemPockets.GetHashCode(), itemPocketsSame.GetHashCode());
-
-        Assert.AreNotEqual(itemPockets, itemPocketsDifferentMemory);
-        Assert.AreNotEqual(itemPockets.GetHashCode(), itemPocketsDifferentMemory.GetHashCode());
-    }
-
-    [Test]
-    public void ItemSlotListTest() {
-        PKMN.ItemSlotList itemSlotList = new PKMN.ItemSlotList();
-        itemSlotList.Add(new PKMN.ItemSlot("Potion", 10));
-        itemSlotList.Add(new PKMN.ItemSlot("Great Ball", 3));
-        itemSlotList.Add(new PKMN.ItemSlot("Razz Berry", 5));
-
-        PKMN.ItemSlotList itemSlotListSame = new PKMN.ItemSlotList();
-        itemSlotListSame.Add(new PKMN.ItemSlot("Potion", 10));
-        itemSlotListSame.Add(new PKMN.ItemSlot("Great Ball", 3));
-        itemSlotListSame.Add(new PKMN.ItemSlot("Razz Berry", 5));
-
-        PKMN.ItemSlotList itemSlotListReversed = new PKMN.ItemSlotList();
-        itemSlotListReversed.Add(new PKMN.ItemSlot("Razz Berry", 5));
-        itemSlotListReversed.Add(new PKMN.ItemSlot("Great Ball", 3));
-        itemSlotListReversed.Add(new PKMN.ItemSlot("Potion", 10));
-
-        Assert.AreEqual(itemSlotList, itemSlotList);
-        Assert.AreEqual(itemSlotList, itemSlotListSame);
-        Assert.AreEqual(itemSlotList.GetHashCode(), itemSlotListSame.GetHashCode());
-
-        Assert.AreNotEqual(itemSlotList, itemSlotListReversed);
-        Assert.AreNotEqual(itemSlotList.GetHashCode(), itemSlotListReversed.GetHashCode());
-    }
-
-    [Test]
-    public void MoveEntryListTest() {
+    public void MoveEntryListTest()
+    {
         PKMN.Database.MoveEntryList moveEntryList = new PKMN.Database.MoveEntryList();
         moveEntryList.Add(
             new PKMN.Database.MoveEntry("Scratch", "Red")
@@ -518,7 +449,8 @@ public class CSharpEqualityHashCodeTest {
     }
 
     [Test]
-    public void PokemonEntryListTest() {
+    public void PokemonEntryListTest()
+    {
         PKMN.Database.PokemonEntryList pokemonEntryList = new PKMN.Database.PokemonEntryList();
         pokemonEntryList.Add(
             new PKMN.Database.PokemonEntry("Squirtle", "Blue", "")
