@@ -255,15 +255,15 @@ namespace pkmn {
         // flag to dictate whether the daycare is in use. However, LibPKMN
         // needs the underlying memory to reflect the lack of Pokémon, so
         // we'll zero out the memory ourselves.
-        if(!(NATIVE_RCAST(_p_native)->daycare_man_flags & PKSAV_GEN2_DAYCARE_MAN_IS_ACTIVE_MASK))
+        if(!(NATIVE_RCAST(_p_native)->daycare_man_fields & PKSAV_GEN2_DAYCARE_MAN_IS_ACTIVE_MASK))
         {
             init_empty_pokemon_data(&NATIVE_RCAST(_p_native)->stored_pokemon1_data);
         }
-        if(!(NATIVE_RCAST(_p_native)->daycare_lady_flags & PKSAV_GEN2_DAYCARE_LADY_IS_ACTIVE_MASK))
+        if(!(NATIVE_RCAST(_p_native)->daycare_lady_fields & PKSAV_GEN2_DAYCARE_LADY_IS_ACTIVE_MASK))
         {
             init_empty_pokemon_data(&NATIVE_RCAST(_p_native)->stored_pokemon2_data);
         }
-        if(!(NATIVE_RCAST(_p_native)->daycare_man_flags & PKSAV_GEN2_DAYCARE_MAN_IS_EGG_READY_MASK))
+        if(!(NATIVE_RCAST(_p_native)->daycare_man_fields & PKSAV_GEN2_DAYCARE_MAN_IS_EGG_READY_MASK))
         {
             init_empty_pokemon_data(&NATIVE_RCAST(_p_native)->stored_pokemon1_data);
         }

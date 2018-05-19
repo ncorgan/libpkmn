@@ -31,6 +31,7 @@ SET(pkmn_libs
 #
 
 ADD_SUBDIRECTORY(SQLiteCpp)
+ADD_SUBDIRECTORY(breeding)
 ADD_SUBDIRECTORY(calculations)
 ADD_SUBDIRECTORY(conversions)
 ADD_SUBDIRECTORY(database)
@@ -57,6 +58,7 @@ ENDIF()
 ADD_SUBDIRECTORY(qt)
 
 SET(pkmn_sources
+    ${pkmn_breeding_sources}
     ${pkmn_calculations_sources}
     ${pkmn_conversions_sources}
     ${pkmn_database_sources}
