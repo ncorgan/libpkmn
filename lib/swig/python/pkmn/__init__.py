@@ -8,6 +8,7 @@
 from .pkmn_python import *
 from .stl_python import *
 
+from . import breeding
 from . import buildinfo
 from . import calculations
 from . import database
