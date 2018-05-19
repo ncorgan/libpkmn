@@ -101,6 +101,7 @@ namespace pkmn {
         _can_breed = true;
 
         this->_from_native_levelup();
+        this->_from_native_breeding();
     }
 
     daycare_gen2impl::~daycare_gen2impl()
@@ -230,11 +231,6 @@ namespace pkmn {
             r_levelup_pokemon[1],
             _game_id
         );
-        import_native_pokemon_data(
-            &NATIVE_RCAST(_p_native)->egg_pokemon_data,
-            _egg,
-            _game_id
-        );
     }
 
     void daycare_gen2impl::_to_native_levelup()
@@ -253,12 +249,22 @@ namespace pkmn {
             &NATIVE_RCAST(_p_native)->stored_pokemon2_data,
             r_levelup_pokemon[1]
         );
+    }
+
+    void daycare_gen2impl::_from_native_breeding()
+    {
+        import_native_pokemon_data(
+            &NATIVE_RCAST(_p_native)->egg_pokemon_data,
+            _egg,
+            _game_id
+        );
+    }
+
+    void daycare_gen2impl::_to_native_breeding()
+    {
         export_native_pokemon_data(
             &NATIVE_RCAST(_p_native)->egg_pokemon_data,
             _egg
         );
     }
-
-    void daycare_gen2impl::_from_native_breeding() {}
-    void daycare_gen2impl::_to_native_breeding() {}
 }
