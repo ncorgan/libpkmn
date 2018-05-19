@@ -9,6 +9,7 @@
 
 #include "utils.hpp"
 
+#include "env.hpp"
 #include "pksav/pksav_call.hpp"
 #include "types/rng.hpp"
 
@@ -26,6 +27,9 @@
 #include "gba/checksum.h"
 #include "gba/save_internal.h"
 
+// LibPkmGC includes, inside warning suppressions
+#include "libpkmgc_includes.hpp"
+
 #include <boost/filesystem.hpp>
 
 #include <gtest/gtest.h>
@@ -33,6 +37,7 @@
 namespace fs = boost::filesystem;
 
 static const std::string SAV_EXTENSION = ".sav";
+static const std::string GCI_EXTENSION = ".gci";
 
 TEST(input_fuzzing_test, test_fuzzing_game_save_static_fcns)
 {
@@ -206,7 +211,7 @@ TEST_P(gen1_save_fuzzing_test, test_fuzzing_gen1_save)
         std::string random_filepath2 = get_random_filepath(SAV_EXTENSION);
         save1->save_as(random_filepath2);
 
-        pkmn::game_save::sptr save2 = pkmn::game_save::from_file(random_filepath1);
+        pkmn::game_save::sptr save2 = pkmn::game_save::from_file(random_filepath2);
         read_all_save_fields(save2);
 
         fs::remove(random_filepath2);
@@ -299,7 +304,7 @@ TEST_P(gen2_save_fuzzing_test, test_fuzzing_gen2_save)
         std::string random_filepath2 = get_random_filepath(SAV_EXTENSION);
         save1->save_as(random_filepath2);
 
-        pkmn::game_save::sptr save2 = pkmn::game_save::from_file(random_filepath1);
+        pkmn::game_save::sptr save2 = pkmn::game_save::from_file(random_filepath2);
         read_all_save_fields(save2);
 
         fs::remove(random_filepath2);
@@ -417,7 +422,7 @@ TEST_P(gba_save_fuzzing_test, test_fuzzing_gba_save)
         std::string random_filepath2 = get_random_filepath(SAV_EXTENSION);
         save1->save_as(random_filepath2);
 
-        pkmn::game_save::sptr save2 = pkmn::game_save::from_file(random_filepath1);
+        pkmn::game_save::sptr save2 = pkmn::game_save::from_file(random_filepath2);
         read_all_save_fields(save2);
 
         fs::remove(random_filepath2);
@@ -437,3 +442,178 @@ INSTANTIATE_TEST_CASE_P(
     gba_save_fuzzing_test,
     ::testing::ValuesIn(GBA_TEST_PARAMS)
 );
+
+static void randomize_libpkmgc_data_struct(
+    LibPkmGC::Base::DataStruct* p_data_struct
+)
+{
+    ASSERT_NE(nullptr, p_data_struct);
+
+    randomize_buffer(
+        p_data_struct->data,
+        p_data_struct->getSize()
+    );
+}
+
+static void randomize_libpkmgc_save(
+    LibPkmGC::GC::SaveEditing::Save* p_libpkmgc_save
+)
+{
+    ASSERT_NE(nullptr, p_libpkmgc_save);
+
+    for(size_t save_slot_index = 0;
+        save_slot_index < p_libpkmgc_save->nbSlots;
+        ++save_slot_index)
+    {
+        LibPkmGC::GC::SaveEditing::SaveSlot* p_save_slot = p_libpkmgc_save->saveSlots[save_slot_index];
+
+        randomize_libpkmgc_data_struct(p_save_slot->gameConfig);
+
+        for(size_t party_index = 0; party_index < 6; ++party_index)
+        {
+            randomize_libpkmgc_data_struct(
+                p_save_slot->player->trainer->party[party_index]
+            );
+        }
+        randomize_libpkmgc_data_struct(p_save_slot->player->trainer);
+        randomize_libpkmgc_data_struct(p_save_slot->player->bag);
+        randomize_libpkmgc_data_struct(p_save_slot->player);
+
+        for(size_t pc_index = 0; pc_index < p_save_slot->PC->nbBoxes; ++pc_index)
+        {
+            LibPkmGC::GC::PokemonBox* p_pokemon_box = p_save_slot->PC->boxes[pc_index];
+
+            for(size_t box_index = 0; box_index < 30; ++box_index)
+            {
+                randomize_libpkmgc_data_struct(p_pokemon_box->pkm[box_index]);
+            }
+
+            randomize_libpkmgc_data_struct(p_pokemon_box);
+        }
+        randomize_libpkmgc_data_struct(p_save_slot->PC);
+
+        randomize_libpkmgc_data_struct(p_save_slot->mailbox);
+
+        randomize_libpkmgc_data_struct(p_save_slot->daycare->pkm);
+        randomize_libpkmgc_data_struct(p_save_slot->daycare);
+
+        for(size_t strategy_memo_index = 0;
+            strategy_memo_index < 500;
+            ++strategy_memo_index)
+        {
+            randomize_libpkmgc_data_struct(
+                p_save_slot->strategyMemo->entries[strategy_memo_index]
+            );
+        }
+        randomize_libpkmgc_data_struct(p_save_slot->strategyMemo);
+
+        for(size_t rule_index = 0; rule_index < 6; ++rule_index)
+        {
+            randomize_libpkmgc_data_struct(
+                p_save_slot->battleMode->rules[rule_index]
+            );
+        }
+        randomize_libpkmgc_data_struct(
+            p_save_slot->battleMode
+        );
+        randomize_libpkmgc_data_struct(
+            p_save_slot->ribbonDescriptions
+        );
+
+        if(LIBPKMGC_IS_XD(SaveEditing::SaveSlot, p_save_slot))
+        {
+            LibPkmGC::XD::SaveEditing::SaveSlot* p_xd_save_slot =
+                dynamic_cast<LibPkmGC::XD::SaveEditing::SaveSlot*>(
+                    p_save_slot
+                );
+            ASSERT_NE(nullptr, p_xd_save_slot);
+
+            randomize_libpkmgc_data_struct(p_xd_save_slot->purifier);
+        }
+    }
+}
+
+// It's easier to randomize an existing save than to manually create one
+// like with PKSav's early-gen saves.
+template <typename libpkmgc_save_type>
+static void generate_random_libpkmgc_save(
+    const std::string& save_filename,
+    std::string* p_filepath
+)
+{
+    ASSERT_NE(nullptr, p_filepath);
+
+    static const fs::path LIBPKMN_TEST_FILES(pkmn_getenv("LIBPKMN_TEST_FILES"));
+
+    fs::path save_path = LIBPKMN_TEST_FILES / "gamecube_saves" / save_filename;
+
+    std::vector<uint8_t> save_contents;
+    read_file_to_vector(save_path.string(), &save_contents);
+    ASSERT_FALSE(save_contents.empty());
+
+    libpkmgc_save_type save(save_contents.data());
+    ASSERT_NO_FATAL_FAILURE(randomize_libpkmgc_save(&save));
+    save.save();
+
+    *p_filepath = get_random_filepath(GCI_EXTENSION);
+    ASSERT_NO_FATAL_FAILURE(write_vector_to_file(
+        save_contents,
+        *p_filepath
+    ));
+}
+
+TEST(colosseum_save_fuzzing_test, test_fuzzing_colosseum_save)
+{
+    std::string random_filepath1;
+    ASSERT_NO_FATAL_FAILURE(
+        generate_random_libpkmgc_save<LibPkmGC::Colosseum::SaveEditing::Save>(
+            "pokemon_colosseum.gci",
+            &random_filepath1
+        )
+    );
+    ASSERT_TRUE(fs::exists(random_filepath1));
+
+    // This should pass, as LibPKMN should label invalid inputs as invalid
+    // rather than erroring out.
+    ASSERT_EQ("Colosseum/XD", pkmn::game_save::detect_type(random_filepath1));
+
+    pkmn::game_save::sptr save1 = pkmn::game_save::from_file(random_filepath1);
+    read_all_save_fields(save1);
+
+    std::string random_filepath2 = get_random_filepath(GCI_EXTENSION);
+    save1->save_as(random_filepath2);
+
+    pkmn::game_save::sptr save2 = pkmn::game_save::from_file(random_filepath2);
+    read_all_save_fields(save2);
+
+    fs::remove(random_filepath2);
+    fs::remove(random_filepath1);
+}
+
+TEST(xd_save_fuzzing_test, test_fuzzing_xd_save)
+{
+    std::string random_filepath1;
+    ASSERT_NO_FATAL_FAILURE(
+        generate_random_libpkmgc_save<LibPkmGC::XD::SaveEditing::Save>(
+            "pokemon_xd.gci",
+            &random_filepath1
+        )
+    );
+    ASSERT_TRUE(fs::exists(random_filepath1));
+
+    // This should pass, as LibPKMN should label invalid inputs as invalid
+    // rather than erroring out.
+    ASSERT_EQ("Colosseum/XD", pkmn::game_save::detect_type(random_filepath1));
+
+    pkmn::game_save::sptr save1 = pkmn::game_save::from_file(random_filepath1);
+    read_all_save_fields(save1);
+
+    std::string random_filepath2 = get_random_filepath(GCI_EXTENSION);
+    save1->save_as(random_filepath2);
+
+    pkmn::game_save::sptr save2 = pkmn::game_save::from_file(random_filepath2);
+    read_all_save_fields(save2);
+
+    fs::remove(random_filepath2);
+    fs::remove(random_filepath1);
+}

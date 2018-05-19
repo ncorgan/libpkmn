@@ -19,12 +19,22 @@
 
 PKMN_CONSTEXPR_OR_CONST static size_t NUM_ITERATIONS = 50;
 
+void randomize_buffer(
+    uint8_t* p_buffer,
+    size_t buffer_size
+);
+
 void randomize_vector(
     size_t filesize,
     std::vector<uint8_t>* output_vector_ptr
 );
 
 std::string get_random_filepath(const std::string& extension);
+
+void read_file_to_vector(
+    const std::string& filepath,
+    std::vector<uint8_t>* p_file_vector
+);
 
 template <typename vector_type>
 static inline void write_vector_to_file(
