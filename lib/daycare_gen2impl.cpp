@@ -23,6 +23,29 @@
 
 namespace pkmn {
 
+    static void init_empty_pokemon_data(
+        pksav_gen2_daycare_pokemon_data* p_native_pokemon_data
+    )
+    {
+        BOOST_ASSERT(p_native_pokemon_data != nullptr);
+
+        std::memset(
+            p_native_pokemon_data->nickname,
+            PKSAV_GEN2_TEXT_TERMINATOR,
+            sizeof(p_native_pokemon_data->nickname)
+        );
+        std::memset(
+            p_native_pokemon_data->otname,
+            PKSAV_GEN2_TEXT_TERMINATOR,
+            sizeof(p_native_pokemon_data->otname)
+        );
+        std::memset(
+            &p_native_pokemon_data->pokemon,
+            0,
+            sizeof(p_native_pokemon_data->pokemon)
+        );
+    }
+
     static void import_native_pokemon_data(
         pksav_gen2_daycare_pokemon_data* p_native_pokemon_data,
         pkmn::pokemon::sptr& r_pokemon,
@@ -90,7 +113,18 @@ namespace pkmn {
             _p_native = new struct pksav_gen2_daycare_data;
             _is_our_mem = true;
 
-            // TODO: flags
+            // Only fields set
+            NATIVE_RCAST(_p_native)->daycare_man_fields =
+                PKSAV_GEN2_DAYCARE_MAN_IS_ACTIVE_MASK;
+
+            // Only field set
+            NATIVE_RCAST(_p_native)->daycare_lady_fields =
+                PKSAV_GEN2_DAYCARE_LADY_IS_ACTIVE_MASK;
+            NATIVE_RCAST(_p_native)->steps_to_egg = 0;
+            NATIVE_RCAST(_p_native)->is_breed_mother_or_non_ditto =
+                PKSAV_GEN2_DAYCARE_BREED_IS_NOT_MOTHER_OR_NON_DITTO;
+            init_empty_pokemon_data(&NATIVE_RCAST(_p_native)->stored_pokemon2_data);
+            init_empty_pokemon_data(&NATIVE_RCAST(_p_native)->egg_pokemon_data);
         }
         else
         {
@@ -216,7 +250,23 @@ namespace pkmn {
 
     void daycare_gen2impl::_from_native_levelup()
     {
-        // TODO: if not set, zero out memory first
+        // For the sake of speed, when a Pokémon is taken out of daycare,
+        // the game doesn't zero out the memory and just uses the "in use"
+        // flag to dictate whether the daycare is in use. However, LibPKMN
+        // needs the underlying memory to reflect the lack of Pokémon, so
+        // we'll zero out the memory ourselves.
+        if(!(NATIVE_RCAST(_p_native)->daycare_man_flags & PKSAV_GEN2_DAYCARE_MAN_IS_ACTIVE_MASK))
+        {
+            init_empty_pokemon_data(&NATIVE_RCAST(_p_native)->stored_pokemon1_data);
+        }
+        if(!(NATIVE_RCAST(_p_native)->daycare_lady_flags & PKSAV_GEN2_DAYCARE_LADY_IS_ACTIVE_MASK))
+        {
+            init_empty_pokemon_data(&NATIVE_RCAST(_p_native)->stored_pokemon2_data);
+        }
+        if(!(NATIVE_RCAST(_p_native)->daycare_man_flags & PKSAV_GEN2_DAYCARE_MAN_IS_EGG_READY_MASK))
+        {
+            init_empty_pokemon_data(&NATIVE_RCAST(_p_native)->stored_pokemon1_data);
+        }
 
         pkmn::pokemon_list_t& r_levelup_pokemon = this->_get_levelup_pokemon_ref();
         r_levelup_pokemon.resize(LEVELUP_CAPACITY);

@@ -34,24 +34,8 @@ namespace pkmn {
         {
             _p_native = new struct pksav_gen1_daycare_data;
 
-            // TODO: flags
-            NATIVE_RCAST(_p_native)->is_daycare_in_use = 0;
-
-            std::memset(
-                NATIVE_RCAST(_p_native)->stored_pokemon_nickname,
-                PKSAV_GEN1_TEXT_TERMINATOR,
-                sizeof(NATIVE_RCAST(_p_native)->stored_pokemon_nickname)
-            );
-            std::memset(
-                NATIVE_RCAST(_p_native)->stored_pokemon_otname,
-                PKSAV_GEN1_TEXT_TERMINATOR,
-                sizeof(NATIVE_RCAST(_p_native)->stored_pokemon_otname)
-            );
-            std::memset(
-                &NATIVE_RCAST(_p_native)->stored_pokemon,
-                0,
-                sizeof(NATIVE_RCAST(_p_native)->stored_pokemon)
-            );
+            // This will cause _from_native_levelup() to zero out the memory.
+            NATIVE_RCAST(_p_native)->is_daycare_in_use = PKSAV_GEN1_DAYCARE_NOT_IN_USE;
 
             _is_our_mem = true;
         }
@@ -176,7 +160,29 @@ namespace pkmn {
 
     void daycare_gen1impl::_from_native_levelup()
     {
-        // TODO: if not set, zero out memory first
+        // For the sake of speed, when a Pokémon is taken out of daycare,
+        // the game doesn't zero out the memory and just uses the "in use"
+        // flag to dictate whether the daycare is in use. However, LibPKMN
+        // needs the underlying memory to reflect the lack of Pokémon, so
+        // we'll zero out the memory ourselves.
+        if(not NATIVE_RCAST(_p_native)->is_daycare_in_use)
+        {
+            std::memset(
+                NATIVE_RCAST(_p_native)->stored_pokemon_nickname,
+                PKSAV_GEN1_TEXT_TERMINATOR,
+                sizeof(NATIVE_RCAST(_p_native)->stored_pokemon_nickname)
+            );
+            std::memset(
+                NATIVE_RCAST(_p_native)->stored_pokemon_otname,
+                PKSAV_GEN1_TEXT_TERMINATOR,
+                sizeof(NATIVE_RCAST(_p_native)->stored_pokemon_otname)
+            );
+            std::memset(
+                &NATIVE_RCAST(_p_native)->stored_pokemon,
+                0,
+                sizeof(NATIVE_RCAST(_p_native)->stored_pokemon)
+            );
+        }
 
         pkmn::pokemon_list_t& r_levelup_pokemon = this->_get_levelup_pokemon_ref();
 
@@ -211,10 +217,17 @@ namespace pkmn {
 
     void daycare_gen1impl::_to_native_levelup()
     {
-        // TODO: if Pokémon aren't empty, set bit to say daycare's in use
-
         pkmn::pokemon_list_t& r_levelup_pokemon = this->_get_levelup_pokemon_ref();
         BOOST_ASSERT(!r_levelup_pokemon.empty());
+
+        if(r_levelup_pokemon[0]->get_database_entry().get_species_id() == 0)
+        {
+            NATIVE_RCAST(_p_native)->is_daycare_in_use = PKSAV_GEN1_DAYCARE_NOT_IN_USE;
+        }
+        else
+        {
+            NATIVE_RCAST(_p_native)->is_daycare_in_use = PKSAV_GEN1_DAYCARE_IN_USE;
+        }
 
         PKSAV_CALL(
             pksav_gen1_export_text(
