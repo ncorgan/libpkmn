@@ -7,6 +7,7 @@
 
 IF(NOT PKMN_DONT_INSTALL_HEADERS)
     SET(pkmn_breeding_headers
+        child_info.hpp
         compatibility.hpp
     )
 

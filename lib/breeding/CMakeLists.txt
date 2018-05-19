@@ -6,5 +6,6 @@
 #
 
 SET(pkmn_breeding_sources
+    ${CMAKE_CURRENT_SOURCE_DIR}/child_info.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/compatibility.cpp
 PARENT_SCOPE)
