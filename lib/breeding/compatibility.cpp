@@ -82,7 +82,6 @@ namespace pkmn { namespace breeding {
                                 does_vector_contain_value(NONBREEDABLE_SPECIES_IDS, pokemon2_id));
         }
 
-
         return are_compatible;
     }
 
@@ -91,7 +90,7 @@ namespace pkmn { namespace breeding {
         const pkmn::pokemon::sptr& pokemon2
     )
     {
-        bool are_compatible = false;
+        bool are_compatible = true;
 
         const pkmn::database::pokemon_entry& pokemon1_entry = pokemon1->get_database_entry();
         const pkmn::database::pokemon_entry& pokemon2_entry = pokemon2->get_database_entry();
@@ -99,13 +98,21 @@ namespace pkmn { namespace breeding {
         std::pair<std::string, std::string> pokemon1_egg_groups = pokemon1_entry.get_egg_groups();
         std::pair<std::string, std::string> pokemon2_egg_groups = pokemon2_entry.get_egg_groups();
 
+        bool is_pokemon1_ditto = (pokemon1_egg_groups.first == "Ditto");
+        bool is_pokemon2_ditto = (pokemon2_egg_groups.first == "Ditto");
+
         // Pokémon in the "Undiscovered" group cannot breed.
         if(does_string_pair_contain_value(pokemon1_egg_groups, "Undiscovered") ||
            does_string_pair_contain_value(pokemon2_egg_groups, "Undiscovered"))
         {
             are_compatible = false;
         }
-        else
+        else if(is_pokemon1_ditto && is_pokemon2_ditto)
+        {
+            // Two Ditto cannot breed.
+            are_compatible = false;
+        }
+        else if(!is_pokemon1_ditto && !is_pokemon2_ditto)
         {
             are_compatible = do_string_pairs_have_common_valid_value(
                                  pokemon1_egg_groups,
