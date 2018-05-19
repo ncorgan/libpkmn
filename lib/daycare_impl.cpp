@@ -8,6 +8,7 @@
 #include "daycare_impl.hpp"
 #include "daycare_gen1impl.hpp"
 #include "daycare_gen2impl.hpp"
+#include "daycare_gcnimpl.hpp"
 
 #include "exception_internal.hpp"
 
@@ -37,6 +38,15 @@ namespace pkmn {
                 break;
 
             case 3:
+                if(game_is_gamecube(game_id))
+                {
+                    ret = std::make_shared<daycare_gcnimpl>(game_id);
+                }
+                else
+                {
+                    throw pkmn::unimplemented_error();
+                }
+
             case 4:
             case 5:
             case 6:

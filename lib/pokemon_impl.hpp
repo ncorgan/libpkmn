@@ -103,6 +103,7 @@ namespace pkmn {
             friend class daycare_impl;
             friend class daycare_gen1impl;
             friend class daycare_gen2impl;
+            friend class daycare_gcnimpl;
 
         protected:
             pkmn::move_slots_t _moves;

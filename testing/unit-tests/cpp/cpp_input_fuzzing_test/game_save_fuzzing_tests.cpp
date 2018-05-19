@@ -564,56 +564,62 @@ static void generate_random_libpkmgc_save(
 
 TEST(colosseum_save_fuzzing_test, test_fuzzing_colosseum_save)
 {
-    std::string random_filepath1;
-    ASSERT_NO_FATAL_FAILURE(
-        generate_random_libpkmgc_save<LibPkmGC::Colosseum::SaveEditing::Save>(
-            "pokemon_colosseum.gci",
-            &random_filepath1
-        )
-    );
-    ASSERT_TRUE(fs::exists(random_filepath1));
+    for(size_t iteration = 0; iteration < NUM_ITERATIONS; ++iteration)
+    {
+        std::string random_filepath1;
+        ASSERT_NO_FATAL_FAILURE(
+            generate_random_libpkmgc_save<LibPkmGC::Colosseum::SaveEditing::Save>(
+                "pokemon_colosseum.gci",
+                &random_filepath1
+            )
+        );
+        ASSERT_TRUE(fs::exists(random_filepath1));
 
-    // This should pass, as LibPKMN should label invalid inputs as invalid
-    // rather than erroring out.
-    ASSERT_EQ("Colosseum/XD", pkmn::game_save::detect_type(random_filepath1));
+        // This should pass, as LibPKMN should label invalid inputs as invalid
+        // rather than erroring out.
+        ASSERT_EQ("Colosseum/XD", pkmn::game_save::detect_type(random_filepath1));
 
-    pkmn::game_save::sptr save1 = pkmn::game_save::from_file(random_filepath1);
-    read_all_save_fields(save1);
+        pkmn::game_save::sptr save1 = pkmn::game_save::from_file(random_filepath1);
+        read_all_save_fields(save1);
 
-    std::string random_filepath2 = get_random_filepath(GCI_EXTENSION);
-    save1->save_as(random_filepath2);
+        std::string random_filepath2 = get_random_filepath(GCI_EXTENSION);
+        save1->save_as(random_filepath2);
 
-    pkmn::game_save::sptr save2 = pkmn::game_save::from_file(random_filepath2);
-    read_all_save_fields(save2);
+        pkmn::game_save::sptr save2 = pkmn::game_save::from_file(random_filepath2);
+        read_all_save_fields(save2);
 
-    fs::remove(random_filepath2);
-    fs::remove(random_filepath1);
+        fs::remove(random_filepath2);
+        fs::remove(random_filepath1);
+    }
 }
 
 TEST(xd_save_fuzzing_test, test_fuzzing_xd_save)
 {
-    std::string random_filepath1;
-    ASSERT_NO_FATAL_FAILURE(
-        generate_random_libpkmgc_save<LibPkmGC::XD::SaveEditing::Save>(
-            "pokemon_xd.gci",
-            &random_filepath1
-        )
-    );
-    ASSERT_TRUE(fs::exists(random_filepath1));
+    for(size_t iteration = 0; iteration < NUM_ITERATIONS; ++iteration)
+    {
+        std::string random_filepath1;
+        ASSERT_NO_FATAL_FAILURE(
+            generate_random_libpkmgc_save<LibPkmGC::XD::SaveEditing::Save>(
+                "pokemon_xd.gci",
+                &random_filepath1
+            )
+        );
+        ASSERT_TRUE(fs::exists(random_filepath1));
 
-    // This should pass, as LibPKMN should label invalid inputs as invalid
-    // rather than erroring out.
-    ASSERT_EQ("Colosseum/XD", pkmn::game_save::detect_type(random_filepath1));
+        // This should pass, as LibPKMN should label invalid inputs as invalid
+        // rather than erroring out.
+        ASSERT_EQ("Colosseum/XD", pkmn::game_save::detect_type(random_filepath1));
 
-    pkmn::game_save::sptr save1 = pkmn::game_save::from_file(random_filepath1);
-    read_all_save_fields(save1);
+        pkmn::game_save::sptr save1 = pkmn::game_save::from_file(random_filepath1);
+        read_all_save_fields(save1);
 
-    std::string random_filepath2 = get_random_filepath(GCI_EXTENSION);
-    save1->save_as(random_filepath2);
+        std::string random_filepath2 = get_random_filepath(GCI_EXTENSION);
+        save1->save_as(random_filepath2);
 
-    pkmn::game_save::sptr save2 = pkmn::game_save::from_file(random_filepath2);
-    read_all_save_fields(save2);
+        pkmn::game_save::sptr save2 = pkmn::game_save::from_file(random_filepath2);
+        read_all_save_fields(save2);
 
-    fs::remove(random_filepath2);
-    fs::remove(random_filepath1);
+        fs::remove(random_filepath2);
+        fs::remove(random_filepath1);
+    }
 }
