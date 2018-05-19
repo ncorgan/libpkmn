@@ -182,12 +182,8 @@ namespace pkmn {
     {
         for(size_t box_index = 0; box_index < GBA_NUM_BOXES; ++box_index)
         {
+            // TODO: assert in valid keys
             std::string wallpaper = _box_list[box_index]->get_wallpaper();
-
-            BOOST_ASSERT(pkmn::does_vector_contain_value(
-                get_valid_gba_wallpaper_names(),
-                wallpaper
-            ));
 
             const pksav::gba_box_wallpaper_bimap_t& gba_box_wallpaper_bimap =
                 pksav::get_gba_box_wallpaper_bimap();

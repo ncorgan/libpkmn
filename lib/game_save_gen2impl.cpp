@@ -111,7 +111,6 @@ namespace pkmn {
                              _pksav_save.pokemon_storage.p_party
                          );
 
-        BOOST_ASSERT(_pksav_save.pokemon_storage.p_boxs != nullptr);
         BOOST_ASSERT(_pksav_save.pokemon_storage.p_box_names != nullptr);
         _pokemon_pc = std::make_shared<pokemon_pc_gen2impl>(
                           _game_id,
@@ -209,7 +208,7 @@ namespace pkmn {
 
         boost::lock_guard<game_save_gen2impl> lock(*this);
 
-        BOOST_ASSERT(_pksav_save.p_time_played != nullptr);
+        BOOST_ASSERT(_pksav_save.save_time.p_time_played != nullptr);
 
         _pksav_save.save_time.p_time_played->hours = static_cast<uint8_t>(time_played.hours);
         _pksav_save.save_time.p_time_played->minutes = static_cast<uint8_t>(time_played.minutes);
@@ -813,7 +812,7 @@ namespace pkmn {
 
     std::string game_save_gen2impl::get_mom_money_policy()
     {
-        BOOST_ASSERT(_pksav_save.misc_options.p_mom_money_policy != nullptr);
+        BOOST_ASSERT(_pksav_save.misc_fields.p_mom_money_policy != nullptr);
 
         boost::lock_guard<game_save_gen2impl> lock(*this);
 

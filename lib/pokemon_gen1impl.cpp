@@ -101,7 +101,7 @@ namespace pkmn
             GEN1_PC_RCAST->types[1] = uint8_t(gen1_type_bimap.left.at(types.second));
         }
 
-        BOOST_ASSERT(size_t(_database_entry_get_species_id()) <= GEN1_CATCH_RATES.size());
+        BOOST_ASSERT(size_t(_database_entry.get_species_id()) <= GEN1_CATCH_RATES.size());
         GEN1_PC_RCAST->catch_rate = GEN1_CATCH_RATES[_database_entry.get_species_id()-1];
 
         GEN1_PC_RCAST->ot_id = pksav_bigendian16(uint16_t(DEFAULT_TRAINER_ID & 0xFFFF));
