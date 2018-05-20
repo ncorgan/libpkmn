@@ -8,6 +8,8 @@
 #include "exception_internal.hpp"
 #include "database/database_common.hpp"
 #include "database/id_to_string.hpp"
+#include "pksav/pksav_call.hpp"
+#include "types/rng.hpp"
 #include "utils/floating_point_comparison.hpp"
 #include "utils/misc.hpp"
 
@@ -16,6 +18,8 @@
 #include <pkmn/breeding/child_info.hpp>
 #include <pkmn/breeding/compatibility.hpp>
 #include <pkmn/database/pokemon_entry.hpp>
+
+#include <pksav/common/stats.h>
 
 #include <boost/assert.hpp>
 #include <boost/config.hpp>
@@ -425,6 +429,437 @@ namespace pkmn { namespace breeding {
 
         child_moves.resize(MAX_NUM_MOVES, "None");
         return child_moves;
+    }
+
+    static bool can_species_be_male(
+        const std::string& species
+    )
+    {
+        static const std::string ENTRY_GAME = "X";
+
+        return fp_compare_not_equal(
+                   pkmn::database::pokemon_entry(species, ENTRY_GAME, "").get_chance_male(),
+                   0.0f
+               );
+    }
+
+    static bool can_species_be_female(
+        const std::string& species
+    )
+    {
+        static const std::string ENTRY_GAME = "X";
+
+        return fp_compare_not_equal(
+                   pkmn::database::pokemon_entry(species, ENTRY_GAME, "").get_chance_female(),
+                   0.0f
+               );
+    }
+
+    static bool is_species_genderless(
+        const std::string& species
+    )
+    {
+        static const std::string ENTRY_GAME = "X";
+
+        pkmn::database::pokemon_entry species_entry(species, ENTRY_GAME, "");
+
+        return fp_compare_equal(
+                   species_entry.get_chance_male(),
+                   0.0f
+               ) &&
+               fp_compare_equal(
+                   species_entry.get_chance_female(),
+                   0.0f
+               );
+    }
+
+    std::map<std::string, int> get_gen2_ideal_child_IVs(
+        const pkmn::pokemon::sptr& mother,
+        const pkmn::pokemon::sptr& father,
+        const std::string& child_gender
+    )
+    {
+        bool is_mother_ditto = (mother->get_database_entry().get_species_id() == DITTO_SPECIES_ID);
+        bool is_father_ditto = (father->get_database_entry().get_species_id() == DITTO_SPECIES_ID);
+
+        std::map<std::string, int> parent_IVs;
+        if(is_mother_ditto)
+        {
+            parent_IVs = mother->get_IVs();
+        }
+        else if(is_father_ditto)
+        {
+            parent_IVs = father->get_IVs();
+        }
+        else
+        {
+            // Genderless Pokémon can only breed with Ditto, so we know the parents
+            // are male and female at this point.
+            parent_IVs = (child_gender == "Male") ? mother->get_IVs()
+                                                  : father->get_IVs();
+        }
+
+        std::map<std::string, int> ideal_child_IVs;
+
+        // Use PKSav to set the IVs, as the HP IV is derived from the others.
+        uint16_t pksav_IV = 0;
+
+        // The Defense IV comes straight from the parent.
+        BOOST_ASSERT(parent_IVs.count("Defense") > 0);
+
+        ideal_child_IVs["Defense"] = parent_IVs["Defense"];
+        PKSAV_CALL(
+            pksav_set_gb_IV(
+                PKSAV_GB_IV_DEFENSE,
+                static_cast<uint8_t>(parent_IVs["Defense"]),
+                &pksav_IV
+            );
+        )
+
+        // The Special stat is inherited from the parent. However, there is
+        // a 50% chance it will be offset by 8, meaning if the IV was below 8,
+        // it would be increased by 8, and if it was above it, it would be
+        // decreased by 8. As this function returns ideal valid IVs, we will
+        // add a low IV and leave a high IV as is.
+        BOOST_ASSERT(parent_IVs.count("Special") > 0);
+
+        int IV_special = parent_IVs["Special"];
+        if(IV_special < 8)
+        {
+            IV_special += 8;
+        }
+        ideal_child_IVs["Special"] = IV_special;
+        PKSAV_CALL(
+            pksav_set_gb_IV(
+                PKSAV_GB_IV_SPECIAL,
+                static_cast<uint8_t>(IV_special),
+                &pksav_IV
+            );
+        )
+
+        // Attack and Speed IVs are generated randomly, but as this function
+        // returns ideal valid IVs, we'll just use the highest valid values.
+        ideal_child_IVs["Attack"] = PKSAV_MAX_GB_IV;
+        PKSAV_CALL(
+            pksav_set_gb_IV(
+                PKSAV_GB_IV_ATTACK,
+                PKSAV_MAX_GB_IV,
+                &pksav_IV
+            );
+        )
+
+        ideal_child_IVs["Speed"]  = PKSAV_MAX_GB_IV;
+        PKSAV_CALL(
+            pksav_set_gb_IV(
+                PKSAV_GB_IV_SPEED,
+                PKSAV_MAX_GB_IV,
+                &pksav_IV
+            );
+        )
+
+        // The HP IV is derived from the rest, so query PKSav for it.
+        uint8_t pksav_IVs[PKSAV_NUM_GB_IVS] = {0};
+        PKSAV_CALL(
+            pksav_get_gb_IVs(
+                &pksav_IV,
+                pksav_IVs,
+                sizeof(pksav_IVs)
+            );
+        )
+        ideal_child_IVs["HP"] = pksav_IVs[PKSAV_GB_IV_HP];
+
+        BOOST_ASSERT(map_keys_to_vector(ideal_child_IVs) == map_keys_to_vector(parent_IVs));
+        return ideal_child_IVs;
+    }
+
+    static std::map<std::string, int> combine_maps_with_higher_values(
+        const std::map<std::string, int>& map1,
+        const std::map<std::string, int>& map2
+    )
+    {
+        BOOST_ASSERT(map_keys_to_vector(map1) == map_keys_to_vector(map2));
+
+        std::map<std::string, int> combined_map;
+        for(const auto& map1_pair: map1)
+        {
+            const std::string& key = map1_pair.first;
+            int value = map1_pair.second;
+
+            combined_map[key] = std::max(value, map2.at(key));
+        }
+
+        BOOST_ASSERT(map_keys_to_vector(combined_map) == map_keys_to_vector(map1));
+        return combined_map;
+    }
+
+    template <typename key_type, typename val_type>
+    inline typename std::map<key_type, val_type>::iterator map_max_value_iter(
+        std::map<key_type, val_type>& r_input_map
+    )
+    {
+        auto iter = std::max_element(
+                        r_input_map.begin(),
+                        r_input_map.end(),
+                        [](const std::pair<key_type, val_type>& map_pair1,
+                           const std::pair<key_type, val_type>& map_pair2)
+                        {
+                            return map_pair1.second < map_pair2.second;
+                        });
+        BOOST_ASSERT(iter != r_input_map.end());
+
+        return iter;
+    }
+
+    void copy_highest_IV_and_remove_from_input_map(
+        std::map<std::string, int>& r_input_map,
+        std::map<std::string, int>& r_output_map
+    )
+    {
+        auto max_IV_iter = map_max_value_iter(r_input_map);
+        const std::string& stat = max_IV_iter->first;
+        int IV = max_IV_iter->second;
+
+        r_output_map[stat] = IV;
+
+        // We've used this IV, so remove it from the intermediate map.
+        r_input_map.erase(max_IV_iter);
+    }
+
+    static std::map<std::string, int> get_rs_frlg_ideal_child_IVs(
+        const pkmn::pokemon::sptr& mother,
+        const pkmn::pokemon::sptr& father
+    )
+    {
+        /*
+         * A child will inherit three random IVs between the parents,
+         * and the rest are randomly generated. We will return the
+         * highest unique IVs from each parent and return the maximum
+         * valid value for the rest.
+         */
+        std::map<std::string, int> mother_IVs = mother->get_IVs();
+        std::map<std::string, int> father_IVs = father->get_IVs();
+        BOOST_ASSERT(map_keys_to_vector(mother_IVs) == map_keys_to_vector(father_IVs));
+
+        std::map<std::string, int> max_parent_IVs = combine_maps_with_higher_values(
+                                                        mother_IVs,
+                                                        father_IVs
+                                                    );
+
+        std::map<std::string, int> ideal_child_IVs;
+
+        BOOST_STATIC_CONSTEXPR size_t num_inherited_IVs = 3;
+        for(size_t iteration = 0; iteration < num_inherited_IVs; ++iteration)
+        {
+            copy_highest_IV_and_remove_from_input_map(
+                max_parent_IVs,
+                ideal_child_IVs
+            );
+        }
+
+        // Use the stats remaining in the intermediate map to determine which
+        // IVs should have the max value.
+        for(const auto& IV_map_pair: max_parent_IVs)
+        {
+            const std::string& stat = IV_map_pair.first;
+
+            ideal_child_IVs[stat] = PKSAV_MAX_IV;
+        }
+
+        BOOST_ASSERT(map_keys_to_vector(ideal_child_IVs) == map_keys_to_vector(mother_IVs));
+        return ideal_child_IVs;
+    }
+
+    // https://stackoverflow.com/a/180772/2425605
+    std::map<std::string, int> get_filtered_map(
+        const std::map<std::string, int>& input_map,
+        const std::vector<std::string>& keys_to_remove
+    )
+    {
+        std::map<std::string, int> output_map(input_map);
+
+        for(auto map_iter = input_map.begin(); map_iter != input_map.end();)
+        {
+            const std::string& key = map_iter->first;
+
+            auto key_iter = std::find(
+                                keys_to_remove.begin(),
+                                keys_to_remove.end(),
+                                key
+                            );
+            if(key_iter != keys_to_remove.end())
+            {
+                output_map.erase(map_iter++);
+            }
+            else
+            {
+                ++map_iter;
+            }
+        }
+
+        return output_map;
+    }
+
+    std::map<std::string, int> get_emerald_dp_ideal_child_IVs(
+        const pkmn::pokemon::sptr& mother,
+        const pkmn::pokemon::sptr& father
+    )
+    {
+        /*
+         * First, a random IV in inherited. Second, a non-HP random IV will be
+         * inherited. Third, an IV (not HP or Defense) will be inherited. The
+         * rest will be randomly generated.
+         */
+        std::map<std::string, int> mother_IVs = mother->get_IVs();
+        std::map<std::string, int> father_IVs = father->get_IVs();
+        BOOST_ASSERT(map_keys_to_vector(mother_IVs) == map_keys_to_vector(father_IVs));
+
+        std::map<std::string, int> ideal_child_IVs;
+
+        std::map<std::string, int> max_parent_IVs = combine_maps_with_higher_values(
+                                                        mother_IVs,
+                                                        father_IVs
+                                                    );
+        copy_highest_IV_and_remove_from_input_map(
+            max_parent_IVs,
+            ideal_child_IVs
+        );
+
+        std::map<std::string, int> max_parent_IVs_minus_hp = get_filtered_map(
+                                                                 max_parent_IVs,
+                                                                 {"HP"}
+                                                             );
+        copy_highest_IV_and_remove_from_input_map(
+            max_parent_IVs_minus_hp,
+            ideal_child_IVs
+        );
+
+        std::map<std::string, int> max_parent_IVs_minus_hp_and_def = get_filtered_map(
+                                                                         max_parent_IVs,
+                                                                         {"HP", "Defense"}
+                                                                     );
+        copy_highest_IV_and_remove_from_input_map(
+            max_parent_IVs_minus_hp_and_def,
+            ideal_child_IVs
+        );
+
+        // Use the highest possible value for the remaining IVs.
+        for(const auto& max_parent_IV_pair: max_parent_IVs)
+        {
+            const std::string& stat = max_parent_IV_pair.first;
+            int IV = max_parent_IV_pair.second;
+
+            if(ideal_child_IVs.count(stat) == 0)
+            {
+                ideal_child_IVs[stat] = IV;
+            }
+        }
+
+        BOOST_ASSERT(map_keys_to_vector(ideal_child_IVs) == map_keys_to_vector(mother_IVs));
+        return ideal_child_IVs;
+    }
+
+    std::map<std::string, int> get_ideal_child_IVs(
+        const pkmn::pokemon::sptr& mother,
+        const pkmn::pokemon::sptr& father,
+        const std::string& child_gender
+    )
+    {
+        pkmn::enforce_value_in_vector(
+            "Child gender",
+            child_gender,
+            {"Male", "Female", "Genderless"}
+        );
+
+        if(mother->get_game() != father->get_game())
+        {
+            throw std::invalid_argument(
+                      "Both parent Pokémon must come from the same game."
+                  );
+        }
+
+        // Validate given child gender against possible child species.
+        std::vector<std::string> possible_child_species = get_possible_child_species(
+                                                              mother->get_species(),
+                                                              father->get_species(),
+                                                              mother->get_game()
+                                                          );
+
+        auto species_iter = possible_child_species.end();
+        if(child_gender == "Male")
+        {
+            species_iter = std::find_if(
+                               possible_child_species.begin(),
+                               possible_child_species.end(),
+                               can_species_be_male
+                           );
+        }
+        else if(child_gender == "Female")
+        {
+            species_iter = std::find_if(
+                               possible_child_species.begin(),
+                               possible_child_species.end(),
+                               can_species_be_female
+                           );
+        }
+        else
+        {
+            species_iter = std::find_if(
+                               possible_child_species.begin(),
+                               possible_child_species.end(),
+                               is_species_genderless
+                           );
+        }
+        if(species_iter == possible_child_species.end())
+        {
+            std::string error_message = "Invalid gender for any valid child species: ";
+            error_message += child_gender;
+            throw std::invalid_argument(error_message);
+        }
+
+        const std::string game = mother->get_game();
+        const int generation = pkmn::database::game_name_to_generation(game);
+        BOOST_ASSERT(generation >= 2);
+
+        std::map<std::string, int> ideal_child_IVs;
+
+        switch(generation)
+        {
+            case 2:
+                ideal_child_IVs = get_gen2_ideal_child_IVs(
+                                      mother,
+                                      father,
+                                      child_gender
+                                  );
+                break;
+
+            case 3:
+                if(game == "Emerald")
+                {
+                    ideal_child_IVs = get_emerald_dp_ideal_child_IVs(
+                                          mother,
+                                          father
+                                      );
+                }
+                else
+                {
+                    ideal_child_IVs = get_rs_frlg_ideal_child_IVs(
+                                          mother,
+                                          father
+                                      );
+                }
+                break;
+
+            case 4:
+            case 5:
+            case 6:
+            case 7:
+                throw pkmn::unimplemented_error();
+
+            default:
+                throw std::invalid_argument("Invalid game");
+        }
+
+        return ideal_child_IVs;
     }
 
 }}
