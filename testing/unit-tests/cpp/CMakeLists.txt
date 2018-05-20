@@ -9,7 +9,6 @@ IF(PKMN_ENABLE_QT)
     CMAKE_POLICY(SET CMP0020 NEW)
 ENDIF()
 
-
 #
 # C++ tests
 #
@@ -19,6 +18,13 @@ INCLUDE_DIRECTORIES(
     ${CMAKE_CURRENT_SOURCE_DIR}/cpp_database_entry_test
     ${Boost_INCLUDE_DIRS}
     ${GTEST_INCLUDE_DIRS}
+)
+
+# Build our custom GTest main function.
+ADD_LIBRARY(pkmn_gtest_main STATIC pkmn_gtest_main.cpp)
+TARGET_LINK_LIBRARIES(pkmn_gtest_main
+    gtest
+    pkmn
 )
 
 SET(cpp_tests

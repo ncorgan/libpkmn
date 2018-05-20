@@ -39,7 +39,7 @@ ADD_EXECUTABLE(
 TARGET_LINK_LIBRARIES(cpp_input_fuzzing_test
     ${Boost_LIBRARIES}
     gtest
-    gtest_main
+    pkmn_gtest_main
     pkmn
     pksav
     PkmGC

@@ -22,7 +22,7 @@ INCLUDE_DIRECTORIES(
 SET(pkmn_cpp_test_libs
     ${Boost_LIBRARIES}
     gtest
-    gtest_main
+    pkmn_gtest_main
     pkmn
     pksav
     PkmGC
