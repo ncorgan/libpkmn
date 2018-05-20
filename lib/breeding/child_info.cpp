@@ -27,15 +27,27 @@ namespace pkmn { namespace breeding {
     BOOST_STATIC_CONSTEXPR int DITTO_SPECIES_ID     = 132;
     BOOST_STATIC_CONSTEXPR int VOLBEAT_SPECIES_ID   = 313;
     BOOST_STATIC_CONSTEXPR int ILLUMISE_SPECIES_ID  = 314;
+    BOOST_STATIC_CONSTEXPR int MANAPHY_SPECIES_ID   = 490;
 
-    std::string get_earliest_species_in_evolutionary_line(int species_id)
+    struct incense_breeding_pokemon
+    {
+        std::vector<std::string> species;
+        std::string evolution_to_add;
+    };
+
+    std::string get_earliest_species_in_evolutionary_line(
+        int species_id,
+        int generation
+    )
     {
         static BOOST_CONSTEXPR const char* evolution_query =
-            "SELECT evolves_from_species_id FROM pokemon_species WHERE id=?";
+            "SELECT id FROM pokemon_species WHERE generation_id<=? AND id IN "
+            "(SELECT evolves_from_species_id FROM pokemon_species WHERE id=?)";
 
         int query_species_id = species_id;
         SQLite::Statement stmt(pkmn::database::get_connection(), evolution_query);
-        stmt.bind(1, query_species_id);
+        stmt.bind(1, generation);
+        stmt.bind(2, query_species_id);
         while(stmt.executeStep())
         {
             // The final query will be valid but return 0, which we can't use
@@ -46,7 +58,8 @@ namespace pkmn { namespace breeding {
             query_species_id = stmt.getColumn(0);
             stmt.reset();
             stmt.clearBindings();
-            stmt.bind(1, query_species_id);
+            stmt.bind(1, generation);
+            stmt.bind(2, query_species_id);
         }
 
         return pkmn::database::species_id_to_name(query_species_id);
@@ -69,7 +82,7 @@ namespace pkmn { namespace breeding {
         if(fp_compare_equal(mother_entry.get_chance_male(), 1.0f))
         {
             std::string error_message(mother_species);
-            error_message += " cannot be a mother.";
+            error_message += " is male-only and cannot be a mother.";
             throw std::invalid_argument(error_message);
         }
 
@@ -77,7 +90,7 @@ namespace pkmn { namespace breeding {
         if(fp_compare_equal(father_entry.get_chance_female(), 1.0f))
         {
             std::string error_message(father_species);
-            error_message += " cannot be a father.";
+            error_message += " is female-only and cannot be a father.";
             throw std::invalid_argument(error_message);
         }
 
@@ -86,9 +99,12 @@ namespace pkmn { namespace breeding {
         bool is_mother_nidoran_f = (mother_entry.get_species_id() == NIDORAN_F_SPECIES_ID);
         bool is_mother_ditto     = (mother_entry.get_species_id() == DITTO_SPECIES_ID);
         bool is_mother_illumise  = (mother_entry.get_species_id() == ILLUMISE_SPECIES_ID);
+        bool is_mother_manaphy   = (mother_entry.get_species_id() == MANAPHY_SPECIES_ID);
 
         bool is_father_nidoran_m = (father_entry.get_species_id() == NIDORAN_M_SPECIES_ID);
+        bool is_father_ditto     = (father_entry.get_species_id() == DITTO_SPECIES_ID);
         bool is_father_volbeat   = (father_entry.get_species_id() == VOLBEAT_SPECIES_ID);
+        bool is_father_manaphy   = (father_entry.get_species_id() == MANAPHY_SPECIES_ID);
 
         if(is_mother_nidoran_f)
         {
@@ -128,11 +144,19 @@ namespace pkmn { namespace breeding {
         {
             possible_child_species = {"Volbeat", "Illumise"};
         }
+        else if((is_mother_manaphy && is_father_ditto) ||
+                (is_father_manaphy && is_mother_ditto))
+        {
+            possible_child_species = {"Phione"};
+        }
         else if(is_mother_ditto)
         {
             possible_child_species.emplace_back(
                 get_earliest_species_in_evolutionary_line(
-                    father_entry.get_species_id()
+                    father_entry.get_species_id(),
+                    pkmn::database::game_id_to_generation(
+                        father_entry.get_game_id()
+                    )
                 )
             );
         }
@@ -140,8 +164,50 @@ namespace pkmn { namespace breeding {
         {
             possible_child_species.emplace_back(
                 get_earliest_species_in_evolutionary_line(
-                    mother_entry.get_species_id()
+                    mother_entry.get_species_id(),
+                    pkmn::database::game_id_to_generation(
+                        mother_entry.get_game_id()
+                    )
                 )
+            );
+        }
+
+        // Pokémon with pre-evolutions added after Generation II can breed
+        // either itself or the pre-evolution. There's no elegant way to
+        // do this automatically, so we have to automatically check.
+        static const std::vector<incense_breeding_pokemon> INCENSE_BREEDING_POKEMON =
+        {
+            {{"Marill", "Azumarill"}, "Marill"},
+            {{"Wobbuffet"}, "Wobbuffet"},
+            {{"Roselia", "Roserade"}, "Roselia"},
+            {{"Chimecho"}, "Chimecho"},
+            {{"Sudowoodo"}, "Sudowoodo"},
+            {{"Mr. Mime"}, "Mr. Mime"},
+            {{"Chansey", "Blissey"}, "Chansey"},
+            {{"Mantine"}, "Mantine"},
+            {{"Snorlax"}, "Snorlax"}
+        };
+        auto incense_breeding_pokemon_iter =
+            std::find_if(
+                INCENSE_BREEDING_POKEMON.begin(),
+                INCENSE_BREEDING_POKEMON.end(),
+                [&mother_species, &father_species](
+                    const incense_breeding_pokemon& breeding_pokemon
+                )
+                {
+                    return (does_vector_contain_value(breeding_pokemon.species, mother_species)) ||
+                           ((mother_species == "Ditto") && does_vector_contain_value(breeding_pokemon.species, father_species));
+                });
+        if((incense_breeding_pokemon_iter != INCENSE_BREEDING_POKEMON.end()) &&
+           !does_vector_contain_value(
+                possible_child_species,
+                incense_breeding_pokemon_iter->evolution_to_add
+            )
+          )
+        {
+            possible_child_species.insert(
+                possible_child_species.begin(),
+                incense_breeding_pokemon_iter->evolution_to_add
             );
         }
 

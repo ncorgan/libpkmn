@@ -133,11 +133,11 @@ static const std::vector<possible_child_species_test_params_t> POSSIBLE_CHILD_SP
 
     possible_child_species_test_params_t("Marill", "Ditto", "Gold", true, {"Marill"}),
     possible_child_species_test_params_t("Azumarill", "Ditto", "Gold", true, {"Marill"}),
-    possible_child_species_test_params_t("Marill", "Ditto", "Ruby", true, {"Marill", "Azumarill"}),
-    possible_child_species_test_params_t("Azumarill", "Ditto", "Ruby", true, {"Marill", "Azumarill"}),
+    possible_child_species_test_params_t("Marill", "Ditto", "Ruby", true, {"Marill", "Azurill"}),
+    possible_child_species_test_params_t("Azumarill", "Ditto", "Ruby", true, {"Marill", "Azurill"}),
 
-    possible_child_species_test_params_t("Wobbufett", "Ditto", "Gold", true, {"Wobbufett"}),
-    possible_child_species_test_params_t("Wobbufett", "Ditto", "Ruby", true, {"Wobbufett", "Wynaut"}),
+    possible_child_species_test_params_t("Wobbuffet", "Ditto", "Gold", true, {"Wobbuffet"}),
+    possible_child_species_test_params_t("Wobbuffet", "Ditto", "Ruby", true, {"Wobbuffet", "Wynaut"}),
 
     possible_child_species_test_params_t("Roselia", "Ditto", "Ruby", true, {"Roselia"}),
     possible_child_species_test_params_t("Roselia", "Ditto", "Diamond", true, {"Roselia", "Budew"}),
@@ -162,6 +162,19 @@ static const std::vector<possible_child_species_test_params_t> POSSIBLE_CHILD_SP
 
     possible_child_species_test_params_t("Snorlax", "Ditto", "Gold", true, {"Snorlax"}),
     possible_child_species_test_params_t("Snorlax", "Ditto", "Diamond", true, {"Snorlax", "Munchlax"}),
+
+    // In Generation V+, Nidoran♂ and Volbeat has a chance to produce one of two different species.
+    // Their female counterparts have always had this chance.
+
+    possible_child_species_test_params_t("Nidoran♀", "Ditto", "Gold", false, {"Nidoran♀", "Nidoran♂"}),
+    possible_child_species_test_params_t("Nidoran♀", "Ditto", "Black", false, {"Nidoran♀", "Nidoran♂"}),
+    possible_child_species_test_params_t("Ditto", "Nidoran♂", "Gold", false, {"Nidoran♂"}),
+    possible_child_species_test_params_t("Ditto", "Nidoran♂", "Black", false, {"Nidoran♀", "Nidoran♂"}),
+
+    possible_child_species_test_params_t("Illumise", "Ditto", "Ruby", false, {"Volbeat", "Illumise"}),
+    possible_child_species_test_params_t("Illumise", "Ditto", "Black", false, {"Volbeat", "Illumise"}),
+    possible_child_species_test_params_t("Ditto", "Volbeat", "Ruby", false, {"Volbeat"}),
+    possible_child_species_test_params_t("Ditto", "Volbeat", "Black", false, {"Volbeat", "Illumise"}),
 
     // Manaphy is an odd case in that it breeds to a Pokémon that doesn't evolve into it.
     possible_child_species_test_params_t("Manaphy", "Ditto", "Diamond", true, {"Phione"}),

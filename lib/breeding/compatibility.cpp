@@ -119,6 +119,36 @@ namespace pkmn { namespace breeding {
         return are_compatible;
     }
 
+    bool are_genders_compatible(
+        const pkmn::database::pokemon_entry& pokemon1_entry,
+        const pkmn::database::pokemon_entry& pokemon2_entry
+    )
+    {
+        bool are_compatible = true;
+
+        float pokemon1_chance_female = pokemon1_entry.get_chance_female();
+        float pokemon2_chance_female = pokemon2_entry.get_chance_female();
+
+        if(fp_compare_equal(pokemon1_chance_female, 1.0f) &&
+           fp_compare_equal(pokemon2_chance_female, 1.0f))
+        {
+            are_compatible = false;
+        }
+        if(are_compatible)
+        {
+            float pokemon1_chance_male = pokemon1_entry.get_chance_male();
+            float pokemon2_chance_male = pokemon2_entry.get_chance_male();
+
+            if(fp_compare_equal(pokemon1_chance_male, 1.0f) &&
+               fp_compare_equal(pokemon2_chance_male, 1.0f))
+            {
+                are_compatible = false;
+            }
+        }
+
+        return are_compatible;
+    }
+
     bool are_pokemon_species_compatible(
         const std::string& species1,
         const std::string& species2
@@ -136,6 +166,9 @@ namespace pkmn { namespace breeding {
                              species2_entry.get_species_id()
                          );
         are_compatible &= are_egg_groups_valid_and_compatible(
+                              species1_entry, species2_entry
+                          );
+        are_compatible &= are_genders_compatible(
                               species1_entry, species2_entry
                           );
 

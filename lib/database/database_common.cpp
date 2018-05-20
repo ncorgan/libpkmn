@@ -23,6 +23,8 @@
 
 #define PKMN_COMPAT_NUM 17
 
+// TODO: check for more internal errors that shouldn't be
+
 namespace pkmn { namespace database {
 
     static std::unique_ptr<SQLite::Database> _database_uptr;
