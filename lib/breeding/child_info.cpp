@@ -74,7 +74,7 @@ namespace pkmn { namespace breeding {
         }
 
         pkmn::database::pokemon_entry father_entry(father_species, game, "");
-        if(fp_compare_equal(father_entry.get_chance_male(), 1.0f))
+        if(fp_compare_equal(father_entry.get_chance_female(), 1.0f))
         {
             std::string error_message(father_species);
             error_message += " cannot be a father.";
