@@ -13,10 +13,12 @@ PKMN_PYTHON_INIT
 %import <stl_python.i>
 
 %{
-    #include "cpp_wrappers/breeding.hpp"
+    #include <pkmn/breeding/child_info.hpp>
+    #include <pkmn/breeding/compatibility.hpp>
 %}
 
 // Convert Doxygen docs to Python docstrings
 %include <pkmn_python_docstrings.i>
 
-%include <cpp_wrappers/breeding.hpp>
+%include <pkmn/breeding/child_info.hpp>
+%include <pkmn/breeding/compatibility.hpp>

@@ -9,13 +9,13 @@
 
 #include <pkmn/config.hpp>
 
-#include <pkmn/pokemon.hpp>
+#include <string>
 
 namespace pkmn { namespace breeding {
 
-    PKMN_API bool are_pokemon_compatible(
-        const pkmn::pokemon::sptr& pokemon1,
-        const pkmn::pokemon::sptr& pokemon2
+    PKMN_API bool are_pokemon_species_compatible(
+        const std::string& species1,
+        const std::string& species2
     );
 
 }}

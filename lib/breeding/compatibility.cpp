@@ -10,6 +10,7 @@
 
 #include <pkmn/exception.hpp>
 #include <pkmn/breeding/compatibility.hpp>
+#include <pkmn/database/pokemon_entry.hpp>
 
 #include <boost/assert.hpp>
 #include <boost/config.hpp>
@@ -50,15 +51,13 @@ namespace pkmn { namespace breeding {
     }
 
     static bool are_species_valid_and_compatible(
-        const pkmn::pokemon::sptr& pokemon1,
-        const pkmn::pokemon::sptr& pokemon2
+        int pokemon1_id,
+        int pokemon2_id
     )
     {
         bool are_compatible = true;
 
-        int pokemon1_id = pokemon1->get_database_entry().get_species_id();
-        int pokemon2_id = pokemon2->get_database_entry().get_species_id();
-
+        // "None" and "Invalid" species are incompatible.
         are_compatible = (pokemon1_id >= 1) && (pokemon2_id >= 1);
 
         if(are_compatible)
@@ -86,14 +85,11 @@ namespace pkmn { namespace breeding {
     }
 
     static bool are_egg_groups_valid_and_compatible(
-        const pkmn::pokemon::sptr& pokemon1,
-        const pkmn::pokemon::sptr& pokemon2
+        const pkmn::database::pokemon_entry& pokemon1_entry,
+        const pkmn::database::pokemon_entry& pokemon2_entry
     )
     {
         bool are_compatible = true;
-
-        const pkmn::database::pokemon_entry& pokemon1_entry = pokemon1->get_database_entry();
-        const pkmn::database::pokemon_entry& pokemon2_entry = pokemon2->get_database_entry();
 
         std::pair<std::string, std::string> pokemon1_egg_groups = pokemon1_entry.get_egg_groups();
         std::pair<std::string, std::string> pokemon2_egg_groups = pokemon2_entry.get_egg_groups();
@@ -123,49 +119,25 @@ namespace pkmn { namespace breeding {
         return are_compatible;
     }
 
-    bool are_gen2_IVs_compatible(
-        const pkmn::pokemon::sptr& pokemon1,
-        const pkmn::pokemon::sptr& pokemon2
-    )
-    {
-        const std::map<std::string, int>& pokemon1_IVs = pokemon1->get_IVs();
-        const std::map<std::string, int>& pokemon2_IVs = pokemon2->get_IVs();
-
-        return ((pokemon1_IVs.at("Defense") != pokemon2_IVs.at("Defense")) &&
-                (pokemon1_IVs.at("Special") != pokemon2_IVs.at("Special")) &&
-                (std::abs(pokemon1_IVs.at("Special") - pokemon2_IVs.at("Special"))) != 8);
-    }
-
-    bool are_pokemon_compatible(
-        const pkmn::pokemon::sptr& pokemon1,
-        const pkmn::pokemon::sptr& pokemon2
+    bool are_pokemon_species_compatible(
+        const std::string& species1,
+        const std::string& species2
     )
     {
         bool are_compatible = true;
 
-        const pkmn::database::pokemon_entry& pokemon1_entry = pokemon1->get_database_entry();
-        const pkmn::database::pokemon_entry& pokemon2_entry = pokemon2->get_database_entry();
+        static const std::string ENTRY_GAME = "X";
 
-        int generation1 = pkmn::database::game_id_to_generation(pokemon1_entry.get_game_id());
-        int generation2 = pkmn::database::game_id_to_generation(pokemon2_entry.get_game_id());
+        pkmn::database::pokemon_entry species1_entry(species1, ENTRY_GAME, "");
+        pkmn::database::pokemon_entry species2_entry(species2, ENTRY_GAME, "");
 
-        if((generation1 == 1) || (generation2 == 1))
-        {
-            throw pkmn::feature_not_in_game_error(
-                      "Breeding",
-                      "Generation I"
-                  );
-        }
-
-        are_compatible = (pokemon1_entry.get_game_id() == pokemon2_entry.get_game_id())
-                       && !pokemon1->is_egg()
-                       && !pokemon2->is_egg()
-                       && are_species_valid_and_compatible(pokemon1, pokemon2)
-                       && are_egg_groups_valid_and_compatible(pokemon1, pokemon2);
-        if(generation1 == 2)
-        {
-            are_compatible &= are_gen2_IVs_compatible(pokemon1, pokemon2);
-        }
+        are_compatible = are_species_valid_and_compatible(
+                             species1_entry.get_species_id(),
+                             species2_entry.get_species_id()
+                         );
+        are_compatible &= are_egg_groups_valid_and_compatible(
+                              species1_entry, species2_entry
+                          );
 
         return are_compatible;
     }

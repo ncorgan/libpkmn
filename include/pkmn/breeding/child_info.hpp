@@ -9,16 +9,15 @@
 
 #include <pkmn/config.hpp>
 
-#include <pkmn/pokemon.hpp>
-
 #include <string>
 #include <vector>
 
 namespace pkmn { namespace breeding {
 
     PKMN_API std::vector<std::string> get_possible_child_species(
-        const pkmn::pokemon::sptr& pokemon1,
-        const pkmn::pokemon::sptr& pokemon2
+        const std::string& mother_species,
+        const std::string& father_species,
+        const std::string& game
     );
 
 }}
