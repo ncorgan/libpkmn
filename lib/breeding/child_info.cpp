@@ -215,4 +215,216 @@ namespace pkmn { namespace breeding {
         return possible_child_species;
     }
 
+    std::vector<std::string> get_child_moves(
+        const pkmn::pokemon::sptr& mother,
+        const pkmn::pokemon::sptr& father,
+        const std::string& child_species
+    )
+    {
+        if(mother->get_game() != father->get_game())
+        {
+            throw std::invalid_argument(
+                      "Both parent Pokémon must come from the same game."
+                  );
+        }
+
+        std::vector<std::string> possible_child_species = get_possible_child_species(
+                                                              mother->get_species(),
+                                                              father->get_species(),
+                                                              mother->get_game()
+                                                          );
+        if(!does_vector_contain_value(possible_child_species, child_species))
+        {
+            std::string error_message = child_species;
+            error_message += " is not a possible child for ";
+            error_message += mother->get_species();
+            error_message += " and ";
+            error_message += father->get_species();
+            error_message += ".";
+
+            throw std::invalid_argument(error_message);
+        }
+
+        const std::string game = mother->get_game();
+        const int generation = pkmn::database::game_name_to_generation(game);
+
+        BOOST_STATIC_CONSTEXPR size_t MAX_NUM_MOVES = 4;
+        std::vector<std::string> child_moves;
+
+        const pkmn::move_slots_t& mother_moves = mother->get_moves();
+        const pkmn::move_slots_t& father_moves = father->get_moves();
+        BOOST_ASSERT(mother_moves.size() == MAX_NUM_MOVES);
+        BOOST_ASSERT(father_moves.size() == MAX_NUM_MOVES);
+
+        pkmn::database::pokemon_entry child_entry(child_species, game, "");
+
+        /*
+         * From Emerald onward, if either parent is holding a Light Ball, any
+         * child Pichu will know Volt Tackle. This takes priority over any
+         * other policy.
+         */
+        if(child_species == "Pichu")
+        {
+            bool has_volt_tackle_policy = (generation >= 4) ||
+                                          (game == "Emerald");
+
+            if(has_volt_tackle_policy)
+            {
+                if((mother->get_held_item() == "Light Ball") || (father->get_held_item() == "Light Ball"))
+                {
+                    child_moves.emplace_back("Volt Tackle");
+                }
+            }
+        }
+
+        pkmn::database::move_list_t child_egg_moves = child_entry.get_egg_moves();
+        if(!child_egg_moves.empty())
+        {
+            /*
+             * If the mother knows any of the child's egg moves, the child
+             * will learn them.
+             */
+            for(size_t mother_move_index = 0;
+                (mother_move_index < mother_moves.size()) && (child_moves.size() < MAX_NUM_MOVES);
+                ++mother_move_index)
+            {
+                auto egg_move_iter =
+                    std::find_if(
+                        child_egg_moves.begin(),
+                        child_egg_moves.end(),
+                        [&mother_moves, &mother_move_index](const pkmn::database::move_entry& egg_move)
+                        {
+                            return (egg_move.get_name() == mother_moves[mother_move_index].move);
+                        });
+                if(egg_move_iter != child_egg_moves.end())
+                {
+                    child_moves.emplace_back(
+                        mother_moves[mother_move_index].move
+                    );
+                }
+            }
+
+            /*
+             * If the father knows any of the child's egg moves, the child
+             * will learn them.
+             */
+            for(size_t father_move_index = 0;
+                (father_move_index < father_moves.size()) && (child_moves.size() < MAX_NUM_MOVES);
+                ++father_move_index)
+            {
+                auto egg_move_iter =
+                    std::find_if(
+                        child_egg_moves.begin(),
+                        child_egg_moves.end(),
+                        [&father_moves, &father_move_index](const pkmn::database::move_entry& egg_move)
+                        {
+                            return (egg_move.get_name() == father_moves[father_move_index].move);
+                        });
+                if(egg_move_iter != child_egg_moves.end())
+                {
+                    child_moves.emplace_back(
+                        father_moves[father_move_index].move
+                    );
+                }
+            }
+        }
+
+        // TODO: add functions to get lists of TMs, HMs, check for father knowing
+        // TM or HM moves before Generation VI
+
+        /*
+         * In Crystal, if the father knows any moves that the child can learn via
+         * a Move Tutor, the child will hatch knowing these move(s).
+         */
+        if((child_moves.size() < MAX_NUM_MOVES) && (game == "Crystal"))
+        {
+            pkmn::database::move_list_t child_tutor_moves = child_entry.get_tutor_moves();
+
+            for(size_t father_move_index = 0;
+                (father_move_index < father_moves.size()) && (child_moves.size() < MAX_NUM_MOVES);
+                ++father_move_index)
+            {
+                auto tutor_move_iter =
+                    std::find_if(
+                        child_tutor_moves.begin(),
+                        child_tutor_moves.end(),
+                        [&father_moves, &father_move_index](const pkmn::database::move_entry& tutor_move)
+                        {
+                            return (tutor_move.get_name() == father_moves[father_move_index].move);
+                        });
+                if(tutor_move_iter != child_tutor_moves.end())
+                {
+                    child_moves.emplace_back(
+                        father_moves[father_move_index].move
+                    );
+                }
+            }
+        }
+
+        if((child_moves.size() < MAX_NUM_MOVES))
+        {
+            /*
+             * If both the mother and father know a move the child would learn via
+             * level-up by the level at which the child will hatch, the child will
+             * hatch knowing this move.
+             */
+            pkmn::database::levelup_moves_t child_levelup_moves = child_entry.get_levelup_moves();
+            for(size_t levelup_move_index = 0;
+                (levelup_move_index < child_levelup_moves.size()) && (child_moves.size() < MAX_NUM_MOVES);
+                ++levelup_move_index)
+            {
+                std::string move_name = child_levelup_moves[levelup_move_index].move.get_name();
+
+                auto mother_move_iter =
+                    std::find_if(
+                        mother_moves.begin(),
+                        mother_moves.end(),
+                        [&move_name](const pkmn::move_slot& move_slot)
+                        {
+                            return (move_slot.move == move_name);
+                        });
+                if(mother_move_iter != mother_moves.end())
+                {
+                    auto father_move_iter =
+                        std::find_if(
+                            father_moves.begin(),
+                            father_moves.end(),
+                            [&move_name](const pkmn::move_slot& move_slot)
+                            {
+                                return (move_slot.move == move_name);
+                            });
+                    if(father_move_iter != father_moves.end())
+                    {
+                        child_moves.emplace_back(move_name);
+                    }
+                }
+            }
+
+            /*
+             * For any remaining moves, use any moves the child would naturally
+             * learn by the level at which it will hatch.
+             */
+            const int child_level = (generation >= 4) ? 1 : 5;
+
+            for(size_t levelup_move_index = 0;
+                (levelup_move_index < child_levelup_moves.size()) && (child_moves.size() < MAX_NUM_MOVES);
+                ++levelup_move_index)
+            {
+                if(child_levelup_moves[levelup_move_index].level <= child_level)
+                {
+                    child_moves.emplace_back(
+                        child_levelup_moves[levelup_move_index].move.get_name()
+                    );
+                }
+                else
+                {
+                    break;
+                }
+            }
+        }
+
+        child_moves.resize(MAX_NUM_MOVES, "None");
+        return child_moves;
+    }
+
 }}

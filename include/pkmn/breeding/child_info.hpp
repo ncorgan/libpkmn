@@ -8,6 +8,7 @@
 #define PKMN_BREEDING_CHILD_INFO_HPP
 
 #include <pkmn/config.hpp>
+#include <pkmn/pokemon.hpp>
 
 #include <string>
 #include <vector>
@@ -19,6 +20,16 @@ namespace pkmn { namespace breeding {
         const std::string& father_species,
         const std::string& game
     );
+
+#ifndef SWIG
+
+    PKMN_API std::vector<std::string> get_child_moves(
+        const pkmn::pokemon::sptr& mother,
+        const pkmn::pokemon::sptr& father,
+        const std::string& child_species
+    );
+
+#endif
 
 }}
 
