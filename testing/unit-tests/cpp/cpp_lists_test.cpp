@@ -932,4 +932,12 @@ TEST(cpp_lists_test, test_machine_special_cases)
         std::vector<std::string> oras_tm_move_list = pkmn::database::get_tm_move_list(oras_game);
         EXPECT_EQ("Secret Power", oras_tm_move_list[93]);
     }
+
+    // HMs were not present in the Gamecube games.
+    for(const std::string& gamecube_game: {"Colosseum", "XD"})
+    {
+        EXPECT_THROW(
+            pkmn::database::get_hm_move_list(gamecube_game);
+        , pkmn::feature_not_in_game_error);
+    }
 }
