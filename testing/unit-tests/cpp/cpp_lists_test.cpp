@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -11,6 +11,8 @@
 #include <gtest/gtest.h>
 
 #include <algorithm>
+#include <functional>
+#include <tuple>
 
 static inline bool string_in_vector(
     const std::vector<std::string> &vec,
@@ -788,4 +790,146 @@ TEST(cpp_lists_test, type_list_test) {
     EXPECT_FALSE(string_in_vector(types_gen6, "???"));
     EXPECT_FALSE(string_in_vector(types_gen6, "Shadow"));
     EXPECT_TRUE(string_in_vector(types_gen6, "Fairy"));
+}
+
+/*
+ * Machine tests
+ */
+
+typedef std::function<std::vector<std::string>(const std::string&)> get_machine_move_list_fcn_t;
+
+typedef std::tuple<
+            std::string,                 // Game
+            size_t,                      // List size
+            std::string,                 // First entry
+            std::string,                 // Last entry
+            get_machine_move_list_fcn_t> // Test function
+        machine_move_list_test_params_t;
+
+class cpp_machine_move_list_test: public ::testing::TestWithParam<machine_move_list_test_params_t> {};
+
+TEST_P(cpp_machine_move_list_test, test_machine_move_list)
+{
+    machine_move_list_test_params_t test_params = GetParam();
+    const std::string& game        = std::get<0>(test_params);
+    const size_t& list_size        = std::get<1>(test_params);
+    const std::string& first_entry = std::get<2>(test_params);
+    const std::string& last_entry  = std::get<3>(test_params);
+    const get_machine_move_list_fcn_t& get_machine_move_list_fcn = std::get<4>(test_params);
+
+    std::vector<std::string> move_list = get_machine_move_list_fcn(game);
+    ASSERT_FALSE(move_list.empty());
+
+    EXPECT_EQ(list_size, move_list.size());
+    EXPECT_EQ(first_entry, move_list.front());
+    EXPECT_EQ(last_entry, move_list.back());
+}
+
+// TODO: move names should match what they were in a given game
+static const std::vector<machine_move_list_test_params_t> TM_LIST_TEST_PARAMS =
+{
+    // Generation I
+    machine_move_list_test_params_t("Red", 50, "Mega Punch", "Substitute", pkmn::database::get_tm_move_list),
+    machine_move_list_test_params_t("Blue", 50, "Mega Punch", "Substitute", pkmn::database::get_tm_move_list),
+    machine_move_list_test_params_t("Yellow", 50, "Mega Punch", "Substitute", pkmn::database::get_tm_move_list),
+
+    // Generation II
+    machine_move_list_test_params_t("Gold", 50, "Dynamic Punch", "Nightmare", pkmn::database::get_tm_move_list),
+    machine_move_list_test_params_t("Silver", 50, "Dynamic Punch", "Nightmare", pkmn::database::get_tm_move_list),
+    machine_move_list_test_params_t("Crystal", 50, "Dynamic Punch", "Nightmare", pkmn::database::get_tm_move_list),
+
+    // Generation III
+    machine_move_list_test_params_t("Ruby", 50, "Focus Punch", "Overheat", pkmn::database::get_tm_move_list),
+    machine_move_list_test_params_t("Sapphire", 50, "Focus Punch", "Overheat", pkmn::database::get_tm_move_list),
+    machine_move_list_test_params_t("Emerald", 50, "Focus Punch", "Overheat", pkmn::database::get_tm_move_list),
+    machine_move_list_test_params_t("FireRed", 50, "Focus Punch", "Overheat", pkmn::database::get_tm_move_list),
+    machine_move_list_test_params_t("LeafGreen", 50, "Focus Punch", "Overheat", pkmn::database::get_tm_move_list),
+    machine_move_list_test_params_t("Colosseum", 50, "Focus Punch", "Overheat", pkmn::database::get_tm_move_list),
+    machine_move_list_test_params_t("XD", 50, "Focus Punch", "Overheat", pkmn::database::get_tm_move_list),
+
+    // Generation IV
+    machine_move_list_test_params_t("Diamond", 92, "Focus Punch", "Trick Room", pkmn::database::get_tm_move_list),
+    machine_move_list_test_params_t("Pearl", 92, "Focus Punch", "Trick Room", pkmn::database::get_tm_move_list),
+    machine_move_list_test_params_t("Platinum", 92, "Focus Punch", "Trick Room", pkmn::database::get_tm_move_list),
+    machine_move_list_test_params_t("HeartGold", 92, "Focus Punch", "Trick Room", pkmn::database::get_tm_move_list),
+    machine_move_list_test_params_t("SoulSilver", 92, "Focus Punch", "Trick Room", pkmn::database::get_tm_move_list),
+
+    // Generation V
+    machine_move_list_test_params_t("Black", 95, "Hone Claws", "Snarl", pkmn::database::get_tm_move_list),
+    machine_move_list_test_params_t("White", 95, "Hone Claws", "Snarl", pkmn::database::get_tm_move_list),
+    machine_move_list_test_params_t("Black 2", 95, "Hone Claws", "Snarl", pkmn::database::get_tm_move_list),
+    machine_move_list_test_params_t("White 2", 95, "Hone Claws", "Snarl", pkmn::database::get_tm_move_list),
+
+    // Generation VI
+    machine_move_list_test_params_t("X", 100, "Hone Claws", "Confide", pkmn::database::get_tm_move_list),
+    machine_move_list_test_params_t("Y", 100, "Hone Claws", "Confide", pkmn::database::get_tm_move_list),
+    machine_move_list_test_params_t("Omega Ruby", 100, "Hone Claws", "Confide", pkmn::database::get_tm_move_list),
+    machine_move_list_test_params_t("Alpha Sapphire", 100, "Hone Claws", "Confide", pkmn::database::get_tm_move_list),
+};
+
+INSTANTIATE_TEST_CASE_P(
+    tm_move_list_test,
+    cpp_machine_move_list_test,
+    ::testing::ValuesIn(TM_LIST_TEST_PARAMS)
+);
+
+static const std::vector<machine_move_list_test_params_t> HM_LIST_TEST_PARAMS =
+{
+    // Generation I
+    machine_move_list_test_params_t("Red", 5, "Cut", "Flash", pkmn::database::get_hm_move_list),
+    machine_move_list_test_params_t("Blue", 5, "Cut", "Flash", pkmn::database::get_hm_move_list),
+    machine_move_list_test_params_t("Yellow", 5, "Cut", "Flash", pkmn::database::get_hm_move_list),
+
+    // Generation II
+    machine_move_list_test_params_t("Gold", 7, "Cut", "Waterfall", pkmn::database::get_hm_move_list),
+    machine_move_list_test_params_t("Silver", 7, "Cut", "Waterfall", pkmn::database::get_hm_move_list),
+    machine_move_list_test_params_t("Crystal", 7, "Cut", "Waterfall", pkmn::database::get_hm_move_list),
+
+    // Generation III
+    machine_move_list_test_params_t("Ruby", 8, "Cut", "Dive", pkmn::database::get_hm_move_list),
+    machine_move_list_test_params_t("Sapphire", 8, "Cut", "Dive", pkmn::database::get_hm_move_list),
+    machine_move_list_test_params_t("Emerald", 8, "Cut", "Dive", pkmn::database::get_hm_move_list),
+    machine_move_list_test_params_t("FireRed", 7, "Cut", "Waterfall", pkmn::database::get_hm_move_list),
+    machine_move_list_test_params_t("LeafGreen", 7, "Cut", "Waterfall", pkmn::database::get_hm_move_list),
+
+    // Generation IV
+    machine_move_list_test_params_t("Diamond", 8, "Cut", "Rock Climb", pkmn::database::get_hm_move_list),
+    machine_move_list_test_params_t("Pearl", 8, "Cut", "Rock Climb", pkmn::database::get_hm_move_list),
+    machine_move_list_test_params_t("Platinum", 8, "Cut", "Rock Climb", pkmn::database::get_hm_move_list),
+    machine_move_list_test_params_t("HeartGold", 8, "Cut", "Rock Climb", pkmn::database::get_hm_move_list),
+    machine_move_list_test_params_t("SoulSilver", 8, "Cut", "Rock Climb", pkmn::database::get_hm_move_list),
+
+    // Generation V
+    machine_move_list_test_params_t("Black", 6, "Cut", "Dive", pkmn::database::get_hm_move_list),
+    machine_move_list_test_params_t("White", 6, "Cut", "Dive", pkmn::database::get_hm_move_list),
+    machine_move_list_test_params_t("Black 2", 6, "Cut", "Dive", pkmn::database::get_hm_move_list),
+    machine_move_list_test_params_t("White 2", 6, "Cut", "Dive", pkmn::database::get_hm_move_list),
+
+    // Generation VI
+    machine_move_list_test_params_t("X", 5, "Cut", "Waterfall", pkmn::database::get_hm_move_list),
+    machine_move_list_test_params_t("Y", 5, "Cut", "Waterfall", pkmn::database::get_hm_move_list),
+    machine_move_list_test_params_t("Omega Ruby", 7, "Cut", "Dive", pkmn::database::get_hm_move_list),
+    machine_move_list_test_params_t("Alpha Sapphire", 7, "Cut", "Dive", pkmn::database::get_hm_move_list),
+};
+
+INSTANTIATE_TEST_CASE_P(
+    hm_move_list_test,
+    cpp_machine_move_list_test,
+    ::testing::ValuesIn(HM_LIST_TEST_PARAMS)
+);
+
+TEST(cpp_lists_test, test_machine_special_cases)
+{
+    // Between X/Y and OR/AS, TM94 was changed from Rock Smash to Secret Power,
+    // due to Rock Smash becoming an HM.
+    for(const std::string& xy_game: {"X", "Y"})
+    {
+        std::vector<std::string> xy_tm_move_list = pkmn::database::get_tm_move_list(xy_game);
+        EXPECT_EQ("Rock Smash", xy_tm_move_list[93]);
+    }
+    for(const std::string& oras_game: {"Omega Ruby", "Alpha Sapphire"})
+    {
+        std::vector<std::string> oras_tm_move_list = pkmn::database::get_tm_move_list(oras_game);
+        EXPECT_EQ("Secret Power", oras_tm_move_list[93]);
+    }
 }

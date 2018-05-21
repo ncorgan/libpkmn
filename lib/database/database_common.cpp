@@ -21,7 +21,7 @@
 #include <sstream>
 #include <stdexcept>
 
-#define PKMN_COMPAT_NUM 17
+#define PKMN_COMPAT_NUM 18
 
 // TODO: check for more internal errors that shouldn't be
 

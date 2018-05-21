@@ -80,6 +80,35 @@ namespace pkmn { namespace database {
         return ret;
     }
 
+    std::vector<std::string> get_hm_move_list(
+        const std::string& game
+    )
+    {
+        static BOOST_CONSTEXPR const char* query =
+            "SELECT name FROM move_names INNER JOIN machines ON (machines.move_id=move_names.move_id) "
+            "WHERE machines.version_group_id=? AND machines.machine_number>=101 "
+            "AND move_names.local_language_id=9 ORDER BY machines.machine_number";
+
+        int game_id = game_name_to_id(game);
+
+        if(game_is_gamecube(game_id))
+        {
+            throw pkmn::feature_not_in_game_error(
+                      "HMs",
+                      game
+                  );
+        }
+
+        int version_group_id = game_id_to_version_group(game_id);
+
+        std::vector<std::string> ret;
+        pkmn::database::query_db_list_bind1<std::string, int>(
+            query, ret, version_group_id
+        );
+
+        return ret;
+    }
+
     std::vector<std::string> get_item_list(
         const std::string &game
     ) {
@@ -454,6 +483,37 @@ namespace pkmn { namespace database {
         std::vector<std::string> ret;
         pkmn::database::query_db_list<std::string>(
             query, ret
+        );
+
+        return ret;
+    }
+
+    std::vector<std::string> get_tm_move_list(
+        const std::string& game
+    )
+    {
+        static BOOST_CONSTEXPR const char* query =
+            "SELECT name FROM move_names INNER JOIN machines ON (machines.move_id=move_names.move_id) "
+            "WHERE machines.version_group_id=? AND machines.machine_number<101 "
+            "AND move_names.local_language_id=9 ORDER BY machines.machine_number";
+
+        int game_id = game_name_to_id(game);
+        int version_group_id = 0;
+
+        if(game_is_gamecube(game_id))
+        {
+            BOOST_STATIC_CONSTEXPR int RS_VERSION_GROUP_ID = 5;
+
+            version_group_id = RS_VERSION_GROUP_ID;
+        }
+        else
+        {
+            version_group_id = game_id_to_version_group(game_id);
+        }
+
+        std::vector<std::string> ret;
+        pkmn::database::query_db_list_bind1<std::string, int>(
+            query, ret, version_group_id
         );
 
         return ret;

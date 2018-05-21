@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -43,6 +43,10 @@ namespace pkmn { namespace database {
      */
     PKMN_API std::vector<std::string> get_gamecube_shadow_pokemon_list(
         bool colosseum
+    );
+
+    PKMN_API std::vector<std::string> get_hm_move_list(
+        const std::string& game
     );
 
     /*!
@@ -116,6 +120,10 @@ namespace pkmn { namespace database {
      * @brief Returns a list (as presented in-game) of Super Training Medals in Generation VI.
      */
     PKMN_API std::vector<std::string> get_super_training_medal_list();
+
+    PKMN_API std::vector<std::string> get_tm_move_list(
+        const std::string& game
+    );
 
     /*!
      * @brief Returns a list of types available in the given game.
