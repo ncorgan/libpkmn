@@ -17,6 +17,7 @@
 
 #include <pkmn/breeding/child_info.hpp>
 #include <pkmn/breeding/compatibility.hpp>
+#include <pkmn/database/lists.hpp>
 #include <pkmn/database/pokemon_entry.hpp>
 
 #include <pksav/common/stats.h>
@@ -333,8 +334,36 @@ namespace pkmn { namespace breeding {
             }
         }
 
-        // TODO: add functions to get lists of TMs, HMs, check for father knowing
-        // TM or HM moves before Generation VI
+        /*
+         * Before Generation VI, if the father (or non-Ditto parent) knows any
+         * moves that are TMs/HMs the child is compatible with, then the child
+         * will learn these moves.
+         *
+         */
+        if((child_moves.size() < MAX_NUM_MOVES) && (generation <= 5))
+        {
+            pkmn::database::move_list_t child_tm_hm_moves = child_entry.get_tm_hm_moves();
+            std::vector<std::string> child_tm_hm_move_names;
+            for(const auto& child_tm_hm_move: child_tm_hm_moves)
+            {
+                child_tm_hm_move_names.emplace_back(child_tm_hm_move.get_name());
+            }
+
+            for(size_t move_index = 0;
+                (move_index < father_moves.size()) && (child_moves.size() < MAX_NUM_MOVES);
+                ++move_index)
+            {
+                auto tm_hm_move_name_iter = std::find(
+                                                child_tm_hm_move_names.begin(),
+                                                child_tm_hm_move_names.end(),
+                                                father_moves[move_index].move
+                                            );
+                if(tm_hm_move_name_iter != child_tm_hm_move_names.end())
+                {
+                    child_moves.emplace_back(*tm_hm_move_name_iter);
+                }
+            }
+        }
 
         /*
          * In Crystal, if the father knows any moves that the child can learn via

@@ -8,6 +8,7 @@
 #include "env.hpp"
 
 #include "swig/modules/cpp_wrappers/attribute_maps.hpp"
+#include "swig/modules/cpp_wrappers/breeding.hpp"
 #include "swig/modules/cpp_wrappers/item_slot.hpp"
 #include "swig/modules/cpp_wrappers/item_list.hpp"
 #include "swig/modules/cpp_wrappers/item_bag.hpp"
@@ -26,7 +27,7 @@
 
 namespace fs = boost::filesystem;
 
-TEST(cpp_swig_helper_test, test_attribute_maps)
+TEST(cpp_swig_wrapper_test, test_attribute_maps)
 {
     // TODO: test with class with more attributes
 
@@ -40,7 +41,7 @@ TEST(cpp_swig_helper_test, test_attribute_maps)
     EXPECT_EQ(190, attribute_map.get_attribute("Catch rate"));
 }
 
-TEST(cpp_swig_helper_test, test_item_slot)
+TEST(cpp_swig_wrapper_test, test_item_slot)
 {
     pkmn::item_list::sptr item_pocket = pkmn::item_list::make(
                                             "Items",
@@ -97,7 +98,7 @@ TEST(cpp_swig_helper_test, test_item_slot)
     EXPECT_EQ(0, second_slot.get_amount());
 }
 
-TEST(cpp_swig_helper_test, test_item_list)
+TEST(cpp_swig_wrapper_test, test_item_list)
 {
     pkmn::swig::item_list swig_item_list("Items", "Red");
 
@@ -120,7 +121,7 @@ TEST(cpp_swig_helper_test, test_item_list)
     EXPECT_GT(valid_items.size(), 0);
 }
 
-TEST(cpp_swig_helper_test, test_item_bag)
+TEST(cpp_swig_wrapper_test, test_item_bag)
 {
     pkmn::swig::item_bag swig_item_bag("Colosseum");
 
@@ -157,7 +158,7 @@ TEST(cpp_swig_helper_test, test_item_bag)
     }
 }
 
-TEST(cpp_swig_helper_test, test_pokedex)
+TEST(cpp_swig_wrapper_test, test_pokedex)
 {
     pkmn::pokedex::sptr cpp_pokedex = pkmn::pokedex::make("Red");
 
@@ -201,7 +202,7 @@ static void test_EV_IV_keys(
     EXPECT_EQ(expected_keys, map_keys);
 }
 
-TEST(cpp_swig_helper_test, test_pokemon_helpers)
+TEST(cpp_swig_wrapper_test, test_pokemon_helpers)
 {
     pkmn::pokemon::sptr pokemon = pkmn::pokemon::make(
                                       "Bulbasaur",
@@ -344,7 +345,7 @@ TEST(cpp_swig_helper_test, test_pokemon_helpers)
     EXPECT_FALSE(contest_stat_map.has_key("Not a key"));
 }
 
-TEST(cpp_swig_helper_test, test_pokemon)
+TEST(cpp_swig_wrapper_test, test_pokemon)
 {
     pkmn::swig::pokemon swig_pokemon(
                              "Bulbasaur",
@@ -456,7 +457,7 @@ TEST(cpp_swig_helper_test, test_pokemon)
     EXPECT_TRUE(fs::exists(swig_pokemon.get_sprite_filepath()));
 }
 
-TEST(cpp_swig_helper_test, test_pokemon_party)
+TEST(cpp_swig_wrapper_test, test_pokemon_party)
 {
     pkmn::swig::pokemon_party swig_pokemon_party("FireRed");
 
@@ -474,7 +475,7 @@ TEST(cpp_swig_helper_test, test_pokemon_party)
     EXPECT_EQ("Charmander", swig_pokemon_party.get_pokemon(0).get_species());
 }
 
-TEST(cpp_swig_helper_test, test_pokemon_box)
+TEST(cpp_swig_wrapper_test, test_pokemon_box)
 {
     pkmn::swig::pokemon_box swig_pokemon_box("FireRed");
 
@@ -494,7 +495,7 @@ TEST(cpp_swig_helper_test, test_pokemon_box)
     EXPECT_EQ("Charmander", swig_pokemon_box.get_pokemon(0).get_species());
 }
 
-TEST(cpp_swig_helper_test, test_pokemon_pc)
+TEST(cpp_swig_wrapper_test, test_pokemon_pc)
 {
     pkmn::swig::pokemon_pc swig_pokemon_pc("FireRed");
 
@@ -515,7 +516,7 @@ TEST(cpp_swig_helper_test, test_pokemon_pc)
     EXPECT_EQ("Charizard", swig_pokemon_pc.get_box(4).get_pokemon(4).get_species());
 }
 
-TEST(cpp_swig_helper_test, test_game_save)
+TEST(cpp_swig_wrapper_test, test_game_save)
 {
     static const fs::path PKSAV_TEST_SAVES(pkmn_getenv("PKSAV_TEST_SAVES"));
 
@@ -569,4 +570,50 @@ TEST(cpp_swig_helper_test, test_game_save)
     EXPECT_EQ(20, swig_game_save.get_pokemon_party().get_pokemon(1).get_EVs().get_EV("Attack"));
     EXPECT_EQ(5, swig_game_save.get_pokemon_pc().get_box(5).get_pokemon(20).get_IVs().get_IV("HP"));
     EXPECT_EQ("Repel", swig_game_save.get_item_bag().get_pocket("Items").at(0).get_item());
+}
+
+TEST(cpp_swig_wrapper_test, test_breeding)
+{
+    pkmn::pokemon::sptr mother = pkmn::pokemon::make("Illumise", "Ruby", "", 50);
+    pkmn::pokemon::sptr father = pkmn::pokemon::make("Volbeat", "Ruby", "", 50);
+
+    mother->set_move("Helping Hand", 0);
+
+    father->set_move("Helping Hand", 0);
+    father->set_move("Water Pulse", 1);
+
+    pkmn::swig::pokemon mother_swig(mother);
+    pkmn::swig::pokemon father_swig(father);
+
+    // get_child_moves
+
+    const std::string child_species = "Illumise";
+
+    std::vector<std::string> child_moves_cpp = pkmn::breeding::get_child_moves(
+                                                   mother,
+                                                   father,
+                                                   child_species
+                                               );
+    std::vector<std::string> child_moves_swig = pkmn::swig::breeding::get_child_moves(
+                                                    mother_swig,
+                                                    father_swig,
+                                                    child_species
+                                                );
+    EXPECT_EQ(child_moves_cpp, child_moves_swig);
+
+    // get_ideal_child_IVs
+
+    const std::string child_gender = "Female";
+
+    std::map<std::string, int> ideal_child_IVs_cpp = pkmn::breeding::get_ideal_child_IVs(
+                                                         mother,
+                                                         father,
+                                                         child_gender
+                                                     );
+    std::map<std::string, int> ideal_child_IVs_swig = pkmn::swig::breeding::get_ideal_child_IVs(
+                                                          mother_swig,
+                                                          father_swig,
+                                                          child_gender
+                                                      );
+    EXPECT_EQ(ideal_child_IVs_cpp, ideal_child_IVs_swig);
 }

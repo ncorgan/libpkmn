@@ -15,6 +15,8 @@ PKMN_PYTHON_INIT
 %{
     #include <pkmn/breeding/child_info.hpp>
     #include <pkmn/breeding/compatibility.hpp>
+
+    #include "cpp_wrappers/breeding.hpp"
 %}
 
 // Convert Doxygen docs to Python docstrings
@@ -22,3 +24,4 @@ PKMN_PYTHON_INIT
 
 %include <pkmn/breeding/child_info.hpp>
 %include <pkmn/breeding/compatibility.hpp>
+%include <cpp_wrappers/breeding.hpp>
