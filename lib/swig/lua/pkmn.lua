@@ -7,6 +7,7 @@
 
 local pkmn = require("pkmn_core_lua")
 
+pkmn.breeding = require("pkmn_breeding_lua")
 pkmn.buildinfo = require("pkmn_buildinfo_lua")
 pkmn.calculations = require("pkmn_calculations_lua")
 pkmn.database = require("pkmn_database_lua")

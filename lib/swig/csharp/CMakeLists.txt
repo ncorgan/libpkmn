@@ -57,6 +57,7 @@ SET(SWIG_CSHARP_LIBRARIES
 INCLUDE(SWIGCSharp)
 SWIG_CSHARP_INIT()
 
+SWIG_BUILD_CSHARP_MODULE(breeding_csharp Breeding TRUE PKMN)
 SWIG_BUILD_CSHARP_MODULE(calculations_csharp Calculations TRUE PKMN)
 SWIG_BUILD_CSHARP_MODULE(database_csharp Database TRUE PKMN.Database)
 SWIG_BUILD_CSHARP_MODULE(gui_csharp GUI TRUE PKMN)
@@ -66,6 +67,7 @@ SWIG_BUILD_CSHARP_MODULE(pkmn_csharp PKMN TRUE PKMN)
 SWIG_BUILD_CSHARP_MODULE(stl_csharp STL TRUE PKMN)
 
 SET(swig_modules
+    breeding_csharp
     calculations_csharp
     database_csharp
     gui_csharp

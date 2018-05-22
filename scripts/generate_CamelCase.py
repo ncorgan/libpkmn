@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright (c) 2015-2017 Nicholas Corgan (n.corgan@gmail.com)
+# Copyright (c) 2015-2018 Nicholas Corgan (n.corgan@gmail.com)
 #
 # Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
 # or copy at http://opensource.org/licenses/MIT)
@@ -67,6 +67,8 @@ def generate_new_name(old_name, pascal):
         new_name = "getEvolutions"
     elif new_name == "GetType":
         new_name = "GetMoveType"
+    elif "GetIDeal" in new_name:
+        new_name = new_name.replace("GetIDeal", "GetIdeal")
 
     return new_name
 

@@ -5,13 +5,13 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-%include <python/python_init.i>
-PKMN_PYTHON_INIT
+%include <csharp/csharp_init.i>
+PKMN_CSHARP_INIT
 
 %include <std_string.i>
 
-%import <pkmn_python.i>
-%import <stl_python.i>
+%import <pkmn_csharp.i>
+%import <stl_csharp.i>
 
 %{
     #include <pkmn/breeding/child_info.hpp>
@@ -20,8 +20,8 @@ PKMN_PYTHON_INIT
     #include "cpp_wrappers/breeding.hpp"
 %}
 
-// Convert Doxygen docs to Python docstrings
-%include <pkmn_python_docstrings.i>
+// Convert Doxygen docs to C# docs
+%include <pkmn_csharp_docs.i>
 
 %include <pkmn/breeding/child_info.hpp>
 %include <pkmn/breeding/compatibility.hpp>

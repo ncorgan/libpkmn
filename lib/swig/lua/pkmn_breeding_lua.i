@@ -5,13 +5,11 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-%include <python/python_init.i>
-PKMN_PYTHON_INIT
+%include <lua/lua_init.i>
+PKMN_LUA_INIT
 
-%include <std_string.i>
-
-%import <pkmn_python.i>
-%import <stl_python.i>
+%import <pkmn_core_lua.i>
+%import <pkmn_stl_lua.i>
 
 %{
     #include <pkmn/breeding/child_info.hpp>
@@ -19,9 +17,6 @@ PKMN_PYTHON_INIT
 
     #include "cpp_wrappers/breeding.hpp"
 %}
-
-// Convert Doxygen docs to Python docstrings
-%include <pkmn_python_docstrings.i>
 
 %include <pkmn/breeding/child_info.hpp>
 %include <pkmn/breeding/compatibility.hpp>

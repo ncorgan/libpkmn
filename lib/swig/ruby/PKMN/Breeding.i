@@ -5,13 +5,13 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-%include <python/python_init.i>
-PKMN_PYTHON_INIT
+%module "PKMN::Breeding"
 
-%include <std_string.i>
+%include <ruby/ruby_init.i>
+PKMN_RUBY_INIT
 
-%import <pkmn_python.i>
-%import <stl_python.i>
+%import <STL.i>
+%import <PKMNRuby.i>
 
 %{
     #include <pkmn/breeding/child_info.hpp>
@@ -19,9 +19,6 @@ PKMN_PYTHON_INIT
 
     #include "cpp_wrappers/breeding.hpp"
 %}
-
-// Convert Doxygen docs to Python docstrings
-%include <pkmn_python_docstrings.i>
 
 %include <pkmn/breeding/child_info.hpp>
 %include <pkmn/breeding/compatibility.hpp>
