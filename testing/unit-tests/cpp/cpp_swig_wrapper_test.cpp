@@ -9,6 +9,8 @@
 
 #include "swig/modules/cpp_wrappers/attribute_maps.hpp"
 #include "swig/modules/cpp_wrappers/breeding.hpp"
+#include "swig/modules/cpp_wrappers/daycare.hpp"
+#include "swig/modules/cpp_wrappers/daycare_helpers.hpp"
 #include "swig/modules/cpp_wrappers/item_slot.hpp"
 #include "swig/modules/cpp_wrappers/item_list.hpp"
 #include "swig/modules/cpp_wrappers/item_bag.hpp"
@@ -616,4 +618,49 @@ TEST(cpp_swig_wrapper_test, test_breeding)
                                                           child_gender
                                                       );
     EXPECT_EQ(ideal_child_IVs_cpp, ideal_child_IVs_swig);
+}
+
+TEST(cpp_swig_wrapper_test, test_daycare)
+{
+    pkmn::daycare::sptr daycare = pkmn::daycare::make("Gold");
+    const pkmn::pokemon_list_t& levelup_pokemon_list = daycare->get_levelup_pokemon();
+    const pkmn::pokemon_list_t& breeding_pokemon_list = daycare->get_breeding_pokemon();
+
+    pkmn::swig::daycare daycare_swig(daycare);
+    pkmn::swig::daycare_levelup_pokemon levelup_pokemon_swig(daycare);
+    pkmn::swig::daycare_breeding_pokemon breeding_pokemon_swig(daycare);
+
+    EXPECT_EQ(
+        daycare->get_levelup_pokemon_capacity(),
+        levelup_pokemon_swig.get_capacity()
+    );
+    EXPECT_EQ(
+        daycare->get_breeding_pokemon_capacity(),
+        breeding_pokemon_swig.get_capacity()
+    );
+
+    pkmn::pokemon::sptr new_pokemon_cpp = pkmn::pokemon::make(
+                                              "Chikorita",
+                                              "Gold",
+                                              "",
+                                              10
+                                          );
+    pkmn::swig::pokemon new_pokemon_swig(
+                            "Cyndaquil",
+                            "Gold",
+                            "",
+                            10
+                        );
+
+    daycare->set_levelup_pokemon(0, new_pokemon_cpp);
+    EXPECT_EQ(
+        levelup_pokemon_list[0],
+        levelup_pokemon_swig.get_pokemon(0).get_internal()
+    );
+
+    breeding_pokemon_swig.set_pokemon(1, new_pokemon_swig);
+    EXPECT_EQ(
+        breeding_pokemon_swig.get_pokemon(0).get_internal(),
+        breeding_pokemon_list[0]
+    );
 }

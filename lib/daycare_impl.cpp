@@ -67,7 +67,7 @@ namespace pkmn {
         _can_breed(false),
         _levelup_pokemon(),
         _breeding_pokemon(),
-        _egg(pkmn::pokemon::make("None", pkmn::database::game_id_to_name(game_id), "", 1)),
+        _egg(nullptr),
         _p_native(nullptr),
         _is_our_mem(false)
     {}
