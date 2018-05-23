@@ -202,7 +202,10 @@ namespace pkmn {
                 PKSAV_GEN1_POKEMON_NICKNAME_LENGTH
             );
         )
-        r_levelup_pokemon[0]->set_nickname(nickname);
+        if(std::strlen(nickname) > 0)
+        {
+            r_levelup_pokemon[0]->set_nickname(nickname);
+        }
 
         char otname[PKSAV_GEN1_POKEMON_OTNAME_LENGTH + 1] = {0};
         PKSAV_CALL(
@@ -212,7 +215,10 @@ namespace pkmn {
                 PKSAV_GEN1_POKEMON_OTNAME_LENGTH
             );
         )
-        r_levelup_pokemon[0]->set_original_trainer_name(otname);
+        if(std::strlen(otname) > 0)
+        {
+            r_levelup_pokemon[0]->set_original_trainer_name(otname);
+        }
     }
 
     void daycare_gen1impl::_to_native_levelup()

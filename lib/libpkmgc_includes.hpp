@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -27,6 +27,10 @@
 #include <LibPkmGC/GC/Common/BagData.h>
 #include <LibPkmGC/Colosseum/Common/BagData.h>
 #include <LibPkmGC/XD/Common/BagData.h>
+
+#include <LibPkmGC/GC/Common/DaycareData.h>
+#include <LibPkmGC/Colosseum/Common/DaycareData.h>
+#include <LibPkmGC/XD/Common/DaycareData.h>
 
 #include <LibPkmGC/GC/Common/PCData.h>
 #include <LibPkmGC/Colosseum/Common/PCData.h>

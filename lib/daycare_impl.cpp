@@ -46,6 +46,7 @@ namespace pkmn {
                 {
                     throw pkmn::unimplemented_error();
                 }
+                break;
 
             case 4:
             case 5:
