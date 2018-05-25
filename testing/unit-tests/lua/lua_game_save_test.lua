@@ -500,7 +500,7 @@ end
 
 function test_red_game_save()
     game_save_test.test_game_save(
-        "Red/Blue/Yellow",
+        "Red/Blue",
         "Red",
         "red_blue",
         "pokemon_red.sav"
@@ -509,7 +509,7 @@ end
 
 function test_yellow_game_save()
     game_save_test.test_game_save(
-        "Red/Blue/Yellow",
+        "Yellow",
         "Yellow",
         "yellow",
         "pokemon_yellow.sav"

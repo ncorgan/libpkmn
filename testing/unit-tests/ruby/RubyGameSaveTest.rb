@@ -52,9 +52,7 @@ class GameSaveTest < PKMNTest
         if @@GB_GAMES.include?(save.game)
             assert_equal(@@DEFAULT_TRAINER_PID, save.trainer_id)
             assert_equal(@@DEFAULT_TRAINER_PID, save.trainer_public_id)
-            assert_raises RuntimeError do
-                save.trainer_secret_id
-            end
+            assert_equal(0, save.trainer_secret_id)
         else
             assert_equal(PKMN::Pokemon.DEFAULT_TRAINER_ID, save.trainer_id)
             assert_equal(@@DEFAULT_TRAINER_PID, save.trainer_public_id)
@@ -351,8 +349,8 @@ class GameSaveTest < PKMNTest
         File.delete(temp_save_path)
     end
 
-    [["Red/Blue/Yellow", "Red", "red_blue/pokemon_red.sav"],
-     ["Red/Blue/Yellow", "Yellow", "yellow/pokemon_yellow.sav"],
+    [["Red/Blue", "Red", "red_blue/pokemon_red.sav"],
+     ["Yellow", "Yellow", "yellow/pokemon_yellow.sav"],
      ["Gold/Silver", "Gold", "gold_silver/pokemon_gold.sav"],
      ["Crystal", "Crystal", "crystal/pokemon_crystal.sav"],
      ["Ruby/Sapphire", "Ruby", "ruby_sapphire/pokemon_ruby.sav"],

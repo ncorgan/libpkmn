@@ -18,7 +18,8 @@
 static const std::unordered_map<std::string, enum pkmn_game_save_type> GAME_SAVE_TYPES =
 {
     {"None", PKMN_GAME_SAVE_TYPE_NONE},
-    {"Red/Blue/Yellow", PKMN_GAME_SAVE_TYPE_RED_BLUE_YELLOW},
+    {"Red/Blue", PKMN_GAME_SAVE_TYPE_RED_BLUE},
+    {"Yellow", PKMN_GAME_SAVE_TYPE_YELLOW},
     {"Gold/Silver", PKMN_GAME_SAVE_TYPE_GOLD_SILVER},
     {"Crystal", PKMN_GAME_SAVE_TYPE_CRYSTAL},
     {"Ruby/Sapphire", PKMN_GAME_SAVE_TYPE_RUBY_SAPPHIRE},

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -610,13 +610,7 @@ public class PokemonTestCommon
             Assert.AreEqual(pokemon.Level, pokemon.LevelMet);
         }
 
-        // TODO: add iterator for move slots
         Assert.AreEqual(4, pokemon.Moves.Count);
-        for(int moveIndex = 0; moveIndex < pokemon.Moves.Count; ++moveIndex)
-        {
-            Assert.AreEqual("None", pokemon.Moves[moveIndex].Move);
-            Assert.AreEqual(0, pokemon.Moves[moveIndex].PP);
-        }
 
         Assert.IsTrue(System.IO.File.Exists(pokemon.IconFilepath));
         Assert.IsTrue(System.IO.File.Exists(pokemon.SpriteFilepath));
@@ -650,8 +644,7 @@ public class PokemonTestCommon
         }
         foreach(string key in pokemon.EVs.Keys)
         {
-            Assert.IsTrue(pokemon.EVs[key] >= 0);
-            Assert.IsTrue(pokemon.EVs[key] <= ((generation >= 3) ? 255 : 65535));
+            Assert.AreEqual(pokemon.EVs[key], 0);
         }
 
         // IVs
@@ -1391,11 +1384,11 @@ public class PokemonTestCommon
         pokemon.CurrentHP = 0;
         Assert.AreEqual(0, pokemon.CurrentHP);
 
-        pokemon.CurrentHP = pokemon.Stats["HP"];
-        Assert.AreEqual(pokemon.Stats["HP"], pokemon.CurrentHP);
-
         pokemon.CurrentHP = pokemon.Stats["HP"] - 1;
         Assert.AreEqual(pokemon.Stats["HP"] - 1, pokemon.CurrentHP);
+
+        pokemon.CurrentHP = pokemon.Stats["HP"];
+        Assert.AreEqual(pokemon.Stats["HP"], pokemon.CurrentHP);
 
         // Set the HP stat to lower than the current HP, and make sure
         // it's updated.

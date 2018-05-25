@@ -148,7 +148,7 @@ namespace pkmn
         _set_has_caught(species_id, has_caught_value);
 
         // If a Pokémon has been caught, then it must have been seen.
-        if(has_caught_value and (not has_caught(species)))
+        if(has_caught_value and (not has_seen(species)))
         {
             set_has_seen(species, true);
         }

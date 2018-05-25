@@ -87,8 +87,7 @@ class game_save_test(pkmntest.base_test):
         )
         self.assertEqual(self.save.trainer_public_id, DEFAULT_TRAINER_PID)
         if is_gb_game:
-            with self.assertRaises(RuntimeError):
-                self.save.trainer_secret_id
+            self.assertEqual(self.save.trainer_secret_id, 0)
         else:
             self.assertEqual(self.save.trainer_secret_id, DEFAULT_TRAINER_SID)
 
@@ -369,8 +368,8 @@ class game_save_test(pkmntest.base_test):
             self.__compare_pokedexes(pokedex1, pokedex2)
 
     @parameterized.expand([
-        ("Red/Blue/Yellow", "Red", "red_blue", "pokemon_red.sav"),
-        ("Red/Blue/Yellow", "Yellow", "yellow", "pokemon_yellow.sav"),
+        ("Red/Blue", "Red", "red_blue", "pokemon_red.sav"),
+        ("Yellow", "Yellow", "yellow", "pokemon_yellow.sav"),
         ("Gold/Silver", "Gold", "gold_silver", "pokemon_gold.sav"),
         ("Crystal", "Crystal", "crystal", "pokemon_crystal.sav"),
         ("Ruby/Sapphire", "Ruby", "ruby_sapphire", "pokemon_ruby.sav"),

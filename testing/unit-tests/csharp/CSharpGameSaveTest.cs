@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -9,14 +9,16 @@ using System;
 using NUnit.Framework;
 
 [TestFixture]
-public class CSharpGameSaveTest {
+public class CSharpGameSaveTest
+{
     /*
      * Red
      */
     [Test]
-    public void RedGameSaveTest() {
+    public void RedGameSaveTest()
+    {
         PKMNTest.GameSaveTest.TestGameSave(
-            "Red/Blue/Yellow",
+            "Red/Blue",
             "Red",
             "red_blue/pokemon_red.sav"
         );
@@ -26,9 +28,10 @@ public class CSharpGameSaveTest {
      * Yellow
      */
     [Test]
-    public void YellowGameSaveTest() {
+    public void YellowGameSaveTest()
+    {
         PKMNTest.GameSaveTest.TestGameSave(
-            "Red/Blue/Yellow",
+            "Yellow",
             "Yellow",
             "yellow/pokemon_yellow.sav"
         );
@@ -38,7 +41,8 @@ public class CSharpGameSaveTest {
      * Gold
      */
     [Test]
-    public void GoldGameSaveTest() {
+    public void GoldGameSaveTest()
+    {
         PKMNTest.GameSaveTest.TestGameSave(
             "Gold/Silver",
             "Gold",
@@ -50,7 +54,8 @@ public class CSharpGameSaveTest {
      * Crystal
      */
     [Test]
-    public void CrystalGameSaveTest() {
+    public void CrystalGameSaveTest()
+    {
         PKMNTest.GameSaveTest.TestGameSave(
             "Crystal",
             "Crystal",
@@ -62,7 +67,8 @@ public class CSharpGameSaveTest {
      * Ruby
      */
     [Test]
-    public void RubyGameSaveTest() {
+    public void RubyGameSaveTest()
+    {
         PKMNTest.GameSaveTest.TestGameSave(
             "Ruby/Sapphire",
             "Ruby",
@@ -74,7 +80,8 @@ public class CSharpGameSaveTest {
      * Emerald
      */
     [Test]
-    public void EmeraldGameSaveTest() {
+    public void EmeraldGameSaveTest()
+    {
         PKMNTest.GameSaveTest.TestGameSave(
             "Emerald",
             "Emerald",
@@ -86,7 +93,8 @@ public class CSharpGameSaveTest {
      * FireRed
      */
     [Test]
-    public void FireRedGameSaveTest() {
+    public void FireRedGameSaveTest()
+    {
         PKMNTest.GameSaveTest.TestGameSave(
             "FireRed/LeafGreen",
             "FireRed",
@@ -98,7 +106,8 @@ public class CSharpGameSaveTest {
      * Colosseum
      */
     [Test]
-    public void ColosseumGameSaveTest() {
+    public void ColosseumGameSaveTest()
+    {
         PKMNTest.GameSaveTest.TestGameSave(
             "Colosseum/XD",
             "Colosseum",
@@ -110,7 +119,8 @@ public class CSharpGameSaveTest {
      * XD
      */
     [Test]
-    public void XDGameSaveTest() {
+    public void XDGameSaveTest()
+    {
         PKMNTest.GameSaveTest.TestGameSave(
             "Colosseum/XD",
             "XD",

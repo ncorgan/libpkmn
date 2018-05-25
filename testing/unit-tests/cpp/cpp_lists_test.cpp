@@ -173,7 +173,7 @@ TEST(cpp_lists_test, item_list_test) {
     EXPECT_FALSE(string_in_vector(items_xd, "Magma Emblem"));
 
     EXPECT_FALSE(string_in_vector(items_rs, "Helix Fossil"));
-    EXPECT_FALSE(string_in_vector(items_e, "Helix Fossil"));
+    EXPECT_TRUE(string_in_vector(items_e, "Helix Fossil"));
     EXPECT_TRUE(string_in_vector(items_frlg, "Helix Fossil"));
     EXPECT_FALSE(string_in_vector(items_colo, "Helix Fossil"));
     EXPECT_FALSE(string_in_vector(items_xd, "Helix Fossil"));

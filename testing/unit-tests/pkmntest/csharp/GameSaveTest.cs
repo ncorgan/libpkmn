@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * DIstributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -77,12 +77,7 @@ public class GameSaveTest
         );
         if(gbGame)
         {
-            Assert.Throws<ApplicationException>(
-                delegate
-                {
-                    ushort SID = gameSave.TrainerSecretID;
-                }
-            );
+            Assert.AreEqual(gameSave.TrainerSecretID, 0);
         }
         else
         {

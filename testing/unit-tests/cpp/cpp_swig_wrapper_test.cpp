@@ -29,18 +29,54 @@
 
 namespace fs = boost::filesystem;
 
+static const fs::path PKSAV_TEST_SAVES(pkmn_getenv("PKSAV_TEST_SAVES"));
+
 TEST(cpp_swig_wrapper_test, test_attribute_maps)
 {
-    // TODO: test with class with more attributes
+    fs::path save_filepath(PKSAV_TEST_SAVES / "firered_leafgreen" / "pokemon_firered.sav");
 
+    pkmn::game_save::sptr game_save = pkmn::game_save::from_file(save_filepath.string());
+    pkmn::swig::game_save game_save_swig(game_save);
+
+    // Numeric attributes
+    pkmn::swig::numeric_attribute_map<pkmn::game_save> game_save_numeric_attribute_map =
+        game_save_swig.get_numeric_attributes();
+
+    game_save->set_numeric_attribute("Casino coins", 500);
+    EXPECT_EQ(500, game_save_numeric_attribute_map.get_attribute("Casino coins"));
+
+    game_save_numeric_attribute_map.set_attribute("Textbox frame", 3);
+    EXPECT_EQ(3, game_save->get_numeric_attribute("Textbox frame"));
+
+    // String attributes
+    pkmn::swig::string_attribute_map<pkmn::game_save> game_save_string_attribute_map =
+        game_save_swig.get_string_attributes();
+
+    game_save->set_string_attribute("Sound output", "Stereo");
+    EXPECT_EQ("Stereo", game_save_string_attribute_map.get_attribute("Sound output"));
+
+    game_save_string_attribute_map.set_attribute("Battle style", "Set");
+    EXPECT_EQ("Set", game_save->get_string_attribute("Battle style"));
+
+    // Boolean attributes
+    pkmn::swig::boolean_attribute_map<pkmn::game_save> game_save_boolean_attribute_map =
+        game_save_swig.get_boolean_attributes();
+
+    game_save->set_boolean_attribute("National Dex unlocked?", false);
+    EXPECT_FALSE(game_save_boolean_attribute_map.get_attribute("National Dex unlocked?"));
+
+    game_save_boolean_attribute_map.set_attribute("Enable battle scene?", true);
+    EXPECT_TRUE(game_save->get_boolean_attribute("Enable battle scene?"));
+
+    // Test with a read-only attribute.
     pkmn::pokemon::sptr pokemon = pkmn::pokemon::make(
                                       "Pikachu",
                                       "Red",
                                       "",
                                       5
                                   );
-    pkmn::swig::numeric_attribute_map<pkmn::pokemon> attribute_map(pokemon);
-    EXPECT_EQ(190, attribute_map.get_attribute("Catch rate"));
+    pkmn::swig::numeric_attribute_map<pkmn::pokemon> pokemon_numeric_attribute_map(pokemon);
+    EXPECT_EQ(190, pokemon_numeric_attribute_map.get_attribute("Catch rate"));
 }
 
 TEST(cpp_swig_wrapper_test, test_item_slot)
@@ -427,8 +463,9 @@ TEST(cpp_swig_wrapper_test, test_pokemon)
     swig_pokemon.set_level(50);
     EXPECT_EQ(50, swig_pokemon.get_level());
 
-    EXPECT_EQ("None", swig_pokemon.get_moves().get_move_slot(0).get_move());
-    EXPECT_EQ(0, swig_pokemon.get_moves().get_move_slot(0).get_pp());
+    swig_pokemon.get_moves().get_move_slot(0).set_move("Razor Leaf");
+    EXPECT_EQ("Razor Leaf", swig_pokemon.get_moves().get_move_slot(0).get_move());
+    EXPECT_EQ(25, swig_pokemon.get_moves().get_move_slot(0).get_pp());
 
     swig_pokemon.get_moves().get_move_slot(0).set_move("Fissure");
     EXPECT_EQ("Fissure", swig_pokemon.get_moves().get_move_slot(0).get_move());
@@ -520,8 +557,6 @@ TEST(cpp_swig_wrapper_test, test_pokemon_pc)
 
 TEST(cpp_swig_wrapper_test, test_game_save)
 {
-    static const fs::path PKSAV_TEST_SAVES(pkmn_getenv("PKSAV_TEST_SAVES"));
-
     fs::path save_filepath(PKSAV_TEST_SAVES / "firered_leafgreen" / "pokemon_firered.sav");
 
     pkmn::swig::game_save swig_game_save(save_filepath.string());

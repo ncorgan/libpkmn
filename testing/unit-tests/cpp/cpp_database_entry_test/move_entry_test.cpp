@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -48,7 +48,7 @@ TEST_P(move_entry_none_test, move_entry_none_test) {
     EXPECT_EQ("None", none_entry.get_target());
     EXPECT_EQ("None", none_entry.get_damage_class());
     EXPECT_EQ(-1, none_entry.get_base_power());
-    EXPECT_EQ(-1, none_entry.get_pp(0));
+    EXPECT_EQ(0, none_entry.get_pp(0));
     EXPECT_FLOAT_EQ(-1.0f, none_entry.get_accuracy());
     EXPECT_EQ(-9, none_entry.get_priority());
     EXPECT_EQ("None", none_entry.get_effect());

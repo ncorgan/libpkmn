@@ -26,8 +26,10 @@ enum pkmn_game_save_type
 {
     //! Not a valid save.
     PKMN_GAME_SAVE_TYPE_NONE = 0,
-    //! Red/Blue/Yellow
-    PKMN_GAME_SAVE_TYPE_RED_BLUE_YELLOW,
+    //! Red/Blue
+    PKMN_GAME_SAVE_TYPE_RED_BLUE,
+    //! Yellow
+    PKMN_GAME_SAVE_TYPE_YELLOW,
     //! Gold/Silver
     PKMN_GAME_SAVE_TYPE_GOLD_SILVER,
     //! Crystal
