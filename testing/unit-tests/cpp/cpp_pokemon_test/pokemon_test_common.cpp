@@ -86,13 +86,6 @@ static void check_initial_values(
         EXPECT_EQ(pokemon->get_level(), pokemon->get_level_met());
     }
 
-    const pkmn::move_slots_t& move_slots = pokemon->get_moves();
-    EXPECT_EQ(4, move_slots.size());
-    for(auto iter = move_slots.begin(); iter != move_slots.end(); ++iter) {
-        EXPECT_EQ("None", iter->move);
-        EXPECT_EQ(0, iter->pp);
-    }
-
     EXPECT_TRUE(fs::exists(pokemon->get_icon_filepath()));
     EXPECT_TRUE(fs::exists(pokemon->get_sprite_filepath()));
 
@@ -118,9 +111,9 @@ static void check_initial_maps(
         EXPECT_EQ(0, EVs.count("Special Attack"));
         EXPECT_EQ(0, EVs.count("Special Defense"));
     }
-    for(auto EV_iter = EVs.begin(); EV_iter != EVs.end(); ++EV_iter) {
-        EXPECT_GE(EV_iter->second, 0);
-        EXPECT_LE(EV_iter->second, (generation >= 3) ? MODERN_EV_MAX : GB_EV_MAX);
+    for(auto EV_iter = EVs.begin(); EV_iter != EVs.end(); ++EV_iter)
+    {
+        EXPECT_EQ(EV_iter->second, 0) << EV_iter->first;
     }
 
     const std::map<std::string, int>& IVs = pokemon->get_IVs();

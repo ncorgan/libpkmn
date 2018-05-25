@@ -112,13 +112,6 @@ namespace pkmn
                        ));
         _growth->friendship = uint8_t(_database_entry.get_base_friendship());
 
-        _effort->ev_hp    = rng.rand();
-        _effort->ev_atk   = rng.rand();
-        _effort->ev_def   = rng.rand();
-        _effort->ev_spd   = rng.rand();
-        _effort->ev_spatk = rng.rand();
-        _effort->ev_spdef = rng.rand();
-
         set_location_met("Fateful encounter", false);
         set_level_met(level);
         set_original_game(get_game());
@@ -151,7 +144,7 @@ namespace pkmn
         _init_contest_stat_map(&_effort->contest_stats);
         _init_markings_map(&GBA_PC_RCAST->markings);
         set_level(level);
-        _update_moves(-1);
+        _init_default_moves_for_level();
 
         if(_database_entry.get_species_id() == UNOWN_ID)
         {

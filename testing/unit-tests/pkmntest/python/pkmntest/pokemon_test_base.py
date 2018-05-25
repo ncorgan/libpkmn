@@ -117,9 +117,7 @@ class pokemon_test_base(base_test):
         if generation >= 2:
             self.assertEqual(pokemon.level_met, pokemon.level)
 
-        for move_index in range(len(pokemon.moves)):
-            self.assertEqual(pokemon.moves[move_index].move, "None")
-            self.assertEqual(pokemon.moves[move_index].pp, 0)
+        self.assertEqual(len(pokemon.moves), 4)
 
         self.assertTrue(os.path.exists(pokemon.icon_filepath))
         self.assertTrue(os.path.exists(pokemon.sprite_filepath))
@@ -145,11 +143,7 @@ class pokemon_test_base(base_test):
             self.assertFalse("Special Defense" in pokemon.EVs.keys)
 
         for EV in pokemon.EVs.keys:
-            self.assertGreaterEqual(pokemon.EVs[EV], 0)
-            self.assertLessEqual(
-                pokemon.EVs[EV],
-                (255 if generation >= 3 else 65535)
-            )
+            self.assertEqual(pokemon.EVs[EV], 0)
 
         # IVs
 

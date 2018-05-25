@@ -84,13 +84,6 @@ namespace pkmn
 
         GEN2_PC_RCAST->ot_id = pksav_bigendian16(uint16_t(DEFAULT_TRAINER_ID & 0xFFFF));
 
-        pkmn::rng<uint16_t> rng;
-        GEN2_PC_RCAST->ev_hp   = rng.rand();
-        GEN2_PC_RCAST->ev_atk  = rng.rand();
-        GEN2_PC_RCAST->ev_def  = rng.rand();
-        GEN2_PC_RCAST->ev_spd  = rng.rand();
-        GEN2_PC_RCAST->ev_spcl = rng.rand();
-
         if(_database_entry.get_species_id() == UNOWN_ID)
         {
             _set_unown_IVs_from_form(
@@ -99,6 +92,7 @@ namespace pkmn
         }
         else
         {
+            pkmn::rng<uint16_t> rng;
             GEN2_PC_RCAST->iv_data = rng.rand();
         }
 
@@ -122,7 +116,7 @@ namespace pkmn
         _update_EV_map();
         _init_gb_IV_map(&GEN2_PC_RCAST->iv_data);
         set_level(level);
-        _update_moves(-1);
+        _init_default_moves_for_level();
     }
 
     pokemon_gen2impl::pokemon_gen2impl(

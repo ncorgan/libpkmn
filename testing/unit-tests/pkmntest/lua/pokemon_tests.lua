@@ -542,11 +542,6 @@ function pokemon_tests.check_initial_values(pokemon)
     luaunit.assertEquals(pokemon.level, 30)
 
     luaunit.assertEquals(#pokemon.moves, 4)
-    for move_index = 1, #pokemon.moves
-    do
-        luaunit.assertEquals(pokemon.moves[move_index].move, "None")
-        luaunit.assertEquals(pokemon.moves[move_index].pp, 0)
-    end
 
     luaunit.assertTrue(pkmntest_utils.file_exists(pokemon.icon_filepath))
     luaunit.assertTrue(pkmntest_utils.file_exists(pokemon.sprite_filepath))
@@ -637,16 +632,7 @@ function pokemon_tests.check_initial_maps(pokemon)
     local EV_names = pokemon.EVs.keys
     for EV_index = 1, #EV_names
     do
-        luaunit.assertTrue(pokemon.EVs[EV_names[EV_index]] >= 0)
-
-        local max_EV = 0
-        if generation >= 3
-        then
-            max_EV = 255
-        else
-            max_EV = 65535
-        end
-        luaunit.assertTrue(pokemon.EVs[EV_names[EV_index]] <= max_EV)
+        luaunit.assertEquals(pokemon.EVs[EV_names[EV_index]], 0)
     end
 
     -- IVs

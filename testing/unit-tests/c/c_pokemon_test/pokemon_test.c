@@ -329,18 +329,6 @@ static void check_initial_values(
     PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_EQUAL(4, move_slots.length);
 
-    for(size_t move_index = 0; move_index < move_slots.length; ++move_index)
-    {
-        TEST_ASSERT_EQUAL_STRING(
-            "None",
-            move_slots.move_slots[move_index].move
-        );
-        TEST_ASSERT_EQUAL(
-            0,
-            move_slots.move_slots[move_index].pp
-        );
-    }
-
     error = pkmn_move_slots_free(&move_slots);
     PKMN_TEST_ASSERT_SUCCESS(error);
 
@@ -403,19 +391,19 @@ static void check_initial_maps(
                 NULL
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
-    TEST_ASSERT_NOT_EQUAL(-1, EVs[PKMN_STAT_HP]);
-    TEST_ASSERT_NOT_EQUAL(-1, EVs[PKMN_STAT_ATTACK]);
-    TEST_ASSERT_NOT_EQUAL(-1, EVs[PKMN_STAT_DEFENSE]);
-    TEST_ASSERT_NOT_EQUAL(-1, EVs[PKMN_STAT_SPEED]);
+    TEST_ASSERT_EQUAL(0, EVs[PKMN_STAT_HP]);
+    TEST_ASSERT_EQUAL(0, EVs[PKMN_STAT_ATTACK]);
+    TEST_ASSERT_EQUAL(0, EVs[PKMN_STAT_DEFENSE]);
+    TEST_ASSERT_EQUAL(0, EVs[PKMN_STAT_SPEED]);
     if(generation >= 3)
     {
         TEST_ASSERT_EQUAL(-1, EVs[PKMN_STAT_SPECIAL]);
-        TEST_ASSERT_NOT_EQUAL(-1, EVs[PKMN_STAT_SPATK]);
-        TEST_ASSERT_NOT_EQUAL(-1, EVs[PKMN_STAT_SPDEF]);
+        TEST_ASSERT_EQUAL(0,  EVs[PKMN_STAT_SPATK]);
+        TEST_ASSERT_EQUAL(0,  EVs[PKMN_STAT_SPDEF]);
     }
     else
     {
-        TEST_ASSERT_NOT_EQUAL(-1, EVs[PKMN_STAT_SPECIAL]);
+        TEST_ASSERT_EQUAL(0,  EVs[PKMN_STAT_SPECIAL]);
         TEST_ASSERT_EQUAL(-1, EVs[PKMN_STAT_SPATK]);
         TEST_ASSERT_EQUAL(-1, EVs[PKMN_STAT_SPDEF]);
     }

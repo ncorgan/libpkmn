@@ -102,23 +102,18 @@ namespace pkmn
         }
 
         BOOST_ASSERT(size_t(_database_entry.get_species_id()) <= GEN1_CATCH_RATES.size());
-        GEN1_PC_RCAST->catch_rate = GEN1_CATCH_RATES[_database_entry.get_species_id()-1];
+        GEN1_PC_RCAST->catch_rate = GEN1_CATCH_RATES[_database_entry.get_species_id()];
 
         GEN1_PC_RCAST->ot_id = pksav_bigendian16(uint16_t(DEFAULT_TRAINER_ID & 0xFFFF));
 
         pkmn::rng<uint16_t> rng;
-        GEN1_PC_RCAST->ev_hp   = rng.rand();
-        GEN1_PC_RCAST->ev_atk  = rng.rand();
-        GEN1_PC_RCAST->ev_def  = rng.rand();
-        GEN1_PC_RCAST->ev_spd  = rng.rand();
-        GEN1_PC_RCAST->ev_spcl = rng.rand();
         GEN1_PC_RCAST->iv_data = rng.rand();
 
         // Populate abstractions
         _update_EV_map();
         _init_gb_IV_map(&GEN1_PC_RCAST->iv_data);
-        _update_moves(-1);
         set_level(level);
+        _init_default_moves_for_level();
 
         _register_attributes();
     }

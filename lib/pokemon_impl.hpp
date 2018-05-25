@@ -130,6 +130,8 @@ namespace pkmn {
 
             // Shared abstraction initializers
 
+            void _init_default_moves_for_level();
+
             void _init_gb_IV_map(
                 const uint16_t* iv_data_ptr
             );

@@ -318,6 +318,65 @@ namespace pkmn
 
     // Shared abstraction initializers
 
+    void pokemon_impl::_init_default_moves_for_level()
+    {
+        _moves.resize(4);
+
+        for(size_t move_index = 0; move_index < 4; ++move_index)
+        {
+            this->set_move("None", move_index);
+        }
+
+        pkmn::database::levelup_moves_t levelup_moves = _database_entry.get_levelup_moves();
+        if(!levelup_moves.empty())
+        {
+            int level = this->get_level();
+            BOOST_ASSERT(level >= levelup_moves[0].level);
+
+            auto levelup_move_iter =
+                std::find_if(
+                    levelup_moves.begin(),
+                    levelup_moves.end(),
+                    [&level](const pkmn::database::levelup_move& levelup_move)
+                    {
+                        return (levelup_move.level > level);
+                    });
+
+            size_t first_move_index = 0;
+            size_t last_move_index = levelup_moves.size() - 1;
+
+            if(levelup_move_iter == levelup_moves.end())
+            {
+                // The Pokémon is at a higher level than any levelup move.
+                if(levelup_moves.size() > 4)
+                {
+                    first_move_index = levelup_moves.size() - 4;
+                }
+            }
+            else
+            {
+                last_move_index = std::distance(
+                                      levelup_moves.begin(),
+                                      levelup_move_iter
+                                  ) - 1;
+                if(last_move_index > 3)
+                {
+                    first_move_index = last_move_index - 4;
+                }
+            }
+
+            for(size_t move_index = 0, levelup_move_index = first_move_index;
+                (move_index < 4) && (levelup_move_index <= last_move_index);
+                ++move_index, ++levelup_move_index)
+            {
+                this->set_move(
+                    levelup_moves[levelup_move_index].move.get_name(),
+                    move_index
+                );
+            }
+        }
+    }
+
     void pokemon_impl::_init_gb_IV_map(
         const uint16_t* iv_data_ptr
     )

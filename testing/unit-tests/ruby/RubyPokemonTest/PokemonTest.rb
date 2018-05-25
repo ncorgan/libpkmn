@@ -78,10 +78,6 @@ class PokemonTest < PKMNTest
         end
 
         assert_equal(4, pokemon.moves.length)
-        pokemon.moves.each do |move|
-            assert_equal("None", move.move)
-            assert_equal(0, move.pp)
-        end
 
         assert(Pathname.new(pokemon.icon_filepath).exist?)
         assert(Pathname.new(pokemon.sprite_filepath).exist?)
@@ -121,13 +117,10 @@ class PokemonTest < PKMNTest
         end
 
         pokemon.EVs.each do |stat|
-            if generation >= 3
-                assert(pokemon.EVs[stat] <= @@MODERN_EV_MAX)
-            else
-                assert(pokemon.EVs[stat] <= @@GB_EV_MAX)
-            end
+            assert_equal(0, pokemon.EVs[stat])
         end
         pokemon.IVs.each do |stat|
+            assert(pokemon.IVs[stat] >= 0)
             if generation >= 3
                 assert(pokemon.IVs[stat] <= @@MODERN_IV_MAX)
             else
@@ -135,6 +128,7 @@ class PokemonTest < PKMNTest
             end
         end
         pokemon.stats.each do |stat|
+            assert(pokemon.stats[stat] >= 0)
             assert(pokemon.stats[stat] <= @@STAT_MAX)
         end
 

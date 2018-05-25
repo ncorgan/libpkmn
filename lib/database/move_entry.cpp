@@ -327,7 +327,7 @@ namespace pkmn { namespace database {
 
         if(_none or _invalid)
         {
-            ret = -1;
+            ret = 0;
         }
         else
         {
