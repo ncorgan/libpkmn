@@ -593,7 +593,7 @@ TEST(colosseum_save_fuzzing_test, test_fuzzing_colosseum_save)
     }
 }
 
-TEST(xd_save_fuzzing_test, test_fuzzing_xd_save)
+TEST(xd_save_fuzzing_test, DISABLED_test_fuzzing_xd_save)
 {
     for(size_t iteration = 0; iteration < NUM_ITERATIONS; ++iteration)
     {
