@@ -26,7 +26,7 @@ void pkmn_set_error(
 { \
     if(param) \
     { \
-        if(!param->_internal) \
+        if(!param->p_internal) \
         { \
             pkmn_set_error("The parameter \"" #param "\" has not been initialized."); \
             return PKMN_ERROR_NULL_POINTER; \
@@ -51,7 +51,7 @@ void pkmn_set_error(
 { \
     if(param) \
     { \
-        if(!param->_internal) \
+        if(!param->p_internal) \
         { \
             boost::mutex::scoped_lock lock(handle->error_mutex); \
             pkmn_set_error("The parameter \"" #param "\" has not been initialized."); \

@@ -25,80 +25,80 @@ typedef enum pkmn_error (*pokemon_int_buffer_getter_fcn_t)(struct pkmn_pokemon*,
 typedef enum pkmn_error (*pokemon_bool_buffer_getter_fcn_t)(struct pkmn_pokemon*,bool*,size_t,size_t*);
 
 PKMNTEST_C_API void get_random_pokemon(
-    struct pkmn_pokemon* pokemon_ptr,
-    struct pkmn_string_list* item_list_ptr, // Can be NULL
+    struct pkmn_pokemon* p_pokemon,
+    struct pkmn_string_list* p_item_list, // Can be NULL
     const char* species, // Can be NULL
     const char* game
 );
 
 PKMNTEST_C_API void compare_pokemon(
-    struct pkmn_pokemon* pokemon1_ptr,
-    struct pkmn_pokemon* pokemon2_ptr
+    struct pkmn_pokemon* p_pokemon1,
+    struct pkmn_pokemon* p_pokemon2
 );
 
 PKMNTEST_C_API void compare_pokemon_ints(
-    struct pkmn_pokemon* pokemon1_ptr,
-    struct pkmn_pokemon* pokemon2_ptr,
+    struct pkmn_pokemon* p_pokemon1,
+    struct pkmn_pokemon* p_pokemon2,
     const char* field,
     pokemon_int_getter_fcn_t getter_fcn
 );
 
 PKMNTEST_C_API void compare_pokemon_uint32s(
-    struct pkmn_pokemon* pokemon1_ptr,
-    struct pkmn_pokemon* pokemon2_ptr,
+    struct pkmn_pokemon* p_pokemon1,
+    struct pkmn_pokemon* p_pokemon2,
     const char* field,
     pokemon_uint32_getter_fcn_t getter_fcn
 );
 
 PKMNTEST_C_API void compare_pokemon_strings(
-    struct pkmn_pokemon* pokemon1_ptr,
-    struct pkmn_pokemon* pokemon2_ptr,
+    struct pkmn_pokemon* p_pokemon1,
+    struct pkmn_pokemon* p_pokemon2,
     const char* field,
     pokemon_string_getter_fcn_t getter_fcn
 );
 
 PKMNTEST_C_API void compare_pokemon_bools(
-    struct pkmn_pokemon* pokemon1_ptr,
-    struct pkmn_pokemon* pokemon2_ptr,
+    struct pkmn_pokemon* p_pokemon1,
+    struct pkmn_pokemon* p_pokemon2,
     const char* field,
     pokemon_bool_getter_fcn_t getter_fcn
 );
 
 PKMNTEST_C_API void compare_pokemon_int_buffers(
-    struct pkmn_pokemon* pokemon1_ptr,
-    struct pkmn_pokemon* pokemon2_ptr,
+    struct pkmn_pokemon* p_pokemon1,
+    struct pkmn_pokemon* p_pokemon2,
     size_t buffer_size,
     const char* field,
     pokemon_int_buffer_getter_fcn_t getter_fcn
 );
 
 PKMNTEST_C_API void compare_pokemon_bool_buffers(
-    struct pkmn_pokemon* pokemon1_ptr,
-    struct pkmn_pokemon* pokemon2_ptr,
+    struct pkmn_pokemon* p_pokemon1,
+    struct pkmn_pokemon* p_pokemon2,
     size_t buffer_size,
     const char* field,
     pokemon_bool_buffer_getter_fcn_t getter_fcn
 );
 
 PKMNTEST_C_API void compare_pokemon_original_trainer_info(
-    struct pkmn_pokemon* pokemon1_ptr,
-    struct pkmn_pokemon* pokemon2_ptr
+    struct pkmn_pokemon* p_pokemon1,
+    struct pkmn_pokemon* p_pokemon2
 );
 
 PKMNTEST_C_API void compare_pokemon_moves(
-    struct pkmn_pokemon* pokemon1_ptr,
-    struct pkmn_pokemon* pokemon2_ptr
+    struct pkmn_pokemon* p_pokemon1,
+    struct pkmn_pokemon* p_pokemon2
 );
 
 PKMNTEST_C_API void compare_pokemon_locations_met(
-    struct pkmn_pokemon* pokemon1_ptr,
-    struct pkmn_pokemon* pokemon2_ptr,
+    struct pkmn_pokemon* p_pokemon1,
+    struct pkmn_pokemon* p_pokemon2,
     bool as_egg
 );
 
 PKMNTEST_C_API void compare_pokemon_ribbons(
-    struct pkmn_pokemon* pokemon1_ptr,
-    struct pkmn_pokemon* pokemon2_ptr
+    struct pkmn_pokemon* p_pokemon1,
+    struct pkmn_pokemon* p_pokemon2
 );
 
 #endif /* PKMNTEST_C_POKEMON_COMPARISON_H */

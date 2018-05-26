@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -23,7 +23,7 @@ extern "C" {
  * \param IV_defense Defense IV (0-15)
  * \param IV_speed Speed IV (0-15)
  * \param IV_special Special IV (0-15)
- * \param hidden_power_out Where to return the Hidden Power information
+ * \param p_hidden_power_out Where to return the Hidden Power information
  * \returns ::PKMN_ERROR_NONE upon successful completion
  * \returns ::PKMN_ERROR_OUT_OF_RANGE if any parameter is [0-15]
  */
@@ -32,7 +32,7 @@ PKMN_C_API enum pkmn_error pkmn_calculations_gen2_hidden_power(
     int IV_defense,
     int IV_speed,
     int IV_special,
-    struct pkmn_hidden_power* hidden_power_out
+    struct pkmn_hidden_power* p_hidden_power_out
 );
 
 /*!
@@ -44,7 +44,7 @@ PKMN_C_API enum pkmn_error pkmn_calculations_gen2_hidden_power(
  * \param IV_speed Speed IV (0-31)
  * \param IV_spatk Special Attack IV (0-31)
  * \param IV_spdef Special Defense IV (0-31)
- * \param hidden_power_out Where to return the Hidden Power information
+ * \param p_hidden_power_out Where to return the Hidden Power information
  * \returns ::PKMN_ERROR_NONE upon successful completion
  * \returns ::PKMN_ERROR_OUT_OF_RANGE if any parameter is [0-31]
  */
@@ -55,7 +55,7 @@ PKMN_C_API enum pkmn_error pkmn_calculations_modern_hidden_power(
     int IV_speed,
     int IV_spatk,
     int IV_spdef,
-    struct pkmn_hidden_power* hidden_power_out
+    struct pkmn_hidden_power* p_hidden_power_out
 );
 
 #ifdef __cplusplus

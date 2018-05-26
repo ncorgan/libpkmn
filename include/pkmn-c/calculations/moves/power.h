@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -20,90 +20,90 @@ extern "C" {
 PKMN_C_API enum pkmn_error pkmn_calculations_brine_power(
     int target_current_hp,
     int target_max_hp,
-    int* brine_power_out
+    int* p_brine_power_out
 );
 
 PKMN_C_API enum pkmn_error pkmn_calculations_crush_grip_power(
     int target_current_hp,
     int target_max_hp,
     int generation,
-    int* crush_grip_power_out
+    int* p_crush_grip_power_out
 );
 
 PKMN_C_API enum pkmn_error pkmn_calculations_echoed_voice_powers(
-    int* powers_buffer,
+    int* p_powers_buffer,
     size_t buffer_length,
-    size_t* num_powers_out
+    size_t* p_num_powers_out
 );
 
 PKMN_C_API enum pkmn_error pkmn_calculations_electro_ball_power(
     int attacker_speed,
     int target_speed,
-    int* electro_ball_power_out
+    int* p_electro_ball_power_out
 );
 
 PKMN_C_API enum pkmn_error pkmn_calculations_eruption_power(
     int attacker_hp,
     int target_hp,
-    int* eruption_out
+    int* p_eruption_out
 );
 
 PKMN_C_API enum pkmn_error pkmn_calculations_flail_power(
     int attacker_current_hp,
     int attacker_max_hp,
-    int* flail_power_out
+    int* p_flail_power_out
 );
 
 PKMN_C_API enum pkmn_error pkmn_calculations_fling_power(
-    const char* held_item,
-    int* fling_power_out
+    const char* p_held_item,
+    int* p_fling_power_out
 );
 
 PKMN_C_API enum pkmn_error pkmn_calculations_frustration_power(
     int friendship,
-    int* frustration_power_out
+    int* p_frustration_power_out
 );
 
 PKMN_C_API enum pkmn_error pkmn_calculations_fury_cutter_powers(
     int generation,
-    int* powers_buffer,
+    int* p_powers_buffer,
     size_t buffer_length,
-    size_t* num_powers_out
+    size_t* p_num_powers_out
 );
 
 PKMN_C_API enum pkmn_error pkmn_calculations_grass_knot_power(
     float target_weight,
-    int* grass_knot_power_out
+    int* p_grass_knot_power_out
 );
 
 PKMN_C_API enum pkmn_error pkmn_calculations_gyro_ball_power(
     int attacker_speed,
     int target_speed,
-    int* gyro_ball_power_out
+    int* p_gyro_ball_power_out
 );
 
 PKMN_C_API enum pkmn_error pkmn_calculations_heat_crash_power(
     float attacker_weight,
     float target_weight,
-    int* heat_crash_power_out
+    int* p_heat_crash_power_out
 );
 
 PKMN_C_API enum pkmn_error pkmn_calculations_heavy_slam_power(
     float attacker_weight,
     float target_weight,
-    int* heavy_slam_power_out
+    int* p_heavy_slam_power_out
 );
 
 PKMN_C_API enum pkmn_error pkmn_calculations_ice_ball_powers(
-    int* powers_buffer,
+    int* p_powers_buffer,
     size_t buffer_length,
-    size_t* num_powers_out
+    size_t* p_num_powers_out
 );
 
 PKMN_C_API enum pkmn_error pkmn_calculations_low_kick_power(
     float target_weight,
     int generation,
-    int* low_kick_power_out
+    int* p_low_kick_power_out
 );
 
 PKMN_C_API enum pkmn_error pkmn_calculations_power_trip_power(
@@ -114,7 +114,7 @@ PKMN_C_API enum pkmn_error pkmn_calculations_power_trip_power(
     int speed_stat_stage,
     int evasion_stat_stage,
     int accuracy_stat_stage,
-    int* power_trip_power_out
+    int* p_power_trip_power_out
 );
 
 PKMN_C_API enum pkmn_error pkmn_calculations_punishment_power(
@@ -125,29 +125,29 @@ PKMN_C_API enum pkmn_error pkmn_calculations_punishment_power(
     int speed_stat_stage,
     int evasion_stat_stage,
     int accuracy_stat_stage,
-    int* punishment_power_out
+    int* p_punishment_power_out
 );
 
 PKMN_C_API enum pkmn_error pkmn_calculations_return_power(
     int friendship,
-    int* return_power_out
+    int* p_return_power_out
 );
 
 PKMN_C_API enum pkmn_error pkmn_calculations_reversal_power(
     int attacker_current_hp,
     int attacker_max_hp,
-    int* reversal_power_out
+    int* p_reversal_power_out
 );
 
 PKMN_C_API enum pkmn_error pkmn_calculations_rollout_powers(
-    int* powers_buffer,
+    int* p_powers_buffer,
     size_t buffer_length,
-    size_t* num_powers_out
+    size_t* p_num_powers_out
 );
 
 PKMN_C_API enum pkmn_error pkmn_calculations_spit_up_power(
     int stockpile_amount,
-    int* spit_up_power_out
+    int* p_spit_up_power_out
 );
 
 PKMN_C_API enum pkmn_error pkmn_calculations_stored_power_power(
@@ -158,32 +158,32 @@ PKMN_C_API enum pkmn_error pkmn_calculations_stored_power_power(
     int speed_stat_stage,
     int evasion_stat_stage,
     int accuracy_stat_stage,
-    int* stored_power_power_out
+    int* p_stored_power_power_out
 );
 
 PKMN_C_API enum pkmn_error pkmn_calculations_triple_kick_powers(
-    int* powers_buffer,
+    int* p_powers_buffer,
     size_t buffer_length,
-    size_t* num_powers_out
+    size_t* p_num_powers_out
 );
 
 
 PKMN_C_API enum pkmn_error pkmn_calculations_trump_card_power(
     int pp_remaining_after_use,
-    int* trump_card_power_out
+    int* p_trump_card_power_out
 );
 
 PKMN_C_API enum pkmn_error pkmn_calculations_water_spout_power(
     int attacker_current_hp,
     int attacker_max_hp,
-    int* water_spout_power_out
+    int* p_water_spout_power_out
 );
 
 PKMN_C_API enum pkmn_error pkmn_calculations_wring_out_power(
     int target_current_hp,
     int target_max_hp,
     int generation,
-    int* wring_out_power_out
+    int* p_wring_out_power_out
 );
 
 #ifdef __cplusplus

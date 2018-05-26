@@ -15,13 +15,15 @@
 
 #include <stdbool.h>
 
+#define PKMN_C_NUM_STATS 7
+
 struct pkmn_database_pokemon_entry
 {
-    char* name;
-    char* game;
-    char* species;
-    char* form;
-    char* pokedex_entry;
+    char* p_name;
+    char* p_game;
+    char* p_species;
+    char* p_form;
+    char* p_pokedex_entry;
     float height;
     float weight;
     float chance_male;
@@ -30,10 +32,10 @@ struct pkmn_database_pokemon_entry
     int base_friendship;
     struct pkmn_string_pair types;
     struct pkmn_string_pair abilities;
-    char* hidden_ability;
+    char* p_hidden_ability;
     struct pkmn_string_pair egg_groups;
-    int base_stats[7];
-    int EV_yields[7];
+    int base_stats[PKMN_C_NUM_STATS];
+    int EV_yields[PKMN_C_NUM_STATS];
     int experience_yield;
     struct pkmn_levelup_moves levelup_moves;
     struct pkmn_string_list tm_hm_moves;
@@ -48,48 +50,48 @@ extern "C" {
 #endif
 
 PKMN_C_API enum pkmn_error pkmn_database_get_pokemon_entry(
-    const char* species,
-    const char* game,
-    const char* form,
-    struct pkmn_database_pokemon_entry* pokemon_entry_out
+    const char* p_species,
+    const char* p_game,
+    const char* p_form,
+    struct pkmn_database_pokemon_entry* p_pokemon_entry_out
 );
 
 PKMN_C_API enum pkmn_error pkmn_database_pokemon_entry_set_form(
-    struct pkmn_database_pokemon_entry* pokemon_entry,
-    const char* form
+    struct pkmn_database_pokemon_entry* p_pokemon_entry,
+    const char* p_form
 );
 
 PKMN_C_API enum pkmn_error pkmn_database_pokemon_entry_experience_at_level(
-    struct pkmn_database_pokemon_entry* pokemon_entry,
+    struct pkmn_database_pokemon_entry* p_pokemon_entry,
     int level,
-    int* experience_out
+    int* p_experience_out
 );
 
 PKMN_C_API enum pkmn_error pkmn_database_pokemon_entry_level_at_experience(
-    struct pkmn_database_pokemon_entry* pokemon_entry,
+    struct pkmn_database_pokemon_entry* p_pokemon_entry,
     int experience,
-    int* level_out
+    int* p_level_out
 );
 
 PKMN_C_API enum pkmn_error pkmn_database_pokemon_entry_icon_filepath(
-    struct pkmn_database_pokemon_entry* pokemon_entry,
+    struct pkmn_database_pokemon_entry* p_pokemon_entry,
     bool shiny,
-    char* icon_filepath_out,
+    char* p_icon_filepath_out,
     size_t buffer_len,
-    size_t* icon_filepath_length_out
+    size_t* p_icon_filepath_length_out
 );
 
 PKMN_C_API enum pkmn_error pkmn_database_pokemon_entry_sprite_filepath(
-    struct pkmn_database_pokemon_entry* pokemon_entry,
+    struct pkmn_database_pokemon_entry* p_pokemon_entry,
     bool female,
     bool shiny,
-    char* sprite_filepath_out,
+    char* p_sprite_filepath_out,
     size_t buffer_len,
-    size_t* sprite_filepath_length_out
+    size_t* p_sprite_filepath_length_out
 );
 
 PKMN_C_API enum pkmn_error pkmn_database_pokemon_entry_free(
-    struct pkmn_database_pokemon_entry* pokemon_entry
+    struct pkmn_database_pokemon_entry* p_pokemon_entry
 );
 
 #ifdef __cplusplus

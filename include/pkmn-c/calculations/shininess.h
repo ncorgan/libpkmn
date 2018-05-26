@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -26,9 +26,9 @@ extern "C" {
  * \param IV_defense Defense IV (0-15)
  * \param IV_speed Speed IV (0-15)
  * \param IV_special Special IV (0-15)
- * \param shiny_out Where to return shininess
+ * \param p_is_shiny_out Where to return shininess
  * \returns ::PKMN_ERROR_NONE upon success
- * \returns ::PKMN_ERROR_NULL_POINTER if shiny_out is NULL
+ * \returns ::PKMN_ERROR_NULL_POINTER if p_is_shiny_out is NULL
  * \returns ::PKMN_ERROR_OUT_OF_RANGE if any parameter is not in the range [0-15]
  */
 PKMN_C_API enum pkmn_error pkmn_calculations_gen2_shiny(
@@ -36,7 +36,7 @@ PKMN_C_API enum pkmn_error pkmn_calculations_gen2_shiny(
     int IV_defense,
     int IV_speed,
     int IV_special,
-    bool* shiny_out
+    bool* p_is_shiny_out
 );
 
 /*!
@@ -45,14 +45,14 @@ PKMN_C_API enum pkmn_error pkmn_calculations_gen2_shiny(
  *
  * \param personality Pokémon's personality
  * \param trainer_id Pokémon's full original trainer ID
- * \param shiny_out Where to return shininess
+ * \param p_is_shiny_out Where to return shininess
  * \returns ::PKMN_ERROR_NONE upon success
- * \returns ::PKMN_ERROR_NULL_POINTER if shiny_out is NULL
+ * \returns ::PKMN_ERROR_NULL_POINTER if p_is_shiny_out is NULL
  */
 PKMN_C_API enum pkmn_error pkmn_calculations_modern_shiny(
     uint32_t personality,
     uint32_t trainer_id,
-    bool* shiny_out
+    bool* p_is_shiny_out
 );
 
 #ifdef __cplusplus

@@ -12,8 +12,8 @@
 #include <pkmn-c/types/attribute_names.h>
 
 PKMNTEST_C_API void compare_attribute_names(
-    const struct pkmn_attribute_names* attribute_names1_ptr,
-    const struct pkmn_attribute_names* attribute_names2_ptr
+    const struct pkmn_attribute_names* p_attribute_names1,
+    const struct pkmn_attribute_names* p_attribute_names2
 );
 
 #endif /* PKMNTEST_C_MISC_COMPARISON_H */

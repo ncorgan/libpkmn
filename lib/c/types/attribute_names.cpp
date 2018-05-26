@@ -10,20 +10,20 @@
 #include "error_internal.hpp"
 
 enum pkmn_error pkmn_attribute_names_free(
-    struct pkmn_attribute_names* attribute_names_ptr
+    struct pkmn_attribute_names* p_attribute_names
 )
 {
-    PKMN_CHECK_NULL_PARAM(attribute_names_ptr);
+    PKMN_CHECK_NULL_PARAM(p_attribute_names);
 
     enum pkmn_error error = PKMN_ERROR_NONE;
 
-    error = pkmn_string_list_free(&attribute_names_ptr->numeric_attribute_names);
+    error = pkmn_string_list_free(&p_attribute_names->numeric_attribute_names);
     if(!error)
     {
-        error = pkmn_string_list_free(&attribute_names_ptr->string_attribute_names);
+        error = pkmn_string_list_free(&p_attribute_names->string_attribute_names);
         if(!error)
         {
-            error = pkmn_string_list_free(&attribute_names_ptr->boolean_attribute_names);
+            error = pkmn_string_list_free(&p_attribute_names->boolean_attribute_names);
         }
     }
 

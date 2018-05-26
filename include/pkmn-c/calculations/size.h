@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -30,7 +30,7 @@ extern "C" {
  * \returns ::PKMN_ERROR_OUT_OF_RANGE if any IV parameter is not in the range [0-31]
  */
 PKMN_C_API enum pkmn_error pkmn_calculations_pokemon_size(
-    const char* species,
+    const char* p_species,
     uint32_t personality,
     int IV_HP,
     int IV_attack,
@@ -38,7 +38,7 @@ PKMN_C_API enum pkmn_error pkmn_calculations_pokemon_size(
     int IV_speed,
     int IV_spatk,
     int IV_spdef,
-    float* size_out
+    float* p_size_out
 );
 
 #ifdef __cplusplus

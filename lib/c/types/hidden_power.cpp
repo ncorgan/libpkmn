@@ -11,13 +11,13 @@
 #include "error_internal.hpp"
 
 enum pkmn_error pkmn_hidden_power_free(
-    struct pkmn_hidden_power* hidden_power_ptr
+    struct pkmn_hidden_power* p_hidden_power
 )
 {
-    PKMN_CHECK_NULL_PARAM(hidden_power_ptr);
+    PKMN_CHECK_NULL_PARAM(p_hidden_power);
 
-    pkmn::c::free_pointer_and_set_to_null(&hidden_power_ptr->type);
-    hidden_power_ptr->base_power = 0;
+    pkmn::c::free_pointer_and_set_to_null(&p_hidden_power->p_type);
+    p_hidden_power->base_power = 0;
 
     return PKMN_ERROR_NONE;
 }

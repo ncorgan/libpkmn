@@ -11,14 +11,14 @@
 #include "error_internal.hpp"
 
 enum pkmn_error pkmn_trainer_info_free(
-    struct pkmn_trainer_info* trainer_info_ptr
+    struct pkmn_trainer_info* p_trainer_info
 )
 {
-    PKMN_CHECK_NULL_PARAM(trainer_info_ptr);
+    PKMN_CHECK_NULL_PARAM(p_trainer_info);
 
-    pkmn::c::free_pointer_and_set_to_null(&trainer_info_ptr->name);
-    trainer_info_ptr->id.id = 0U;
-    trainer_info_ptr->gender = PKMN_GENDER_GENDERLESS;
+    pkmn::c::free_pointer_and_set_to_null(&p_trainer_info->p_name);
+    p_trainer_info->id.id = 0U;
+    p_trainer_info->gender = PKMN_GENDER_GENDERLESS;
 
     return PKMN_ERROR_NONE;
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -14,20 +14,20 @@
 
 enum pkmn_error pkmn_calculations_type_damage_modifier(
     int generation,
-    const char* attacking_type,
-    const char* defending_type,
-    float* type_damage_modifier_out
+    const char* p_attacking_type,
+    const char* p_defending_type,
+    float* p_type_damage_modifier_out
 )
 {
-    PKMN_CHECK_NULL_PARAM(attacking_type);
-    PKMN_CHECK_NULL_PARAM(defending_type);
-    PKMN_CHECK_NULL_PARAM(type_damage_modifier_out);
+    PKMN_CHECK_NULL_PARAM(p_attacking_type);
+    PKMN_CHECK_NULL_PARAM(p_defending_type);
+    PKMN_CHECK_NULL_PARAM(p_type_damage_modifier_out);
 
     PKMN_CPP_TO_C(
-        *type_damage_modifier_out = pkmn::calculations::type_damage_modifier(
-                                        generation,
-                                        attacking_type,
-                                        defending_type
-                                    );
+        *p_type_damage_modifier_out = pkmn::calculations::type_damage_modifier(
+                                          generation,
+                                          p_attacking_type,
+                                          p_defending_type
+                                      );
     )
 }

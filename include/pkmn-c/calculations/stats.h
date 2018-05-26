@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016,2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -26,9 +26,9 @@ extern "C" {
  * \param base_stat The base stat value
  * \param EV The Pokémon's EV for this stat (0-65535)
  * \param IV The Pokémon's IV for this stat (0-15)
- * \param stat_out Where to return the stat
+ * \param p_stat_out Where to return the stat
  * \returns ::PKMN_ERROR_NONE upon success
- * \returns ::PKMN_ERROR_NULL_POINTER if stat_out is NULL
+ * \returns ::PKMN_ERROR_NULL_POINTER if p_stat_out is NULL
  * \returns ::PKMN_ERROR_RUNTIME_ERROR If the given stat string is invalid
  * \returns ::PKMN_ERROR_OUT_OF_RANGE If any numeric parameter is out of the given range
  */
@@ -38,7 +38,7 @@ PKMN_C_API enum pkmn_error pkmn_calculations_gb_stat(
     int base_stat,
     int EV,
     int IV,
-    int* stat_out
+    int* p_stat_out
 );
 
 /*!
@@ -49,7 +49,7 @@ PKMN_C_API enum pkmn_error pkmn_calculations_gb_stat(
  *             Attack, Special Defense)
  * \param level Pokémon's level (0-100)
  * \param base_stat The base stat value
- * \param stat_range_out Where to return the stat range
+ * \param p_stat_range_out Where to return the stat range
  * \returns ::PKMN_ERROR_NONE upon success
  * \returns ::PKMN_ERROR_NULL_POINTER if stat_rangeout is NULL
  */
@@ -57,7 +57,7 @@ PKMN_C_API enum pkmn_error pkmn_calculations_gb_stat_range(
     enum pkmn_stat stat,
     int level,
     int base_stat,
-    struct pkmn_int_pair* stat_range_out
+    struct pkmn_int_pair* p_stat_range_out
 );
 
 /*!
@@ -71,9 +71,9 @@ PKMN_C_API enum pkmn_error pkmn_calculations_gb_stat_range(
  * \param base_stat The base stat value
  * \param EV The Pokémon's EV for this stat (0-255)
  * \param IV The Pokémon's IV for this stat (0-31)
- * \param stat_out Where to return the stat
+ * \param p_stat_out Where to return the stat
  * \returns ::PKMN_ERROR_NONE upon success
- * \returns ::PKMN_ERROR_NULL_POINTER if stat_out is NULL
+ * \returns ::PKMN_ERROR_NULL_POINTER if p_stat_out is NULL
  * \returns ::PKMN_ERROR_RUNTIME_ERROR If the given stat string is invalid
  * \returns ::PKMN_ERROR_DOMAIN_ERROR If the given nature modifier is not in (0.9, 1.0, 1.1)
  * \returns ::PKMN_ERROR_OUT_OF_RANGE If any numeric parameter is out of the given range
@@ -85,7 +85,7 @@ PKMN_C_API enum pkmn_error pkmn_calculations_modern_stat(
     int base_stat,
     int EV,
     int IV,
-    int* stat_out
+    int* p_stat_out
 );
 
 /*!
@@ -96,15 +96,15 @@ PKMN_C_API enum pkmn_error pkmn_calculations_modern_stat(
  *             Special Defense)
  * \param level Pokémon's level (0-100)
  * \param base_stat The base stat value
- * \param stat_range_out Where to return the stat range
+ * \param p_stat_range_out Where to return the stat range
  * \returns ::PKMN_ERROR_NONE upon success
- * \returns ::PKMN_ERROR_NULL_POINTER if stat_range_out is NULL
+ * \returns ::PKMN_ERROR_NULL_POINTER if p_stat_range_out is NULL
  */
 PKMN_C_API enum pkmn_error pkmn_calculations_modern_stat_range(
     enum pkmn_stat stat,
     int level,
     int base_stat,
-    struct pkmn_int_pair* stat_range_out
+    struct pkmn_int_pair* p_stat_range_out
 );
 
 #ifdef __cplusplus

@@ -14,13 +14,13 @@
 
 struct pkmn_move_slot
 {
-    char* move;
+    char* p_move;
     int pp;
 };
 
 struct pkmn_move_slots
 {
-    struct pkmn_move_slot* move_slots;
+    struct pkmn_move_slot* p_move_slots;
     size_t length;
 };
 
@@ -29,11 +29,11 @@ extern "C" {
 #endif
 
 PKMN_C_API enum pkmn_error pkmn_move_slot_free(
-    struct pkmn_move_slot* move_slot_ptr
+    struct pkmn_move_slot* p_move_slot
 );
 
 PKMN_C_API enum pkmn_error pkmn_move_slots_free(
-    struct pkmn_move_slots* move_slots_ptr
+    struct pkmn_move_slots* p_move_slots
 );
 
 #ifdef __cplusplus

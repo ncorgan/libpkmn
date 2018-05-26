@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -17,10 +17,10 @@ enum pkmn_error pkmn_calculations_gen2_hidden_power(
     int IV_defense,
     int IV_speed,
     int IV_special,
-    struct pkmn_hidden_power* hidden_power_out
+    struct pkmn_hidden_power* p_hidden_power_out
 )
 {
-    PKMN_CHECK_NULL_PARAM(hidden_power_out);
+    PKMN_CHECK_NULL_PARAM(p_hidden_power_out);
 
     PKMN_CPP_TO_C(
         pkmn::c::hidden_power_cpp_to_c(
@@ -28,7 +28,7 @@ enum pkmn_error pkmn_calculations_gen2_hidden_power(
                 IV_attack, IV_defense,
                 IV_speed, IV_special
             ),
-            hidden_power_out
+            p_hidden_power_out
         );
     )
 }
@@ -40,10 +40,10 @@ enum pkmn_error pkmn_calculations_modern_hidden_power(
     int IV_speed,
     int IV_spatk,
     int IV_spdef,
-    struct pkmn_hidden_power* hidden_power_out
+    struct pkmn_hidden_power* p_hidden_power_out
 )
 {
-    PKMN_CHECK_NULL_PARAM(hidden_power_out);
+    PKMN_CHECK_NULL_PARAM(p_hidden_power_out);
 
     PKMN_CPP_TO_C(
         pkmn::c::hidden_power_cpp_to_c(
@@ -52,7 +52,7 @@ enum pkmn_error pkmn_calculations_modern_hidden_power(
                 IV_defense, IV_speed,
                 IV_spatk, IV_spdef
             ),
-            hidden_power_out
+            p_hidden_power_out
         );
     )
 }

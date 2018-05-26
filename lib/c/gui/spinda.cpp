@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -17,17 +17,17 @@ enum pkmn_error pkmn_gui_generate_spinda_sprite_at_filepath(
     int generation,
     uint32_t personality,
     bool shiny,
-    const char* filepath
+    const char* p_filepath
 )
 {
-    PKMN_CHECK_NULL_PARAM(filepath);
+    PKMN_CHECK_NULL_PARAM(p_filepath);
 
     PKMN_CPP_TO_C(
         pkmn::qt::GenerateSpindaSpriteAtFilepath(
             generation,
             personality,
             shiny,
-            filepath
+            p_filepath
         );
     )
 }

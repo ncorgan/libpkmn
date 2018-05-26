@@ -22,9 +22,9 @@ static void gen1_pokemon_test(
     enum pkmn_error error = PKMN_ERROR_NONE;
     struct pkmn_pokemon pokemon =
     {
-        .species = NULL,
-        .game = NULL,
-        ._internal = NULL
+        .p_species = NULL,
+        .p_game = NULL,
+        .p_internal = NULL
     };
 
     error = pkmn_pokemon_init(
@@ -35,7 +35,7 @@ static void gen1_pokemon_test(
                 &pokemon
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
-    TEST_ASSERT_NOT_NULL(pokemon._internal);
+    TEST_ASSERT_NOT_NULL(pokemon.p_internal);
 
     pkmn_test_values_t test_values =
     {

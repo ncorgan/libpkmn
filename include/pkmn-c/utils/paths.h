@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -36,9 +36,9 @@ extern "C" {
  * \returns ::PKMN_ERROR_NULL_POINTER if appdata_dir_out is NULL
  */
 PKMN_C_API enum pkmn_error pkmn_get_appdata_dir(
-    char* appdata_dir_out,
+    char* p_appdata_dir_out,
     size_t buffer_len,
-    size_t* appdata_dir_length_out
+    size_t* p_appdata_dir_length_out
 );
 
 /*!
@@ -59,9 +59,9 @@ PKMN_C_API enum pkmn_error pkmn_get_appdata_dir(
  * \returns ::PKMN_ERROR_NULL_POINTER if database_path_out is NULL
  */
 PKMN_C_API enum pkmn_error pkmn_get_database_path(
-    char* database_path_out,
+    char* p_database_path_out,
     size_t buffer_len,
-    size_t* database_path_length_out
+    size_t* p_database_path_length_out
 );
 
 /*!
@@ -81,9 +81,9 @@ PKMN_C_API enum pkmn_error pkmn_get_database_path(
  * \returns ::PKMN_ERROR_NULL_POINTER if images_dir_out is NULL
  */
 PKMN_C_API enum pkmn_error pkmn_get_images_dir(
-    char* images_dir_out,
+    char* p_images_dir_out,
     size_t buffer_len,
-    size_t* images_dir_length_out
+    size_t* p_images_dir_length_out
 );
 
 /*!
@@ -100,9 +100,9 @@ PKMN_C_API enum pkmn_error pkmn_get_images_dir(
  * \returns ::PKMN_ERROR_NULL_POINTER if tmp_dir_out is NULL
  */
 PKMN_C_API enum pkmn_error pkmn_get_tmp_dir(
-    char* tmp_dir_out,
+    char* p_tmp_dir_out,
     size_t buffer_len,
-    size_t* tmp_dir_length_out
+    size_t* p_tmp_dir_length_out
 );
 
 #ifdef __cplusplus

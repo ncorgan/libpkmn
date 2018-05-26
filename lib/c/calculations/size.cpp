@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -12,7 +12,7 @@
 #include <pkmn/calculations/size.hpp>
 
 enum pkmn_error pkmn_calculations_pokemon_size(
-    const char* species,
+    const char* p_species,
     uint32_t personality,
     int IV_HP,
     int IV_attack,
@@ -20,21 +20,22 @@ enum pkmn_error pkmn_calculations_pokemon_size(
     int IV_speed,
     int IV_spatk,
     int IV_spdef,
-    float* size_out
-) {
-    PKMN_CHECK_NULL_PARAM(species);
-    PKMN_CHECK_NULL_PARAM(size_out);
+    float* p_size_out
+)
+{
+    PKMN_CHECK_NULL_PARAM(p_species);
+    PKMN_CHECK_NULL_PARAM(p_size_out);
 
     PKMN_CPP_TO_C(
-        *size_out = pkmn::calculations::pokemon_size(
-                        species,
-                        personality,
-                        IV_HP,
-                        IV_attack,
-                        IV_defense,
-                        IV_speed,
-                        IV_spatk,
-                        IV_spdef
-                    );
+        *p_size_out = pkmn::calculations::pokemon_size(
+                          p_species,
+                          personality,
+                          IV_HP,
+                          IV_attack,
+                          IV_defense,
+                          IV_speed,
+                          IV_spatk,
+                          IV_spdef
+                      );
     )
 }

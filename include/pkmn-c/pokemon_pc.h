@@ -17,10 +17,10 @@
 
 struct pkmn_pokemon_pc
 {
-    char* game;
+    char* p_game;
     size_t capacity;
 
-    void* _internal;
+    void* p_internal;
 };
 
 #ifdef __cplusplus
@@ -28,32 +28,32 @@ extern "C" {
 #endif
 
 PKMN_C_API enum pkmn_error pkmn_pokemon_pc_init(
-    const char* game,
-    struct pkmn_pokemon_pc* pokemon_pc_out
+    const char* p_game,
+    struct pkmn_pokemon_pc* p_pokemon_pc_out
 );
 
 PKMN_C_API enum pkmn_error pkmn_pokemon_pc_free(
-    struct pkmn_pokemon_pc* pokemon_pc_ptr
+    struct pkmn_pokemon_pc* p_pokemon_pc
 );
 
 PKMN_C_API const char* pkmn_pokemon_pc_strerror(
-    struct pkmn_pokemon_pc* pokemon_pc_ptr
+    struct pkmn_pokemon_pc* p_pokemon_pc
 );
 
 PKMN_C_API enum pkmn_error pkmn_pokemon_pc_get_box(
-    struct pkmn_pokemon_pc* pokemon_pc_ptr,
+    struct pkmn_pokemon_pc* p_pokemon_pc,
     size_t index,
-    struct pkmn_pokemon_box* pokemon_box_out
+    struct pkmn_pokemon_box* p_pokemon_box_out
 );
 
 PKMN_C_API enum pkmn_error pkmn_pokemon_pc_get_box_names(
-    struct pkmn_pokemon_pc* pokemon_pc_ptr,
-    struct pkmn_string_list* box_names_out
+    struct pkmn_pokemon_pc* p_pokemon_pc,
+    struct pkmn_string_list* p_box_names_out
 );
 
 PKMN_C_API enum pkmn_error pkmn_pokemon_pc_as_list(
-    struct pkmn_pokemon_pc* pokemon_box_ptr,
-    struct pkmn_pokemon_box_list* pokemon_box_list_out
+    struct pkmn_pokemon_pc* p_pokemon_pc,
+    struct pkmn_pokemon_box_list* p_pokemon_box_list_out
 );
 
 #ifdef __cplusplus

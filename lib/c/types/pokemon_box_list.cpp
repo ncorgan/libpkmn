@@ -11,32 +11,32 @@
 #include "error_internal.hpp"
 
 enum pkmn_error pkmn_pokemon_box_list_free(
-    struct pkmn_pokemon_box_list* pokemon_box_list_ptr
+    struct pkmn_pokemon_box_list* p_pokemon_box_list
 )
 {
-    PKMN_CHECK_NULL_PARAM(pokemon_box_list_ptr);
+    PKMN_CHECK_NULL_PARAM(p_pokemon_box_list);
 
     enum pkmn_error error = PKMN_ERROR_NONE;
 
-    if(pokemon_box_list_ptr->length > 0)
+    if(p_pokemon_box_list->length > 0)
     {
         for(size_t pokemon_index = 0;
-            (pokemon_index < pokemon_box_list_ptr->length) && !error;
+            (pokemon_index < p_pokemon_box_list->length) && !error;
             ++pokemon_index)
         {
-            error = pkmn_pokemon_box_free(&pokemon_box_list_ptr->boxes[pokemon_index]);
+            error = pkmn_pokemon_box_free(&p_pokemon_box_list->p_boxes[pokemon_index]);
         }
 
         if(!error)
         {
-            std::free(pokemon_box_list_ptr->boxes);
+            std::free(p_pokemon_box_list->p_boxes);
         }
     }
 
     if(!error)
     {
-        pokemon_box_list_ptr->boxes = nullptr;
-        pokemon_box_list_ptr->length = 0;
+        p_pokemon_box_list->p_boxes = nullptr;
+        p_pokemon_box_list->length = 0;
     }
 
     return error;

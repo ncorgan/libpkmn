@@ -14,18 +14,18 @@
 
 struct pkmn_database_move_entry
 {
-    char* name;
-    char* game;
-    char* description;
-    char* target;
-    char* damage_class;
+    char* p_name;
+    char* p_game;
+    char* p_description;
+    char* p_target;
+    char* p_damage_class;
     int base_power;
     int pp[4];
     float accuracy;
-    char* effect;
-    char* contest_type;
-    char* contest_effect;
-    char* super_contest_effect;
+    char* p_effect;
+    char* p_contest_type;
+    char* p_contest_effect;
+    char* p_super_contest_effect;
 };
 
 #ifdef __cplusplus
@@ -33,13 +33,13 @@ extern "C" {
 #endif
 
 PKMN_C_API enum pkmn_error pkmn_database_get_move_entry(
-    const char* move_name,
-    const char* move_game,
-    struct pkmn_database_move_entry* move_entry_out
+    const char* p_move_name,
+    const char* p_move_game,
+    struct pkmn_database_move_entry* p_move_entry_out
 );
 
 PKMN_C_API enum pkmn_error pkmn_database_move_entry_free(
-    struct pkmn_database_move_entry* move_entry
+    struct pkmn_database_move_entry* p_move_entry
 );
 
 #ifdef __cplusplus

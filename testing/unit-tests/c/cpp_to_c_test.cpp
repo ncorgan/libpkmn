@@ -456,11 +456,11 @@ TEST(cpp_to_c_test, hidden_power_cpp_to_c_test)
         &hidden_power_c
     );
 
-    EXPECT_STREQ("Normal", hidden_power_c.type);
+    EXPECT_STREQ("Normal", hidden_power_c.p_type);
     EXPECT_EQ(90, hidden_power_c.base_power);
 
     pkmn_hidden_power_free(&hidden_power_c);
-    EXPECT_EQ(NULL, hidden_power_c.type);
+    EXPECT_EQ(NULL, hidden_power_c.p_type);
     EXPECT_EQ(0, hidden_power_c.base_power);
 }
 
@@ -475,11 +475,11 @@ TEST(cpp_to_c_test, natural_gift_cpp_to_c_test)
         &natural_gift_c
     );
 
-    EXPECT_STREQ("Normal", natural_gift_c.type);
+    EXPECT_STREQ("Normal", natural_gift_c.p_type);
     EXPECT_EQ(90, natural_gift_c.base_power);
 
     pkmn_natural_gift_free(&natural_gift_c);
-    EXPECT_EQ(NULL, natural_gift_c.type);
+    EXPECT_EQ(NULL, natural_gift_c.p_type);
     EXPECT_EQ(0, natural_gift_c.base_power);
 }
 
@@ -493,11 +493,11 @@ TEST(cpp_to_c_test, item_slot_cpp_to_c_test)
         &item_slot_c
     );
 
-    EXPECT_STREQ("Potion", item_slot_c.item);
+    EXPECT_STREQ("Potion", item_slot_c.p_item);
     EXPECT_EQ(50, item_slot_c.amount);
 
     pkmn_item_slot_free(&item_slot_c);
-    EXPECT_EQ(NULL, item_slot_c.item);
+    EXPECT_EQ(NULL, item_slot_c.p_item);
     EXPECT_EQ(0, item_slot_c.amount);
 }
 
@@ -517,17 +517,17 @@ TEST(cpp_to_c_test, item_slots_cpp_to_c_test)
     );
 
     EXPECT_EQ(3, item_slots_c.length);
-    EXPECT_STREQ("Potion", item_slots_c.item_slots[0].item);
-    EXPECT_EQ(50, item_slots_c.item_slots[0].amount);
-    EXPECT_STREQ("Berry", item_slots_c.item_slots[1].item);
-    EXPECT_EQ(28, item_slots_c.item_slots[1].amount);
-    EXPECT_STREQ("Berry Pouch", item_slots_c.item_slots[2].item);
-    EXPECT_EQ(1, item_slots_c.item_slots[2].amount);
+    EXPECT_STREQ("Potion", item_slots_c.p_item_slots[0].p_item);
+    EXPECT_EQ(50, item_slots_c.p_item_slots[0].amount);
+    EXPECT_STREQ("Berry", item_slots_c.p_item_slots[1].p_item);
+    EXPECT_EQ(28, item_slots_c.p_item_slots[1].amount);
+    EXPECT_STREQ("Berry Pouch", item_slots_c.p_item_slots[2].p_item);
+    EXPECT_EQ(1, item_slots_c.p_item_slots[2].amount);
 
     pkmn_item_slots_free(
         &item_slots_c
     );
-    EXPECT_EQ(NULL, item_slots_c.item_slots);
+    EXPECT_EQ(NULL, item_slots_c.p_item_slots);
     EXPECT_EQ(0, item_slots_c.length);
 }
 
@@ -545,11 +545,11 @@ TEST(cpp_to_c_test, levelup_move_cpp_to_c_test)
         &levelup_move_c
     );
 
-    EXPECT_STREQ("Scratch", levelup_move_c.move);
+    EXPECT_STREQ("Scratch", levelup_move_c.p_move);
     EXPECT_EQ(50, levelup_move_c.level);
 
     pkmn_levelup_move_free(&levelup_move_c);
-    EXPECT_EQ(NULL, levelup_move_c.move);
+    EXPECT_EQ(NULL, levelup_move_c.p_move);
     EXPECT_EQ(0, levelup_move_c.level);
 }
 
@@ -578,17 +578,17 @@ TEST(cpp_to_c_test, levelup_moves_cpp_to_c_test)
     );
 
     EXPECT_EQ(3, levelup_moves_c.length);
-    EXPECT_STREQ("Scratch", levelup_moves_c.levelup_moves[0].move);
-    EXPECT_EQ(50, levelup_moves_c.levelup_moves[0].level);
-    EXPECT_STREQ("Synthesis", levelup_moves_c.levelup_moves[1].move);
-    EXPECT_EQ(5, levelup_moves_c.levelup_moves[1].level);
-    EXPECT_STREQ("Frenzy Plant", levelup_moves_c.levelup_moves[2].move);
-    EXPECT_EQ(37, levelup_moves_c.levelup_moves[2].level);
+    EXPECT_STREQ("Scratch", levelup_moves_c.p_levelup_moves[0].p_move);
+    EXPECT_EQ(50, levelup_moves_c.p_levelup_moves[0].level);
+    EXPECT_STREQ("Synthesis", levelup_moves_c.p_levelup_moves[1].p_move);
+    EXPECT_EQ(5, levelup_moves_c.p_levelup_moves[1].level);
+    EXPECT_STREQ("Frenzy Plant", levelup_moves_c.p_levelup_moves[2].p_move);
+    EXPECT_EQ(37, levelup_moves_c.p_levelup_moves[2].level);
 
     pkmn_levelup_moves_free(
         &levelup_moves_c
     );
-    EXPECT_EQ(NULL, levelup_moves_c.levelup_moves);
+    EXPECT_EQ(NULL, levelup_moves_c.p_levelup_moves);
     EXPECT_EQ(0, levelup_moves_c.length);
 }
 
@@ -608,14 +608,14 @@ TEST(cpp_to_c_test, move_list_cpp_to_c_test)
     );
 
     EXPECT_EQ(3, string_list_c.length);
-    EXPECT_STREQ("Scratch", string_list_c.strings[0]);
-    EXPECT_STREQ("Synthesis", string_list_c.strings[1]);
-    EXPECT_STREQ("Frenzy Plant", string_list_c.strings[2]);
+    EXPECT_STREQ("Scratch", string_list_c.pp_strings[0]);
+    EXPECT_STREQ("Synthesis", string_list_c.pp_strings[1]);
+    EXPECT_STREQ("Frenzy Plant", string_list_c.pp_strings[2]);
 
     pkmn_string_list_free(
         &string_list_c
     );
-    EXPECT_EQ(NULL, string_list_c.strings);
+    EXPECT_EQ(NULL, string_list_c.pp_strings);
     EXPECT_EQ(0, string_list_c.length);
 }
 
@@ -633,11 +633,11 @@ TEST(cpp_to_c_test, move_slot_cpp_to_c_test)
         &move_slot_c
     );
 
-    EXPECT_STREQ("Tackle", move_slot_c.move);
+    EXPECT_STREQ("Tackle", move_slot_c.p_move);
     EXPECT_EQ(50, move_slot_c.pp);
 
     pkmn_move_slot_free(&move_slot_c);
-    EXPECT_EQ(NULL, move_slot_c.move);
+    EXPECT_EQ(NULL, move_slot_c.p_move);
     EXPECT_EQ(0, move_slot_c.pp);
 }
 
@@ -666,17 +666,17 @@ TEST(cpp_to_c_test, move_slots_cpp_to_c_test)
     );
 
     EXPECT_EQ(3, move_slots_c.length);
-    EXPECT_STREQ("Tackle", move_slots_c.move_slots[0].move);
-    EXPECT_EQ(50, move_slots_c.move_slots[0].pp);
-    EXPECT_STREQ("Pound", move_slots_c.move_slots[1].move);
-    EXPECT_EQ(28, move_slots_c.move_slots[1].pp);
-    EXPECT_STREQ("Metronome", move_slots_c.move_slots[2].move);
-    EXPECT_EQ(1, move_slots_c.move_slots[2].pp);
+    EXPECT_STREQ("Tackle", move_slots_c.p_move_slots[0].p_move);
+    EXPECT_EQ(50, move_slots_c.p_move_slots[0].pp);
+    EXPECT_STREQ("Pound", move_slots_c.p_move_slots[1].p_move);
+    EXPECT_EQ(28, move_slots_c.p_move_slots[1].pp);
+    EXPECT_STREQ("Metronome", move_slots_c.p_move_slots[2].p_move);
+    EXPECT_EQ(1, move_slots_c.p_move_slots[2].pp);
 
     pkmn_move_slots_free(
         &move_slots_c
     );
-    EXPECT_EQ(NULL, move_slots_c.move_slots);
+    EXPECT_EQ(NULL, move_slots_c.p_move_slots);
     EXPECT_EQ(0, move_slots_c.length);
 }
 
@@ -696,14 +696,14 @@ TEST(cpp_to_c_test, pokemon_entries_cpp_to_c_test)
     );
 
     EXPECT_EQ(3, string_list_c.length);
-    EXPECT_STREQ("Charmander", string_list_c.strings[0]);
-    EXPECT_STREQ("Totodile", string_list_c.strings[1]);
-    EXPECT_STREQ("Treecko", string_list_c.strings[2]);
+    EXPECT_STREQ("Charmander", string_list_c.pp_strings[0]);
+    EXPECT_STREQ("Totodile", string_list_c.pp_strings[1]);
+    EXPECT_STREQ("Treecko", string_list_c.pp_strings[2]);
 
     pkmn_string_list_free(
         &string_list_c
     );
-    EXPECT_EQ(NULL, string_list_c.strings);
+    EXPECT_EQ(NULL, string_list_c.pp_strings);
     EXPECT_EQ(0, string_list_c.length);
 }
 
@@ -736,15 +736,15 @@ TEST(cpp_to_c_test, pokemon_list_cpp_to_c)
 
         EXPECT_STREQ(
             pokemon_list_cpp[i]->get_species().c_str(),
-            pokemon_list_c.pokemon[i].species
+            pokemon_list_c.p_pokemon[i].p_species
         );
         EXPECT_STREQ(
             pokemon_list_cpp[i]->get_game().c_str(),
-            pokemon_list_c.pokemon[i].game
+            pokemon_list_c.p_pokemon[i].p_game
         );
 
         error = pkmn_pokemon_get_level(
-                    &pokemon_list_c.pokemon[i],
+                    &pokemon_list_c.p_pokemon[i],
                     &level_c
                 );
         EXPECT_EQ(PKMN_ERROR_NONE, error);
@@ -757,7 +757,7 @@ TEST(cpp_to_c_test, pokemon_list_cpp_to_c)
     pkmn_pokemon_list_free(
         &pokemon_list_c
     );
-    EXPECT_EQ(NULL, pokemon_list_c.pokemon);
+    EXPECT_EQ(NULL, pokemon_list_c.p_pokemon);
     EXPECT_EQ(0, pokemon_list_c.length);
 }
 
@@ -788,11 +788,11 @@ TEST(cpp_to_c_test, pokemon_box_list_cpp_to_c_test)
 
         EXPECT_STREQ(
             pokemon_box_list_cpp[index]->get_game().c_str(),
-            pokemon_box_list_c.boxes[index].game
+            pokemon_box_list_c.p_boxes[index].p_game
         );
 
         error = pkmn_pokemon_box_get_name(
-                    &pokemon_box_list_c.boxes[index],
+                    &pokemon_box_list_c.p_boxes[index],
                     name_c,
                     sizeof(name_c),
                     nullptr
@@ -807,7 +807,7 @@ TEST(cpp_to_c_test, pokemon_box_list_cpp_to_c_test)
     pkmn_pokemon_box_list_free(
         &pokemon_box_list_c
     );
-    EXPECT_EQ(NULL, pokemon_box_list_c.boxes);
+    EXPECT_EQ(NULL, pokemon_box_list_c.p_boxes);
     EXPECT_EQ(0, pokemon_box_list_c.length);
 }
 
@@ -873,12 +873,12 @@ TEST(cpp_to_c_test, string_pair_cpp_to_c_test)
         &string_pair_c
     );
 
-    EXPECT_STREQ("LibPKMN", string_pair_c.first);
-    EXPECT_STREQ("PKSav", string_pair_c.second);
+    EXPECT_STREQ("LibPKMN", string_pair_c.p_first);
+    EXPECT_STREQ("PKSav", string_pair_c.p_second);
 
     pkmn_string_pair_free(&string_pair_c);
-    EXPECT_EQ(NULL, string_pair_c.first);
-    EXPECT_EQ(NULL, string_pair_c.second);
+    EXPECT_EQ(NULL, string_pair_c.p_first);
+    EXPECT_EQ(NULL, string_pair_c.p_second);
 }
 
 TEST(cpp_to_c_test, std_map_keys_to_string_list_test)
@@ -908,15 +908,15 @@ TEST(cpp_to_c_test, std_map_keys_to_string_list_test)
 
     // To suppress Clang-tidy warning, instead of assering length
     EXPECT_EQ(4ULL, string_list_c.length);
-    if(string_list_c.strings)
+    if(string_list_c.pp_strings)
     {
-        EXPECT_STREQ("key1", string_list_c.strings[0]);
-        EXPECT_STREQ("key2", string_list_c.strings[1]);
-        EXPECT_STREQ("key3", string_list_c.strings[2]);
-        EXPECT_STREQ("key4", string_list_c.strings[3]);
+        EXPECT_STREQ("key1", string_list_c.pp_strings[0]);
+        EXPECT_STREQ("key2", string_list_c.pp_strings[1]);
+        EXPECT_STREQ("key3", string_list_c.pp_strings[2]);
+        EXPECT_STREQ("key4", string_list_c.pp_strings[3]);
 
         pkmn_string_list_free(&string_list_c);
-        EXPECT_EQ(NULL, string_list_c.strings);
+        EXPECT_EQ(NULL, string_list_c.pp_strings);
         EXPECT_EQ(0, string_list_c.length);
     }
 
@@ -927,16 +927,16 @@ TEST(cpp_to_c_test, std_map_keys_to_string_list_test)
 
     // To suppress Clang-tidy warning, instead of asserting length
     EXPECT_EQ(5ULL, string_list_c.length);
-    if(string_list_c.strings)
+    if(string_list_c.pp_strings)
     {
-        EXPECT_STREQ("key5", string_list_c.strings[0]);
-        EXPECT_STREQ("key6", string_list_c.strings[1]);
-        EXPECT_STREQ("key7", string_list_c.strings[2]);
-        EXPECT_STREQ("key8", string_list_c.strings[3]);
-        EXPECT_STREQ("key9", string_list_c.strings[4]);
+        EXPECT_STREQ("key5", string_list_c.pp_strings[0]);
+        EXPECT_STREQ("key6", string_list_c.pp_strings[1]);
+        EXPECT_STREQ("key7", string_list_c.pp_strings[2]);
+        EXPECT_STREQ("key8", string_list_c.pp_strings[3]);
+        EXPECT_STREQ("key9", string_list_c.pp_strings[4]);
 
         pkmn_string_list_free(&string_list_c);
-        EXPECT_EQ(NULL, string_list_c.strings);
+        EXPECT_EQ(NULL, string_list_c.pp_strings);
         EXPECT_EQ(0, string_list_c.length);
     }
 }
@@ -952,13 +952,13 @@ TEST(cpp_to_c_test, string_list_cpp_to_c_test)
     );
 
     EXPECT_EQ(3, string_list_c.length);
-    EXPECT_STREQ("LibPKMN", string_list_c.strings[0]);
-    EXPECT_STREQ("PKSav", string_list_c.strings[1]);
-    EXPECT_STREQ("TKO", string_list_c.strings[2]);
+    EXPECT_STREQ("LibPKMN", string_list_c.pp_strings[0]);
+    EXPECT_STREQ("PKSav", string_list_c.pp_strings[1]);
+    EXPECT_STREQ("TKO", string_list_c.pp_strings[2]);
 
     pkmn_string_list_free(
         &string_list_c
     );
-    EXPECT_EQ(NULL, string_list_c.strings);
+    EXPECT_EQ(NULL, string_list_c.pp_strings);
     EXPECT_EQ(0, string_list_c.length);
 }

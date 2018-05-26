@@ -14,14 +14,14 @@
 
 struct pkmn_string_list
 {
-    char** strings;
+    char** pp_strings;
     size_t length;
 };
 
 struct pkmn_string_pair
 {
-    char* first;
-    char* second;
+    char* p_first;
+    char* p_second;
 };
 
 #ifdef __cplusplus
@@ -29,11 +29,11 @@ extern "C" {
 #endif
 
 PKMN_C_API enum pkmn_error pkmn_string_list_free(
-    struct pkmn_string_list* string_list_ptr
+    struct pkmn_string_list* p_string_list
 );
 
 PKMN_C_API enum pkmn_error pkmn_string_pair_free(
-    struct pkmn_string_pair* string_pair_ptr
+    struct pkmn_string_pair* p_string_pair
 );
 
 #ifdef __cplusplus

@@ -37,14 +37,14 @@ static const char* ribbons[] =
 };
 
 static void check_initial_ribbons(
-    struct pkmn_pokemon* pokemon_ptr
+    struct pkmn_pokemon* p_pokemon
 )
 {
-    TEST_ASSERT_NOT_NULL(pokemon_ptr);
+    TEST_ASSERT_NOT_NULL(p_pokemon);
 
     struct pkmn_string_list ribbon_names;
     error = pkmn_pokemon_get_ribbon_names(
-                pokemon_ptr,
+                p_pokemon,
                 &ribbon_names
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
@@ -80,10 +80,10 @@ static void check_initial_ribbons(
 }
 
 static void test_contest_ribbons(
-    struct pkmn_pokemon* pokemon_ptr
+    struct pkmn_pokemon* p_pokemon
 )
 {
-    TEST_ASSERT_NOT_NULL(pokemon_ptr);
+    TEST_ASSERT_NOT_NULL(p_pokemon);
 
     char super_ribbon_name[STRBUFFER_LEN] = {0};
     char hyper_ribbon_name[STRBUFFER_LEN] = {0};
@@ -112,35 +112,35 @@ static void test_contest_ribbons(
         );
 
         error = pkmn_pokemon_set_has_ribbon(
-                    pokemon_ptr,
+                    p_pokemon,
                     hyper_ribbon_name,
                     true
                 );
         PKMN_TEST_ASSERT_SUCCESS(error);
 
         error = pkmn_pokemon_has_ribbon(
-                    pokemon_ptr,
+                    p_pokemon,
                     contest_types[type_index],
                     &has_ribbon
                 );
         PKMN_TEST_ASSERT_SUCCESS(error);
         TEST_ASSERT_TRUE(has_ribbon);
         error = pkmn_pokemon_has_ribbon(
-                    pokemon_ptr,
+                    p_pokemon,
                     super_ribbon_name,
                     &has_ribbon
                 );
         PKMN_TEST_ASSERT_SUCCESS(error);
         TEST_ASSERT_TRUE(has_ribbon);
         error = pkmn_pokemon_has_ribbon(
-                    pokemon_ptr,
+                    p_pokemon,
                     hyper_ribbon_name,
                     &has_ribbon
                 );
         PKMN_TEST_ASSERT_SUCCESS(error);
         TEST_ASSERT_TRUE(has_ribbon);
         error = pkmn_pokemon_has_ribbon(
-                    pokemon_ptr,
+                    p_pokemon,
                     master_ribbon_name,
                     &has_ribbon
                 );
@@ -150,16 +150,16 @@ static void test_contest_ribbons(
 }
 
 static void test_ribbons(
-    struct pkmn_pokemon* pokemon_ptr
+    struct pkmn_pokemon* p_pokemon
 )
 {
-    TEST_ASSERT_NOT_NULL(pokemon_ptr);
+    TEST_ASSERT_NOT_NULL(p_pokemon);
 
     bool has_ribbon = false;
     for(int ribbon_index = 0; ribbon_index < 12; ++ribbon_index)
     {
         error = pkmn_pokemon_has_ribbon(
-                    pokemon_ptr,
+                    p_pokemon,
                     ribbons[ribbon_index],
                     &has_ribbon
                 );
@@ -167,14 +167,14 @@ static void test_ribbons(
         TEST_ASSERT_FALSE(has_ribbon);
 
         error = pkmn_pokemon_set_has_ribbon(
-                    pokemon_ptr,
+                    p_pokemon,
                     ribbons[ribbon_index],
                     true
                 );
         PKMN_TEST_ASSERT_SUCCESS(error);
 
         error = pkmn_pokemon_has_ribbon(
-                    pokemon_ptr,
+                    p_pokemon,
                     ribbons[ribbon_index],
                     &has_ribbon
                 );
@@ -194,9 +194,9 @@ static void gba_pokemon_test(
     enum pkmn_error error = PKMN_ERROR_NONE;
     struct pkmn_pokemon pokemon =
     {
-        .species = NULL,
-        .game = NULL,
-        ._internal = NULL
+        .p_species = NULL,
+        .p_game = NULL,
+        .p_internal = NULL
     };
 
     error = pkmn_pokemon_init(
@@ -207,7 +207,7 @@ static void gba_pokemon_test(
                 &pokemon
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
-    TEST_ASSERT_NOT_NULL(pokemon._internal);
+    TEST_ASSERT_NOT_NULL(pokemon.p_internal);
 
     pkmn_test_values_t test_values =
     {
@@ -257,9 +257,9 @@ static void gcn_pokemon_test(
     enum pkmn_error error = PKMN_ERROR_NONE;
     struct pkmn_pokemon pokemon =
     {
-        .species = NULL,
-        .game = NULL,
-        ._internal = NULL
+        .p_species = NULL,
+        .p_game = NULL,
+        .p_internal = NULL
     };
 
     error = pkmn_pokemon_init(
@@ -270,7 +270,7 @@ static void gcn_pokemon_test(
                 &pokemon
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
-    TEST_ASSERT_NOT_NULL(pokemon._internal);
+    TEST_ASSERT_NOT_NULL(pokemon.p_internal);
 
     pkmn_test_values_t test_values =
     {

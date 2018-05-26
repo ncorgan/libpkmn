@@ -16,9 +16,9 @@
 
 static const struct pkmn_pokemon empty_pokemon =
 {
-    .species = NULL,
-    .game = NULL,
-    ._internal = NULL
+    .p_species = NULL,
+    .p_game = NULL,
+    .p_internal = NULL
 };
 
 #define STRBUFFER_LEN 1024
@@ -48,12 +48,12 @@ static void gen2_unown_test(
         error = pkmn_pokemon_init(
                     "Unown",
                     game,
-                    unown_entry.forms.strings[form_index],
+                    unown_entry.forms.pp_strings[form_index],
                     5,
                     &unown
                 );
         PKMN_TEST_ASSERT_SUCCESS(error);
-        TEST_ASSERT_NOT_NULL(unown._internal);
+        TEST_ASSERT_NOT_NULL(unown.p_internal);
 
         error = pkmn_pokemon_get_form(
                     &unown,
@@ -63,7 +63,7 @@ static void gen2_unown_test(
                 );
         PKMN_TEST_ASSERT_SUCCESS(error);
         TEST_ASSERT_EQUAL_STRING(
-            unown_entry.forms.strings[form_index],
+            unown_entry.forms.pp_strings[form_index],
             strbuffer
         );
 
@@ -87,7 +87,7 @@ static void gen2_unown_test(
                 );
         PKMN_TEST_ASSERT_SUCCESS(error);
         TEST_ASSERT_EQUAL_STRING(
-            unown_entry.forms.strings[form_index],
+            unown_entry.forms.pp_strings[form_index],
             strbuffer
         );
 
@@ -111,7 +111,7 @@ static void gen2_unown_test(
 
         error = pkmn_pokemon_free(&unown);
         PKMN_TEST_ASSERT_SUCCESS(error);
-        TEST_ASSERT_NULL(unown._internal);
+        TEST_ASSERT_NULL(unown.p_internal);
     }
 
     // Make sure setting IVs properly changes the form.
@@ -166,7 +166,7 @@ static void gen2_unown_test(
     {
         error = pkmn_pokemon_set_form(
                     &unown,
-                    unown_entry.forms.strings[form_index]
+                    unown_entry.forms.pp_strings[form_index]
                 );
         PKMN_TEST_ASSERT_SUCCESS(error);
 
@@ -178,7 +178,7 @@ static void gen2_unown_test(
                 );
         PKMN_TEST_ASSERT_SUCCESS(error);
         TEST_ASSERT_EQUAL_STRING(
-            unown_entry.forms.strings[form_index],
+            unown_entry.forms.pp_strings[form_index],
             strbuffer
         );
 
@@ -202,14 +202,14 @@ static void gen2_unown_test(
                 );
         PKMN_TEST_ASSERT_SUCCESS(error);
         TEST_ASSERT_EQUAL_STRING(
-            unown_entry.forms.strings[form_index],
+            unown_entry.forms.pp_strings[form_index],
             strbuffer
         );
     }
 
     error = pkmn_pokemon_free(&unown);
     PKMN_TEST_ASSERT_SUCCESS(error);
-    TEST_ASSERT_NULL(unown._internal);
+    TEST_ASSERT_NULL(unown.p_internal);
 
     error = pkmn_database_pokemon_entry_free(&unown_entry);
     PKMN_TEST_ASSERT_SUCCESS(error);
@@ -242,7 +242,7 @@ static void gen3_unown_test(
         error = pkmn_pokemon_init(
                     "Unown",
                     game,
-                    unown_entry.forms.strings[form_index],
+                    unown_entry.forms.pp_strings[form_index],
                     5,
                     &unown
                 );
@@ -256,7 +256,7 @@ static void gen3_unown_test(
                 );
         TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
         TEST_ASSERT_EQUAL_STRING(
-            unown_entry.forms.strings[form_index],
+            unown_entry.forms.pp_strings[form_index],
             strbuffer
         );
 
@@ -275,7 +275,7 @@ static void gen3_unown_test(
                 );
         TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
         TEST_ASSERT_EQUAL_STRING(
-            unown_entry.forms.strings[form_index],
+            unown_entry.forms.pp_strings[form_index],
             strbuffer
         );
 
@@ -301,7 +301,7 @@ static void gen3_unown_test(
 
         error = pkmn_pokemon_free(&unown);
         TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
-        TEST_ASSERT_NULL(unown._internal);
+        TEST_ASSERT_NULL(unown.p_internal);
     }
 
     // Make sure setting the personality properly sets the form.
@@ -313,7 +313,7 @@ static void gen3_unown_test(
                 &unown
             );
     TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
-    TEST_ASSERT_NOT_NULL(unown._internal);
+    TEST_ASSERT_NOT_NULL(unown.p_internal);
 
     error = pkmn_pokemon_set_personality(
                 &unown,
@@ -336,7 +336,7 @@ static void gen3_unown_test(
     {
         error = pkmn_pokemon_set_form(
                     &unown,
-                    unown_entry.forms.strings[form_index]
+                    unown_entry.forms.pp_strings[form_index]
                 );
         TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
 
@@ -354,14 +354,14 @@ static void gen3_unown_test(
                 );
         TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
         TEST_ASSERT_EQUAL_STRING(
-            unown_entry.forms.strings[form_index],
+            unown_entry.forms.pp_strings[form_index],
             strbuffer
         );
     }
 
     error = pkmn_pokemon_free(&unown);
     TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
-    TEST_ASSERT_NULL(unown._internal);
+    TEST_ASSERT_NULL(unown.p_internal);
 
     error = pkmn_database_pokemon_entry_free(&unown_entry);
     TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);

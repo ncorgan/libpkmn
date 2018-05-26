@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -19,9 +19,9 @@ extern "C" {
 #endif
 
 PKMN_C_API enum pkmn_error pkmn_calculations_natural_gift_stats(
-    const char* item_name,
+    const char* p_item_name,
     int generation,
-    struct pkmn_natural_gift* natural_gift_stats_out
+    struct pkmn_natural_gift* p_natural_gift_stats_out
 );
 
 #ifdef __cplusplus
