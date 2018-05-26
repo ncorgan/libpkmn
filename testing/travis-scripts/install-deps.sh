@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+# Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
 #
 # Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
 # or copy at http://opensource.org/licenses/MIT)
@@ -20,7 +20,7 @@ sudo apt-get -y install libqt4-dev qtbase5-dev libsqlite3-dev sqlite3 \
 [ $? -ne 0 ] && exit 1
 
 # Static analysis needs a later CMake than the default for Ubuntu 14.04
-if [ "$STATIC_ANALYSIS" -eq "1" ]
+if [ "$EXTRA_TESTING" -eq "1" ]
 then
     sudo apt-get -y install cmake cppcheck
 fi
