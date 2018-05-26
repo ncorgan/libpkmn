@@ -322,7 +322,7 @@ namespace pkmn
     {
         _moves.resize(4);
 
-        for(size_t move_index = 0; move_index < 4; ++move_index)
+        for(int move_index = 0; move_index < 4; ++move_index)
         {
             this->set_move("None", move_index);
         }
@@ -371,7 +371,7 @@ namespace pkmn
             {
                 this->set_move(
                     levelup_moves[levelup_move_index].move.get_name(),
-                    move_index
+                    static_cast<int>(move_index)
                 );
             }
         }
