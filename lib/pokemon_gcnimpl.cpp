@@ -1370,7 +1370,8 @@ namespace pkmn
 
     void pokemon_gcnimpl::_update_moves(
         int index
-    ) {
+    )
+    {
         _moves.resize(4);
         switch(index) {
             case 0:
@@ -1379,14 +1380,16 @@ namespace pkmn
             case 3:
                 _moves[index] = pkmn::move_slot(
                     pkmn::database::move_id_to_name(
-                        int(GC_RCAST->moves[index].move), 3
+                        int(GC_RCAST->moves[index].move),
+                        3
                     ),
                     GC_RCAST->moves[index].currentPPs
                 );
                 break;
 
             default:
-                for(int i = 0; i < 4; ++i) {
+                for(int i = 0; i < 4; ++i)
+                {
                     _update_moves(i);
                 }
         }

@@ -19,6 +19,9 @@
 #include <boost/assign.hpp>
 #include <boost/config.hpp>
 
+#include <algorithm>
+#include <unordered_map>
+
 namespace pkmn { namespace database {
 
     std::vector<std::string> get_ability_list(
@@ -363,18 +366,70 @@ namespace pkmn { namespace database {
 
     std::vector<std::string> get_move_list(
         const std::string &game
-    ) {
+    )
+    {
         static BOOST_CONSTEXPR const char* main_query =
             "SELECT name FROM move_names WHERE local_language_id=9 AND "
             "move_id IN (SELECT id FROM moves WHERE generation_id<=? AND "
             "type_id<100) ORDER BY move_id";
 
+        int game_id = game_name_to_id(game);
         int generation = game_name_to_generation(game);
 
         std::vector<std::string> ret;
+
         pkmn::database::query_db_list_bind1<std::string, int>(
             main_query, ret, generation
         );
+
+        // DTODO: We have a database table with these. There has to be
+        // a way to do this in a single transaction...
+        if(generation < 6)
+        {
+            static const std::unordered_map<std::string, std::string> REPLACEMENT_MOVES =
+            {
+                {"Ancient Power",  "AncientPower"},
+                {"Bubble Beam",    "BubbleBeam"},
+                {"Double Slap",    "DoubleSlap"},
+                {"Dragon Breath",  "DragonBreath"},
+                {"Dynamic Punch",  "DynamicPunch"},
+                {"Extreme Speed",  "ExtremeSpeed"},
+                {"Feint Attack",   "Faint Attack"},
+                {"Feather Dance",  "FeatherDance"},
+                {"Grass Whistle",  "GrassWhistle"},
+                {"High Jump Kick", "Hi Jump Kick"},
+                {"Poison Powder",  "PoisonPowder"},
+                {"Sand Attack",    "Sand-Attack"},
+                {"Self-Destruct",  "Selfdestruct"},
+                {"Smelling Salts", "SmellingSalt"},
+                {"Smokescreen",    "SmokeScreen"},
+                {"Soft-Boiled",    "Softboiled"},
+                {"Solar Beam",     "SolarBeam"},
+                {"Sonic Boom",     "SonicBoom"},
+                {"Thunder Punch",  "ThunderPunch"},
+                {"Thunder Shock",  "ThunderShock"},
+                {"Vice Grip",      "ViceGrip"},
+            };
+
+            for(const auto& move_pair: REPLACEMENT_MOVES)
+            {
+                const std::string& new_move = move_pair.first;
+                const std::string& old_move = move_pair.second;
+
+#ifndef NDEBUG
+                // Since we're not actually using the database, use it to
+                // validate the map entries.
+                (void)pkmn::database::move_name_to_id(new_move);
+                (void)pkmn::database::move_name_to_id(old_move);
+#endif
+                std::replace(
+                    ret.begin(),
+                    ret.end(),
+                    new_move,
+                    old_move
+                );
+            }
+        }
 
         BOOST_STATIC_CONSTEXPR int COLOSSEUM = 19;
         BOOST_STATIC_CONSTEXPR int XD        = 20;
@@ -389,8 +444,8 @@ namespace pkmn { namespace database {
          * There are also four Generation VI moves that are exclusive to Omega
          * Ruby and Alpha Sapphire, so get rid of those for X/Y.
          */
-        int game_id = game_name_to_id(game);
-        if(game_id == COLOSSEUM) {
+        if(game_id == COLOSSEUM)
+        {
             static BOOST_CONSTEXPR const char* shadow_query =
                 "SELECT name FROM move_names WHERE local_language_id=9 AND "
                 "move_id=10001";
@@ -398,7 +453,9 @@ namespace pkmn { namespace database {
             pkmn::database::query_db_list<std::string>(
                 shadow_query, ret
             );
-        } else if(game_id == XD) {
+        }
+        else if(game_id == XD)
+        {
             static BOOST_CONSTEXPR const char* shadow_query =
                 "SELECT name FROM move_names WHERE local_language_id=9 AND "
                 "move_id IN (SELECT id FROM moves WHERE type_id=10002) "
@@ -407,8 +464,12 @@ namespace pkmn { namespace database {
             pkmn::database::query_db_list<std::string>(
                 shadow_query, ret
             );
-        } else if(game_id == X or game_id == Y) {
-            for(size_t i = 0; i < 4; ++i) {
+        }
+        else if((game_id == X) or (game_id == Y))
+        {
+            // DTODO: this is likely fragile.
+            for(size_t i = 0; i < 4; ++i)
+            {
                 ret.pop_back();
             }
         }

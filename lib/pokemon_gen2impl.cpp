@@ -1064,7 +1064,8 @@ namespace pkmn
     )
     {
         _moves.resize(PKSAV_GEN2_POKEMON_NUM_MOVES);
-        switch(index) {
+        switch(index)
+        {
             case 0:
             case 1:
             case 2:
@@ -1072,14 +1073,15 @@ namespace pkmn
                 _moves[index] = pkmn::move_slot(
                     pkmn::database::move_id_to_name(
                         GEN2_PC_RCAST->moves[index],
-                        _database_entry.get_game_id()
+                        1
                     ),
                     (GEN2_PC_RCAST->move_pps[index] & PKSAV_GEN2_POKEMON_MOVE_PP_MASK)
                 );
                 break;
 
             default:
-                for(int i = 0; i < 4; ++i) {
+                for(int i = 0; i < 4; ++i)
+                {
                     _update_moves(i);
                 }
         }

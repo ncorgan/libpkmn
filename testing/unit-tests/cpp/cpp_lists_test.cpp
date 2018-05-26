@@ -495,7 +495,45 @@ TEST(cpp_lists_test, location_list_test) {
     EXPECT_TRUE(string_in_vector(locations_oras, "PC Tokyo"));
 }
 
-TEST(cpp_lists_test, move_list_test) {
+struct changed_move_names
+{
+    std::string old_name;
+    std::string new_name;
+};
+
+static const std::vector<changed_move_names> GEN1_CHANGED_MOVE_NAMES =
+{
+    {"BubbleBeam",   "Bubble Beam"},
+    {"DoubleSlap",   "Double Slap"},
+    {"Hi Jump Kick", "High Jump Kick"},
+    {"PoisonPowder", "Poison Powder"},
+    {"Sand-Attack",  "Sand Attack"},
+    {"Selfdestruct", "Self-Destruct"},
+    {"SmokeScreen",  "Smokescreen"},
+    {"Softboiled",   "Soft-Boiled"},
+    {"SolarBeam",    "Solar Beam"},
+    {"SonicBoom",    "Sonic Boom"},
+    {"ThunderPunch", "Thunder Punch"},
+    {"ThunderShock", "Thunder Shock"},
+    {"ViceGrip",     "Vice Grip"}
+};
+static const std::vector<changed_move_names> GEN2_CHANGED_MOVE_NAMES =
+{
+    {"AncientPower", "Ancient Power"},
+    {"DragonBreath", "Dragon Breath"},
+    {"DynamicPunch", "Dynamic Punch"},
+    {"ExtremeSpeed", "Extreme Speed"},
+    {"Faint Attack", "Feint Attack"}
+};
+static const std::vector<changed_move_names> GEN3_CHANGED_MOVE_NAMES =
+{
+    {"FeatherDance", "Feather Dance"},
+    {"GrassWhistle", "Grass Whistle"},
+    {"SmellingSalt", "Smelling Salts"}
+};
+
+TEST(cpp_lists_test, move_list_test)
+{
     std::vector<std::string> moves_gen1,
                              moves_gen2, moves_gba,
                              moves_colo, moves_xd,
@@ -517,6 +555,13 @@ TEST(cpp_lists_test, move_list_test) {
     EXPECT_EQ("Pound", moves_gen1.front());
     EXPECT_EQ("Struggle", moves_gen1.back());
 
+    // Make sure old move names appear.
+    for(const auto& changed_move_names: GEN1_CHANGED_MOVE_NAMES)
+    {
+        EXPECT_TRUE(string_in_vector(moves_gen1, changed_move_names.old_name))  << changed_move_names.old_name;
+        EXPECT_FALSE(string_in_vector(moves_gen1, changed_move_names.new_name)) << changed_move_names.new_name;
+    }
+
     /*
      * Generation II
      */
@@ -524,6 +569,18 @@ TEST(cpp_lists_test, move_list_test) {
     EXPECT_EQ(251, moves_gen2.size());
     EXPECT_EQ("Pound", moves_gen2.front());
     EXPECT_EQ("Beat Up", moves_gen2.back());
+
+    // Make sure old move names appear.
+    for(const auto& changed_move_names: GEN1_CHANGED_MOVE_NAMES)
+    {
+        EXPECT_TRUE(string_in_vector(moves_gen2, changed_move_names.old_name))  << changed_move_names.old_name;
+        EXPECT_FALSE(string_in_vector(moves_gen2, changed_move_names.new_name)) << changed_move_names.new_name;
+    }
+    for(const auto& changed_move_names: GEN2_CHANGED_MOVE_NAMES)
+    {
+        EXPECT_TRUE(string_in_vector(moves_gen2, changed_move_names.old_name))  << changed_move_names.old_name;
+        EXPECT_FALSE(string_in_vector(moves_gen2, changed_move_names.new_name)) << changed_move_names.new_name;
+    }
 
     /*
      * Game Boy Advance
@@ -533,6 +590,23 @@ TEST(cpp_lists_test, move_list_test) {
     EXPECT_EQ("Pound", moves_gba.front());
     EXPECT_EQ("Psycho Boost", moves_gba.back());
 
+    // Make sure old move names appear.
+    for(const auto& changed_move_names: GEN1_CHANGED_MOVE_NAMES)
+    {
+        EXPECT_TRUE(string_in_vector(moves_gba, changed_move_names.old_name))  << changed_move_names.old_name;
+        EXPECT_FALSE(string_in_vector(moves_gba, changed_move_names.new_name)) << changed_move_names.new_name;
+    }
+    for(const auto& changed_move_names: GEN2_CHANGED_MOVE_NAMES)
+    {
+        EXPECT_TRUE(string_in_vector(moves_gba, changed_move_names.old_name))  << changed_move_names.old_name;
+        EXPECT_FALSE(string_in_vector(moves_gba, changed_move_names.new_name)) << changed_move_names.new_name;
+    }
+    for(const auto& changed_move_names: GEN3_CHANGED_MOVE_NAMES)
+    {
+        EXPECT_TRUE(string_in_vector(moves_gba, changed_move_names.old_name))  << changed_move_names.old_name;
+        EXPECT_FALSE(string_in_vector(moves_gba, changed_move_names.new_name)) << changed_move_names.new_name;
+    }
+
     /*
      * Colosseum
      */
@@ -540,6 +614,23 @@ TEST(cpp_lists_test, move_list_test) {
     EXPECT_EQ(355, moves_colo.size());
     EXPECT_EQ("Pound", moves_colo.front());
     EXPECT_EQ("Shadow Rush", moves_colo.back());
+
+    // Make sure old move names appear.
+    for(const auto& changed_move_names: GEN1_CHANGED_MOVE_NAMES)
+    {
+        EXPECT_TRUE(string_in_vector(moves_colo, changed_move_names.old_name))  << changed_move_names.old_name;
+        EXPECT_FALSE(string_in_vector(moves_colo, changed_move_names.new_name)) << changed_move_names.new_name;
+    }
+    for(const auto& changed_move_names: GEN2_CHANGED_MOVE_NAMES)
+    {
+        EXPECT_TRUE(string_in_vector(moves_colo, changed_move_names.old_name))  << changed_move_names.old_name;
+        EXPECT_FALSE(string_in_vector(moves_colo, changed_move_names.new_name)) << changed_move_names.new_name;
+    }
+    for(const auto& changed_move_names: GEN3_CHANGED_MOVE_NAMES)
+    {
+        EXPECT_TRUE(string_in_vector(moves_colo, changed_move_names.old_name))  << changed_move_names.old_name;
+        EXPECT_FALSE(string_in_vector(moves_colo, changed_move_names.new_name)) << changed_move_names.new_name;
+    }
 
     /*
      * XD
@@ -549,6 +640,23 @@ TEST(cpp_lists_test, move_list_test) {
     EXPECT_EQ("Pound", moves_xd.front());
     EXPECT_EQ("Shadow Sky", moves_xd.back());
 
+    // Make sure old move names appear.
+    for(const auto& changed_move_names: GEN1_CHANGED_MOVE_NAMES)
+    {
+        EXPECT_TRUE(string_in_vector(moves_xd, changed_move_names.old_name))  << changed_move_names.old_name;
+        EXPECT_FALSE(string_in_vector(moves_xd, changed_move_names.new_name)) << changed_move_names.new_name;
+    }
+    for(const auto& changed_move_names: GEN2_CHANGED_MOVE_NAMES)
+    {
+        EXPECT_TRUE(string_in_vector(moves_xd, changed_move_names.old_name))  << changed_move_names.old_name;
+        EXPECT_FALSE(string_in_vector(moves_xd, changed_move_names.new_name)) << changed_move_names.new_name;
+    }
+    for(const auto& changed_move_names: GEN3_CHANGED_MOVE_NAMES)
+    {
+        EXPECT_TRUE(string_in_vector(moves_xd, changed_move_names.old_name))  << changed_move_names.old_name;
+        EXPECT_FALSE(string_in_vector(moves_xd, changed_move_names.new_name)) << changed_move_names.new_name;
+    }
+
     /*
      * Generation IV
      */
@@ -556,6 +664,23 @@ TEST(cpp_lists_test, move_list_test) {
     EXPECT_EQ(467, moves_gen4.size());
     EXPECT_EQ("Pound", moves_gen4.front());
     EXPECT_EQ("Shadow Force", moves_gen4.back());
+
+    // Make sure old move names appear.
+    for(const auto& changed_move_names: GEN1_CHANGED_MOVE_NAMES)
+    {
+        EXPECT_TRUE(string_in_vector(moves_gen4, changed_move_names.old_name))  << changed_move_names.old_name;
+        EXPECT_FALSE(string_in_vector(moves_gen4, changed_move_names.new_name)) << changed_move_names.new_name;
+    }
+    for(const auto& changed_move_names: GEN2_CHANGED_MOVE_NAMES)
+    {
+        EXPECT_TRUE(string_in_vector(moves_gen4, changed_move_names.old_name))  << changed_move_names.old_name;
+        EXPECT_FALSE(string_in_vector(moves_gen4, changed_move_names.new_name)) << changed_move_names.new_name;
+    }
+    for(const auto& changed_move_names: GEN3_CHANGED_MOVE_NAMES)
+    {
+        EXPECT_TRUE(string_in_vector(moves_gen4, changed_move_names.old_name))  << changed_move_names.old_name;
+        EXPECT_FALSE(string_in_vector(moves_gen4, changed_move_names.new_name)) << changed_move_names.new_name;
+    }
 
     /*
      * Generation V
@@ -565,6 +690,23 @@ TEST(cpp_lists_test, move_list_test) {
     EXPECT_EQ("Pound", moves_gen5.front());
     EXPECT_EQ("Fusion Bolt", moves_gen5.back());
 
+    // Make sure old move names appear.
+    for(const auto& changed_move_names: GEN1_CHANGED_MOVE_NAMES)
+    {
+        EXPECT_TRUE(string_in_vector(moves_gen5, changed_move_names.old_name))  << changed_move_names.old_name;
+        EXPECT_FALSE(string_in_vector(moves_gen5, changed_move_names.new_name)) << changed_move_names.new_name;
+    }
+    for(const auto& changed_move_names: GEN2_CHANGED_MOVE_NAMES)
+    {
+        EXPECT_TRUE(string_in_vector(moves_gen5, changed_move_names.old_name))  << changed_move_names.old_name;
+        EXPECT_FALSE(string_in_vector(moves_gen5, changed_move_names.new_name)) << changed_move_names.new_name;
+    }
+    for(const auto& changed_move_names: GEN3_CHANGED_MOVE_NAMES)
+    {
+        EXPECT_TRUE(string_in_vector(moves_gen5, changed_move_names.old_name))  << changed_move_names.old_name;
+        EXPECT_FALSE(string_in_vector(moves_gen5, changed_move_names.new_name)) << changed_move_names.new_name;
+    }
+
     /*
      * X/Y
      */
@@ -573,6 +715,23 @@ TEST(cpp_lists_test, move_list_test) {
     EXPECT_EQ("Pound", moves_xy.front());
     EXPECT_EQ("Light of Ruin", moves_xy.back());
 
+    // Make sure new move names appear.
+    for(const auto& changed_move_names: GEN1_CHANGED_MOVE_NAMES)
+    {
+        EXPECT_FALSE(string_in_vector(moves_xy, changed_move_names.old_name))  << changed_move_names.old_name;
+        EXPECT_TRUE(string_in_vector(moves_xy, changed_move_names.new_name)) << changed_move_names.new_name;
+    }
+    for(const auto& changed_move_names: GEN2_CHANGED_MOVE_NAMES)
+    {
+        EXPECT_FALSE(string_in_vector(moves_xy, changed_move_names.old_name))  << changed_move_names.old_name;
+        EXPECT_TRUE(string_in_vector(moves_xy, changed_move_names.new_name)) << changed_move_names.new_name;
+    }
+    for(const auto& changed_move_names: GEN3_CHANGED_MOVE_NAMES)
+    {
+        EXPECT_FALSE(string_in_vector(moves_xy, changed_move_names.old_name))  << changed_move_names.old_name;
+        EXPECT_TRUE(string_in_vector(moves_xy, changed_move_names.new_name)) << changed_move_names.new_name;
+    }
+
     /*
      * Omega Ruby/Alpha Sapphire
      */
@@ -580,6 +739,23 @@ TEST(cpp_lists_test, move_list_test) {
     EXPECT_EQ(621, moves_oras.size());
     EXPECT_EQ("Pound", moves_oras.front());
     EXPECT_EQ("Hyperspace Fury", moves_oras.back());
+
+    // Make sure old move names appear.
+    for(const auto& changed_move_names: GEN1_CHANGED_MOVE_NAMES)
+    {
+        EXPECT_FALSE(string_in_vector(moves_oras, changed_move_names.old_name))  << changed_move_names.old_name;
+        EXPECT_TRUE(string_in_vector(moves_oras, changed_move_names.new_name)) << changed_move_names.new_name;
+    }
+    for(const auto& changed_move_names: GEN2_CHANGED_MOVE_NAMES)
+    {
+        EXPECT_FALSE(string_in_vector(moves_oras, changed_move_names.old_name))  << changed_move_names.old_name;
+        EXPECT_TRUE(string_in_vector(moves_oras, changed_move_names.new_name)) << changed_move_names.new_name;
+    }
+    for(const auto& changed_move_names: GEN3_CHANGED_MOVE_NAMES)
+    {
+        EXPECT_FALSE(string_in_vector(moves_oras, changed_move_names.old_name))  << changed_move_names.old_name;
+        EXPECT_TRUE(string_in_vector(moves_oras, changed_move_names.new_name)) << changed_move_names.new_name;
+    }
 }
 
 TEST(cpp_lists_test, nature_list_test) {

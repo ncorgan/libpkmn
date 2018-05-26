@@ -1443,23 +1443,27 @@ namespace pkmn
 
     void pokemon_gbaimpl::_update_moves(
         int index
-    ) {
+    )
+    {
         _moves.resize(4);
-        switch(index) {
+        switch(index)
+        {
             case 0:
             case 1:
             case 2:
             case 3:
                 _moves[index] = pkmn::move_slot(
                     pkmn::database::move_id_to_name(
-                        pksav_littleendian16(_attacks->moves[index]), 3
+                        pksav_littleendian16(_attacks->moves[index]),
+                        3
                     ),
                     _attacks->move_pps[index]
                 );
                 break;
 
             default:
-                for(int i = 0; i < 4; ++i) {
+                for(int i = 0; i < 4; ++i)
+                {
                     _update_moves(i);
                 }
         }
