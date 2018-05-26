@@ -8,8 +8,11 @@
 #ifndef PKMN_C_TESTS_COMMON_H
 #define PKMN_C_TESTS_COMMON_H
 
+#include "private_exports.h"
+
 #include <unity.h>
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 
@@ -29,9 +32,19 @@
         (void)argc; \
         (void)argv; \
         srand((unsigned int)time(NULL)); \
-        UnityBegin(__FILE__); \
-        __VA_ARGS__; \
-        return (UnityEnd()); \
+        int return_code = EXIT_SUCCESS; \
+        if(!pkmn_priv_initialize_database_connection()) \
+        { \
+            UnityBegin(__FILE__); \
+            __VA_ARGS__; \
+            return_code = UnityEnd(); \
+        } \
+        else \
+        { \
+            fputs("Failed to initialize database connection.\n", stderr); \
+            return_code = EXIT_FAILURE; \
+        } \
+        return return_code; \
     }
 
 #endif /* PKMN_C_TESTS_COMMON_H */

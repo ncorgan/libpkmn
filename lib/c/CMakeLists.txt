@@ -43,6 +43,7 @@ SET(pkmn_c_sources
     pokemon_box.cpp
     pokemon_party.cpp
     pokemon_pc.cpp
+    private_exports.cpp
 )
 
 
