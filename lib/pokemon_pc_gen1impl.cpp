@@ -111,7 +111,8 @@ namespace pkmn {
 
         uint8_t current_box_num = *NATIVE_RCAST->p_current_box_num;
         current_box_num &= PKSAV_GEN1_CURRENT_POKEMON_BOX_NUM_MASK;
-        BOOST_ASSERT(current_box_num < PKSAV_GEN1_NUM_POKEMON_BOXES);
+
+        bool is_current_box_num_valid = (current_box_num < PKSAV_GEN1_NUM_POKEMON_BOXES);
 
         // In Generation I, the current box is stored in a specific memory
         // location, so for that number box, use that pointer instead of
@@ -120,7 +121,7 @@ namespace pkmn {
             box_index < PKSAV_GEN1_NUM_POKEMON_BOXES;
             ++box_index)
         {
-            if(box_index == current_box_num)
+            if(is_current_box_num_valid && (box_index == current_box_num))
             {
                 _box_list[box_index] = std::make_shared<pokemon_box_gen1impl>(
                                            _game_id,
