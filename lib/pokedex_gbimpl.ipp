@@ -41,8 +41,11 @@ namespace pkmn
             size_t num_bytes = static_cast<size_t>(std::ceil(float(_num_pokemon) / 8.0f));
             _p_native = new pksav_type;
 
-            GBIMPL_RCAST(_p_native)->p_seen = new uint8_t[num_bytes]{0};
-            GBIMPL_RCAST(_p_native)->p_owned = new uint8_t[num_bytes]{0};
+            GBIMPL_RCAST(_p_native)->p_seen = new uint8_t[num_bytes];
+            GBIMPL_RCAST(_p_native)->p_owned = new uint8_t[num_bytes];
+
+            std::memset(GBIMPL_RCAST(_p_native)->p_seen,  0, num_bytes);
+            std::memset(GBIMPL_RCAST(_p_native)->p_owned, 0, num_bytes);
 
             _our_mem = true;
         }

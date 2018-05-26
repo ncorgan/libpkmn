@@ -55,10 +55,8 @@ namespace pkmn { namespace breeding {
         int pokemon2_id
     )
     {
-        bool are_compatible = true;
-
         // "None" and "Invalid" species are incompatible.
-        are_compatible = (pokemon1_id >= 1) && (pokemon2_id >= 1);
+        bool are_compatible = (pokemon1_id >= 1) && (pokemon2_id >= 1);
 
         if(are_compatible)
         {
@@ -154,17 +152,15 @@ namespace pkmn { namespace breeding {
         const std::string& species2
     )
     {
-        bool are_compatible = true;
-
         static const std::string ENTRY_GAME = "X";
 
         pkmn::database::pokemon_entry species1_entry(species1, ENTRY_GAME, "");
         pkmn::database::pokemon_entry species2_entry(species2, ENTRY_GAME, "");
 
-        are_compatible = are_species_valid_and_compatible(
-                             species1_entry.get_species_id(),
-                             species2_entry.get_species_id()
-                         );
+        bool are_compatible = are_species_valid_and_compatible(
+                                  species1_entry.get_species_id(),
+                                  species2_entry.get_species_id()
+                              );
         are_compatible &= are_egg_groups_valid_and_compatible(
                               species1_entry, species2_entry
                           );

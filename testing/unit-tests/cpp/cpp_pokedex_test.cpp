@@ -77,7 +77,7 @@ static void check_gba_pksav_pokedex(
 {
     ASSERT_NE(nullptr, p_gba_pokedex);
 
-    const size_t num_bytes = std::ceil(386.0f / 8.0f);
+    const size_t num_bytes = static_cast<size_t>(std::ceil(386.0f / 8.0f));
 
     check_pksav_buffer(
         p_gba_pokedex->p_seenA,

@@ -26,13 +26,13 @@ environment:
       RUBY_VERSION: 23-x64
 
     - BITNESS: 32
-      BOOST_VERSION: 1_67_1
+      BOOST_VERSION: 1_67_0
       PYTHON_VERSION: 35
       LUA_VER: 5.3.2
       RUBY_VERSION: 24
 
     - BITNESS: 64
-      BOOST_VERSION: 1_67_1
+      BOOST_VERSION: 1_67_0
       PYTHON_VERSION: 35
       LUA_VER: 5.3.2
       RUBY_VERSION: 24-x64

@@ -167,7 +167,7 @@ function pkmntest_utils.get_specific_random_pokemon(game, species, form, move_li
         end
         repeat
             pcall(pokemon_set_held_item, ret, item_list[math.random(1, #item_list)])
-        until ret.held_item ~= "None" and string.find(ret.held_item, "None") == nil
+        until ret.held_item ~= "None" and string.find(ret.held_item, "Scent") == nil
 
         ret.pokerus_duration = math.random(0, 15)
     end

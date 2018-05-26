@@ -42,10 +42,15 @@ namespace pkmn
 
             _p_native = new struct pksav_gba_pokedex;
 
-            GBAIMPL_RCAST(_p_native)->p_seenA = new uint8_t[num_bytes]{0};
-            GBAIMPL_RCAST(_p_native)->p_seenB = new uint8_t[num_bytes]{0};
-            GBAIMPL_RCAST(_p_native)->p_seenC = new uint8_t[num_bytes]{0};
-            GBAIMPL_RCAST(_p_native)->p_owned = new uint8_t[num_bytes]{0};
+            GBAIMPL_RCAST(_p_native)->p_seenA = new uint8_t[num_bytes];
+            GBAIMPL_RCAST(_p_native)->p_seenB = new uint8_t[num_bytes];
+            GBAIMPL_RCAST(_p_native)->p_seenC = new uint8_t[num_bytes];
+            GBAIMPL_RCAST(_p_native)->p_owned = new uint8_t[num_bytes];
+
+            std::memset(GBAIMPL_RCAST(_p_native)->p_seenA, 0, num_bytes);
+            std::memset(GBAIMPL_RCAST(_p_native)->p_seenB, 0, num_bytes);
+            std::memset(GBAIMPL_RCAST(_p_native)->p_seenC, 0, num_bytes);
+            std::memset(GBAIMPL_RCAST(_p_native)->p_owned, 0, num_bytes);
 
             GBAIMPL_RCAST(_p_native)->p_rse_nat_pokedex_unlockedA  = new uint16_t(0);
             GBAIMPL_RCAST(_p_native)->p_frlg_nat_pokedex_unlockedA = new uint8_t(0);

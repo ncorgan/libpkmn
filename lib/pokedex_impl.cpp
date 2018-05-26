@@ -80,8 +80,12 @@ namespace pkmn
     ): _game_id(game_id),
        _generation(pkmn::database::game_id_to_generation(game_id)),
        _num_pokemon(GENERATION_POKEDEX_SIZES.at(_generation)),
+       _all_seen(),
        _dirty_seen(true),
-       _dirty_caught(true)
+       _all_caught(),
+       _dirty_caught(true),
+       _p_native(nullptr),
+       _our_mem(false)
     {}
 
     std::string pokedex_impl::get_game()
