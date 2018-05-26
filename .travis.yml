@@ -104,7 +104,7 @@ matrix:
         - DESIRED_QT_VERSION=5
         - PYTHON_VERSION=3
         - SWIG_VERSION=3
-    # Static analysis build
+    # Static analysis + debug build
     - compiler: clang
       addons:
         apt:
@@ -118,7 +118,7 @@ matrix:
             - cmake
             - libboost1.60-all-dev
       env:
-        - STATIC_ANALYSIS=1
+        - EXTRA_TESTING=1
         - CC=clang-5.0
         - CXX=clang++-5.0
         - CLANG_TIDY_EXE=/usr/bin/clang-tidy-5.0
@@ -134,4 +134,4 @@ before_install:
   - bash testing/travis-scripts/install-deps.sh
 
 script:
-  - if [ "$STATIC_ANALYSIS" = "1" ]; then bash testing/travis-scripts/static-analysis.sh; else bash testing/travis-scripts/build-test.sh; fi
+  - if [ "$EXTRA_TESTING" = "1" ]; then bash testing/travis-scripts/extra-testing.sh; else bash testing/travis-scripts/build-test.sh; fi

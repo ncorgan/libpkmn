@@ -31,8 +31,8 @@ else
     PYTHON_LIBRARY=/usr/lib/x86_64-linux-gnu/libpython3.4m.so
 fi
 
-echo Building LibPKMN with Clang-tidy analysis enabled.
-cmake -DCMAKE_BUILD_TYPE=Release \
+echo Building LibPKMN in debug mode with Clang-tidy analysis enabled.
+cmake -DCMAKE_BUILD_TYPE=Debug \
   -DPKMN_ENABLE_CSHARP=OFF \
   -DPKMN_ENABLE_LUA=OFF \
   -DPKMN_ENABLE_PYTHON=OFF \
@@ -44,6 +44,8 @@ cmake -DCMAKE_BUILD_TYPE=Release \
   $REPO_TOPLEVEL
 [ $? -ne 0 ] && exit 1
 make
+[ $? -ne 0 ] && exit 1
+ctest -E ".*GUI" --output-on-failure
 [ $? -ne 0 ] && exit 1
 
 echo # So we can check the last error code
