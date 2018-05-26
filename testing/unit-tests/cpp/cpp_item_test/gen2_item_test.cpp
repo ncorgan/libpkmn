@@ -111,8 +111,6 @@ void gen2_key_item_pocket_test(
     pkmn::item_list::sptr key_item_pocket
 )
 {
-    (void)key_item_pocket;
-
     ASSERT_EQ("KeyItems", key_item_pocket->get_name());
     ASSERT_EQ(PKSAV_GEN2_KEY_ITEM_POCKET_SIZE, key_item_pocket->get_capacity());
     ASSERT_EQ(PKSAV_GEN2_KEY_ITEM_POCKET_SIZE, key_item_pocket->as_vector().size());

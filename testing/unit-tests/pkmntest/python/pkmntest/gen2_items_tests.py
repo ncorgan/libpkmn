@@ -63,7 +63,7 @@ class gen2_items_test(items_tests):
         # Check unchanging and initial values.
         self.assertEqual(key_item_pocket.name, "KeyItems")
         self.assertEqual(key_item_pocket.game, game)
-        self.assertEqual(len(key_item_pocket), 26)
+        self.assertEqual(len(key_item_pocket), 25)
         self.assertEqual(key_item_pocket.num_items, 0)
 
         # Make sure item slots start as correctly empty.
@@ -96,16 +96,28 @@ class gen2_items_test(items_tests):
                 self.__crystal_items
             )
 
-        # Start adding and removing stuff, and make sure the numbers are accurate.
-        self.item_list_test_add_remove(
-            key_item_pocket,
-            [u"Bicycle", u"Basement Key", u"SecretPotion", u"Mystery Egg",
-             u"Silver Wing", u"Lost Item", u"SquirtBottle", u"Rainbow Wing"]
-        )
+        # Make sure we can't add or remove more than a single item.
+        with self.assertRaises(IndexError):
+            key_item_pocket.add("Bicycle", 5)
+        with self.assertRaises(IndexError):
+            key_item_pocket.remove("Bicycle", 5)
 
-        valid_items = key_item_pocket.valid_items
-        self.assertGreater(len(valid_items), 0)
-        self.item_list_test_both_text_types(key_item_pocket)
+        # Start adding and removing stuff, and make sure the numbers are accurate.
+        item_names = [u"Bicycle", u"Basement Key", u"SecretPotion", u"Mystery Egg",
+                      u"Silver Wing", u"Lost Item", u"SquirtBottle", u"Rainbow Wing"]
+        for item_index in range(len(item_names)):
+            if item_index < 4:
+                key_item_pocket.add(item_names[item_index], 1)
+            else:
+                key_item_pocket[item_index].item = item_names[item_index]
+
+        key_item_pocket.remove(item_names[2], 1)
+        key_item_pocket[2].item = "None"
+
+        while key_item_pocket[0].item != "None":
+            key_item_pocket[0].item = "None"
+
+        self.assertGreater(len(key_item_pocket.valid_items), 0)
 
     def __test_ball_pocket(self, ball_pocket, game):
         # Check unchanging and initial values.
@@ -283,26 +295,26 @@ class gen2_items_test(items_tests):
         self.assertEqual(bag["Balls"].num_items, 0)
         self.assertEqual(bag["TM/HM"].num_items, 0)
         for item in items:
-            bag.add(item, 5)
+            bag.add(item, 1)
 
         self.assertEqual(bag["Items"][0].item, "Potion")
-        self.assertEqual(bag["Items"][0].amount, 5)
+        self.assertEqual(bag["Items"][0].amount, 1)
         self.assertEqual(bag["Items"][1].item, "Berry")
-        self.assertEqual(bag["Items"][1].amount, 5)
+        self.assertEqual(bag["Items"][1].amount, 1)
         self.assertEqual(bag["Items"][2].item, "None")
         self.assertEqual(bag["Items"][2].amount, 0)
 
         self.assertEqual(bag["KeyItems"][0].item, "Bicycle")
-        self.assertEqual(bag["KeyItems"][0].amount, 5)
+        self.assertEqual(bag["KeyItems"][0].amount, 1)
         self.assertEqual(bag["KeyItems"][1].item, "SquirtBottle")
-        self.assertEqual(bag["KeyItems"][1].amount, 5)
+        self.assertEqual(bag["KeyItems"][1].amount, 1)
         self.assertEqual(bag["KeyItems"][2].item, "None")
         self.assertEqual(bag["KeyItems"][2].amount, 0)
 
         self.assertEqual(bag["Balls"][0].item, "Great Ball")
-        self.assertEqual(bag["Balls"][0].amount, 5)
+        self.assertEqual(bag["Balls"][0].amount, 1)
         self.assertEqual(bag["Balls"][1].item, "Friend Ball")
-        self.assertEqual(bag["Balls"][1].amount, 5)
+        self.assertEqual(bag["Balls"][1].amount, 1)
         self.assertEqual(bag["Balls"][2].item, "None")
         self.assertEqual(bag["Balls"][2].amount, 0)
 
@@ -311,13 +323,13 @@ class gen2_items_test(items_tests):
         self.assertEqual(bag["TM/HM"][1].item, "TM02")
         self.assertEqual(bag["TM/HM"][1].amount, 0)
         self.assertEqual(bag["TM/HM"][27].item, "TM28")
-        self.assertEqual(bag["TM/HM"][27].amount, 5)
+        self.assertEqual(bag["TM/HM"][27].amount, 1)
         self.assertEqual(bag["TM/HM"][50].item, "HM01")
-        self.assertEqual(bag["TM/HM"][50].amount, 5)
+        self.assertEqual(bag["TM/HM"][50].amount, 1)
 
         # Make sure removing items through the bag removes from the proper pockets.
         for item in items:
-            bag.remove(item, 5)
+            bag.remove(item, 1)
 
         self.assertEqual(bag["Items"][0].item, "None")
         self.assertEqual(bag["Items"][0].amount, 0)

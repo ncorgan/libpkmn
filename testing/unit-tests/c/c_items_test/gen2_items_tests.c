@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -103,86 +103,166 @@ static void gen2_item_pocket_test(
 }
 
 static void gen2_key_item_pocket_test(
-    struct pkmn_item_list* key_item_pocket_ptr,
-    const char* game
+    struct pkmn_item_list* p_key_item_pocket,
+    const char* p_game
 )
 {
-    TEST_ASSERT_NOT_NULL(key_item_pocket_ptr);
-    TEST_ASSERT_NOT_NULL(key_item_pocket_ptr->_internal);
-    TEST_ASSERT_NOT_NULL(game);
+    TEST_ASSERT_NOT_NULL(p_key_item_pocket);
+    TEST_ASSERT_NOT_NULL(p_key_item_pocket->_internal);
+    TEST_ASSERT_NOT_NULL(p_game);
+
+    TEST_ASSERT_EQUAL_STRING("KeyItems", p_key_item_pocket->name);
+    TEST_ASSERT_EQUAL_STRING(p_game, p_key_item_pocket->game);
+    TEST_ASSERT_EQUAL(25, p_key_item_pocket->capacity);
 
     enum pkmn_error error = PKMN_ERROR_NONE;
 
-    TEST_ASSERT_EQUAL_STRING("KeyItems", key_item_pocket_ptr->name);
-    TEST_ASSERT_EQUAL_STRING(game, key_item_pocket_ptr->game);
-    TEST_ASSERT_EQUAL(26, key_item_pocket_ptr->capacity);
-
     // Make sure item slots start as completely empty.
-    test_item_list_initial_values(key_item_pocket_ptr);
+    test_item_list_initial_values(p_key_item_pocket);
 
     // Confirm errors are returned when expected.
     test_item_list_out_of_range_error(
-        key_item_pocket_ptr,
+        p_key_item_pocket,
         "Bicycle"
     );
 
     // Make sure we can't add items from other pockets.
     const char* wrong_pocket_item_names[] = {"Potion", "Master Ball", "HM01"};
-    test_item_list_invalid_items(key_item_pocket_ptr, wrong_pocket_item_names, 3);
+    test_item_list_invalid_items(p_key_item_pocket, wrong_pocket_item_names, 3);
 
-    // Make sure we can't add items from later generations.
     const char* wrong_generation_item_names[] =
     {
         "Mach Bike", "Jade Orb", "Light Stone", "Aqua Suit"
     };
-    test_item_list_invalid_items(key_item_pocket_ptr, wrong_generation_item_names, 4);
+    test_item_list_invalid_items(p_key_item_pocket, wrong_generation_item_names, 4);
 
     // Crystal-specific items.
-    bool is_crystal = (bool)(!strcmp(key_item_pocket_ptr->game, "Crystal"));
-    for(size_t i = 0; i < sizeof(CRYSTAL_ITEM_NAMES)/sizeof(CRYSTAL_ITEM_NAMES[0]); ++i)
+    for(size_t item_index = 0; item_index < 4; ++item_index)
     {
         error = pkmn_item_list_add(
-                    key_item_pocket_ptr,
-                    CRYSTAL_ITEM_NAMES[i],
+                    p_key_item_pocket,
+                    CRYSTAL_ITEM_NAMES[item_index],
                     1
                 );
-        TEST_ASSERT_EQUAL(
-            is_crystal ? PKMN_ERROR_NONE : PKMN_ERROR_INVALID_ARGUMENT,
-            error
-        );
+        if(!strcmp(p_game, "Crystal"))
+        {
+            PKMN_TEST_ASSERT_SUCCESS(error);
+        }
+        else
+        {
+            TEST_ASSERT_EQUAL(PKMN_ERROR_INVALID_ARGUMENT, error);
+        }
 
         error = pkmn_item_list_remove(
-                    key_item_pocket_ptr,
-                    CRYSTAL_ITEM_NAMES[i],
+                    p_key_item_pocket,
+                    CRYSTAL_ITEM_NAMES[item_index],
                     1
                 );
-        TEST_ASSERT_EQUAL(
-            is_crystal ? PKMN_ERROR_NONE : PKMN_ERROR_INVALID_ARGUMENT,
-            error
-        );
+        if(!strcmp(p_game, "Crystal"))
+        {
+            PKMN_TEST_ASSERT_SUCCESS(error);
+        }
+        else
+        {
+            TEST_ASSERT_EQUAL(PKMN_ERROR_INVALID_ARGUMENT, error);
+        }
 
-        check_num_items(key_item_pocket_ptr, 0);
+        check_num_items(p_key_item_pocket, 0);
     }
 
-    const char* item_names[] =
+    // Make sure we can't add or remove more than a single item.
+    error = pkmn_item_list_add(
+                p_key_item_pocket,
+                "Bicycle",
+                5
+            );
+    TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
+
+    error = pkmn_item_list_add(
+                p_key_item_pocket,
+                "Bicycle",
+                1
+            );
+    PKMN_TEST_ASSERT_SUCCESS(error);
+
+    check_num_items(p_key_item_pocket, 1);
+
+    error = pkmn_item_list_remove(
+                p_key_item_pocket,
+                "Bicycle",
+                5
+            );
+    TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
+
+    error = pkmn_item_list_remove(
+                p_key_item_pocket,
+                "Bicycle",
+                1
+            );
+    PKMN_TEST_ASSERT_SUCCESS(error);
+
+    check_num_items(p_key_item_pocket, 0);
+
+    // Start adding and removing stuff, and make sure the numbers are accurate.
+    static const char* item_names[] =
     {
         "Bicycle", "Basement Key", "SecretPotion", "Mystery Egg",
         "Silver Wing", "Lost Item", "SquirtBottle", "Rainbow Wing"
     };
+    for(size_t item_index = 0; item_index < 8; ++item_index)
+    {
+        if(item_index < 4)
+        {
+            error = pkmn_item_list_add(
+                        p_key_item_pocket,
+                        item_names[item_index],
+                        1
+                    );
+        }
+        else
+        {
+            error = pkmn_item_list_set_item(
+                        p_key_item_pocket,
+                        item_index,
+                        item_names[item_index],
+                        1
+                    );
+        }
+        PKMN_TEST_ASSERT_SUCCESS(error);
+    }
 
-    // Test setting items by index.
-    test_item_list_set_item(
-        key_item_pocket_ptr,
-        item_names,
-        3
-    );
+    error = pkmn_item_list_remove(
+                p_key_item_pocket,
+                item_names[2],
+                1
+            );
+    PKMN_TEST_ASSERT_SUCCESS(error);
 
-    // Start adding and removing items, and make sure the numbers are accurate.
-    test_item_list_add_remove(
-        key_item_pocket_ptr,
-        item_names,
-        8
-    );
+    error = pkmn_item_list_set_item(
+                p_key_item_pocket,
+                2,
+                "None",
+                0
+            );
+    PKMN_TEST_ASSERT_SUCCESS(error);
+
+    size_t num_items = 0;
+    do
+    {
+        error = pkmn_item_list_set_item(
+                    p_key_item_pocket,
+                    0,
+                    "None",
+                    0
+                );
+        PKMN_TEST_ASSERT_SUCCESS(error);
+
+        error = pkmn_item_list_get_num_items(
+                    p_key_item_pocket,
+                    &num_items
+                );
+        PKMN_TEST_ASSERT_SUCCESS(error);
+    } while(num_items > 0);
 
     struct pkmn_string_list valid_items =
     {
@@ -190,7 +270,7 @@ static void gen2_key_item_pocket_test(
         .length = 0
     };
     error = pkmn_item_list_get_valid_items(
-                key_item_pocket_ptr,
+                p_key_item_pocket,
                 &valid_items
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
@@ -595,27 +675,27 @@ static void gen2_item_bag_test(
         pkmn_item_bag_add(
             &item_bag,
             ALL_POCKET_ITEM_NAMES[item_index],
-            5
+            1
         );
         PKMN_TEST_ASSERT_SUCCESS(error);
     }
 
-    check_item_at_index(&item_pocket, 0, "Potion", 5);
-    check_item_at_index(&item_pocket, 1, "Berry", 5);
+    check_item_at_index(&item_pocket, 0, "Potion", 1);
+    check_item_at_index(&item_pocket, 1, "Berry", 1);
     check_item_at_index(&item_pocket, 2, "None", 0);
 
-    check_item_at_index(&key_item_pocket, 0, "Bicycle", 5);
-    check_item_at_index(&key_item_pocket, 1, "SquirtBottle", 5);
+    check_item_at_index(&key_item_pocket, 0, "Bicycle", 1);
+    check_item_at_index(&key_item_pocket, 1, "SquirtBottle", 1);
     check_item_at_index(&key_item_pocket, 2, "None", 0);
 
-    check_item_at_index(&ball_pocket, 0, "Great Ball", 5);
-    check_item_at_index(&ball_pocket, 1, "Friend Ball", 5);
+    check_item_at_index(&ball_pocket, 0, "Great Ball", 1);
+    check_item_at_index(&ball_pocket, 1, "Friend Ball", 1);
     check_item_at_index(&ball_pocket, 2, "None", 0);
 
     check_item_at_index(&tmhm_pocket, 0, "TM01", 0);
     check_item_at_index(&tmhm_pocket, 1, "TM02", 0);
-    check_item_at_index(&tmhm_pocket, 27, "TM28", 5);
-    check_item_at_index(&tmhm_pocket, 50, "HM01", 5);
+    check_item_at_index(&tmhm_pocket, 27, "TM28", 1);
+    check_item_at_index(&tmhm_pocket, 50, "HM01", 1);
 
     // Make sure removing items through the bag removes from the proper pockets.
     for(size_t item_index = 0; item_index < 8; ++item_index)
@@ -623,7 +703,7 @@ static void gen2_item_bag_test(
         pkmn_item_bag_remove(
             &item_bag,
             ALL_POCKET_ITEM_NAMES[item_index],
-            5
+            1
         );
         PKMN_TEST_ASSERT_SUCCESS(error);
     }

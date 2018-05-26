@@ -57,7 +57,7 @@ class Gen2ItemTest < ItemTest
 
     def _gen2_key_item_pocket_test_common(key_item_pocket)
         assert_equal("KeyItems", key_item_pocket.name)
-        assert_equal(26, key_item_pocket.length)
+        assert_equal(25, key_item_pocket.length)
 
         # Make sure item slots start as correctly empty.
         item_list_test_empty_slots(key_item_pocket)
@@ -91,11 +91,31 @@ class Gen2ItemTest < ItemTest
             end
         end
 
+        # Make sure you can't add or remove more than a single item.
+        assert_raises IndexError do
+            key_item_pocket.add("Bicycle", 5)
+        end
+        assert_raises IndexError do
+            key_item_pocket.remove("Bicycle", 5)
+        end
+
         # Start adding and removing items, and make sure the numbers are accurate.
         test_items = ["Bicycle", "Basement Key", "SecretPotion", "Mystery Egg",
                       "Silver Wing", "Lost Item", "SquirtBottle", "Rainbow Wing"]
-        item_list_test_setting_items(key_item_pocket, test_items)
-        item_list_test_add_remove(key_item_pocket, test_items)
+        (0..(test_items.length-1)).each do |item_index|
+            if item_index < 4
+                key_item_pocket.add(test_items[item_index], 1)
+            else
+                key_item_pocket[item_index].item = test_items[item_index]
+            end
+        end
+
+        key_item_pocket.remove(test_items[2], 1)
+        key_item_pocket[2].item = "None"
+
+        while key_item_pocket[0].item != "None"
+            key_item_pocket[0].item = "None"
+        end
 
         assert_operator(key_item_pocket.valid_items.length, :>, 0)
     end
@@ -267,27 +287,27 @@ class Gen2ItemTest < ItemTest
 
         # Make sure adding items through the bag adds to the pocket.
         @@ALL_POCKET_ITEM_NAMES.each do |item_name|
-            bag.add(item_name, 5)
+            bag.add(item_name, 1)
         end
 
         assert_equal("Potion", item_pocket[0].item)
-        assert_equal(5, item_pocket[0].amount)
+        assert_equal(1, item_pocket[0].amount)
         assert_equal("Berry", item_pocket[1].item)
-        assert_equal(5, item_pocket[1].amount)
+        assert_equal(1, item_pocket[1].amount)
         assert_equal("None", item_pocket[2].item)
         assert_equal(0, item_pocket[2].amount)
 
         assert_equal("Bicycle", key_item_pocket[0].item)
-        assert_equal(5, key_item_pocket[0].amount)
+        assert_equal(1, key_item_pocket[0].amount)
         assert_equal("SquirtBottle", key_item_pocket[1].item)
-        assert_equal(5, key_item_pocket[1].amount)
+        assert_equal(1, key_item_pocket[1].amount)
         assert_equal("None", key_item_pocket[2].item)
         assert_equal(0, key_item_pocket[2].amount)
 
         assert_equal("Great Ball", ball_pocket[0].item)
-        assert_equal(5, ball_pocket[0].amount)
+        assert_equal(1, ball_pocket[0].amount)
         assert_equal("Friend Ball", ball_pocket[1].item)
-        assert_equal(5, ball_pocket[1].amount)
+        assert_equal(1, ball_pocket[1].amount)
         assert_equal("None", ball_pocket[2].item)
         assert_equal(0, ball_pocket[2].amount)
 
@@ -296,13 +316,13 @@ class Gen2ItemTest < ItemTest
         assert_equal("TM02", tmhm_pocket[1].item)
         assert_equal(0, tmhm_pocket[1].amount)
         assert_equal("TM28", tmhm_pocket[27].item)
-        assert_equal(5, tmhm_pocket[27].amount)
+        assert_equal(1, tmhm_pocket[27].amount)
         assert_equal("HM01", tmhm_pocket[50].item)
-        assert_equal(5, tmhm_pocket[50].amount)
+        assert_equal(1, tmhm_pocket[50].amount)
 
         # Make sure removing items through the bag removes from the pocket.
         @@ALL_POCKET_ITEM_NAMES.each do |item_name|
-            bag.remove(item_name, 5)
+            bag.remove(item_name, 1)
         end
 
         assert_equal("None", item_pocket[0].item)

@@ -1,5 +1,5 @@
 --
--- Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+-- Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
 --
 -- Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
 -- or copy at http://opensource.org/licenses/MIT)
@@ -56,7 +56,7 @@ end
 
 function gen2_items_tests.test_key_item_pocket(key_item_pocket, game)
     -- Check unchanging and initial values.
-    luaunit.assertEquals(#key_item_pocket, 26)
+    luaunit.assertEquals(#key_item_pocket, 25)
     luaunit.assertEquals(key_item_pocket.name, "KeyItems")
     luaunit.assertEquals(key_item_pocket.game, game)
     luaunit.assertEquals(key_item_pocket.num_items, 0)
@@ -71,6 +71,13 @@ function gen2_items_tests.test_key_item_pocket(key_item_pocket, game)
     items_tests.item_list_test_invalid_items(
         key_item_pocket,
         {"Potion", "Master Ball", "HM01"}
+    )
+    luaunit.assertEquals(key_item_pocket.num_items, 0)
+
+    -- Make sure we can't add items from other generations.
+    items_tests.item_list_test_invalid_items(
+        key_item_pocket,
+        {"Mach Bike", "Jade Orb", "Light Stone", "Aqua Suit"}
     )
     luaunit.assertEquals(key_item_pocket.num_items, 0)
 
@@ -91,24 +98,35 @@ function gen2_items_tests.test_key_item_pocket(key_item_pocket, game)
     end
     luaunit.assertEquals(key_item_pocket.num_items, 0)
 
+    -- Make sure we can't add or remove more than a single item.
+    luaunit.assertError(pkmn.item_list.add, key_item_pocket, "Bicycle", 5)
+    luaunit.assertError(pkmn.item_list.remove, key_item_pocket, "Bicycle", 5)
+
     -- Start adding and removing stuff, and make sure the numbers are accurate.
     local item_names =
     {
         "Bicycle", "Basement Key", "SecretPotion", "Mystery Egg",
         "Silver Wing", "Lost Item", "SquirtBottle", "Rainbow Wing"
     }
+    for item_index = 1, #item_names
+    do
+        if item_index <= 4
+        then
+            key_item_pocket:add(item_names[item_index], 1)
+        else
+            key_item_pocket[item_index].item = item_names[item_index]
+        end
+    end
 
-    items_tests.item_list_test_setting_items(
-        key_item_pocket,
-        item_names
-    )
-    items_tests.item_list_test_add_remove(
-        key_item_pocket,
-        item_names
-    )
+    key_item_pocket:remove(item_names[2], 1)
+    key_item_pocket[2].item = "None"
 
-    valid_items = key_item_pocket.valid_items
-    luaunit.assertTrue(#valid_items > 0)
+    while key_item_pocket[1].item ~= "None"
+    do
+        key_item_pocket[1].item = "None"
+    end
+
+    luaunit.assertTrue(#key_item_pocket.valid_items > 0)
 end
 
 function gen2_items_tests.test_ball_pocket(ball_pocket, game)
@@ -274,27 +292,27 @@ function gen2_items_tests.test_item_bag(bag, game)
     luaunit.assertEquals(bag["TM/HM"].num_items, 0)
     for i = 1, #items
     do
-        bag:add(items[i], 5)
+        bag:add(items[i], 1)
     end
 
     luaunit.assertEquals(bag["Items"][1].item, "Potion")
-    luaunit.assertEquals(bag["Items"][1].amount, 5)
+    luaunit.assertEquals(bag["Items"][1].amount, 1)
     luaunit.assertEquals(bag["Items"][2].item, "Berry")
-    luaunit.assertEquals(bag["Items"][2].amount, 5)
+    luaunit.assertEquals(bag["Items"][2].amount, 1)
     luaunit.assertEquals(bag["Items"][3].item, "None")
     luaunit.assertEquals(bag["Items"][3].amount, 0)
 
     luaunit.assertEquals(bag["KeyItems"][1].item, "Bicycle")
-    luaunit.assertEquals(bag["KeyItems"][1].amount, 5)
+    luaunit.assertEquals(bag["KeyItems"][1].amount, 1)
     luaunit.assertEquals(bag["KeyItems"][2].item, "SquirtBottle")
-    luaunit.assertEquals(bag["KeyItems"][2].amount, 5)
+    luaunit.assertEquals(bag["KeyItems"][2].amount, 1)
     luaunit.assertEquals(bag["KeyItems"][3].item, "None")
     luaunit.assertEquals(bag["KeyItems"][3].amount, 0)
 
     luaunit.assertEquals(bag["Balls"][1].item, "Great Ball")
-    luaunit.assertEquals(bag["Balls"][1].amount, 5)
+    luaunit.assertEquals(bag["Balls"][1].amount, 1)
     luaunit.assertEquals(bag["Balls"][2].item, "Friend Ball")
-    luaunit.assertEquals(bag["Balls"][2].amount, 5)
+    luaunit.assertEquals(bag["Balls"][2].amount, 1)
     luaunit.assertEquals(bag["Balls"][3].item, "None")
     luaunit.assertEquals(bag["Balls"][3].amount, 0)
 
@@ -303,14 +321,14 @@ function gen2_items_tests.test_item_bag(bag, game)
     luaunit.assertEquals(bag["TM/HM"][2].item, "TM02")
     luaunit.assertEquals(bag["TM/HM"][2].amount, 0)
     luaunit.assertEquals(bag["TM/HM"][28].item, "TM28")
-    luaunit.assertEquals(bag["TM/HM"][28].amount, 5)
+    luaunit.assertEquals(bag["TM/HM"][28].amount, 1)
     luaunit.assertEquals(bag["TM/HM"][51].item, "HM01")
-    luaunit.assertEquals(bag["TM/HM"][51].amount, 5)
+    luaunit.assertEquals(bag["TM/HM"][51].amount, 1)
 
     -- Make sure removing items through the bag removes from the proper pockets.
     for i = 1, #items
     do
-        bag:remove(items[i], 5)
+        bag:remove(items[i], 1)
     end
 
     luaunit.assertEquals(bag["Items"][1].item, "None")
