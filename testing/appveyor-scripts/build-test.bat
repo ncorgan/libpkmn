@@ -2,12 +2,12 @@
 @echo off
 
 :: Set variables
-set BOOST_ROOT=C:/Libraries/boost_%BOOST_VERSION%_0
+set BOOST_ROOT=C:/Libraries/boost_%BOOST_VERSION%
 set BOOST_LIBRARY_DIR="%BOOST_ROOT%\lib%BITNESS%-msvc-14.0"
 set "PATH=C:\Ruby%RUBY_VERSION%\bin;%PATH%"
 if "%BITNESS%"=="32" (
     set CMAKE_GENERATOR_NAME="Visual Studio 14 2015"
-    set CMAKE_PREFIX_PATH=C:\Qt\5.7\msvc2015
+    set CMAKE_PREFIX_PATH=C:\Qt\5.10.1\msvc2015
     set PYTHON_ROOT=C:\Python%PYTHON_VERSION%
     set RUBY_LIBRARY="C:\Ruby%RUBY_VERSION%\lib\libmsvcrt-ruby%RUBY_VERSION%0.dll.a"
     set "PATH=C:\Program Files (x86)\PKMN\bin;%BOOST_LIBRARY_DIR%;%CMAKE_PREFIX_PATH%\bin;%PATH%"
@@ -15,7 +15,7 @@ if "%BITNESS%"=="32" (
     set "INCLUDE=C:\Program Files (x86)\PKMN\include;%INCLUDE%"
 ) else (
     set CMAKE_GENERATOR_NAME="Visual Studio 14 2015 Win64"
-    set CMAKE_PREFIX_PATH=C:\Qt\5.7\msvc2015_64
+    set CMAKE_PREFIX_PATH=C:\Qt\5.10.1\msvc2015_64
     set PYTHON_ROOT=C:\Python%PYTHON_VERSION%-x64
     set RUBY_LIBRARY="C:\Ruby%RUBY_VERSION%\lib\libx64-msvcrt-ruby%RUBY_VERSION%0.dll.a"
     set "PATH=C:\Program Files\PKMN\bin;%BOOST_LIBRARY_DIR%;%CMAKE_PREFIX_PATH%\bin;%PATH%"
