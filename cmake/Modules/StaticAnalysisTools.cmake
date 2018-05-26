@@ -21,7 +21,7 @@ IF(PKMN_USE_CLANGTIDY)
         "${CLANG_TIDY_EXECUTABLE}"
         "-checks=\
          clang-diagnostic-*,\
-         misc-macro-parentheses,google-readability-casting,\
+         misc-macro-parentheses,\
          modernize-loop-convert,readability-else-after-return"
     )
 ENDIF()
