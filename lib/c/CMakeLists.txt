@@ -19,6 +19,7 @@ SET(pkmn_c_libs
 # Add sources included in all builds
 #
 
+ADD_SUBDIRECTORY(breeding)
 ADD_SUBDIRECTORY(calculations)
 ADD_SUBDIRECTORY(database)
 ADD_SUBDIRECTORY(gui)
@@ -26,6 +27,7 @@ ADD_SUBDIRECTORY(types)
 ADD_SUBDIRECTORY(utils)
 
 SET(pkmn_c_sources
+    ${pkmn_c_breeding_sources}
     ${pkmn_c_calculations_sources}
     ${pkmn_c_database_sources}
     ${pkmn_c_gui_sources}

@@ -22,56 +22,6 @@
 #include <cstdio>
 #include <type_traits>
 
-// The caller is expected to be exception-safe.
-template <typename enum_type, typename buffer_type>
-static void copy_map_to_buffer(
-    const std::map<std::string, buffer_type>& value_map,
-    const boost::bimap<std::string, enum_type>& value_enum_bimap,
-    buffer_type* p_values_buffer_out,
-    size_t value_buffer_size,
-    size_t p_actual_num_values,
-    size_t* p_p_actual_num_values_out
-)
-{
-    BOOST_ASSERT(p_values_buffer_out != nullptr);
-
-    std::memset(
-        p_values_buffer_out,
-        0,
-        value_buffer_size * sizeof(buffer_type)
-    );
-
-    size_t internal_num_values = std::min<size_t>(value_buffer_size, p_actual_num_values);
-    for(size_t value = 0; value < internal_num_values; ++value)
-    {
-        enum_type value_enum = enum_type(value);
-        BOOST_ASSERT(value_enum_bimap.right.count(value_enum) > 0);
-
-        const std::string& cpp_key = value_enum_bimap.right.at(value_enum);
-        if(value_map.count(cpp_key) > 0)
-        {
-            p_values_buffer_out[value] = value_map.at(value_enum_bimap.right.at(value_enum));
-        }
-        else
-        {
-            if(std::is_same<bool, buffer_type>::value)
-            {
-                p_values_buffer_out[value] = false;
-            }
-            else
-            {
-                p_values_buffer_out[value] = buffer_type(-1);
-            }
-        }
-    }
-
-    // Optional parameter
-    if(p_p_actual_num_values_out)
-    {
-        *p_p_actual_num_values_out = p_actual_num_values;
-    }
-}
-
 union pkmn_trainer_id pkmn_pokemon_default_trainer_id()
 {
     return {pkmn::pokemon::DEFAULT_TRAINER_ID};
@@ -897,7 +847,7 @@ enum pkmn_error pkmn_pokemon_get_markings(
         const pkmn::c::marking_bimap_t& marking_bimap = (p_internal->generation == 3) ?
             pkmn::c::get_gen3_marking_bimap() : pkmn::c::get_marking_bimap();
 
-        copy_map_to_buffer(
+        pkmn::c::copy_map_to_buffer(
             p_internal->cpp->get_markings(),
             marking_bimap,
             p_has_markings_buffer_out,
@@ -1010,7 +960,7 @@ enum pkmn_error pkmn_pokemon_get_contest_stats(
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_contest_stats_buffer_out, p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
-        copy_map_to_buffer(
+        pkmn::c::copy_map_to_buffer(
             p_internal->cpp->get_contest_stats(),
             pkmn::c::get_contest_stat_bimap(),
             p_contest_stats_buffer_out,
@@ -1108,7 +1058,7 @@ enum pkmn_error pkmn_pokemon_get_EVs(
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_EVs_buffer_out, p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
-        copy_map_to_buffer(
+        pkmn::c::copy_map_to_buffer(
             p_internal->cpp->get_EVs(),
             pkmn::c::get_stat_bimap(),
             p_EVs_buffer_out,
@@ -1156,7 +1106,7 @@ enum pkmn_error pkmn_pokemon_get_IVs(
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_IVs_buffer_out, p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
-        copy_map_to_buffer(
+        pkmn::c::copy_map_to_buffer(
             p_internal->cpp->get_IVs(),
             pkmn::c::get_stat_bimap(),
             p_IVs_buffer_out,
@@ -1204,7 +1154,7 @@ enum pkmn_error pkmn_pokemon_get_stats(
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_stats_buffer_out, p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
-        copy_map_to_buffer(
+        pkmn::c::copy_map_to_buffer(
             p_internal->cpp->get_stats(),
             pkmn::c::get_stat_bimap(),
             p_stats_buffer_out,
