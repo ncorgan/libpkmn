@@ -85,15 +85,15 @@ make
 [ $? -ne 0 ] && exit 1
 
 # Test external Lua application
-cd $REPO_TOPLEVEL/testing/applications/lua
-lua pkmn-lua-app.lua
+#cd $REPO_TOPLEVEL/testing/applications/lua
+#lua pkmn-lua-app.lua
 
 # Test external Python application
-cd $REPO_TOPLEVEL/testing/applications/python
-python${PYTHON_VERSION} pkmn-python-app.py
+#cd $REPO_TOPLEVEL/testing/applications/python
+#python${PYTHON_VERSION} pkmn-python-app.py
 
 # Test external Ruby application
-cd $REPO_TOPLEVEL/testing/applications/ruby
-ruby pkmn-ruby-app.rb
+#cd $REPO_TOPLEVEL/testing/applications/ruby
+#ruby pkmn-ruby-app.rb
 
 echo # So we can check the last error code
