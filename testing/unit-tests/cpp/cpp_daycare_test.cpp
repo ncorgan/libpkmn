@@ -39,38 +39,76 @@ TEST_P(daycare_test, test_empty_daycare)
 
     pkmn::daycare::sptr daycare = pkmn::daycare::make(game);
 
-    const pkmn::pokemon_list_t& levelup_pokemon = daycare->get_levelup_pokemon();
-    ASSERT_FALSE(levelup_pokemon.empty());
-    ASSERT_EQ(
-        levelup_pokemon.size(),
-        static_cast<size_t>(daycare->get_levelup_pokemon_capacity())
-    );
-    for(const pkmn::pokemon::sptr& pokemon: levelup_pokemon)
+    // Levelup Pokémon
+
+    int levelup_capacity = daycare->get_levelup_pokemon_capacity();
+    for(int levelup_pokemon_index = 0;
+        levelup_pokemon_index < levelup_capacity;
+        ++levelup_pokemon_index)
     {
+        const pkmn::pokemon::sptr& pokemon = daycare->get_levelup_pokemon(levelup_pokemon_index);
         ASSERT_EQ("None", pokemon->get_species());
     }
 
+    // Test invalid indices.
+    ASSERT_THROW(
+        daycare->get_levelup_pokemon(-1);
+    , std::out_of_range);
+    ASSERT_THROW(
+        daycare->get_levelup_pokemon(levelup_capacity);
+    , std::out_of_range);
+
+    const pkmn::pokemon_list_t& all_levelup_pokemon =
+        daycare->get_levelup_pokemon_as_vector();
+    ASSERT_EQ(
+        static_cast<size_t>(levelup_capacity),
+        all_levelup_pokemon.size()
+    );
+
+    // Breeding Pokémon
+
     if(can_breed)
     {
-        const pkmn::pokemon_list_t& breeding_pokemon = daycare->get_breeding_pokemon();
-        ASSERT_FALSE(breeding_pokemon.empty());
-        ASSERT_EQ(
-            breeding_pokemon.size(),
-            static_cast<size_t>(daycare->get_breeding_pokemon_capacity())
-        );
-        for(const pkmn::pokemon::sptr& pokemon: breeding_pokemon)
+        int breeding_capacity = daycare->get_breeding_pokemon_capacity();
+        for(int breeding_pokemon_index = 0;
+            breeding_pokemon_index < breeding_capacity;
+            ++breeding_pokemon_index)
         {
+            const pkmn::pokemon::sptr& pokemon = daycare->get_breeding_pokemon(breeding_pokemon_index);
             ASSERT_EQ("None", pokemon->get_species());
         }
 
-        const pkmn::pokemon::sptr& daycare_egg = daycare->get_egg();
-        ASSERT_EQ("None", daycare_egg->get_species());
-        ASSERT_TRUE(daycare_egg->is_egg());
+        // Test invalid indices.
+        ASSERT_THROW(
+            daycare->get_breeding_pokemon(-1);
+        , std::out_of_range);
+        ASSERT_THROW(
+            daycare->get_breeding_pokemon(breeding_capacity);
+        , std::out_of_range);
+
+        const pkmn::pokemon_list_t& all_breeding_pokemon =
+            daycare->get_breeding_pokemon_as_vector();
+        ASSERT_EQ(
+            static_cast<size_t>(breeding_capacity),
+            all_breeding_pokemon.size()
+        );
     }
     else
     {
+        ASSERT_EQ(0, daycare->get_breeding_pokemon_capacity());
+
         ASSERT_THROW(
-            daycare->get_breeding_pokemon();
+            daycare->get_breeding_pokemon(0);
+        , pkmn::feature_not_in_game_error);
+        ASSERT_THROW(
+            daycare->get_breeding_pokemon_as_vector();
+        , pkmn::feature_not_in_game_error);
+
+        ASSERT_THROW(
+            daycare->set_breeding_pokemon(
+                0,
+                pkmn::pokemon::make("Bulbasaur", game, "", 5)
+            );
         , pkmn::feature_not_in_game_error);
     }
 }

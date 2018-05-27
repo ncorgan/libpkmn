@@ -27,9 +27,17 @@ namespace pkmn {
 
             std::string get_game() override final;
 
-            const pkmn::pokemon_list_t& get_levelup_pokemon() override final;
+            const pkmn::pokemon::sptr& get_levelup_pokemon(
+                int index
+            ) override final;
 
-            const pkmn::pokemon_list_t& get_breeding_pokemon() override final;
+            const pkmn::pokemon_list_t& get_levelup_pokemon_as_vector() override final;
+
+            const pkmn::pokemon::sptr& get_breeding_pokemon(
+                int index
+            ) override final;
+
+            const pkmn::pokemon_list_t& get_breeding_pokemon_as_vector() override final;
 
             const pkmn::pokemon::sptr& get_egg() override final;
 

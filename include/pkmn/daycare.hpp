@@ -25,21 +25,29 @@ namespace pkmn {
 
             virtual std::string get_game() = 0;
 
-            virtual const pkmn::pokemon_list_t& get_levelup_pokemon() = 0;
+            virtual const pkmn::pokemon::sptr& get_levelup_pokemon(
+                int index
+            ) = 0;
 
             virtual void set_levelup_pokemon(
                 int index,
                 const pkmn::pokemon::sptr& new_pokemon
             ) = 0;
 
+            virtual const pkmn::pokemon_list_t& get_levelup_pokemon_as_vector() = 0;
+
             virtual int get_levelup_pokemon_capacity() = 0;
 
-            virtual const pkmn::pokemon_list_t& get_breeding_pokemon() = 0;
+            virtual const pkmn::pokemon::sptr& get_breeding_pokemon(
+                int index
+            ) = 0;
 
             virtual void set_breeding_pokemon(
                 int index,
                 const pkmn::pokemon::sptr& new_pokemon
             ) = 0;
+
+            virtual const pkmn::pokemon_list_t& get_breeding_pokemon_as_vector() = 0;
 
             virtual int get_breeding_pokemon_capacity() = 0;
 

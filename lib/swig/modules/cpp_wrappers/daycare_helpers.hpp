@@ -41,6 +41,8 @@ namespace pkmn { namespace swig {
                     1,
                     _daycare->get_levelup_pokemon_capacity()
                 );
+
+                --index;
 #else
                 pkmn::enforce_bounds(
                     "Index",
@@ -51,7 +53,7 @@ namespace pkmn { namespace swig {
 #endif
 
                 return pkmn::swig::pokemon(
-                           _daycare->get_levelup_pokemon().at(index)
+                           _daycare->get_levelup_pokemon(index)
                        );
             }
 
@@ -107,6 +109,8 @@ namespace pkmn { namespace swig {
                     1,
                     _daycare->get_breeding_pokemon_capacity()
                 );
+
+                --index;
 #else
                 pkmn::enforce_bounds(
                     "Index",
@@ -117,7 +121,7 @@ namespace pkmn { namespace swig {
 #endif
 
                 return pkmn::swig::pokemon(
-                           _daycare->get_breeding_pokemon().at(index)
+                           _daycare->get_breeding_pokemon(index)
                        );
             }
 

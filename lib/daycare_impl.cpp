@@ -80,14 +80,69 @@ namespace pkmn {
         return pkmn::database::game_id_to_name(_game_id);
     }
 
-    const pkmn::pokemon_list_t& daycare_impl::get_levelup_pokemon()
+    const pkmn::pokemon::sptr& daycare_impl::get_levelup_pokemon(
+        int index
+    )
+    {
+        int levelup_capacity = this->get_levelup_pokemon_capacity();
+
+        // Same functionality, just better error messages for the given
+        // situation
+        if(levelup_capacity == 1)
+        {
+            pkmn::enforce_comparator(
+                "Index",
+                index,
+                0,
+                pkmn::value_comparator::EQ
+            );
+        }
+        else
+        {
+            pkmn::enforce_bounds(
+                "Index",
+                index,
+                0,
+                (levelup_capacity - 1)
+            );
+        }
+
+        boost::lock_guard<daycare_impl> lock(*this);
+
+        return this->_get_levelup_pokemon_ref().at(index);
+    }
+
+    const pkmn::pokemon_list_t& daycare_impl::get_levelup_pokemon_as_vector()
     {
         boost::lock_guard<daycare_impl> lock(*this);
 
         return this->_get_levelup_pokemon_ref();
     }
 
-    const pkmn::pokemon_list_t& daycare_impl::get_breeding_pokemon()
+    const pkmn::pokemon::sptr& daycare_impl::get_breeding_pokemon(
+        int index
+    )
+    {
+        if(!_can_breed)
+        {
+            throw pkmn::feature_not_in_game_error(
+                      "Breeding",
+                      this->get_game()
+                  );
+        }
+        pkmn::enforce_bounds(
+            "Index",
+            index,
+            0,
+            (this->get_breeding_pokemon_capacity() - 1)
+        );
+
+        boost::lock_guard<daycare_impl> lock(*this);
+
+        return this->_breeding_pokemon.at(index);
+    }
+
+    const pkmn::pokemon_list_t& daycare_impl::get_breeding_pokemon_as_vector()
     {
         if(!_can_breed)
         {

@@ -658,8 +658,10 @@ TEST(cpp_swig_wrapper_test, test_breeding)
 TEST(cpp_swig_wrapper_test, test_daycare)
 {
     pkmn::daycare::sptr daycare = pkmn::daycare::make("Gold");
-    const pkmn::pokemon_list_t& levelup_pokemon_list = daycare->get_levelup_pokemon();
-    const pkmn::pokemon_list_t& breeding_pokemon_list = daycare->get_breeding_pokemon();
+    const pkmn::pokemon_list_t& levelup_pokemon_list =
+        daycare->get_levelup_pokemon_as_vector();
+    const pkmn::pokemon_list_t& breeding_pokemon_list =
+        daycare->get_breeding_pokemon_as_vector();
 
     pkmn::swig::daycare daycare_swig(daycare);
     pkmn::swig::daycare_levelup_pokemon levelup_pokemon_swig(daycare);
