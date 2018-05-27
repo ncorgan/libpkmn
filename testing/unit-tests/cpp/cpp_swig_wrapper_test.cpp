@@ -667,6 +667,11 @@ TEST(cpp_swig_wrapper_test, test_daycare)
     pkmn::swig::daycare_levelup_pokemon levelup_pokemon_swig(daycare);
     pkmn::swig::daycare_breeding_pokemon breeding_pokemon_swig(daycare);
 
+    ASSERT_EQ(
+        daycare->can_breed_pokemon(),
+        daycare_swig.can_breed_pokemon()
+    );
+
     EXPECT_EQ(
         daycare->get_levelup_pokemon_capacity(),
         levelup_pokemon_swig.get_capacity()

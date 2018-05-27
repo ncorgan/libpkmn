@@ -48,8 +48,6 @@ namespace pkmn {
             int _game_id;
             int _generation;
 
-            bool _can_breed;
-
             pkmn::pokemon_list_t _levelup_pokemon;
             pkmn::pokemon_list_t _breeding_pokemon;
 

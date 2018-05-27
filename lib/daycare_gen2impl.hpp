@@ -26,6 +26,8 @@ namespace pkmn {
 
             int get_levelup_pokemon_capacity() override final;
 
+            bool can_breed_pokemon() override final;
+
             void set_breeding_pokemon(
                 int position,
                 const pkmn::pokemon::sptr& new_pokemon
@@ -39,8 +41,9 @@ namespace pkmn {
             void _from_native_breeding() override final;
             void _to_native_breeding() override final;
 
-            BOOST_STATIC_CONSTEXPR int LEVELUP_CAPACITY = 2;
-            BOOST_STATIC_CONSTEXPR int BREEDING_CAPACITY = 2;
+            BOOST_STATIC_CONSTEXPR int  LEVELUP_CAPACITY = 2;
+            BOOST_STATIC_CONSTEXPR int  BREEDING_CAPACITY = 2;
+            BOOST_STATIC_CONSTEXPR bool CAN_BREED_POKEMON = true;
     };
 }
 

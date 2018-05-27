@@ -65,7 +65,6 @@ namespace pkmn {
         daycare(),
         _game_id(game_id),
         _generation(pkmn::database::game_id_to_generation(game_id)),
-        _can_breed(false),
         _levelup_pokemon(),
         _breeding_pokemon(),
         _egg(nullptr),
@@ -123,7 +122,7 @@ namespace pkmn {
         int index
     )
     {
-        if(!_can_breed)
+        if(!this->can_breed_pokemon())
         {
             throw pkmn::feature_not_in_game_error(
                       "Breeding",
@@ -144,7 +143,7 @@ namespace pkmn {
 
     const pkmn::pokemon_list_t& daycare_impl::get_breeding_pokemon_as_vector()
     {
-        if(!_can_breed)
+        if(!this->can_breed_pokemon())
         {
             throw pkmn::feature_not_in_game_error(
                       "Breeding",
@@ -159,7 +158,7 @@ namespace pkmn {
 
     const pkmn::pokemon::sptr& daycare_impl::get_egg()
     {
-        if(!_can_breed)
+        if(!this->can_breed_pokemon())
         {
             throw pkmn::feature_not_in_game_error(
                       "Breeding",

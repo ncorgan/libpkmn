@@ -38,6 +38,8 @@ namespace pkmn {
 
             virtual int get_levelup_pokemon_capacity() = 0;
 
+            virtual bool can_breed_pokemon() = 0;
+
             virtual const pkmn::pokemon::sptr& get_breeding_pokemon(
                 int index
             ) = 0;

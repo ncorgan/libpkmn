@@ -48,6 +48,13 @@ namespace pkmn { namespace swig {
                 return _daycare->get_game();
             }
 
+            inline bool can_breed_pokemon()
+            {
+                BOOST_ASSERT(_daycare.get() != nullptr);
+
+                return _daycare->can_breed_pokemon();
+            }
+
             inline daycare_levelup_pokemon get_levelup_pokemon()
             {
                 BOOST_ASSERT(_daycare.get() != nullptr);

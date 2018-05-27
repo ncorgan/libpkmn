@@ -51,8 +51,6 @@ namespace pkmn {
             _is_our_mem = false;
         }
 
-        _can_breed = false;
-
         this->_from_native_levelup();
     }
 
@@ -156,6 +154,11 @@ namespace pkmn {
     int daycare_gcnimpl::get_levelup_pokemon_capacity()
     {
         return LEVELUP_CAPACITY;
+    }
+
+    bool daycare_gcnimpl::can_breed_pokemon()
+    {
+        return CAN_BREED_POKEMON;
     }
 
     void daycare_gcnimpl::set_breeding_pokemon(
