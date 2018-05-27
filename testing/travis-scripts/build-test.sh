@@ -57,7 +57,7 @@ make
 [ $? -ne 0 ] && exit 1
 
 # Test external C++ project that uses raw Makefiles
-cd $REPO_TOPLEVEL/testing/application/cpp/makefiles
+cd $REPO_TOPLEVEL/testing/applications/cpp/makefiles
 [ $? -ne 0 ] && exit 1
 make
 [ $? -ne 0 ] && exit 1
