@@ -18,6 +18,7 @@ CONFIGURE_FILE(
 
 IF(NOT PKMN_DONT_INSTALL_HEADERS)
     SET(pkmn_c_headers
+        breeding.h
         build_info.h
         calculations.h
         config.h
