@@ -146,7 +146,9 @@ namespace pkmn {
         old_box_pokemon_impl_ptr->unlock();
 
         r_levelup_pokemon[0] = std::make_shared<pokemon_gcnimpl>(
-                                   dynamic_cast<LibPkmGC::GC::Pokemon*>(GC_RCAST(_p_native)),
+                                   dynamic_cast<LibPkmGC::GC::Pokemon*>(
+                                       GC_RCAST(_p_native)->pkm
+                                   ),
                                    _game_id
                                );
     }
