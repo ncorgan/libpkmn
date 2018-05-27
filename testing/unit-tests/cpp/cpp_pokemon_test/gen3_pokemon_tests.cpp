@@ -80,7 +80,7 @@ static void check_initial_ribbons_map(
 
 static void test_contest_ribbons(
     pkmn::pokemon::sptr pokemon,
-    const std::string &contest_type
+    const std::string& contest_type
 ) {
     std::string ribbon_name = contest_type;
     std::string super_ribbon_name = contest_type + std::string(" Super");
@@ -103,7 +103,7 @@ static void test_contest_ribbons(
 
 static void test_ribbons(
     pkmn::pokemon::sptr pokemon,
-    const std::string &ribbon
+    const std::string& ribbon
 ) {
     std::map<std::string, bool> ribbons_before = pokemon->get_ribbons();
     pokemon->set_ribbon(ribbon, true);

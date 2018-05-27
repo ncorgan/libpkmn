@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2015-2016 Nicholas Corgan (n.corgan@gmail.com)
+# Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
 #
 # Distributed under the MIT License (MIT) (See accompanying FILE LICENSE.txt
 # or copy at http://opensource.org/licenses/MIT)
@@ -12,6 +12,7 @@
 #
 # Macro parameters:
 #  * module_name: The module filename, minus the .i extension.
+#  * module_rc_name: The module name to use in the DLL resource file
 #  * cplusplus:   TRUE or FALSE, whether or not this is a C++ module.
 #
 # Assumes the following variables are set:
@@ -47,7 +48,7 @@ SET(LUA_SHARE_INSTALL_DIR ${LUA_SHARE_INSTALL_DIR} CACHE FILEPATH "Lua .lua inst
 ########################################################################
 # Macro to build and install Lua SWIG modules
 ########################################################################
-MACRO(SWIG_BUILD_LUA_MODULE module_name cplusplus)
+MACRO(SWIG_BUILD_LUA_MODULE module_name module_rc_name cplusplus)
     INCLUDE(UseSWIG)
 
     SET(SWIG_INCLUDE_DIRS
@@ -84,6 +85,7 @@ MACRO(SWIG_BUILD_LUA_MODULE module_name cplusplus)
     ENDIF(${cplusplus})
 
     # The actual CMake call for SWIG
+    SET(SWIG_MODULE_RC_NAME ${module_rc_name})
     SWIG_ADD_MODULE(${module_name} lua ${CMAKE_CURRENT_BINARY_DIR}/${module_name}.i)
     SET_TARGET_PROPERTIES(${SWIG_MODULE_${module_name}_REAL_NAME} PROPERTIES PREFIX "")
     SWIG_LINK_LIBRARIES(${module_name} ${SWIG_LIBRARIES})

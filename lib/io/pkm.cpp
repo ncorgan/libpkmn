@@ -86,7 +86,7 @@ namespace pkmn { namespace io {
     }
 
     pkmn::pokemon::sptr load_pkm(
-        const std::string &filepath
+        const std::string& filepath
     ) {
         if(not fs::exists(filepath)) {
             throw std::invalid_argument(
@@ -107,7 +107,7 @@ namespace pkmn { namespace io {
 
     void save_pkm(
         pkmn::pokemon::sptr libpkmn_pokemon,
-        const std::string &filepath
+        const std::string& filepath
     ) {
         int generation = pkmn::database::game_id_to_generation(
                              libpkmn_pokemon->get_database_entry().get_game_id()

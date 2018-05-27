@@ -57,12 +57,12 @@ namespace pkmn { namespace calculations {
     }
 
     uint32_t generate_personality(
-        const std::string &species,
+        const std::string& species,
         uint32_t trainer_id,
         bool shiny,
-        const std::string &ability,
-        const std::string &gender,
-        const std::string &nature
+        const std::string& ability,
+        const std::string& gender,
+        const std::string& nature
     ) {
         uint32_t ret = 0;
 

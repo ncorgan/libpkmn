@@ -321,7 +321,7 @@ namespace pkmn
     }
 
     void pokemon_gen2impl::set_form(
-        const std::string &form
+        const std::string& form
     ) {
         boost::lock_guard<pokemon_gen2impl> lock(*this);
 
@@ -390,7 +390,7 @@ namespace pkmn
     }
 
     void pokemon_gen2impl::set_nickname(
-        const std::string &nickname
+        const std::string& nickname
     )
     {
         boost::lock_guard<pokemon_gen2impl> lock(*this);
@@ -416,7 +416,7 @@ namespace pkmn
     }
 
     void pokemon_gen2impl::set_gender(
-        const std::string &gender
+        const std::string& gender
     )
     {
         boost::lock_guard<pokemon_gen2impl> lock(*this);
@@ -529,7 +529,7 @@ namespace pkmn
     }
 
     void pokemon_gen2impl::set_held_item(
-        const std::string &held_item
+        const std::string& held_item
     )
     {
         boost::lock_guard<pokemon_gen2impl> lock(*this);
@@ -589,7 +589,7 @@ namespace pkmn
     }
 
     void pokemon_gen2impl::set_original_trainer_name(
-        const std::string &trainer_name
+        const std::string& trainer_name
     )
     {
         boost::lock_guard<pokemon_gen2impl> lock(*this);
@@ -661,7 +661,7 @@ namespace pkmn
     }
 
     void pokemon_gen2impl::set_original_trainer_gender(
-        const std::string &gender
+        const std::string& gender
     )
     {
         pkmn::enforce_value_in_vector(
@@ -716,7 +716,7 @@ namespace pkmn
     }
 
     void pokemon_gen2impl::set_ability(
-        PKMN_UNUSED(const std::string &ability)
+        PKMN_UNUSED(const std::string& ability)
     )
     {
         throw pkmn::feature_not_in_game_error("Abilities", "Generation II");
@@ -728,7 +728,7 @@ namespace pkmn
     }
 
     void pokemon_gen2impl::set_ball(
-        PKMN_UNUSED(const std::string &ball)
+        PKMN_UNUSED(const std::string& ball)
     )
     {
         throw pkmn::feature_not_in_game_error("A Pokémon's ball is not recorded in Generation II.");
@@ -776,7 +776,7 @@ namespace pkmn
     }
 
     void pokemon_gen2impl::set_location_met(
-        const std::string &location,
+        const std::string& location,
         bool as_egg
     )
     {
@@ -803,7 +803,7 @@ namespace pkmn
     }
 
     void pokemon_gen2impl::set_original_game(
-        PKMN_UNUSED(const std::string &game)
+        PKMN_UNUSED(const std::string& game)
     )
     {
         throw pkmn::feature_not_in_game_error("Original game is not recorded in Generation II.");
@@ -890,7 +890,7 @@ namespace pkmn
     }
 
     void pokemon_gen2impl::set_IV(
-        const std::string &stat,
+        const std::string& stat,
         int value
     )
     {
@@ -909,7 +909,7 @@ namespace pkmn
     }
 
     void pokemon_gen2impl::set_marking(
-        PKMN_UNUSED(const std::string &marking),
+        PKMN_UNUSED(const std::string& marking),
         PKMN_UNUSED(bool value)
     )
     {
@@ -917,7 +917,7 @@ namespace pkmn
     }
 
     void pokemon_gen2impl::set_ribbon(
-        PKMN_UNUSED(const std::string &ribbon),
+        PKMN_UNUSED(const std::string& ribbon),
         PKMN_UNUSED(bool value)
     )
     {
@@ -925,7 +925,7 @@ namespace pkmn
     }
 
     void pokemon_gen2impl::set_contest_stat(
-        PKMN_UNUSED(const std::string &stat),
+        PKMN_UNUSED(const std::string& stat),
         PKMN_UNUSED(int value)
     )
     {
@@ -933,7 +933,7 @@ namespace pkmn
     }
 
     void pokemon_gen2impl::set_move(
-        const std::string &move,
+        const std::string& move,
         int index
     )
     {
@@ -986,7 +986,7 @@ namespace pkmn
     }
 
     void pokemon_gen2impl::set_EV(
-        const std::string &stat,
+        const std::string& stat,
         int value
     )
     {
@@ -1119,7 +1119,7 @@ namespace pkmn
     }
 
     void pokemon_gen2impl::_set_unown_IVs_from_form(
-        const std::string &form
+        const std::string& form
     )
     {
         // Set the maximum possible Special IV for the given form.

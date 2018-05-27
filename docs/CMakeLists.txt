@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2015-2017 Nicholas Corgan (n.corgan@gmail.com)
+# Copyright (c) 2015-2018 Nicholas Corgan (n.corgan@gmail.com)
 #
 # Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
 # or copy at http://opensource.org/licenses/MIT)
@@ -19,8 +19,8 @@ MACRO(PKMN_BUILD_DOXYGEN_DOCS files lang langname)
         COMMENT "Generating ${langname} Doxygen documentation"
     )
     ADD_CUSTOM_TARGET(doxygen_${lang}_docs ALL DEPENDS ${DOXYGEN_OUTPUT_DIR}/html/index.html)
-    INSTALL(DIRECTORY ${DOXYGEN_OUTPUT_DIR} DESTINATION ${PKMN_DOCS_DIR} COMPONENT doxygen)
-ENDMACRO(PKMN_BUILD_DOXYGEN_DOCS)
+    INSTALL(DIRECTORY ${DOXYGEN_OUTPUT_DIR} DESTINATION ${PKMN_DOCS_DIR} COMPONENT Documentation)
+ENDMACRO()
 
 # C++ documentation
 FILE(GLOB_RECURSE hpp_files
@@ -36,14 +36,20 @@ IF(PKMN_ENABLE_C)
         ${PKMN_BINARY_DIR}/include/pkmn-c/*.h
     )
     PKMN_BUILD_DOXYGEN_DOCS("${h_files}" "c" "C")
-ENDIF(PKMN_ENABLE_C)
+ENDIF()
 
 IF(PKMN_ENABLE_CSHARP)
     PKMN_BUILD_DOXYGEN_DOCS("" "csharp" "C#")
-    ADD_DEPENDENCIES(doxygen_csharp_docs pkmn-cs)
-ENDIF(PKMN_ENABLE_CSHARP)
+    ADD_DEPENDENCIES(doxygen_csharp_docs PKMN.CSharp)
+ENDIF()
 
-#IF(PKMN_ENABLE_JAVA)
-#    PKMN_BUILD_DOXYGEN_DOCS("" "java" "Java")
-#    ADD_DEPENDENCIES(doxygen_java_docs pkmn_jar)
-#ENDIF(PKMN_ENABLE_JAVA)
+# TODO: add dependency to other modules when swig branch merged
+IF(PKMN_ENABLE_PYTHON)
+    PKMN_BUILD_DOXYGEN_DOCS("" "python" "Python")
+    ADD_DEPENDENCIES(doxygen_python_docs
+        _pkmn_python
+        _stl_python
+        _database_python
+        _calculations_python
+    )
+ENDIF()

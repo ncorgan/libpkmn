@@ -26,4 +26,4 @@ SET(SWIG_PYTHON_LIBRARIES
     pkmn
 )
 
-SWIG_BUILD_PYTHON_MODULE(breeding_python pkmn/breeding TRUE)
+SWIG_BUILD_PYTHON_MODULE(breeding_python Breeding pkmn/breeding TRUE)

@@ -45,7 +45,7 @@ static bool get_random_bool()
 }
 
 static pkmn::pokemon::sptr get_random_pokemon(
-    const std::string &game
+    const std::string& game
 ) {
     int generation = game_generations.at(game);
     pkmn::rng<uint32_t> rng;

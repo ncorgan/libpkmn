@@ -252,11 +252,42 @@ MACRO(SWIG_ADD_MODULE name language)
           PROPERTIES COMPILE_FLAGS "${PKMN_CXX_FLAGS} /wd4244 /wd4267"
       )
   ENDIF()
+  STRING(TOLOWER "${language}" swig_lowercase_language)
+
+  # For Windows, auto-generate a DLL resource file.
+  IF(WIN32)
+      IF(${swig_lowercase_language} STREQUAL "csharp")
+          SET(SWIG_LANGUAGE "C#")
+      ELSEIF(${swig_lowercase_language} STREQUAL "lua")
+          SET(SWIG_LANGUAGE "Lua")
+      ELSEIF(${swig_lowercase_language} STREQUAL "python")
+          SET(SWIG_LANGUAGE "Python")
+      ELSEIF(${swig_lowercase_language} STREQUAL "ruby")
+          SET(SWIG_LANGUAGE "Ruby")
+      ENDIF()
+
+      SET(SWIGDLL_BASENAME ${SWIG_MODULE_${name}_REAL_NAME})
+      IF(MINGW)
+          SET(LIB_PREFIX "lib")
+      ENDIF()
+      IF(${swig_lowercase_language} STREQUAL "python")
+          SET(SWIGDLL_SUFFIX "pyd")
+      ELSE()
+          SET(SWIGDLL_SUFFIX "dll")
+      ENDIF()
+
+      SET(swig_rc_path ${CMAKE_CURRENT_BINARY_DIR}/${name}.rc)
+      CONFIGURE_FILE(
+          ${PKMN_SOURCE_DIR}/lib/swig/swigdll.rc.in
+          ${swig_rc_path}
+      @ONLY)
+  ENDIF()
+
   ADD_LIBRARY(${SWIG_MODULE_${name}_REAL_NAME}
     MODULE
     ${all_swig_sources}
+    ${swig_rc_path}
   )
-  STRING(TOLOWER "${language}" swig_lowercase_language)
   IF (${swig_lowercase_language} STREQUAL "java")
     IF (APPLE)
         MESSAGE(STATUS "SWIG JAVA APPLE")

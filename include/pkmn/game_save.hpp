@@ -28,6 +28,17 @@
 
 namespace pkmn {
 
+    /*!
+     * @brief A class that provides a common interface for editing various
+     *        main-series Pokémon games.
+     *
+     * This class abstracts away the differences in implementation between
+     * different save formats and provides a common interface for editing these
+     * fields.
+     *
+     * Through this class, you can read and edit all trainer Pokémon, item
+     * bag contents, and Pokédex stats, among other miscellaneous items.
+     */
     class PKMN_API game_save: public class_with_attributes
     {
         public:
@@ -272,6 +283,9 @@ namespace pkmn {
 
             /*!
              * @brief Returns the trainer's Pokédex.
+             *
+             * Gamecube games do not have a Pokédex, and so this function will throw
+             * an exception if this save corresponds to a Gamecube game.
              *
              * \throws pkmn::feature_not_in_game_error if the save is from a Gamecube game
              */

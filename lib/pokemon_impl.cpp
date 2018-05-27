@@ -64,9 +64,9 @@ namespace pkmn
     const std::string pkmn::pokemon::DEFAULT_TRAINER_NAME = "LibPKMN";
 
     pokemon::sptr pokemon::make(
-        const std::string &species,
-        const std::string &game,
-        const std::string &form,
+        const std::string& species,
+        const std::string& game,
+        const std::string& form,
         int level
     )
     {
@@ -119,7 +119,7 @@ namespace pkmn
     }
 
     pokemon::sptr pokemon::from_file(
-        const std::string &filepath
+        const std::string& filepath
     )
     {
         pokemon::sptr ret;
@@ -484,7 +484,7 @@ namespace pkmn
 
     void pokemon_impl::_set_modern_gender(
         uint32_t* personality_ptr,
-        const std::string &gender
+        const std::string& gender
     )
     {
         float chance_male = _database_entry.get_chance_male();
@@ -580,7 +580,7 @@ namespace pkmn
     }
 
     void pokemon_impl::_set_gb_IV(
-        const std::string &stat,
+        const std::string& stat,
         int value,
         uint16_t* iv_data_ptr
     )
@@ -603,7 +603,7 @@ namespace pkmn
     }
 
     void pokemon_impl::_set_modern_IV(
-        const std::string &stat,
+        const std::string& stat,
         int value,
         uint32_t* iv_data_ptr
     )
@@ -633,7 +633,7 @@ namespace pkmn
     }
 
     void pokemon_impl::_set_contest_stat(
-        const std::string &stat,
+        const std::string& stat,
         int value,
         struct pksav_contest_stats* native_ptr
     )
@@ -667,7 +667,7 @@ namespace pkmn
     }
 
     void pokemon_impl::_set_marking(
-        const std::string &marking,
+        const std::string& marking,
         bool value,
         uint8_t* native_ptr
     )

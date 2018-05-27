@@ -26,7 +26,7 @@ static const fs::path pkmn_images_dir("@PKMN_IMAGES_DIR@");
 namespace pkmn {
 
     static fs::path env_var_to_fs_path(
-        const std::string &env_var,
+        const std::string& env_var,
         bool must_exist
     ) {
         std::string value = pkmn_getenv(env_var);

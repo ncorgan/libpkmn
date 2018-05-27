@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -15,7 +15,8 @@
 namespace pkmn { namespace calculations {
 
     //! X/Y coordinates of an individual Spinda spot.
-    struct spinda_coords {
+    struct spinda_coords
+    {
         //! Default constructor.
         PKMN_CONSTEXPR_OR_INLINE spinda_coords():
             x(0), y(0) {}
@@ -29,34 +30,12 @@ namespace pkmn { namespace calculations {
             int xcoord, int ycoord
         ): x(xcoord), y(ycoord) {}
 
-        /*!
-         * @brief Copy constructor.
-         * \param other Coordinates to copy
-         */
-        PKMN_CONSTEXPR_OR_INLINE spinda_coords(
-            const spinda_coords &other
-        ): x(other.x), y(other.y) {}
+        spinda_coords(const spinda_coords&) = default;
+        spinda_coords& operator=(const spinda_coords&) = default;
 
 #ifndef SWIG
-        /*!
-         * @brief Move constructor.
-         * \param other Reference to coordinates whose members to move
-         */
-        PKMN_CONSTEXPR_OR_INLINE spinda_coords(
-            spinda_coords&& other
-        ): x(std::move(other.x)), y(std::move(other.y)) {}
-
-        /*!
-         * @brief Assignment operator.
-         * \param rhs Coordinates whose members to assign.
-         */
-        inline spinda_coords& operator=(
-            const spinda_coords &rhs
-        ) {
-            this->x = rhs.x;
-            this->y = rhs.y;
-            return *this;
-        }
+        spinda_coords(spinda_coords&&) = default;
+        spinda_coords& operator=(spinda_coords&&) = default;
 #endif
 
         /*!
@@ -64,8 +43,9 @@ namespace pkmn { namespace calculations {
          * \param rhs struct with which to compare self
          */
         PKMN_CONSTEXPR_OR_INLINE bool operator==(
-            const spinda_coords &rhs
-        ) const {
+            const spinda_coords& rhs
+        ) const
+        {
             return (this->x == rhs.x) and (this->y == rhs.y);
         }
 
@@ -74,23 +54,32 @@ namespace pkmn { namespace calculations {
          * \param rhs struct with which to compare self
          */
         PKMN_CONSTEXPR_OR_INLINE bool operator!=(
-            const spinda_coords &rhs
-        ) const {
-            return (this->x != rhs.x) or (this->y != rhs.y);
+            const spinda_coords& rhs
+        ) const
+        {
+            return !operator==(rhs);
         }
 
+        /*!
+         * @brief Add the given Spinda coordinates to this instance.
+         */
         PKMN_CONSTEXPR_OR_INLINE spinda_coords operator+(
-            const spinda_coords &rhs
-        ) const {
+            const spinda_coords& rhs
+        ) const
+        {
             return spinda_coords(
                        this->x + rhs.x,
                        this->y + rhs.y
                    );
         }
 
+        /*!
+         * @brief Add the given Spinda coordinates to this instance in-place.
+         */
         inline spinda_coords& operator+=(
-            const spinda_coords &rhs
-        ) {
+            const spinda_coords& rhs
+        )
+        {
             this->x += rhs.x;
             this->y += rhs.y;
             return *this;
@@ -103,7 +92,8 @@ namespace pkmn { namespace calculations {
     };
 
     //! Coordinates of all four Spinda spots.
-    struct spinda_spots {
+    struct spinda_spots
+    {
         //! Default constructor.
         PKMN_CONSTEXPR_OR_INLINE spinda_spots():
             left_ear(spinda_coords()),
@@ -113,95 +103,65 @@ namespace pkmn { namespace calculations {
 
         /*!
          * @brief Constructor taking in four coordinate sets.
-         * \param le Coordinates for spot on the left ear.
-         * \param re Coordinates for spot on the right ear.
-         * \param lf Coordinates for spot on the left of the face.
-         * \param rf Coordinates for spot on the right of the face.
+         * \param l_ear Coordinates for spot on the left ear.
+         * \param r_ear Coordinates for spot on the right ear.
+         * \param l_face Coordinates for spot on the left of the face.
+         * \param r_face Coordinates for spot on the right of the face.
          */
         PKMN_CONSTEXPR_OR_INLINE spinda_spots(
-            const spinda_coords &le,
-            const spinda_coords &re,
-            const spinda_coords &lf,
-            const spinda_coords &rf
-        ): left_ear(le),
-           right_ear(re),
-           left_face(lf),
-           right_face(rf) {}
-
-        /*!
-         * @brief Copy constructor.
-         * \param spots Coordinate set whose coordinates to copy.
-         */
-        PKMN_CONSTEXPR_OR_INLINE spinda_spots(
-            const spinda_spots &spots
-        ): left_ear(spots.left_ear),
-           right_ear(spots.right_ear),
-           left_face(spots.left_face),
-           right_face(spots.right_face) {}
+            const spinda_coords& l_ear,
+            const spinda_coords& r_ear,
+            const spinda_coords& l_face,
+            const spinda_coords& r_face
+        ): left_ear(l_ear),
+           right_ear(r_ear),
+           left_face(l_face),
+           right_face(r_face) {}
 
         /*!
          * @brief Constructor taking in individual parts of coordinates.
-         * \param le_x X coordinate of spot on the left ear.
-         * \param le_y Y coordinate of spot on the left ear.
-         * \param re_x X coordinate of spot on the right ear.
-         * \param re_y Y coordinate of spot on the right ear.
-         * \param lf_x X coordinate of spot on the left of the face.
-         * \param lf_y Y coordinate of spot on the left of the face.
-         * \param rf_x X coordinate of spot on the right of the face.
-         * \param rf_y Y coordinate of spot on the right of the face.
+         * \param leftear_x X coordinate of spot on the left ear.
+         * \param leftear_y Y coordinate of spot on the left ear.
+         * \param rightear_x X coordinate of spot on the right ear.
+         * \param rightear_y Y coordinate of spot on the right ear.
+         * \param leftface_x X coordinate of spot on the left of the face.
+         * \param leftface_y Y coordinate of spot on the left of the face.
+         * \param rightface_x X coordinate of spot on the right of the face.
+         * \param rightface_y Y coordinate of spot on the right of the face.
          */
         PKMN_CONSTEXPR_OR_INLINE spinda_spots(
-            int le_x, int le_y,
-            int re_x, int re_y,
-            int lf_x, int lf_y,
-            int rf_x, int rf_y
-        ): left_ear(spinda_coords(le_x, le_y)),
-           right_ear(spinda_coords(re_x, re_y)),
-           left_face(spinda_coords(lf_x, lf_y)),
-           right_face(spinda_coords(rf_x, rf_y)) {}
+            int leftear_x, int leftear_y,
+            int rightear_x, int rightear_y,
+            int leftface_x, int leftface_y,
+            int rightface_x, int rightface_y
+        ): left_ear(spinda_coords(leftear_x, leftear_y)),
+           right_ear(spinda_coords(rightear_x, rightear_y)),
+           left_face(spinda_coords(leftface_x, leftface_y)),
+           right_face(spinda_coords(rightface_x, rightface_y)) {}
+
+        spinda_spots(const spinda_spots&) = default;
+        spinda_spots& operator=(const spinda_spots&) = default;
 
 #ifndef SWIG
         /*!
          * @brief Constructor taking in references to individual spots.
-         * \param le Coordinates for spot on the left ear.
-         * \param re Coordinates for spot on the right ear.
-         * \param lf Coordinates for spot on the left of the face.
-         * \param rf Coordinates for spot on the right of the face.
+         * \param leftear_coords Coordinates for spot on the left ear.
+         * \param rightear_coords Coordinates for spot on the right ear.
+         * \param leftface_coords Coordinates for spot on the left of the face.
+         * \param rightface_coords Coordinates for spot on the right of the face.
          */
         PKMN_CONSTEXPR_OR_INLINE spinda_spots(
-            spinda_coords&& le,
-            spinda_coords&& re,
-            spinda_coords&& lf,
-            spinda_coords&& rf
-        ): left_ear(std::move(le)),
-           right_ear(std::move(re)),
-           left_face(std::move(lf)),
-           right_face(std::move(rf)) {}
+            spinda_coords&& leftear_coords,
+            spinda_coords&& rightear_coords,
+            spinda_coords&& leftface_coords,
+            spinda_coords&& rightface_coords
+        ): left_ear(std::move(leftear_coords)),
+           right_ear(std::move(rightear_coords)),
+           left_face(std::move(leftface_coords)),
+           right_face(std::move(rightface_coords)) {}
 
-        /*!
-         * @brief Move constructor.
-         * \param spots Coordinate set whose coordinates to move.
-         */
-        PKMN_CONSTEXPR_OR_INLINE spinda_spots(
-            spinda_spots&& spots
-        ): left_ear(std::move(spots.left_ear)),
-           right_ear(std::move(spots.right_ear)),
-           left_face(std::move(spots.left_face)),
-           right_face(std::move(spots.right_face)) {}
-
-        /*!
-         * @brief Assignment operator.
-         * \param rhs Spots whose member to assign.
-         */
-        inline spinda_spots& operator=(
-            const spinda_spots &rhs
-        ) {
-            this->left_ear = rhs.left_ear;
-            this->right_ear = rhs.right_ear;
-            this->left_face = rhs.left_face;
-            this->right_face = rhs.right_face;
-            return *this;
-        }
+        spinda_spots(spinda_spots&&) = default;
+        spinda_spots& operator=(spinda_spots&&) = default;
 #endif
 
         /*!
@@ -209,11 +169,12 @@ namespace pkmn { namespace calculations {
          * \param rhs Struct with which to compare self
          */
         PKMN_CONSTEXPR_OR_INLINE bool operator==(
-            const spinda_spots &rhs
-        ) const {
-            return (this->left_ear == rhs.left_ear) and \
-                   (this->right_ear == rhs.right_ear) and \
-                   (this->left_face == rhs.left_face) and \
+            const spinda_spots& rhs
+        ) const
+        {
+            return (this->left_ear == rhs.left_ear) and
+                   (this->right_ear == rhs.right_ear) and
+                   (this->left_face == rhs.left_face) and
                    (this->right_face == rhs.right_face);
         }
 
@@ -222,16 +183,14 @@ namespace pkmn { namespace calculations {
          * \param rhs Struct with which to compare self
          */
         PKMN_CONSTEXPR_OR_INLINE bool operator!=(
-            const spinda_spots &rhs
-        ) const {
-            return (this->left_ear != rhs.left_ear) or \
-                   (this->right_ear != rhs.right_ear) or \
-                   (this->left_face != rhs.left_face) or \
-                   (this->right_face != rhs.right_face);
+            const spinda_spots& rhs
+        ) const
+        {
+            return !operator==(rhs);
         }
 
         PKMN_CONSTEXPR_OR_INLINE spinda_spots operator+(
-            const spinda_spots &rhs
+            const spinda_spots& rhs
         ) const {
             return spinda_spots(
                        this->left_ear + rhs.left_ear,
@@ -242,7 +201,7 @@ namespace pkmn { namespace calculations {
         }
 
         PKMN_CONSTEXPR_OR_INLINE spinda_spots operator+(
-            const spinda_coords &rhs
+            const spinda_coords& rhs
         ) const {
             return spinda_spots(
                        this->left_ear + rhs,
@@ -253,7 +212,7 @@ namespace pkmn { namespace calculations {
         }
 
         inline spinda_spots& operator+=(
-            const spinda_spots &rhs
+            const spinda_spots& rhs
         ) {
             this->left_ear += rhs.left_ear;
             this->right_ear += rhs.right_ear;
@@ -263,7 +222,7 @@ namespace pkmn { namespace calculations {
         }
 
         inline spinda_spots& operator+=(
-            const spinda_coords &rhs
+            const spinda_coords& rhs
         ) {
             this->left_ear += rhs;
             this->right_ear += rhs;
@@ -294,9 +253,29 @@ namespace pkmn { namespace calculations {
      * \param personality Spinda's personality
      * \returns Locations of Spinda's spots
      */
-    PKMN_API spinda_spots spinda_spot_offset(
+    PKMN_CONSTEXPR_OR_INLINE spinda_spots spinda_spot_offset(
         uint32_t personality
-    );
+    )
+    {
+        return spinda_spots(
+                   spinda_coords(
+                       int( personality & 0x0000000F),
+                       int((personality & 0x000000F0) >> 4)
+                   ),
+                   spinda_coords(
+                       int((personality & 0x00000F00) >> 8),
+                       int((personality & 0x0000F000) >> 12)
+                   ),
+                   spinda_coords(
+                       int((personality & 0x000F0000) >> 16),
+                       int((personality & 0x00F00000) >> 20)
+                   ),
+                   spinda_coords(
+                       int((personality & 0x0F000000) >> 24),
+                       int((personality & 0xF0000000) >> 28)
+                   )
+               );
+    }
 
 }}
 

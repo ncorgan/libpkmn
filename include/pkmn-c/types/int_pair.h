@@ -7,9 +7,12 @@
 #ifndef PKMN_C_TYPES_INT_PAIR_H
 #define PKMN_C_TYPES_INT_PAIR_H
 
+//! A pair of ints.
 struct pkmn_int_pair
 {
+    //! The first int in the pair.
     int first;
+    //! The second int in the pair.
     int second;
 };
 

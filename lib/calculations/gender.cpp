@@ -15,7 +15,7 @@
 namespace pkmn { namespace calculations {
 
     std::string gen2_pokemon_gender(
-        const std::string &species,
+        const std::string& species,
         int IV_attack
     )
     {
@@ -66,7 +66,7 @@ namespace pkmn { namespace calculations {
     }
 
     std::string modern_pokemon_gender(
-        const std::string &species,
+        const std::string& species,
         uint32_t personality
     )
     {

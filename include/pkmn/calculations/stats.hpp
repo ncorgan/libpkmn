@@ -29,7 +29,7 @@ namespace pkmn { namespace calculations {
      * \returns Calculated stat
      */
     PKMN_API int get_gb_stat(
-        const std::string &stat,
+        const std::string& stat,
         int level,
         int base_stat,
         int EV,
@@ -47,7 +47,7 @@ namespace pkmn { namespace calculations {
      * \returns Calculated stats
      */
     inline std::pair<int, int> get_gb_stat_range(
-        const std::string &stat,
+        const std::string& stat,
         int level,
         int base_stat
     ) {
@@ -74,7 +74,7 @@ namespace pkmn { namespace calculations {
      * \returns Calculated stat
      */
     PKMN_API int get_modern_stat(
-        const std::string &stat,
+        const std::string& stat,
         int level,
         float nature_modifier,
         int base_stat,
@@ -93,7 +93,7 @@ namespace pkmn { namespace calculations {
      * \returns Calculated stats
      */
     inline std::pair<int, int> get_modern_stat_range(
-        const std::string &stat,
+        const std::string& stat,
         int level,
         int base_stat
     ) {

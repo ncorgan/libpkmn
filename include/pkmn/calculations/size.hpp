@@ -26,7 +26,7 @@ namespace pkmn { namespace calculations {
      * \throws std::out_of_range if any IV parameter is not in the range [0-31]
      */
     PKMN_API float pokemon_size(
-        const std::string &species,
+        const std::string& species,
         uint32_t personality,
         int IV_HP,
         int IV_attack,

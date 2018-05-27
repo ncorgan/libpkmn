@@ -387,7 +387,7 @@ namespace pkmn
     }
 
     void pokemon_gcnimpl::set_form(
-        const std::string &form
+        const std::string& form
     )
     {
         boost::lock_guard<pokemon_gcnimpl> lock(*this);
@@ -494,7 +494,7 @@ namespace pkmn
     }
 
     void pokemon_gcnimpl::set_nickname(
-        const std::string &nickname
+        const std::string& nickname
     )
     {
         pkmn::enforce_string_length(
@@ -520,7 +520,7 @@ namespace pkmn
     }
 
     void pokemon_gcnimpl::set_gender(
-        const std::string &gender
+        const std::string& gender
     )
     {
         boost::lock_guard<pokemon_gcnimpl> lock(*this);
@@ -572,7 +572,7 @@ namespace pkmn
     }
 
     void pokemon_gcnimpl::set_held_item(
-        const std::string &held_item
+        const std::string& held_item
     )
     {
         boost::lock_guard<pokemon_gcnimpl> lock(*this);
@@ -666,7 +666,7 @@ namespace pkmn
     }
 
     void pokemon_gcnimpl::set_original_trainer_name(
-        const std::string &trainer_name
+        const std::string& trainer_name
     )
     {
         pkmn::enforce_string_length(
@@ -738,7 +738,7 @@ namespace pkmn
     }
 
     void pokemon_gcnimpl::set_original_trainer_gender(
-        const std::string &gender
+        const std::string& gender
     )
     {
         if(gender == "Male" or gender == "Female")
@@ -830,7 +830,7 @@ namespace pkmn
     }
 
     void pokemon_gcnimpl::set_ability(
-        const std::string &ability
+        const std::string& ability
     )
     {
         boost::lock_guard<pokemon_gcnimpl> lock(*this);
@@ -875,7 +875,7 @@ namespace pkmn
     }
 
     void pokemon_gcnimpl::set_ball(
-        const std::string &ball
+        const std::string& ball
     )
     {
         boost::lock_guard<pokemon_gcnimpl> lock(*this);
@@ -925,7 +925,7 @@ namespace pkmn
     }
 
     void pokemon_gcnimpl::set_location_met(
-        const std::string &location,
+        const std::string& location,
         bool as_egg
     )
     {
@@ -965,7 +965,7 @@ namespace pkmn
     }
 
     void pokemon_gcnimpl::set_original_game(
-        const std::string &game
+        const std::string& game
     )
     {
         std::string game_to_test;
@@ -1062,7 +1062,7 @@ namespace pkmn
     }
 
     void pokemon_gcnimpl::set_IV(
-        const std::string &stat,
+        const std::string& stat,
         int value
     )
     {
@@ -1106,7 +1106,7 @@ namespace pkmn
     }
 
     void pokemon_gcnimpl::set_marking(
-        const std::string &marking,
+        const std::string& marking,
         bool value
     )
     {
@@ -1137,7 +1137,7 @@ namespace pkmn
     }
 
     void pokemon_gcnimpl::set_ribbon(
-        const std::string &ribbon,
+        const std::string& ribbon,
         bool value
     )
     {
@@ -1183,7 +1183,7 @@ namespace pkmn
     }
 
     void pokemon_gcnimpl::set_contest_stat(
-        const std::string &stat,
+        const std::string& stat,
         int value
     )
     {
@@ -1222,7 +1222,7 @@ namespace pkmn
     }
 
     void pokemon_gcnimpl::set_move(
-        const std::string &move,
+        const std::string& move,
         int index
     )
     {
@@ -1283,7 +1283,7 @@ namespace pkmn
     }
 
     void pokemon_gcnimpl::set_EV(
-        const std::string &stat,
+        const std::string& stat,
         int value
     )
     {

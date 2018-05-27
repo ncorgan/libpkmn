@@ -36,7 +36,7 @@ namespace pkmn { namespace database {
     }
 
     int game_name_to_index(
-        const std::string &game_name
+        const std::string& game_name
     )
     {
         static BOOST_CONSTEXPR const char* query =
@@ -144,7 +144,7 @@ namespace pkmn { namespace database {
     }
 
     int location_name_to_index(
-        const std::string &location_name,
+        const std::string& location_name,
         int game_id
     )
     {
@@ -231,7 +231,7 @@ namespace pkmn { namespace database {
     }
 
     int nature_name_to_index(
-        const std::string &nature_name
+        const std::string& nature_name
     )
     {
         static BOOST_CONSTEXPR const char* query =

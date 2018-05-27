@@ -307,7 +307,7 @@ namespace pkmn
     }
 
     void pokemon_gen1impl::set_form(
-        const std::string &form
+        const std::string& form
     )
     {
         boost::lock_guard<pokemon_gen1impl> lock(*this);
@@ -371,7 +371,7 @@ namespace pkmn
     }
 
     void pokemon_gen1impl::set_nickname(
-        const std::string &nickname
+        const std::string& nickname
     )
     {
         pkmn::enforce_string_length(
@@ -392,7 +392,7 @@ namespace pkmn
     }
 
     void pokemon_gen1impl::set_gender(
-        PKMN_UNUSED(const std::string &gender)
+        PKMN_UNUSED(const std::string& gender)
     )
     {
         throw pkmn::feature_not_in_game_error("Pokémon gender", "Generation I");
@@ -416,7 +416,7 @@ namespace pkmn
     }
 
     void pokemon_gen1impl::set_held_item(
-        PKMN_UNUSED(const std::string &held_item)
+        PKMN_UNUSED(const std::string& held_item)
     )
     {
         throw pkmn::feature_not_in_game_error("Held items", "Generation I");
@@ -454,7 +454,7 @@ namespace pkmn
     }
 
     void pokemon_gen1impl::set_original_trainer_name(
-        const std::string &trainer_name
+        const std::string& trainer_name
     )
     {
         pkmn::enforce_string_length(
@@ -523,7 +523,7 @@ namespace pkmn
     }
 
     void pokemon_gen1impl::set_original_trainer_gender(
-        PKMN_UNUSED(const std::string &gender)
+        PKMN_UNUSED(const std::string& gender)
     )
     {
         throw pkmn::feature_not_in_game_error("All Generation I trainers are male.");
@@ -555,7 +555,7 @@ namespace pkmn
     }
 
     void pokemon_gen1impl::set_ability(
-        PKMN_UNUSED(const std::string &ability)
+        PKMN_UNUSED(const std::string& ability)
     )
     {
         throw pkmn::feature_not_in_game_error("Abilities", "Generation I");
@@ -567,7 +567,7 @@ namespace pkmn
     }
 
     void pokemon_gen1impl::set_ball(
-        PKMN_UNUSED(const std::string &ball)
+        PKMN_UNUSED(const std::string& ball)
     )
     {
         throw pkmn::feature_not_in_game_error("A Pokémon's ball is not recorded in Generation I.");
@@ -593,7 +593,7 @@ namespace pkmn
     }
 
     void pokemon_gen1impl::set_location_met(
-        PKMN_UNUSED(const std::string &location),
+        PKMN_UNUSED(const std::string& location),
         PKMN_UNUSED(bool as_egg)
     )
     {
@@ -606,7 +606,7 @@ namespace pkmn
     }
 
     void pokemon_gen1impl::set_original_game(
-        PKMN_UNUSED(const std::string &game)
+        PKMN_UNUSED(const std::string& game)
     )
     {
         throw pkmn::feature_not_in_game_error("Original game is not recorded in Generation I.");
@@ -694,7 +694,7 @@ namespace pkmn
     }
 
     void pokemon_gen1impl::set_IV(
-        const std::string &stat,
+        const std::string& stat,
         int value
     )
     {
@@ -708,7 +708,7 @@ namespace pkmn
     }
 
     void pokemon_gen1impl::set_marking(
-        PKMN_UNUSED(const std::string &marking),
+        PKMN_UNUSED(const std::string& marking),
         PKMN_UNUSED(bool value)
     )
     {
@@ -716,7 +716,7 @@ namespace pkmn
     }
 
     void pokemon_gen1impl::set_ribbon(
-        PKMN_UNUSED(const std::string &ribbon),
+        PKMN_UNUSED(const std::string& ribbon),
         PKMN_UNUSED(bool value)
     )
     {
@@ -724,7 +724,7 @@ namespace pkmn
     }
 
     void pokemon_gen1impl::set_contest_stat(
-        PKMN_UNUSED(const std::string &stat),
+        PKMN_UNUSED(const std::string& stat),
         PKMN_UNUSED(int value)
     )
     {
@@ -732,7 +732,7 @@ namespace pkmn
     }
 
     void pokemon_gen1impl::set_move(
-        const std::string &move,
+        const std::string& move,
         int index
     )
     {
@@ -785,7 +785,7 @@ namespace pkmn
     }
 
     void pokemon_gen1impl::set_EV(
-        const std::string &stat,
+        const std::string& stat,
         int value
     )
     {

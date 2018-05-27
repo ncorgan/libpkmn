@@ -161,7 +161,7 @@ namespace pkmn {
 
             void _set_modern_gender(
                 uint32_t* personality_ptr,
-                const std::string &gender
+                const std::string& gender
             );
 
             void _set_modern_shininess(
@@ -171,32 +171,32 @@ namespace pkmn {
             );
 
             void _set_gb_IV(
-                const std::string &stat,
+                const std::string& stat,
                 int value,
                 uint16_t* iv_data_ptr
             );
 
             void _set_modern_IV(
-                const std::string &stat,
+                const std::string& stat,
                 int value,
                 uint32_t* iv_data_ptr
             );
 
             void _set_contest_stat(
-                const std::string &stat,
+                const std::string& stat,
                 int value,
                 struct pksav_contest_stats* native_ptr
             );
 
             void _set_marking(
-                const std::string &marking,
+                const std::string& marking,
                 bool value,
                 uint8_t* native_ptr
             );
 
             template <typename native_type, typename mask_type>
             void _set_ribbon(
-                const std::string &ribbon,
+                const std::string& ribbon,
                 bool value,
                 native_type* native,
                 const std::unordered_map<std::string, mask_type> &masks

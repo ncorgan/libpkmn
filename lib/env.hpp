@@ -22,15 +22,15 @@ static char putenv_buffer[1024];
  */
 
 inline std::string pkmn_getenv(
-    const std::string &key
+    const std::string& key
 ) {
     char* val = getenv(key.c_str());
     return (val) ? val : "";
 }
 
 inline void pkmn_setenv(
-    const std::string &key,
-    const std::string &val
+    const std::string& key,
+    const std::string& val
 ) {
     #if defined(PKMN_PLATFORM_WIN32)
         _putenv_s(key.c_str(), val.c_str());
@@ -49,7 +49,7 @@ inline void pkmn_setenv(
 }
 
 inline void pkmn_unsetenv(
-    const std::string &key
+    const std::string& key
 ) {
     #if defined(PKMN_PLATFORM_WIN32)
         _putenv_s(key.c_str(), "");

@@ -113,7 +113,7 @@ namespace pkmn { namespace database {
     }
 
     std::vector<std::string> get_item_list(
-        const std::string &game
+        const std::string& game
     ) {
         int game_id = pkmn::database::game_name_to_id(game);
 
@@ -247,7 +247,7 @@ namespace pkmn { namespace database {
     }
 
     std::vector<std::string> get_location_list(
-        const std::string &game,
+        const std::string& game,
         bool whole_generation
     ) {
         int game_id          = game_name_to_id(game);
@@ -365,7 +365,7 @@ namespace pkmn { namespace database {
     }
 
     std::vector<std::string> get_move_list(
-        const std::string &game
+        const std::string& game
     )
     {
         static BOOST_CONSTEXPR const char* main_query =
@@ -581,7 +581,7 @@ namespace pkmn { namespace database {
     }
 
     std::vector<std::string> get_type_list(
-        const std::string &game
+        const std::string& game
     ) {
         int generation = game_name_to_generation(game);
 

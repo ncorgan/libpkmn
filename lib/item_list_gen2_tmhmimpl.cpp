@@ -105,7 +105,7 @@ namespace pkmn {
     }
 
     void item_list_gen2_tmhmimpl::add(
-        const std::string &name,
+        const std::string& name,
         int amount
     )
     {
@@ -140,7 +140,7 @@ namespace pkmn {
     }
 
     void item_list_gen2_tmhmimpl::remove(
-        const std::string &name,
+        const std::string& name,
         int amount
     )
     {

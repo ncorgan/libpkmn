@@ -212,8 +212,8 @@ namespace pkmn { namespace database {
     }
 
     item_entry::item_entry(
-        const std::string &item_name,
-        const std::string &game_name
+        const std::string& item_name,
+        const std::string& game_name
     ):
         _none(item_name == "None"),
         _invalid(false)

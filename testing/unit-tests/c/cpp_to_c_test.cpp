@@ -34,7 +34,7 @@ class pkmn_test_exception: public std::exception {
         explicit pkmn_test_exception(const char* msg):
             msg_(msg) {}
 
-        explicit pkmn_test_exception(const std::string &msg):
+        explicit pkmn_test_exception(const std::string& msg):
             msg_(msg) {}
 
         virtual ~pkmn_test_exception() throw() {}
@@ -66,7 +66,7 @@ enum pkmn_error throw_unknown() {
 // The "enum" tag must be removed for MSVC to compile.
 template <typename exception_type>
 pkmn_error throw_exception(
-    const std::string &msg
+    const std::string& msg
 ) {
     PKMN_CPP_TO_C(
         throw exception_type(msg);
@@ -74,8 +74,8 @@ pkmn_error throw_exception(
 }
 
 enum pkmn_error throw_feature_not_in_game_error(
-    const std::string &feature,
-    const std::string &game
+    const std::string& feature,
+    const std::string& game
 ) {
     PKMN_CPP_TO_C(
         throw pkmn::feature_not_in_game_error(
@@ -197,7 +197,7 @@ enum pkmn_error throw_unknown_with_handle(
 // The "enum" tag must be removed for MSVC to compile.
 template <typename exception_type>
 pkmn_error throw_exception_with_handle(
-    const std::string &msg,
+    const std::string& msg,
     pkmn_test_handle_t* handle
 ) {
     PKMN_CPP_TO_C_WITH_HANDLE(handle,
@@ -206,8 +206,8 @@ pkmn_error throw_exception_with_handle(
 }
 
 enum pkmn_error throw_feature_not_in_game_error_with_handle(
-    const std::string &feature,
-    const std::string &game,
+    const std::string& feature,
+    const std::string& game,
     pkmn_test_handle_t* handle
 ) {
     PKMN_CPP_TO_C_WITH_HANDLE(handle,

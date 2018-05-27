@@ -26,8 +26,8 @@ SET(SWIG_PYTHON_LIBRARIES
     pkmn
 )
 
-SWIG_BUILD_PYTHON_MODULE(pkmn_python pkmn TRUE)
-SWIG_BUILD_PYTHON_MODULE(stl_python  pkmn TRUE)
+SWIG_BUILD_PYTHON_MODULE(pkmn_python Core pkmn TRUE)
+SWIG_BUILD_PYTHON_MODULE(stl_python  STL  pkmn TRUE)
 
 ADD_SUBDIRECTORY(breeding)
 ADD_SUBDIRECTORY(buildinfo)

@@ -93,7 +93,7 @@ namespace pkmn { namespace io {
     }
 
     pkmn::pokemon::sptr load_3gpkm(
-        const std::string &filepath
+        const std::string& filepath
     )
     {
         if(not fs::exists(filepath))

@@ -225,9 +225,9 @@ namespace pkmn { namespace database {
     }
 
     pokemon_entry::pokemon_entry(
-        const std::string &species_name,
-        const std::string &game_name,
-        const std::string &form_name
+        const std::string& species_name,
+        const std::string& game_name,
+        const std::string& form_name
     ):
         _none(species_name == "None"),
         _invalid(false),
@@ -665,7 +665,7 @@ namespace pkmn { namespace database {
     static inline void execute_stat_stmt_and_get(
         SQLite::Statement &stmt,
         std::map<std::string, int> &ret,
-        const std::string &key
+        const std::string& key
     ) {
         stmt.executeStep();
         ret[key] = stmt.getColumn(0);
@@ -1054,7 +1054,7 @@ namespace pkmn { namespace database {
     }
 
     void pokemon_entry::set_form(
-        const std::string &form_name
+        const std::string& form_name
     ) {
         if(not (_none or _invalid)) {
             if(form_name == "") {

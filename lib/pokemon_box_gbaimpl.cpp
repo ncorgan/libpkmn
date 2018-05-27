@@ -79,7 +79,7 @@ namespace pkmn {
     }
 
     void pokemon_box_gbaimpl::set_name(
-        const std::string &name
+        const std::string& name
     )
     {
         pkmn::enforce_string_length(

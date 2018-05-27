@@ -58,8 +58,8 @@ namespace pkmn { namespace database {
              * \throw std::invalid_argument If the given move was not in the given game
              */
             move_entry(
-                const std::string &move_name,
-                const std::string &game_name
+                const std::string& move_name,
+                const std::string& game_name
             );
 
             move_entry(const move_entry&) = default;

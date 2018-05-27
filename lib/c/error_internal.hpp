@@ -19,7 +19,7 @@
 #include <string>
 
 void pkmn_set_error(
-    const std::string &error
+    const std::string& error
 );
 
 #define PKMN_CHECK_NULL_WRAPPER_PARAM(param) \

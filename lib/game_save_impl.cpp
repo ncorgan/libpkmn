@@ -173,7 +173,7 @@ namespace pkmn {
     }
 
     static pkmn_save_type_t _detect_save_type(
-        const std::string &filepath
+        const std::string& filepath
     )
     {
         if(not fs::exists(filepath))
@@ -192,7 +192,7 @@ namespace pkmn {
     }
 
     std::string game_save::detect_type(
-        const std::string &filepath
+        const std::string& filepath
     )
     {
         pkmn_save_type_t save_type = _detect_save_type(filepath);

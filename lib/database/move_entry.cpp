@@ -77,8 +77,8 @@ namespace pkmn { namespace database {
     }
 
     move_entry::move_entry(
-        const std::string &move_name,
-        const std::string &game_name
+        const std::string& move_name,
+        const std::string& game_name
     ):
         _none(move_name == "None")
     {
@@ -477,7 +477,7 @@ namespace pkmn { namespace database {
     }
 
     static std::string _cleanup_effect(
-        const std::string &input,
+        const std::string& input,
         int move_id
     ) {
         // Get effect chance

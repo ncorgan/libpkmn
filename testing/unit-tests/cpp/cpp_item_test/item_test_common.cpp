@@ -23,7 +23,7 @@ void test_item_list_empty_slots(
 
 void test_item_list_out_of_range_error(
     pkmn::item_list::sptr list,
-    const std::string &item_name
+    const std::string& item_name
 ) {
     int num_items = list->get_num_items();
 

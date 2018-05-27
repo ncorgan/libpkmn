@@ -26,4 +26,4 @@ SET(SWIG_PYTHON_LIBRARIES
     pkmn
 )
 
-SWIG_BUILD_PYTHON_MODULE(paths_python pkmn/paths TRUE)
+SWIG_BUILD_PYTHON_MODULE(paths_python Paths pkmn/paths TRUE)

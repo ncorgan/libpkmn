@@ -26,4 +26,4 @@ SET(SWIG_PYTHON_LIBRARIES
     pkmn
 )
 
-SWIG_BUILD_PYTHON_MODULE(qt_python_swig pkmn/qt TRUE)
+SWIG_BUILD_PYTHON_MODULE(qt_python_swig Qt pkmn/qt TRUE)

@@ -273,7 +273,7 @@ TEST_F(item_entry_test, invalid_index_test) {
 
 static void tmhm_entry_check_move(
     const pkmn::database::item_entry &tmhm_entry,
-    const std::string &move
+    const std::string& move
 ) {
     static boost::format tmhm_desc("Teaches the move %s.");
     EXPECT_EQ(str(tmhm_desc % move.c_str()), tmhm_entry.get_description());

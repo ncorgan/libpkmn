@@ -18,17 +18,11 @@
 #include <pkmn/database/pokemon_entry.hpp>
 #include <pkmn/utils/paths.hpp>
 
-#ifdef PKMN_QT4
-#include <QtCore/QString>
-#include <QtGui/QImage>
-#else
-#include <QImage>
-#include <QString>
-#endif
-
 #include <boost/filesystem.hpp>
 
 #include <QColor>
+#include <QImage>
+#include <QString>
 
 #include <iostream>
 

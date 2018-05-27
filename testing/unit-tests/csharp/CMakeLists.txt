@@ -31,7 +31,7 @@ IF(NUNIT_FOUND)
     )
 
     SET(csharp_pkmn_dlls
-        "${CMAKE_CURRENT_BINARY_DIR}/pkmn-cs.dll;${CMAKE_CURRENT_BINARY_DIR}/pkmntest-cs.dll"
+        "${CMAKE_CURRENT_BINARY_DIR}/PKMN.CSharp.dll;${CMAKE_CURRENT_BINARY_DIR}/PKMNTest.CSharp.dll"
     )
 
     FOREACH(test ${csharp_tests})

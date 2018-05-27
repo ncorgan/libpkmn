@@ -227,7 +227,7 @@ INCLUDE(SWIGCSharp)
 
 MACRO(PKMN_ADD_CSHARP_TEST test_name test_srcs test_dlls)
     CSHARP_ADD_LIBRARY(${test_name} ${test_srcs} ${test_dlls} ${NUNIT_LIBRARIES})
-    ADD_DEPENDENCIES(${test_name} "pkmn-cs" "pkmntest-cs")
+    ADD_DEPENDENCIES(${test_name} "PKMN.CSharp" "PKMNTest.CSharp")
 
     # TODO: Determine programmatically, probably parsing variables
     IF(NOT APPVEYOR)

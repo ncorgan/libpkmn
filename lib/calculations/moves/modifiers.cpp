@@ -16,8 +16,8 @@ namespace pkmn { namespace calculations {
 
     float type_damage_modifier(
         int generation,
-        const std::string &attacking_type,
-        const std::string &defending_type
+        const std::string& attacking_type,
+        const std::string& defending_type
     )
     {
         pkmn::enforce_bounds(

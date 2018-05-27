@@ -14,6 +14,7 @@
 struct pkmn_spinda_coords
 {
     int x;
+    //! Y coordinate.
     int y;
 };
 

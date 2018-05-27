@@ -26,4 +26,4 @@ SET(SWIG_PYTHON_LIBRARIES
     pkmn
 )
 
-SWIG_BUILD_PYTHON_MODULE(lists_python pkmn/database/lists TRUE)
+SWIG_BUILD_PYTHON_MODULE(lists_python Lists pkmn/database/lists TRUE)

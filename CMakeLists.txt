@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+# Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
 #
 # Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
 # or copy at http://opensource.org/licenses/MIT)
@@ -12,8 +12,8 @@ CMAKE_MINIMUM_REQUIRED(VERSION 2.8.9)
 PROJECT(PKMN C CXX)
 
 SET(PKMN_VERSION_MAJOR 0)
-SET(PKMN_VERSION_MINOR 3)
-SET(PKMN_VERSION_PATCH 0)
+SET(PKMN_VERSION_MINOR 999)
+SET(PKMN_VERSION_PATCH 999)
 SET(PKMN_VERSION "${PKMN_VERSION_MAJOR}.${PKMN_VERSION_MINOR}.${PKMN_VERSION_PATCH}")
 
 SET(PKMN_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
@@ -36,6 +36,7 @@ INCLUDE(PKMNComponent)
 IF(NOT PKMN_USED_AS_SUBPROJECT)
     INCLUDE(CPack)
     FIND_PACKAGE(Doxygen)
+    FIND_PACKAGE(RDoc)
 ENDIF()
 
 ####################################################################
@@ -130,6 +131,14 @@ ENDIF()
 ########################################################################
 ADD_SUBDIRECTORY(PkmGCTools/LibPkmGC)
 
+IF(PLATFORM_LITTLE_ENDIAN)
+    SET(PKSAV_LITTLE_ENDIAN TRUE CACHE BOOL "Build PKSav with little endian")
+    SET(PKSAV_BIG_ENDIAN    FALSE CACHE BOOL "Build PKSav with big endian")
+ELSE()
+    SET(PKSAV_LITTLE_ENDIAN FALSE CACHE BOOL "Build PKSav with little endian")
+    SET(PKSAV_BIG_ENDIAN    TRUE CACHE BOOL "Build PKSav with little endian")
+ENDIF()
+
 ADD_SUBDIRECTORY(pksav)
 
 ########################################################################
@@ -169,8 +178,9 @@ PKMN_REGISTER_COMPONENT("Ruby API"         PKMN_ENABLE_RUBY  ON
     "PKMN_ENABLE_CORELIB;SWIG_FOUND;SWIG_VERSION_CHECK_RUBY;RUBY_FOUND;PYTHON_MODULES_FOUND" OFF)
 
 IF(NOT PKMN_USED_AS_SUBPROJECT)
-    PKMN_REGISTER_COMPONENT("Doxygen Documentation" PKMN_ENABLE_DOCS  ON "DOXYGEN_FOUND" OFF)
-    PKMN_REGISTER_COMPONENT("Unit Tests"            PKMN_ENABLE_TESTS ON "" OFF)
+    PKMN_REGISTER_COMPONENT("Doxygen Documentation" PKMN_ENABLE_DOXYGEN  ON "DOXYGEN_FOUND" OFF)
+    PKMN_REGISTER_COMPONENT("RDoc Documentation"    PKMN_ENABLE_RDOC     ON "PKMN_ENABLE_RUBY;RDOC_FOUND" OFF)
+    PKMN_REGISTER_COMPONENT("Unit Tests"            PKMN_ENABLE_TESTS    ON "" OFF)
 ENDIF()
 
 ####################################################################
@@ -181,7 +191,7 @@ ADD_SUBDIRECTORY(images)
 ADD_SUBDIRECTORY(include)
 ADD_SUBDIRECTORY(lib)
 
-IF(PKMN_ENABLE_DOCS)
+IF(PKMN_ENABLE_DOXYGEN)
     ADD_SUBDIRECTORY(docs)
 ENDIF()
 

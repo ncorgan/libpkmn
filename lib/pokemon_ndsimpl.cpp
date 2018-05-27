@@ -222,7 +222,7 @@ namespace pkmn {
 
     // TODO: isnicknamed flag
     void pokemon_ndsimpl::set_nickname(
-        const std::string &nickname
+        const std::string& nickname
     ) {
         if(nickname.size() < 1 or nickname.size() > 10) {
             throw std::invalid_argument(
@@ -271,7 +271,7 @@ namespace pkmn {
     }
 
     void pokemon_ndsimpl::set_held_item(
-        const std::string &held_item
+        const std::string& held_item
     ) {
         // Make sure item is valid and holdable
         pkmn::database::item_entry item(
@@ -314,7 +314,7 @@ namespace pkmn {
     }
 
     void pokemon_ndsimpl::set_original_trainer_name(
-        const std::string &trainer_name
+        const std::string& trainer_name
     ) {
         if(trainer_name.size() < 1 or trainer_name.size() > 7) {
             throw std::invalid_argument(
@@ -377,7 +377,7 @@ namespace pkmn {
     }
 
     void pokemon_ndsimpl::set_original_trainer_gender(
-        const std::string &gender
+        const std::string& gender
     ) {
         if(gender == "Male") {
             _blockD->metlevel_otgender &= ~PKSAV_NDS_OTGENDER_MASK;
@@ -411,7 +411,7 @@ namespace pkmn {
     }
 
     void pokemon_ndsimpl::set_ability(
-        const std::string &ability
+        const std::string& ability
     ) {
         std::pair<std::string, std::string> abilities = _database_entry.get_abilities();
 
@@ -442,7 +442,7 @@ namespace pkmn {
     }
 
     void pokemon_ndsimpl::set_ball(
-        const std::string &ball
+        const std::string& ball
     ) {
         (_hgss ? _blockD->ball_hgss : _blockD->ball) = uint8_t(pkmn::database::ball_name_to_id(
                                                                    ball
@@ -482,7 +482,7 @@ namespace pkmn {
     }
 
     void pokemon_ndsimpl::set_location_met(
-        const std::string &location,
+        const std::string& location,
         bool as_egg
     ) {
         uint16_t* field = _plat ? as_egg ? &_blockB->eggmet_plat
@@ -503,7 +503,7 @@ namespace pkmn {
     }
 
     void pokemon_ndsimpl::set_original_game(
-        const std::string &game
+        const std::string& game
     ) {
         _blockC->hometown = uint8_t(pkmn::database::game_name_to_index(game));
     }
@@ -558,7 +558,7 @@ namespace pkmn {
     }
 
     void pokemon_ndsimpl::set_IV(
-        const std::string &stat,
+        const std::string& stat,
         int value
     ) {
         _set_modern_IV(
@@ -569,7 +569,7 @@ namespace pkmn {
     }
 
     void pokemon_ndsimpl::set_marking(
-        const std::string &marking,
+        const std::string& marking,
         bool value
     ) {
         _set_marking(
@@ -580,14 +580,14 @@ namespace pkmn {
     }
 
     void pokemon_ndsimpl::set_ribbon(
-        PKMN_UNUSED(const std::string &ribbon),
+        PKMN_UNUSED(const std::string& ribbon),
         PKMN_UNUSED(bool value)
     ) {
         throw pkmn::unimplemented_error();
     }
 
     void pokemon_ndsimpl::set_contest_stat(
-        const std::string &stat,
+        const std::string& stat,
         int value
     ) {
         _set_contest_stat(
@@ -598,7 +598,7 @@ namespace pkmn {
     }
 
     void pokemon_ndsimpl::set_move(
-        const std::string &move,
+        const std::string& move,
         int index
     ) {
         if(index < 0 or index > 3) {
@@ -625,7 +625,7 @@ namespace pkmn {
     }
 
     void pokemon_ndsimpl::set_EV(
-        const std::string &stat,
+        const std::string& stat,
         int value
     ) {
         if(not pkmn_string_is_modern_stat(stat.c_str())) {

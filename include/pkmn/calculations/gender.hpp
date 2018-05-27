@@ -29,7 +29,7 @@ namespace pkmn { namespace calculations {
      * \returns Pokémon gender (possible values: Male, Female, Genderless)
      */
     PKMN_API std::string gen2_pokemon_gender(
-        const std::string &species,
+        const std::string& species,
         int IV_attack
     );
 
@@ -47,7 +47,7 @@ namespace pkmn { namespace calculations {
      * \returns Pokémon gender (possible values: Male, Female, Genderless)
      */
     PKMN_API std::string modern_pokemon_gender(
-        const std::string &species,
+        const std::string& species,
         uint32_t personality
     );
 

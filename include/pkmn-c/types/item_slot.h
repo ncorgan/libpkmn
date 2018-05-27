@@ -12,15 +12,31 @@
 
 #include <stdlib.h>
 
+/*!
+ * @brief A struct representing a slot in an item list.
+ *
+ * This struct is populated by ::pkmn_item_list_at and must be freed with
+ * ::pkmn_item_slot_free.
+ */
 struct pkmn_item_slot
 {
+    //! The item name.
     char* p_item;
+    //! The item amount, in the range [0-99].
     size_t amount;
 };
 
+/*!
+ * @brief A more C-like representation of an item list.
+ *
+ * This struct is populated by ::pkmn_item_list_as_list and must be freed
+ * with ::pkmn_item_slots_free.
+ */
 struct pkmn_item_slots
 {
+    //! The list of items, dynamically allocated.
     struct pkmn_item_slot* p_item_slots;
+    //! The number of items in the list.
     size_t length;
 };
 
@@ -32,6 +48,13 @@ PKMN_C_API enum pkmn_error pkmn_item_slot_free(
     struct pkmn_item_slot* p_item_slot
 );
 
+/*!
+ * @brief Frees the dynamically allocated memory in a struct pkmn_item_slot.
+ *
+ * \param item_slots_ptr The item slots to free
+ * \returns ::PKMN_ERROR_NONE upon success
+ * \returns ::PKMN_ERROR_NULL_POINTER if item_slots_ptr is NULL
+ */
 PKMN_C_API enum pkmn_error pkmn_item_slots_free(
     struct pkmn_item_slots* p_item_slots
 );

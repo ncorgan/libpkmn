@@ -29,9 +29,9 @@ SET(pkmntest_cs_srcs
 SET(CSHARP_BINARY_DIRECTORY ${PKMN_BINARY_DIR}/testing/unit-tests/csharp)
 
 CSHARP_ADD_LIBRARY(
-    "pkmntest-cs"
+    "PKMNTest.CSharp"
     "${CMAKE_CURRENT_SOURCE_DIR}/*.cs"
-    ${PKMN_BINARY_DIR}/testing/unit-tests/csharp/pkmn-cs.dll
+    ${PKMN_BINARY_DIR}/testing/unit-tests/csharp/PKMN.CSharp.dll
     ${NUNIT_LIBRARIES}
 )
-ADD_DEPENDENCIES(pkmntest-cs pkmn-cs)
+ADD_DEPENDENCIES(PKMNTest.CSharp PKMN.CSharp)

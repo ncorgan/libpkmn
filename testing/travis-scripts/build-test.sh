@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+# Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
 #
 # Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
 # or copy at http://opensource.org/licenses/MIT)
@@ -44,28 +44,56 @@ export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
 sudo ldconfig
 [ $? -ne 0 ] && exit 1
 
-# Test external C++ project
+# Test external C++ CMake project that uses FindPKMN.cmake
 mkdir $REPO_TOPLEVEL/test-env/cpp-app
 [ $? -ne 0 ] && exit 1
 cd $REPO_TOPLEVEL/test-env/cpp-app
 [ $? -ne 0 ] && exit 1
-cmake $REPO_TOPLEVEL/testing/applications/cpp
+cmake $REPO_TOPLEVEL/testing/applications/cpp/cmake
 [ $? -ne 0 ] && exit 1
 make
 [ $? -ne 0 ] && exit 1
 ./pkmn-cpp-app
 [ $? -ne 0 ] && exit 1
 
-# Test external C project
+# Test external C++ project that uses raw Makefiles
+cd $REPO_TOPLEVEL/testing/application/cpp/makefiles
+[ $? -ne 0 ] && exit 1
+make
+[ $? -ne 0 ] && exit 1
+./pkmn-cpp-app
+[ $? -ne 0 ] && exit 1
+
+# Test external C CMake project that uses FindPKMN-C.cmake
 mkdir $REPO_TOPLEVEL/test-env/c-app
 [ $? -ne 0 ] && exit 1
 cd $REPO_TOPLEVEL/test-env/c-app
 [ $? -ne 0 ] && exit 1
-cmake $REPO_TOPLEVEL/testing/applications/c
+cmake $REPO_TOPLEVEL/testing/applications/c/cmake
 [ $? -ne 0 ] && exit 1
 make
 [ $? -ne 0 ] && exit 1
 ./pkmn-c-app
 [ $? -ne 0 ] && exit 1
+
+# Test external C project that uses raw Makefiles
+cd $REPO_TOPLEVEL/testing/application/c/makefiles
+[ $? -ne 0 ] && exit 1
+make
+[ $? -ne 0 ] && exit 1
+./pkmn-c-app
+[ $? -ne 0 ] && exit 1
+
+# Test external Lua application
+cd $REPO_TOPLEVEL/testing/applications/lua
+lua pkmn-lua-app.lua
+
+# Test external Python application
+cd $REPO_TOPLEVEL/testing/applications/python
+python${PYTHON_VERSION} pkmn-python-app.py
+
+# Test external Ruby application
+cd $REPO_TOPLEVEL/testing/applications/ruby
+ruby pkmn-ruby-app.rb
 
 echo # So we can check the last error code

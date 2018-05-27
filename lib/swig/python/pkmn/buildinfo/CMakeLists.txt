@@ -26,4 +26,4 @@ SET(SWIG_PYTHON_LIBRARIES
     pkmn
 )
 
-SWIG_BUILD_PYTHON_MODULE(buildinfo_python pkmn/buildinfo TRUE)
+SWIG_BUILD_PYTHON_MODULE(buildinfo_python BuildInfo pkmn/buildinfo TRUE)

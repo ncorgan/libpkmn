@@ -1,15 +1,15 @@
 prefix=@CMAKE_INSTALL_PREFIX@
 exec_prefix=${prefix}
-libdir=${exec_prefix}/@LIBRARY_DIR@
-includedir=${prefix}/@INCLUDE_DIR@
+libdir=${exec_prefix}/@PKMN_LIBRARY_DIR@
+includedir=${prefix}/@PKMN_INCLUDE_DIR@
 
 Name: LibPKMN
 Description: Pokémon save editing and analysis library
 URL: https://github.com/ncorgan/libpkmn
-Version: 0.0.1
+Version: @PKMN_VERSION@
 Requires:
 Requires.private:
 Conflicts:
 Cflags: -I${includedir}
-Libs: -L${libdir} -lpkmn -lpksav
+Libs: -L${libdir} -lpkmn -lpksav -lPkmGC
 Libs.private:

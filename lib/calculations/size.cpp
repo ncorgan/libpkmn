@@ -76,7 +76,7 @@ inline static float round_float(float value) {
 namespace pkmn { namespace calculations {
 
     float pokemon_size(
-        const std::string &species,
+        const std::string& species,
         uint32_t personality,
         int IV_HP,
         int IV_attack,

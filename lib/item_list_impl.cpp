@@ -29,8 +29,8 @@
 namespace pkmn {
 
     item_list::sptr item_list::make(
-        const std::string &name,
-        const std::string &game
+        const std::string& name,
+        const std::string& game
     ) {
         int game_id = pkmn::database::game_name_to_id(game);
         int generation = pkmn::database::game_id_to_generation(game_id);
@@ -231,7 +231,7 @@ namespace pkmn {
     }
 
     void item_list_impl::add(
-        const std::string &item_name,
+        const std::string& item_name,
         int amount
     )
     {
@@ -291,7 +291,7 @@ namespace pkmn {
     }
 
     void item_list_impl::remove(
-        const std::string &item_name,
+        const std::string& item_name,
         int amount
     )
     {

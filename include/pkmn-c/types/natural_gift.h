@@ -10,9 +10,17 @@
 #include <pkmn-c/config.h>
 #include <pkmn-c/error.h>
 
+/*!
+ * @brief A struct containing the values relevant to Natural Gift.
+ *
+ * These values are populated by ::pkmn_calculations_natural_gift_stats
+ * and must be freed with ::pkmn_natural_gift_free.
+ */
 struct pkmn_natural_gift
 {
+    //! The type of the move when used by a Pokémon holding a specific item.
     char* p_type;
+    //! The base power of hte move when used by a Pokémon holding a specific item.
     int base_power;
 };
 
@@ -20,6 +28,13 @@ struct pkmn_natural_gift
 extern "C" {
 #endif
 
+/*!
+ * @brief Frees memory dynamically allocated in a pkmn_natural_gift_t.
+ *
+ * \param natural_gift_ptr The Natural Gift struct whose memory to free
+ * \returns ::PKMN_ERROR_NONE upon success
+ * \returns ::PKMN_ERROR_NULL_POINTER if natural_gift_ptr is NULL
+ */
 PKMN_C_API enum pkmn_error pkmn_natural_gift_free(
     struct pkmn_natural_gift* p_natural_gift
 );

@@ -29,12 +29,12 @@ namespace pkmn { namespace calculations {
      * \throws std::invalid_argument If the given nature is invalid
      */
     PKMN_API uint32_t generate_personality(
-        const std::string &species,
+        const std::string& species,
         uint32_t trainer_id,
         bool shiny,
-        const std::string &ability,
-        const std::string &gender,
-        const std::string &nature
+        const std::string& ability,
+        const std::string& gender,
+        const std::string& nature
     );
 
 }}

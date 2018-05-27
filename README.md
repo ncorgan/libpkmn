@@ -1,6 +1,24 @@
 LibPKMN
 ===============================================
 
+RELEASE TODO
+-------------------------------------
+
+* Coding
+  * Style and coding consistency
+* Testing
+  * LibPKMN C/C++ applications without CMake
+    * Makefiles
+    * MSVC solutions
+    * QMake for using Qt widgets
+  * Applications with all APIs with usual importing means
+* PKSav: update to v2.0 when released
+* Misc
+  * LGPL PKSav, LibPKMN APIs
+
+Actual README
+-------------------------------------
+
 [![license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/ncorgan/libpkmn/blob/master/LICENSE.txt)
 [![Travis-CI Build](https://travis-ci.org/ncorgan/libpkmn.svg)](https://travis-ci.org/ncorgan/libpkmn)
 [![AppVeyor Build](https://ci.appveyor.com/api/projects/status/github/ncorgan/libpkmn)](https://ci.appveyor.com/project/ncorgan/libpkmn)
@@ -23,8 +41,11 @@ Features in development:
  * Objective-C API
 
 Future planned features:
+ * OS X support
+ * PyQt classes using SIP
  * Legality checks
  * Generation VII save support
+ * Pokémon Showdown plugin
 
 Build Dependencies
 -------------------------------------
@@ -98,4 +119,4 @@ A special thanks to Michael Bond ([@codemonkey85](https://github.com/codemonkey8
 
 This software is in no way affiliated with or endorsed by Nintendo, Creatures Inc. or Game Freak Inc, and is created for solely recreational and non-profit use. Pokémon © 2002- Pokémon. © 1995- Nintendo/Creatures Inc./GAME FREAK inc. TM, ® and Pokémon character names are trademarks of Nintendo.
 
-README last updated: 2017/12/27
+README last updated: 2018/04/14

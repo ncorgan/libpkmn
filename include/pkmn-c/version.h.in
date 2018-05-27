@@ -21,7 +21,7 @@
  *
  * This number is incremented with new feature support, usually the addition
  * of a new generation of games or adding features to an existing component.
- * Existing ABI may be compatible but is not guaranteed.
+ * Existing API is guaranteed to be compatible, but ABI may not be compatible.
  */
 #define PKMN_VERSION_MINOR @PKMN_VERSION_MINOR@
 

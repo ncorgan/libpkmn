@@ -262,7 +262,7 @@ static void test_setting_ability(
 
 static void test_setting_ball(
     pkmn::pokemon::sptr pokemon,
-    const std::string &ball_name,
+    const std::string& ball_name,
     const std::vector<std::string> &invalid_ball_names
 ) {
     int generation = game_generations.at(pokemon->get_game());
@@ -340,7 +340,7 @@ static void test_setting_friendship(
 
 static void test_setting_item(
     pkmn::pokemon::sptr pokemon,
-    const std::string &item_name,
+    const std::string& item_name,
     const std::vector<std::string> &invalid_item_names
 ) {
     int generation = game_generations.at(pokemon->get_game());
@@ -437,7 +437,7 @@ static void test_setting_levels(
 
 static void test_setting_location_met(
     pkmn::pokemon::sptr pokemon,
-    const std::string &expected_original_location,
+    const std::string& expected_original_location,
     const std::vector<std::string> &locations,
     const std::vector<std::string> &invalid_locations
 ) {
