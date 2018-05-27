@@ -23,6 +23,7 @@ IF(NOT PKMN_DONT_INSTALL_HEADERS)
         calculations.h
         config.h
         database.h
+        daycare.h
         error.h
         game_save.h
         item_bag.h

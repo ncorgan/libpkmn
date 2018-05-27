@@ -42,6 +42,49 @@ namespace pkmn { namespace c {
                                    );
     }
 
+    void init_daycare(
+        const pkmn::daycare::sptr& daycare_cpp,
+        struct pkmn_daycare* p_daycare_c_out
+    )
+    {
+        BOOST_ASSERT(p_daycare_c_out != nullptr);
+        BOOST_ASSERT(daycare_cpp.get() != nullptr);
+
+        // Make all C++ calls and operate on a second struct until we
+        // know everything succeeds before changing any user output.
+        // If this fails, we'll leak, but it's small enough to not be
+        // a concern.
+        struct pkmn_daycare temp_daycare_c =
+        {
+            nullptr, // p_game
+
+            false, // can_breed_pokemon
+
+            0, // p_levelup_pokemon_capacity
+            0, // p_breeding_pokemon_capacity
+
+            nullptr  // p_internal
+        };
+
+        init_c_internal_class(
+            daycare_cpp,
+            &temp_daycare_c
+        );
+        string_cpp_to_c_alloc(
+            daycare_cpp->get_game(),
+            &temp_daycare_c.p_game
+        );
+
+        temp_daycare_c.can_breed_pokemon = daycare_cpp->can_breed_pokemon();
+
+        temp_daycare_c.levelup_pokemon_capacity = daycare_cpp->get_levelup_pokemon_capacity();
+        temp_daycare_c.breeding_pokemon_capacity = daycare_cpp->get_breeding_pokemon_capacity();
+
+        // Everything succeeded, so move it into the pointer the caller
+        // provided.
+        *p_daycare_c_out = std::move(temp_daycare_c);
+    }
+
     void init_item_bag(
         const pkmn::item_bag::sptr& item_bag_cpp,
         struct pkmn_item_bag* p_item_bag_c_out
