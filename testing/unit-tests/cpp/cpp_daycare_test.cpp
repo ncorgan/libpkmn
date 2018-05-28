@@ -92,6 +92,10 @@ TEST_P(daycare_test, test_empty_daycare)
             static_cast<size_t>(breeding_capacity),
             all_breeding_pokemon.size()
         );
+
+        const pkmn::pokemon::sptr& egg = daycare->get_egg();
+        ASSERT_EQ("None", egg->get_species());
+        ASSERT_TRUE(egg->is_egg());
     }
     else
     {
@@ -109,6 +113,10 @@ TEST_P(daycare_test, test_empty_daycare)
                 0,
                 pkmn::pokemon::make("Bulbasaur", game, "", 5)
             );
+        , pkmn::feature_not_in_game_error);
+
+        ASSERT_THROW(
+            daycare->get_egg()
         , pkmn::feature_not_in_game_error);
     }
 }
@@ -214,12 +222,6 @@ TEST_P(daycare_test, test_setting_pokemon)
         breeding_pokemon[1]->set_gender("Male");
 
         ASSERT_TRUE(daycare->get_egg()->is_egg());
-    }
-    else
-    {
-        ASSERT_THROW(
-            daycare->get_egg()
-        , pkmn::feature_not_in_game_error);
     }
 }
 

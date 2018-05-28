@@ -21,6 +21,7 @@ SET(c_tests
     c_buildinfo_test
     c_calculations_test
     c_database_entry_test
+    c_daycare_test
     c_error_test
     c_game_save_test
     c_gui_test
