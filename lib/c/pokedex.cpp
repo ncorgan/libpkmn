@@ -49,7 +49,7 @@ enum pkmn_error pkmn_pokedex_free(
 }
 
 const char* pkmn_pokedex_strerror(
-    struct pkmn_pokedex* p_pokedex
+    const struct pkmn_pokedex* p_pokedex
 )
 {
     if(!p_pokedex)
@@ -75,7 +75,7 @@ const char* pkmn_pokedex_strerror(
 }
 
 enum pkmn_error pkmn_pokedex_has_seen(
-    struct pkmn_pokedex* p_pokedex,
+    const struct pkmn_pokedex* p_pokedex,
     const char* p_species,
     bool* p_has_seen_out
 )
@@ -91,7 +91,7 @@ enum pkmn_error pkmn_pokedex_has_seen(
 }
 
 enum pkmn_error pkmn_pokedex_set_has_seen_species(
-    struct pkmn_pokedex* p_pokedex,
+    const struct pkmn_pokedex* p_pokedex,
     const char* p_species,
     bool has_seen
 )
@@ -106,7 +106,7 @@ enum pkmn_error pkmn_pokedex_set_has_seen_species(
 }
 
 enum pkmn_error pkmn_pokedex_get_all_seen(
-    struct pkmn_pokedex* p_pokedex,
+    const struct pkmn_pokedex* p_pokedex,
     struct pkmn_string_list* p_all_seen_out
 )
 {
@@ -123,7 +123,7 @@ enum pkmn_error pkmn_pokedex_get_all_seen(
 }
 
 enum pkmn_error pkmn_pokedex_get_num_seen(
-    struct pkmn_pokedex* p_pokedex,
+    const struct pkmn_pokedex* p_pokedex,
     size_t* p_num_seen_out
 )
 {
@@ -137,7 +137,7 @@ enum pkmn_error pkmn_pokedex_get_num_seen(
 }
 
 enum pkmn_error pkmn_pokedex_has_caught(
-    struct pkmn_pokedex* p_pokedex,
+    const struct pkmn_pokedex* p_pokedex,
     const char* p_species,
     bool* p_has_caught_out
 )
@@ -153,7 +153,7 @@ enum pkmn_error pkmn_pokedex_has_caught(
 }
 
 enum pkmn_error pkmn_pokedex_set_has_caught_species(
-    struct pkmn_pokedex* p_pokedex,
+    const struct pkmn_pokedex* p_pokedex,
     const char* p_species,
     bool has_caught
 )
@@ -168,7 +168,7 @@ enum pkmn_error pkmn_pokedex_set_has_caught_species(
 }
 
 enum pkmn_error pkmn_pokedex_get_all_caught(
-    struct pkmn_pokedex* p_pokedex,
+    const struct pkmn_pokedex* p_pokedex,
     struct pkmn_string_list* p_all_caught_out
 )
 {
@@ -185,7 +185,7 @@ enum pkmn_error pkmn_pokedex_get_all_caught(
 }
 
 enum pkmn_error pkmn_pokedex_get_num_caught(
-    struct pkmn_pokedex* p_pokedex,
+    const struct pkmn_pokedex* p_pokedex,
     size_t* p_num_caught_out
 )
 {

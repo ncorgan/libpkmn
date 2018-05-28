@@ -80,7 +80,7 @@ PKMN_C_API enum pkmn_error pkmn_pokemon_party_free(
  * \returns <b>NULL</b> if pokemon_party_ptr is NULL
  */
 PKMN_C_API const char* pkmn_pokemon_party_strerror(
-    struct pkmn_pokemon_party* p_pokemon_party
+    const struct pkmn_pokemon_party* p_pokemon_party
 );
 
 /*!
@@ -94,7 +94,7 @@ PKMN_C_API const char* pkmn_pokemon_party_strerror(
  * \returns ::PKMN_ERROR_NULL_POINTER if either parameter is NULL
  */
 PKMN_C_API enum pkmn_error pkmn_pokemon_party_get_num_pokemon(
-    struct pkmn_pokemon_party* p_pokemon_party,
+    const struct pkmn_pokemon_party* p_pokemon_party,
     size_t* p_num_pokemon_out
 );
 
@@ -115,7 +115,7 @@ PKMN_C_API enum pkmn_error pkmn_pokemon_party_get_num_pokemon(
  * \returns ::PKMN_ERROR_OUT_OF_RANGE If index is not in the range [0-5]
  */
 PKMN_C_API enum pkmn_error pkmn_pokemon_party_get_pokemon(
-    struct pkmn_pokemon_party* p_pokemon_party,
+    const struct pkmn_pokemon_party* p_pokemon_party,
     size_t position,
     struct pkmn_pokemon* p_pokemon_out
 );
@@ -139,7 +139,7 @@ PKMN_C_API enum pkmn_error pkmn_pokemon_party_get_pokemon(
  * \returns ::PKMN_ERROR_INVALID_ARGUMENT If the new Pokémon is incompatible with the party's game
  */
 PKMN_C_API enum pkmn_error pkmn_pokemon_party_set_pokemon(
-    struct pkmn_pokemon_party* p_pokemon_party,
+    const struct pkmn_pokemon_party* p_pokemon_party,
     size_t position,
     struct pkmn_pokemon* p_pokemon
 );
@@ -156,7 +156,7 @@ PKMN_C_API enum pkmn_error pkmn_pokemon_party_set_pokemon(
  * \returns ::PKMN_ERROR_NULL_POINTER if either pointer parameter is NULL
  */
 PKMN_C_API enum pkmn_error pkmn_pokemon_party_as_list(
-    struct pkmn_pokemon_party* p_pokemon_party,
+    const struct pkmn_pokemon_party* p_pokemon_party,
     struct pkmn_pokemon_list* p_pokemon_list_out
 );
 

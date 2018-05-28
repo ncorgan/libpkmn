@@ -260,14 +260,14 @@ void get_random_pokemon(
 }
 
 void compare_pokemon_ints(
-    struct pkmn_pokemon* p_pokemon1,
-    struct pkmn_pokemon* p_pokemon,
+    const struct pkmn_pokemon* p_pokemon1,
+    const struct pkmn_pokemon* p_pokemon2,
     const char* field,
     pokemon_int_getter_fcn_t getter_fcn
 )
 {
     TEST_ASSERT_NOT_NULL(p_pokemon1);
-    TEST_ASSERT_NOT_NULL(p_pokemon);
+    TEST_ASSERT_NOT_NULL(p_pokemon2);
     TEST_ASSERT_NOT_NULL(field);
     TEST_ASSERT_NOT_NULL(getter_fcn);
 
@@ -278,24 +278,24 @@ void compare_pokemon_ints(
 
     error = getter_fcn(p_pokemon1, &int1);
     PKMN_TEST_ASSERT_SUCCESS(error);
-    error = getter_fcn(p_pokemon, &int2);
+    error = getter_fcn(p_pokemon2, &int2);
     PKMN_TEST_ASSERT_SUCCESS(error);
 
     char error_message[STRBUFFER_LEN] = {0};
     snprintf(error_message, sizeof(error_message), "Mismatched %s", field);
 
-    TEST_ASSERT_EQUAL_MESSAGE(int1, int2, error_message);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 }
 
 void compare_pokemon_uint32s(
-    struct pkmn_pokemon* p_pokemon1,
-    struct pkmn_pokemon* p_pokemon,
+    const struct pkmn_pokemon* p_pokemon1,
+    const struct pkmn_pokemon* p_pokemon2,
     const char* field,
     pokemon_uint32_getter_fcn_t getter_fcn
 )
 {
     TEST_ASSERT_NOT_NULL(p_pokemon1);
-    TEST_ASSERT_NOT_NULL(p_pokemon);
+    TEST_ASSERT_NOT_NULL(p_pokemon2);
     TEST_ASSERT_NOT_NULL(field);
     TEST_ASSERT_NOT_NULL(getter_fcn);
 
@@ -306,18 +306,18 @@ void compare_pokemon_uint32s(
 
     error = getter_fcn(p_pokemon1, &uint1);
     PKMN_TEST_ASSERT_SUCCESS(error);
-    error = getter_fcn(p_pokemon, &uint2);
+    error = getter_fcn(p_pokemon2, &uint2);
     PKMN_TEST_ASSERT_SUCCESS(error);
 
     char error_message[STRBUFFER_LEN] = {0};
     snprintf(error_message, sizeof(error_message), "Mismatched %s", field);
 
-    TEST_ASSERT_EQUAL_MESSAGE(uint1, uint2, error_message);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 }
 
 void compare_pokemon_strings(
-    struct pkmn_pokemon* p_pokemon1,
-    struct pkmn_pokemon* p_pokemon2,
+    const struct pkmn_pokemon* p_pokemon1,
+    const struct pkmn_pokemon* p_pokemon2,
     const char* field,
     pokemon_string_getter_fcn_t getter_fcn
 )
@@ -351,18 +351,18 @@ void compare_pokemon_strings(
     char error_message[STRBUFFER_LEN] = {0};
     snprintf(error_message, sizeof(error_message), "Mismatched %s", field);
 
-    TEST_ASSERT_EQUAL_STRING_MESSAGE(strbuffer1, strbuffer2, error_message);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 }
 
 void compare_pokemon_bools(
-    struct pkmn_pokemon* p_pokemon1,
-    struct pkmn_pokemon* p_pokemon,
+    const struct pkmn_pokemon* p_pokemon1,
+    const struct pkmn_pokemon* p_pokemon2,
     const char* field,
     pokemon_bool_getter_fcn_t getter_fcn
 )
 {
     TEST_ASSERT_NOT_NULL(p_pokemon1);
-    TEST_ASSERT_NOT_NULL(p_pokemon);
+    TEST_ASSERT_NOT_NULL(p_pokemon2);
     TEST_ASSERT_NOT_NULL(field);
     TEST_ASSERT_NOT_NULL(getter_fcn);
 
@@ -373,25 +373,25 @@ void compare_pokemon_bools(
 
     error = getter_fcn(p_pokemon1, &bool1);
     PKMN_TEST_ASSERT_SUCCESS(error);
-    error = getter_fcn(p_pokemon, &bool2);
+    error = getter_fcn(p_pokemon2, &bool2);
     PKMN_TEST_ASSERT_SUCCESS(error);
 
     char error_message[STRBUFFER_LEN] = {0};
     snprintf(error_message, sizeof(error_message), "Mismatched %s", field);
 
-    TEST_ASSERT_EQUAL_MESSAGE(bool1, bool2, error_message);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 }
 
 void compare_pokemon_int_buffers(
-    struct pkmn_pokemon* p_pokemon1,
-    struct pkmn_pokemon* p_pokemon,
+    const struct pkmn_pokemon* p_pokemon1,
+    const struct pkmn_pokemon* p_pokemon2,
     size_t buffer_size,
     const char* field,
     pokemon_int_buffer_getter_fcn_t getter_fcn
 )
 {
     TEST_ASSERT_NOT_NULL(p_pokemon1);
-    TEST_ASSERT_NOT_NULL(p_pokemon);
+    TEST_ASSERT_NOT_NULL(p_pokemon2);
     TEST_ASSERT_NOT_NULL(field);
     TEST_ASSERT_NOT_NULL(getter_fcn);
 
@@ -402,7 +402,7 @@ void compare_pokemon_int_buffers(
 
     error = getter_fcn(p_pokemon1, int_buffer1, buffer_size, NULL);
     PKMN_TEST_ASSERT_SUCCESS(error);
-    error = getter_fcn(p_pokemon, int_buffer2, buffer_size, NULL);
+    error = getter_fcn(p_pokemon2, int_buffer2, buffer_size, NULL);
     PKMN_TEST_ASSERT_SUCCESS(error);
 
     char error_message[STRBUFFER_LEN] = {0};
@@ -420,15 +420,15 @@ void compare_pokemon_int_buffers(
 }
 
 void compare_pokemon_bool_buffers(
-    struct pkmn_pokemon* p_pokemon1,
-    struct pkmn_pokemon* p_pokemon,
+    const struct pkmn_pokemon* p_pokemon1,
+    const struct pkmn_pokemon* p_pokemon2,
     size_t buffer_size,
     const char* field,
     pokemon_bool_buffer_getter_fcn_t getter_fcn
 )
 {
     TEST_ASSERT_NOT_NULL(p_pokemon1);
-    TEST_ASSERT_NOT_NULL(p_pokemon);
+    TEST_ASSERT_NOT_NULL(p_pokemon2);
     TEST_ASSERT_NOT_NULL(field);
     TEST_ASSERT_NOT_NULL(getter_fcn);
 
@@ -439,7 +439,7 @@ void compare_pokemon_bool_buffers(
 
     error = getter_fcn(p_pokemon1, bool_buffer1, buffer_size, NULL);
     PKMN_TEST_ASSERT_SUCCESS(error);
-    error = getter_fcn(p_pokemon, bool_buffer2, buffer_size, NULL);
+    error = getter_fcn(p_pokemon2, bool_buffer2, buffer_size, NULL);
     PKMN_TEST_ASSERT_SUCCESS(error);
 
     char error_message[STRBUFFER_LEN] = {0};
@@ -457,12 +457,12 @@ void compare_pokemon_bool_buffers(
 }
 
 void compare_pokemon_original_trainer_info(
-    struct pkmn_pokemon* p_pokemon1,
-    struct pkmn_pokemon* p_pokemon
+    const struct pkmn_pokemon* p_pokemon1,
+    const struct pkmn_pokemon* p_pokemon2
 )
 {
     TEST_ASSERT_NOT_NULL(p_pokemon1);
-    TEST_ASSERT_NOT_NULL(p_pokemon);
+    TEST_ASSERT_NOT_NULL(p_pokemon2);
 
     enum pkmn_error error = PKMN_ERROR_NONE;
 
@@ -473,12 +473,12 @@ void compare_pokemon_original_trainer_info(
                 p_pokemon1,
                 &original_trainer_info1
             );
-    TEST_ASSERT_EQUAL_STRING(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     error = pkmn_pokemon_get_original_trainer_info(
-                p_pokemon,
+                p_pokemon2,
                 &original_trainer_info2
             );
-    TEST_ASSERT_EQUAL_STRING(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_EQUAL_STRING(
         original_trainer_info1.p_name,
         original_trainer_info2.p_name
@@ -499,12 +499,12 @@ void compare_pokemon_original_trainer_info(
 }
 
 void compare_pokemon_moves(
-    struct pkmn_pokemon* p_pokemon1,
-    struct pkmn_pokemon* p_pokemon
+    const struct pkmn_pokemon* p_pokemon1,
+    const struct pkmn_pokemon* p_pokemon2
 )
 {
     TEST_ASSERT_NOT_NULL(p_pokemon1);
-    TEST_ASSERT_NOT_NULL(p_pokemon);
+    TEST_ASSERT_NOT_NULL(p_pokemon2);
 
     enum pkmn_error error = PKMN_ERROR_NONE;
 
@@ -517,7 +517,7 @@ void compare_pokemon_moves(
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
     error = pkmn_pokemon_get_moves(
-                p_pokemon,
+                p_pokemon2,
                 &move_slots2
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
@@ -538,17 +538,19 @@ void compare_pokemon_moves(
     }
 
     error = pkmn_move_slots_free(&move_slots2);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     error = pkmn_move_slots_free(&move_slots1);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 }
 
 void compare_pokemon_locations_met(
-    struct pkmn_pokemon* p_pokemon1,
-    struct pkmn_pokemon* p_pokemon,
+    const struct pkmn_pokemon* p_pokemon1,
+    const struct pkmn_pokemon* p_pokemon2,
     bool as_egg
 )
 {
     TEST_ASSERT_NOT_NULL(p_pokemon1);
-    TEST_ASSERT_NOT_NULL(p_pokemon);
+    TEST_ASSERT_NOT_NULL(p_pokemon2);
 
     enum pkmn_error error = PKMN_ERROR_NONE;
 
@@ -564,7 +566,7 @@ void compare_pokemon_locations_met(
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
     error = pkmn_pokemon_get_location_met(
-                p_pokemon,
+                p_pokemon2,
                 as_egg,
                 strbuffer2,
                 sizeof(strbuffer2),
@@ -575,12 +577,12 @@ void compare_pokemon_locations_met(
 }
 
 void compare_pokemon_ribbons(
-    struct pkmn_pokemon* p_pokemon1,
-    struct pkmn_pokemon* p_pokemon
+    const struct pkmn_pokemon* p_pokemon1,
+    const struct pkmn_pokemon* p_pokemon2
 )
 {
     TEST_ASSERT_NOT_NULL(p_pokemon1);
-    TEST_ASSERT_NOT_NULL(p_pokemon);
+    TEST_ASSERT_NOT_NULL(p_pokemon2);
 
     enum pkmn_error error = PKMN_ERROR_NONE;
 
@@ -602,7 +604,7 @@ void compare_pokemon_ribbons(
                 );
         PKMN_TEST_ASSERT_SUCCESS(error);
         error = pkmn_pokemon_has_ribbon(
-                    p_pokemon,
+                    p_pokemon2,
                     ribbon_list.pp_strings[ribbon_index],
                     &has_ribbon2
                 );
@@ -619,8 +621,8 @@ void compare_pokemon_ribbons(
 }
 
 void compare_pokemon(
-    struct pkmn_pokemon* p_pokemon1,
-    struct pkmn_pokemon* p_pokemon2
+    const struct pkmn_pokemon* p_pokemon1,
+    const struct pkmn_pokemon* p_pokemon2
 )
 {
     TEST_ASSERT_NOT_NULL(p_pokemon1);
@@ -788,14 +790,14 @@ void compare_pokemon(
                 p_pokemon1,
                 &attribute_names1
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 
     struct pkmn_attribute_names attribute_names2 = empty_attribute_names;
     error = pkmn_pokemon_get_attribute_names(
                 p_pokemon2,
                 &attribute_names2
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 
     compare_attribute_names(
         &attribute_names1,
@@ -814,14 +816,14 @@ void compare_pokemon(
                     attribute_names1.numeric_attribute_names.pp_strings[attribute_index],
                     &attribute_value1
                 );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        PKMN_TEST_ASSERT_SUCCESS(error);
 
         error = pkmn_pokemon_get_numeric_attribute(
                     p_pokemon2,
                     attribute_names2.numeric_attribute_names.pp_strings[attribute_index],
                     &attribute_value2
                 );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        PKMN_TEST_ASSERT_SUCCESS(error);
 
         TEST_ASSERT_EQUAL(attribute_value1, attribute_value2);
     }
@@ -840,7 +842,7 @@ void compare_pokemon(
                     sizeof(attribute_value1),
                     NULL
                 );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        PKMN_TEST_ASSERT_SUCCESS(error);
 
         error = pkmn_pokemon_get_string_attribute(
                     p_pokemon2,
@@ -849,7 +851,7 @@ void compare_pokemon(
                     sizeof(attribute_value2),
                     NULL
                 );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        PKMN_TEST_ASSERT_SUCCESS(error);
 
         TEST_ASSERT_EQUAL_STRING(attribute_value1, attribute_value2);
     }
@@ -866,21 +868,21 @@ void compare_pokemon(
                     attribute_names1.boolean_attribute_names.pp_strings[attribute_index],
                     &attribute_value1
                 );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        PKMN_TEST_ASSERT_SUCCESS(error);
 
         error = pkmn_pokemon_get_boolean_attribute(
                     p_pokemon2,
                     attribute_names2.boolean_attribute_names.pp_strings[attribute_index],
                     &attribute_value2
                 );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        PKMN_TEST_ASSERT_SUCCESS(error);
 
         TEST_ASSERT_EQUAL(attribute_value1, attribute_value2);
     }
 
     error = pkmn_attribute_names_free(&attribute_names1);
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 
     error = pkmn_attribute_names_free(&attribute_names2);
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 }

@@ -88,7 +88,7 @@ PKMN_C_API enum pkmn_error pkmn_item_bag_free(
  * \returns <b>NULL</b> if item_bag_ptr is NULL
  */
 PKMN_C_API const char* pkmn_item_bag_strerror(
-    struct pkmn_item_bag* p_item_bag
+    const struct pkmn_item_bag* p_item_bag
 );
 
 /*!
@@ -108,7 +108,7 @@ PKMN_C_API const char* pkmn_item_bag_strerror(
  *                                        valid pocket
  */
 PKMN_C_API enum pkmn_error pkmn_item_bag_get_pocket(
-    struct pkmn_item_bag* p_item_bag,
+    const struct pkmn_item_bag* p_item_bag,
     const char* pocket_name,
     struct pkmn_item_list* p_item_list_out
 );
@@ -130,7 +130,7 @@ PKMN_C_API enum pkmn_error pkmn_item_bag_get_pocket(
  * \returns ::PKMN_ERROR_OUT_OF_RANGE if amount is not in the range [0,99]
  */
 PKMN_C_API enum pkmn_error pkmn_item_bag_add(
-    struct pkmn_item_bag* p_item_bag,
+    const struct pkmn_item_bag* p_item_bag,
     const char* p_item,
     size_t amount
 );
@@ -152,7 +152,7 @@ PKMN_C_API enum pkmn_error pkmn_item_bag_add(
  * \returns ::PKMN_ERROR_OUT_OF_RANGE if amount is not in the range [0,99]
  */
 PKMN_C_API enum pkmn_error pkmn_item_bag_remove(
-    struct pkmn_item_bag* p_item_bag,
+    const struct pkmn_item_bag* p_item_bag,
     const char* p_item,
     size_t amount
 );

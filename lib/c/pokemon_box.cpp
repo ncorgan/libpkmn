@@ -48,7 +48,7 @@ enum pkmn_error pkmn_pokemon_box_free(
 }
 
 const char* pkmn_pokemon_box_strerror(
-    struct pkmn_pokemon_box* p_pokemon_box
+    const struct pkmn_pokemon_box* p_pokemon_box
 )
 {
     if(!p_pokemon_box)
@@ -74,7 +74,7 @@ const char* pkmn_pokemon_box_strerror(
 }
 
 enum pkmn_error pkmn_pokemon_box_get_name(
-    struct pkmn_pokemon_box* p_pokemon_box,
+    const struct pkmn_pokemon_box* p_pokemon_box,
     char* p_name_buffer_out,
     size_t name_buffer_length,
     size_t* p_actual_name_length_out
@@ -95,7 +95,7 @@ enum pkmn_error pkmn_pokemon_box_get_name(
 }
 
 enum pkmn_error pkmn_pokemon_box_set_name(
-    struct pkmn_pokemon_box* p_pokemon_box,
+    const struct pkmn_pokemon_box* p_pokemon_box,
     const char* p_name
 )
 {
@@ -109,7 +109,7 @@ enum pkmn_error pkmn_pokemon_box_set_name(
 }
 
 enum pkmn_error pkmn_pokemon_box_get_num_pokemon(
-    struct pkmn_pokemon_box* p_pokemon_box,
+    const struct pkmn_pokemon_box* p_pokemon_box,
     size_t* p_num_pokemon_out
 )
 {
@@ -123,7 +123,7 @@ enum pkmn_error pkmn_pokemon_box_get_num_pokemon(
 }
 
 enum pkmn_error pkmn_pokemon_box_get_pokemon(
-    struct pkmn_pokemon_box* p_pokemon_box,
+    const struct pkmn_pokemon_box* p_pokemon_box,
     size_t position,
     struct pkmn_pokemon* p_pokemon_out
 )
@@ -141,7 +141,7 @@ enum pkmn_error pkmn_pokemon_box_get_pokemon(
 }
 
 enum pkmn_error pkmn_pokemon_box_set_pokemon(
-    struct pkmn_pokemon_box* p_pokemon_box,
+    const struct pkmn_pokemon_box* p_pokemon_box,
     size_t position,
     struct pkmn_pokemon* p_pokemon
 )
@@ -161,7 +161,7 @@ enum pkmn_error pkmn_pokemon_box_set_pokemon(
 }
 
 enum pkmn_error pkmn_pokemon_box_as_list(
-    struct pkmn_pokemon_box* p_pokemon_box,
+    const struct pkmn_pokemon_box* p_pokemon_box,
     struct pkmn_pokemon_list* p_pokemon_list_out
 )
 {

@@ -48,7 +48,7 @@ enum pkmn_error pkmn_pokemon_party_free(
 }
 
 const char* pkmn_pokemon_party_strerror(
-    struct pkmn_pokemon_party* p_pokemon_party
+    const struct pkmn_pokemon_party* p_pokemon_party
 )
 {
     if(!p_pokemon_party)
@@ -74,7 +74,7 @@ const char* pkmn_pokemon_party_strerror(
 }
 
 enum pkmn_error pkmn_pokemon_party_get_num_pokemon(
-    struct pkmn_pokemon_party* p_pokemon_party,
+    const struct pkmn_pokemon_party* p_pokemon_party,
     size_t* p_num_pokemon_out
 )
 {
@@ -88,7 +88,7 @@ enum pkmn_error pkmn_pokemon_party_get_num_pokemon(
 }
 
 enum pkmn_error pkmn_pokemon_party_get_pokemon(
-    struct pkmn_pokemon_party* p_pokemon_party,
+    const struct pkmn_pokemon_party* p_pokemon_party,
     size_t position,
     struct pkmn_pokemon* p_pokemon_out
 )
@@ -106,7 +106,7 @@ enum pkmn_error pkmn_pokemon_party_get_pokemon(
 }
 
 enum pkmn_error pkmn_pokemon_party_set_pokemon(
-    struct pkmn_pokemon_party* p_pokemon_party,
+    const struct pkmn_pokemon_party* p_pokemon_party,
     size_t position,
     struct pkmn_pokemon* p_pokemon
 )
@@ -126,7 +126,7 @@ enum pkmn_error pkmn_pokemon_party_set_pokemon(
 }
 
 enum pkmn_error pkmn_pokemon_party_as_list(
-    struct pkmn_pokemon_party* p_pokemon_party,
+    const struct pkmn_pokemon_party* p_pokemon_party,
     struct pkmn_pokemon_list* p_pokemon_list_out
 )
 {

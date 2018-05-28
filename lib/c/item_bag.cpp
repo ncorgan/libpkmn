@@ -49,7 +49,7 @@ enum pkmn_error pkmn_item_bag_free(
 }
 
 const char* pkmn_item_bag_strerror(
-    struct pkmn_item_bag* p_item_bag
+    const struct pkmn_item_bag* p_item_bag
 )
 {
     if(!p_item_bag)
@@ -75,7 +75,7 @@ const char* pkmn_item_bag_strerror(
 }
 
 enum pkmn_error pkmn_item_bag_get_pocket(
-    struct pkmn_item_bag* p_item_bag,
+    const struct pkmn_item_bag* p_item_bag,
     const char* p_pocket_name,
     struct pkmn_item_list* p_item_list_out
 )
@@ -98,7 +98,7 @@ enum pkmn_error pkmn_item_bag_get_pocket(
 }
 
 enum pkmn_error pkmn_item_bag_add(
-    struct pkmn_item_bag* p_item_bag,
+    const struct pkmn_item_bag* p_item_bag,
     const char* p_item,
     size_t amount
 )
@@ -118,7 +118,7 @@ enum pkmn_error pkmn_item_bag_add(
 }
 
 enum pkmn_error pkmn_item_bag_remove(
-    struct pkmn_item_bag* p_item_bag,
+    const struct pkmn_item_bag* p_item_bag,
     const char* p_item,
     size_t amount
 )

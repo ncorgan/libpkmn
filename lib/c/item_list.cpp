@@ -51,7 +51,7 @@ enum pkmn_error pkmn_item_list_free(
 }
 
 const char* pkmn_item_list_strerror(
-    struct pkmn_item_list* p_item_list
+    const struct pkmn_item_list* p_item_list
 )
 {
     if(!p_item_list)
@@ -77,7 +77,7 @@ const char* pkmn_item_list_strerror(
 }
 
 enum pkmn_error pkmn_item_list_get_num_items(
-    struct pkmn_item_list* p_item_list,
+    const struct pkmn_item_list* p_item_list,
     size_t* p_num_items_out
 )
 {
@@ -93,7 +93,7 @@ enum pkmn_error pkmn_item_list_get_num_items(
 }
 
 enum pkmn_error pkmn_item_list_at(
-    struct pkmn_item_list* p_item_list,
+    const struct pkmn_item_list* p_item_list,
     size_t position,
     struct pkmn_item_slot* p_item_slot_out
 )
@@ -113,7 +113,7 @@ enum pkmn_error pkmn_item_list_at(
 }
 
 enum pkmn_error pkmn_item_list_add(
-    struct pkmn_item_list* p_item_list,
+    const struct pkmn_item_list* p_item_list,
     const char* p_item,
     size_t amount
 )
@@ -133,7 +133,7 @@ enum pkmn_error pkmn_item_list_add(
 }
 
 enum pkmn_error pkmn_item_list_remove(
-    struct pkmn_item_list* p_item_list,
+    const struct pkmn_item_list* p_item_list,
     const char* p_item,
     size_t amount
 )
@@ -153,7 +153,7 @@ enum pkmn_error pkmn_item_list_remove(
 }
 
 enum pkmn_error pkmn_item_list_move(
-    struct pkmn_item_list* p_item_list,
+    const struct pkmn_item_list* p_item_list,
     size_t old_position,
     size_t new_position
 )
@@ -172,7 +172,7 @@ enum pkmn_error pkmn_item_list_move(
 }
 
 enum pkmn_error pkmn_item_list_set_item(
-    struct pkmn_item_list* p_item_list,
+    const struct pkmn_item_list* p_item_list,
     size_t position,
     const char* p_item,
     size_t amount
@@ -194,7 +194,7 @@ enum pkmn_error pkmn_item_list_set_item(
 }
 
 enum pkmn_error pkmn_item_list_get_valid_items(
-    struct pkmn_item_list* p_item_list,
+    const struct pkmn_item_list* p_item_list,
     struct pkmn_string_list* p_valid_items_out
 )
 {
@@ -213,7 +213,7 @@ enum pkmn_error pkmn_item_list_get_valid_items(
 }
 
 enum pkmn_error pkmn_item_list_as_list(
-    struct pkmn_item_list* p_item_list,
+    const struct pkmn_item_list* p_item_list,
     struct pkmn_item_slots* p_item_slots_out
 )
 {

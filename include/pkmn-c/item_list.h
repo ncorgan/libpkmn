@@ -96,7 +96,7 @@ PKMN_C_API enum pkmn_error pkmn_item_list_free(
  * \returns <b>NULL</b> if item_list_ptr is NULL
  */
 PKMN_C_API const char* pkmn_item_list_strerror(
-    struct pkmn_item_list* p_item_list
+    const struct pkmn_item_list* p_item_list
 );
 
 /*!
@@ -108,7 +108,7 @@ PKMN_C_API const char* pkmn_item_list_strerror(
  * \returns ::PKMN_ERROR_NULL_POINTER if any pointer parameter is NULL
 */
 PKMN_C_API enum pkmn_error pkmn_item_list_get_num_items(
-    struct pkmn_item_list* p_item_list,
+    const struct pkmn_item_list* p_item_list,
     size_t* p_num_items_out
 );
 
@@ -125,7 +125,7 @@ PKMN_C_API enum pkmn_error pkmn_item_list_get_num_items(
  * \returns ::PKMN_ERROR_NULL_POINTER if any pointer parameter is NULL
  */
 PKMN_C_API enum pkmn_error pkmn_item_list_at(
-    struct pkmn_item_list* p_item_list,
+    const struct pkmn_item_list* p_item_list,
     size_t position,
     struct pkmn_item_slot* p_item_slot_out
 );
@@ -146,7 +146,7 @@ PKMN_C_API enum pkmn_error pkmn_item_list_at(
  * \returns ::PKMN_ERROR_OUT_OF_RANGE If amount is outside the range [1,99]
  */
 PKMN_C_API enum pkmn_error pkmn_item_list_add(
-    struct pkmn_item_list* p_item_list,
+    const struct pkmn_item_list* p_item_list,
     const char* p_item,
     size_t amount
 );
@@ -167,7 +167,7 @@ PKMN_C_API enum pkmn_error pkmn_item_list_add(
  * \returns ::PKMN_ERROR_OUT_OF_RANGE if amount is outside the range [1,99]
  */
 PKMN_C_API enum pkmn_error pkmn_item_list_remove(
-    struct pkmn_item_list* p_item_list,
+    const struct pkmn_item_list* p_item_list,
     const char* p_item,
     size_t amount
 );
@@ -184,7 +184,7 @@ PKMN_C_API enum pkmn_error pkmn_item_list_remove(
  * \returns ::PKMN_ERROR_RUNTIME_ERROR if items in the given list cannot be moved
 */
 PKMN_C_API enum pkmn_error pkmn_item_list_move(
-    struct pkmn_item_list* p_item_list,
+    const struct pkmn_item_list* p_item_list,
     size_t old_position,
     size_t new_position
 );
@@ -204,7 +204,7 @@ PKMN_C_API enum pkmn_error pkmn_item_list_move(
  *                                     given item does not match that slot
 */
 PKMN_C_API enum pkmn_error pkmn_item_list_set_item(
-    struct pkmn_item_list* p_item_list,
+    const struct pkmn_item_list* p_item_list,
     size_t position,
     const char* p_item,
     size_t amount
@@ -225,7 +225,7 @@ PKMN_C_API enum pkmn_error pkmn_item_list_set_item(
  * \returns ::PKMN_ERROR_NULL_POINTER if either parameter is NULL
 */
 PKMN_C_API enum pkmn_error pkmn_item_list_get_valid_items(
-    struct pkmn_item_list* p_item_list,
+    const struct pkmn_item_list* p_item_list,
     struct pkmn_string_list* p_valid_items_out
 );
 
@@ -241,7 +241,7 @@ PKMN_C_API enum pkmn_error pkmn_item_list_get_valid_items(
  * \returns ::PKMN_ERROR_NULL_POINTER if either parameter is NULL
  */
 PKMN_C_API enum pkmn_error pkmn_item_list_as_list(
-    struct pkmn_item_list* p_item_list,
+    const struct pkmn_item_list* p_item_list,
     struct pkmn_item_slots* p_item_slots_out
 );
 

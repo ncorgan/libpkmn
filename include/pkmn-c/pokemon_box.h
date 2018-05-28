@@ -80,7 +80,7 @@ PKMN_C_API enum pkmn_error pkmn_pokemon_box_free(
  * \returns <b>NULL</b> if pokemon_box_ptr is NULL
  */
 PKMN_C_API const char* pkmn_pokemon_box_strerror(
-    struct pkmn_pokemon_box* p_pokemon_box
+    const struct pkmn_pokemon_box* p_pokemon_box
 );
 
 /*!
@@ -98,7 +98,7 @@ PKMN_C_API const char* pkmn_pokemon_box_strerror(
  * \returns ::PKMN_ERROR_FEATURE_NOT_IN_GAME_ERROR if the box is from a Generation I game
  */
 PKMN_C_API enum pkmn_error pkmn_pokemon_box_get_name(
-    struct pkmn_pokemon_box* p_pokemon_box,
+    const struct pkmn_pokemon_box* p_pokemon_box,
     char* p_name_buffer_out,
     size_t name_buffer_length,
     size_t* p_actual_name_length_out
@@ -120,7 +120,7 @@ PKMN_C_API enum pkmn_error pkmn_pokemon_box_get_name(
  * \returns ::PKMN_ERROR_FEATURE_NOT_IN_GAME_ERROR if the box is from a Generation I game
  */
 PKMN_C_API enum pkmn_error pkmn_pokemon_box_set_name(
-    struct pkmn_pokemon_box* p_pokemon_box,
+    const struct pkmn_pokemon_box* p_pokemon_box,
     const char* p_name
 );
 
@@ -135,7 +135,7 @@ PKMN_C_API enum pkmn_error pkmn_pokemon_box_set_name(
  * \returns ::PKMN_ERROR_NULL_POINTER if either parameter is NULL
  */
 PKMN_C_API enum pkmn_error pkmn_pokemon_box_get_num_pokemon(
-    struct pkmn_pokemon_box* p_pokemon_box,
+    const struct pkmn_pokemon_box* p_pokemon_box,
     size_t* p_num_pokemon_out
 );
 
@@ -156,7 +156,7 @@ PKMN_C_API enum pkmn_error pkmn_pokemon_box_get_num_pokemon(
  * \returns ::PKMN_ERROR_OUT_OF_RANGE If index is not in the range [0-capacity]
  */
 PKMN_C_API enum pkmn_error pkmn_pokemon_box_get_pokemon(
-    struct pkmn_pokemon_box* p_pokemon_box,
+    const struct pkmn_pokemon_box* p_pokemon_box,
     size_t position,
     struct pkmn_pokemon* p_pokemon_out
 );
@@ -180,7 +180,7 @@ PKMN_C_API enum pkmn_error pkmn_pokemon_box_get_pokemon(
  * \returns ::PKMN_ERROR_INVALID_ARGUMENT If the new Pokémon is incompatible with the box's game
  */
 PKMN_C_API enum pkmn_error pkmn_pokemon_box_set_pokemon(
-    struct pkmn_pokemon_box* p_pokemon_box,
+    const struct pkmn_pokemon_box* p_pokemon_box,
     size_t position,
     struct pkmn_pokemon* p_pokemon
 );
@@ -197,7 +197,7 @@ PKMN_C_API enum pkmn_error pkmn_pokemon_box_set_pokemon(
  * \returns ::PKMN_ERROR_NULL_POINTER if either pointer parameter is NULL
  */
 PKMN_C_API enum pkmn_error pkmn_pokemon_box_as_list(
-    struct pkmn_pokemon_box* p_pokemon_box,
+    const struct pkmn_pokemon_box* p_pokemon_box,
     struct pkmn_pokemon_list* p_pokemon_list_out
 );
 

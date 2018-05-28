@@ -82,7 +82,7 @@ PKMN_C_API enum pkmn_error pkmn_pokemon_pc_free(
  * \returns <b>NULL</b> if pokemon_pc_ptr is NULL
  */
 PKMN_C_API const char* pkmn_pokemon_pc_strerror(
-    struct pkmn_pokemon_pc* p_pokemon_pc
+    const struct pkmn_pokemon_pc* p_pokemon_pc
 );
 
 /*!
@@ -102,7 +102,7 @@ PKMN_C_API const char* pkmn_pokemon_pc_strerror(
  * \returns ::PKMN_ERROR_OUT_OF_RANGE If index is not in the range [0-capacity]
  */
 PKMN_C_API enum pkmn_error pkmn_pokemon_pc_get_box(
-    struct pkmn_pokemon_pc* p_pokemon_pc,
+    const struct pkmn_pokemon_pc* p_pokemon_pc,
     size_t index,
     struct pkmn_pokemon_box* p_pokemon_box_out
 );
@@ -123,7 +123,7 @@ PKMN_C_API enum pkmn_error pkmn_pokemon_pc_get_box(
  * \returns ::PKMN_ERROR_FEATURE_NOT_IN_GAME_ERROR if this is a Generation I PC
  */
 PKMN_C_API enum pkmn_error pkmn_pokemon_pc_get_box_names(
-    struct pkmn_pokemon_pc* p_pokemon_pc,
+    const struct pkmn_pokemon_pc* p_pokemon_pc,
     struct pkmn_string_list* p_box_names_out
 );
 
@@ -139,7 +139,7 @@ PKMN_C_API enum pkmn_error pkmn_pokemon_pc_get_box_names(
  * \returns ::PKMN_ERROR_NULL_POINTER if either pointer parameter is NULL
  */
 PKMN_C_API enum pkmn_error pkmn_pokemon_pc_as_list(
-    struct pkmn_pokemon_pc* p_pokemon_pc,
+    const struct pkmn_pokemon_pc* p_pokemon_pc,
     struct pkmn_pokemon_box_list* p_pokemon_box_list_out
 );
 
