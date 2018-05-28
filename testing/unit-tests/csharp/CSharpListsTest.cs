@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -9,12 +9,15 @@ using System;
 using NUnit.Framework;
 
 [TestFixture]
-public class CSharpListsTest {
+public class CSharpListsTest
+{
     [Test]
-    public void AbilityListTest() {
+    public void AbilityListTest()
+    {
         // Make sure trying to create an invalid list results in an exception
         Assert.Throws<IndexOutOfRangeException>(
-            delegate {
+            delegate
+            {
                 PKMN.Database.Lists.AbilityList(0);
             }
         );
@@ -26,10 +29,12 @@ public class CSharpListsTest {
     }
 
     [Test]
-    public void GameListTest() {
+    public void GameListTest()
+    {
         // Make sure trying to create an invalid list results in an exception
         Assert.Throws<IndexOutOfRangeException>(
-            delegate {
+            delegate
+            {
                 PKMN.Database.Lists.GameList(7, false);
             }
         );
@@ -41,7 +46,8 @@ public class CSharpListsTest {
     }
 
     [Test]
-    public void GamecubeShadowPokemonListTest() {
+    public void GamecubeShadowPokemonListTest()
+    {
         PKMN.StringList colosseumShadowPokemonList = PKMN.Database.Lists.GamecubeShadowPokemonList(true);
         Assert.AreEqual(colosseumShadowPokemonList.Count, 48);
 
@@ -50,10 +56,29 @@ public class CSharpListsTest {
     }
 
     [Test]
-    public void ItemListTest() {
+    public void HMMoveListTest()
+    {
         // Make sure trying to create an invalid list results in an exception
         Assert.Throws<ArgumentOutOfRangeException>(
-            delegate {
+            delegate
+            {
+                PKMN.Database.Lists.HMMoveList("Not a game");
+            }
+        );
+
+        PKMN.StringList hmMoveList = PKMN.Database.Lists.HMMoveList("Red");
+        Assert.AreEqual(hmMoveList.Count, 5);
+        Assert.AreEqual(hmMoveList[0], "Cut");
+        Assert.AreEqual(hmMoveList[4], "Flash");
+    }
+
+    [Test]
+    public void ItemListTest()
+    {
+        // Make sure trying to create an invalid list results in an exception
+        Assert.Throws<ArgumentOutOfRangeException>(
+            delegate
+            {
                 PKMN.Database.Lists.ItemList("Not a game");
             }
         );
@@ -65,10 +90,12 @@ public class CSharpListsTest {
     }
 
     [Test]
-    public void LocationListTest() {
+    public void LocationListTest()
+    {
         // Make sure trying to create an invalid list results in an exception
         Assert.Throws<ArgumentOutOfRangeException>(
-            delegate {
+            delegate
+            {
                 PKMN.Database.Lists.LocationList("Not a game", false);
             }
         );
@@ -80,10 +107,12 @@ public class CSharpListsTest {
     }
 
     [Test]
-    public void MoveListTest() {
+    public void MoveListTest()
+    {
         // Make sure trying to create an invalid list results in an exception
         Assert.Throws<ArgumentOutOfRangeException>(
-            delegate {
+            delegate
+            {
                 PKMN.Database.Lists.MoveList("Not a game");
             }
         );
@@ -95,7 +124,8 @@ public class CSharpListsTest {
     }
 
     [Test]
-    public void NatureListTest() {
+    public void NatureListTest()
+    {
         PKMN.StringList natureList = PKMN.Database.Lists.NatureList();
         Assert.AreEqual(natureList.Count, 25);
         Assert.AreEqual(natureList[0], "Hardy");
@@ -103,10 +133,12 @@ public class CSharpListsTest {
     }
 
     [Test]
-    public void PokemonListTest() {
+    public void PokemonListTest()
+    {
         // Make sure trying to create an invalid list results in an exception
         Assert.Throws<IndexOutOfRangeException>(
-            delegate {
+            delegate
+            {
                 PKMN.Database.Lists.PokemonList(0, true);
             }
         );
@@ -118,7 +150,8 @@ public class CSharpListsTest {
     }
 
     [Test]
-    public void RegionListTest() {
+    public void RegionListTest()
+    {
         PKMN.StringList regionList = PKMN.Database.Lists.RegionList();
         Assert.AreEqual(regionList.Count, 7);
         Assert.AreEqual(regionList[0], "Kanto");
@@ -127,11 +160,13 @@ public class CSharpListsTest {
 
     [Test]
     [Ignore("Feature not implemented")]
-    public void RibbonListTest() {
+    public void RibbonListTest()
+    {
     }
 
     [Test]
-    public void SuperTrainingMedalListTest() {
+    public void SuperTrainingMedalListTest()
+    {
         PKMN.StringList superTrainingMedalList = PKMN.Database.Lists.SuperTrainingMedalList();
         Assert.AreEqual(superTrainingMedalList.Count, 30);
         Assert.AreEqual(superTrainingMedalList[0], "Sp. Atk Level 1");
@@ -139,10 +174,29 @@ public class CSharpListsTest {
     }
 
     [Test]
-    public void TypeListTest() {
+    public void TMMoveListTest()
+    {
         // Make sure trying to create an invalid list results in an exception
         Assert.Throws<ArgumentOutOfRangeException>(
-            delegate {
+            delegate
+            {
+                PKMN.Database.Lists.TMMoveList("Not a game");
+            }
+        );
+
+        PKMN.StringList tmMoveList = PKMN.Database.Lists.TMMoveList("Red");
+        Assert.AreEqual(tmMoveList.Count, 50);
+        Assert.AreEqual(tmMoveList[0], "Mega Punch");
+        Assert.AreEqual(tmMoveList[49], "Substitute");
+    }
+
+    [Test]
+    public void TypeListTest()
+    {
+        // Make sure trying to create an invalid list results in an exception
+        Assert.Throws<ArgumentOutOfRangeException>(
+            delegate
+            {
                 PKMN.Database.Lists.TypeList("Not a game");
             }
         );

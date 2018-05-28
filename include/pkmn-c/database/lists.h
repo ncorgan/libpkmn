@@ -33,6 +33,11 @@ PKMN_C_API enum pkmn_error pkmn_database_gamecube_shadow_pokemon_list(
     struct pkmn_string_list* p_p_gamecube_shadow_pokemon_list_out
 );
 
+PKMN_C_API enum pkmn_error pkmn_database_hm_move_list(
+    const char* p_game,
+    struct pkmn_string_list* p_hm_move_list_out
+);
+
 PKMN_C_API enum pkmn_error pkmn_database_item_list(
     const char* p_game,
     struct pkmn_string_list* p_item_list_out
@@ -70,6 +75,11 @@ PKMN_C_API enum pkmn_error pkmn_database_ribbon_list(
 
 PKMN_C_API enum pkmn_error pkmn_database_super_training_medal_list(
     struct pkmn_string_list* p_super_training_medal_list_out
+);
+
+PKMN_C_API enum pkmn_error pkmn_database_tm_move_list(
+    const char* p_game,
+    struct pkmn_string_list* p_tm_move_list_out
 );
 
 PKMN_C_API enum pkmn_error pkmn_database_type_list(

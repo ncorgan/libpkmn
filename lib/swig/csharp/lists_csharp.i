@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -22,6 +22,7 @@ PKMN_CSHARP_INIT
 %rename(AbilityList) get_ability_list;
 %rename(GameList) get_game_list;
 %rename(GamecubeShadowPokemonList) get_gamecube_shadow_pokemon_list;
+%rename(HMMoveList) get_hm_move_list;
 %rename(ItemList) get_item_list;
 %rename(LocationList) get_location_list;
 %rename(MoveList) get_move_list;
@@ -30,5 +31,6 @@ PKMN_CSHARP_INIT
 %rename(RegionList) get_region_list;
 %rename(RibbonList) get_ribbon_list;
 %rename(SuperTrainingMedalList) get_super_training_medal_list;
+%rename(TMMoveList) get_tm_move_list;
 %rename(TypeList) get_type_list;
 %include <pkmn/database/lists.hpp>

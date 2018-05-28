@@ -62,6 +62,24 @@ enum pkmn_error pkmn_database_gamecube_shadow_pokemon_list(
     )
 }
 
+enum pkmn_error pkmn_database_hm_move_list(
+    const char* p_game,
+    struct pkmn_string_list* p_hm_move_list_out
+)
+{
+    PKMN_CHECK_NULL_PARAM(p_game);
+    PKMN_CHECK_NULL_PARAM(p_hm_move_list_out);
+
+    PKMN_CPP_TO_C(
+        pkmn::c::string_list_cpp_to_c(
+            pkmn::database::get_hm_move_list(
+                p_game
+            ),
+            p_hm_move_list_out
+        )
+    )
+}
+
 enum pkmn_error pkmn_database_item_list(
     const char* p_game,
     struct pkmn_string_list* p_item_list_out
@@ -190,6 +208,24 @@ enum pkmn_error pkmn_database_super_training_medal_list(
         pkmn::c::string_list_cpp_to_c(
             pkmn::database::get_super_training_medal_list(),
             p_super_training_medal_list_out
+        )
+    )
+}
+
+enum pkmn_error pkmn_database_tm_move_list(
+    const char* p_game,
+    struct pkmn_string_list* p_tm_move_list_out
+)
+{
+    PKMN_CHECK_NULL_PARAM(p_game);
+    PKMN_CHECK_NULL_PARAM(p_tm_move_list_out);
+
+    PKMN_CPP_TO_C(
+        pkmn::c::string_list_cpp_to_c(
+            pkmn::database::get_tm_move_list(
+                p_game
+            ),
+            p_tm_move_list_out
         )
     )
 }

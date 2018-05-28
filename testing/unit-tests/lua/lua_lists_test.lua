@@ -1,5 +1,5 @@
 --
--- Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+-- Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
 --
 -- Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
 -- or copy at http://opensource.org/licenses/MIT)
@@ -34,6 +34,16 @@ function test_gamecube_shadow_pokemon_list()
 
     local xd_shadow_pokemon_list = pkmn.database.get_gamecube_shadow_pokemon_list(false)
     luaunit.assertEquals(#xd_shadow_pokemon_list, 83)
+end
+
+function test_hm_move_list()
+    -- Make sure trying to create an invalid list results in an error
+    luaunit.assertError(pkmn.database.get_hm_move_list, "Not a game")
+
+    local hm_move_list = pkmn.database.get_hm_move_list("Red")
+    luaunit.assertEquals(#hm_move_list, 5)
+    luaunit.assertEquals(hm_move_list[1], "Cut")
+    luaunit.assertEquals(hm_move_list[5], "Flash")
 end
 
 function test_item_list()
@@ -99,6 +109,16 @@ function test_super_training_medal_list()
     luaunit.assertEquals(#super_training_medal_list, 30)
     luaunit.assertEquals(super_training_medal_list[1], "Sp. Atk Level 1")
     luaunit.assertEquals(super_training_medal_list[30], "The Battle for the Best!")
+end
+
+function test_tm_move_list()
+    -- Make sure trying to create an invalid list results in an error
+    luaunit.assertError(pkmn.database.get_tm_move_list, "Not a game")
+
+    local tm_move_list = pkmn.database.get_tm_move_list("Red")
+    luaunit.assertEquals(#tm_move_list, 50)
+    luaunit.assertEquals(tm_move_list[1], "Mega Punch")
+    luaunit.assertEquals(tm_move_list[50], "Substitute")
 end
 
 function test_type_list()

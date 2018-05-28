@@ -111,6 +111,44 @@ static void gamecube_shadow_pokemon_list_test()
     TEST_ASSERT_EQUAL(0, gamecube_shadow_pokemon.length);
 }
 
+static void hm_move_list_test()
+{
+    struct pkmn_string_list hm_moves =
+    {
+        .pp_strings = NULL,
+        .length = 0
+    };
+    enum pkmn_error error = PKMN_ERROR_NONE;
+
+    // Make sure invalid calls return an error
+    error = pkmn_database_hm_move_list(
+                "Not a game",
+                &hm_moves
+            );
+    TEST_ASSERT_EQUAL(PKMN_ERROR_INVALID_ARGUMENT, error);
+
+    error = pkmn_database_hm_move_list(
+                "Red",
+                &hm_moves
+            );
+    PKMN_TEST_ASSERT_SUCCESS(error);
+    TEST_ASSERT_NOT_NULL(hm_moves.pp_strings);
+    TEST_ASSERT_EQUAL(5, hm_moves.length);
+
+    TEST_ASSERT_EQUAL_STRING(
+        "Cut",
+        hm_moves.pp_strings[0]
+    );
+    TEST_ASSERT_EQUAL_STRING(
+        "Flash",
+        hm_moves.pp_strings[4]
+    );
+
+    pkmn_string_list_free(&hm_moves);
+    TEST_ASSERT_NULL(hm_moves.pp_strings);
+    TEST_ASSERT_EQUAL(0, hm_moves.length);
+}
+
 static void item_list_test()
 {
     struct pkmn_string_list items =
@@ -352,6 +390,44 @@ static void super_training_medal_list_test()
     TEST_ASSERT_EQUAL(0, super_training_medals.length);
 }
 
+static void tm_move_list_test()
+{
+    struct pkmn_string_list tm_moves =
+    {
+        .pp_strings = NULL,
+        .length = 0
+    };
+    enum pkmn_error error = PKMN_ERROR_NONE;
+
+    // Make sure invalid calls return an error
+    error = pkmn_database_tm_move_list(
+                "Not a game",
+                &tm_moves
+            );
+    TEST_ASSERT_EQUAL(PKMN_ERROR_INVALID_ARGUMENT, error);
+
+    error = pkmn_database_tm_move_list(
+                "Red",
+                &tm_moves
+            );
+    PKMN_TEST_ASSERT_SUCCESS(error);
+    TEST_ASSERT_NOT_NULL(tm_moves.pp_strings);
+    TEST_ASSERT_EQUAL(50, tm_moves.length);
+
+    TEST_ASSERT_EQUAL_STRING(
+        "Mega Punch",
+        tm_moves.pp_strings[0]
+    );
+    TEST_ASSERT_EQUAL_STRING(
+        "Substitute",
+        tm_moves.pp_strings[49]
+    );
+
+    pkmn_string_list_free(&tm_moves);
+    TEST_ASSERT_NULL(tm_moves.pp_strings);
+    TEST_ASSERT_EQUAL(0, tm_moves.length);
+}
+
 static void type_list_test()
 {
     struct pkmn_string_list types =
@@ -393,6 +469,7 @@ PKMN_C_TEST_MAIN(
     PKMN_C_TEST(ability_list_test)
     PKMN_C_TEST(game_list_test)
     PKMN_C_TEST(gamecube_shadow_pokemon_list_test)
+    PKMN_C_TEST(hm_move_list_test)
     PKMN_C_TEST(item_list_test)
     PKMN_C_TEST(location_list_test)
     PKMN_C_TEST(move_list_test)
@@ -401,5 +478,6 @@ PKMN_C_TEST_MAIN(
     PKMN_C_TEST(region_list_test)
     PKMN_C_TEST(ribbon_list_test)
     PKMN_C_TEST(super_training_medal_list_test)
+    PKMN_C_TEST(tm_move_list_test)
     PKMN_C_TEST(type_list_test)
 )

@@ -41,7 +41,8 @@ replacements = dict(Ev = "EV",
                     Pp = "PP",
                     Pc = "PC",
                     Hp = "HP",
-                    TmHm = "TMHM",
+                    Tm = "TM",
+                    Hm = "HM",
                     Pksav = "PKSav",
                     Libpkmgc = "LibPkmGC",
                     Sqlite3 = "SQLite3",
@@ -69,6 +70,8 @@ def generate_new_name(old_name, pascal):
         new_name = "GetMoveType"
     elif "GetIDeal" in new_name:
         new_name = new_name.replace("GetIDeal", "GetIdeal")
+    elif "TMp" in new_name:
+        new_name = new_name.replace("TMp", "Tmp")
 
     return new_name
 
