@@ -54,23 +54,23 @@ ctest -E "python_paths_test" --output-on-failure
 if not !ERRORLEVEL!==0 goto fail
 
 :: So the log isn't too verbose
-echo Installing...
-msbuild /p:configuration=Release INSTALL.vcxproj 1>nul 2>nul
-if not !ERRORLEVEL!==0 goto fail
-
-mkdir c:\projects\libpkmn\testing\applications\cpp\build
-cd c:\projects\libpkmn\testing\applications\cpp\build
-cmake -G %CMAKE_GENERATOR_NAME% ..
-if not !ERRORLEVEL!==0 goto fail
-msbuild /p:configuration=Release ALL_BUILD.vcxproj
-if not !ERRORLEVEL!==0 goto fail
-
-mkdir c:\projects\libpkmn\testing\applications\c\build
-cd c:\projects\libpkmn\testing\applications\c\build
-cmake -G %CMAKE_GENERATOR_NAME% ..
-if not !ERRORLEVEL!==0 goto fail
-msbuild /p:configuration=Release ALL_BUILD.vcxproj
-if not !ERRORLEVEL!==0 goto fail
+:: echo Installing...
+:: msbuild /p:configuration=Release INSTALL.vcxproj 1>nul 2>nul
+:: if not !ERRORLEVEL!==0 goto fail
+::
+:: mkdir c:\projects\libpkmn\testing\applications\cpp\build
+:: cd c:\projects\libpkmn\testing\applications\cpp\build
+:: cmake -G %CMAKE_GENERATOR_NAME% ..
+:: if not !ERRORLEVEL!==0 goto fail
+:: msbuild /p:configuration=Release ALL_BUILD.vcxproj
+:: if not !ERRORLEVEL!==0 goto fail
+::
+:: mkdir c:\projects\libpkmn\testing\applications\c\build
+:: cd c:\projects\libpkmn\testing\applications\c\build
+:: cmake -G %CMAKE_GENERATOR_NAME% ..
+:: if not !ERRORLEVEL!==0 goto fail
+:: msbuild /p:configuration=Release ALL_BUILD.vcxproj
+:: if not !ERRORLEVEL!==0 goto fail
 
 goto pass
 

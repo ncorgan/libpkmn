@@ -37,61 +37,61 @@ make
 ctest -E ".*GUI" --output-on-failure
 [ $? -ne 0 ] && exit 1
 # So the log isn't too verbose
-echo Installing...
-sudo make install > /dev/null 2>&1
-[ $? -ne 0 ] && exit 1
-export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
-sudo ldconfig
-[ $? -ne 0 ] && exit 1
+#echo Installing...
+#sudo make install > /dev/null 2>&1
+#[ $? -ne 0 ] && exit 1
+#export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
+#sudo ldconfig
+#[ $? -ne 0 ] && exit 1
 
 # Test external C++ CMake project that uses FindPKMN.cmake
-mkdir $REPO_TOPLEVEL/test-env/cpp-app
-[ $? -ne 0 ] && exit 1
-cd $REPO_TOPLEVEL/test-env/cpp-app
-[ $? -ne 0 ] && exit 1
-cmake $REPO_TOPLEVEL/testing/applications/cpp/cmake
-[ $? -ne 0 ] && exit 1
-make
-[ $? -ne 0 ] && exit 1
-./pkmn-cpp-app
-[ $? -ne 0 ] && exit 1
-
+#mkdir $REPO_TOPLEVEL/test-env/cpp-app
+#[ $? -ne 0 ] && exit 1
+#cd $REPO_TOPLEVEL/test-env/cpp-app
+#[ $? -ne 0 ] && exit 1
+#cmake $REPO_TOPLEVEL/testing/applications/cpp/cmake
+#[ $? -ne 0 ] && exit 1
+#make
+#[ $? -ne 0 ] && exit 1
+#./pkmn-cpp-app
+#[ $? -ne 0 ] && exit 1
+#
 # Test external C++ project that uses raw Makefiles
-cd $REPO_TOPLEVEL/testing/applications/cpp/makefiles
-[ $? -ne 0 ] && exit 1
-make
-[ $? -ne 0 ] && exit 1
-./pkmn-cpp-app
-[ $? -ne 0 ] && exit 1
-
+#cd $REPO_TOPLEVEL/testing/applications/cpp/makefiles
+#[ $? -ne 0 ] && exit 1
+#make
+#[ $? -ne 0 ] && exit 1
+#./pkmn-cpp-app
+#[ $? -ne 0 ] && exit 1
+#
 # Test external C CMake project that uses FindPKMN-C.cmake
-mkdir $REPO_TOPLEVEL/test-env/c-app
-[ $? -ne 0 ] && exit 1
-cd $REPO_TOPLEVEL/test-env/c-app
-[ $? -ne 0 ] && exit 1
-cmake $REPO_TOPLEVEL/testing/applications/c/cmake
-[ $? -ne 0 ] && exit 1
-make
-[ $? -ne 0 ] && exit 1
-./pkmn-c-app
-[ $? -ne 0 ] && exit 1
-
+#mkdir $REPO_TOPLEVEL/test-env/c-app
+#[ $? -ne 0 ] && exit 1
+#cd $REPO_TOPLEVEL/test-env/c-app
+#[ $? -ne 0 ] && exit 1
+#cmake $REPO_TOPLEVEL/testing/applications/c/cmake
+#[ $? -ne 0 ] && exit 1
+#make
+#[ $? -ne 0 ] && exit 1
+#./pkmn-c-app
+#[ $? -ne 0 ] && exit 1
+#
 # Test external C project that uses raw Makefiles
-cd $REPO_TOPLEVEL/testing/application/c/makefiles
-[ $? -ne 0 ] && exit 1
-make
-[ $? -ne 0 ] && exit 1
-./pkmn-c-app
-[ $? -ne 0 ] && exit 1
-
+#cd $REPO_TOPLEVEL/testing/application/c/makefiles
+#[ $? -ne 0 ] && exit 1
+#make
+#[ $? -ne 0 ] && exit 1
+#./pkmn-c-app
+#[ $? -ne 0 ] && exit 1
+#
 # Test external Lua application
 #cd $REPO_TOPLEVEL/testing/applications/lua
 #lua pkmn-lua-app.lua
-
+#
 # Test external Python application
 #cd $REPO_TOPLEVEL/testing/applications/python
 #python${PYTHON_VERSION} pkmn-python-app.py
-
+#
 # Test external Ruby application
 #cd $REPO_TOPLEVEL/testing/applications/ruby
 #ruby pkmn-ruby-app.rb
