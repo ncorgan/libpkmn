@@ -26,6 +26,10 @@ namespace pkmn { namespace priv {
 // Attribute Maps
 %include <ruby/pkmn_attribute_maps.i>
 
+// Daycare
+%include <ruby/pkmn_daycare_helpers.i>
+%include <ruby/pkmn_daycare.i>
+
 // Item Slot
 %include <ruby/pkmn_item_slot.i>
 

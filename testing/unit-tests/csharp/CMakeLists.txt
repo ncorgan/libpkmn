@@ -18,6 +18,7 @@ IF(NUNIT_FOUND)
         CSharpBuildInfoTest
         CSharpCalculationsTest
         CSharpDatabaseEntryTest
+        CSharpDaycareTest
         CSharpEqualityHashCodeTest
         CSharpGameSaveTest
         CSharpItemsTest

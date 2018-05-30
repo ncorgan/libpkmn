@@ -9,6 +9,7 @@ SET(ruby_tests
     RubyBuildInfoTest
     RubyCalculationsTest
     RubyDatabaseEntryTest
+    RubyDaycareTest
     RubyGameSaveTest
     RubyGUITest
     RubyItemTest

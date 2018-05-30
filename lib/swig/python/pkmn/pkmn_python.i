@@ -29,6 +29,10 @@ namespace pkmn { namespace priv {
 // Attribute Maps
 %include <python/pkmn_attribute_maps.i>
 
+// Daycare
+%include <python/pkmn_daycare_helpers.i>
+%include <python/pkmn_daycare.i>
+
 // Item Slot
 %include <python/pkmn_item_slot.i>
 

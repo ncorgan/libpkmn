@@ -12,6 +12,7 @@ SET(python_tests
     python_buildinfo_test
     python_calculations_test
     python_database_entry_test
+    python_daycare_test
     python_game_save_test
     python_items_test
     python_lists_test

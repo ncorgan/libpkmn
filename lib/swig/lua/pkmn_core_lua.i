@@ -24,6 +24,10 @@ namespace pkmn { namespace priv {
 // Attribute Maps
 %include <lua/pkmn_attribute_maps.i>
 
+// Daycare
+%include <lua/pkmn_daycare_helpers.i>
+%include <lua/pkmn_daycare.i>
+
 // Item Slot
 %include <lua/pkmn_item_slot.i>
 

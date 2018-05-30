@@ -54,6 +54,10 @@ std::string GetSWIGVersion();
 // Attribute Maps
 %include <csharp/pkmn_attribute_maps.i>
 
+// Daycare
+%include <csharp/pkmn_daycare_helpers.i>
+%include <csharp/pkmn_daycare.i>
+
 // Game Save
 %include <csharp/pkmn_game_save.i>
 

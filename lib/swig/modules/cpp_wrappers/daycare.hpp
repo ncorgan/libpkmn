@@ -69,6 +69,24 @@ namespace pkmn { namespace swig {
                 return daycare_breeding_pokemon(_daycare);
             }
 
+#ifdef SWIGCSHARP
+            // For equality and hash codes
+            uintmax_t cptr()
+            {
+                return uintmax_t(_daycare.get());
+            }
+#else
+            bool operator==(const daycare& rhs) const
+            {
+                return (_daycare == rhs._daycare);
+            }
+
+            bool operator!=(const daycare& rhs) const
+            {
+                return !operator==(rhs);
+            }
+#endif
+
         private:
             pkmn::daycare::sptr _daycare;
             int _generation;

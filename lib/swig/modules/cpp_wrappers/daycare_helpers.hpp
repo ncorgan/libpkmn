@@ -70,6 +70,8 @@ namespace pkmn { namespace swig {
                     1,
                     _daycare->get_levelup_pokemon_capacity()
                 );
+
+                --index;
 #endif
 
                 _daycare->set_levelup_pokemon(
@@ -84,6 +86,24 @@ namespace pkmn { namespace swig {
 
                 return _daycare->get_levelup_pokemon_capacity();
             }
+
+#ifdef SWIGCSHARP
+            // For equality and hash codes
+            uintmax_t cptr()
+            {
+                return uintmax_t(_daycare.get());
+            }
+#else
+            bool operator==(const daycare_levelup_pokemon& rhs) const
+            {
+                return (_daycare == rhs._daycare);
+            }
+
+            bool operator!=(const daycare_levelup_pokemon& rhs) const
+            {
+                return !operator==(rhs);
+            }
+#endif
 
         private:
             pkmn::daycare::sptr _daycare;
@@ -138,6 +158,8 @@ namespace pkmn { namespace swig {
                     1,
                     _daycare->get_breeding_pokemon_capacity()
                 );
+
+                --index;
 #endif
 
                 _daycare->set_breeding_pokemon(
@@ -152,6 +174,24 @@ namespace pkmn { namespace swig {
 
                 return _daycare->get_breeding_pokemon_capacity();
             }
+
+#ifdef SWIGCSHARP
+            // For equality and hash codes
+            uintmax_t cptr()
+            {
+                return uintmax_t(_daycare.get());
+            }
+#else
+            bool operator==(const daycare_breeding_pokemon& rhs) const
+            {
+                return (_daycare == rhs._daycare);
+            }
+
+            bool operator!=(const daycare_breeding_pokemon& rhs) const
+            {
+                return !operator==(rhs);
+            }
+#endif
 
         private:
             pkmn::daycare::sptr _daycare;

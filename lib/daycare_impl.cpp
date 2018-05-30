@@ -18,6 +18,8 @@
 #include <boost/assert.hpp>
 #include <boost/thread/lock_guard.hpp>
 
+// TODO: "None" Pokémon's game should match daycare's
+
 namespace pkmn {
 
     daycare::sptr daycare::make(const std::string& game)

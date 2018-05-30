@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+# Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
 #
 # Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
 # or copy at http://opensource.org/licenses/MIT)
@@ -35,6 +35,7 @@ IF(LUAUNIT_FOUND)
         lua_buildinfo_test
         lua_calculations_test
         lua_database_entry_test
+        lua_daycare_test
         lua_game_save_test
         lua_gui_test
         lua_items_test
