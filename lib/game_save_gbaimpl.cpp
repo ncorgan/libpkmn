@@ -211,7 +211,7 @@ namespace pkmn {
                    pksav_littleendian16(_pksav_save.p_time_played->hours),
                    _pksav_save.p_time_played->minutes,
                    _pksav_save.p_time_played->seconds,
-                   0 // frames
+                   _pksav_save.p_time_played->frames
                );
     }
 

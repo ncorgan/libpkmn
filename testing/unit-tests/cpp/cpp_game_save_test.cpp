@@ -27,6 +27,7 @@
 #include <gtest/gtest.h>
 
 #include <boost/assign.hpp>
+#include <boost/config.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/format.hpp>
 
@@ -130,7 +131,7 @@ namespace pkmntest {
     }
 
     static void test_trainer_name(
-        pkmn::game_save::sptr save
+        const pkmn::game_save::sptr& save
     ) {
         EXPECT_THROW(
             save->set_trainer_name("");
@@ -144,7 +145,7 @@ namespace pkmntest {
     }
 
     static void test_trainer_id(
-        pkmn::game_save::sptr save,
+        const pkmn::game_save::sptr& save,
         bool is_gb_game
     ) {
         EXPECT_EQ((is_gb_game ? DEFAULT_TRAINER_PID : pkmn::pokemon::DEFAULT_TRAINER_ID), save->get_trainer_id());
@@ -159,7 +160,7 @@ namespace pkmntest {
     }
 
     static void test_rival_name(
-        pkmn::game_save::sptr save,
+        const pkmn::game_save::sptr& save,
         bool is_rival_name_set
     ) {
         if(is_rival_name_set) {
@@ -179,8 +180,84 @@ namespace pkmntest {
         }
     }
 
+    static void test_time_played(
+        const pkmn::game_save::sptr& save
+    )
+    {
+        if(save->get_game() == "Colosseum" or save->get_game() == "XD")
+        {
+            ASSERT_THROW(
+                save->get_time_played();
+            , pkmn::unimplemented_error);
+            ASSERT_THROW(
+                save->set_time_played(pkmn::time_duration());
+            , pkmn::unimplemented_error);
+        }
+        else
+        {
+            // Generation I doesn't have frames.
+            int generation = game_generations.at(save->get_game());
+
+            pkmn::rng<int> int_rng;
+            pkmn::time_duration duration(
+                                    int_rng.rand(0, 255),
+                                    int_rng.rand(0, 59),
+                                    int_rng.rand(0, 59),
+                                    0
+                                );
+            if(generation != 1)
+            {
+                duration.frames = int_rng.rand(0, 59);
+            }
+
+            save->set_time_played(duration);
+            ASSERT_EQ(duration, save->get_time_played());
+
+            // Test invalid times.
+
+            BOOST_STATIC_CONSTEXPR pkmn::time_duration too_low_hours_time_played(-1,0,0,0);
+            BOOST_STATIC_CONSTEXPR pkmn::time_duration too_high_hours_time_played(999999,0,0,0);
+
+            BOOST_STATIC_CONSTEXPR pkmn::time_duration too_low_minutes_time_played(0,-1,0,0);
+            BOOST_STATIC_CONSTEXPR pkmn::time_duration too_high_minutes_time_played(0,999999,0,0);
+
+            BOOST_STATIC_CONSTEXPR pkmn::time_duration too_low_seconds_time_played(0,0,-1,0);
+            BOOST_STATIC_CONSTEXPR pkmn::time_duration too_high_seconds_time_played(0,0,999999,0);
+
+            static const std::vector<pkmn::time_duration> invalid_time_durations =
+            {
+                too_low_hours_time_played,
+                too_high_hours_time_played,
+                too_low_minutes_time_played,
+                too_high_minutes_time_played,
+                too_low_seconds_time_played,
+                too_high_seconds_time_played,
+            };
+
+            for(const pkmn::time_duration& invalid_time_duration: invalid_time_durations)
+            {
+                ASSERT_THROW(
+                    save->set_time_played(invalid_time_duration);
+                , std::out_of_range);
+            }
+
+            if(generation != 1)
+            {
+                BOOST_STATIC_CONSTEXPR pkmn::time_duration too_low_frames_time_played(0,0,0,-1);
+                BOOST_STATIC_CONSTEXPR pkmn::time_duration too_high_frames_time_played(0,0,0,999999);
+
+                ASSERT_THROW(
+                    save->set_time_played(too_low_frames_time_played);
+                , std::out_of_range);
+                ASSERT_THROW(
+                    save->set_time_played(too_high_frames_time_played);
+                , std::out_of_range);
+            }
+        }
+    }
+
     static void game_save_test_common_fields(
-        pkmn::game_save::sptr save
+        const pkmn::game_save::sptr& save
     ) {
         std::string game = save->get_game();
         int generation = game_generations.at(game);
@@ -355,10 +432,12 @@ namespace pkmntest {
             EXPECT_TRUE(pokedex->has_seen(test_species2));
             EXPECT_TRUE(pokedex->has_caught(test_species2));
         }
+
+        test_time_played(save);
     }
 
     static void game_save_test_attributes(
-        pkmn::game_save::sptr save
+        const pkmn::game_save::sptr& save
     )
     {
         std::string game = save->get_game();
@@ -577,7 +656,7 @@ namespace pkmntest {
     }
 
     void randomize_items(
-        pkmn::game_save::sptr save,
+        const pkmn::game_save::sptr& save,
         const std::vector<std::string> &item_list
     ) {
         // Clear out what items the save happens to have to put it in a known state.
@@ -587,7 +666,7 @@ namespace pkmntest {
     }
 
     void randomize_pokemon(
-        pkmn::game_save::sptr save,
+        const pkmn::game_save::sptr& save,
         const std::vector<std::string> &item_list
     ) {
         int generation = game_generations.at(save->get_game());
@@ -750,8 +829,8 @@ namespace pkmntest {
     }
 
     static void compare_game_saves(
-        pkmn::game_save::sptr save1,
-        pkmn::game_save::sptr save2
+        const pkmn::game_save::sptr& save1,
+        const pkmn::game_save::sptr& save2
     ) {
         ASSERT_EQ(save1->get_game(), save2->get_game());
         std::string game = save1->get_game();
@@ -963,7 +1042,7 @@ namespace pkmntest {
     };
 
     TEST_P(game_save_test, game_save_test) {
-        pkmn::game_save::sptr save = get_game_save();
+        const pkmn::game_save::sptr& save = get_game_save();
 
         std::vector<std::string> item_list = pkmn::database::get_item_list(save->get_game());
 
@@ -981,7 +1060,7 @@ namespace pkmntest {
         fs::path temp_save_path = TMP_DIR / str(boost::format("%s_%u.sav") % save->get_game().c_str() % pkmn::rng<uint32_t>().rand());
         save->save_as(temp_save_path.string());
 
-        pkmn::game_save::sptr save2 = pkmn::game_save::from_file(temp_save_path.string());
+        const pkmn::game_save::sptr& save2 = pkmn::game_save::from_file(temp_save_path.string());
         pkmntest::compare_game_saves(save, save2);
 
         std::remove(temp_save_path.string().c_str());
