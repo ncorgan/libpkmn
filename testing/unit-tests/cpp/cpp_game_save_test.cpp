@@ -215,14 +215,14 @@ namespace pkmntest {
 
             // Test invalid times.
 
-            BOOST_STATIC_CONSTEXPR pkmn::time_duration too_low_hours_time_played(-1,0,0,0);
-            BOOST_STATIC_CONSTEXPR pkmn::time_duration too_high_hours_time_played(999999,0,0,0);
+            static const pkmn::time_duration too_low_hours_time_played(-1,0,0,0);
+            static const pkmn::time_duration too_high_hours_time_played(999999,0,0,0);
 
-            BOOST_STATIC_CONSTEXPR pkmn::time_duration too_low_minutes_time_played(0,-1,0,0);
-            BOOST_STATIC_CONSTEXPR pkmn::time_duration too_high_minutes_time_played(0,999999,0,0);
+            static const pkmn::time_duration too_low_minutes_time_played(0,-1,0,0);
+            static const pkmn::time_duration too_high_minutes_time_played(0,999999,0,0);
 
-            BOOST_STATIC_CONSTEXPR pkmn::time_duration too_low_seconds_time_played(0,0,-1,0);
-            BOOST_STATIC_CONSTEXPR pkmn::time_duration too_high_seconds_time_played(0,0,999999,0);
+            static const pkmn::time_duration too_low_seconds_time_played(0,0,-1,0);
+            static const pkmn::time_duration too_high_seconds_time_played(0,0,999999,0);
 
             static const std::vector<pkmn::time_duration> invalid_time_durations =
             {
@@ -243,8 +243,8 @@ namespace pkmntest {
 
             if(generation != 1)
             {
-                BOOST_STATIC_CONSTEXPR pkmn::time_duration too_low_frames_time_played(0,0,0,-1);
-                BOOST_STATIC_CONSTEXPR pkmn::time_duration too_high_frames_time_played(0,0,0,999999);
+                static const pkmn::time_duration too_low_frames_time_played(0,0,0,-1);
+                static const pkmn::time_duration too_high_frames_time_played(0,0,0,999999);
 
                 ASSERT_THROW(
                     save->set_time_played(too_low_frames_time_played);
