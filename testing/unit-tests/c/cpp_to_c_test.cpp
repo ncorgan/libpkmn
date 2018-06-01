@@ -965,16 +965,21 @@ TEST(cpp_to_c_test, string_list_cpp_to_c_test)
 
 TEST(cpp_to_c_test, time_duration_cpp_to_c_test)
 {
-    const pkmn::time_duration time_duration_cpp = {23, 36, 30, 30};
+    const pkmn::time_duration time_duration_cpp1 = {23, 36, 30, 30};
     struct pkmn_time_duration time_duration_c = {0, 0, 0, 0};
 
     pkmn::c::time_duration_cpp_to_c(
-        time_duration_cpp,
+        time_duration_cpp1,
         &time_duration_c
     );
 
-    EXPECT_EQ(time_duration_cpp.hours,   time_duration_c.hours);
-    EXPECT_EQ(time_duration_cpp.minutes, time_duration_c.minutes);
-    EXPECT_EQ(time_duration_cpp.seconds, time_duration_c.seconds);
-    EXPECT_EQ(time_duration_cpp.frames,  time_duration_c.frames);
+    EXPECT_EQ(time_duration_cpp1.hours,   time_duration_c.hours);
+    EXPECT_EQ(time_duration_cpp1.minutes, time_duration_c.minutes);
+    EXPECT_EQ(time_duration_cpp1.seconds, time_duration_c.seconds);
+    EXPECT_EQ(time_duration_cpp1.frames,  time_duration_c.frames);
+
+    pkmn::time_duration time_duration_cpp2 = pkmn::c::time_duration_c_to_cpp(
+                                                 &time_duration_c
+                                             );
+    EXPECT_EQ(time_duration_cpp1, time_duration_cpp2);
 }

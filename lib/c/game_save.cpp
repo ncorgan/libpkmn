@@ -269,6 +269,39 @@ enum pkmn_error pkmn_game_save_set_trainer_gender(
 
 // Other fields
 
+enum pkmn_error pkmn_game_save_get_time_played(
+    const struct pkmn_game_save* p_game_save,
+    struct pkmn_time_duration* p_time_played_out
+)
+{
+    PKMN_CHECK_NULL_PARAM(p_game_save);
+    pkmn_game_save_internal_t* p_internal = GAME_SAVE_INTERNAL_RCAST(p_game_save->p_internal);
+    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_time_played_out, p_internal);
+
+    PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
+        pkmn::c::time_duration_cpp_to_c(
+            p_internal->cpp->get_time_played(),
+            p_time_played_out
+        );
+    )
+}
+
+enum pkmn_error pkmn_game_save_set_time_played(
+    const struct pkmn_game_save* p_game_save,
+    const struct pkmn_time_duration* p_time_played
+)
+{
+    PKMN_CHECK_NULL_PARAM(p_game_save);
+    pkmn_game_save_internal_t* p_internal = GAME_SAVE_INTERNAL_RCAST(p_game_save->p_internal);
+    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_time_played, p_internal);
+
+    PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
+        p_internal->cpp->set_time_played(
+            pkmn::c::time_duration_c_to_cpp(p_time_played)
+        );
+    )
+}
+
 enum pkmn_error pkmn_game_save_get_rival_name(
     const struct pkmn_game_save* p_game_save,
     char* p_rival_name_buffer,

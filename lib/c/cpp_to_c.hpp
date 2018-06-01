@@ -440,6 +440,19 @@ namespace pkmn { namespace c {
         p_time_duration_c_out->frames  = time_duration_cpp.frames;
     }
 
+    // Return struct to match C++ convention
+    inline pkmn::time_duration time_duration_c_to_cpp(
+        const pkmn_time_duration* p_time_duration_c
+    )
+    {
+        BOOST_ASSERT(p_time_duration_c != nullptr);
+
+        return {p_time_duration_c->hours,
+                p_time_duration_c->minutes,
+                p_time_duration_c->seconds,
+                p_time_duration_c->frames};
+    }
+
     template <typename sptr_type>
     void get_attribute_names_from_sptr(
         const std::shared_ptr<sptr_type>& libpkmn_sptr,

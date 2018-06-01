@@ -18,6 +18,7 @@
 
 #include <pkmn-c/types/attribute_names.h>
 #include <pkmn-c/types/gender.h>
+#include <pkmn-c/types/time_duration.h>
 #include <pkmn-c/types/trainer_info.h>
 
 #include <stdint.h>
@@ -124,6 +125,16 @@ PKMN_C_API enum pkmn_error pkmn_game_save_set_trainer_gender(
 );
 
 // Other fields
+
+PKMN_C_API enum pkmn_error pkmn_game_save_get_time_played(
+    const struct pkmn_game_save* p_game_save,
+    struct pkmn_time_duration* p_time_played_out
+);
+
+PKMN_C_API enum pkmn_error pkmn_game_save_set_time_played(
+    const struct pkmn_game_save* p_game_save,
+    const struct pkmn_time_duration* p_time_played
+);
 
 PKMN_C_API enum pkmn_error pkmn_game_save_get_rival_name(
     const struct pkmn_game_save* p_game_save,

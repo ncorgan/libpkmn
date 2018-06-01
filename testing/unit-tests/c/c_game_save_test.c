@@ -312,6 +312,134 @@ static void game_save_test_rival_name(
     }
 }
 
+static void game_save_test_time_played(
+    const struct pkmn_game_save* p_game_save
+)
+{
+    TEST_ASSERT_NOT_NULL(p_game_save);
+
+    enum pkmn_error error = PKMN_ERROR_NONE;
+
+    struct pkmn_time_duration time_played_from_save =
+    {
+        .hours = 0,
+        .minutes = 0,
+        .seconds = 0,
+        .frames = 0
+    };
+    bool is_game_gamecube = !strcmp(p_game_save->p_game, "Colosseum") ||
+                            !strcmp(p_game_save->p_game, "XD");
+
+    error = pkmn_game_save_get_time_played(
+                p_game_save,
+                &time_played_from_save
+            );
+
+    if(is_game_gamecube)
+    {
+        TEST_ASSERT_EQUAL(PKMN_ERROR_UNIMPLEMENTED_ERROR, error);
+
+        error = pkmn_game_save_set_time_played(
+                    p_game_save,
+                    &time_played_from_save
+                );
+        TEST_ASSERT_EQUAL(PKMN_ERROR_UNIMPLEMENTED_ERROR, error);
+    }
+    else
+    {
+        PKMN_TEST_ASSERT_SUCCESS(error);
+
+        // Generation I doesn't have frames.
+        int generation = game_to_generation(p_game_save->p_game);
+
+        struct pkmn_time_duration test_time_duration =
+        {
+            .hours   = (rand() % 256),
+            .minutes = (rand() % 60),
+            .seconds = (rand() % 60),
+            .frames  = (rand() % 60)
+        };
+
+        error = pkmn_game_save_set_time_played(
+                    p_game_save,
+                    &test_time_duration
+                );
+        PKMN_TEST_ASSERT_SUCCESS(error);
+
+        error = pkmn_game_save_get_time_played(
+                    p_game_save,
+                    &time_played_from_save
+                );
+        PKMN_TEST_ASSERT_SUCCESS(error);
+
+        TEST_ASSERT_EQUAL(
+            test_time_duration.hours,
+            time_played_from_save.hours
+        );
+        TEST_ASSERT_EQUAL(
+            test_time_duration.minutes,
+            time_played_from_save.minutes
+        );
+        TEST_ASSERT_EQUAL(
+            test_time_duration.seconds,
+            time_played_from_save.seconds
+        );
+        if(generation > 1)
+        {
+            TEST_ASSERT_EQUAL(
+                test_time_duration.frames,
+                time_played_from_save.frames
+            );
+        }
+
+        // Test invalid times.
+        static const struct pkmn_time_duration invalid_time_durations[] =
+        {
+            {-1,0,0,0},     // Hours too low
+            {999999,0,0,0}, // Hours too high
+            {0,-1,0,0},     // Minutes too low
+            {0,999999,0,0}, // Minutes too high
+            {0,0,-1,0},     // Minutes too low
+            {0,0,999999,0}, // Minutes too high
+        };
+        static const size_t num_invalid_time_durations =
+            sizeof(invalid_time_durations)/sizeof(invalid_time_durations[0]);
+
+        for(size_t time_duration_index = 0;
+            time_duration_index < num_invalid_time_durations;
+            ++time_duration_index)
+        {
+            error = pkmn_game_save_set_time_played(
+                        p_game_save,
+                        &invalid_time_durations[time_duration_index]
+                    );
+            TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
+        }
+
+        if(generation > 1)
+        {
+            static const struct pkmn_time_duration invalid_frame_time_durations[] =
+            {
+                {0,0,0,-1},     // Too low
+                {0,0,0,999999}, // Too high
+            };
+            static const size_t num_invalid_frame_time_durations =
+                sizeof(invalid_frame_time_durations)/sizeof(invalid_frame_time_durations[0]);
+
+            for(size_t time_duration_index = 0;
+                time_duration_index < num_invalid_frame_time_durations;
+                ++time_duration_index)
+            {
+                error = pkmn_game_save_set_time_played(
+                            p_game_save,
+                            &invalid_frame_time_durations[time_duration_index]
+                        );
+                TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
+            }
+        }
+    }
+}
+
 static void game_save_test_attributes(
     struct pkmn_game_save* p_game_save
 )
@@ -335,9 +463,7 @@ static void game_save_test_attributes(
             TEST_ASSERT_TRUE(num_casino_coins >= 0);
             TEST_ASSERT_TRUE(num_casino_coins <= 9999);
 
-            // TODO: uncomment after fixing:
-            //  * https://github.com/ncorgan/pksav/issues/3
-            /*int new_num_casino_coins = (rand() % 10000);
+            int new_num_casino_coins = (rand() % 10000);
             error = pkmn_game_save_set_numeric_attribute(
                         p_game_save,
                         "Casino coins",
@@ -354,7 +480,7 @@ static void game_save_test_attributes(
             TEST_ASSERT_EQUAL(
                 new_num_casino_coins,
                 num_casino_coins
-            );*/
+            );
 
             int pikachu_friendship = -1;
             error = pkmn_game_save_get_numeric_attribute(
@@ -678,7 +804,7 @@ static void game_save_test_common_fields(
     error = pkmn_pokemon_pc_free(&pokemon_pc);
     PKMN_TEST_ASSERT_SUCCESS(error);
 
-    game_save_test_attributes(p_game_save);
+    game_save_test_time_played(p_game_save);
 }
 
 static void randomize_pokemon(
@@ -1219,6 +1345,7 @@ static void test_game_save(
     TEST_ASSERT_EQUAL_STRING(save_filepath, strbuffer);
 
     game_save_test_common_fields(&game_save);
+    game_save_test_attributes(&game_save);
     randomize_pokemon(&game_save);
 
     char tmp_save_filepath[STRBUFFER_LEN] = {0};
