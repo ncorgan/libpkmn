@@ -29,6 +29,8 @@
 #include <pkmn/database/move_entry.hpp>
 #include <pkmn/database/pokemon_entry.hpp>
 
+#include <pkmn/types/time_duration.hpp>
+
 #include <pkmn-c/error.h>
 #include <pkmn-c/database/item_entry.h>
 #include <pkmn-c/database/move_entry.h>
@@ -39,6 +41,7 @@
 #include <pkmn-c/types/levelup_move.h>
 #include <pkmn-c/types/natural_gift.h>
 #include <pkmn-c/types/string_types.h>
+#include <pkmn-c/types/time_duration.h>
 
 #include <boost/assert.hpp>
 #include <boost/bimap.hpp>
@@ -423,6 +426,19 @@ namespace pkmn { namespace c {
         const pkmn::pokemon_box_list_t& pokemon_box_list_cpp,
         struct pkmn_pokemon_box_list* p_pokemon_box_list_c_out
     );
+
+    inline void time_duration_cpp_to_c(
+        const pkmn::time_duration& time_duration_cpp,
+        struct pkmn_time_duration* p_time_duration_c_out
+    )
+    {
+        BOOST_ASSERT(p_time_duration_c_out != nullptr);
+
+        p_time_duration_c_out->hours   = time_duration_cpp.hours;
+        p_time_duration_c_out->minutes = time_duration_cpp.minutes;
+        p_time_duration_c_out->seconds = time_duration_cpp.seconds;
+        p_time_duration_c_out->frames  = time_duration_cpp.frames;
+    }
 
     template <typename sptr_type>
     void get_attribute_names_from_sptr(

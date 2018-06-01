@@ -21,6 +21,7 @@ IF(NOT PKMN_DONT_INSTALL_HEADERS)
         pokemon_box_list.h
         stats.h
         string_types.h
+        time_duration.h
         trainer_id.h
         trainer_info.h
     )

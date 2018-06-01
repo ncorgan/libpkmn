@@ -21,6 +21,7 @@
 #include <pkmn-c/types/pokemon_box_list.h>
 #include <pkmn-c/types/stats.h>
 #include <pkmn-c/types/string_types.h>
+#include <pkmn-c/types/time_duration.h>
 #include <pkmn-c/types/trainer_id.h>
 #include <pkmn-c/types/trainer_info.h>
 
