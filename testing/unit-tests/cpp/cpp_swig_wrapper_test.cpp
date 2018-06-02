@@ -22,6 +22,7 @@
 #include "swig/modules/cpp_wrappers/pokemon_box.hpp"
 #include "swig/modules/cpp_wrappers/pokemon_pc.hpp"
 #include "swig/modules/cpp_wrappers/game_save.hpp"
+#include "swig/modules/cpp_wrappers/time_duration.hpp"
 
 #include <boost/filesystem.hpp>
 
@@ -562,7 +563,20 @@ TEST(cpp_swig_wrapper_test, test_game_save)
     pkmn::swig::game_save swig_game_save(save_filepath.string());
 
     EXPECT_EQ(save_filepath.string(), swig_game_save.get_filepath());
+
     EXPECT_EQ("FireRed", swig_game_save.get_game());
+
+    swig_game_save.get_time_played().set_hours(100);
+    EXPECT_EQ(100, swig_game_save.get_time_played().get_hours());
+
+    swig_game_save.get_time_played().set_minutes(50);
+    EXPECT_EQ(50, swig_game_save.get_time_played().get_minutes());
+
+    swig_game_save.get_time_played().set_seconds(20);
+    EXPECT_EQ(20, swig_game_save.get_time_played().get_seconds());
+
+    swig_game_save.get_time_played().set_frames(10);
+    EXPECT_EQ(10, swig_game_save.get_time_played().get_frames());
 
     swig_game_save.set_trainer_name("foobar");
     EXPECT_EQ("foobar", swig_game_save.get_trainer_name());

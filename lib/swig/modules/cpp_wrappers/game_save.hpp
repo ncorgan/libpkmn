@@ -14,6 +14,7 @@
 #include "pokedex.hpp"
 #include "pokemon_party.hpp"
 #include "pokemon_pc.hpp"
+#include "time_duration.hpp"
 
 #include "private_exports.hpp"
 #include "utils/misc.hpp"
@@ -100,6 +101,13 @@ namespace pkmn { namespace swig {
                 BOOST_ASSERT(_game_save.get() != nullptr);
 
                 _game_save->set_time_played(time_played);
+            }
+#else
+            inline pkmn::swig::game_save_time_played get_time_played()
+            {
+                BOOST_ASSERT(_game_save.get() != nullptr);
+
+                return pkmn::swig::game_save_time_played(_game_save);
             }
 #endif
 
