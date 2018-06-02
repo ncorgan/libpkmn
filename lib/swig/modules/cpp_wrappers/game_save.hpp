@@ -85,6 +85,24 @@ namespace pkmn { namespace swig {
                 return _game_save->get_game();
             }
 
+#ifdef SWIGCSHARP
+            inline pkmn::time_duration get_time_played()
+            {
+                BOOST_ASSERT(_game_save.get() != nullptr);
+
+                return _game_save->get_time_played();
+            }
+
+            inline void set_time_played(
+                const pkmn::time_duration& time_played
+            )
+            {
+                BOOST_ASSERT(_game_save.get() != nullptr);
+
+                _game_save->set_time_played(time_played);
+            }
+#endif
+
             inline std::string get_trainer_name()
             {
                 BOOST_ASSERT(_game_save.get() != nullptr);

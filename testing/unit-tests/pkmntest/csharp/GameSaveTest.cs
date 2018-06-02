@@ -85,6 +85,78 @@ public class GameSaveTest
         }
     }
 
+    private static void TestTimePlayed(
+        PKMN.GameSave gameSave
+    )
+    {
+        string game = gameSave.Game;
+        int generation = Util.GameToGeneration(game);
+
+        int milliseconds = 0;
+        if(generation > 1)
+        {
+            // Generation I doesn't record to sub-second precision.
+            milliseconds = rng.Next(0, 999);
+        }
+
+        System.TimeSpan validTimePlayed = new System.TimeSpan(
+                                                  0, // Days
+                                                  rng.Next(0, 255),
+                                                  rng.Next(0, 59),
+                                                  rng.Next(0, 59),
+                                                  milliseconds
+                                              );
+
+
+        if(game.Equals("Colosseum") || game.Equals("XD"))
+        {
+            Assert.Throws<ApplicationException>(
+                delegate
+                {
+                    gameSave.TimePlayed = validTimePlayed;
+                }
+            );
+            Assert.Throws<ApplicationException>(
+                delegate
+                {
+                    System.TimeSpan timePlayed = gameSave.TimePlayed;
+                }
+            );
+        }
+        else
+        {
+            // Test a valid time played.
+            gameSave.TimePlayed = validTimePlayed;
+
+            // Internally, time is stored with a precision of 1/60 second.
+            Assert.That(
+                gameSave.TimePlayed,
+                Is.EqualTo(validTimePlayed).Within(
+                    System.TimeSpan.FromMilliseconds(1000.0 / 60.0)
+                )
+            );
+
+            System.TimeSpan[] invalidTimeSpans =
+            {
+                new System.TimeSpan(0, -1, 0, 0, 0),
+                new System.TimeSpan(0, 0, -1, 0, 0),
+                new System.TimeSpan(0, 0, 0, -1, 0),
+
+                // Just past the maximum internal storage size
+                new System.TimeSpan(0, 65536, 0, 0, 0)
+            };
+            foreach(System.TimeSpan invalidTimePlayed in invalidTimeSpans)
+            {
+                Assert.Throws<IndexOutOfRangeException>(
+                    delegate
+                    {
+                        gameSave.TimePlayed = invalidTimePlayed;
+                    }
+                );
+            }
+        }
+    }
+
     private static void TestCommonFields(
         PKMN.GameSave gameSave
     )
@@ -302,6 +374,8 @@ public class GameSaveTest
             Assert.IsTrue(pokedex.SeenPokemonMap[testSpecies2]);
             Assert.IsTrue(pokedex.CaughtPokemonMap[testSpecies2]);
         }
+
+        TestTimePlayed(gameSave);
     }
 
     private static void TestAttributes(
@@ -317,11 +391,9 @@ public class GameSaveTest
                 Assert.GreaterOrEqual(gameSave.NumericAttributes["Casino coins"], 0);
                 Assert.LessOrEqual(gameSave.NumericAttributes["Casino coins"], 9999);
 
-                // TODO: uncomment after fixing:
-                //  * https://github.com/ncorgan/pksav/issues/3
-                /*int casinoCoins = rng.Next(0, 9999);
-                gameSave.NumericAttributes["Casino coins"] = casinoCoins;
-                Assert.AreEqual(gameSave.NumericAttributes["Casino coins"], casinoCoins);*/
+                int gen1CasinoCoins = rng.Next(0, 9999);
+                gameSave.NumericAttributes["Casino coins"] = gen1CasinoCoins;
+                Assert.AreEqual(gameSave.NumericAttributes["Casino coins"], gen1CasinoCoins);
 
                 if(game.Equals("Yellow"))
                 {
@@ -346,9 +418,9 @@ public class GameSaveTest
                     Assert.GreaterOrEqual(gameSave.NumericAttributes["Casino coins"], 0);
                     Assert.LessOrEqual(gameSave.NumericAttributes["Casino coins"], 9999);
 
-                    int casinoCoins = rng.Next(0, 9999);
-                    gameSave.NumericAttributes["Casino coins"] = casinoCoins;
-                    Assert.AreEqual(gameSave.NumericAttributes["Casino coins"], casinoCoins);
+                    int gcnCasinoCoins = rng.Next(0, 9999);
+                    gameSave.NumericAttributes["Casino coins"] = gcnCasinoCoins;
+                    Assert.AreEqual(gameSave.NumericAttributes["Casino coins"], gcnCasinoCoins);
                 }
                 break;
 

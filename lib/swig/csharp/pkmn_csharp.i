@@ -58,6 +58,9 @@ std::string GetSWIGVersion();
 %include <csharp/pkmn_daycare_helpers.i>
 %include <csharp/pkmn_daycare.i>
 
+// Time Duration
+%include <csharp/pkmn_time_duration.i>
+
 // Game Save
 %include <csharp/pkmn_game_save.i>
 

@@ -41,8 +41,19 @@ using System.Runtime.InteropServices;"
 %attributeval(pkmn::swig::game_save, %arg(pkmn::swig::string_attribute_map<pkmn::game_save>), StringAttributes, get_string_attributes);
 %attributeval(pkmn::swig::game_save, %arg(pkmn::swig::boolean_attribute_map<pkmn::game_save>), BooleanAttributes, get_boolean_attributes);
 
+// These need to manually be made private due to the custom typemaps involved.
+%csmethodmodifiers pkmn::swig::game_save::get_time_played() "private";
+%csmethodmodifiers pkmn::swig::game_save::set_time_played(const pkmn::time_duration&) "private";
+
 %typemap(cscode) pkmn::swig::game_save
 %{
+    // This needs to be done manually due to the custom typemaps involved.
+    public System.TimeSpan TimePlayed
+    {
+        get { return GetTimePlayed(); }
+        set { SetTimePlayed(value); }
+    }
+
     public bool Equals(GameSave rhs)
     {
         if(rhs == null)

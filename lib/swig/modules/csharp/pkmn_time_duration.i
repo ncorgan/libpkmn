@@ -16,38 +16,33 @@
 
 /*
  * This class will not be exposed through the C# DLL. Instead, the existing
- * C# System.TimeSpan will be used. This typemap will create implicit operators
- * between these two classes for internal ease-of-use.
+ * C# System.TimeSpan will be used.
  */
-%typemap(cscode) pkmn::time_duration %{
-    public static implicit operator System.TimeSpan(TimeDurationInternal timeDurationInternal)
-    {
-        // A frame is 1/60 of a second, so we need to convert to milliseconds.
-        const double frameToMillisecondConversionFactor = (1000.0 / 60.0);
-        double milliseconds = timeDurationInternal.Frames * frameToMillisecondConversionFactor;
+%typemap(cstype) pkmn::time_duration "System.TimeSpan"
+%typemap(csout, excode=SWIGEXCODE) pkmn::time_duration {
+    global::System.IntPtr timeDurationPtr = $imcall;$excode
 
-        return new System.TimeSpan(
-                       0, // days
-                       timeDurationInternal.Hours,
-                       timeDurationInternal.Minutes,
-                       timeDurationInternal.Seconds,
-                       (int)milliseconds
-                   );
-    }
+    TimeDurationInternal timeDurationInternal = new TimeDurationInternal(
+                                                        timeDurationPtr,
+                                                        false
+                                                    );
 
-    public static implicit operator TimeDurationInternal(System.TimeSpan csharpTimeSpan)
-    {
-        // A frame is 1/60 of a second, so we need to convert from milliseconds.
-        const double millisecondToFrameConversionFactor = (60.0 / 1000.0);
-        double frames = csharpTimeSpan.Milliseconds * millisecondToFrameConversionFactor;
+    return new System.TimeSpan(
+                   0, // days
+                   timeDurationInternal.Hours,
+                   timeDurationInternal.Minutes,
+                   timeDurationInternal.Seconds,
+                   (int)System.Math.Floor(timeDurationInternal.Frames * (1000.0 / 60.0))
+               );
+}
 
-        return new TimeDurationInternal(
-                       csharpTimeSpan.Hours,
-                       csharpTimeSpan.Minutes,
-                       csharpTimeSpan.Seconds,
-                       (int)frames
-                   );
-    }
-%}
+%typemap(cstype) const pkmn::time_duration& "System.TimeSpan"
+%typemap(csin,
+         pre="
+    int $csinputTotalHours = $csinput.Hours + ($csinput.Days * 24);
+    TimeDurationInternal temp$csinput = new TimeDurationInternal("
+    "$csinputTotalHours, $csinput.Minutes, $csinput.Seconds, (int)System.Math.Floor($csinput.Milliseconds * (60.0 / 1000.0)));
+    ") const pkmn::time_duration& "$csclassname.getCPtr(temp$csinput)"
+
 
 %include <pkmn/types/time_duration.hpp>
