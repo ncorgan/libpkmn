@@ -251,6 +251,7 @@ public class CSharpEqualityHashCodeTest
         Assert.AreNotEqual(pokemon.GetHashCode(), pokemon.Moves.GetHashCode());
         Assert.AreNotEqual(pokemon.GetHashCode(), pokemon.NumericAttributes.GetHashCode());
         Assert.AreNotEqual(pokemon.GetHashCode(), pokemon.StringAttributes.GetHashCode());
+        Assert.AreNotEqual(pokemon.GetHashCode(), pokemon.BooleanAttributes.GetHashCode());
 
         Assert.AreNotEqual(pokemon.EVs.GetHashCode(), pokemon.IVs.GetHashCode());
         Assert.AreNotEqual(pokemon.EVs.GetHashCode(), pokemon.ContestStats.GetHashCode());
@@ -259,6 +260,7 @@ public class CSharpEqualityHashCodeTest
         Assert.AreNotEqual(pokemon.EVs.GetHashCode(), pokemon.Moves.GetHashCode());
         Assert.AreNotEqual(pokemon.EVs.GetHashCode(), pokemon.NumericAttributes.GetHashCode());
         Assert.AreNotEqual(pokemon.EVs.GetHashCode(), pokemon.StringAttributes.GetHashCode());
+        Assert.AreNotEqual(pokemon.EVs.GetHashCode(), pokemon.BooleanAttributes.GetHashCode());
 
         Assert.AreNotEqual(pokemon.IVs.GetHashCode(), pokemon.ContestStats.GetHashCode());
         Assert.AreNotEqual(pokemon.IVs.GetHashCode(), pokemon.Markings.GetHashCode());
@@ -266,26 +268,68 @@ public class CSharpEqualityHashCodeTest
         Assert.AreNotEqual(pokemon.IVs.GetHashCode(), pokemon.Moves.GetHashCode());
         Assert.AreNotEqual(pokemon.IVs.GetHashCode(), pokemon.NumericAttributes.GetHashCode());
         Assert.AreNotEqual(pokemon.IVs.GetHashCode(), pokemon.StringAttributes.GetHashCode());
+        Assert.AreNotEqual(pokemon.IVs.GetHashCode(), pokemon.BooleanAttributes.GetHashCode());
 
         Assert.AreNotEqual(pokemon.ContestStats.GetHashCode(), pokemon.Markings.GetHashCode());
         Assert.AreNotEqual(pokemon.ContestStats.GetHashCode(), pokemon.Ribbons.GetHashCode());
         Assert.AreNotEqual(pokemon.ContestStats.GetHashCode(), pokemon.Moves.GetHashCode());
         Assert.AreNotEqual(pokemon.ContestStats.GetHashCode(), pokemon.NumericAttributes.GetHashCode());
         Assert.AreNotEqual(pokemon.ContestStats.GetHashCode(), pokemon.StringAttributes.GetHashCode());
+        Assert.AreNotEqual(pokemon.ContestStats.GetHashCode(), pokemon.BooleanAttributes.GetHashCode());
 
         Assert.AreNotEqual(pokemon.Markings.GetHashCode(), pokemon.Ribbons.GetHashCode());
         Assert.AreNotEqual(pokemon.Markings.GetHashCode(), pokemon.Moves.GetHashCode());
         Assert.AreNotEqual(pokemon.Markings.GetHashCode(), pokemon.NumericAttributes.GetHashCode());
         Assert.AreNotEqual(pokemon.Markings.GetHashCode(), pokemon.StringAttributes.GetHashCode());
+        Assert.AreNotEqual(pokemon.Markings.GetHashCode(), pokemon.BooleanAttributes.GetHashCode());
 
         Assert.AreNotEqual(pokemon.Ribbons.GetHashCode(), pokemon.Moves.GetHashCode());
         Assert.AreNotEqual(pokemon.Ribbons.GetHashCode(), pokemon.NumericAttributes.GetHashCode());
         Assert.AreNotEqual(pokemon.Ribbons.GetHashCode(), pokemon.StringAttributes.GetHashCode());
+        Assert.AreNotEqual(pokemon.Ribbons.GetHashCode(), pokemon.BooleanAttributes.GetHashCode());
 
         Assert.AreNotEqual(pokemon.Moves.GetHashCode(), pokemon.NumericAttributes.GetHashCode());
         Assert.AreNotEqual(pokemon.Moves.GetHashCode(), pokemon.StringAttributes.GetHashCode());
+        Assert.AreNotEqual(pokemon.Moves.GetHashCode(), pokemon.BooleanAttributes.GetHashCode());
 
         Assert.AreNotEqual(pokemon.NumericAttributes.GetHashCode(), pokemon.StringAttributes.GetHashCode());
+        Assert.AreNotEqual(pokemon.NumericAttributes.GetHashCode(), pokemon.BooleanAttributes.GetHashCode());
+
+        Assert.AreNotEqual(pokemon.StringAttributes.GetHashCode(), pokemon.BooleanAttributes.GetHashCode());
+
+        for(int moveIndex = 0; moveIndex < pokemon.Moves.Count; ++moveIndex)
+        {
+            Assert.AreNotEqual(pokemon.Moves.GetHashCode(), pokemon.Moves[moveIndex].GetHashCode());
+        }
+    }
+
+    [Test]
+    public void DaycareHelpersTest()
+    {
+        PKMN.Daycare daycare = new PKMN.Daycare("Gold");
+
+        Assert.AreNotEqual(daycare.GetHashCode(), daycare.LevelupPokemon.GetHashCode());
+        Assert.AreNotEqual(daycare.GetHashCode(), daycare.BreedingPokemon.GetHashCode());
+
+        Assert.AreNotEqual(daycare.LevelupPokemon.GetHashCode(), daycare.BreedingPokemon.GetHashCode());
+    }
+
+    [Test]
+    public void GameSaveHelpersTest()
+    {
+        string pksavTestSaves = System.Environment.GetEnvironmentVariable("PKSAV_TEST_SAVES");
+        string saveFilepath = System.IO.Path.GetFullPath(System.IO.Path.Combine(pksavTestSaves, "gold_silver/pokemon_gold.sav"));
+
+        PKMN.GameSave gameSave = new PKMN.GameSave(saveFilepath);
+
+        Assert.AreNotEqual(gameSave.GetHashCode(), gameSave.NumericAttributes.GetHashCode());
+        Assert.AreNotEqual(gameSave.GetHashCode(), gameSave.StringAttributes.GetHashCode());
+        Assert.AreNotEqual(gameSave.GetHashCode(), gameSave.BooleanAttributes.GetHashCode());
+
+        Assert.AreNotEqual(gameSave.NumericAttributes.GetHashCode(), gameSave.StringAttributes.GetHashCode());
+        Assert.AreNotEqual(gameSave.NumericAttributes.GetHashCode(), gameSave.BooleanAttributes.GetHashCode());
+
+        Assert.AreNotEqual(gameSave.StringAttributes.GetHashCode(), gameSave.BooleanAttributes.GetHashCode());
     }
 
     /*
