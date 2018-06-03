@@ -9,7 +9,7 @@ The goal of LibPKMN is to be the most expansive library for editing, analyzing, 
 series Pokémon games and saves.
 
 Features:
- * Game save game editing
+ * Game save editing
  * Damage calculation
  * Pokémon breeding
  * Qt subclasses for easy GUI development
