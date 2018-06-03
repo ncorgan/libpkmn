@@ -108,7 +108,7 @@ void get_random_pokemon(
             do
             {
                 actual_species = pokemon_list.pp_strings[rand() % pokemon_list.length];
-            } while(!strcmp(actual_species, "Deoxys") && !strcmp(actual_species, "Unown"));
+            } while(!strcmp(actual_species, "Deoxys") || !strcmp(actual_species, "Unown"));
         }
         else
         {
