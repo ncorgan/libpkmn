@@ -11,6 +11,8 @@
 
 %include <attribute.i>
 
+%import <python/pkmn_game_save_helpers.i>
+
 %ignore pkmn::swig::game_save::game_save();
 %ignore pkmn::swig::game_save::game_save(const pkmn::game_save::sptr&);
 %ignore pkmn::swig::game_save::cptr();
@@ -18,6 +20,7 @@
 // Convert getter/setter functions into attributes for more idiomatic Python.
 
 %attributestring(pkmn::swig::game_save, std::string, game, get_game);
+%attributeval(pkmn::swig::game_save, pkmn::swig::game_save_time_played, time_played, get_time_played);
 %attributestring(pkmn::swig::game_save, std::string, filepath, get_filepath);
 %attributestring(pkmn::swig::game_save, std::string, trainer_name, get_trainer_name, set_trainer_name);
 %attribute(pkmn::swig::game_save, uint16_t, trainer_public_id, get_trainer_public_id, set_trainer_public_id);

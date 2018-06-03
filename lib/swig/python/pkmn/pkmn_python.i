@@ -60,4 +60,5 @@ namespace pkmn { namespace priv {
 %include <python/pkmn_pokemon_pc.i>
 
 // Game Save
+%include <python/pkmn_game_save_helpers.i>
 %include <python/pkmn_game_save.i>

@@ -91,6 +91,61 @@ class game_save_test(pkmntest.base_test):
         else:
             self.assertEqual(self.save.trainer_secret_id, DEFAULT_TRAINER_SID)
 
+    def __test_time_played(self):
+        if self.save.game in ["Colosseum", "XD"]:
+            with self.assertRaises(RuntimeError):
+                self.save.time_played.hours = 5
+            with self.assertRaises(RuntimeError):
+                self.save.time_played.minutes = 5
+            with self.assertRaises(RuntimeError):
+                self.save.time_played.seconds = 5
+            with self.assertRaises(RuntimeError):
+                self.save.time_played.frames = 5
+        else:
+            # Test valid values.
+
+            hours = random.randint(0, 255)
+            self.save.time_played.hours = hours
+            self.assertEqual(hours, self.save.time_played.hours)
+
+            minutes = random.randint(0, 59)
+            self.save.time_played.minutes = minutes
+            self.assertEqual(minutes, self.save.time_played.minutes)
+
+            seconds = random.randint(0, 59)
+            self.save.time_played.seconds = seconds
+            self.assertEqual(seconds, self.save.time_played.seconds)
+
+            # Only Generation I has frames.
+            if GAME_GENERATIONS[self.save.game] > 1:
+                frames = random.randint(0, 59)
+                self.save.time_played.frames = frames
+                self.assertEqual(frames, self.save.time_played.frames)
+
+            # Test invalid values.
+
+            with self.assertRaises(IndexError):
+                self.save.time_played.hours = -1
+            with self.assertRaises(IndexError):
+                self.save.time_played.hours = 999999
+
+            with self.assertRaises(IndexError):
+                self.save.time_played.minutes = -1
+            with self.assertRaises(IndexError):
+                self.save.time_played.minutes = 999999
+
+            with self.assertRaises(IndexError):
+                self.save.time_played.seconds = -1
+            with self.assertRaises(IndexError):
+                self.save.time_played.seconds = 999999
+
+            # Only Generation I has frames.
+            if GAME_GENERATIONS[self.save.game] > 1:
+                with self.assertRaises(IndexError):
+                    self.save.time_played.frames = -1
+                with self.assertRaises(IndexError):
+                    self.save.time_played.frames = 999999
+
     def __test_common_fields(self):
         self.__test_trainer_name()
 
@@ -224,6 +279,9 @@ class game_save_test(pkmntest.base_test):
                         self.assertTrue(pokedex.seen_pokemon_map[species])
                         self.assertTrue(pokedex.caught_pokemon_map[species])
 
+        # Time Played
+        self.__test_time_played()
+
     def __test_attributes(self):
         game = self.save.game
         generation = GAME_GENERATIONS[game]
@@ -239,16 +297,12 @@ class game_save_test(pkmntest.base_test):
                 9999
             )
 
-            # TODO: uncomment after fixing:
-            #  * https://github.com/ncorgan/pksav/issues/3
-            '''
             casino_coins = random.randint(0, 9999)
             self.save.numeric_attributes["Casino coins"] = casino_coins
             self.assertEqual(
                 self.save.numeric_attributes["Casino coins"],
                 casino_coins
             )
-            '''
 
             if game == "Yellow":
                 self.assertTrue("Pikachu friendship" in self.save.numeric_attributes.names)

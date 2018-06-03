@@ -78,30 +78,8 @@ function game_save_test.test_trainer_id(save, is_gb_game)
 end
 
 function game_save_test.test_time_played(save)
+    local game = save.game
     local generation = pkmntest_utils.GAME_TO_GENERATION[save.game]
-
-    -- Test valid values.
-
-    local hours = math.random(0, 255)
-    save.time_played.hours = hours
-    luaunit.assertEquals(save.time_played.hours, hours)
-
-    local minutes = math.random(0, 59)
-    save.time_played.minutes = minutes
-    luaunit.assertEquals(save.time_played.minutes, minutes)
-
-    local seconds = math.random(0, 59)
-    save.time_played.seconds = seconds
-    luaunit.assertEquals(save.time_played.seconds, seconds)
-
-    -- Generation I doesn't have frames, so it won't get back
-    -- the correct value.
-    if generation > 1
-    then
-        local frames = math.random(0, 59)
-        save.time_played.frames = frames
-        luaunit.assertEquals(save.time_played.frames, frames)
-    end
 
     -- Test invalid values. Use these stupid hacky functions because
     -- LuaUnit can't check setting variables.
@@ -118,23 +96,56 @@ function game_save_test.test_time_played(save)
         save.time_played.frames = frames
     end
 
-    -- Too low/high hours
-    luaunit.assertError(time_played_set_hours, -1)
-    luaunit.assertError(time_played_set_hours, 999999)
-
-    -- Too low/high minutes
-    luaunit.assertError(time_played_set_minutes, -1)
-    luaunit.assertError(time_played_set_minutes, 999999)
-
-    -- Too low/high seconds
-    luaunit.assertError(time_played_set_seconds, -1)
-    luaunit.assertError(time_played_set_seconds, 999999)
-
-    if generation > 1
+    if (game == "Colosseum") or (game == "XD")
     then
-        -- Too low/high frames
-        luaunit.assertError(time_played_set_frames, -1)
-        luaunit.assertError(time_played_set_frames, 999999)
+        luaunit.assertError(time_played_set_hours, 5)
+        luaunit.assertError(time_played_set_minutes, 5)
+        luaunit.assertError(time_played_set_seconds, 5)
+        luaunit.assertError(time_played_set_frames, 5)
+    else
+        -- Test valid values.
+
+        local hours = math.random(0, 255)
+        save.time_played.hours = hours
+        luaunit.assertEquals(save.time_played.hours, hours)
+
+        local minutes = math.random(0, 59)
+        save.time_played.minutes = minutes
+        luaunit.assertEquals(save.time_played.minutes, minutes)
+
+        local seconds = math.random(0, 59)
+        save.time_played.seconds = seconds
+        luaunit.assertEquals(save.time_played.seconds, seconds)
+
+        -- Generation I doesn't have frames.
+        if generation > 1
+        then
+            local frames = math.random(0, 59)
+            save.time_played.frames = frames
+            luaunit.assertEquals(save.time_played.frames, frames)
+        end
+
+        -- Test invalid values.
+
+        -- Too low/high hours
+        luaunit.assertError(time_played_set_hours, -1)
+        luaunit.assertError(time_played_set_hours, 999999)
+
+        -- Too low/high minutes
+        luaunit.assertError(time_played_set_minutes, -1)
+        luaunit.assertError(time_played_set_minutes, 999999)
+
+        -- Too low/high seconds
+        luaunit.assertError(time_played_set_seconds, -1)
+        luaunit.assertError(time_played_set_seconds, 999999)
+
+        -- Generation I doesn't have frames.
+        if generation > 1
+        then
+            -- Too low/high frames
+            luaunit.assertError(time_played_set_frames, -1)
+            luaunit.assertError(time_played_set_frames, 999999)
+        end
     end
 end
 
@@ -354,10 +365,7 @@ function game_save_test.test_common_fields(save)
     end
 
     -- Time played
-    if not is_gamecube_game
-    then
-        game_save_test.test_time_played(save)
-    end
+    game_save_test.test_time_played(save)
 end
 
 function game_save_test.test_attributes(save)

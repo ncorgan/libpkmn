@@ -57,4 +57,5 @@ namespace pkmn { namespace priv {
 %include <ruby/pkmn_pokemon_pc.i>
 
 // Game Save
+%include <ruby/pkmn_game_save_helpers.i>
 %include <ruby/pkmn_game_save.i>

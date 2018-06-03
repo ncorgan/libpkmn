@@ -78,6 +78,80 @@ class GameSaveTest < PKMNTest
         end
     end
 
+    def _test_time_played(save)
+        game = save.game
+        generation = @@GAME_GENERATIONS[game]
+
+        if (game == "Colosseum") or (game == "XD")
+            assert_raises RuntimeError do
+                save.time_played.hours = 5
+            end
+            assert_raises RuntimeError do
+                save.time_played.minutes = 5
+            end
+            assert_raises RuntimeError do
+                save.time_played.seconds = 5
+            end
+            assert_raises RuntimeError do
+                save.time_played.frames = 5
+            end
+        else
+            # Test valid values.
+
+            hours = @@RNG.rand(256)
+            save.time_played.hours = hours
+            assert_equal(hours, save.time_played.hours)
+
+            minutes = @@RNG.rand(60)
+            save.time_played.minutes = minutes
+            assert_equal(minutes, save.time_played.minutes)
+
+            seconds = @@RNG.rand(60)
+            save.time_played.seconds = seconds
+            assert_equal(seconds, save.time_played.seconds)
+
+            # Generation I doesn't have frames.
+            if generation > 1
+                frames = @@RNG.rand(60)
+                save.time_played.frames = frames
+                assert_equal(frames, save.time_played.frames)
+            end
+
+            # Test invalid values.
+
+            assert_raises IndexError do
+                save.time_played.hours = -1
+            end
+            assert_raises IndexError do
+                save.time_played.hours = 999999
+            end
+
+            assert_raises IndexError do
+                save.time_played.minutes = -1
+            end
+            assert_raises IndexError do
+                save.time_played.minutes = 999999
+            end
+
+            assert_raises IndexError do
+                save.time_played.seconds = -1
+            end
+            assert_raises IndexError do
+                save.time_played.seconds = 999999
+            end
+
+            # Generation I doesn't have frames.
+            if generation > 1
+                assert_raises IndexError do
+                    save.time_played.frames = -1
+                end
+                assert_raises IndexError do
+                    save.time_played.frames = 999999
+                end
+            end
+        end
+    end
+
     def _test_game_save_common_fields(save)
         generation = @@GAME_GENERATIONS[save.game]
 
@@ -191,13 +265,9 @@ class GameSaveTest < PKMNTest
                 9999
             )
 
-            # TODO: uncomment after fixing:
-            # * https://github.com/ncorgan/pksav/issues/3
-=begin
             casino_coins = @@RNG.rand(10000)
             save.numeric_attributes["Casino coins"] = casino_coins
             assert_equal(casino_coins, save.numeric_attributes["Casino coins"])
-=end
 
             if save.game == "Yellow"
                 assert(save.numeric_attributes.names.include?("Pikachu friendship"))
