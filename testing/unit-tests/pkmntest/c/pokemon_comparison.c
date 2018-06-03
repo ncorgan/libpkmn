@@ -95,7 +95,7 @@ void get_random_pokemon(
         PKMN_TEST_ASSERT_SUCCESS(error);
     }
 
-    // Don't deal with Deoxys issues here.
+    // Don't deal with Deoxys or Unown issues here.
     const char* actual_species = NULL;
     if(species)
     {
@@ -108,7 +108,7 @@ void get_random_pokemon(
             do
             {
                 actual_species = pokemon_list.pp_strings[rand() % pokemon_list.length];
-            } while(!strcmp(actual_species, "Deoxys"));
+            } while(!strcmp(actual_species, "Deoxys") && !strcmp(actual_species, "Unown"));
         }
         else
         {

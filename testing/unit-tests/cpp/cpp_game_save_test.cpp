@@ -598,12 +598,12 @@ namespace pkmntest {
         pkmn::rng<uint32_t> rng;
         (void)move_list;
 
-        // Don't deal with Deoxys issues here.
+        // Don't deal with Deoxys or Unown issues here.
         std::string species;
         if(generation == 3) {
             do {
                 species = pokemon_list[rng.rand() % pokemon_list.size()];
-            } while(species == "Deoxys");
+            } while(species == "Deoxys" || species == "Unown");
         } else {
             species = pokemon_list[rng.rand() % pokemon_list.size()];
         }

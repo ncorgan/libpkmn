@@ -78,7 +78,7 @@ internal class Util
     {
         int generation = Util.GameToGeneration(game);
 
-        // Don't deal with Deoxys issues here.
+        // Don't deal with Deoxys or Unown issues here.
         string species;
         if(generation == 3)
         {
@@ -86,7 +86,7 @@ internal class Util
             {
                 species = pokemonList[rng.Next(0, pokemonList.Count-1)];
             }
-            while(species == "Deoxys");
+            while(species == "Deoxys" || species == "Unown");
         }
         else
         {

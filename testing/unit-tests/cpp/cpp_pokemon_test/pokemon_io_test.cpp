@@ -54,12 +54,12 @@ static pkmn::pokemon::sptr get_random_pokemon(
     std::vector<std::string> move_list = pkmn::database::get_move_list(game);
     std::vector<std::string> pokemon_list = pkmn::database::get_pokemon_list(generation, true);
 
-    // Don't deal with Deoxys issues here.
+    // Don't deal with Deoxys or Unown issues here.
     std::string species;
     if(generation == 3) {
         do {
             species = pokemon_list[rng.rand() % pokemon_list.size()];
-        } while(species == "Deoxys");
+        } while(species == "Deoxys" || species == "Unown");
     } else {
         species = pokemon_list[rng.rand() % pokemon_list.size()];
     }

@@ -130,7 +130,7 @@ class PKMNTest < MiniTest::Test
         if generation == 3
             loop do
                 species = pokemon_list[@@RNG.rand(pokemon_list.size)]
-                break if species != "Deoxys"
+                break if (species != "Deoxys" and species != "Unown")
             end
         else
             species = pokemon_list[@@RNG.rand(pokemon_list.size)]
