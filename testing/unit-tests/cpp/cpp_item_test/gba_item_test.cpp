@@ -7,8 +7,11 @@
 
 #include "item_test_common.hpp"
 
+#include "utils/misc.hpp"
+
 #include <pkmn/exception.hpp>
 #include <pkmn/database/item_entry.hpp>
+#include <pkmn/database/lists.hpp>
 #include "pksav/pksav_call.hpp"
 
 #include <pksav/common/stats.h>
@@ -40,26 +43,32 @@ static void check_pksav_struct(
     const pkmn::item_slots_t& item_slots,
     const std::string& game,
     int expected_num_items,
-    const struct pksav_item* native_items
-) {
-    for(int i = 0; i < expected_num_items; ++i) {
+    const struct pksav_item* p_native_items
+)
+{
+    for(int item_index = 0; item_index < expected_num_items; ++item_index)
+    {
         EXPECT_EQ(
             pkmn::database::item_entry(
-                item_slots.at(i).item,
+                item_slots.at(item_index).item,
                 game
             ).get_item_index(),
-            int(pksav_littleendian16(native_items[i].index))
+            int(pksav_littleendian16(p_native_items[item_index].index))
         );
-        EXPECT_EQ(item_slots.at(i).amount, int(pksav_littleendian16(native_items[i].count)));
+        EXPECT_EQ(
+            item_slots.at(item_index).amount,
+            int(pksav_littleendian16(p_native_items[item_index].count))
+        );
     }
 
-    EXPECT_EQ(0, native_items[expected_num_items].index);
-    EXPECT_EQ(0, native_items[expected_num_items].count);
+    EXPECT_EQ(0, p_native_items[expected_num_items].index);
+    EXPECT_EQ(0, p_native_items[expected_num_items].count);
 }
 
 void gba_item_pocket_test(
-    pkmn::item_list::sptr item_pocket
-) {
+    const pkmn::item_list::sptr& item_pocket
+)
+{
     ASSERT_EQ("Items", item_pocket->get_name());
 
     int capacity = 0;
@@ -134,13 +143,14 @@ void gba_item_pocket_test(
         item_pocket->as_vector(),
         item_pocket->get_game(),
         item_pocket->get_num_items(),
-        reinterpret_cast<const struct pksav_item*>(item_pocket->get_native())
+        static_cast<const struct pksav_item*>(item_pocket->get_native())
     );
 }
 
 void gba_key_item_pocket_test(
-    pkmn::item_list::sptr key_item_pocket
-) {
+    const pkmn::item_list::sptr& key_item_pocket
+)
+{
     ASSERT_EQ("Key Items", key_item_pocket->get_name());
 
     std::string game = key_item_pocket->get_game();
@@ -229,13 +239,14 @@ void gba_key_item_pocket_test(
         key_item_pocket->as_vector(),
         key_item_pocket->get_game(),
         key_item_pocket->get_num_items(),
-        reinterpret_cast<const struct pksav_item*>(key_item_pocket->get_native())
+        static_cast<const struct pksav_item*>(key_item_pocket->get_native())
     );
 }
 
 void gba_ball_pocket_test(
-    pkmn::item_list::sptr ball_pocket
-) {
+    const pkmn::item_list::sptr& ball_pocket
+)
+{
     ASSERT_EQ("Poké Balls", ball_pocket->get_name());
 
     std::string game = ball_pocket->get_game();
@@ -296,13 +307,14 @@ void gba_ball_pocket_test(
         ball_pocket->as_vector(),
         ball_pocket->get_game(),
         ball_pocket->get_num_items(),
-        reinterpret_cast<const struct pksav_item*>(ball_pocket->get_native())
+        static_cast<const struct pksav_item*>(ball_pocket->get_native())
     );
 }
 
 void gba_tmhm_pocket_test(
-    pkmn::item_list::sptr tmhm_pocket
-) {
+    const pkmn::item_list::sptr& tmhm_pocket
+)
+{
     int capacity = 0;
 
     std::string game = tmhm_pocket->get_game();
@@ -364,13 +376,14 @@ void gba_tmhm_pocket_test(
         tmhm_pocket->as_vector(),
         tmhm_pocket->get_game(),
         tmhm_pocket->get_num_items(),
-        reinterpret_cast<const struct pksav_item*>(tmhm_pocket->get_native())
+        static_cast<const struct pksav_item*>(tmhm_pocket->get_native())
     );
 }
 
 void gba_berry_pocket_test(
-    pkmn::item_list::sptr berry_pocket
-) {
+    const pkmn::item_list::sptr& berry_pocket
+)
+{
     int capacity = 0;
 
     std::string game = berry_pocket->get_game();
@@ -432,13 +445,14 @@ void gba_berry_pocket_test(
         berry_pocket->as_vector(),
         berry_pocket->get_game(),
         berry_pocket->get_num_items(),
-        reinterpret_cast<const struct pksav_item*>(berry_pocket->get_native())
+        static_cast<const struct pksav_item*>(berry_pocket->get_native())
     );
 }
 
 void gba_item_pc_test(
-    pkmn::item_list::sptr item_pc
-) {
+    const pkmn::item_list::sptr& item_pc
+)
+{
     ASSERT_EQ("PC", item_pc->get_name());
     ASSERT_EQ(50, item_pc->get_capacity());
     ASSERT_EQ(50, item_pc->as_vector().size());
@@ -468,8 +482,27 @@ void gba_item_pc_test(
         item_pc->as_vector(),
         item_pc->get_game(),
         item_pc->get_num_items(),
-        reinterpret_cast<const struct pksav_item*>(item_pc->get_native())
+        static_cast<const struct pksav_item*>(item_pc->get_native())
     );
+
+    // For FR/LG, the Berry Pouch and TM Case cannot be added to the PC, as
+    // they are also bag pockets, so make sure this is reflects in the
+    // get_valid_items() call.
+    std::string game = item_pc->get_game();
+    const std::vector<std::string>& valid_items = item_pc->get_valid_items();
+    std::vector<std::string> all_items = pkmn::database::get_item_list(game);
+
+    if((game == "FireRed") || (game == "LeafGreen"))
+    {
+        EXPECT_EQ(all_items.size()-2, valid_items.size());
+
+        EXPECT_FALSE(pkmn::does_vector_contain_value<std::string>(valid_items, "Berry Pouch"));
+        EXPECT_FALSE(pkmn::does_vector_contain_value<std::string>(valid_items, "TM Case"));
+    }
+    else
+    {
+        EXPECT_EQ(all_items, valid_items);
+    }
 }
 
 static const item_list_test_fcns_t gba_test_fcns = boost::assign::map_list_of
@@ -483,11 +516,13 @@ static const item_list_test_fcns_t gba_test_fcns = boost::assign::map_list_of
     ("PC", &gba_item_pc_test)
 ;
 
-TEST_P(gba_item_list_test, item_list_test) {
+TEST_P(gba_item_list_test, item_list_test)
+{
     gba_test_fcns.at(get_name())(get_item_list());
 }
 
-static const std::vector<std::pair<std::string, std::string>> item_list_params = {
+static const std::vector<std::pair<std::string, std::string>> item_list_params =
+{
     {"Ruby", "Items"},
     {"Ruby", "Key Items"},
     {"Ruby", "Poké Balls"},
@@ -528,7 +563,8 @@ INSTANTIATE_TEST_CASE_P(
 
 class gba_item_bag_test: public item_bag_test {};
 
-TEST_P(gba_item_bag_test, item_bag_test) {
+TEST_P(gba_item_bag_test, item_bag_test)
+{
     const pkmn::item_bag::sptr& bag = get_item_bag();
 
     const std::string& game = get_game();
@@ -568,16 +604,20 @@ TEST_P(gba_item_bag_test, item_bag_test) {
     ASSERT_EQ(0, bag->get_pocket("Items")->get_num_items());
     ASSERT_EQ(0, bag->get_pocket("Key Items")->get_num_items());
     ASSERT_EQ(0, bag->get_pocket("Poké Balls")->get_num_items());
-    if(is_frlg) {
+    if(is_frlg)
+    {
         ASSERT_EQ(0, bag->get_pocket("TM Case")->get_num_items());
         ASSERT_EQ(0, bag->get_pocket("Berry Pouch")->get_num_items());
-    } else {
+    }
+    else
+    {
         ASSERT_EQ(0, bag->get_pocket("TMs & HMs")->get_num_items());
         ASSERT_EQ(0, bag->get_pocket("Berries")->get_num_items());
     }
-    for(int i = 0; i < 8; ++i) {
+    for(int item_index = 0; item_index < 8; ++item_index)
+    {
         bag->add(
-            all_pocket_item_names[i],
+            all_pocket_item_names[item_index],
             5
         );
     }
@@ -623,7 +663,7 @@ TEST_P(gba_item_bag_test, item_bag_test) {
      * On the C++ level, make sure the LibPKMN abstraction matches the underlying
      * PKSav struct.
      */
-    const union pksav_gba_item_bag* native = reinterpret_cast<const union pksav_gba_item_bag*>(bag->get_native());
+    const union pksav_gba_item_bag* native = static_cast<const union pksav_gba_item_bag*>(bag->get_native());
     if(game == "Ruby" or game == "Sapphire")
     {
         check_pksav_struct(
@@ -725,9 +765,10 @@ TEST_P(gba_item_bag_test, item_bag_test) {
     }
 
     // Make sure removing items through the bag removes from the proper pockets.
-    for(int i = 0; i < 8; ++i) {
+    for(int item_index = 0; item_index < 8; ++item_index)
+    {
         bag->remove(
-            all_pocket_item_names[i],
+            all_pocket_item_names[item_index],
             5
         );
     }
@@ -770,7 +811,8 @@ TEST_P(gba_item_bag_test, item_bag_test) {
     );
 }
 
-static const std::vector<std::string> item_bag_params = {
+static const std::vector<std::string> item_bag_params =
+{
     "Ruby", "Sapphire", "Emerald", "FireRed", "LeafGreen"
 };
 

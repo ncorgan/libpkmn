@@ -74,8 +74,8 @@ namespace pkmn {
         int game_id
     ): item_bag(),
        _game_id(game_id),
-       _our_mem(false),
-       _native(nullptr)
+       _is_our_mem(false),
+       _p_native(nullptr)
     {
         // Populate pocket name vector
         int version_group_id = pkmn::database::game_id_to_version_group(game_id);
@@ -134,7 +134,7 @@ namespace pkmn {
         "FROM items WHERE id=(SELECT item_id FROM old_item_names WHERE "
         "name=?))))";
 
-    BOOST_STATIC_CONSTEXPR int FRLG = 7;
+    BOOST_STATIC_CONSTEXPR int FRLG_VERSION_GROUP = 7;
 
     // Skips creating item entry
     static std::string get_pocket_name(
@@ -178,7 +178,7 @@ namespace pkmn {
             int generation = pkmn::database::game_id_to_generation(
                                   _game_id
                              );
-            if(version_group_id == FRLG)
+            if(version_group_id == FRLG_VERSION_GROUP)
             {
                 pocket_name = "Berry Pouch";
             }
@@ -218,7 +218,7 @@ namespace pkmn {
             int generation = pkmn::database::game_id_to_generation(
                                   _game_id
                              );
-            if(version_group_id == FRLG)
+            if(version_group_id == FRLG_VERSION_GROUP)
             {
                 pocket_name = "Berry Pouch";
             }
@@ -243,7 +243,7 @@ namespace pkmn {
     {
         boost::lock_guard<item_bag_impl> lock(*this);
 
-        return _native;
+        return _p_native;
     }
 
 }

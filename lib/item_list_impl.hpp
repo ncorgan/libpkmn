@@ -76,10 +76,10 @@ namespace pkmn {
             pkmn::item_slots_t _item_slots;
             std::vector<std::string> _valid_items;
 
-            bool _our_mem;
-            void* _native;
+            bool _is_our_mem;
+            void* _p_native;
 
-            virtual void _from_native(
+            virtual void _from_p_native(
                 int index = -1
             ) = 0;
             virtual void _to_native(

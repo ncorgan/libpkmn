@@ -13,15 +13,12 @@
 
 namespace pkmn {
 
-    class item_bag_gbaimpl: public item_bag_impl {
+    class item_bag_gbaimpl: public item_bag_impl
+    {
         public:
             item_bag_gbaimpl(
                 int game_id,
-                void* ptr
-            );
-            item_bag_gbaimpl(
-                int game_id,
-                const union pksav_gba_item_bag& item_bag
+                void* p_native
             );
 
             ~item_bag_gbaimpl();

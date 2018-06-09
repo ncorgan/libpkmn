@@ -37,11 +37,12 @@ static const std::vector<std::string> wrong_generation_all_pocket_items = boost:
 class gen2_item_list_test: public item_list_test {};
 
 void gen2_item_pocket_test(
-    pkmn::item_list::sptr item_pocket
-) {
+    const pkmn::item_list::sptr& item_pocket
+)
+{
     ASSERT_EQ("Items", item_pocket->get_name());
-    ASSERT_EQ(20, item_pocket->get_capacity());
-    ASSERT_EQ(20, item_pocket->as_vector().size());
+    ASSERT_EQ(PKSAV_GEN2_ITEM_POCKET_SIZE, item_pocket->get_capacity());
+    ASSERT_EQ(PKSAV_GEN2_ITEM_POCKET_SIZE, item_pocket->as_vector().size());
 
     // Make sure item slots start as correctly empty.
     test_item_list_empty_slots(item_pocket);
@@ -90,25 +91,29 @@ void gen2_item_pocket_test(
     const pkmn::item_slots_t& item_slots = item_pocket->as_vector();
     int num_items = item_pocket->get_num_items();
 
-    const struct pksav_gen2_item_pocket* native = reinterpret_cast<const pksav_gen2_item_pocket*>(item_pocket->get_native());
-    EXPECT_EQ(num_items, int(native->count));
-    for(int i = 0; i < num_items; ++i) {
+    const struct pksav_gen2_item_pocket* p_native_pocket = static_cast<const pksav_gen2_item_pocket*>(item_pocket->get_native());
+    EXPECT_EQ(num_items, int(p_native_pocket->count));
+    for(int item_index = 0; item_index < num_items; ++item_index)
+    {
         EXPECT_EQ(
             pkmn::database::item_entry(
-                item_slots.at(i).item,
+                item_slots.at(item_index).item,
                 item_pocket->get_game()
             ).get_item_index(),
-            int(native->items[i].index)
+            int(p_native_pocket->items[item_index].index)
         );
-        EXPECT_EQ(item_slots.at(i).amount, int(native->items[i].count));
+        EXPECT_EQ(
+            item_slots.at(item_index).amount,
+            int(p_native_pocket->items[item_index].count)
+        );
     }
-    EXPECT_EQ(0, native->items[num_items].index);
-    EXPECT_EQ(0, native->items[num_items].count);
-    EXPECT_EQ(0xFF, native->terminator);
+    EXPECT_EQ(0, p_native_pocket->items[num_items].index);
+    EXPECT_EQ(0, p_native_pocket->items[num_items].count);
+    EXPECT_EQ(0xFF, p_native_pocket->terminator);
 }
 
 void gen2_key_item_pocket_test(
-    pkmn::item_list::sptr key_item_pocket
+    const pkmn::item_list::sptr& key_item_pocket
 )
 {
     ASSERT_EQ("KeyItems", key_item_pocket->get_name());
@@ -209,8 +214,8 @@ void gen2_key_item_pocket_test(
     const pkmn::item_slots_t& item_slots = key_item_pocket->as_vector();
     int num_items = key_item_pocket->get_num_items();
 
-    const struct pksav_gen2_key_item_pocket* native = reinterpret_cast<const pksav_gen2_key_item_pocket*>(key_item_pocket->get_native());
-    EXPECT_EQ(num_items, int(native->count));
+    const struct pksav_gen2_key_item_pocket* p_native_pocket = static_cast<const pksav_gen2_key_item_pocket*>(key_item_pocket->get_native());
+    EXPECT_EQ(num_items, int(p_native_pocket->count));
     for(int item_index = 0; item_index < num_items; ++item_index)
     {
         EXPECT_EQ(
@@ -218,19 +223,20 @@ void gen2_key_item_pocket_test(
                 item_slots.at(item_index).item,
                 key_item_pocket->get_game()
             ).get_item_index(),
-            int(native->item_indices[item_index])
+            int(p_native_pocket->item_indices[item_index])
         );
     }
-    EXPECT_EQ(0, native->item_indices[num_items]);
-    EXPECT_EQ(0xFF, native->terminator);
+    EXPECT_EQ(0, p_native_pocket->item_indices[num_items]);
+    EXPECT_EQ(0xFF, p_native_pocket->terminator);
 }
 
 void gen2_ball_pocket_test(
-    pkmn::item_list::sptr ball_pocket
-) {
+    const pkmn::item_list::sptr& ball_pocket
+)
+{
     ASSERT_EQ("Balls", ball_pocket->get_name());
-    ASSERT_EQ(12, ball_pocket->get_capacity());
-    ASSERT_EQ(12, ball_pocket->as_vector().size());
+    ASSERT_EQ(PKSAV_GEN2_BALL_POCKET_SIZE, ball_pocket->get_capacity());
+    ASSERT_EQ(PKSAV_GEN2_BALL_POCKET_SIZE, ball_pocket->as_vector().size());
 
     // Make sure item slots start as correctly empty.
     test_item_list_empty_slots(ball_pocket);
@@ -279,44 +285,53 @@ void gen2_ball_pocket_test(
     const pkmn::item_slots_t& item_slots = ball_pocket->as_vector();
     int num_items = ball_pocket->get_num_items();
 
-    const struct pksav_gen2_ball_pocket* native = reinterpret_cast<const pksav_gen2_ball_pocket*>(ball_pocket->get_native());
-    EXPECT_EQ(num_items, int(native->count));
-    for(int i = 0; i < num_items; ++i) {
+    const struct pksav_gen2_ball_pocket* p_native_pocket = static_cast<const pksav_gen2_ball_pocket*>(ball_pocket->get_native());
+    EXPECT_EQ(num_items, int(p_native_pocket->count));
+    for(int item_index = 0; item_index < num_items; ++item_index)
+    {
         EXPECT_EQ(
             pkmn::database::item_entry(
-                item_slots.at(i).item,
+                item_slots.at(item_index).item,
                 ball_pocket->get_game()
             ).get_item_index(),
-            int(native->items[i].index)
+            int(p_native_pocket->items[item_index].index)
         );
-        EXPECT_EQ(item_slots.at(i).amount, int(native->items[i].count));
+        EXPECT_EQ(
+            item_slots.at(item_index).amount,
+            int(p_native_pocket->items[item_index].count)
+        );
     }
-    EXPECT_EQ(0, native->items[num_items].index);
-    EXPECT_EQ(0, native->items[num_items].count);
-    EXPECT_EQ(0xFF, native->terminator);
+    EXPECT_EQ(0, p_native_pocket->items[num_items].index);
+    EXPECT_EQ(0, p_native_pocket->items[num_items].count);
+    EXPECT_EQ(0xFF, p_native_pocket->terminator);
 }
 
 void gen2_tmhm_pocket_test(
-    pkmn::item_list::sptr tmhm_pocket
-) {
+    const pkmn::item_list::sptr& tmhm_pocket
+)
+{
+    BOOST_STATIC_CONSTEXPR int TMHM_POCKET_SIZE = PKSAV_GEN2_TM_COUNT + PKSAV_GEN2_HM_COUNT;
+
     ASSERT_EQ("TM/HM", tmhm_pocket->get_name());
-    ASSERT_EQ(57, tmhm_pocket->get_capacity());
-    ASSERT_EQ(57, tmhm_pocket->as_vector().size());
+    ASSERT_EQ(TMHM_POCKET_SIZE, tmhm_pocket->get_capacity());
+    ASSERT_EQ(TMHM_POCKET_SIZE, tmhm_pocket->as_vector().size());
 
     // Make sure item slots start as correctly empty.
     const pkmn::item_slots_t& item_slots = tmhm_pocket->as_vector();
-    ASSERT_EQ(57, item_slots.size());
-    for(int i = 1; i <= 50; ++i) {
-        char name[5] = "";
-        std::snprintf(name, sizeof(name), "TM%02d", i);
-        EXPECT_EQ(name, item_slots[i-1].item);
-        EXPECT_EQ(0, item_slots[i-1].amount);
+    ASSERT_EQ(TMHM_POCKET_SIZE, item_slots.size());
+    for(int tm_index = 1; tm_index <= PKSAV_GEN2_TM_COUNT; ++tm_index)
+    {
+        char name[5] = {0};
+        std::snprintf(name, sizeof(name), "TM%02d", tm_index);
+        EXPECT_EQ(name, item_slots[tm_index-1].item);
+        EXPECT_EQ(0, item_slots[tm_index-1].amount);
     }
-    for(int i = 1; i <= 7; ++i) {
-        char name[5] = "";
-        std::snprintf(name, sizeof(name), "HM%02d", i);
-        EXPECT_EQ(name, item_slots[50+i-1].item);
-        EXPECT_EQ(0, item_slots[50+i-1].amount);
+    for(int hm_index = 1; hm_index <= 7; ++hm_index)
+    {
+        char name[5] = {};
+        std::snprintf(name, sizeof(name), "HM%02d", hm_index);
+        EXPECT_EQ(name, item_slots[50+hm_index-1].item);
+        EXPECT_EQ(0, item_slots[50+hm_index-1].amount);
     }
 
     // Confirm exceptions are thrown when expected.
@@ -344,62 +359,75 @@ void gen2_tmhm_pocket_test(
     );
 
     // Start adding and removing stuff, and make sure the numbers are accurate.
-    for(int i = 1; i <= 50; ++i) {
-        char name[5] = "";
-        std::snprintf(name, sizeof(name), "TM%02d", i);
+    for(int tm_index = 1; tm_index <= 50; ++tm_index)
+    {
+        char name[5] = {0};
+        std::snprintf(name, sizeof(name), "TM%02d", tm_index);
         tmhm_pocket->add(name, 50);
-        EXPECT_EQ(i, tmhm_pocket->get_num_items());
-        EXPECT_EQ(name, item_slots[i-1].item);
-        EXPECT_EQ(50, item_slots[i-1].amount);
+        EXPECT_EQ(tm_index, tmhm_pocket->get_num_items());
+        EXPECT_EQ(name, item_slots[tm_index-1].item);
+        EXPECT_EQ(50, item_slots[tm_index-1].amount);
     }
-    for(int i = 50; i >= 1; --i) {
-        char name[5] = "";
-        std::snprintf(name, sizeof(name), "TM%02d", i);
+    for(int tm_index = 50; tm_index >= 1; --tm_index)
+    {
+        char name[5] = {0};
+        std::snprintf(name, sizeof(name), "TM%02d", tm_index);
         tmhm_pocket->remove(name, 50);
-        EXPECT_EQ(i-1, tmhm_pocket->get_num_items());
-        EXPECT_EQ(name, item_slots[i-1].item);
-        EXPECT_EQ(0, item_slots[i-1].amount);
+        EXPECT_EQ(tm_index-1, tmhm_pocket->get_num_items());
+        EXPECT_EQ(name, item_slots[tm_index-1].item);
+        EXPECT_EQ(0, item_slots[tm_index-1].amount);
     }
 
     /*
      * Before removing items, on the C++ level, make sure the LibPKMN abstraction
      * matches the underlying PKSav struct.
      */
-    const struct pksav_gen2_tmhm_pocket* native = reinterpret_cast<const pksav_gen2_tmhm_pocket*>(tmhm_pocket->get_native());
-    for(int i = 0; i < 50; ++i) {
-        EXPECT_EQ(item_slots[i].amount, int(native->tm_count[i]));
+    const struct pksav_gen2_tmhm_pocket* p_native_pocket = static_cast<const pksav_gen2_tmhm_pocket*>(tmhm_pocket->get_native());
+    for(int tm_index = 0; tm_index < 50; ++tm_index)
+    {
+        EXPECT_EQ(
+            item_slots[tm_index].amount,
+            int(p_native_pocket->tm_count[tm_index])
+        );
     }
-    for(int i = 0; i < 7; ++i) {
-        EXPECT_EQ(item_slots[50+i].amount, int(native->hm_count[i]));
+    for(int hm_index = 0; hm_index < 7; ++hm_index)
+    {
+        EXPECT_EQ(
+            item_slots[50+hm_index].amount,
+            int(p_native_pocket->hm_count[hm_index])
+        );
     }
 
-    for(int i = 1; i <= 7; ++i) {
-        char name[5] = "";
-        std::snprintf(name, sizeof(name), "HM%02d", i);
+    for(int hm_index = 1; hm_index <= 7; ++hm_index)
+    {
+        char name[5] = {0};
+        std::snprintf(name, sizeof(name), "HM%02d", hm_index);
         tmhm_pocket->add(name, 1);
-        EXPECT_EQ(i, tmhm_pocket->get_num_items());
-        EXPECT_EQ(name, item_slots[50+i-1].item);
-        EXPECT_EQ(1, item_slots[50+i-1].amount);
+        EXPECT_EQ(hm_index, tmhm_pocket->get_num_items());
+        EXPECT_EQ(name, item_slots[50+hm_index-1].item);
+        EXPECT_EQ(1, item_slots[50+hm_index-1].amount);
     }
-    for(int i = 7; i >= 1; --i) {
-        char name[5];
-        std::snprintf(name, sizeof(name), "HM%02d", i);
+    for(int hm_index = 7; hm_index >= 1; --hm_index)
+    {
+        char name[5] = {0};
+        std::snprintf(name, sizeof(name), "HM%02d", hm_index);
         tmhm_pocket->remove(name, 1);
-        EXPECT_EQ(i-1, tmhm_pocket->get_num_items());
-        EXPECT_EQ(name, item_slots[50+i-1].item);
-        EXPECT_EQ(0, item_slots[50+i-1].amount);
+        EXPECT_EQ(hm_index-1, tmhm_pocket->get_num_items());
+        EXPECT_EQ(name, item_slots[50+hm_index-1].item);
+        EXPECT_EQ(0, item_slots[50+hm_index-1].amount);
     }
 
     const std::vector<std::string>& valid_items = tmhm_pocket->get_valid_items();
-    EXPECT_EQ(57, valid_items.size());
+    EXPECT_EQ(TMHM_POCKET_SIZE, valid_items.size());
 }
 
 void gen2_item_pc_test(
-    pkmn::item_list::sptr item_pc
-) {
+    const pkmn::item_list::sptr& item_pc
+)
+{
     ASSERT_EQ("PC", item_pc->get_name());
-    ASSERT_EQ(50, item_pc->get_capacity());
-    ASSERT_EQ(50, item_pc->as_vector().size());
+    ASSERT_EQ(PKSAV_GEN2_ITEM_PC_SIZE, item_pc->get_capacity());
+    ASSERT_EQ(PKSAV_GEN2_ITEM_PC_SIZE, item_pc->as_vector().size());
 
     // Confirm exceptions are thrown when expected.
     test_item_list_out_of_range_error(
@@ -411,14 +439,18 @@ void gen2_item_pc_test(
     test_item_list_empty_slots(item_pc);
 
     // Crystal-specific items.
-    if(item_pc->get_game() == "Crystal") {
-        for(auto iter = crystal_items.begin(); iter != crystal_items.end(); ++iter) {
-            item_pc->add(*iter, 1);
-            item_pc->remove(*iter, 1);
+    if(item_pc->get_game() == "Crystal")
+    {
+        for(const std::string& crystal_item: crystal_items)
+        {
+            item_pc->add(crystal_item, 1);
+            item_pc->remove(crystal_item, 1);
         }
 
         EXPECT_EQ(0, item_pc->get_num_items());
-    } else {
+    }
+    else
+    {
         test_item_list_invalid_items(
             item_pc,
             crystal_items
@@ -448,21 +480,25 @@ void gen2_item_pc_test(
     const pkmn::item_slots_t& item_slots = item_pc->as_vector();
     int num_items = item_pc->get_num_items();
 
-    const struct pksav_gen2_item_pc* native = reinterpret_cast<const struct pksav_gen2_item_pc*>(item_pc->get_native());
-    EXPECT_EQ(num_items, int(native->count));
-    for(int i = 0; i < num_items; ++i) {
+    const struct pksav_gen2_item_pc* p_native_pocket = static_cast<const struct pksav_gen2_item_pc*>(item_pc->get_native());
+    EXPECT_EQ(num_items, int(p_native_pocket->count));
+    for(int item_index = 0; item_index < num_items; ++item_index)
+    {
         EXPECT_EQ(
             pkmn::database::item_entry(
-                item_slots.at(i).item,
+                item_slots.at(item_index).item,
                 item_pc->get_game()
             ).get_item_index(),
-            int(native->items[i].index)
+            int(p_native_pocket->items[item_index].index)
         );
-        EXPECT_EQ(item_slots.at(i).amount, int(native->items[i].count));
+        EXPECT_EQ(
+            item_slots.at(item_index).amount,
+            int(p_native_pocket->items[item_index].count)
+        );
     }
-    EXPECT_EQ(0, native->items[num_items].index);
-    EXPECT_EQ(0, native->items[num_items].count);
-    EXPECT_EQ(0xFF, native->terminator);
+    EXPECT_EQ(0, p_native_pocket->items[num_items].index);
+    EXPECT_EQ(0, p_native_pocket->items[num_items].count);
+    EXPECT_EQ(0xFF, p_native_pocket->terminator);
 }
 
 static const item_list_test_fcns_t gen2_test_fcns = boost::assign::map_list_of
@@ -477,7 +513,8 @@ TEST_P(gen2_item_list_test, item_list_test) {
     gen2_test_fcns.at(get_name())(get_item_list());
 }
 
-static const std::vector<std::pair<std::string, std::string>> item_list_params = {
+static const std::vector<std::pair<std::string, std::string>> item_list_params =
+{
     {"Gold", "Items"},
     {"Gold", "KeyItems"},
     {"Gold", "Balls"},

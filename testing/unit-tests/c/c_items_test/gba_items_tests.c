@@ -6,6 +6,7 @@
  */
 
 #include "c_items_test.h"
+#include "pkmntest-c/util.h"
 
 #include <pkmn-c/database/lists.h>
 
@@ -530,7 +531,16 @@ static void gba_item_pc_test(
     TEST_ASSERT_NOT_NULL(full_item_list.pp_strings);
     TEST_ASSERT_TRUE(full_item_list.length > 0);
 
-    TEST_ASSERT_EQUAL(full_item_list.length, valid_items.length);
+    if(!strcmp(item_pc.p_game, "FireRed") || !strcmp(item_pc.p_game, "LeafGreen"))
+    {
+        TEST_ASSERT_EQUAL(full_item_list.length-2, valid_items.length);
+        TEST_ASSERT_FALSE(string_list_contains(&valid_items, "Berry Pouch"));
+        TEST_ASSERT_FALSE(string_list_contains(&valid_items, "TM Case"));
+    }
+    else
+    {
+        TEST_ASSERT_EQUAL(full_item_list.length, valid_items.length);
+    }
 
     error = pkmn_string_list_free(&valid_items);
     PKMN_TEST_ASSERT_SUCCESS(error);

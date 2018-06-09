@@ -19,7 +19,7 @@
 #include <cstring>
 #include <stdexcept>
 
-#define NATIVE_RCAST (reinterpret_cast<struct pksav_gen2_key_item_pocket*>(_native))
+#define NATIVE_RCAST (reinterpret_cast<struct pksav_gen2_key_item_pocket*>(_p_native))
 
 namespace pkmn {
 
@@ -31,24 +31,24 @@ namespace pkmn {
     {
         if(ptr)
         {
-            _native = ptr;
-            _our_mem = false;
+            _p_native = ptr;
+            _is_our_mem = false;
 
-            _from_native();
+            _from_p_native();
         }
         else
         {
-            _native = reinterpret_cast<void*>(new struct pksav_gen2_key_item_pocket);
-            std::memset(_native, 0, sizeof(struct pksav_gen2_key_item_pocket));
+            _p_native = reinterpret_cast<void*>(new struct pksav_gen2_key_item_pocket);
+            std::memset(_p_native, 0, sizeof(struct pksav_gen2_key_item_pocket));
             NATIVE_RCAST->terminator = 0xFF;
 
-            _our_mem = true;
+            _is_our_mem = true;
         }
     }
 
     item_list_gen2_keyitemimpl::~item_list_gen2_keyitemimpl()
     {
-        if(_our_mem)
+        if(_is_our_mem)
         {
             delete NATIVE_RCAST;
         }
@@ -200,7 +200,7 @@ namespace pkmn {
         _to_native();
     }
 
-    void item_list_gen2_keyitemimpl::_from_native(
+    void item_list_gen2_keyitemimpl::_from_p_native(
         int index
     )
     {

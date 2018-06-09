@@ -31,7 +31,8 @@ namespace pkmn {
     item_list::sptr item_list::make(
         const std::string& name,
         const std::string& game
-    ) {
+    )
+    {
         int game_id = pkmn::database::game_name_to_id(game);
         int generation = pkmn::database::game_id_to_generation(game_id);
         int item_list_id = 0;
@@ -48,16 +49,19 @@ namespace pkmn {
         );
         stmt.bind(1, name);
         stmt.bind(2, game_id);
-        if(stmt.executeStep()) {
+        if(stmt.executeStep())
+        {
             item_list_id = stmt.getColumn(0);
             capacity = stmt.getColumn(1);
         } else {
             throw std::invalid_argument("Invalid list.");
         }
 
-        switch(generation) {
+        switch(generation)
+        {
             case 1:
-                switch(item_list_id) {
+                switch(item_list_id)
+                {
                     case 1:
                     case 3:
                         return std::make_shared<item_list_gen1_bagimpl>(
@@ -75,7 +79,8 @@ namespace pkmn {
                 }
 
             case 2:
-                switch(item_list_id) {
+                switch(item_list_id)
+                {
                     case 5:
                     case 10:
                         return std::make_shared<item_list_gen2_item_pocketimpl>(
@@ -111,11 +116,14 @@ namespace pkmn {
                 }
 
             case 3:
-                if(game_is_gamecube(game_id)) {
+                if(game_is_gamecube(game_id))
+                {
                     return std::make_shared<item_list_gcnimpl>(
                                item_list_id, game_id, nullptr, capacity, false
                            );
-                } else {
+                }
+                else
+                {
                     return std::make_shared<item_list_modernimpl>(
                                item_list_id, game_id, nullptr, capacity, false
                            );
@@ -146,7 +154,8 @@ namespace pkmn {
 
     static PKMN_CONSTEXPR_OR_INLINE bool ITEM_LIST_ID_IS_PC(
         int item_list_id
-    ) {
+    )
+    {
         return (item_list_id == RB_PC_ID) or
                (item_list_id == YELLOW_PC_ID) or
                (item_list_id == GS_PC_ID) or
@@ -167,8 +176,8 @@ namespace pkmn {
        _version_group_id(pkmn::database::game_id_to_version_group(game_id)),
        _num_items(0),
        _pc(ITEM_LIST_ID_IS_PC(item_list_id)),
-       _our_mem(false),
-       _native(nullptr)
+       _is_our_mem(false),
+       _p_native(nullptr)
     {
         static BOOST_CONSTEXPR const char* capacity_query = \
             "SELECT capacity FROM libpkmn_item_lists WHERE id=? AND "
@@ -180,13 +189,15 @@ namespace pkmn {
                     );
 
         _item_slots.resize(_capacity);
-        for(int i = 0; i < _capacity; ++i) {
-            _item_slots[i].item = "None";
-            _item_slots[i].amount = 0;
+        for(pkmn::item_slot& r_item_slot: _item_slots)
+        {
+            r_item_slot.item = "None";
+            r_item_slot.amount = 0;
         }
     }
 
-    std::string item_list_impl::get_name() {
+    std::string item_list_impl::get_name()
+    {
         static BOOST_CONSTEXPR const char* query = \
             "SELECT name FROM libpkmn_item_lists WHERE id=? AND "
             "version_group_id=?";
@@ -196,13 +207,15 @@ namespace pkmn {
                );
     }
 
-    std::string item_list_impl::get_game() {
+    std::string item_list_impl::get_game()
+    {
         return pkmn::database::game_id_to_name(
                    _game_id
                );
     }
 
-    int item_list_impl::get_capacity() {
+    int item_list_impl::get_capacity()
+    {
         return _capacity;
     }
 
@@ -245,39 +258,43 @@ namespace pkmn {
          * that amount. If not, see if there's room to add another
          * item.
          */
-        for(int i = 0; i < _num_items; ++i)
+        for(int item_index = 0; item_index < _num_items; ++item_index)
         {
-            if(_item_slots[i].item == item_name)
+            if(_item_slots[item_index].item == item_name)
             {
-                if(_item_slots[i].amount == 99)
+                if(_item_slots[item_index].amount == 99)
                 {
                     throw std::runtime_error("Cannot add any more of this item.");
-                } else if((_item_slots[i].amount + amount) > 99)
+                } else if((_item_slots[item_index].amount + amount) > 99)
                 {
                     throw std::runtime_error(
                               str(boost::format("Can only add %d more items.") %
-                                  (99 - _item_slots[i].amount)
+                                  (99 - _item_slots[item_index].amount)
                               )
                           );
                 }
                 else
                 {
-                    _item_slots[i].amount += amount;
-                    _to_native(i);
+                    _item_slots[item_index].amount += amount;
+                    _to_native(item_index);
                     return;
                 }
             }
         }
 
         // At this point, we know the item isn't already in the pocket
-        if(_num_items == _capacity) {
+        if(_num_items == _capacity)
+        {
             throw std::runtime_error("Cannot add any new items.");
-        } else {
+        }
+        else
+        {
             // Confirm the item can be placed in this pocket
             pkmn::database::item_entry entry(
                 item_name, get_game()
             );
-            if(not _pc and entry.get_item_list_id() != _item_list_id) {
+            if(not _pc and entry.get_item_list_id() != _item_list_id)
+            {
                 throw std::invalid_argument(
                           str(boost::format("This item belongs in the \"%s\" pocket.") %
                               entry.get_pocket())
@@ -305,30 +322,30 @@ namespace pkmn {
          * and if there are no more, remove the item from the list and
          * shift everything over.
          */
-        for(int i = 0; i < _num_items; ++i)
+        for(int item_index = 0; item_index < _num_items; ++item_index)
         {
-            if(_item_slots[i].item == item_name)
+            if(_item_slots[item_index].item == item_name)
             {
-                if(_item_slots[i].amount < amount)
+                if(_item_slots[item_index].amount < amount)
                 {
                     throw std::runtime_error(
                               str(boost::format("Can only remove %d items.") %
-                                  _item_slots[i].amount)
+                                  _item_slots[item_index].amount)
                           );
                 }
                 else
                 {
-                    _item_slots[i].amount -= amount;
-                    if(_item_slots[i].amount == 0)
+                    _item_slots[item_index].amount -= amount;
+                    if(_item_slots[item_index].amount == 0)
                     {
-                        _item_slots.erase(_item_slots.begin()+i);
+                        _item_slots.erase(_item_slots.begin()+item_index);
                         _item_slots.resize(_capacity);
                         _num_items--;
                         _to_native();
                     }
                     else
                     {
-                        _to_native(i);
+                        _to_native(item_index);
                     }
                     return;
                 }
@@ -348,7 +365,9 @@ namespace pkmn {
            new_position < 0 or new_position >= _num_items)
         {
             throw std::range_error("Cannot move an item outside of the list.");
-        } else if(old_position == new_position) {
+        }
+        else if(old_position == new_position)
+        {
             throw std::invalid_argument("Positions cannot match.");
         }
 
@@ -392,12 +411,13 @@ namespace pkmn {
             }
 
             pkmn::enforce_bounds("Amount", amount, 1, 99);
-            for(int i = 0; i < _num_items; ++i)
+            for(int item_index = 0; item_index < _num_items; ++item_index)
             {
-                if((_item_slots[i].item == item_name) && (i != position))
+                if((_item_slots[item_index].item == item_name) &&
+                   (item_index != position))
                 {
                     std::string err_msg = "This item is already present in slot ";
-                    err_msg.append(std::to_string(i));
+                    err_msg.append(std::to_string(item_index));
                     err_msg.append(".");
 
                     throw std::invalid_argument(err_msg.c_str());
@@ -433,7 +453,8 @@ namespace pkmn {
      * but they go in separate pockets in every game past Generation II, so this
      * overrides the database query.
      */
-    BOOST_STATIC_CONSTEXPR int BERRY_LIST_IDS[] = {
+    BOOST_STATIC_CONSTEXPR int BERRY_LIST_IDS[] =
+    {
         -1, // None
         -1, // Red/Blue
         -1, // Yellow
@@ -458,8 +479,10 @@ namespace pkmn {
      */
     const std::vector<std::string>& item_list_impl::get_valid_items()
     {
-        if(_valid_items.size() == 0) {
-            if(std::find(BERRY_LIST_IDS, BERRY_LIST_IDS+17, _item_list_id) != BERRY_LIST_IDS+17) {
+        if(_valid_items.size() == 0)
+        {
+            if(std::find(BERRY_LIST_IDS, BERRY_LIST_IDS+17, _item_list_id) != BERRY_LIST_IDS+17)
+            {
                 static BOOST_CONSTEXPR const char* berry_list_query = \
                     "SELECT DISTINCT item_names.name FROM item_names JOIN item_game_indices ON "
                     "(item_names.item_id=item_game_indices.item_id) WHERE item_game_indices.generation_id=? "
@@ -469,11 +492,37 @@ namespace pkmn {
                     berry_list_query, _valid_items,
                     pkmn::database::game_id_to_generation(_game_id)
                 );
-            } else {
+            }
+            else
+            {
                 pkmn::database::_get_item_list(
                     _valid_items,
                     ((get_name() == "PC") ? -1 : _item_list_id),
                     _game_id
+                );
+            }
+
+            BOOST_STATIC_CONSTEXPR int FRLG_VERSION_GROUP_ID = 7;
+
+            if(_pc && (_version_group_id == FRLG_VERSION_GROUP_ID))
+            {
+                static const std::vector<std::string> INVALID_GBA_PC_ITEMS =
+                {
+                    "Berry Pouch", "TM Case"
+                };
+
+                _valid_items.erase(
+                    std::remove_if(
+                        _valid_items.begin(),
+                        _valid_items.end(),
+                        [](const std::string& item)
+                        {
+                            return pkmn::does_vector_contain_value(
+                                       INVALID_GBA_PC_ITEMS,
+                                       item
+                                   );
+                        }),
+                    _valid_items.end()
                 );
             }
         }
@@ -485,6 +534,6 @@ namespace pkmn {
     {
         boost::lock_guard<item_list_impl> lock(*this);
 
-        return _native;
+        return _p_native;
     }
 }

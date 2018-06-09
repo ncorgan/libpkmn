@@ -5,7 +5,7 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-#define NATIVE_RCAST (reinterpret_cast<struct pksav_gen1_item_bag*>(_native))
+#define GEN1_CAST(ptr) (static_cast<struct pksav_gen1_item_bag*>(ptr))
 
 #include "item_bag_gen1impl.hpp"
 #include "item_list_gbimpl.hpp"
@@ -18,50 +18,44 @@ namespace pkmn {
 
     item_bag_gen1impl::item_bag_gen1impl(
         int game_id,
-        void* ptr
+        void* p_native
     ): item_bag_impl(game_id)
     {
-        if(ptr)
+        if(p_native)
         {
-            _native = ptr;
-            _our_mem = false;
+            _p_native = p_native;
+            _is_our_mem = false;
         }
         else
         {
-            _native = reinterpret_cast<void*>(new struct pksav_gen1_item_bag);
-            std::memset(_native, 0, sizeof(struct pksav_gen1_item_bag));
-            NATIVE_RCAST->terminator = 0xFF;
-            _our_mem = true;
+            _p_native = new struct pksav_gen1_item_bag;
+            std::memset(_p_native, 0, sizeof(struct pksav_gen1_item_bag));
+            GEN1_CAST(_p_native)->terminator = 0xFF;
+            _is_our_mem = true;
         }
-
-        _set_ptrs();
-    }
-
-    item_bag_gen1impl::item_bag_gen1impl(
-        int game_id,
-        const struct pksav_gen1_item_bag &item_bag
-    ): item_bag_impl(game_id)
-    {
-        _native = reinterpret_cast<void*>(new struct pksav_gen1_item_bag);
-        *NATIVE_RCAST = item_bag;
-        _our_mem = true;
 
         _set_ptrs();
     }
 
     item_bag_gen1impl::~item_bag_gen1impl()
     {
-        boost::lock_guard<item_bag_gen1impl> lock(*this);
-
-        if(_our_mem)
+        if(_is_our_mem)
         {
-            delete NATIVE_RCAST;
+            delete GEN1_CAST(_p_native);
         }
     }
 
-    void item_bag_gen1impl::_set_ptrs() {
+    void item_bag_gen1impl::_set_ptrs()
+    {
+        BOOST_STATIC_CONSTEXPR int YELLOW_GAME_ID = 3;
+        BOOST_STATIC_CONSTEXPR int RB_ITEM_POCKET_ID = 1;
+        BOOST_STATIC_CONSTEXPR int YELLOW_ITEM_POCKET_ID = 3;
+
         _item_pockets["Items"] = std::make_shared<item_list_gen1_bagimpl>(
-                                     (_game_id == 3) ? 3 : 1, _game_id, _native
+                                     (_game_id == YELLOW_GAME_ID)
+                                         ? YELLOW_ITEM_POCKET_ID
+                                         : RB_ITEM_POCKET_ID,
+                                     _game_id, _p_native
                                  );
     }
 }

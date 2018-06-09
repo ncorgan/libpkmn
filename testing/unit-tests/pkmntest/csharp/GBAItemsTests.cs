@@ -387,7 +387,16 @@ public class GBAItemsTest
         );
 
         PKMN.StringList fullItemList = PKMN.Database.Lists.ItemList(game);
-        Assert.AreEqual(itemPC.ValidItems.Count, fullItemList.Count);
+        if(game.Equals("FireRed") || game.Equals("LeafGreen"))
+        {
+            Assert.AreEqual(itemPC.ValidItems.Count, fullItemList.Count-2);
+            Assert.IsFalse(itemPC.ValidItems.Contains("Berry Pouch"));
+            Assert.IsFalse(itemPC.ValidItems.Contains("TM Case"));
+        }
+        else
+        {
+            Assert.AreEqual(itemPC.ValidItems.Count, fullItemList.Count);
+        }
     }
 
     public static void ItemBagTest(

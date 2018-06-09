@@ -49,30 +49,36 @@ class gcn_item_list_test: public item_list_test {};
 static void check_libpkmgc_class(
     const pkmn::item_slots_t& item_slots,
     const std::string& game,
-    const LibPkmGC::Item* native_items,
+    const LibPkmGC::Item* p_native_items,
     int expected_num_items
-) {
-    for(int i = 0; i < expected_num_items; ++i) {
+)
+{
+    for(int item_index = 0; item_index < expected_num_items; ++item_index)
+    {
         EXPECT_EQ(
             pkmn::database::item_entry(
-                item_slots.at(i).item,
+                item_slots.at(item_index).item,
                 game
             ).get_item_index(),
-            int(native_items[i].index)
+            int(p_native_items[item_index].index)
         );
-        EXPECT_EQ(item_slots.at(i).amount, int(native_items[i].quantity));
+        EXPECT_EQ(
+            item_slots.at(item_index).amount,
+            int(p_native_items[item_index].quantity)
+        );
     }
 
     if(expected_num_items < int(item_slots.size()))
     {
-        EXPECT_EQ(LibPkmGC::NoItem, native_items[expected_num_items].index);
-        EXPECT_EQ(0, native_items[expected_num_items].quantity);
+        EXPECT_EQ(LibPkmGC::NoItem, p_native_items[expected_num_items].index);
+        EXPECT_EQ(0, p_native_items[expected_num_items].quantity);
     }
 }
 
 void gcn_item_pocket_test(
-    pkmn::item_list::sptr item_pocket
-) {
+    const pkmn::item_list::sptr& item_pocket
+)
+{
     ASSERT_EQ("Items", item_pocket->get_name());
 
     bool colosseum = (item_pocket->get_game() == "Colosseum");
@@ -131,14 +137,15 @@ void gcn_item_pocket_test(
     check_libpkmgc_class(
         item_pocket->as_vector(),
         item_pocket->get_game(),
-        reinterpret_cast<const LibPkmGC::Item*>(item_pocket->get_native()),
+        static_cast<const LibPkmGC::Item*>(item_pocket->get_native()),
         item_pocket->get_num_items()
     );
 }
 
 void gcn_key_item_pocket_test(
-    pkmn::item_list::sptr key_item_pocket
-) {
+    const pkmn::item_list::sptr& key_item_pocket
+)
+{
     ASSERT_EQ("Key Items", key_item_pocket->get_name());
 
     bool colosseum = (key_item_pocket->get_game() == "Colosseum");
@@ -215,14 +222,15 @@ void gcn_key_item_pocket_test(
     check_libpkmgc_class(
         key_item_pocket->as_vector(),
         key_item_pocket->get_game(),
-        reinterpret_cast<const LibPkmGC::Item*>(key_item_pocket->get_native()),
+        static_cast<const LibPkmGC::Item*>(key_item_pocket->get_native()),
         key_item_pocket->get_num_items()
     );
 }
 
 void gcn_ball_pocket_test(
-    pkmn::item_list::sptr ball_pocket
-) {
+    const pkmn::item_list::sptr& ball_pocket
+)
+{
     ASSERT_EQ("Poké Balls", ball_pocket->get_name());
 
     bool colosseum = (ball_pocket->get_game() == "Colosseum");
@@ -276,14 +284,15 @@ void gcn_ball_pocket_test(
     check_libpkmgc_class(
         ball_pocket->as_vector(),
         ball_pocket->get_game(),
-        reinterpret_cast<const LibPkmGC::Item*>(ball_pocket->get_native()),
+        static_cast<const LibPkmGC::Item*>(ball_pocket->get_native()),
         ball_pocket->get_num_items()
     );
 }
 
 void gcn_tm_pocket_test(
-    pkmn::item_list::sptr tm_pocket
-) {
+    const pkmn::item_list::sptr& tm_pocket
+)
+{
     ASSERT_EQ("TMs", tm_pocket->get_name());
 
     bool colosseum = (tm_pocket->get_game() == "Colosseum");
@@ -340,13 +349,13 @@ void gcn_tm_pocket_test(
     check_libpkmgc_class(
         tm_pocket->as_vector(),
         tm_pocket->get_game(),
-        reinterpret_cast<const LibPkmGC::Item*>(tm_pocket->get_native()),
+        static_cast<const LibPkmGC::Item*>(tm_pocket->get_native()),
         tm_pocket->get_num_items()
     );
 }
 
 void gcn_berry_pocket_test(
-    pkmn::item_list::sptr berry_pocket
+    const pkmn::item_list::sptr& berry_pocket
 ) {
     ASSERT_EQ("Berries", berry_pocket->get_name());
 
@@ -402,14 +411,15 @@ void gcn_berry_pocket_test(
     check_libpkmgc_class(
         berry_pocket->as_vector(),
         berry_pocket->get_game(),
-        reinterpret_cast<const LibPkmGC::Item*>(berry_pocket->get_native()),
+        static_cast<const LibPkmGC::Item*>(berry_pocket->get_native()),
         berry_pocket->get_num_items()
     );
 }
 
 void gcn_cologne_pocket_test(
-    pkmn::item_list::sptr cologne_pocket
-) {
+    const pkmn::item_list::sptr& cologne_pocket
+)
+{
     ASSERT_EQ("Colognes", cologne_pocket->get_name());
 
     bool colosseum = (cologne_pocket->get_game() == "Colosseum");
@@ -462,14 +472,15 @@ void gcn_cologne_pocket_test(
     check_libpkmgc_class(
         cologne_pocket->as_vector(),
         cologne_pocket->get_game(),
-        reinterpret_cast<const LibPkmGC::Item*>(cologne_pocket->get_native()),
+        static_cast<const LibPkmGC::Item*>(cologne_pocket->get_native()),
         cologne_pocket->get_num_items()
     );
 }
 
 void gcn_battle_cd_pocket_test(
-    pkmn::item_list::sptr battle_cd_pocket
-) {
+    const pkmn::item_list::sptr& battle_cd_pocket
+)
+{
     ASSERT_EQ("Battle CDs", battle_cd_pocket->get_name());
 
     int capacity = 60;
@@ -511,14 +522,15 @@ void gcn_battle_cd_pocket_test(
     check_libpkmgc_class(
         battle_cd_pocket->as_vector(),
         battle_cd_pocket->get_game(),
-        reinterpret_cast<const LibPkmGC::Item*>(battle_cd_pocket->get_native()),
+        static_cast<const LibPkmGC::Item*>(battle_cd_pocket->get_native()),
         battle_cd_pocket->get_num_items()
     );
 }
 
 void gcn_item_pc_test(
-    pkmn::item_list::sptr item_pc
-) {
+    const pkmn::item_list::sptr& item_pc
+)
+{
     ASSERT_EQ("PC", item_pc->get_name());
     ASSERT_EQ(235, item_pc->get_capacity());
     ASSERT_EQ(235, item_pc->as_vector().size());
@@ -548,7 +560,7 @@ void gcn_item_pc_test(
     check_libpkmgc_class(
         item_pc->as_vector(),
         item_pc->get_game(),
-        reinterpret_cast<const LibPkmGC::Item*>(item_pc->get_native()),
+        static_cast<const LibPkmGC::Item*>(item_pc->get_native()),
         item_pc->get_num_items()
     );
 }
@@ -564,11 +576,13 @@ static const item_list_test_fcns_t gcn_test_fcns = boost::assign::map_list_of
     ("PC", &gcn_item_pc_test)
 ;
 
-TEST_P(gcn_item_list_test, item_list_test) {
+TEST_P(gcn_item_list_test, item_list_test)
+{
     gcn_test_fcns.at(get_name())(get_item_list());
 }
 
-static const std::vector<std::pair<std::string, std::string>> item_list_params = {
+static const std::vector<std::pair<std::string, std::string>> item_list_params =
+{
     {"Colosseum", "Items"},
     {"Colosseum", "Key Items"},
     {"Colosseum", "Poké Balls"},
@@ -662,9 +676,11 @@ TEST_P(gcn_item_bag_test, item_bag_test)
     {
         ASSERT_EQ(0, bag->get_pocket("Battle CDs")->get_num_items());
     }
-    for(int i = 0; i < 8; ++i) {
+    for(int item_index = 0; item_index < 8; ++item_index)
+    {
         bag->add(
-            (colosseum ? colosseum_all_pocket_items[i] : xd_all_pocket_items[i]),
+            (colosseum ? colosseum_all_pocket_items[item_index]
+                       : xd_all_pocket_items[item_index]),
             5
         );
     }
@@ -728,7 +744,7 @@ TEST_P(gcn_item_bag_test, item_bag_test)
      * On the C++ level, make sure the LibPKMN abstraction matches the underlying
      * PKSav struct.
      */
-    const LibPkmGC::GC::BagData* native = reinterpret_cast<const LibPkmGC::GC::BagData*>(bag->get_native());
+    const LibPkmGC::GC::BagData* native = static_cast<const LibPkmGC::GC::BagData*>(bag->get_native());
     check_libpkmgc_class(
         item_slots,
         game,
@@ -837,7 +853,8 @@ TEST_P(gcn_item_bag_test, item_bag_test)
     );
 }
 
-static const std::vector<std::string> item_bag_params = {
+static const std::vector<std::string> item_bag_params =
+{
     "Colosseum", "XD"
 };
 

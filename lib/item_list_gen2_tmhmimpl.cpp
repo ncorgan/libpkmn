@@ -32,7 +32,7 @@ static PKMN_CONSTEXPR_OR_INLINE bool ITEM_ID_IS_HM(int num) {
     return (num >= HM01_ID and num <= HM07_ID);
 }
 
-#define NATIVE_RCAST (reinterpret_cast<struct pksav_gen2_tmhm_pocket*>(_native))
+#define NATIVE_RCAST (reinterpret_cast<struct pksav_gen2_tmhm_pocket*>(_p_native))
 
 namespace pkmn {
 
@@ -58,16 +58,16 @@ namespace pkmn {
 
         if(ptr)
         {
-            _native = ptr;
-            _our_mem = false;
+            _p_native = ptr;
+            _is_our_mem = false;
 
-            _from_native();
+            _from_p_native();
         }
         else
         {
-            _native = reinterpret_cast<void*>(new struct pksav_gen2_tmhm_pocket);
-            std::memset(_native, 0, sizeof(struct pksav_gen2_tmhm_pocket));
-            _our_mem = true;
+            _p_native = reinterpret_cast<void*>(new struct pksav_gen2_tmhm_pocket);
+            std::memset(_p_native, 0, sizeof(struct pksav_gen2_tmhm_pocket));
+            _is_our_mem = true;
         }
     }
 
@@ -75,7 +75,7 @@ namespace pkmn {
     {
         boost::lock_guard<item_list_gen2_tmhmimpl> lock(*this);
 
-        if(_our_mem)
+        if(_is_our_mem)
         {
             delete NATIVE_RCAST;
         }
@@ -210,7 +210,7 @@ namespace pkmn {
         _item_slots[position].amount = amount;
     }
 
-    void item_list_gen2_tmhmimpl::_from_native(
+    void item_list_gen2_tmhmimpl::_from_p_native(
         PKMN_UNUSED(int index)
     )
     {

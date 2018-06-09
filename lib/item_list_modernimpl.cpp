@@ -16,7 +16,7 @@
 #include <algorithm>
 #include <cstring>
 
-#define NATIVE_RCAST (reinterpret_cast<struct pksav_item*>(_native))
+#define NATIVE_RCAST (reinterpret_cast<struct pksav_item*>(_p_native))
 
 namespace pkmn {
 
@@ -30,32 +30,32 @@ namespace pkmn {
     {
         if(ptr) {
             if(copy) {
-                _native = reinterpret_cast<void*>(new struct pksav_item[capacity]);
-                std::memcpy(_native, ptr, sizeof(struct pksav_item)*capacity);
-                _our_mem = true;
+                _p_native = reinterpret_cast<void*>(new struct pksav_item[capacity]);
+                std::memcpy(_p_native, ptr, sizeof(struct pksav_item)*capacity);
+                _is_our_mem = true;
             } else {
-                _native = ptr;
-                _our_mem = false;
+                _p_native = ptr;
+                _is_our_mem = false;
             }
 
-            _from_native();
+            _from_p_native();
         } else {
-            _native = reinterpret_cast<void*>(new struct pksav_item[capacity]);
-            std::memset(_native, 0, sizeof(struct pksav_item)*capacity);
-            _our_mem = true;
+            _p_native = reinterpret_cast<void*>(new struct pksav_item[capacity]);
+            std::memset(_p_native, 0, sizeof(struct pksav_item)*capacity);
+            _is_our_mem = true;
 
         }
     }
 
     item_list_modernimpl::~item_list_modernimpl()
     {
-        if(_our_mem)
+        if(_is_our_mem)
         {
             delete[] NATIVE_RCAST;
         }
     }
 
-    void item_list_modernimpl::_from_native(
+    void item_list_modernimpl::_from_p_native(
         int index
     )
     {

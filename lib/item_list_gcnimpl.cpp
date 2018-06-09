@@ -13,7 +13,7 @@
 
 #include <cstring>
 
-#define NATIVE_RCAST (reinterpret_cast<LibPkmGC::Item*>(_native))
+#define NATIVE_RCAST (reinterpret_cast<LibPkmGC::Item*>(_p_native))
 
 namespace pkmn {
 
@@ -27,19 +27,19 @@ namespace pkmn {
     {
         if(ptr) {
             if(copy) {
-                _native = reinterpret_cast<void*>(new LibPkmGC::Item[capacity]);
-                std::memcpy(_native, ptr, sizeof(LibPkmGC::Item)*capacity);
-                _our_mem = true;
+                _p_native = reinterpret_cast<void*>(new LibPkmGC::Item[capacity]);
+                std::memcpy(_p_native, ptr, sizeof(LibPkmGC::Item)*capacity);
+                _is_our_mem = true;
             } else {
-                _native = ptr;
-                _our_mem = false;
+                _p_native = ptr;
+                _is_our_mem = false;
             }
 
-            _from_native();
+            _from_p_native();
         } else {
-            _native = reinterpret_cast<void*>(new LibPkmGC::Item[capacity]);
-            std::memset(_native, 0, sizeof(LibPkmGC::Item)*capacity);
-            _our_mem = true;
+            _p_native = reinterpret_cast<void*>(new LibPkmGC::Item[capacity]);
+            std::memset(_p_native, 0, sizeof(LibPkmGC::Item)*capacity);
+            _is_our_mem = true;
         }
     }
 
@@ -47,13 +47,13 @@ namespace pkmn {
     {
         boost::lock_guard<item_list_gcnimpl> lock(*this);
 
-        if(_our_mem)
+        if(_is_our_mem)
         {
             delete[] NATIVE_RCAST;
         }
     }
 
-    void item_list_gcnimpl::_from_native(
+    void item_list_gcnimpl::_from_p_native(
         int index
     )
     {

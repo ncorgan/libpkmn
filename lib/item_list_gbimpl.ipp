@@ -13,7 +13,7 @@
 
 #include <cstring>
 
-#define GBLIST_RCAST reinterpret_cast<list_type*>(_native)
+#define GBLIST_RCAST reinterpret_cast<list_type*>(_p_native)
 
 namespace pkmn {
 
@@ -25,15 +25,15 @@ namespace pkmn {
     ): item_list_impl(item_list_id, game_id)
     {
         if(ptr) {
-            _native = ptr;
-            _our_mem = false;
+            _p_native = ptr;
+            _is_our_mem = false;
 
-            _from_native();
+            _from_p_native();
         } else {
-            _native = reinterpret_cast<void*>(new list_type);
-            std::memset(_native, 0, sizeof(list_type));
+            _p_native = reinterpret_cast<void*>(new list_type);
+            std::memset(_p_native, 0, sizeof(list_type));
             GBLIST_RCAST->terminator = 0xFF;
-            _our_mem = true;
+            _is_our_mem = true;
         }
     }
 
@@ -44,10 +44,10 @@ namespace pkmn {
         const list_type &list
     ): item_list_impl(item_list_id, game_id)
     {
-        _native = reinterpret_cast<void*>(new list_type);
+        _p_native = reinterpret_cast<void*>(new list_type);
         *GBLIST_RCAST = list;
-        _our_mem = true;
-        _from_native();
+        _is_our_mem = true;
+        _from_p_native();
     }
 
     template<typename list_type>
@@ -55,14 +55,14 @@ namespace pkmn {
     {
         boost::lock_guard<item_list_gbimpl<list_type>>(*this);
 
-        if(_our_mem)
+        if(_is_our_mem)
         {
             delete GBLIST_RCAST;
         }
     }
 
     template<typename list_type>
-    void item_list_gbimpl<list_type>::_from_native(
+    void item_list_gbimpl<list_type>::_from_p_native(
         int index
     )
     {

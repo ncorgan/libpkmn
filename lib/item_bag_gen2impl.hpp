@@ -13,15 +13,12 @@
 
 namespace pkmn {
 
-    class item_bag_gen2impl: public item_bag_impl {
+    class item_bag_gen2impl: public item_bag_impl
+    {
         public:
             item_bag_gen2impl(
                 int game_id,
-                void* ptr
-            );
-            item_bag_gen2impl(
-                int game_id,
-                const struct pksav_gen2_item_bag& item_bag
+                void* p_native
             );
 
             ~item_bag_gen2impl();

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -8,23 +8,26 @@
 #include "item_test_common.hpp"
 
 void test_item_list_empty_slots(
-    pkmn::item_list::sptr list
-) {
+    const pkmn::item_list::sptr& list
+)
+{
     ASSERT_EQ(0, list->get_num_items());
 
     std::string game = list->get_game();
     const pkmn::item_slots_t& item_slots = list->as_vector();
     ASSERT_EQ(list->get_capacity(), item_slots.size());
-    for(auto iter = item_slots.begin(); iter != item_slots.end(); ++iter) {
-        EXPECT_EQ("None", iter->item);
-        EXPECT_EQ(0, iter->amount);
+    for(const pkmn::item_slot& item_slot: item_slots)
+    {
+        EXPECT_EQ("None", item_slot.item);
+        EXPECT_EQ(0, item_slot.amount);
     }
 }
 
 void test_item_list_out_of_range_error(
-    pkmn::item_list::sptr list,
+    const pkmn::item_list::sptr& list,
     const std::string& item_name
-) {
+)
+{
     int num_items = list->get_num_items();
 
     EXPECT_THROW(
@@ -45,25 +48,29 @@ void test_item_list_out_of_range_error(
 }
 
 void test_item_bag_invalid_items(
-    pkmn::item_bag::sptr bag,
+    const pkmn::item_bag::sptr& bag,
     const std::vector<std::string> &item_names
-) {
-    for(auto iter = item_names.begin(); iter != item_names.end(); ++iter) {
+)
+{
+    for(const std::string& item_name: item_names)
+    {
         EXPECT_THROW(
-            bag->add(*iter, 1)
+            bag->add(item_name, 1);
         , std::invalid_argument);
     }
 }
 
 void test_item_list_invalid_items(
-    pkmn::item_list::sptr list,
+    const pkmn::item_list::sptr& list,
     const std::vector<std::string> &item_names
-) {
+)
+{
     int num_items = list->get_num_items();
 
-    for(auto iter = item_names.begin(); iter != item_names.end(); ++iter) {
+    for(const std::string& item_name: item_names)
+    {
         EXPECT_THROW(
-            list->add(*iter, 1)
+            list->add(item_name, 1);
         , std::invalid_argument);
     }
 
@@ -72,9 +79,10 @@ void test_item_list_invalid_items(
 }
 
 void test_item_list_add_remove(
-    pkmn::item_list::sptr list,
+    const pkmn::item_list::sptr& list,
     const std::vector<std::string> &item_names
-) {
+)
+{
     ASSERT_EQ(0, list->get_num_items());
     ASSERT_EQ(8, item_names.size());
     const pkmn::item_slots_t& item_slots = list->as_vector();

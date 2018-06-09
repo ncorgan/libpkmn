@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -11,11 +11,12 @@
 
 namespace pkmn {
 
-    class item_bag_gcnimpl: public item_bag_impl {
+    class item_bag_gcnimpl: public item_bag_impl
+    {
         public:
             item_bag_gcnimpl(
                 int game_id,
-                void* ptr
+                void* p_native
             );
 
             ~item_bag_gcnimpl();

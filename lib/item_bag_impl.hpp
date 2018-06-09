@@ -55,8 +55,8 @@ namespace pkmn {
             pkmn::item_pockets_t _item_pockets;
             std::vector<std::string> _item_pocket_names;
 
-            bool _our_mem;
-            void* _native;
+            bool _is_our_mem;
+            void* _p_native;
 
             virtual void _set_ptrs() = 0;
     };

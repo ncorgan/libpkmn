@@ -5,7 +5,7 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-#define NATIVE_RCAST (reinterpret_cast<struct pksav_gen2_item_bag*>(_native))
+#define GEN2_CAST(ptr) (static_cast<struct pksav_gen2_item_bag*>(ptr))
 
 #include "item_bag_gen2impl.hpp"
 #include "item_list_gbimpl.hpp"
@@ -20,46 +20,32 @@ namespace pkmn {
 
     item_bag_gen2impl::item_bag_gen2impl(
         int game_id,
-        void* ptr
+        void* p_native
     ): item_bag_impl(game_id)
     {
-        if(ptr)
+        if(p_native)
         {
-            _native = ptr;
-            _our_mem = false;
+            _p_native = p_native;
+            _is_our_mem = false;
         }
         else
         {
-            _native = reinterpret_cast<void*>(new struct pksav_gen2_item_bag);
-            std::memset(_native, 0, sizeof(struct pksav_gen2_item_bag));
-            NATIVE_RCAST->item_pocket.terminator = 0xFF;
-            NATIVE_RCAST->key_item_pocket.terminator = 0xFF;
-            NATIVE_RCAST->ball_pocket.terminator = 0xFF;
-            _our_mem = true;
+            _p_native = new struct pksav_gen2_item_bag;
+            std::memset(_p_native, 0, sizeof(struct pksav_gen2_item_bag));
+            GEN2_CAST(_p_native)->item_pocket.terminator = 0xFF;
+            GEN2_CAST(_p_native)->key_item_pocket.terminator = 0xFF;
+            GEN2_CAST(_p_native)->ball_pocket.terminator = 0xFF;
+            _is_our_mem = true;
         }
-
-        _set_ptrs();
-    }
-
-    item_bag_gen2impl::item_bag_gen2impl(
-        int game_id,
-        const struct pksav_gen2_item_bag &item_bag
-    ): item_bag_impl(game_id)
-    {
-        _native = reinterpret_cast<void*>(new struct pksav_gen2_item_bag);
-        *NATIVE_RCAST = item_bag;
-        _our_mem = true;
 
         _set_ptrs();
     }
 
     item_bag_gen2impl::~item_bag_gen2impl()
     {
-        boost::lock_guard<item_bag_gen2impl> lock(*this);
-
-        if(_our_mem)
+        if(_is_our_mem)
         {
-            delete NATIVE_RCAST;
+            delete GEN2_CAST(_p_native);
         }
     }
 
@@ -73,16 +59,24 @@ namespace pkmn {
         int tmhm_pocket_id     = crystal ? 13 : 8;
 
         _item_pockets["Items"]    = std::make_shared<item_list_gen2_item_pocketimpl>(
-                                        item_pocket_id, _game_id, &NATIVE_RCAST->item_pocket
+                                        item_pocket_id,
+                                        _game_id,
+                                        &GEN2_CAST(_p_native)->item_pocket
                                     );
         _item_pockets["KeyItems"] = std::make_shared<item_list_gen2_keyitemimpl>(
-                                        key_item_pocket_id, _game_id, &NATIVE_RCAST->key_item_pocket
+                                        key_item_pocket_id,
+                                        _game_id,
+                                        &GEN2_CAST(_p_native)->key_item_pocket
                                     );
         _item_pockets["Balls"]    = std::make_shared<item_list_gen2_ball_pocketimpl>(
-                                        ball_pocket_id, _game_id, &NATIVE_RCAST->ball_pocket
+                                        ball_pocket_id,
+                                        _game_id,
+                                        &GEN2_CAST(_p_native)->ball_pocket
                                     );
         _item_pockets["TM/HM"]    = std::make_shared<item_list_gen2_tmhmimpl>(
-                                        tmhm_pocket_id, _game_id, &NATIVE_RCAST->tmhm_pocket
+                                        tmhm_pocket_id,
+                                        _game_id,
+                                        &GEN2_CAST(_p_native)->tmhm_pocket
                                     );
     }
 }

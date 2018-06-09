@@ -26,7 +26,7 @@ namespace pkmn {
             ~item_list_modernimpl();
 
         private:
-            void _from_native(
+            void _from_p_native(
                 int index = -1
             ) override final;
             void _to_native(

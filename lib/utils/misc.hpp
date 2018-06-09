@@ -18,6 +18,10 @@
 
 namespace pkmn {
 
+    // This needs to be a macro because array parameters are decayed into
+    // pointers.
+    #define RAW_ARRAY_LENGTH(arr) (sizeof(arr)/sizeof(arr[0]))
+
     template <typename T>
     inline bool does_vector_contain_value(
         const std::vector<T>& vec,

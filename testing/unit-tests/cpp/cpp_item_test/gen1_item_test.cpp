@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -39,35 +39,44 @@ static void check_pksav_struct(
     const pkmn::item_slots_t& item_slots,
     const std::string& game,
     int expected_num_items,
-    const void* ptr,
-    bool pc
-) {
-    const struct pksav_gen1_item_pc* native = reinterpret_cast<const struct pksav_gen1_item_pc*>(ptr);
-    EXPECT_EQ(expected_num_items, int(native->count));
-    for(int i = 0; i < expected_num_items; ++i) {
+    const void* p_native,
+    bool is_pc
+)
+{
+    const struct pksav_gen1_item_pc* p_native_pc = static_cast<const struct pksav_gen1_item_pc*>(p_native);
+    ASSERT_EQ(expected_num_items, int(p_native_pc->count));
+    for(int item_index = 0; item_index < expected_num_items; ++item_index)
+    {
         EXPECT_EQ(
             pkmn::database::item_entry(
-                item_slots.at(i).item,
+                item_slots.at(item_index).item,
                 game
             ).get_item_index(),
-            int(native->items[i].index)
+            int(p_native_pc->items[item_index].index)
         );
-        EXPECT_EQ(item_slots.at(i).amount, int(native->items[i].count));
+        EXPECT_EQ(
+            item_slots.at(item_index).amount,
+            int(p_native_pc->items[item_index].count)
+        );
     }
 
-    EXPECT_EQ(0, native->items[expected_num_items].index);
-    EXPECT_EQ(0, native->items[expected_num_items].count);
+    EXPECT_EQ(0, p_native_pc->items[expected_num_items].index);
+    EXPECT_EQ(0, p_native_pc->items[expected_num_items].count);
 
-    if(pc) {
-        EXPECT_EQ(0xFF, native->terminator);
-    } else {
-        EXPECT_EQ(0xFF, reinterpret_cast<const struct pksav_gen1_item_bag*>(native)->terminator);
+    if(is_pc)
+    {
+        EXPECT_EQ(0xFF, p_native_pc->terminator);
+    }
+    else
+    {
+        EXPECT_EQ(0xFF, reinterpret_cast<const struct pksav_gen1_item_bag*>(p_native_pc)->terminator);
     }
 }
 
 static void gen1_item_list_test_common(
-    pkmn::item_list::sptr list
-) {
+    const pkmn::item_list::sptr& list
+)
+{
     // Make sure item slots start as correctly empty.
     test_item_list_empty_slots(list);
 
@@ -104,8 +113,9 @@ static void gen1_item_list_test_common(
 }
 
 static void gen1_item_pocket_test(
-    pkmn::item_list::sptr item_pocket
-) {
+    const pkmn::item_list::sptr& item_pocket
+)
+{
     ASSERT_EQ("Items", item_pocket->get_name());
     ASSERT_EQ(20, item_pocket->get_capacity());
     ASSERT_EQ(20, item_pocket->as_vector().size());
@@ -114,8 +124,9 @@ static void gen1_item_pocket_test(
 }
 
 static void gen1_item_pc_test(
-    pkmn::item_list::sptr item_pc
-) {
+    const pkmn::item_list::sptr& item_pc
+)
+{
     ASSERT_EQ("PC", item_pc->get_name());
     ASSERT_EQ(50, item_pc->get_capacity());
     ASSERT_EQ(50, item_pc->as_vector().size());
@@ -128,11 +139,13 @@ static const item_list_test_fcns_t gen1_test_fcns = boost::assign::map_list_of
     ("PC", &gen1_item_pc_test)
 ;
 
-TEST_P(gen1_item_list_test, item_list_test) {
+TEST_P(gen1_item_list_test, item_list_test)
+{
     gen1_test_fcns.at(get_name())(get_item_list());
 }
 
-static const std::vector<std::pair<std::string, std::string>> item_list_params = {
+static const std::vector<std::pair<std::string, std::string>> item_list_params =
+{
     {"Red", "Items"},
     {"Red", "PC"},
     {"Blue", "Items"},
@@ -149,7 +162,8 @@ INSTANTIATE_TEST_CASE_P(
 
 class gen1_item_bag_test: public item_bag_test {};
 
-TEST_P(gen1_item_bag_test, item_bag_test) {
+TEST_P(gen1_item_bag_test, item_bag_test)
+{
     const pkmn::item_bag::sptr& bag = get_item_bag();
 
     const pkmn::item_pockets_t& pockets = bag->get_pockets();
@@ -165,19 +179,21 @@ TEST_P(gen1_item_bag_test, item_bag_test) {
     reset();
 
     // Make sure adding items through the bag adds to the pocket.
-    pkmn::item_list::sptr item_pocket = bag->get_pocket("Items");
+    const pkmn::item_list::sptr& item_pocket = bag->get_pocket("Items");
     const pkmn::item_slots_t& item_slots = item_pocket->as_vector();
     ASSERT_EQ(0, item_pocket->get_num_items());
 
-    for(int i = 0; i < 8; ++i) {
+    for(int item_index = 0; item_index < 8; ++item_index)
+    {
         bag->add(
-            item_names[i],
-            i+1
+            item_names[item_index],
+            item_index+1
         );
     }
-    for(int i = 0; i < 8; ++i) {
-        EXPECT_EQ(item_names[i], item_slots.at(i).item);
-        EXPECT_EQ(i+1, item_slots.at(i).amount);
+    for(int item_index = 0; item_index < 8; ++item_index)
+    {
+        EXPECT_EQ(item_names[item_index], item_slots.at(item_index).item);
+        EXPECT_EQ(item_index+1, item_slots.at(item_index).amount);
     }
     EXPECT_EQ("None", item_slots.at(8).item);
     EXPECT_EQ(0, item_slots.at(8).amount);
@@ -191,19 +207,22 @@ TEST_P(gen1_item_bag_test, item_bag_test) {
     );
 
     // Make sure adding items through the bag removes from the pocket.
-    for(int i = 0; i < 8; ++i) {
+    for(int item_index = 0; item_index < 8; ++item_index)
+    {
         bag->remove(
-            item_names[i],
-            i+1
+            item_names[item_index],
+            item_index+1
         );
     }
-    for(int i = 0; i < 9; ++i) {
-        EXPECT_EQ("None", item_slots.at(i).item);
-        EXPECT_EQ(0, item_slots.at(i).amount);
+    for(int item_index = 0; item_index < 9; ++item_index)
+    {
+        EXPECT_EQ("None", item_slots.at(item_index).item);
+        EXPECT_EQ(0, item_slots.at(item_index).amount);
     }
 }
 
-static const std::vector<std::string> item_bag_params = {
+static const std::vector<std::string> item_bag_params =
+{
     "Red", "Blue", "Yellow"
 };
 
