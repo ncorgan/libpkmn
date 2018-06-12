@@ -35,7 +35,7 @@ namespace pkmn {
                 _is_our_mem = false;
             }
 
-            _from_p_native();
+            _from_native();
         } else {
             _p_native = reinterpret_cast<void*>(new LibPkmGC::Item[capacity]);
             std::memset(_p_native, 0, sizeof(LibPkmGC::Item)*capacity);
@@ -53,7 +53,7 @@ namespace pkmn {
         }
     }
 
-    void item_list_gcnimpl::_from_p_native(
+    void item_list_gcnimpl::_from_native(
         int index
     )
     {

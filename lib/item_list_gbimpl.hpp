@@ -31,7 +31,7 @@ namespace pkmn {
             ~item_list_gbimpl();
 
         private:
-            void _from_p_native(
+            void _from_native(
                 int index = -1
             ) override final;
             void _to_native(

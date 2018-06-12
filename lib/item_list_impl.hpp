@@ -79,7 +79,7 @@ namespace pkmn {
             bool _is_our_mem;
             void* _p_native;
 
-            virtual void _from_p_native(
+            virtual void _from_native(
                 int index = -1
             ) = 0;
             virtual void _to_native(

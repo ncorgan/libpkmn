@@ -28,7 +28,7 @@ namespace pkmn {
             _p_native = ptr;
             _is_our_mem = false;
 
-            _from_p_native();
+            _from_native();
         } else {
             _p_native = reinterpret_cast<void*>(new list_type);
             std::memset(_p_native, 0, sizeof(list_type));
@@ -47,7 +47,7 @@ namespace pkmn {
         _p_native = reinterpret_cast<void*>(new list_type);
         *GBLIST_RCAST = list;
         _is_our_mem = true;
-        _from_p_native();
+        _from_native();
     }
 
     template<typename list_type>
@@ -62,7 +62,7 @@ namespace pkmn {
     }
 
     template<typename list_type>
-    void item_list_gbimpl<list_type>::_from_p_native(
+    void item_list_gbimpl<list_type>::_from_native(
         int index
     )
     {

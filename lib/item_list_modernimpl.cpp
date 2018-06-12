@@ -38,7 +38,7 @@ namespace pkmn {
                 _is_our_mem = false;
             }
 
-            _from_p_native();
+            _from_native();
         } else {
             _p_native = reinterpret_cast<void*>(new struct pksav_item[capacity]);
             std::memset(_p_native, 0, sizeof(struct pksav_item)*capacity);
@@ -55,7 +55,7 @@ namespace pkmn {
         }
     }
 
-    void item_list_modernimpl::_from_p_native(
+    void item_list_modernimpl::_from_native(
         int index
     )
     {

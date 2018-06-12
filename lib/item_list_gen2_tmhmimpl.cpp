@@ -61,7 +61,7 @@ namespace pkmn {
             _p_native = ptr;
             _is_our_mem = false;
 
-            _from_p_native();
+            _from_native();
         }
         else
         {
@@ -210,7 +210,7 @@ namespace pkmn {
         _item_slots[position].amount = amount;
     }
 
-    void item_list_gen2_tmhmimpl::_from_p_native(
+    void item_list_gen2_tmhmimpl::_from_native(
         PKMN_UNUSED(int index)
     )
     {

@@ -34,7 +34,7 @@ namespace pkmn {
             _p_native = ptr;
             _is_our_mem = false;
 
-            _from_p_native();
+            _from_native();
         }
         else
         {
@@ -200,7 +200,7 @@ namespace pkmn {
         _to_native();
     }
 
-    void item_list_gen2_keyitemimpl::_from_p_native(
+    void item_list_gen2_keyitemimpl::_from_native(
         int index
     )
     {
