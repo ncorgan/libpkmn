@@ -30,18 +30,18 @@ namespace pkmn {
 
             ~pokemon_party_gcnimpl();
 
-            int get_num_pokemon() override final;
+            int get_num_pokemon() final;
 
             void set_pokemon(
                 int index,
                 const pkmn::pokemon::sptr& new_pokemon
-            ) override final;
+            ) final;
 
         private:
 
             int _num_pokemon;
 
-            void _from_native() override final;
+            void _from_native() final;
     };
 }
 

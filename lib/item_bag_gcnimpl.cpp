@@ -12,122 +12,88 @@
 #include "item_bag_gcnimpl.hpp"
 #include "item_list_gcnimpl.hpp"
 
-#include "libpkmgc_includes.hpp"
-
 #include "utils/misc.hpp"
 
+#include <boost/assert.hpp>
 #include <boost/thread/lock_guard.hpp>
 
 namespace pkmn {
 
-    BOOST_STATIC_CONSTEXPR int COLOSSEUM = 19;
-    BOOST_STATIC_CONSTEXPR int XD = 20;
-
     item_bag_gcnimpl::item_bag_gcnimpl(
         int game_id,
-        void* p_native
+        const LibPkmGC::GC::BagData* p_libpkmgc_bag
     ): item_bag_impl(game_id)
     {
-        if(p_native)
+        const bool is_colosseum = (_game_id == COLOSSEUM_ID);
+
+        if(p_libpkmgc_bag != nullptr)
         {
-            _p_native = p_native;
-            _is_our_mem = false;
+            _libpkmgc_bag_uptr.reset(p_libpkmgc_bag->clone());
         }
         else
         {
-            if(_game_id == COLOSSEUM)
+            if(_game_id == COLOSSEUM_ID)
             {
-                _p_native = new LibPkmGC::Colosseum::BagData;
+                _libpkmgc_bag_uptr.reset(new LibPkmGC::Colosseum::BagData);
             }
             else
             {
-                _p_native = new LibPkmGC::XD::BagData;
-            }
-
-            _is_our_mem = true;
-        }
-
-        _set_ptrs();
-    }
-
-    item_bag_gcnimpl::~item_bag_gcnimpl()
-    {
-        if(_is_our_mem)
-        {
-            if(_game_id == COLOSSEUM)
-            {
-                delete COLO_CAST(_p_native);
-            }
-            else
-            {
-                delete XD_CAST(_p_native);
+                _libpkmgc_bag_uptr.reset(new LibPkmGC::XD::BagData);
             }
         }
-    }
 
-    #define ITEM_POCKET_ID ((_game_id == COLOSSEUM) ? 62 : 69)
-    #define KEY_ITEM_POCKET_ID ((_game_id == COLOSSEUM) ? 63 : 70)
-    #define BALL_POCKET_ID ((_game_id == COLOSSEUM) ? 64 : 71)
-    #define TM_POCKET_ID ((_game_id == COLOSSEUM) ? 65 : 72)
-    #define BERRY_POCKET_ID ((_game_id == COLOSSEUM) ? 66 : 73)
-    #define COLOGNE_POCKET_ID ((_game_id == COLOSSEUM) ? 67 : 74)
-    BOOST_STATIC_CONSTEXPR int BATTLE_CD_POCKET_ID = 91;
+        BOOST_ASSERT(_libpkmgc_bag_uptr.get() != nullptr);
 
-    // This is stored as a pointer, so we can't use the nicer sizeof approach.
-    #define ITEM_POCKET_CAPACITY ((_game_id == COLOSSEUM) ? 20 : 30)
+        const int item_pocket_id     = is_colosseum ? 62 : 69;
+        const int key_item_pocket_id = is_colosseum ? 63 : 70;
+        const int ball_pocket_id     = is_colosseum ? 64 : 71;
+        const int tm_pocket_id       = is_colosseum ? 65 : 72;
+        const int berry_pocket_id    = is_colosseum ? 66 : 73;
+        const int cologne_pocket_id  = is_colosseum ? 67 : 74;
 
-    void item_bag_gcnimpl::_set_ptrs()
-    {
         _item_pockets["Items"] = std::make_shared<item_list_gcnimpl>(
-                                     ITEM_POCKET_ID,
+                                     item_pocket_id,
                                      _game_id,
-                                     GC_CAST(_p_native)->regularItems,
-                                     ITEM_POCKET_CAPACITY,
-                                     false
+                                     _libpkmgc_bag_uptr->regularItems
                                  );
         _item_pockets["Key Items"] = std::make_shared<item_list_gcnimpl>(
-                                         KEY_ITEM_POCKET_ID,
+                                         key_item_pocket_id,
                                          _game_id,
-                                         GC_CAST(_p_native)->keyItems,
-                                         RAW_ARRAY_LENGTH(GC_CAST(_p_native)->keyItems),
-                                         false
+                                         _libpkmgc_bag_uptr->keyItems
                                      );
         _item_pockets["Poké Balls"] = std::make_shared<item_list_gcnimpl>(
-                                          BALL_POCKET_ID,
+                                          ball_pocket_id,
                                           _game_id,
-                                          GC_CAST(_p_native)->pokeballs,
-                                          RAW_ARRAY_LENGTH(GC_CAST(_p_native)->pokeballs),
-                                          false
+                                          _libpkmgc_bag_uptr->pokeballs
                                       );
         _item_pockets["TMs"] = std::make_shared<item_list_gcnimpl>(
-                                   TM_POCKET_ID,
+                                   tm_pocket_id,
                                    _game_id,
-                                   GC_CAST(_p_native)->TMs,
-                                   RAW_ARRAY_LENGTH(GC_CAST(_p_native)->TMs),
-                                   false
+                                   _libpkmgc_bag_uptr->TMs
                                );
         _item_pockets["Berries"] = std::make_shared<item_list_gcnimpl>(
-                                       BERRY_POCKET_ID,
+                                       berry_pocket_id,
                                        _game_id,
-                                       GC_CAST(_p_native)->berries,
-                                       RAW_ARRAY_LENGTH(GC_CAST(_p_native)->berries),
-                                       false
+                                       _libpkmgc_bag_uptr->berries
                                    );
         _item_pockets["Colognes"] = std::make_shared<item_list_gcnimpl>(
-                                        COLOGNE_POCKET_ID,
+                                        cologne_pocket_id,
                                         _game_id,
-                                        GC_CAST(_p_native)->colognes,
-                                        RAW_ARRAY_LENGTH(GC_CAST(_p_native)->colognes),
-                                        false
+                                        _libpkmgc_bag_uptr->colognes
                                     );
-        if(_game_id == XD)
+        if(!is_colosseum)
         {
+            static const int BATTLE_CD_POCKET_ID = 91;
+
+            LibPkmGC::XD::BagData* p_xd_bag = dynamic_cast<LibPkmGC::XD::BagData*>(
+                                                  _libpkmgc_bag_uptr.get()
+                                              );
+            BOOST_ASSERT(p_xd_bag != nullptr);
+
             _item_pockets["Battle CDs"] = std::make_shared<item_list_gcnimpl>(
                                               BATTLE_CD_POCKET_ID,
                                               _game_id,
-                                              XD_CAST(_p_native)->battleCDs,
-                                              RAW_ARRAY_LENGTH(XD_CAST(_p_native)->battleCDs),
-                                              false
+                                              p_xd_bag->battleCDs
                                           );
         }
     }

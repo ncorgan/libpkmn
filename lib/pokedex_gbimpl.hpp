@@ -28,24 +28,24 @@ namespace pkmn
 
             bool has_seen(
                 const std::string& species
-            ) override final;
+            ) final;
 
             bool has_caught(
                 const std::string& species
-            ) override final;
+            ) final;
 
             void _set_has_seen(
                 int species_id,
                 bool has_seen_value
-            ) override final;
+            ) final;
 
             void _set_has_caught(
                 int species_id,
                 bool has_caught_value
-            ) override final;
+            ) final;
 
-            void _update_all_seen() override final;
-            void _update_all_caught() override final;
+            void _update_all_seen() final;
+            void _update_all_caught() final;
     };
 
     typedef pokedex_gbimpl<struct pksav_gen1_pokedex_lists> pokedex_gen1impl;

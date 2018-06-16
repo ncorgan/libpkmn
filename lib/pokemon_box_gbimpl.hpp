@@ -42,30 +42,30 @@ namespace pkmn {
 
             ~pokemon_box_gbimpl();
 
-            std::string get_name() override final;
+            std::string get_name() final;
 
             void set_name(
                 const std::string& name
-            ) override final;
+            ) final;
 
-            int get_num_pokemon() override final;
+            int get_num_pokemon() final;
 
-            int get_capacity() override final;
+            int get_capacity() final;
 
             void set_pokemon(
                 int index,
                 const pkmn::pokemon::sptr& new_pokemon
-            ) override final;
+            ) final;
 
-            std::string get_wallpaper() override final;
+            std::string get_wallpaper() final;
 
             void set_wallpaper(
                 const std::string& wallpaper
-            ) override final;
+            ) final;
 
         private:
 
-            void _from_native() override final;
+            void _from_native() final;
     };
 
     // Generation I

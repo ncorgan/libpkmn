@@ -86,8 +86,7 @@ namespace pkmn {
                     );
         _item_pc = std::make_shared<item_list_gcnimpl>(
                        GCN_PC_ID, _game_id,
-                       _current_slot->PC->items,
-                       235, false
+                       _current_slot->PC->items
                    );
     }
 

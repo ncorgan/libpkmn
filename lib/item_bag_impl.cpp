@@ -74,7 +74,6 @@ namespace pkmn {
         int game_id
     ): item_bag(),
        _game_id(game_id),
-       _is_our_mem(false),
        _p_native(nullptr)
     {
         // Populate pocket name vector
@@ -242,6 +241,8 @@ namespace pkmn {
     void* item_bag_impl::get_native()
     {
         boost::lock_guard<item_bag_impl> lock(*this);
+
+        // TODO: copy pockets from item lists
 
         return _p_native;
     }

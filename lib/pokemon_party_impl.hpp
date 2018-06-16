@@ -14,7 +14,6 @@
 #include <pkmn/pokedex.hpp>
 #include <pkmn/pokemon_party.hpp>
 
-#include <boost/noncopyable.hpp>
 #include <boost/thread/lockable_adapter.hpp>
 #include <boost/thread/recursive_mutex.hpp>
 
@@ -25,7 +24,6 @@ namespace pkmn {
     BOOST_STATIC_CONSTEXPR int PARTY_SIZE = 6;
 
     class pokemon_party_impl: public pokemon_party,
-                              private boost::noncopyable,
                               public boost::basic_lockable_adapter<boost::recursive_mutex>
     {
         public:
@@ -36,15 +34,15 @@ namespace pkmn {
 
             virtual ~pokemon_party_impl() {}
 
-            std::string get_game() override final;
+            std::string get_game() final;
 
             const pkmn::pokemon::sptr& get_pokemon(
                 int index
-            ) override final;
+            ) final;
 
-            const pkmn::pokemon_list_t& as_vector() override final;
+            const pkmn::pokemon_list_t& as_vector() final;
 
-            void* get_native() override final;
+            void* get_native() final;
 
             // For internal use
 

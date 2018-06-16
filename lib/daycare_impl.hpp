@@ -25,23 +25,23 @@ namespace pkmn {
             explicit daycare_impl(int game_id);
             ~daycare_impl();
 
-            std::string get_game() override final;
+            std::string get_game() final;
 
             const pkmn::pokemon::sptr& get_levelup_pokemon(
                 int index
-            ) override final;
+            ) final;
 
-            const pkmn::pokemon_list_t& get_levelup_pokemon_as_vector() override final;
+            const pkmn::pokemon_list_t& get_levelup_pokemon_as_vector() final;
 
             const pkmn::pokemon::sptr& get_breeding_pokemon(
                 int index
-            ) override final;
+            ) final;
 
-            const pkmn::pokemon_list_t& get_breeding_pokemon_as_vector() override final;
+            const pkmn::pokemon_list_t& get_breeding_pokemon_as_vector() final;
 
-            const pkmn::pokemon::sptr& get_egg() override final;
+            const pkmn::pokemon::sptr& get_egg() final;
 
-            void* get_native() override final;
+            void* get_native() final;
 
         protected:
 

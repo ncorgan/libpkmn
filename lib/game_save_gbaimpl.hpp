@@ -26,55 +26,55 @@ namespace pkmn {
 
             void save_as(
                 const std::string& filepath
-            ) override final;
+            ) final;
 
-            pkmn::time_duration get_time_played() override final;
+            pkmn::time_duration get_time_played() final;
 
             void set_time_played(
                 const pkmn::time_duration& time_played
-            ) override final;
+            ) final;
 
-            std::string get_trainer_name() override final;
+            std::string get_trainer_name() final;
 
             void set_trainer_name(
                 const std::string& trainer_name
-            ) override final;
+            ) final;
 
-            uint32_t get_trainer_id() override final;
+            uint32_t get_trainer_id() final;
 
             void set_trainer_id(
                 uint32_t trainer_id
-            ) override final;
+            ) final;
 
-            uint16_t get_trainer_public_id() override final;
+            uint16_t get_trainer_public_id() final;
 
             void set_trainer_public_id(
                 uint16_t trainer_public_id
-            ) override final;
+            ) final;
 
-            uint16_t get_trainer_secret_id() override final;
+            uint16_t get_trainer_secret_id() final;
 
             void set_trainer_secret_id(
                 uint16_t trainer_secret_id
-            ) override final;
+            ) final;
 
-            std::string get_trainer_gender() override final;
+            std::string get_trainer_gender() final;
 
             void set_trainer_gender(
                 const std::string& trainer_gender
-            ) override final;
+            ) final;
 
-            std::string get_rival_name() override final;
+            std::string get_rival_name() final;
 
             void set_rival_name(
                 const std::string& rival_name
-            ) override final;
+            ) final;
 
-            int get_money() override final;
+            int get_money() final;
 
             void set_money(
                 int money
-            ) override final;
+            ) final;
 
             // Functions for attributes
 

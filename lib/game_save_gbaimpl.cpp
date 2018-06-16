@@ -156,9 +156,7 @@ namespace pkmn {
         BOOST_ASSERT(_pksav_save.item_storage.p_pc != nullptr);
         _item_pc = std::make_shared<item_list_modernimpl>(
                         item_pc_id, _game_id,
-                        _pksav_save.item_storage.p_pc->items,
-                        PKSAV_GBA_ITEM_PC_NUM_ITEMS,
-                        false
+                        _pksav_save.item_storage.p_pc->items
                    );
 
         // When a Pokémon is added to the PC or party, it should be

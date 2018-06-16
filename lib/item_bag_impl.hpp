@@ -9,14 +9,12 @@
 
 #include <pkmn/item_bag.hpp>
 
-#include <boost/noncopyable.hpp>
 #include <boost/thread/lockable_adapter.hpp>
 #include <boost/thread/recursive_mutex.hpp>
 
 namespace pkmn {
 
     class item_bag_impl: public item_bag,
-                         private boost::noncopyable,
                          public boost::basic_lockable_adapter<boost::recursive_mutex>
     {
         public:
@@ -27,27 +25,27 @@ namespace pkmn {
 
             virtual ~item_bag_impl() {};
 
-            std::string get_game() override final;
+            std::string get_game() final;
 
             const pkmn::item_list::sptr& get_pocket(
                 const std::string& name
-            ) override final;
+            ) final;
 
-            const pkmn::item_pockets_t& get_pockets() override final;
+            const pkmn::item_pockets_t& get_pockets() final;
 
-            const std::vector<std::string>& get_pocket_names() override final;
+            const std::vector<std::string>& get_pocket_names() final;
 
             virtual void add(
                 const std::string& item_name,
                 int amount
-            ) override final;
+            ) final;
 
             virtual void remove(
                 const std::string& item_name,
                 int amount
-            ) override final;
+            ) final;
 
-            void* get_native() override final;
+            void* get_native() final;
 
         protected:
             int _game_id;
@@ -55,10 +53,7 @@ namespace pkmn {
             pkmn::item_pockets_t _item_pockets;
             std::vector<std::string> _item_pocket_names;
 
-            bool _is_our_mem;
             void* _p_native;
-
-            virtual void _set_ptrs() = 0;
     };
 
 }

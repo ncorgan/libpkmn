@@ -9,40 +9,53 @@
 
 #include "item_list_impl.hpp"
 
+#include <pksav/gen2/items.h>
+
 namespace pkmn {
+
     class item_list_gen2_keyitemimpl: public item_list_impl
     {
         public:
             item_list_gen2_keyitemimpl(
                 int item_list_id,
                 int game_id,
-                void* ptr
+                const struct pksav_gen2_key_item_pocket* p_pksav_list = nullptr
             );
-            ~item_list_gen2_keyitemimpl();
+
+            // TODO
+            item_list_gen2_keyitemimpl(const item_list_gen2_keyitemimpl&) = delete;
+            item_list_gen2_keyitemimpl(item_list_gen2_keyitemimpl&&) = delete;
+
+            item_list_gen2_keyitemimpl& operator=(const item_list_gen2_keyitemimpl&) = delete;
+            item_list_gen2_keyitemimpl& operator=(item_list_gen2_keyitemimpl&&) = delete;
+
+            ~item_list_gen2_keyitemimpl() = default;
 
             void add(
                 const std::string& item_name,
                 int amount
-            ) override final;
+            ) final;
 
             void remove(
                 const std::string& item_name,
                 int amount
-            ) override final;
+            ) final;
 
             void set_item(
                 int position,
                 const std::string& item_name,
                 int amount
-            ) override final;
+            ) final;
 
         private:
+            struct pksav_gen2_key_item_pocket _pksav_list;
+
             void _from_native(
                 int index = -1
-            ) override final;
+            ) final;
             void _to_native(
                 int index = -1
-            ) override final;
+            ) final;
     };
 }
 

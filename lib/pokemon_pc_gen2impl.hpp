@@ -25,12 +25,12 @@ namespace pkmn {
 
             ~pokemon_pc_gen2impl();
 
-            int get_num_boxes() override final;
+            int get_num_boxes() final;
 
         private:
-            void _from_native() override final;
-            void _update_box_names() override final;
-            void _update_native_box_wallpapers() override final;
+            void _from_native() final;
+            void _update_box_names() final;
+            void _update_native_box_wallpapers() final;
     };
 }
 

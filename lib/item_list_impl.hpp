@@ -9,15 +9,12 @@
 
 #include <pkmn/item_list.hpp>
 
-#include <boost/noncopyable.hpp>
-
 #include <boost/thread/lockable_adapter.hpp>
 #include <boost/thread/recursive_mutex.hpp>
 
 namespace pkmn {
 
     class item_list_impl: public item_list,
-                          private boost::noncopyable,
                           public boost::basic_lockable_adapter<boost::recursive_mutex>
     {
         public:
@@ -29,11 +26,11 @@ namespace pkmn {
 
             virtual ~item_list_impl() {};
 
-            std::string get_name() override final;
+            std::string get_name() final;
 
-            std::string get_game() override final;
+            std::string get_game() final;
 
-            int get_capacity() override final;
+            int get_capacity() final;
 
             int get_num_items() override;
 
@@ -62,11 +59,11 @@ namespace pkmn {
                 int amount
             ) override;
 
-            const pkmn::item_slots_t& as_vector() override final;
+            const pkmn::item_slots_t& as_vector() final;
 
-            const std::vector<std::string>& get_valid_items() override final;
+            const std::vector<std::string>& get_valid_items() final;
 
-            void* get_native() override final;
+            void* get_native() final;
 
         protected:
             int _item_list_id, _game_id, _version_group_id;
@@ -76,7 +73,6 @@ namespace pkmn {
             pkmn::item_slots_t _item_slots;
             std::vector<std::string> _valid_items;
 
-            bool _is_our_mem;
             void* _p_native;
 
             virtual void _from_native(

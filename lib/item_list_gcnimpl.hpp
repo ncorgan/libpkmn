@@ -11,27 +11,42 @@
 
 #include <LibPkmGC/Core/ItemInfo.h>
 
+#include <vector>
+
 namespace pkmn {
 
-    class item_list_gcnimpl: public item_list_impl {
+    class item_list_gcnimpl: public item_list_impl
+    {
         public:
             item_list_gcnimpl(
                 int item_list_id,
                 int game_id,
-                LibPkmGC::Item* ptr,
-                size_t capacity,
-                bool copy
+                const LibPkmGC::Item* p_libpkmgc_list = nullptr
             );
 
-            ~item_list_gcnimpl();
+            // TODO
+            item_list_gcnimpl(const item_list_gcnimpl&) = delete;
+            item_list_gcnimpl(item_list_gcnimpl&&) = delete;
+
+            item_list_gcnimpl& operator=(const item_list_gcnimpl&) = delete;
+            item_list_gcnimpl& operator=(item_list_gcnimpl&&) = delete;
+
+            ~item_list_gcnimpl() = default;
 
         private:
-            void _from_native(
-                int index = -1
-            ) override final;
-            void _to_native(
-                int index = -1
-            ) override final;
+            void _libpkmgc_item_to_libpkmn_item_slot(
+                const LibPkmGC::Item& pksav_item,
+                pkmn::item_slot& r_item_slot
+            );
+            void _libpkmn_item_slot_to_libpkmgc_item(
+                const pkmn::item_slot& item_slot,
+                LibPkmGC::Item& r_libpkmgc_item
+            );
+
+            void _from_native(int index = -1) final;
+            void _to_native(int index = -1) final;
+
+            std::vector<LibPkmGC::Item> _libpkmgc_list;
     };
 }
 

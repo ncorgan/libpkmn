@@ -119,13 +119,13 @@ namespace pkmn {
                 if(game_is_gamecube(game_id))
                 {
                     return std::make_shared<item_list_gcnimpl>(
-                               item_list_id, game_id, nullptr, capacity, false
+                               item_list_id, game_id, nullptr
                            );
                 }
                 else
                 {
                     return std::make_shared<item_list_modernimpl>(
-                               item_list_id, game_id, nullptr, capacity, false
+                               item_list_id, game_id, nullptr
                            );
                 }
 
@@ -176,7 +176,6 @@ namespace pkmn {
        _version_group_id(pkmn::database::game_id_to_version_group(game_id)),
        _num_items(0),
        _pc(ITEM_LIST_ID_IS_PC(item_list_id)),
-       _is_our_mem(false),
        _p_native(nullptr)
     {
         static BOOST_CONSTEXPR const char* capacity_query = \

@@ -31,6 +31,7 @@
 #include <pksav/common/markings.h>
 #include <pksav/common/pokerus.h>
 
+#include <boost/assign.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/thread/lock_guard.hpp>
 

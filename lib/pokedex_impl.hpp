@@ -15,7 +15,6 @@
 namespace pkmn
 {
     class pokedex_impl: public pokedex,
-                        private boost::noncopyable,
                         public boost::basic_lockable_adapter<boost::recursive_mutex>
     {
         public:
@@ -26,27 +25,27 @@ namespace pkmn
 
             virtual ~pokedex_impl() {};
 
-            std::string get_game() override final;
+            std::string get_game() final;
 
             void set_has_seen(
                 const std::string& species,
                 bool has_seen_value
-            ) override final;
+            ) final;
 
-            const std::vector<std::string>& get_all_seen() override final;
+            const std::vector<std::string>& get_all_seen() final;
 
-            int get_num_seen() override final;
+            int get_num_seen() final;
 
             void set_has_caught(
                 const std::string& species,
                 bool has_caught_value
-            ) override final;
+            ) final;
 
-            const std::vector<std::string>& get_all_caught() override final;
+            const std::vector<std::string>& get_all_caught() final;
 
-            int get_num_caught() override final;
+            int get_num_caught() final;
 
-            void* get_native() override final;
+            void* get_native() final;
 
         protected:
             int _game_id;

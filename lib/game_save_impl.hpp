@@ -32,21 +32,21 @@ namespace pkmn {
 
             virtual ~game_save_impl() {};
 
-            std::string get_filepath() override final;
+            std::string get_filepath() final;
 
-            void save() override final;
+            void save() final;
 
-            std::string get_game() override final;
+            std::string get_game() final;
 
             virtual const pkmn::pokedex::sptr& get_pokedex() override;
 
-            const pkmn::pokemon_party::sptr& get_pokemon_party() override final;
+            const pkmn::pokemon_party::sptr& get_pokemon_party() final;
 
-            const pkmn::pokemon_pc::sptr& get_pokemon_pc() override final;
+            const pkmn::pokemon_pc::sptr& get_pokemon_pc() final;
 
-            const pkmn::item_bag::sptr& get_item_bag() override final;
+            const pkmn::item_bag::sptr& get_item_bag() final;
 
-            const pkmn::item_list::sptr& get_item_pc() override final;
+            const pkmn::item_list::sptr& get_item_pc() final;
 
         protected:
             std::string _filepath;
