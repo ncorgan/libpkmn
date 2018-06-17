@@ -58,10 +58,10 @@ namespace pkmn {
                 uint16_t trainer_secret_id
             ) override final;
 
-            std::string get_trainer_gender() override final;
+            pkmn::e_gender get_trainer_gender() override final;
 
             void set_trainer_gender(
-                const std::string& trainer_gender
+                pkmn::e_gender trainer_gender
             ) override final;
 
             std::string get_rival_name() override final;

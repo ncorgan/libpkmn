@@ -312,46 +312,41 @@ namespace pkmn {
         throw pkmn::feature_not_in_game_error("Secret ID", "Generation II");
     }
 
-    std::string game_save_gen2impl::get_trainer_gender()
+    pkmn::e_gender game_save_gen2impl::get_trainer_gender()
     {
         boost::lock_guard<game_save_gen2impl> lock(*this);
 
-        std::string ret;
+        pkmn::e_gender ret;
 
         if(_game_id == CRYSTAL_GAME_ID)
         {
-            ret = (*_pksav_save.trainer_info.p_gender == PKSAV_GEN2_GENDER_MALE) ? "Male" : "Female";
+            ret = (*_pksav_save.trainer_info.p_gender == PKSAV_GEN2_GENDER_MALE) ? pkmn::e_gender::MALE
+                                                                                 : pkmn::e_gender::FEMALE;
         }
         else
         {
-            ret = "Male";
+            ret = pkmn::e_gender::MALE;
         }
 
         return ret;
     }
 
-    void game_save_gen2impl::set_trainer_gender(
-        const std::string& trainer_gender
-    )
+    void game_save_gen2impl::set_trainer_gender(pkmn::e_gender trainer_gender)
     {
-        boost::lock_guard<game_save_gen2impl> lock(*this);
-
         if(_game_id == CRYSTAL_GAME_ID)
         {
             BOOST_ASSERT(_pksav_save.trainer_info.p_gender != nullptr);
 
-            if(trainer_gender == "Male")
-            {
-                *_pksav_save.trainer_info.p_gender = uint8_t(PKSAV_GEN2_GENDER_MALE);
-            }
-            else if(trainer_gender == "Female")
-            {
-                *_pksav_save.trainer_info.p_gender = uint8_t(PKSAV_GEN2_GENDER_FEMALE);
-            }
-            else
-            {
-                throw std::invalid_argument("trainer_gender: valid values \"Male\", \"Female\"");
-            }
+            const pksav::gen2_gender_bimap_t& gen2_gender_bimap = pksav::get_gen2_gender_bimap();
+            pkmn::enforce_value_in_map_keys(
+                "Trainer gender",
+                trainer_gender,
+                gen2_gender_bimap.left
+            );
+
+            boost::lock_guard<game_save_gen2impl> lock(*this);
+
+            *_pksav_save.trainer_info.p_gender = uint8_t(gen2_gender_bimap.left.at(trainer_gender));
         }
         else
         {

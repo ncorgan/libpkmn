@@ -12,6 +12,19 @@
 namespace pksav
 {
 
+// Genders
+
+const gen2_gender_bimap_t& get_gen2_gender_bimap()
+{
+    static const gen2_gender_bimap_t GEN2_GENDER_BIMAP =
+    boost::assign::list_of<gen2_gender_bimap_t::relation>
+        (pkmn::e_gender::MALE,   PKSAV_GEN2_GENDER_MALE)
+        (pkmn::e_gender::FEMALE, PKSAV_GEN2_GENDER_FEMALE)
+    ;
+
+    return GEN2_GENDER_BIMAP;
+}
+
 // Options
 
 const gen1_rb_text_speed_bimap_t& get_gen1_rb_text_speed_bimap()

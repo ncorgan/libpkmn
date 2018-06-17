@@ -358,35 +358,39 @@ namespace pkmn {
         _pksav_save.trainer_info.p_id->sid = pksav_littleendian16(trainer_secret_id);
     }
 
-    std::string game_save_gbaimpl::get_trainer_gender()
+    // TODO: PKSav gender enum
+    pkmn::e_gender game_save_gbaimpl::get_trainer_gender()
     {
         boost::lock_guard<game_save_gbaimpl> lock(*this);
 
         BOOST_ASSERT(_pksav_save.trainer_info.p_gender != nullptr);
 
-        return (*_pksav_save.trainer_info.p_gender == 0) ? "Male" : "Female";
+        return (*_pksav_save.trainer_info.p_gender == 0) ? pkmn::e_gender::MALE
+                                                         : pkmn::e_gender::FEMALE;
     }
 
-    // TODO: gender enum
+    // TODO: PKSav gender enum, use bimap
     void game_save_gbaimpl::set_trainer_gender(
-        const std::string& trainer_gender
+        pkmn::e_gender trainer_gender
     )
     {
         boost::lock_guard<game_save_gbaimpl> lock(*this);
 
+        pkmn::enforce_value_in_vector(
+            "Trainer gender",
+            trainer_gender,
+            {pkmn::e_gender::MALE, pkmn::e_gender::FEMALE}
+        );
+
         BOOST_ASSERT(_pksav_save.trainer_info.p_gender != nullptr);
 
-        if(trainer_gender == "Male")
+        if(trainer_gender == pkmn::e_gender::MALE)
         {
             *_pksav_save.trainer_info.p_gender = 0;
         }
-        else if(trainer_gender == "Female")
-        {
-            *_pksav_save.trainer_info.p_gender = 1;
-        }
         else
         {
-            throw std::invalid_argument("trainer_gender: valid values \"Male\", \"Female\"");
+            *_pksav_save.trainer_info.p_gender = 1;
         }
     }
 

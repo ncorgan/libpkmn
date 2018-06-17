@@ -281,21 +281,24 @@ namespace pkmntest {
 
         test_rival_name(save, is_rival_name_set(game));
 
-        if(is_male_only(game)) {
-            EXPECT_EQ("Male", save->get_trainer_gender());
+        if(is_male_only(game))
+        {
+            EXPECT_EQ(pkmn::e_gender::MALE, save->get_trainer_gender());
             EXPECT_THROW(
-                save->set_trainer_gender("Male");
+                save->set_trainer_gender(pkmn::e_gender::MALE);
             , pkmn::feature_not_in_game_error);
             EXPECT_THROW(
-                save->set_trainer_gender("Female");
+                save->set_trainer_gender(pkmn::e_gender::FEMALE);
             , pkmn::feature_not_in_game_error);
-        } else {
-            save->set_trainer_gender("Male");
-            EXPECT_EQ("Male", save->get_trainer_gender());
-            save->set_trainer_gender("Female");
-            EXPECT_EQ("Female", save->get_trainer_gender());
+        }
+        else
+        {
+            save->set_trainer_gender(pkmn::e_gender::MALE);
+            EXPECT_EQ(pkmn::e_gender::MALE, save->get_trainer_gender());
+            save->set_trainer_gender(pkmn::e_gender::FEMALE);
+            EXPECT_EQ(pkmn::e_gender::FEMALE, save->get_trainer_gender());
             EXPECT_THROW(
-                save->set_trainer_gender("Genderless");
+                save->set_trainer_gender(pkmn::e_gender::GENDERLESS);
             , std::invalid_argument);
         }
 
@@ -509,8 +512,8 @@ namespace pkmntest {
             case 2:
             {
                 // Check for the default palette. Boys are red, girls are blue.
-                std::string gender = save->get_trainer_gender();
-                if(gender == "Male")
+                pkmn::e_gender gender = save->get_trainer_gender();
+                if(gender == pkmn::e_gender::MALE)
                 {
                     ASSERT_EQ("Red", save->get_string_attribute("Player palette"));
                 }

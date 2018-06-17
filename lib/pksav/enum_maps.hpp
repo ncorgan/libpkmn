@@ -8,12 +8,15 @@
 #ifndef INCLUDED_PKMN_PKSAV_ENUM_MAPS_HPP
 #define INCLUDED_PKMN_PKSAV_ENUM_MAPS_HPP
 
+#include <pkmn/enums/gender.hpp>
+
 #include <pksav/gen1/options.h>
 #include <pksav/gen1/pokemon.h>
 #include <pksav/gen1/type.h>
 
 #include <pksav/gen2/mom_money_policy.h>
 #include <pksav/gen2/options.h>
+#include <pksav/gen2/save.h>
 
 #include <pksav/gba/box_wallpaper.h>
 #include <pksav/gba/language.h>
@@ -29,6 +32,11 @@
 
 namespace pksav
 {
+    // Genders
+    typedef boost::bimap<pkmn::e_gender, enum pksav_gen2_gender> gen2_gender_bimap_t;
+
+    const gen2_gender_bimap_t& get_gen2_gender_bimap();
+
     // Options
     typedef boost::bimap<std::string, enum pksav_gen1_rb_text_speed> gen1_rb_text_speed_bimap_t;
     typedef boost::bimap<std::string, enum pksav_gen1_yellow_sound_option> gen1_yellow_sound_option_bimap_t;

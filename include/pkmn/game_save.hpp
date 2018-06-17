@@ -14,6 +14,8 @@
 #include <pkmn/pokemon_party.hpp>
 #include <pkmn/pokemon_pc.hpp>
 
+#include <pkmn/enums/gender.hpp>
+
 #include <pkmn/types/class_with_attributes.hpp>
 #include <pkmn/types/time_duration.hpp>
 
@@ -212,7 +214,7 @@ namespace pkmn {
             /*!
              * @brief Returns whether the player character is male or female.
              */
-            virtual std::string get_trainer_gender() = 0;
+            virtual pkmn::e_gender get_trainer_gender() = 0;
 
             /*!
              * @brief Sets whether the player character is male or female.
@@ -221,14 +223,14 @@ namespace pkmn {
              * and Pokémon Colosseum and XD had a single male character. As such, using this function for
              * Gamecube saves or for games before Crystal will result in an error.
              *
-             * Valid values: "Male", "Female"
+             * Valid values: pkmn::e_gender::MALE, pkmn::e_gender::FEMALE
              *
              * \param trainer_gender The new trainer gender
-             * \throws std::invalid_argument if the given gender is not "Male" or "Female"
+             * \throws std::invalid_argument if the given gender is not male or female
              * \throws pkmn::feature_not_in_game_error if the game only has one gender of playable character
              */
             virtual void set_trainer_gender(
-                const std::string& trainer_gender
+                pkmn::e_gender trainer_gender
             ) = 0;
 
             /*!

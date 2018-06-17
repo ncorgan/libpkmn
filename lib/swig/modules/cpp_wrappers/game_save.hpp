@@ -182,7 +182,7 @@ namespace pkmn { namespace swig {
                 _game_save->set_trainer_secret_id(trainer_secret_id);
             }
 
-            inline std::string get_trainer_gender()
+            inline pkmn::e_gender get_trainer_gender()
             {
                 BOOST_ASSERT(_game_save.get() != nullptr);
 
@@ -192,12 +192,12 @@ namespace pkmn { namespace swig {
                 }
                 else
                 {
-                    return "Male";
+                    return pkmn::e_gender::MALE;
                 }
             }
 
             inline void set_trainer_gender(
-                const std::string& trainer_gender
+                pkmn::e_gender trainer_gender
             )
             {
                 BOOST_ASSERT(_game_save.get() != nullptr);

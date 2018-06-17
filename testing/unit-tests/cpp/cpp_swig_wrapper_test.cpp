@@ -590,8 +590,8 @@ TEST(cpp_swig_wrapper_test, test_game_save)
     swig_game_save.set_trainer_secret_id(0xFCA0);
     EXPECT_EQ(0xFCA0, swig_game_save.get_trainer_secret_id());
 
-    swig_game_save.set_trainer_gender("Female");
-    EXPECT_EQ("Female", swig_game_save.get_trainer_gender());
+    swig_game_save.set_trainer_gender(pkmn::e_gender::FEMALE);
+    EXPECT_EQ(pkmn::e_gender::FEMALE, swig_game_save.get_trainer_gender());
 
     swig_game_save.set_rival_name("abcdef");
     EXPECT_EQ("abcdef", swig_game_save.get_rival_name());
