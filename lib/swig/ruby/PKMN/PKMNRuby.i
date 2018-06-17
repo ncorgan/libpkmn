@@ -23,6 +23,12 @@ namespace pkmn { namespace priv {
 %import <Database.i>
 %import <STL.i>
 
+// Enums
+// (TODO: this turns into PKMN::gender_MALE, add a script to put raw enums in
+// a struct and point SWIG at that
+
+%include <pkmn/enums/gender.hpp>
+
 // Attribute Maps
 %include <ruby/pkmn_attribute_maps.i>
 

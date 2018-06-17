@@ -26,6 +26,13 @@ namespace pkmn { namespace priv {
 %import <database/database_python.i>
 %import <stl_python.i>
 
+// Enums
+// (TODO: this turns into pkmn.gender_MALE, add a script to put raw enums in
+// a struct and point SWIG at that
+
+%rename(gender) pkmn::e_gender;
+%include <pkmn/enums/gender.hpp>
+
 // Attribute Maps
 %include <python/pkmn_attribute_maps.i>
 

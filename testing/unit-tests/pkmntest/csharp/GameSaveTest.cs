@@ -218,30 +218,30 @@ public class GameSaveTest
         // Trainer Gender
         if(IsMaleOnly(game))
         {
-            Assert.AreEqual(gameSave.TrainerGender, "Male");
+            Assert.AreEqual(gameSave.TrainerGender, PKMN.Gender.MALE);
             Assert.Throws<ApplicationException>(
                 delegate
                 {
-                   gameSave.TrainerGender = "Male";
+                   gameSave.TrainerGender = PKMN.Gender.MALE;
                 }
             );
             Assert.Throws<ApplicationException>(
                 delegate
                 {
-                   gameSave.TrainerGender = "Female";
+                   gameSave.TrainerGender = PKMN.Gender.FEMALE;
                 }
             );
         }
         else
         {
-            gameSave.TrainerGender = "Male";
-            Assert.AreEqual(gameSave.TrainerGender, "Male");
-            gameSave.TrainerGender = "Female";
-            Assert.AreEqual(gameSave.TrainerGender, "Female");
+            gameSave.TrainerGender = PKMN.Gender.MALE;
+            Assert.AreEqual(gameSave.TrainerGender, PKMN.Gender.MALE);
+            gameSave.TrainerGender = PKMN.Gender.FEMALE;
+            Assert.AreEqual(gameSave.TrainerGender, PKMN.Gender.FEMALE);
             Assert.Throws<ArgumentOutOfRangeException>(
                 delegate
                 {
-                   gameSave.TrainerGender = "Genderless";
+                   gameSave.TrainerGender = PKMN.Gender.GENDERLESS;
                 }
             );
         }

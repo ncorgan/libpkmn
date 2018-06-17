@@ -51,6 +51,9 @@ namespace pkmn { namespace priv {
 %csmethodmodifiers GetSWIGVersion "internal";
 std::string GetSWIGVersion();
 
+// Enums
+%include <pkmn/enums/gender.hpp>
+
 // Attribute Maps
 %include <csharp/pkmn_attribute_maps.i>
 

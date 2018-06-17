@@ -21,6 +21,13 @@ namespace pkmn { namespace priv {
 %import <pkmn_database_lua.i>
 %import <pkmn_stl_lua.i>
 
+// Enums
+// (TODO: this turns into pkmn.gender_MALE, add a script to put raw enums in
+// a struct and point SWIG at that
+
+%rename(gender) pkmn::e_gender;
+%include <pkmn/enums/gender.hpp>
+
 // Attribute Maps
 %include <lua/pkmn_attribute_maps.i>
 

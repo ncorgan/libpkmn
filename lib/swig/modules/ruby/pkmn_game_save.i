@@ -32,7 +32,7 @@
 %attribute(pkmn::swig::game_save, uint16_t, trainer_public_id, get_trainer_public_id, set_trainer_public_id);
 %attribute(pkmn::swig::game_save, uint16_t, trainer_secret_id, get_trainer_secret_id, set_trainer_secret_id);
 %attribute(pkmn::swig::game_save, uint32_t, trainer_id, get_trainer_id, set_trainer_id);
-%attributestring(pkmn::swig::game_save, std::string, trainer_gender, get_trainer_gender, set_trainer_gender);
+%attribute(pkmn::swig::game_save, pkmn::e_gender, trainer_gender, get_trainer_gender, set_trainer_gender);
 %attributestring(pkmn::swig::game_save, std::string, rival_name, get_rival_name, set_rival_name);
 %attribute(pkmn::swig::game_save, int, money, get_money, set_money);
 %attributeval(pkmn::swig::game_save, pkmn::swig::pokedex, pokedex, get_pokedex);
