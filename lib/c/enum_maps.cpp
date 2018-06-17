@@ -9,6 +9,18 @@
 
 namespace pkmn { namespace c {
 
+    const gender_bimap_t2& get_gender_bimap2()
+    {
+        static const gender_bimap_t2 GENDER_BIMAP2 =
+        boost::assign::list_of<gender_bimap_t2::relation>
+            (pkmn::e_gender::MALE,       PKMN_GENDER_MALE)
+            (pkmn::e_gender::FEMALE,     PKMN_GENDER_FEMALE)
+            (pkmn::e_gender::GENDERLESS, PKMN_GENDER_GENDERLESS)
+        ;
+
+        return GENDER_BIMAP2;
+    }
+
     const gender_bimap_t& get_gender_bimap()
     {
         static const gender_bimap_t GENDER_BIMAP =
