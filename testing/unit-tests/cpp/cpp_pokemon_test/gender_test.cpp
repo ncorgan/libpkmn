@@ -29,13 +29,13 @@ TEST_P(gender_test, gender_test) {
                                        "",
                                        50
                                    );
-    EXPECT_EQ("Female", nidorina->get_gender());
-    nidorina->set_gender("Female");
+    EXPECT_EQ(pkmn::e_gender::FEMALE, nidorina->get_gender());
+    nidorina->set_gender(pkmn::e_gender::FEMALE);
     EXPECT_THROW(
-        nidorina->set_gender("Male");
+        nidorina->set_gender(pkmn::e_gender::MALE);
     , std::invalid_argument);
     EXPECT_THROW(
-        nidorina->set_gender("Genderless");
+        nidorina->set_gender(pkmn::e_gender::GENDERLESS);
     , std::invalid_argument);
 
     pkmn::pokemon::sptr nidorino = pkmn::pokemon::make(
@@ -44,13 +44,13 @@ TEST_P(gender_test, gender_test) {
                                        "",
                                        50
                                    );
-    EXPECT_EQ("Male", nidorino->get_gender());
-    nidorino->set_gender("Male");
+    EXPECT_EQ(pkmn::e_gender::MALE, nidorino->get_gender());
+    nidorino->set_gender(pkmn::e_gender::MALE);
     EXPECT_THROW(
-        nidorino->set_gender("Female");
+        nidorino->set_gender(pkmn::e_gender::FEMALE);
     , std::invalid_argument);
     EXPECT_THROW(
-        nidorino->set_gender("Genderless");
+        nidorino->set_gender(pkmn::e_gender::GENDERLESS);
     , std::invalid_argument);
 
     pkmn::pokemon::sptr magnemite = pkmn::pokemon::make(
@@ -59,13 +59,13 @@ TEST_P(gender_test, gender_test) {
                                         "",
                                         50
                                     );
-    EXPECT_EQ("Genderless", magnemite->get_gender());
-    magnemite->set_gender("Genderless");
+    EXPECT_EQ(pkmn::e_gender::GENDERLESS, magnemite->get_gender());
+    magnemite->set_gender(pkmn::e_gender::GENDERLESS);
     EXPECT_THROW(
-        magnemite->set_gender("Male");
+        magnemite->set_gender(pkmn::e_gender::MALE);
     , std::invalid_argument);
     EXPECT_THROW(
-        magnemite->set_gender("Female");
+        magnemite->set_gender(pkmn::e_gender::FEMALE);
     , std::invalid_argument);
 
     static const std::vector<std::string> mixed_pokemon = boost::assign::list_of
@@ -82,14 +82,14 @@ TEST_P(gender_test, gender_test) {
                                           "",
                                           50
                                       );
-        EXPECT_NE("Genderless", pokemon->get_gender());
+        EXPECT_NE(pkmn::e_gender::GENDERLESS, pokemon->get_gender());
 
-        pokemon->set_gender("Male");
-        EXPECT_EQ("Male", pokemon->get_gender());
-        pokemon->set_gender("Female");
-        EXPECT_EQ("Female", pokemon->get_gender());
+        pokemon->set_gender(pkmn::e_gender::MALE);
+        EXPECT_EQ(pkmn::e_gender::MALE, pokemon->get_gender());
+        pokemon->set_gender(pkmn::e_gender::FEMALE);
+        EXPECT_EQ(pkmn::e_gender::FEMALE, pokemon->get_gender());
         EXPECT_THROW(
-            pokemon->set_gender("Genderless");
+            pokemon->set_gender(pkmn::e_gender::GENDERLESS);
         , std::invalid_argument);
     }
 }

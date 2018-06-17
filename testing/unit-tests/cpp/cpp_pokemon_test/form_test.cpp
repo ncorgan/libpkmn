@@ -260,7 +260,7 @@ TEST_P(gen2_form_test, test_gen2_pokemon_forms) {
                                        100
                                     );
         EXPECT_TRUE(pichu->is_shiny());
-        EXPECT_EQ("Female", pichu->get_gender());
+        EXPECT_EQ(pkmn::e_gender::FEMALE, pichu->get_gender());
     } else {
         EXPECT_THROW(
             (void)pkmn::pokemon::make(

@@ -320,7 +320,7 @@ enum pkmn_error pkmn_pokemon_get_gender(
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_gender_out, p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
-        std::string gender = p_internal->cpp->get_gender();
+        pkmn::e_gender gender = p_internal->cpp->get_gender();
 
         const pkmn::c::gender_bimap_t& gender_bimap = pkmn::c::get_gender_bimap();
         BOOST_ASSERT(gender_bimap.left.count(gender) > 0);
@@ -462,7 +462,7 @@ enum pkmn_error pkmn_pokemon_get_original_trainer_info(
 
         if(p_internal->generation >= 2)
         {
-            std::string original_trainer_gender = p_internal->cpp->get_original_trainer_gender();
+            pkmn::e_gender original_trainer_gender = p_internal->cpp->get_original_trainer_gender();
 
             const pkmn::c::gender_bimap_t& gender_bimap = pkmn::c::get_gender_bimap();
             BOOST_ASSERT(gender_bimap.left.count(original_trainer_gender) > 0);

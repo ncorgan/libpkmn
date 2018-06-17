@@ -526,7 +526,7 @@ namespace pkmn
         )
     }
 
-    std::string pokemon_gbaimpl::get_gender()
+    pkmn::e_gender pokemon_gbaimpl::get_gender()
     {
         boost::lock_guard<pokemon_gbaimpl> lock(*this);
 
@@ -537,7 +537,7 @@ namespace pkmn
     }
 
     void pokemon_gbaimpl::set_gender(
-        const std::string& gender
+        pkmn::e_gender gender
     )
     {
         boost::lock_guard<pokemon_gbaimpl> lock(*this);
@@ -756,25 +756,31 @@ namespace pkmn
         GBA_PC_RCAST->ot_id.id = pksav_littleendian32(id);
     }
 
-    std::string pokemon_gbaimpl::get_original_trainer_gender()
+    pkmn::e_gender pokemon_gbaimpl::get_original_trainer_gender()
     {
         boost::lock_guard<pokemon_gbaimpl> lock(*this);
 
-        return (_misc->origin_info & PKSAV_GBA_POKEMON_OTGENDER_MASK) ? "Female"
-                                                              : "Male";
+        return (_misc->origin_info & PKSAV_GBA_POKEMON_OTGENDER_MASK)
+                   ? pkmn::e_gender::FEMALE
+                   : pkmn::e_gender::MALE;
     }
 
     void pokemon_gbaimpl::set_original_trainer_gender(
-        const std::string& gender
+        pkmn::e_gender gender
     )
     {
         boost::lock_guard<pokemon_gbaimpl> lock(*this);
 
-        if(gender == "Male") {
+        if(gender == pkmn::e_gender::MALE)
+        {
             _misc->origin_info &= ~PKSAV_GBA_POKEMON_OTGENDER_MASK;
-        } else if(gender == "Female") {
+        }
+        else if(gender == pkmn::e_gender::FEMALE)
+        {
             _misc->origin_info |= PKSAV_GBA_POKEMON_OTGENDER_MASK;
-        } else {
+        }
+        else
+        {
             throw std::invalid_argument("gender: valid values \"Male\", \"Female\"");
         }
     }

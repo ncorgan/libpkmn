@@ -101,10 +101,10 @@ public class CSharpDaycareTest
                                                  "",
                                                  50
                                              );
-            daycare.BreedingPokemon[0].Gender = "Female";
+            daycare.BreedingPokemon[0].Gender = PKMN.Gender.FEMALE;
 
             Assert.AreEqual("Blastoise", daycare.BreedingPokemon[0].Species);
-            Assert.AreEqual("Female", daycare.BreedingPokemon[0].Gender);
+            Assert.AreEqual(PKMN.Gender.FEMALE, daycare.BreedingPokemon[0].Gender);
 
             daycare.BreedingPokemon[1] = new PKMN.Pokemon(
                                                  "Marowak",
@@ -112,10 +112,10 @@ public class CSharpDaycareTest
                                                  "",
                                                  50
                                              );
-            daycare.BreedingPokemon[1].Gender = "Male";
+            daycare.BreedingPokemon[1].Gender = PKMN.Gender.MALE;
 
             Assert.AreEqual("Marowak", daycare.BreedingPokemon[1].Species);
-            Assert.AreEqual("Male", daycare.BreedingPokemon[1].Gender);
+            Assert.AreEqual(PKMN.Gender.MALE, daycare.BreedingPokemon[1].Gender);
 
             // TODO: test egg
         }

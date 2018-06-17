@@ -47,7 +47,7 @@ namespace pkmn { namespace swig { namespace breeding {
     inline std::map<std::string, int> get_ideal_child_IVs(
         const pkmn::swig::pokemon& mother,
         const pkmn::swig::pokemon& father,
-        const std::string& child_gender
+        pkmn::e_gender child_gender
     )
     {
         BOOST_ASSERT(mother.get_internal() != nullptr);

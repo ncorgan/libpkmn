@@ -9,6 +9,8 @@
 
 #include <pkmn/config.hpp>
 
+#include <pkmn/enums/gender.hpp>
+
 #include <cstdint>
 #include <string>
 
@@ -33,7 +35,7 @@ namespace pkmn { namespace calculations {
         uint32_t trainer_id,
         bool shiny,
         const std::string& ability,
-        const std::string& gender,
+        pkmn::e_gender gender,
         const std::string& nature
     );
 

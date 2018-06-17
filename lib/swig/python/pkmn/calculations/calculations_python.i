@@ -32,6 +32,9 @@ PKMN_PYTHON_INIT
 // Convert Doxygen docs to Python docstrings
 %include <pkmn_python_docstrings.i>
 
+%rename(gender) pkmn::e_gender;
+%import <pkmn/enums/gender.hpp>
+
 %include <pkmn/calculations/form.hpp>
 %include <pkmn/calculations/gender.hpp>
 %include <pkmn/calculations/nature.hpp>

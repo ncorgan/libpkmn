@@ -503,14 +503,14 @@ namespace pkmn { namespace c {
         *p_attribute_names_out = std::move(temp_attribute_names_c);
     }
 
-    template <typename enum_type, typename buffer_type>
+    template <typename key_type, typename c_enum_type, typename buffer_type>
     static void copy_map_to_buffer(
         const std::map<std::string, buffer_type>& value_map,
-        const boost::bimap<std::string, enum_type>& value_enum_bimap,
+        const boost::bimap<key_type, c_enum_type>& value_enum_bimap,
         buffer_type* p_values_buffer_out,
         size_t value_buffer_size,
-        size_t p_actual_num_values,
-        size_t* p_p_actual_num_values_out
+        size_t actual_num_values,
+        size_t* p_actual_num_values_out
     )
     {
         BOOST_ASSERT(p_values_buffer_out != nullptr);
@@ -521,13 +521,13 @@ namespace pkmn { namespace c {
             value_buffer_size * sizeof(buffer_type)
         );
 
-        size_t internal_num_values = std::min<size_t>(value_buffer_size, p_actual_num_values);
+        size_t internal_num_values = std::min<size_t>(value_buffer_size, actual_num_values);
         for(size_t value = 0; value < internal_num_values; ++value)
         {
-            enum_type value_enum = enum_type(value);
+            c_enum_type value_enum = c_enum_type(value);
             BOOST_ASSERT(value_enum_bimap.right.count(value_enum) > 0);
 
-            const std::string& cpp_key = value_enum_bimap.right.at(value_enum);
+            const key_type& cpp_key = value_enum_bimap.right.at(value_enum);
             if(value_map.count(cpp_key) > 0)
             {
                 p_values_buffer_out[value] = value_map.at(value_enum_bimap.right.at(value_enum));
@@ -546,9 +546,9 @@ namespace pkmn { namespace c {
         }
 
         // Optional parameter
-        if(p_p_actual_num_values_out)
+        if(p_actual_num_values_out != nullptr)
         {
-            *p_p_actual_num_values_out = p_actual_num_values;
+            *p_actual_num_values_out = actual_num_values;
         }
     }
 }

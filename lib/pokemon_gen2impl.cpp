@@ -405,7 +405,7 @@ namespace pkmn
         _nickname = nickname;
     }
 
-    std::string pokemon_gen2impl::get_gender()
+    pkmn::e_gender pokemon_gen2impl::get_gender()
     {
         boost::lock_guard<pokemon_gen2impl> lock(*this);
 
@@ -416,7 +416,7 @@ namespace pkmn
     }
 
     void pokemon_gen2impl::set_gender(
-        const std::string& gender
+        pkmn::e_gender gender
     )
     {
         boost::lock_guard<pokemon_gen2impl> lock(*this);
@@ -426,14 +426,14 @@ namespace pkmn
 
         if(pkmn::fp_compare_equal(chance_male, 0.0f) and pkmn::fp_compare_equal(chance_female, 0.0f))
         {
-            if(gender != "Genderless")
+            if(gender != pkmn::e_gender::GENDERLESS)
             {
                 throw std::invalid_argument("This Pokémon is genderless.");
             }
         }
         else
         {
-            if(gender == "Male")
+            if(gender == pkmn::e_gender::MALE)
             {
                 if(pkmn::fp_compare_equal(chance_male, 0.0f))
                 {
@@ -444,7 +444,7 @@ namespace pkmn
                     set_IV("Attack", PKSAV_MAX_GB_IV);
                 }
             }
-            else if(gender == "Female")
+            else if(gender == pkmn::e_gender::FEMALE)
             {
                 if(pkmn::fp_compare_equal(chance_female, 0.0f))
                 {
@@ -652,27 +652,28 @@ namespace pkmn
         GEN2_PC_RCAST->ot_id = pksav_bigendian16(uint16_t(id));
     }
 
-    std::string pokemon_gen2impl::get_original_trainer_gender()
+    pkmn::e_gender pokemon_gen2impl::get_original_trainer_gender()
     {
         boost::lock_guard<pokemon_gen2impl> lock(*this);
 
-        return (GEN2_PC_RCAST->caught_data & PKSAV_GEN2_POKEMON_OT_GENDER_MASK) ? "Female"
-                                                                        : "Male";
+        return (GEN2_PC_RCAST->caught_data & PKSAV_GEN2_POKEMON_OT_GENDER_MASK)
+                    ? pkmn::e_gender::FEMALE
+                    : pkmn::e_gender::MALE;
     }
 
     void pokemon_gen2impl::set_original_trainer_gender(
-        const std::string& gender
+        pkmn::e_gender gender
     )
     {
-        pkmn::enforce_value_in_vector(
+        pkmn::enforce_value_in_map_keys(
             "Original trainer gender",
             gender,
-            {"Male", "Female"}
+            pksav::get_gen2_gender_bimap().left
         );
 
         boost::lock_guard<pokemon_gen2impl> lock(*this);
 
-        if(gender == "Male")
+        if(gender == pkmn::e_gender::MALE)
         {
             GEN2_PC_RCAST->caught_data &= ~PKSAV_GEN2_POKEMON_OT_GENDER_MASK;
         }

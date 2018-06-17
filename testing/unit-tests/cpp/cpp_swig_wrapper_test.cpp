@@ -410,8 +410,8 @@ TEST(cpp_swig_wrapper_test, test_pokemon)
     swig_pokemon.set_nickname("12345");
     EXPECT_EQ("12345", swig_pokemon.get_nickname());
 
-    swig_pokemon.set_gender("Female");
-    EXPECT_EQ("Female", swig_pokemon.get_gender());
+    swig_pokemon.set_gender(pkmn::e_gender::FEMALE);
+    EXPECT_EQ(pkmn::e_gender::FEMALE, swig_pokemon.get_gender());
 
     swig_pokemon.set_shininess(true);
     EXPECT_TRUE(swig_pokemon.is_shiny());
@@ -434,8 +434,8 @@ TEST(cpp_swig_wrapper_test, test_pokemon)
     swig_pokemon.set_original_trainer_id(0xABCDEF12);
     EXPECT_EQ(0xABCDEF12, swig_pokemon.get_original_trainer_id());
 
-    swig_pokemon.set_original_trainer_gender("Female");
-    EXPECT_EQ("Female", swig_pokemon.get_original_trainer_gender());
+    swig_pokemon.set_original_trainer_gender(pkmn::e_gender::FEMALE);
+    EXPECT_EQ(pkmn::e_gender::FEMALE, swig_pokemon.get_original_trainer_gender());
 
     swig_pokemon.set_current_trainer_friendship(100);
     EXPECT_EQ(100, swig_pokemon.get_current_trainer_friendship());
@@ -654,7 +654,7 @@ TEST(cpp_swig_wrapper_test, test_breeding)
 
     // get_ideal_child_IVs
 
-    const std::string child_gender = "Female";
+    const pkmn::e_gender child_gender = pkmn::e_gender::FEMALE;
 
     std::map<std::string, int> ideal_child_IVs_cpp = pkmn::breeding::get_ideal_child_IVs(
                                                          mother,

@@ -28,13 +28,13 @@
 %attribute(pkmn::swig::pokemon, bool, is_egg, is_egg, set_is_egg);
 %attributeval(pkmn::swig::pokemon, pkmn::database::pokemon_entry, database_entry, get_database_entry);
 %attributestring(pkmn::swig::pokemon, std::string, condition, get_condition, set_condition);
-%attributestring(pkmn::swig::pokemon, std::string, gender, get_gender, set_gender);
+%attribute(pkmn::swig::pokemon, pkmn::e_gender, gender, get_gender, set_gender);
 %attribute(pkmn::swig::pokemon, bool, is_shiny, is_shiny, set_shininess);
 %attribute(pkmn::swig::pokemon, int, pokerus_duration, get_pokerus_duration, set_pokerus_duration);
 %attribute(pkmn::swig::pokemon, uint16_t, original_trainer_public_id, get_original_trainer_public_id, set_original_trainer_public_id);
 %attribute(pkmn::swig::pokemon, uint16_t, original_trainer_secret_id, get_original_trainer_secret_id, set_original_trainer_secret_id);
 %attribute(pkmn::swig::pokemon, uint32_t, original_trainer_id, get_original_trainer_id, set_original_trainer_id);
-%attributestring(pkmn::swig::pokemon, std::string, original_trainer_gender, get_original_trainer_gender, set_original_trainer_gender);
+%attribute(pkmn::swig::pokemon, pkmn::e_gender, original_trainer_gender, get_original_trainer_gender, set_original_trainer_gender);
 %attribute(pkmn::swig::pokemon, int, current_trainer_friendship, get_current_trainer_friendship, set_current_trainer_friendship);
 %attributestring(pkmn::swig::pokemon, std::string, ability, get_ability, set_ability);
 %attribute(pkmn::swig::pokemon, int, level_met, get_level_met, set_level_met);

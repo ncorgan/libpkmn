@@ -34,6 +34,8 @@ PKMN_CSHARP_INIT
 // Convert Doxygen docs to C# docstrings
 %include <pkmn_csharp_docs.i>
 
+%import <pkmn/enums/gender.hpp>
+
 %rename(STABModifier) STAB_MODIFIER;
 %include <pkmn/calculations/moves/critical_hit.hpp>
 %include <pkmn/calculations/moves/damage.hpp>

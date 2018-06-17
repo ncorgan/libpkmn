@@ -72,13 +72,13 @@ public class PokemonConversionsTest
         }
         if(originGeneration >= 2)
         {
-            firstPokemon.Gender = Util.RandomBool() ? "Male" : "Female";
+            firstPokemon.Gender = Util.RandomBool() ? PKMN.Gender.MALE : PKMN.Gender.FEMALE;
             firstPokemon.IsShiny = Util.RandomBool();
             firstPokemon.CurrentTrainerFriendship = rng.Next(0, 255);
 
             if(!originGame.Equals("Gold") && !originGame.Equals("Silver"))
             {
-                firstPokemon.OriginalTrainerGender = Util.RandomBool() ? "Male" : "Female";
+                firstPokemon.OriginalTrainerGender = Util.RandomBool() ? PKMN.Gender.MALE : PKMN.Gender.FEMALE;
             }
 
             // The max level met value in Generation II is 63.

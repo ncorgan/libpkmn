@@ -288,7 +288,7 @@ namespace pkmn
         boost::lock_guard<pokemon_impl> lock(*this);
 
         return _database_entry.get_icon_filepath(
-                    (get_gender() == "Female")
+                    (get_gender() == pkmn::e_gender::FEMALE)
                );
     }
 
@@ -297,7 +297,7 @@ namespace pkmn
         boost::lock_guard<pokemon_impl> lock(*this);
 
         return _database_entry.get_sprite_filepath(
-                    (get_gender() == "Female"),
+                    (get_gender() == pkmn::e_gender::FEMALE),
                     is_shiny()
                );
     }
@@ -484,7 +484,7 @@ namespace pkmn
 
     void pokemon_impl::_set_modern_gender(
         uint32_t* personality_ptr,
-        const std::string& gender
+        pkmn::e_gender gender
     )
     {
         float chance_male = _database_entry.get_chance_male();
@@ -493,7 +493,7 @@ namespace pkmn
         // Check for invalid genders.
         if(pkmn::fp_compare_equal(chance_male, 0.0f) and pkmn::fp_compare_equal(chance_female, 0.0f))
         {
-            if(gender != "Genderless")
+            if(gender != pkmn::e_gender::GENDERLESS)
             {
                 throw std::invalid_argument("This Pokémon is genderless.");
             }
@@ -503,20 +503,20 @@ namespace pkmn
                 return;
             }
         }
-        else if(pkmn::fp_compare_equal(chance_male, 1.0f) and gender != "Male")
+        else if(pkmn::fp_compare_equal(chance_male, 1.0f) and gender != pkmn::e_gender::MALE)
         {
             throw std::invalid_argument("This Pokémon is male-only.");
         }
-        else if(pkmn::fp_compare_equal(chance_female, 1.0f) and gender != "Female")
+        else if(pkmn::fp_compare_equal(chance_female, 1.0f) and gender != pkmn::e_gender::FEMALE)
         {
             throw std::invalid_argument("This Pokémon is female-only.");
         }
-        else if(gender == "Genderless")
+        else if(gender == pkmn::e_gender::GENDERLESS)
         {
             throw std::invalid_argument("gender: valid options \"Male\", \"Female\"");
         }
 
-        if(gender == "Male")
+        if(gender == pkmn::e_gender::MALE)
         {
             *personality_ptr |= 0xFF;
         }

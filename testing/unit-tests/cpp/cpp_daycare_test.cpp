@@ -205,7 +205,7 @@ TEST_P(daycare_test, test_setting_pokemon)
             blastoise->get_native_pc_data(),
             breeding_pokemon[0]->get_native_pc_data()
         );
-        breeding_pokemon[0]->set_gender("Female");
+        breeding_pokemon[0]->set_gender(pkmn::e_gender::FEMALE);
 
         pkmn::pokemon::sptr marowak = pkmn::pokemon::make(
                                           "Marowak",
@@ -219,7 +219,7 @@ TEST_P(daycare_test, test_setting_pokemon)
             marowak->get_native_pc_data(),
             breeding_pokemon[1]->get_native_pc_data()
         );
-        breeding_pokemon[1]->set_gender("Male");
+        breeding_pokemon[1]->set_gender(pkmn::e_gender::MALE);
 
         ASSERT_TRUE(daycare->get_egg()->is_egg());
     }

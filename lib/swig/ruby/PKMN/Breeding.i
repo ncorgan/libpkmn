@@ -20,6 +20,8 @@ PKMN_RUBY_INIT
     #include "cpp_wrappers/breeding.hpp"
 %}
 
+%import <pkmn/enums/gender.hpp>
+
 %include <pkmn/breeding/child_info.hpp>
 %include <pkmn/breeding/compatibility.hpp>
 %include <cpp_wrappers/breeding.hpp>

@@ -130,15 +130,15 @@ public class Gen3PokemonTests
 
         // Gender and personality are tied, so make sure they affect each other.
 
-        pokemon.Gender = "Female";
+        pokemon.Gender = PKMN.Gender.FEMALE;
         Assert.Less((pokemon.Personality & 0xFF), 0xFF);
-        pokemon.Gender = "Male";
+        pokemon.Gender = PKMN.Gender.MALE;
         Assert.AreEqual((pokemon.Personality & 0xFF), 0xFF);
 
         pokemon.Personality = 0x1234AB00;
-        Assert.AreEqual(pokemon.Gender, "Female");
+        Assert.AreEqual(pokemon.Gender, PKMN.Gender.FEMALE);
         pokemon.Personality = 0xCD5678FF;
-        Assert.AreEqual(pokemon.Gender, "Male");
+        Assert.AreEqual(pokemon.Gender, PKMN.Gender.MALE);
 
         // Setting shininess should affect personality.
 

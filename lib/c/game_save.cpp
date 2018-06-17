@@ -178,7 +178,7 @@ enum pkmn_error pkmn_game_save_get_trainer_info(
         {
             pkmn::e_gender cpp_gender = p_internal->cpp->get_trainer_gender();
 
-            const pkmn::c::gender_bimap_t2& gender_bimap = pkmn::c::get_gender_bimap2();
+            const pkmn::c::gender_bimap_t& gender_bimap = pkmn::c::get_gender_bimap();
             BOOST_ASSERT(gender_bimap.left.count(cpp_gender) > 0);
             trainer_info.gender = gender_bimap.left.at(cpp_gender);
         }
@@ -259,7 +259,7 @@ enum pkmn_error pkmn_game_save_set_trainer_gender(
             {PKMN_GENDER_MALE, PKMN_GENDER_FEMALE}
         );
 
-        const pkmn::c::gender_bimap_t2& gender_bimap = pkmn::c::get_gender_bimap2();
+        const pkmn::c::gender_bimap_t& gender_bimap = pkmn::c::get_gender_bimap();
 
         p_internal->cpp->set_trainer_gender(
             gender_bimap.right.at(gender)

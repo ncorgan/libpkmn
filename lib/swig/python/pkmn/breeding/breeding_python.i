@@ -23,6 +23,9 @@ PKMN_PYTHON_INIT
 // Convert Doxygen docs to Python docstrings
 %include <pkmn_python_docstrings.i>
 
+%rename(gender) pkmn::e_gender;
+%import <pkmn/enums/gender.hpp>
+
 %include <pkmn/breeding/child_info.hpp>
 %include <pkmn/breeding/compatibility.hpp>
 %include <cpp_wrappers/breeding.hpp>

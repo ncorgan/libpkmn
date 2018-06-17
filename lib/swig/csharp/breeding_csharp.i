@@ -23,6 +23,8 @@ PKMN_CSHARP_INIT
 // Convert Doxygen docs to C# docs
 %include <pkmn_csharp_docs.i>
 
+%import <pkmn/enums/gender.hpp>
+
 %include <pkmn/breeding/child_info.hpp>
 %include <pkmn/breeding/compatibility.hpp>
 %include <cpp_wrappers/breeding.hpp>

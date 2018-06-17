@@ -9,6 +9,8 @@
 
 #include <pkmn/config.hpp>
 
+#include <pkmn/enums/gender.hpp>
+
 #include <cstdint>
 #include <string>
 
@@ -28,7 +30,7 @@ namespace pkmn { namespace calculations {
      * \throws std::out_of_range If IV_attack is out of range [0,15]
      * \returns Pokémon gender (possible values: Male, Female, Genderless)
      */
-    PKMN_API std::string gen2_pokemon_gender(
+    PKMN_API pkmn::e_gender gen2_pokemon_gender(
         const std::string& species,
         int IV_attack
     );
@@ -46,7 +48,7 @@ namespace pkmn { namespace calculations {
      * \throws std::runtime_error If Pokémon species is invalid
      * \returns Pokémon gender (possible values: Male, Female, Genderless)
      */
-    PKMN_API std::string modern_pokemon_gender(
+    PKMN_API pkmn::e_gender modern_pokemon_gender(
         const std::string& species,
         uint32_t personality
     );

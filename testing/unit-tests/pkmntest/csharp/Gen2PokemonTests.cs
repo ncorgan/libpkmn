@@ -38,15 +38,15 @@ public class Gen2PokemonTests
 
         // Gender is tied to IVs, so make sure the abstraction reflects that.
 
-        pokemon.Gender = "Male";
+        pokemon.Gender = PKMN.Gender.MALE;
         Assert.AreEqual(pokemon.IVs["Attack"], 15);
-        pokemon.Gender = "Female";
+        pokemon.Gender = PKMN.Gender.FEMALE;
         Assert.Less(pokemon.IVs["Attack"], 15);
 
         pokemon.IVs["Attack"] = 0;
-        Assert.AreEqual(pokemon.Gender, "Female");
+        Assert.AreEqual(pokemon.Gender, PKMN.Gender.FEMALE);
         pokemon.IVs["Attack"] = 15;
-        Assert.AreEqual(pokemon.Gender, "Male");
+        Assert.AreEqual(pokemon.Gender, PKMN.Gender.MALE);
 
         // Shininess is tied to IVs, so make sure the abstraction reflects that.
 

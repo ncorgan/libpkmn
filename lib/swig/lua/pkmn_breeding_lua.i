@@ -18,6 +18,9 @@ PKMN_LUA_INIT
     #include "cpp_wrappers/breeding.hpp"
 %}
 
+%rename(gender) pkmn::e_gender;
+%import <pkmn/enums/gender.hpp>
+
 %include <pkmn/breeding/child_info.hpp>
 %include <pkmn/breeding/compatibility.hpp>
 %include <cpp_wrappers/breeding.hpp>

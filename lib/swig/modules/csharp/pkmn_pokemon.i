@@ -36,7 +36,7 @@ using Database;"
 %attributestring(pkmn::swig::pokemon, std::string, Nickname, get_nickname, set_nickname);
 %attributeval(pkmn::swig::pokemon, pkmn::database::pokemon_entry, DatabaseEntry, get_database_entry);
 %attributestring(pkmn::swig::pokemon, std::string, Condition, get_condition, set_condition);
-%attributestring(pkmn::swig::pokemon, std::string, Gender, get_gender, set_gender);
+%attribute(pkmn::swig::pokemon, pkmn::e_gender, Gender, get_gender, set_gender);
 %attribute(pkmn::swig::pokemon, bool, IsShiny, is_shiny, set_shininess);
 %attributestring(pkmn::swig::pokemon, std::string, HeldItem, get_held_item, set_held_item);
 %attribute(pkmn::swig::pokemon, int, PokerusDuration, get_pokerus_duration, set_pokerus_duration);
@@ -44,7 +44,7 @@ using Database;"
 %attribute(pkmn::swig::pokemon, uint16_t, OriginalTrainerPublicID, get_original_trainer_public_id, set_original_trainer_public_id);
 %attribute(pkmn::swig::pokemon, uint16_t, OriginalTrainerSecretID, get_original_trainer_secret_id, set_original_trainer_secret_id);
 %attribute(pkmn::swig::pokemon, uint32_t, OriginalTrainerID, get_original_trainer_id, set_original_trainer_id);
-%attributestring(pkmn::swig::pokemon, std::string, OriginalTrainerGender, get_original_trainer_gender, set_original_trainer_gender);
+%attribute(pkmn::swig::pokemon, pkmn::e_gender, OriginalTrainerGender, get_original_trainer_gender, set_original_trainer_gender);
 %attribute(pkmn::swig::pokemon, int, CurrentTrainerFriendship, get_current_trainer_friendship, set_current_trainer_friendship);
 %attributestring(pkmn::swig::pokemon, std::string, Ability, get_ability, set_ability);
 %attributestring(pkmn::swig::pokemon, std::string, Ball, get_ball, set_ball);

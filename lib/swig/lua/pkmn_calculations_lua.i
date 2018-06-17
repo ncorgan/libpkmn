@@ -28,6 +28,9 @@ PKMN_LUA_INIT
     #include <pkmn/calculations/moves/natural_gift.hpp>
 %}
 
+%rename(gender) pkmn::e_gender;
+%import <pkmn/enums/gender.hpp>
+
 %include <pkmn/calculations/form.hpp>
 %include <pkmn/calculations/gender.hpp>
 %include <pkmn/calculations/nature.hpp>

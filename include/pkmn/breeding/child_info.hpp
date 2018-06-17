@@ -33,7 +33,7 @@ namespace pkmn { namespace breeding {
     PKMN_API std::map<std::string, int> get_ideal_child_IVs(
         const pkmn::pokemon::sptr& mother,
         const pkmn::pokemon::sptr& father,
-        const std::string& child_gender
+        pkmn::e_gender child_gender
     );
 
 #endif

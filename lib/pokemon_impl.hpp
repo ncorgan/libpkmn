@@ -161,7 +161,7 @@ namespace pkmn {
 
             void _set_modern_gender(
                 uint32_t* personality_ptr,
-                const std::string& gender
+                pkmn::e_gender gender
             );
 
             void _set_modern_shininess(

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -1464,20 +1464,20 @@ public class CSharpCalculationsTest {
         // Make sure known good inputs result in expected results.
 
         // All male
-        Assert.AreEqual("Male", PKMN.Calculations.Gen2PokemonGender("Nidorino", 0));
-        Assert.AreEqual("Male", PKMN.Calculations.Gen2PokemonGender("Nidorino", 15));
+        Assert.AreEqual(PKMN.Gender.MALE, PKMN.Calculations.Gen2PokemonGender("Nidorino", 0));
+        Assert.AreEqual(PKMN.Gender.MALE, PKMN.Calculations.Gen2PokemonGender("Nidorino", 15));
 
         // 25% male, 75% female
-        Assert.AreEqual("Female", PKMN.Calculations.Gen2PokemonGender("Vulpix", 11));
-        Assert.AreEqual("Male", PKMN.Calculations.Gen2PokemonGender("Vulpix", 12));
+        Assert.AreEqual(PKMN.Gender.FEMALE, PKMN.Calculations.Gen2PokemonGender("Vulpix", 11));
+        Assert.AreEqual(PKMN.Gender.MALE, PKMN.Calculations.Gen2PokemonGender("Vulpix", 12));
 
         // All female
-        Assert.AreEqual("Female", PKMN.Calculations.Gen2PokemonGender("Nidorina", 0));
-        Assert.AreEqual("Female", PKMN.Calculations.Gen2PokemonGender("Nidorina", 15));
+        Assert.AreEqual(PKMN.Gender.FEMALE, PKMN.Calculations.Gen2PokemonGender("Nidorina", 0));
+        Assert.AreEqual(PKMN.Gender.FEMALE, PKMN.Calculations.Gen2PokemonGender("Nidorina", 15));
 
         // Genderless
-        Assert.AreEqual("Genderless", PKMN.Calculations.Gen2PokemonGender("Magnemite", 0));
-        Assert.AreEqual("Genderless", PKMN.Calculations.Gen2PokemonGender("Magnemite", 15));
+        Assert.AreEqual(PKMN.Gender.GENDERLESS, PKMN.Calculations.Gen2PokemonGender("Magnemite", 0));
+        Assert.AreEqual(PKMN.Gender.GENDERLESS, PKMN.Calculations.Gen2PokemonGender("Magnemite", 15));
     }
 
     [Test]
@@ -1492,20 +1492,20 @@ public class CSharpCalculationsTest {
         // Make sure known good inputs result in expected results.
 
         // All male
-        Assert.AreEqual("Male", PKMN.Calculations.ModernPokemonGender("Nidorino", 0));
-        Assert.AreEqual("Male", PKMN.Calculations.ModernPokemonGender("Nidorino", 0xFFFFFFFF));
+        Assert.AreEqual(PKMN.Gender.MALE, PKMN.Calculations.ModernPokemonGender("Nidorino", 0));
+        Assert.AreEqual(PKMN.Gender.MALE, PKMN.Calculations.ModernPokemonGender("Nidorino", 0xFFFFFFFF));
 
         // 25% male, 75% female
-        Assert.AreEqual("Female", PKMN.Calculations.ModernPokemonGender("Vulpix", 190));
-        Assert.AreEqual("Male", PKMN.Calculations.ModernPokemonGender("Vulpix", 191));
+        Assert.AreEqual(PKMN.Gender.FEMALE, PKMN.Calculations.ModernPokemonGender("Vulpix", 190));
+        Assert.AreEqual(PKMN.Gender.MALE, PKMN.Calculations.ModernPokemonGender("Vulpix", 191));
 
         // All female
-        Assert.AreEqual("Female", PKMN.Calculations.ModernPokemonGender("Nidorina", 0));
-        Assert.AreEqual("Female", PKMN.Calculations.ModernPokemonGender("Nidorina", 0xFFFFFFFF));
+        Assert.AreEqual(PKMN.Gender.FEMALE, PKMN.Calculations.ModernPokemonGender("Nidorina", 0));
+        Assert.AreEqual(PKMN.Gender.FEMALE, PKMN.Calculations.ModernPokemonGender("Nidorina", 0xFFFFFFFF));
 
         // Genderless
-        Assert.AreEqual("Genderless", PKMN.Calculations.ModernPokemonGender("Magnemite", 0));
-        Assert.AreEqual("Genderless", PKMN.Calculations.ModernPokemonGender("Magnemite", 0xFFFFFFFF));
+        Assert.AreEqual(PKMN.Gender.GENDERLESS, PKMN.Calculations.ModernPokemonGender("Magnemite", 0));
+        Assert.AreEqual(PKMN.Gender.GENDERLESS, PKMN.Calculations.ModernPokemonGender("Magnemite", 0xFFFFFFFF));
     }
 
     [Test]
@@ -1738,7 +1738,7 @@ public class CSharpCalculationsTest {
                     PKMN.Pokemon.DefaultTrainerID,
                     true,
                     "Torrent",
-                    "Male",
+                    PKMN.Gender.MALE,
                     "Quiet"
                 );
             }
@@ -1752,7 +1752,7 @@ public class CSharpCalculationsTest {
                     PKMN.Pokemon.DefaultTrainerID,
                     true,
                     "Blaze",
-                    "Not a gender",
+                    PKMN.Gender.NONE,
                     "Quiet"
                 );
             }
@@ -1766,7 +1766,7 @@ public class CSharpCalculationsTest {
                     PKMN.Pokemon.DefaultTrainerID,
                     true,
                     "Blaze",
-                    "Male",
+                    PKMN.Gender.MALE,
                     "Not a nature"
                 );
             }
@@ -1778,11 +1778,11 @@ public class CSharpCalculationsTest {
                                PKMN.Pokemon.DefaultTrainerID,
                                true,
                                "Blaze",
-                               "Male",
+                               PKMN.Gender.MALE,
                                "Quiet"
                            );
         Assert.AreEqual(
-            "Male",
+            PKMN.Gender.MALE,
             PKMN.Calculations.ModernPokemonGender(
                 "Charmander", personality
             )

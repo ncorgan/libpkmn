@@ -50,15 +50,15 @@ TEST_P(gen2_pokemon_test, gen2_pokemon_test) {
 
     // Gender affects IVs, so make sure the abstraction reflects that.
     const std::map<std::string, int>& IVs = pokemon->get_IVs();
-    pokemon->set_gender("Male");
+    pokemon->set_gender(pkmn::e_gender::MALE);
     EXPECT_EQ(15, IVs.at("Attack"));
-    pokemon->set_gender("Female");
+    pokemon->set_gender(pkmn::e_gender::FEMALE);
     EXPECT_LT(IVs.at("Attack"), 15);
 
     pokemon->set_IV("Attack", 0);
-    EXPECT_EQ("Female", pokemon->get_gender());
+    EXPECT_EQ(pkmn::e_gender::FEMALE, pokemon->get_gender());
     pokemon->set_IV("Attack", 15);
-    EXPECT_EQ("Male", pokemon->get_gender());
+    EXPECT_EQ(pkmn::e_gender::MALE, pokemon->get_gender());
 
     // Shininess affects IVs, so make sure the abstraction reflects that.
     pokemon->set_shininess(false);
@@ -74,7 +74,7 @@ TEST_P(gen2_pokemon_test, gen2_pokemon_test) {
 
     // On the C++ level, make sure functions that affect the same PKSav field don't impact each other.
     std::string location_met_before_change = pokemon->get_location_met(false);
-    std::string trainer_gender_before_change = pokemon->get_original_trainer_gender();
+    pkmn::e_gender trainer_gender_before_change = pokemon->get_original_trainer_gender();
     int level_met_before_change = pokemon->get_level_met();
 
     const struct pksav_gen2_pc_pokemon* native_pc = reinterpret_cast<const struct pksav_gen2_pc_pokemon*>(
@@ -99,8 +99,8 @@ TEST_P(gen2_pokemon_test, gen2_pokemon_test) {
     pokemon->set_location_met(location_met_before_change, false);
 
     // Setting trainer gender shouldn't affect level caught, location caught, or time of day caught.
-    pokemon->set_original_trainer_gender("Female");
-    EXPECT_EQ("Female", pokemon->get_original_trainer_gender());
+    pokemon->set_original_trainer_gender(pkmn::e_gender::FEMALE);
+    EXPECT_EQ(pkmn::e_gender::FEMALE, pokemon->get_original_trainer_gender());
     EXPECT_EQ(location_met_before_change, pokemon->get_location_met(false));
     EXPECT_EQ(level_met_before_change, pokemon->get_level_met());
 

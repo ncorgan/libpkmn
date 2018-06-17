@@ -13,6 +13,7 @@
 #include <windows.h>
 #endif
 
+#include "exception_internal.hpp"
 #include "utils/misc.hpp"
 #include "types/rng.hpp"
 #include "utils/floating_point_comparison.hpp"
@@ -21,6 +22,7 @@
 
 #include <pkmn/calculations/shininess.hpp>
 #include <pkmn/database/pokemon_entry.hpp>
+#include <pkmn/enums/gender.hpp>
 
 #include <boost/assign/list_of.hpp>
 
@@ -40,16 +42,24 @@ namespace pkmn { namespace calculations {
 
     static uint32_t get_gender_threshold(
         float chance_male
-    ) {
+    )
+    {
         uint32_t ret = 0;
 
-        if(pkmn::fp_compare_equal(chance_male, 0.875f)) {
+        if(pkmn::fp_compare_equal(chance_male, 0.875f))
+        {
             ret = 31;
-        } else if(pkmn::fp_compare_equal(chance_male, 0.75f)) {
+        }
+        else if(pkmn::fp_compare_equal(chance_male, 0.75f))
+        {
             ret = 64;
-        } else if(pkmn::fp_compare_equal(chance_male, 0.5f)) {
+        }
+        else if(pkmn::fp_compare_equal(chance_male, 0.5f))
+        {
             ret = 127;
-        } else {
+        }
+        else
+        {
             ret = 191;
         }
 
@@ -61,9 +71,16 @@ namespace pkmn { namespace calculations {
         uint32_t trainer_id,
         bool shiny,
         const std::string& ability,
-        const std::string& gender,
+        pkmn::e_gender gender,
         const std::string& nature
-    ) {
+    )
+    {
+        pkmn::enforce_value_in_vector(
+            "Gender",
+            gender,
+            {pkmn::e_gender::MALE, pkmn::e_gender::FEMALE, pkmn::e_gender::GENDERLESS}
+        );
+
         uint32_t ret = 0;
 
         pkmn::database::pokemon_entry entry(species, "Omega Ruby", "");
@@ -74,36 +91,53 @@ namespace pkmn { namespace calculations {
 
         // Validate ability input.
         uint32_t ability_modulo = 0; // If first or hiddenability, keep this
-        if(ability == abilities.second) {
-            if(ability != "None") {
+        if(ability == abilities.second)
+        {
+            if(ability != "None")
+            {
                 ability_modulo = 1;
-            } else {
+            }
+            else
+            {
                 throw std::invalid_argument("You cannot use \"None\".");
             }
-        } else if(ability != abilities.first and ability != hidden_ability) {
+        }
+        else if(ability != abilities.first and ability != hidden_ability)
+        {
             throw std::invalid_argument("Invalid ability.");
         }
 
         // Validate gender input.
-        if(pkmn::fp_compare_equal((chance_male + chance_female), 0.0f)) {
-            if(gender != "Genderless") {
+        if(pkmn::fp_compare_equal((chance_male + chance_female), 0.0f))
+        {
+            if(gender != pkmn::e_gender::GENDERLESS)
+            {
                 throw std::invalid_argument("This Pokémon is genderless.");
             }
-        } else if(pkmn::fp_compare_equal(chance_male, 1.0f)) {
-            if(gender != "Male") {
+        }
+        else if(pkmn::fp_compare_equal(chance_male, 1.0f))
+        {
+            if(gender != pkmn::e_gender::MALE)
+            {
                 throw std::invalid_argument("This Pokémon is male-only.");
             }
-        } else if(pkmn::fp_compare_equal(chance_female, 1.0f)) {
-            if(gender != "Female") {
+        }
+        else if(pkmn::fp_compare_equal(chance_female, 1.0f))
+        {
+            if(gender != pkmn::e_gender::FEMALE)
+            {
                 throw std::invalid_argument("This Pokémon is female-only.");
             }
-        } else if(gender != "Male" and gender != "Female") {
+        }
+        else if(gender != pkmn::e_gender::MALE and gender != pkmn::e_gender::FEMALE)
+        {
             throw std::invalid_argument("Valid genders: Male, Female");
         }
 
         // Validate nature input.
         auto iter = std::find(natures.begin(), natures.end(), nature);
-        if(iter == natures.end()) {
+        if(iter == natures.end())
+        {
             throw std::invalid_argument("Invalid nature.");
         }
         uint32_t index = uint32_t(iter - natures.begin());
@@ -113,14 +147,18 @@ namespace pkmn { namespace calculations {
         bool found = false;
         size_t count = 0;
         pkmn::rng<uint32_t> rng;
-        do {
+        do
+        {
             ret = rng.rand();
 
             // Set the gender if applicable.
-            if(gender == "Male") {
+            if(gender == pkmn::e_gender::MALE)
+            {
                 ret &= ~0xFF;
                 ret |= (rng.rand() % (0xFF - gender_threshold) + gender_threshold);
-            } else if(gender == "Female") {
+            }
+            else if(gender == pkmn::e_gender::FEMALE)
+            {
                 ret &= ~0xFF;
                 ret |= (rng.rand() % gender_threshold);
             }
@@ -128,12 +166,14 @@ namespace pkmn { namespace calculations {
             if(modern_shiny(ret, trainer_id) == shiny and
                (ret % natures.size()) == index and
                (ret % 2) == ability_modulo
-            ) {
+            )
+            {
                 found = true;
             }
 
             ++count;
-        } while(not found);
+        }
+        while(not found);
 
         return ret;
     }

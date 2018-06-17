@@ -425,18 +425,18 @@ public class PokemonTestCommon
                                         "",
                                         50
                                     );
-        Assert.AreEqual("Female", nidorina.Gender);
-        nidorina.Gender = "Female";
+        Assert.AreEqual(PKMN.Gender.FEMALE, nidorina.Gender);
+        nidorina.Gender = PKMN.Gender.FEMALE;
         Assert.Throws<ArgumentOutOfRangeException>(
             delegate
             {
-                nidorina.Gender = "Male";
+                nidorina.Gender = PKMN.Gender.MALE;
             }
         );
         Assert.Throws<ArgumentOutOfRangeException>(
             delegate
             {
-                nidorina.Gender = "Genderless";
+                nidorina.Gender = PKMN.Gender.GENDERLESS;
             }
         );
 
@@ -446,18 +446,18 @@ public class PokemonTestCommon
                                         "",
                                         50
                                     );
-        Assert.AreEqual("Male", nidorino.Gender);
-        nidorino.Gender = "Male";
+        Assert.AreEqual(PKMN.Gender.MALE, nidorino.Gender);
+        nidorino.Gender = PKMN.Gender.MALE;
         Assert.Throws<ArgumentOutOfRangeException>(
             delegate
             {
-                nidorino.Gender = "Female";
+                nidorino.Gender = PKMN.Gender.FEMALE;
             }
         );
         Assert.Throws<ArgumentOutOfRangeException>(
             delegate
             {
-                nidorino.Gender = "Genderless";
+                nidorino.Gender = PKMN.Gender.GENDERLESS;
             }
         );
 
@@ -467,18 +467,18 @@ public class PokemonTestCommon
                                          "",
                                          50
                                      );
-        Assert.AreEqual("Genderless", magnemite.Gender);
-        magnemite.Gender = "Genderless";
+        Assert.AreEqual(PKMN.Gender.GENDERLESS, magnemite.Gender);
+        magnemite.Gender = PKMN.Gender.GENDERLESS;
         Assert.Throws<ArgumentOutOfRangeException>(
             delegate
             {
-                magnemite.Gender = "Male";
+                magnemite.Gender = PKMN.Gender.MALE;
             }
         );
         Assert.Throws<ArgumentOutOfRangeException>(
             delegate
             {
-                magnemite.Gender = "Female";
+                magnemite.Gender = PKMN.Gender.FEMALE;
             }
         );
 
@@ -497,14 +497,14 @@ public class PokemonTestCommon
                                            50
                                        );
 
-            pokemon.Gender = "Female";
-            Assert.AreEqual("Female", pokemon.Gender);
-            pokemon.Gender = "Male";
-            Assert.AreEqual("Male", pokemon.Gender);
+            pokemon.Gender = PKMN.Gender.FEMALE;
+            Assert.AreEqual(PKMN.Gender.FEMALE, pokemon.Gender);
+            pokemon.Gender = PKMN.Gender.MALE;
+            Assert.AreEqual(PKMN.Gender.MALE, pokemon.Gender);
             Assert.Throws<ArgumentOutOfRangeException>(
                 delegate
                 {
-                    pokemon.Gender = "Genderless";
+                    pokemon.Gender = PKMN.Gender.GENDERLESS;
                 }
             );
         }
@@ -531,13 +531,13 @@ public class PokemonTestCommon
         if(generation >= 2)
         {
             Assert.AreEqual("None", pokemon.HeldItem);
-            Assert.AreEqual("Male", pokemon.OriginalTrainerGender);
+            Assert.AreEqual(PKMN.Gender.MALE, pokemon.OriginalTrainerGender);
         }
         else
         {
             // Default value since a getter shouldn't throw an exception.
             Assert.AreEqual("", pokemon.HeldItem);
-            Assert.AreEqual("", pokemon.OriginalTrainerGender);
+            Assert.AreEqual(PKMN.Gender.NONE, pokemon.OriginalTrainerGender);
         }
 
         Assert.AreEqual(
@@ -752,10 +752,10 @@ public class PokemonTestCommon
 
         if(generation >= 2)
         {
-            string[] genders = {"Male", "Female"};
+            PKMN.Gender[] genders = {PKMN.Gender.MALE, PKMN.Gender.FEMALE};
             bool[] isShinyBools = {true, false};
 
-            foreach(string gender in genders)
+            foreach(PKMN.Gender gender in genders)
             {
                 foreach(bool isShiny in isShinyBools)
                 {
@@ -1451,16 +1451,16 @@ public class PokemonTestCommon
 
         if(generation >= 2)
         {
-            pokemon.OriginalTrainerGender = "Male";
-            Assert.AreEqual("Male", pokemon.OriginalTrainerGender);
+            pokemon.OriginalTrainerGender = PKMN.Gender.MALE;
+            Assert.AreEqual(PKMN.Gender.MALE, pokemon.OriginalTrainerGender);
 
-            pokemon.OriginalTrainerGender = "Female";
-            Assert.AreEqual("Female", pokemon.OriginalTrainerGender);
+            pokemon.OriginalTrainerGender = PKMN.Gender.FEMALE;
+            Assert.AreEqual(PKMN.Gender.FEMALE, pokemon.OriginalTrainerGender);
 
             Assert.Throws<ArgumentOutOfRangeException>(
                 delegate
                 {
-                    pokemon.OriginalTrainerGender = "Genderless";
+                    pokemon.OriginalTrainerGender = PKMN.Gender.GENDERLESS;
                 }
             );
         }
@@ -1469,7 +1469,7 @@ public class PokemonTestCommon
             Assert.Throws<ApplicationException>(
                 delegate
                 {
-                    pokemon.OriginalTrainerGender = "Male";
+                    pokemon.OriginalTrainerGender = PKMN.Gender.MALE;
                 }
             );
         }

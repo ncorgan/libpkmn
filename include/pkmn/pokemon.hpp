@@ -11,6 +11,7 @@
 #include <pkmn/move_slot.hpp>
 #include <pkmn/database/move_entry.hpp>
 #include <pkmn/database/pokemon_entry.hpp>
+#include <pkmn/enums/gender.hpp>
 #include <pkmn/types/class_with_attributes.hpp>
 
 #include <cstdint>
@@ -83,10 +84,10 @@ namespace pkmn {
                 const std::string& nickname
             ) = 0;
 
-            virtual std::string get_gender() = 0;
+            virtual pkmn::e_gender get_gender() = 0;
 
             virtual void set_gender(
-                const std::string& gender
+                pkmn::e_gender gender
             ) = 0;
 
             virtual bool is_shiny() = 0;
@@ -137,10 +138,10 @@ namespace pkmn {
                 uint32_t id
             ) = 0;
 
-            virtual std::string get_original_trainer_gender() = 0;
+            virtual pkmn::e_gender get_original_trainer_gender() = 0;
 
             virtual void set_original_trainer_gender(
-                const std::string& trainer_gender
+                pkmn::e_gender trainer_gender
             ) = 0;
 
             virtual std::string get_language() = 0;

@@ -73,10 +73,10 @@ namespace pkmn {
                 const std::string& nickname
             ) override final;
 
-            std::string get_gender() override final;
+            pkmn::e_gender get_gender() override final;
 
             void set_gender(
-                const std::string& gender
+                pkmn::e_gender gender
             ) override final;
 
             bool is_shiny() override final;
@@ -127,10 +127,10 @@ namespace pkmn {
                 uint32_t id
             ) override final;
 
-            std::string get_original_trainer_gender() override final;
+            pkmn::e_gender get_original_trainer_gender() override final;
 
             void set_original_trainer_gender(
-                const std::string& gender
+                pkmn::e_gender gender
             ) override final;
 
             std::string get_language() override final;

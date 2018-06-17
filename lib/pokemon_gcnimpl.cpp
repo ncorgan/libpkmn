@@ -50,6 +50,7 @@ namespace pkmn
     BOOST_STATIC_CONSTEXPR int DEOXYS_ID = 386;
 
     // TODO: consistency in template order
+    //       accessor functions to scope instantiation
 
     typedef boost::bimap<libpkmgc_contest_stat_t, std::string> contest_stat_bimap_t;
     static const contest_stat_bimap_t CONTEST_STAT_BIMAP = boost::assign::list_of<contest_stat_bimap_t::relation>
@@ -68,11 +69,11 @@ namespace pkmn
         ("Master", LibPkmGC::MasterContestWon)
     ;
 
-    typedef boost::bimap<LibPkmGC::Gender, std::string> gender_bimap_t;
+    typedef boost::bimap<LibPkmGC::Gender, pkmn::e_gender> gender_bimap_t;
     static const gender_bimap_t GENDER_BIMAP = boost::assign::list_of<gender_bimap_t::relation>
-        (LibPkmGC::Male,       "Male")
-        (LibPkmGC::Female,     "Female")
-        (LibPkmGC::Genderless, "Genderless")
+        (LibPkmGC::Male,       pkmn::e_gender::MALE)
+        (LibPkmGC::Female,     pkmn::e_gender::FEMALE)
+        (LibPkmGC::Genderless, pkmn::e_gender::GENDERLESS)
     ;
 
     typedef boost::bimap<libpkmgc_ribbon_t, std::string> ribbon_bimap_t;
@@ -509,7 +510,7 @@ namespace pkmn
         GC_RCAST->name->fromUTF8(nickname.c_str());
     }
 
-    std::string pokemon_gcnimpl::get_gender()
+    pkmn::e_gender pokemon_gcnimpl::get_gender()
     {
         boost::lock_guard<pokemon_gcnimpl> lock(*this);
 
@@ -520,9 +521,15 @@ namespace pkmn
     }
 
     void pokemon_gcnimpl::set_gender(
-        const std::string& gender
+        pkmn::e_gender gender
     )
     {
+        pkmn::enforce_value_in_vector(
+            "Gender",
+            gender,
+            {pkmn::e_gender::MALE, pkmn::e_gender::FEMALE, pkmn::e_gender::GENDERLESS}
+        );
+
         boost::lock_guard<pokemon_gcnimpl> lock(*this);
 
         _set_modern_gender(
@@ -730,27 +737,28 @@ namespace pkmn
         GC_RCAST->SID = uint16_t(id >> 16);
     }
 
-    std::string pokemon_gcnimpl::get_original_trainer_gender()
+    pkmn::e_gender pokemon_gcnimpl::get_original_trainer_gender()
     {
         boost::lock_guard<pokemon_gcnimpl> lock(*this);
 
+        BOOST_ASSERT(GENDER_BIMAP.left.count(GC_RCAST->OTGender) > 0);
         return GENDER_BIMAP.left.at(GC_RCAST->OTGender);
     }
 
     void pokemon_gcnimpl::set_original_trainer_gender(
-        const std::string& gender
+        pkmn::e_gender gender
     )
     {
-        if(gender == "Male" or gender == "Female")
-        {
-            boost::lock_guard<pokemon_gcnimpl> lock(*this);
+        pkmn::enforce_value_in_vector(
+            "Gender",
+            gender,
+            {pkmn::e_gender::MALE, pkmn::e_gender::FEMALE}
+        );
 
-            GC_RCAST->OTGender = GENDER_BIMAP.right.at(gender);
-        }
-        else
-        {
-            throw std::invalid_argument("gender: valid values \"Male\", \"Female\"");
-        }
+        boost::lock_guard<pokemon_gcnimpl> lock(*this);
+
+        BOOST_ASSERT(GENDER_BIMAP.right.count(gender) > 0);
+        GC_RCAST->OTGender = GENDER_BIMAP.right.at(gender);
     }
 
     std::string pokemon_gcnimpl::get_language()

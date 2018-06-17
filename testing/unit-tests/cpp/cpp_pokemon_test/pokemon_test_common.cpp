@@ -51,7 +51,7 @@ static void check_initial_values(
         EXPECT_EQ("None", pokemon->get_held_item());
     }
 
-    EXPECT_EQ("Male", pokemon->get_original_trainer_gender());
+    EXPECT_EQ(pkmn::e_gender::MALE, pokemon->get_original_trainer_gender());
     EXPECT_EQ(uint16_t(pkmn::pokemon::DEFAULT_TRAINER_ID & 0xFFFF), pokemon->get_original_trainer_public_id());
 
     if(generation >= 3) {
@@ -205,7 +205,7 @@ static void test_image_filepaths(
     EXPECT_TRUE(fs::exists(pokemon->get_icon_filepath()));
 
     if(generation >= 2) {
-        static const std::string genders[] = {"Male", "Female"};
+        static const pkmn::e_gender genders[] = {pkmn::e_gender::MALE, pkmn::e_gender::FEMALE};
         static const bool shininess[] = {false, true};
 
         for(int i = 0; i < 2; ++i) {
@@ -789,16 +789,16 @@ static void test_setting_trainer_info(
     EXPECT_EQ("foobar", pokemon->get_original_trainer_name());
 
     if(generation >= 2) {
-        pokemon->set_original_trainer_gender("Male");
-        EXPECT_EQ("Male", pokemon->get_original_trainer_gender());
-        pokemon->set_original_trainer_gender("Female");
-        EXPECT_EQ("Female", pokemon->get_original_trainer_gender());
+        pokemon->set_original_trainer_gender(pkmn::e_gender::MALE);
+        EXPECT_EQ(pkmn::e_gender::MALE, pokemon->get_original_trainer_gender());
+        pokemon->set_original_trainer_gender(pkmn::e_gender::FEMALE);
+        EXPECT_EQ(pkmn::e_gender::FEMALE, pokemon->get_original_trainer_gender());
         EXPECT_THROW(
-            pokemon->set_original_trainer_gender("Genderless");
+            pokemon->set_original_trainer_gender(pkmn::e_gender::GENDERLESS);
         , std::invalid_argument);
     } else {
         EXPECT_THROW(
-            pokemon->set_original_trainer_gender("Male");
+            pokemon->set_original_trainer_gender(pkmn::e_gender::MALE);
         , pkmn::feature_not_in_game_error);
     }
 

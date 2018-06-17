@@ -386,14 +386,12 @@ namespace pkmn
         _nickname = nickname;
     }
 
-    std::string pokemon_gen1impl::get_gender()
+    pkmn::e_gender pokemon_gen1impl::get_gender()
     {
         throw pkmn::feature_not_in_game_error("Pokémon gender", "Generation I");
     }
 
-    void pokemon_gen1impl::set_gender(
-        PKMN_UNUSED(const std::string& gender)
-    )
+    void pokemon_gen1impl::set_gender(pkmn::e_gender)
     {
         throw pkmn::feature_not_in_game_error("Pokémon gender", "Generation I");
     }
@@ -515,16 +513,12 @@ namespace pkmn
         GEN1_PC_RCAST->ot_id = pksav_bigendian16(uint16_t(id));
     }
 
-    std::string pokemon_gen1impl::get_original_trainer_gender()
+    pkmn::e_gender pokemon_gen1impl::get_original_trainer_gender()
     {
-        boost::lock_guard<pokemon_gen1impl> lock(*this);
-
-        return "Male";
+        return pkmn::e_gender::MALE;
     }
 
-    void pokemon_gen1impl::set_original_trainer_gender(
-        PKMN_UNUSED(const std::string& gender)
-    )
+    void pokemon_gen1impl::set_original_trainer_gender(pkmn::e_gender)
     {
         throw pkmn::feature_not_in_game_error("All Generation I trainers are male.");
     }

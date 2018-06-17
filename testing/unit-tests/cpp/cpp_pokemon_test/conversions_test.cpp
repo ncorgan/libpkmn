@@ -143,13 +143,13 @@ TEST_P(conversions_test, conversions_test)
     }
     if(origin_generation >= 2)
     {
-        first_pokemon->set_gender(random_bool() ? "Male" : "Female");
+        first_pokemon->set_gender(random_bool() ? pkmn::e_gender::MALE : pkmn::e_gender::FEMALE);
         first_pokemon->set_shininess(random_bool());
         first_pokemon->set_current_trainer_friendship(uint8_rng.rand());
 
         if(params.origin_game != "Gold" and params.origin_game != "Silver")
         {
-            first_pokemon->set_original_trainer_gender(random_bool() ? "Male" : "Female");
+            first_pokemon->set_original_trainer_gender(random_bool() ? pkmn::e_gender::MALE : pkmn::e_gender::FEMALE);
         }
 
         // The max level met value in Generation II is 63.

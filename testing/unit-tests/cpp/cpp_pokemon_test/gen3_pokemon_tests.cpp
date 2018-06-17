@@ -163,15 +163,15 @@ TEST_P(gba_pokemon_test, gba_pokemon_test) {
     }
 
     // Gender and personality are tied, so make sure they affect each other.
-    pokemon->set_gender("Female");
+    pokemon->set_gender(pkmn::e_gender::FEMALE);
     EXPECT_LT((pokemon->get_personality() & 0xFF), 0xFF);
-    pokemon->set_gender("Male");
+    pokemon->set_gender(pkmn::e_gender::MALE);
     EXPECT_EQ(0xFF, (pokemon->get_personality() & 0xFF));
 
     pokemon->set_personality(0x1234AB00);
-    EXPECT_EQ("Female", pokemon->get_gender());
+    EXPECT_EQ(pkmn::e_gender::FEMALE, pokemon->get_gender());
     pokemon->set_personality(0xCD5678FF);
-    EXPECT_EQ("Male", pokemon->get_gender());
+    EXPECT_EQ(pkmn::e_gender::MALE, pokemon->get_gender());
 
     // Setting shininess should affect personality.
     pokemon->set_shininess(false);
@@ -339,11 +339,11 @@ boost::assign::map_list_of<std::string, LibPkmGC::ContestAchievementLevel>
     ("Master", LibPkmGC::MasterContestWon)
 ;
 
-typedef boost::bimap<LibPkmGC::Gender, std::string> gender_bimap_t;
+typedef boost::bimap<LibPkmGC::Gender, pkmn::e_gender> gender_bimap_t;
 static const gender_bimap_t GENDER_BIMAP = boost::assign::list_of<gender_bimap_t::relation>
-    (LibPkmGC::Male,       "Male")
-    (LibPkmGC::Female,     "Female")
-    (LibPkmGC::Genderless, "Genderless")
+    (LibPkmGC::Male,       pkmn::e_gender::MALE)
+    (LibPkmGC::Female,     pkmn::e_gender::FEMALE)
+    (LibPkmGC::Genderless, pkmn::e_gender::GENDERLESS)
 ;
 
 typedef boost::bimap<libpkmgc_ribbon_t, std::string> ribbon_bimap_t;
@@ -415,15 +415,15 @@ TEST_P(gcn_pokemon_test, gcn_pokemon_test) {
     }
 
     // Gender and personality are tied, so make sure they affect each other.
-    pokemon->set_gender("Female");
+    pokemon->set_gender(pkmn::e_gender::FEMALE);
     EXPECT_LT((pokemon->get_personality() & 0xFF), 0xFF);
-    pokemon->set_gender("Male");
+    pokemon->set_gender(pkmn::e_gender::MALE);
     EXPECT_EQ(0xFF, (pokemon->get_personality() & 0xFF));
 
     pokemon->set_personality(0x1234AB00);
-    EXPECT_EQ("Female", pokemon->get_gender());
+    EXPECT_EQ(pkmn::e_gender::FEMALE, pokemon->get_gender());
     pokemon->set_personality(0xCD5678FF);
-    EXPECT_EQ("Male", pokemon->get_gender());
+    EXPECT_EQ(pkmn::e_gender::MALE, pokemon->get_gender());
 
     // Setting shininess should affect personality.
     pokemon->set_shininess(false);

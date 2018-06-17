@@ -12,9 +12,11 @@
 #include <pkmn/calculations/gender.hpp>
 #include <pkmn/database/pokemon_entry.hpp>
 
+#include <boost/assert.hpp>
+
 namespace pkmn { namespace calculations {
 
-    std::string gen2_pokemon_gender(
+    pkmn::e_gender gen2_pokemon_gender(
         const std::string& species,
         int IV_attack
     )
@@ -29,43 +31,49 @@ namespace pkmn { namespace calculations {
         float chance_male = entry.get_chance_male();
         float chance_female = entry.get_chance_female();
 
-        std::string ret;
+        pkmn::e_gender ret = pkmn::e_gender::NONE;
 
         if(pkmn::fp_compare_equal(chance_male, 0.0f) and
            pkmn::fp_compare_equal(chance_female, 0.0f)
         )
         {
-            ret = "Genderless";
+            ret = pkmn::e_gender::GENDERLESS;
         }
         else if(pkmn::fp_compare_equal(chance_male, 1.0f))
         {
-            ret = "Male";
+            ret = pkmn::e_gender::MALE;
         }
         else if(pkmn::fp_compare_equal(chance_male, 0.875f))
         {
-            ret = (IV_attack < 2) ? "Female" : "Male";
+            ret = (IV_attack < 2) ? pkmn::e_gender::FEMALE
+                                  : pkmn::e_gender::MALE;
         }
         else if(pkmn::fp_compare_equal(chance_male, 0.75f))
         {
-            ret = (IV_attack < 4) ? "Female" : "Male";
+            ret = (IV_attack < 4) ? pkmn::e_gender::FEMALE
+                                  : pkmn::e_gender::MALE;
         }
         else if(pkmn::fp_compare_equal(chance_male, 0.5f))
         {
-            ret = (IV_attack < 7) ? "Female" : "Male";
+            ret = (IV_attack < 7) ? pkmn::e_gender::FEMALE
+                                  : pkmn::e_gender::MALE;
         }
         else if(pkmn::fp_compare_equal(chance_male, 0.25f))
         {
-            ret = (IV_attack < 12) ? "Female" : "Male";
+            ret = (IV_attack < 12) ? pkmn::e_gender::FEMALE
+                                   : pkmn::e_gender::MALE;
         }
         else
         {
-            ret = "Female";
+            ret = pkmn::e_gender::FEMALE;
         }
+
+        BOOST_ASSERT(ret != pkmn::e_gender::NONE);
 
         return ret;
     }
 
-    std::string modern_pokemon_gender(
+    pkmn::e_gender modern_pokemon_gender(
         const std::string& species,
         uint32_t personality
     )
@@ -76,38 +84,44 @@ namespace pkmn { namespace calculations {
         float chance_male = entry.get_chance_male();
         float chance_female = entry.get_chance_female();
 
-        std::string ret;
+        pkmn::e_gender ret = pkmn::e_gender::NONE;
 
         if(pkmn::fp_compare_equal(chance_male, 0.0f) and
            pkmn::fp_compare_equal(chance_female, 0.0f)
         )
         {
-            ret = "Genderless";
+            ret = pkmn::e_gender::GENDERLESS;
         }
         else if(pkmn::fp_compare_equal(chance_male, 1.0f))
         {
-            ret = "Male";
+            ret = pkmn::e_gender::MALE;
         }
         else if(pkmn::fp_compare_equal(chance_male, 0.875f))
         {
-            ret = (truncated_pid < 31) ? "Female" : "Male";
+            ret = (truncated_pid < 31) ? pkmn::e_gender::FEMALE
+                                       : pkmn::e_gender::MALE;
         }
         else if(pkmn::fp_compare_equal(chance_male, 0.75f))
         {
-            ret = (truncated_pid < 64) ? "Female" : "Male";
+            ret = (truncated_pid < 64) ? pkmn::e_gender::FEMALE
+                                       : pkmn::e_gender::MALE;
         }
         else if(pkmn::fp_compare_equal(chance_male, 0.5f))
         {
-            ret = (truncated_pid < 127) ? "Female" : "Male";
+            ret = (truncated_pid < 127) ? pkmn::e_gender::FEMALE
+                                        : pkmn::e_gender::MALE;
         }
         else if(pkmn::fp_compare_equal(chance_male, 0.25f))
         {
-            ret = (truncated_pid < 191) ? "Female" : "Male";
+            ret = (truncated_pid < 191) ? pkmn::e_gender::FEMALE
+                                        : pkmn::e_gender::MALE;
         }
         else
         {
-            ret = "Female";
+            ret = pkmn::e_gender::FEMALE;
         }
+
+        BOOST_ASSERT(ret != pkmn::e_gender::NONE);
 
         return ret;
     }

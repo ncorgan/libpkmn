@@ -168,7 +168,7 @@ namespace pkmn { namespace swig {
                 _pokemon->set_nickname(nickname);
             }
 
-            inline std::string get_gender()
+            inline pkmn::e_gender get_gender()
             {
                 BOOST_ASSERT(_pokemon.get() != nullptr);
 
@@ -178,12 +178,12 @@ namespace pkmn { namespace swig {
                 }
                 else
                 {
-                    return "";
+                    return pkmn::e_gender::NONE;
                 }
             }
 
             inline void set_gender(
-                const std::string& gender
+                pkmn::e_gender gender
             )
             {
                 BOOST_ASSERT(_pokemon.get() != nullptr);
@@ -329,7 +329,7 @@ namespace pkmn { namespace swig {
                 _pokemon->set_original_trainer_id(public_id);
             }
 
-            inline std::string get_original_trainer_gender()
+            inline pkmn::e_gender get_original_trainer_gender()
             {
                 BOOST_ASSERT(_pokemon.get() != nullptr);
 
@@ -339,12 +339,12 @@ namespace pkmn { namespace swig {
                 }
                 else
                 {
-                    return "";
+                    return pkmn::e_gender::NONE;
                 }
             }
 
             inline void set_original_trainer_gender(
-                const std::string& trainer_gender
+                pkmn::e_gender trainer_gender
             )
             {
                 BOOST_ASSERT(_pokemon.get() != nullptr);

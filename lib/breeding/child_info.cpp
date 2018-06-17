@@ -505,7 +505,7 @@ namespace pkmn { namespace breeding {
     std::map<std::string, int> get_gen2_ideal_child_IVs(
         const pkmn::pokemon::sptr& mother,
         const pkmn::pokemon::sptr& father,
-        const std::string& child_gender
+        pkmn::e_gender child_gender
     )
     {
         bool is_mother_ditto = (mother->get_database_entry().get_species_id() == DITTO_SPECIES_ID);
@@ -524,8 +524,8 @@ namespace pkmn { namespace breeding {
         {
             // Genderless Pokémon can only breed with Ditto, so we know the parents
             // are male and female at this point.
-            parent_IVs = (child_gender == "Male") ? mother->get_IVs()
-                                                  : father->get_IVs();
+            parent_IVs = (child_gender == pkmn::e_gender::MALE) ? mother->get_IVs()
+                                                                : father->get_IVs();
         }
 
         std::map<std::string, int> ideal_child_IVs;
@@ -790,13 +790,13 @@ namespace pkmn { namespace breeding {
     std::map<std::string, int> get_ideal_child_IVs(
         const pkmn::pokemon::sptr& mother,
         const pkmn::pokemon::sptr& father,
-        const std::string& child_gender
+        pkmn::e_gender child_gender
     )
     {
         pkmn::enforce_value_in_vector(
             "Child gender",
             child_gender,
-            {"Male", "Female", "Genderless"}
+            {pkmn::e_gender::MALE, pkmn::e_gender::FEMALE, pkmn::e_gender::GENDERLESS}
         );
 
         if(mother->get_game() != father->get_game())
@@ -814,34 +814,38 @@ namespace pkmn { namespace breeding {
                                                           );
 
         auto species_iter = possible_child_species.end();
-        if(child_gender == "Male")
+        switch(child_gender)
         {
-            species_iter = std::find_if(
-                               possible_child_species.begin(),
-                               possible_child_species.end(),
-                               can_species_be_male
-                           );
-        }
-        else if(child_gender == "Female")
-        {
-            species_iter = std::find_if(
-                               possible_child_species.begin(),
-                               possible_child_species.end(),
-                               can_species_be_female
-                           );
-        }
-        else
-        {
-            species_iter = std::find_if(
-                               possible_child_species.begin(),
-                               possible_child_species.end(),
-                               is_species_genderless
-                           );
+            case pkmn::e_gender::MALE:
+                species_iter = std::find_if(
+                                   possible_child_species.begin(),
+                                   possible_child_species.end(),
+                                   can_species_be_male
+                               );
+                break;
+
+            case pkmn::e_gender::FEMALE:
+                species_iter = std::find_if(
+                                   possible_child_species.begin(),
+                                   possible_child_species.end(),
+                                   can_species_be_female
+                               );
+                break;
+
+            case pkmn::e_gender::GENDERLESS:
+                species_iter = std::find_if(
+                                   possible_child_species.begin(),
+                                   possible_child_species.end(),
+                                   is_species_genderless
+                               );
+                break;
+
+            default:
+                BOOST_ASSERT_MSG(false, "Invalid child gender");
         }
         if(species_iter == possible_child_species.end())
         {
-            std::string error_message = "Invalid gender for any valid child species: ";
-            error_message += child_gender;
+            std::string error_message = "Invalid gender for any valid child species.";
             throw std::invalid_argument(error_message);
         }
 
