@@ -13,6 +13,9 @@ PKMN_LUA_INIT
 %{
     #include "private_exports.hpp"
 
+    #include <pkmn/enums/game.hpp>
+    #include <pkmn/enums/gender.hpp>
+    #include <pkmn/enums/language.hpp>
     #include <pkmn/enums/stat.hpp>
 %}
 
@@ -27,9 +30,13 @@ namespace pkmn { namespace priv {
 // (TODO: this turns into pkmn.gender_MALE, add a script to put raw enums in
 // a struct and point SWIG at that
 
+%rename(game) pkmn::e_game;
 %rename(gender) pkmn::e_gender;
+%rename(language) pkmn::e_language;
 %rename(stat) pkmn::e_stat;
+%include <pkmn/enums/game.hpp>
 %include <pkmn/enums/gender.hpp>
+%include <pkmn/enums/language.hpp>
 %include <pkmn/enums/stat.hpp>
 
 // Attribute Maps

@@ -92,14 +92,14 @@ namespace pkmn
         (LIBPKMGC_RIBBON_WORLD,    "World")
     ;
 
-    typedef boost::bimap<std::string, LibPkmGC::LanguageIndex> language_bimap_t;
+    typedef boost::bimap<pkmn::e_language, LibPkmGC::LanguageIndex> language_bimap_t;
     static const language_bimap_t& LANGUAGE_BIMAP = boost::assign::list_of<language_bimap_t::relation>
-        ("Japanese", LibPkmGC::Japanese)
-        ("English",  LibPkmGC::English)
-        ("German",   LibPkmGC::German)
-        ("French",   LibPkmGC::French)
-        ("Italian",  LibPkmGC::Italian)
-        ("Spanish",  LibPkmGC::Spanish)
+        (pkmn::e_language::JAPANESE, LibPkmGC::Japanese)
+        (pkmn::e_language::ENGLISH,  LibPkmGC::English)
+        (pkmn::e_language::GERMAN,   LibPkmGC::German)
+        (pkmn::e_language::FRENCH,   LibPkmGC::French)
+        (pkmn::e_language::ITALIAN,  LibPkmGC::Italian)
+        (pkmn::e_language::SPANISH,  LibPkmGC::Spanish)
     ;
 
     pokemon_gcnimpl::pokemon_gcnimpl(
@@ -761,11 +761,11 @@ namespace pkmn
         GC_RCAST->OTGender = GENDER_BIMAP.right.at(gender);
     }
 
-    std::string pokemon_gcnimpl::get_language()
+    pkmn::e_language pokemon_gcnimpl::get_language()
     {
         boost::lock_guard<pokemon_gcnimpl> lock(*this);
 
-        std::string ret;
+        pkmn::e_language ret = pkmn::e_language::ENGLISH;
 
         // Allow for other values in case of a corrupted save.
         auto language_bimap_iter = LANGUAGE_BIMAP.right.find(
@@ -775,17 +775,12 @@ namespace pkmn
         {
             ret = language_bimap_iter->second;
         }
-        else
-        {
-            // Sensible default
-            ret = "English";
-        }
 
         return ret;
     }
 
     void pokemon_gcnimpl::set_language(
-        const std::string& language
+        pkmn::e_language language
     )
     {
         pkmn::enforce_value_in_map_keys(

@@ -683,12 +683,12 @@ namespace pkmn
         }
     }
 
-    std::string pokemon_gen2impl::get_language()
+    pkmn::e_language pokemon_gen2impl::get_language()
     {
         throw pkmn::feature_not_in_game_error("Generation II does not track origin language.");
     }
 
-    void pokemon_gen2impl::set_language(const std::string&)
+    void pokemon_gen2impl::set_language(pkmn::e_language)
     {
         throw pkmn::feature_not_in_game_error("Generation II does not track origin language.");
     }

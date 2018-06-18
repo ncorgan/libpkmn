@@ -129,10 +129,10 @@ namespace pkmn {
                 pkmn::e_gender gender
             ) override final;
 
-            std::string get_language() override final;
+            pkmn::e_language get_language() override final;
 
             void set_language(
-                const std::string& language
+                pkmn::e_language language
             ) override final;
 
             int get_current_trainer_friendship() override final;

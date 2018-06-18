@@ -270,13 +270,13 @@ const gba_language_bimap_t& get_gba_language_bimap()
 {
     static const gba_language_bimap_t GBA_LANGUAGE_BIMAP =
     boost::assign::list_of<gba_language_bimap_t::relation>
-        ("Japanese", PKSAV_GBA_LANGUAGE_JAPANESE)
-        ("English",  PKSAV_GBA_LANGUAGE_ENGLISH)
-        ("French",   PKSAV_GBA_LANGUAGE_FRENCH)
-        ("Italian",  PKSAV_GBA_LANGUAGE_ITALIAN)
-        ("German",   PKSAV_GBA_LANGUAGE_GERMAN)
-        ("Korean",   PKSAV_GBA_LANGUAGE_KOREAN) // Unused, but the value's there
-        ("Spanish",  PKSAV_GBA_LANGUAGE_SPANISH)
+        (pkmn::e_language::JAPANESE, PKSAV_GBA_LANGUAGE_JAPANESE)
+        (pkmn::e_language::ENGLISH,  PKSAV_GBA_LANGUAGE_ENGLISH)
+        (pkmn::e_language::FRENCH,   PKSAV_GBA_LANGUAGE_FRENCH)
+        (pkmn::e_language::ITALIAN,  PKSAV_GBA_LANGUAGE_ITALIAN)
+        (pkmn::e_language::GERMAN,   PKSAV_GBA_LANGUAGE_GERMAN)
+        (pkmn::e_language::KOREAN,   PKSAV_GBA_LANGUAGE_KOREAN) // Unused, but the value's there
+        (pkmn::e_language::SPANISH,  PKSAV_GBA_LANGUAGE_SPANISH)
     ;
 
     return GBA_LANGUAGE_BIMAP;

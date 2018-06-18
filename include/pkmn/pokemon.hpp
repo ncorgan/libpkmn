@@ -14,6 +14,7 @@
 #include <pkmn/types/class_with_attributes.hpp>
 
 #include <pkmn/enums/gender.hpp>
+#include <pkmn/enums/language.hpp>
 #include <pkmn/enums/stat.hpp>
 
 #include <cstdint>
@@ -146,10 +147,10 @@ namespace pkmn {
                 pkmn::e_gender trainer_gender
             ) = 0;
 
-            virtual std::string get_language() = 0;
+            virtual pkmn::e_language get_language() = 0;
 
             virtual void set_language(
-                const std::string& language
+                pkmn::e_language language
             ) = 0;
 
             virtual int get_current_trainer_friendship() = 0;

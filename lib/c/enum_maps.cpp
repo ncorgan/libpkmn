@@ -21,6 +21,22 @@ namespace pkmn { namespace c {
         return GENDER_BIMAP;
     }
 
+    const language_bimap_t& get_language_bimap()
+    {
+        static const language_bimap_t LANGUAGE_BIMAP =
+        boost::assign::list_of<language_bimap_t::relation>
+            (pkmn::e_language::JAPANESE, PKMN_LANGUAGE_JAPANESE)
+            (pkmn::e_language::ENGLISH,  PKMN_LANGUAGE_ENGLISH)
+            (pkmn::e_language::GERMAN,   PKMN_LANGUAGE_GERMAN)
+            (pkmn::e_language::FRENCH,   PKMN_LANGUAGE_FRENCH)
+            (pkmn::e_language::ITALIAN,  PKMN_LANGUAGE_ITALIAN)
+            (pkmn::e_language::SPANISH,  PKMN_LANGUAGE_SPANISH)
+            (pkmn::e_language::KOREAN,   PKMN_LANGUAGE_KOREAN)
+        ;
+
+        return LANGUAGE_BIMAP;
+    }
+
     const stat_bimap_t& get_stat_bimap()
     {
         static const stat_bimap_t STAT_BIMAP =

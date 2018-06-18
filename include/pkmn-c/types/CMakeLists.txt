@@ -13,6 +13,7 @@ IF(NOT PKMN_DONT_INSTALL_HEADERS)
         hidden_power.h
         int_pair.h
         item_slot.h
+        language.h
         levelup_move.h
         marking.h
         move_slot.h

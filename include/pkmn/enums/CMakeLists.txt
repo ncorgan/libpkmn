@@ -7,7 +7,9 @@
 
 IF(NOT PKMN_DONT_INSTALL_HEADERS)
     SET(pkmn_enums_headers
+        game.hpp
         gender.hpp
+        language.hpp
         stat.hpp
     )
 

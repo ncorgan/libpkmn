@@ -13,8 +13,15 @@ PKMN_RUBY_INIT
 // Will be called on import
 
 %{
+    // The Ruby headers define this but don't do anything with it. It messes
+    // with us because of our game enum.
+    #undef RUBY
+
     #include "private_exports.hpp"
 
+    #include <pkmn/enums/game.hpp>
+    #include <pkmn/enums/gender.hpp>
+    #include <pkmn/enums/language.hpp>
     #include <pkmn/enums/stat.hpp>
 %}
 
@@ -29,7 +36,9 @@ namespace pkmn { namespace priv {
 // (TODO: this turns into PKMN::gender_MALE, add a script to put raw enums in
 // a struct and point SWIG at that
 
+%include <pkmn/enums/game.hpp>
 %include <pkmn/enums/gender.hpp>
+%include <pkmn/enums/language.hpp>
 %include <pkmn/enums/stat.hpp>
 
 // Attribute Maps

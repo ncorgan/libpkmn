@@ -352,6 +352,27 @@ namespace pkmn { namespace swig {
                 _pokemon->set_original_trainer_gender(trainer_gender);
             }
 
+            inline pkmn::e_language get_language()
+            {
+                BOOST_ASSERT(_pokemon.get() != nullptr);
+
+                if(_generation >= 3)
+                {
+                    return _pokemon->get_language();
+                }
+                else
+                {
+                    return pkmn::e_language::NONE;
+                }
+            }
+
+            inline void set_language(pkmn::e_language language)
+            {
+                BOOST_ASSERT(_pokemon.get() != nullptr);
+
+                _pokemon->set_language(language);
+            }
+
             inline int get_current_trainer_friendship()
             {
                 BOOST_ASSERT(_pokemon.get() != nullptr);

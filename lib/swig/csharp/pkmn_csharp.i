@@ -16,6 +16,9 @@ PKMN_CSHARP_INIT
 %{
     #include <pkmn/build_info.hpp>
 
+    #include <pkmn/enums/game.hpp>
+    #include <pkmn/enums/gender.hpp>
+    #include <pkmn/enums/language.hpp>
     #include <pkmn/enums/stat.hpp>
 
     #include "private_exports.hpp"
@@ -54,7 +57,9 @@ namespace pkmn { namespace priv {
 std::string GetSWIGVersion();
 
 // Enums
+%include <pkmn/enums/game.hpp>
 %include <pkmn/enums/gender.hpp>
+%include <pkmn/enums/language.hpp>
 %include <pkmn/enums/stat.hpp>
 
 // Attribute Maps

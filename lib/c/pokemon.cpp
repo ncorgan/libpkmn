@@ -553,6 +553,48 @@ enum pkmn_error pkmn_pokemon_set_original_trainer_gender(
     )
 }
 
+enum pkmn_error pkmn_pokemon_get_language(
+    const struct pkmn_pokemon* p_pokemon,
+    enum pkmn_language* p_language_out
+)
+{
+    PKMN_CHECK_NULL_PARAM(p_pokemon);
+    pkmn_pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
+    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_language_out, p_internal);
+
+    PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
+        const pkmn::c::language_bimap_t& language_bimap = pkmn::c::get_language_bimap();
+
+        pkmn::e_language cpp_language = p_internal->cpp->get_language();
+        BOOST_ASSERT(gender_bimap.left.count(cpp_language) > 0);
+
+        *p_language_out = language_bimap.left.at(cpp_language);
+    )
+}
+
+enum pkmn_error pkmn_pokemon_set_language(
+    const struct pkmn_pokemon* p_pokemon,
+    enum pkmn_language language
+)
+{
+    PKMN_CHECK_NULL_PARAM(p_pokemon);
+    pkmn_pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
+
+    PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
+        const pkmn::c::language_bimap_t& language_bimap = pkmn::c::get_language_bimap();
+
+        pkmn::enforce_value_in_map_keys(
+            "Language",
+            language,
+            language_bimap.right
+        );
+
+        p_internal->cpp->set_language(
+            language_bimap.right.at(language)
+        );
+    )
+}
+
 enum pkmn_error pkmn_pokemon_get_current_trainer_friendship(
     const struct pkmn_pokemon* p_pokemon,
     int* p_current_trainer_friendship_out

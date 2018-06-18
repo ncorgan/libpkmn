@@ -10,11 +10,9 @@
 //! Valid genders in the Pokémon games.
 enum pkmn_gender
 {
-    //! Male.
-    PKMN_GENDER_MALE = 0,
-    //! Female.
+    PKMN_GENDER_NONE = 0,
+    PKMN_GENDER_MALE,
     PKMN_GENDER_FEMALE,
-    //! Genderless.
     PKMN_GENDER_GENDERLESS
 };
 

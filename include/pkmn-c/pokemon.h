@@ -14,6 +14,7 @@
 
 #include <pkmn-c/types/attribute_names.h>
 #include <pkmn-c/types/condition.h>
+#include <pkmn-c/types/language.h>
 #include <pkmn-c/types/marking.h>
 #include <pkmn-c/types/move_slot.h>
 #include <pkmn-c/types/stats.h>
@@ -186,6 +187,16 @@ PKMN_C_API enum pkmn_error pkmn_pokemon_set_original_trainer_id(
 PKMN_C_API enum pkmn_error pkmn_pokemon_set_original_trainer_gender(
     const struct pkmn_pokemon* p_pokemon,
     enum pkmn_gender original_trainer_gender
+);
+
+PKMN_C_API enum pkmn_error pkmn_pokemon_get_language(
+    const struct pkmn_pokemon* p_pokemon,
+    enum pkmn_language* p_language_out
+);
+
+PKMN_C_API enum pkmn_error pkmn_pokemon_set_language(
+    const struct pkmn_pokemon* p_pokemon,
+    enum pkmn_language language
 );
 
 PKMN_C_API enum pkmn_error pkmn_pokemon_get_current_trainer_friendship(

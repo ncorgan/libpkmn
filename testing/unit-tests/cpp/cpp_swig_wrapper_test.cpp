@@ -437,6 +437,9 @@ TEST(cpp_swig_wrapper_test, test_pokemon)
     swig_pokemon.set_original_trainer_gender(pkmn::e_gender::FEMALE);
     EXPECT_EQ(pkmn::e_gender::FEMALE, swig_pokemon.get_original_trainer_gender());
 
+    swig_pokemon.set_language(pkmn::e_language::JAPANESE);
+    EXPECT_EQ(pkmn::e_language::JAPANESE, swig_pokemon.get_language());
+
     swig_pokemon.set_current_trainer_friendship(100);
     EXPECT_EQ(100, swig_pokemon.get_current_trainer_friendship());
 

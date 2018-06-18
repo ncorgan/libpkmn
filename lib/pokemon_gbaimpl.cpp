@@ -96,7 +96,7 @@ namespace pkmn
             );
         )
 
-        set_language("English");
+        set_language(pkmn::e_language::ENGLISH);
 
         PKSAV_CALL(
             pksav_gba_export_text(
@@ -785,17 +785,17 @@ namespace pkmn
         }
     }
 
-    std::string pokemon_gbaimpl::get_language()
+    pkmn::e_language pokemon_gbaimpl::get_language()
     {
         boost::lock_guard<pokemon_gbaimpl> lock(*this);
 
-        std::string ret;
+        pkmn::e_language ret = pkmn::e_language::ENGLISH;
 
-        pksav_gba_language language_as_enum = static_cast<enum pksav_gba_language>(
-                                                  pksav_littleendian16(
-                                                      GBA_PC_RCAST->language
-                                                  )
-                                              );
+        enum pksav_gba_language language_as_enum = static_cast<enum pksav_gba_language>(
+                                                       pksav_littleendian16(
+                                                           GBA_PC_RCAST->language
+                                                       )
+                                                   );
 
         const pksav::gba_language_bimap_t& gba_language_bimap = pksav::get_gba_language_bimap();
 
@@ -805,17 +805,12 @@ namespace pkmn
         {
             ret = gba_language_bimap_iter->second;
         }
-        else
-        {
-            // Sensible default
-            ret = "English";
-        }
 
         return ret;
     }
 
     void pokemon_gbaimpl::set_language(
-        const std::string& language
+        pkmn::e_language language
     )
     {
         const pksav::gba_language_bimap_t& gba_language_bimap = pksav::get_gba_language_bimap();

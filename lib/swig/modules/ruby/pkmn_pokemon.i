@@ -35,6 +35,7 @@
 %attribute(pkmn::swig::pokemon, uint16_t, original_trainer_secret_id, get_original_trainer_secret_id, set_original_trainer_secret_id);
 %attribute(pkmn::swig::pokemon, uint32_t, original_trainer_id, get_original_trainer_id, set_original_trainer_id);
 %attribute(pkmn::swig::pokemon, pkmn::e_gender, original_trainer_gender, get_original_trainer_gender, set_original_trainer_gender);
+%attribute(pkmn::swig::pokemon, pkmn::e_language, language, get_language, set_language);
 %attribute(pkmn::swig::pokemon, int, current_trainer_friendship, get_current_trainer_friendship, set_current_trainer_friendship);
 %attributestring(pkmn::swig::pokemon, std::string, ability, get_ability, set_ability);
 %attribute(pkmn::swig::pokemon, int, level_met, get_level_met, set_level_met);
