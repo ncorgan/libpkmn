@@ -14,6 +14,7 @@
 #include <pkmn-c/types/stats.h>
 
 #include <pkmn/enums/gender.hpp>
+#include <pkmn/enums/stat.hpp>
 
 #include <boost/assign.hpp>
 #include <boost/bimap.hpp>
@@ -23,8 +24,8 @@
 namespace pkmn { namespace c {
 
     typedef boost::bimap<pkmn::e_gender, enum pkmn_gender> gender_bimap_t;
+    typedef boost::bimap<pkmn::e_stat, enum pkmn_stat> stat_bimap_t;
 
-    typedef boost::bimap<std::string, enum pkmn_stat> stat_bimap_t;
     typedef boost::bimap<std::string, enum pkmn_contest_stat> contest_stat_bimap_t;
     typedef boost::bimap<std::string, enum pkmn_condition> condition_bimap_t;
     typedef boost::bimap<std::string, enum pkmn_marking> marking_bimap_t;

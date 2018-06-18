@@ -35,6 +35,7 @@ PKMN_CSHARP_INIT
 %include <pkmn_csharp_docs.i>
 
 %import <pkmn/enums/gender.hpp>
+%import <pkmn/enums/stat.hpp>
 
 %rename(STABModifier) STAB_MODIFIER;
 %include <pkmn/calculations/moves/critical_hit.hpp>

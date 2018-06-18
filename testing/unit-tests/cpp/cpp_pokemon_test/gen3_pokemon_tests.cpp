@@ -256,13 +256,13 @@ TEST_P(gba_pokemon_test, gba_pokemon_test) {
         );
     }
 
-    const std::map<std::string, int>& EVs = pokemon->get_EVs();
-    EXPECT_EQ(EVs.at("HP"), int(pksav_littleendian16(effort->ev_hp)));
-    EXPECT_EQ(EVs.at("Attack"), int(pksav_littleendian16(effort->ev_atk)));
-    EXPECT_EQ(EVs.at("Defense"), int(pksav_littleendian16(effort->ev_def)));
-    EXPECT_EQ(EVs.at("Speed"), int(pksav_littleendian16(effort->ev_spd)));
-    EXPECT_EQ(EVs.at("Special Attack"), int(pksav_littleendian16(effort->ev_spatk)));
-    EXPECT_EQ(EVs.at("Special Defense"), int(pksav_littleendian16(effort->ev_spdef)));
+    const std::map<pkmn::e_stat, int>& EVs = pokemon->get_EVs();
+    EXPECT_EQ(EVs.at(pkmn::e_stat::HP), int(pksav_littleendian16(effort->ev_hp)));
+    EXPECT_EQ(EVs.at(pkmn::e_stat::ATTACK), int(pksav_littleendian16(effort->ev_atk)));
+    EXPECT_EQ(EVs.at(pkmn::e_stat::DEFENSE), int(pksav_littleendian16(effort->ev_def)));
+    EXPECT_EQ(EVs.at(pkmn::e_stat::SPEED), int(pksav_littleendian16(effort->ev_spd)));
+    EXPECT_EQ(EVs.at(pkmn::e_stat::SPECIAL_ATTACK), int(pksav_littleendian16(effort->ev_spatk)));
+    EXPECT_EQ(EVs.at(pkmn::e_stat::SPECIAL_DEFENSE), int(pksav_littleendian16(effort->ev_spdef)));
 
     const std::map<std::string, int>& contest_stats = pokemon->get_contest_stats();
     EXPECT_EQ(contest_stats.at("Cool"), int(effort->contest_stats.cool));
@@ -280,7 +280,7 @@ TEST_P(gba_pokemon_test, gba_pokemon_test) {
     // TODO: get ball ID for what we set
     EXPECT_TRUE(misc->origin_info & PKSAV_GBA_POKEMON_OTGENDER_MASK);
 
-    const std::map<std::string, int>& IVs = pokemon->get_IVs();
+    const std::map<pkmn::e_stat, int>& IVs = pokemon->get_IVs();
     uint8_t pksav_IVs[PKSAV_NUM_IVS] = {0};
     PKSAV_CALL(
         pksav_get_IVs(
@@ -290,12 +290,12 @@ TEST_P(gba_pokemon_test, gba_pokemon_test) {
         );
     )
 
-    EXPECT_EQ(IVs.at("HP"),              int(pksav_IVs[PKSAV_IV_HP]));
-    EXPECT_EQ(IVs.at("Attack"),          int(pksav_IVs[PKSAV_IV_ATTACK]));
-    EXPECT_EQ(IVs.at("Defense"),         int(pksav_IVs[PKSAV_IV_DEFENSE]));
-    EXPECT_EQ(IVs.at("Speed"),           int(pksav_IVs[PKSAV_IV_SPEED]));
-    EXPECT_EQ(IVs.at("Special Attack"),  int(pksav_IVs[PKSAV_IV_SPATK]));
-    EXPECT_EQ(IVs.at("Special Defense"), int(pksav_IVs[PKSAV_IV_SPDEF]));
+    EXPECT_EQ(IVs.at(pkmn::e_stat::HP),              int(pksav_IVs[PKSAV_IV_HP]));
+    EXPECT_EQ(IVs.at(pkmn::e_stat::ATTACK),          int(pksav_IVs[PKSAV_IV_ATTACK]));
+    EXPECT_EQ(IVs.at(pkmn::e_stat::DEFENSE),         int(pksav_IVs[PKSAV_IV_DEFENSE]));
+    EXPECT_EQ(IVs.at(pkmn::e_stat::SPEED),           int(pksav_IVs[PKSAV_IV_SPEED]));
+    EXPECT_EQ(IVs.at(pkmn::e_stat::SPECIAL_ATTACK),  int(pksav_IVs[PKSAV_IV_SPATK]));
+    EXPECT_EQ(IVs.at(pkmn::e_stat::SPECIAL_DEFENSE), int(pksav_IVs[PKSAV_IV_SPDEF]));
 
     EXPECT_TRUE(!(misc->iv_egg_ability & PKSAV_GBA_POKEMON_EGG_MASK));
     EXPECT_TRUE(!(misc->iv_egg_ability & PKSAV_GBA_POKEMON_ABILITY_MASK));
@@ -312,14 +312,14 @@ TEST_P(gba_pokemon_test, gba_pokemon_test) {
 
     // TODO: Pokérus
 
-    const std::map<std::string, int>& stats = pokemon->get_stats();
+    const std::map<pkmn::e_stat, int>& stats = pokemon->get_stats();
     EXPECT_EQ(pokemon->get_current_hp(), int(pksav_littleendian16(native_party_data->current_hp)));
-    EXPECT_EQ(stats.at("HP"), int(pksav_littleendian16(native_party_data->max_hp)));
-    EXPECT_EQ(stats.at("Attack"), int(pksav_littleendian16(native_party_data->atk)));
-    EXPECT_EQ(stats.at("Defense"), int(pksav_littleendian16(native_party_data->def)));
-    EXPECT_EQ(stats.at("Speed"), int(pksav_littleendian16(native_party_data->spd)));
-    EXPECT_EQ(stats.at("Special Attack"), int(pksav_littleendian16(native_party_data->spatk)));
-    EXPECT_EQ(stats.at("Special Defense"), int(pksav_littleendian16(native_party_data->spdef)));
+    EXPECT_EQ(stats.at(pkmn::e_stat::HP), int(pksav_littleendian16(native_party_data->max_hp)));
+    EXPECT_EQ(stats.at(pkmn::e_stat::ATTACK), int(pksav_littleendian16(native_party_data->atk)));
+    EXPECT_EQ(stats.at(pkmn::e_stat::DEFENSE), int(pksav_littleendian16(native_party_data->def)));
+    EXPECT_EQ(stats.at(pkmn::e_stat::SPEED), int(pksav_littleendian16(native_party_data->spd)));
+    EXPECT_EQ(stats.at(pkmn::e_stat::SPECIAL_ATTACK), int(pksav_littleendian16(native_party_data->spatk)));
+    EXPECT_EQ(stats.at(pkmn::e_stat::SPECIAL_DEFENSE), int(pksav_littleendian16(native_party_data->spdef)));
 }
 
 typedef boost::bimap<libpkmgc_contest_stat_t, std::string> contest_stat_bimap_t;
@@ -362,14 +362,14 @@ static const ribbon_bimap_t RIBBON_BIMAP = boost::assign::list_of<ribbon_bimap_t
     (LIBPKMGC_RIBBON_WORLD,    "World")
 ;
 
-typedef boost::bimap<libpkmgc_stat_t, std::string> stat_bimap_t;
+typedef boost::bimap<libpkmgc_stat_t, pkmn::e_stat> stat_bimap_t;
 static const stat_bimap_t STAT_BIMAP = boost::assign::list_of<stat_bimap_t::relation>
-    (LIBPKMGC_STAT_HP,      "HP")
-    (LIBPKMGC_STAT_ATTACK,  "Attack")
-    (LIBPKMGC_STAT_DEFENSE, "Defense")
-    (LIBPKMGC_STAT_SPATK,   "Special Attack")
-    (LIBPKMGC_STAT_SPDEF,   "Special Defense")
-    (LIBPKMGC_STAT_SPEED,   "Speed")
+    (LIBPKMGC_STAT_HP,      pkmn::e_stat::HP)
+    (LIBPKMGC_STAT_ATTACK,  pkmn::e_stat::ATTACK)
+    (LIBPKMGC_STAT_DEFENSE, pkmn::e_stat::DEFENSE)
+    (LIBPKMGC_STAT_SPATK,   pkmn::e_stat::SPECIAL_ATTACK)
+    (LIBPKMGC_STAT_SPDEF,   pkmn::e_stat::SPECIAL_DEFENSE)
+    (LIBPKMGC_STAT_SPEED,   pkmn::e_stat::SPEED)
 ;
 
 TEST_P(gcn_pokemon_test, gcn_pokemon_test) {
@@ -486,9 +486,9 @@ TEST_P(gcn_pokemon_test, gcn_pokemon_test) {
         EXPECT_EQ(3, int(native->moves[i].nbPPUpsUsed));
     }
 
-    const std::map<std::string, int>& EVs = pokemon->get_EVs();
-    const std::map<std::string, int>& IVs = pokemon->get_IVs();
-    const std::map<std::string, int>& stats = pokemon->get_stats();
+    const std::map<pkmn::e_stat, int>& EVs = pokemon->get_EVs();
+    const std::map<pkmn::e_stat, int>& IVs = pokemon->get_IVs();
+    const std::map<pkmn::e_stat, int>& stats = pokemon->get_stats();
     for(auto iter = STAT_BIMAP.right.begin(); iter != STAT_BIMAP.right.end(); ++iter) {
         EXPECT_EQ(EVs.at(iter->first), int(native->EVs[iter->second]));
         EXPECT_EQ(IVs.at(iter->first), int(native->IVs[iter->second]));

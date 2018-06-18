@@ -49,7 +49,7 @@
 %attributeval(pkmn::swig::pokemon, pkmn::swig::ribbon_map, ribbons, get_ribbons);
 %attributeval(pkmn::swig::pokemon, pkmn::swig::contest_stat_map, contest_stats, get_contest_stats);
 %attributeval(pkmn::swig::pokemon, pkmn::swig::move_slots, moves, get_moves);
-%attributeval(pkmn::swig::pokemon, %arg(std::map<std::string, int>), stats, get_stats);
+%attributeval(pkmn::swig::pokemon, %arg(std::map<pkmn::e_stat, int>), stats, get_stats);
 %attributestring(pkmn::swig::pokemon, std::string, icon_filepath, get_icon_filepath);
 %attributestring(pkmn::swig::pokemon, std::string, sprite_filepath, get_sprite_filepath);
 %attributeval(pkmn::swig::pokemon, %arg(pkmn::swig::numeric_attribute_map<pkmn::pokemon>), numeric_attributes, get_numeric_attributes);

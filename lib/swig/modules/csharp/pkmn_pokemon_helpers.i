@@ -20,19 +20,19 @@ using System.Runtime.InteropServices;"
 %ignore pkmn::swig::EV_map::EV_map();
 %ignore pkmn::swig::EV_map::EV_map(const pkmn::pokemon::sptr&);
 %rename("KeysFunction") pkmn::swig::EV_map::keys();
-%rename("ContainsKey") pkmn::swig::EV_map::has_key(const std::string&);
+%rename("ContainsKey") pkmn::swig::EV_map::has_key(pkmn::e_stat);
 
 // Make C++ methods private, replace with properties for more idiomatic C#.
 
-%csmethodmodifiers pkmn::swig::EV_map::get_EV(const std::string&) "private";
-%csmethodmodifiers pkmn::swig::EV_map::set_EV(const std::string&, int) "private";
+%csmethodmodifiers pkmn::swig::EV_map::get_EV(pkmn::e_stat) "private";
+%csmethodmodifiers pkmn::swig::EV_map::set_EV(pkmn::e_stat, int) "private";
 %csmethodmodifiers pkmn::swig::EV_map::size() "private";
 %csmethodmodifiers pkmn::swig::EV_map::keys() "private";
 %csmethodmodifiers pkmn::swig::EV_map::cptr() "private";
 
 %typemap(cscode) pkmn::swig::EV_map
 %{
-    public int this[string stat]
+    public int this[Stat stat]
     {
         get { return GetEV(stat); }
         set { SetEV(stat, value); }
@@ -43,7 +43,7 @@ using System.Runtime.InteropServices;"
         get { return (int)size(); }
     }
 
-    public StringList Keys
+    public StatList Keys
     {
         get { return KeysFunction(); }
     }
@@ -85,7 +85,7 @@ using System.Runtime.InteropServices;"
     public override int GetHashCode()
     {
         return HashCodeBuilder.Create().AddValue<ulong>(this.Cptr())
-                                       .AddValue<StringList>(this.Keys)
+                                       .AddValue<StatList>(this.Keys)
                                        .AddValue<string>(this.GetType().Name)
                                        .ToHashCode();
     }
@@ -102,19 +102,19 @@ using System.Runtime.InteropServices;"
 %ignore pkmn::swig::IV_map::IV_map();
 %ignore pkmn::swig::IV_map::IV_map(const pkmn::pokemon::sptr&);
 %rename("KeysFunction") pkmn::swig::IV_map::keys();
-%rename("ContainsKey") pkmn::swig::IV_map::has_key(const std::string&);
+%rename("ContainsKey") pkmn::swig::IV_map::has_key(pkmn::e_stat);
 
 // Make C++ methods private, replace with properties for more idiomatic C#.
 
-%csmethodmodifiers pkmn::swig::IV_map::get_IV(const std::string&) "private";
-%csmethodmodifiers pkmn::swig::IV_map::set_IV(const std::string&, int) "private";
+%csmethodmodifiers pkmn::swig::IV_map::get_IV(pkmn::e_stat) "private";
+%csmethodmodifiers pkmn::swig::IV_map::set_IV(pkmn::e_stat, int) "private";
 %csmethodmodifiers pkmn::swig::IV_map::size() "private";
 %csmethodmodifiers pkmn::swig::IV_map::keys() "private";
 %csmethodmodifiers pkmn::swig::IV_map::cptr() "private";
 
 %typemap(cscode) pkmn::swig::IV_map
 %{
-    public int this[string stat]
+    public int this[Stat stat]
     {
         get { return GetIV(stat); }
         set { SetIV(stat, value); }
@@ -125,7 +125,7 @@ using System.Runtime.InteropServices;"
         get { return (int)size(); }
     }
 
-    public StringList Keys
+    public StatList Keys
     {
         get { return KeysFunction(); }
     }
@@ -167,7 +167,7 @@ using System.Runtime.InteropServices;"
     public override int GetHashCode()
     {
         return HashCodeBuilder.Create().AddValue<ulong>(this.Cptr())
-                                       .AddValue<StringList>(this.Keys)
+                                       .AddValue<StatList>(this.Keys)
                                        .AddValue<string>(this.GetType().Name)
                                        .ToHashCode();
     }

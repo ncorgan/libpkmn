@@ -26,8 +26,8 @@
 %attributeval(pkmn::database::pokemon_entry, %arg(std::pair<std::string, std::string>), abilities, get_abilities);
 %attributestring(pkmn::database::pokemon_entry, std::string, hidden_ability, get_hidden_ability);
 %attributeval(pkmn::database::pokemon_entry, %arg(std::pair<std::string, std::string>), egg_groups, get_egg_groups);
-%attributeval(pkmn::database::pokemon_entry, %arg(std::map<std::string, int>), base_stats, get_base_stats);
-%attributeval(pkmn::database::pokemon_entry, %arg(std::map<std::string, int>), EV_yields, get_EV_yields);
+%attributeval(pkmn::database::pokemon_entry, %arg(std::map<pkmn::e_stat, int>), base_stats, get_base_stats);
+%attributeval(pkmn::database::pokemon_entry, %arg(std::map<pkmn::e_stat, int>), EV_yields, get_EV_yields);
 %attribute(pkmn::database::pokemon_entry, int, experience_yield, get_experience_yield);
 %attributeval(pkmn::database::pokemon_entry, %arg(std::vector<pkmn::database::levelup_move>), levelup_moves, get_levelup_moves);
 %attributeval(pkmn::database::pokemon_entry, %arg(std::vector<pkmn::database::move_entry>), tm_hm_moves, get_tm_hm_moves);

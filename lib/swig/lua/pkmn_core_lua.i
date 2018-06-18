@@ -12,6 +12,8 @@ PKMN_LUA_INIT
 
 %{
     #include "private_exports.hpp"
+
+    #include <pkmn/enums/stat.hpp>
 %}
 
 namespace pkmn { namespace priv {
@@ -26,7 +28,9 @@ namespace pkmn { namespace priv {
 // a struct and point SWIG at that
 
 %rename(gender) pkmn::e_gender;
+%rename(stat) pkmn::e_stat;
 %include <pkmn/enums/gender.hpp>
+%include <pkmn/enums/stat.hpp>
 
 // Attribute Maps
 %include <lua/pkmn_attribute_maps.i>

@@ -50,7 +50,7 @@ namespace pkmn
     BOOST_STATIC_CONSTEXPR int DEOXYS_ID = 386;
 
     // TODO: consistency in template order
-    //       accessor functions to scope instantiation
+    //       move to namespace like PKSav, add accessor functions to scope instantiation
 
     typedef boost::bimap<libpkmgc_contest_stat_t, std::string> contest_stat_bimap_t;
     static const contest_stat_bimap_t CONTEST_STAT_BIMAP = boost::assign::list_of<contest_stat_bimap_t::relation>
@@ -1070,7 +1070,7 @@ namespace pkmn
     }
 
     void pokemon_gcnimpl::set_IV(
-        const std::string& stat,
+        pkmn::e_stat stat,
         int value
     )
     {
@@ -1083,23 +1083,24 @@ namespace pkmn
 
         boost::lock_guard<pokemon_gcnimpl> lock(*this);
 
-        if(stat == "HP")
+        // TODO: stat bimap
+        if(stat == pkmn::e_stat::HP)
         {
             GC_RCAST->IVs[LIBPKMGC_STAT_HP] = LibPkmGC::u8(value);
         }
-        else if(stat == "Attack")
+        else if(stat == pkmn::e_stat::ATTACK)
         {
             GC_RCAST->IVs[LIBPKMGC_STAT_ATTACK] = LibPkmGC::u8(value);
         }
-        else if(stat == "Defense")
+        else if(stat == pkmn::e_stat::DEFENSE)
         {
             GC_RCAST->IVs[LIBPKMGC_STAT_DEFENSE] = LibPkmGC::u8(value);
         }
-        else if(stat == "Speed")
+        else if(stat == pkmn::e_stat::SPEED)
         {
             GC_RCAST->IVs[LIBPKMGC_STAT_SPEED] = LibPkmGC::u8(value);
         }
-        else if(stat == "Special Attack")
+        else if(stat == pkmn::e_stat::SPECIAL_ATTACK)
         {
             GC_RCAST->IVs[LIBPKMGC_STAT_SPATK] = LibPkmGC::u8(value);
         }
@@ -1291,7 +1292,7 @@ namespace pkmn
     }
 
     void pokemon_gcnimpl::set_EV(
-        const std::string& stat,
+        pkmn::e_stat stat,
         int value
     )
     {
@@ -1304,29 +1305,33 @@ namespace pkmn
 
         boost::lock_guard<pokemon_gcnimpl> lock(*this);
 
-        if(stat == "HP")
+        // TODO: make an enum for LibPkmGC stat
+
+        switch(stat)
         {
-            GC_RCAST->EVs[LIBPKMGC_STAT_HP] = LibPkmGC::u8(value);
-        }
-        else if(stat == "Attack")
-        {
-            GC_RCAST->EVs[LIBPKMGC_STAT_ATTACK] = LibPkmGC::u8(value);
-        }
-        else if(stat == "Defense")
-        {
-            GC_RCAST->EVs[LIBPKMGC_STAT_DEFENSE] = LibPkmGC::u8(value);
-        }
-        else if(stat == "Speed")
-        {
-            GC_RCAST->EVs[LIBPKMGC_STAT_SPEED] = LibPkmGC::u8(value);
-        }
-        else if(stat == "Special Attack")
-        {
-            GC_RCAST->EVs[LIBPKMGC_STAT_SPATK] = LibPkmGC::u8(value);
-        }
-        else
-        {
-            GC_RCAST->EVs[LIBPKMGC_STAT_SPDEF] = LibPkmGC::u8(value);
+            case pkmn::e_stat::HP:
+                GC_RCAST->EVs[LIBPKMGC_STAT_HP] = LibPkmGC::u8(value);
+                break;
+
+            case pkmn::e_stat::ATTACK:
+                GC_RCAST->EVs[LIBPKMGC_STAT_ATTACK] = LibPkmGC::u8(value);
+                break;
+
+            case pkmn::e_stat::DEFENSE:
+                GC_RCAST->EVs[LIBPKMGC_STAT_DEFENSE] = LibPkmGC::u8(value);
+                break;
+
+            case pkmn::e_stat::SPEED:
+                GC_RCAST->EVs[LIBPKMGC_STAT_SPEED] = LibPkmGC::u8(value);
+                break;
+
+            case pkmn::e_stat::SPECIAL_ATTACK:
+                GC_RCAST->EVs[LIBPKMGC_STAT_SPATK] = LibPkmGC::u8(value);
+                break;
+
+            default:
+                GC_RCAST->EVs[LIBPKMGC_STAT_SPDEF] = LibPkmGC::u8(value);
+                break;
         }
 
         _EVs[stat] = value;
@@ -1349,7 +1354,7 @@ namespace pkmn
             "Current HP",
             hp,
             0,
-            _stats["HP"]
+            _stats[pkmn::e_stat::HP]
         );
 
         boost::lock_guard<pokemon_gcnimpl> lock(*this);
@@ -1419,21 +1424,21 @@ namespace pkmn
     }
 
     void pokemon_gcnimpl::_update_EV_map() {
-        _EVs["HP"]              = int(GC_RCAST->EVs[LIBPKMGC_STAT_HP]);
-        _EVs["Attack"]          = int(GC_RCAST->EVs[LIBPKMGC_STAT_ATTACK]);
-        _EVs["Defense"]         = int(GC_RCAST->EVs[LIBPKMGC_STAT_DEFENSE]);
-        _EVs["Speed"]           = int(GC_RCAST->EVs[LIBPKMGC_STAT_SPEED]);
-        _EVs["Special Attack"]  = int(GC_RCAST->EVs[LIBPKMGC_STAT_SPATK]);
-        _EVs["Special Defense"] = int(GC_RCAST->EVs[LIBPKMGC_STAT_SPDEF]);
+        _EVs[pkmn::e_stat::HP]              = int(GC_RCAST->EVs[LIBPKMGC_STAT_HP]);
+        _EVs[pkmn::e_stat::ATTACK]          = int(GC_RCAST->EVs[LIBPKMGC_STAT_ATTACK]);
+        _EVs[pkmn::e_stat::DEFENSE]         = int(GC_RCAST->EVs[LIBPKMGC_STAT_DEFENSE]);
+        _EVs[pkmn::e_stat::SPEED]           = int(GC_RCAST->EVs[LIBPKMGC_STAT_SPEED]);
+        _EVs[pkmn::e_stat::SPECIAL_ATTACK]  = int(GC_RCAST->EVs[LIBPKMGC_STAT_SPATK]);
+        _EVs[pkmn::e_stat::SPECIAL_DEFENSE] = int(GC_RCAST->EVs[LIBPKMGC_STAT_SPDEF]);
     }
 
     void pokemon_gcnimpl::_update_stat_map() {
-        _stats["HP"]              = int(GC_RCAST->partyData.stats[LIBPKMGC_STAT_HP]);
-        _stats["Attack"]          = int(GC_RCAST->partyData.stats[LIBPKMGC_STAT_ATTACK]);
-        _stats["Defense"]         = int(GC_RCAST->partyData.stats[LIBPKMGC_STAT_DEFENSE]);
-        _stats["Speed"]           = int(GC_RCAST->partyData.stats[LIBPKMGC_STAT_SPEED]);
-        _stats["Special Attack"]  = int(GC_RCAST->partyData.stats[LIBPKMGC_STAT_SPATK]);
-        _stats["Special Defense"] = int(GC_RCAST->partyData.stats[LIBPKMGC_STAT_SPDEF]);
+        _stats[pkmn::e_stat::HP]              = int(GC_RCAST->partyData.stats[LIBPKMGC_STAT_HP]);
+        _stats[pkmn::e_stat::ATTACK]          = int(GC_RCAST->partyData.stats[LIBPKMGC_STAT_ATTACK]);
+        _stats[pkmn::e_stat::DEFENSE]         = int(GC_RCAST->partyData.stats[LIBPKMGC_STAT_DEFENSE]);
+        _stats[pkmn::e_stat::SPEED]           = int(GC_RCAST->partyData.stats[LIBPKMGC_STAT_SPEED]);
+        _stats[pkmn::e_stat::SPECIAL_ATTACK]  = int(GC_RCAST->partyData.stats[LIBPKMGC_STAT_SPATK]);
+        _stats[pkmn::e_stat::SPECIAL_DEFENSE] = int(GC_RCAST->partyData.stats[LIBPKMGC_STAT_SPDEF]);
     }
 
     void pokemon_gcnimpl::_set_unown_form_from_personality() {
@@ -1471,12 +1476,12 @@ namespace pkmn
     }
 
     void pokemon_gcnimpl::_init_IV_map() {
-        _IVs["HP"]              = int(GC_RCAST->IVs[LIBPKMGC_STAT_HP]);
-        _IVs["Attack"]          = int(GC_RCAST->IVs[LIBPKMGC_STAT_ATTACK]);
-        _IVs["Defense"]         = int(GC_RCAST->IVs[LIBPKMGC_STAT_DEFENSE]);
-        _IVs["Speed"]           = int(GC_RCAST->IVs[LIBPKMGC_STAT_SPEED]);
-        _IVs["Special Attack"]  = int(GC_RCAST->IVs[LIBPKMGC_STAT_SPATK]);
-        _IVs["Special Defense"] = int(GC_RCAST->IVs[LIBPKMGC_STAT_SPDEF]);
+        _IVs[pkmn::e_stat::HP]              = int(GC_RCAST->IVs[LIBPKMGC_STAT_HP]);
+        _IVs[pkmn::e_stat::ATTACK]          = int(GC_RCAST->IVs[LIBPKMGC_STAT_ATTACK]);
+        _IVs[pkmn::e_stat::DEFENSE]         = int(GC_RCAST->IVs[LIBPKMGC_STAT_DEFENSE]);
+        _IVs[pkmn::e_stat::SPEED]           = int(GC_RCAST->IVs[LIBPKMGC_STAT_SPEED]);
+        _IVs[pkmn::e_stat::SPECIAL_ATTACK]  = int(GC_RCAST->IVs[LIBPKMGC_STAT_SPATK]);
+        _IVs[pkmn::e_stat::SPECIAL_DEFENSE] = int(GC_RCAST->IVs[LIBPKMGC_STAT_SPDEF]);
     }
 
     void pokemon_gcnimpl::_init_gcn_contest_stats_map() {

@@ -24,6 +24,7 @@
 
 #include "types/rng.hpp"
 
+#include "pksav/enum_maps.hpp"
 #include "pksav/pksav_call.hpp"
 
 #include <pkmn/exception.hpp>
@@ -36,30 +37,10 @@
 
 #include <stdexcept>
 
-static const std::unordered_map<std::string, enum pksav_gb_IV> PKMN_STATS_TO_PKSAV_GB_IVS =
-boost::assign::map_list_of
-    ("HP",      PKSAV_GB_IV_HP)
-    ("Attack",  PKSAV_GB_IV_ATTACK)
-    ("Defense", PKSAV_GB_IV_DEFENSE)
-    ("Speed",   PKSAV_GB_IV_SPEED)
-    ("Special", PKSAV_GB_IV_SPECIAL)
-;
-
-static const std::unordered_map<std::string, enum pksav_IV> PKMN_STATS_TO_PKSAV_IVS =
-boost::assign::map_list_of
-    ("HP",              PKSAV_IV_HP)
-    ("Attack",          PKSAV_IV_ATTACK)
-    ("Defense",         PKSAV_IV_DEFENSE)
-    ("Speed",           PKSAV_IV_SPEED)
-    ("Special Attack",  PKSAV_IV_SPATK)
-    ("Special Defense", PKSAV_IV_SPDEF)
-;
-
 namespace fs = boost::filesystem;
 
 namespace pkmn
 {
-
     const uint32_t pkmn::pokemon::DEFAULT_TRAINER_ID = 2105214279;
     const std::string pkmn::pokemon::DEFAULT_TRAINER_NAME = "LibPKMN";
 
@@ -262,21 +243,21 @@ namespace pkmn
         return _moves;
     }
 
-    const std::map<std::string, int>& pokemon_impl::get_EVs()
+    const std::map<pkmn::e_stat, int>& pokemon_impl::get_EVs()
     {
         boost::lock_guard<pokemon_impl> lock(*this);
 
         return _EVs;
     }
 
-    const std::map<std::string, int>& pokemon_impl::get_IVs()
+    const std::map<pkmn::e_stat, int>& pokemon_impl::get_IVs()
     {
         boost::lock_guard<pokemon_impl> lock(*this);
 
         return _IVs;
     }
 
-    const std::map<std::string, int>& pokemon_impl::get_stats()
+    const std::map<pkmn::e_stat, int>& pokemon_impl::get_stats()
     {
         boost::lock_guard<pokemon_impl> lock(*this);
 
@@ -381,43 +362,48 @@ namespace pkmn
         const uint16_t* iv_data_ptr
     )
     {
-        uint8_t IVs[PKSAV_NUM_GB_IVS] = {0};
+        uint8_t pksav_IVs[PKSAV_NUM_GB_IVS] = {0};
 
         PKSAV_CALL(
             pksav_get_gb_IVs(
                 iv_data_ptr,
-                IVs,
-                sizeof(IVs)
+                pksav_IVs,
+                sizeof(pksav_IVs)
             );
         )
 
-        _IVs["HP"]      = IVs[PKSAV_GB_IV_HP];
-        _IVs["Attack"]  = IVs[PKSAV_GB_IV_ATTACK];
-        _IVs["Defense"] = IVs[PKSAV_GB_IV_DEFENSE];
-        _IVs["Speed"]   = IVs[PKSAV_GB_IV_SPEED];
-        _IVs["Special"] = IVs[PKSAV_GB_IV_SPECIAL];
+        const pksav::gb_IV_bimap_t& gb_IV_bimap = pksav::get_gb_IV_bimap();
+        for(const auto& IV_pair: gb_IV_bimap.left)
+        {
+            pkmn::e_stat libpkmn_stat = IV_pair.first;
+            enum pksav_gb_IV pksav_IV = IV_pair.second;
+
+            _IVs[libpkmn_stat] = pksav_IVs[pksav_IV];
+        }
     }
 
     void pokemon_impl::_init_modern_IV_map(
         const uint32_t* iv_data_ptr
     )
     {
-        uint8_t IVs[PKSAV_NUM_IVS] = {0};
+        uint8_t pksav_IVs[PKSAV_NUM_IVS] = {0};
 
         PKSAV_CALL(
             pksav_get_IVs(
                 iv_data_ptr,
-                IVs,
-                sizeof(IVs)
+                pksav_IVs,
+                sizeof(pksav_IVs)
             );
         )
 
-        _IVs["HP"]              = IVs[PKSAV_IV_HP];
-        _IVs["Attack"]          = IVs[PKSAV_IV_ATTACK];
-        _IVs["Defense"]         = IVs[PKSAV_IV_DEFENSE];
-        _IVs["Speed"]           = IVs[PKSAV_IV_SPEED];
-        _IVs["Special Attack"]  = IVs[PKSAV_IV_SPATK];
-        _IVs["Special Defense"] = IVs[PKSAV_IV_SPDEF];
+        const pksav::IV_bimap_t& IV_bimap = pksav::get_IV_bimap();
+        for(const auto& IV_pair: IV_bimap.left)
+        {
+            pkmn::e_stat libpkmn_stat = IV_pair.first;
+            enum pksav_IV pksav_IV = IV_pair.second;
+
+            _IVs[libpkmn_stat] = pksav_IVs[pksav_IV];
+        }
     }
 
     void pokemon_impl::_init_contest_stat_map(
@@ -580,7 +566,7 @@ namespace pkmn
     }
 
     void pokemon_impl::_set_gb_IV(
-        const std::string& stat,
+        pkmn::e_stat stat,
         int value,
         uint16_t* iv_data_ptr
     )
@@ -590,7 +576,7 @@ namespace pkmn
 
         PKSAV_CALL(
             pksav_set_gb_IV(
-                PKMN_STATS_TO_PKSAV_GB_IVS.at(stat),
+                pksav::get_gb_IV_bimap().left.at(stat),
                 uint8_t(value),
                 iv_data_ptr
             );
@@ -603,7 +589,7 @@ namespace pkmn
     }
 
     void pokemon_impl::_set_modern_IV(
-        const std::string& stat,
+        pkmn::e_stat stat,
         int value,
         uint32_t* iv_data_ptr
     )
@@ -613,7 +599,7 @@ namespace pkmn
 
         PKSAV_CALL(
             pksav_set_IV(
-                PKMN_STATS_TO_PKSAV_IVS.at(stat),
+                pksav::get_IV_bimap().left.at(stat),
                 uint8_t(value),
                 iv_data_ptr
             );

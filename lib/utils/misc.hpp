@@ -9,6 +9,7 @@
 #define INCLUDED_PKMN_MISC_COMMON_HPP
 
 #include <pkmn/config.hpp>
+#include <pkmn/enums/stat.hpp>
 
 #include <boost/config.hpp>
 
@@ -57,19 +58,43 @@ namespace pkmn {
 
     // Useful constants and maps
 
-    static const std::vector<std::string> GEN1_STATS =
+    static const std::vector<pkmn::e_stat> GEN1_STATS =
     {
-        "HP", "Attack", "Defense", "Speed", "Special"
+        pkmn::e_stat::HP,
+        pkmn::e_stat::ATTACK,
+        pkmn::e_stat::DEFENSE,
+        pkmn::e_stat::SPEED,
+        pkmn::e_stat::SPECIAL
     };
-    static const std::vector<std::string> GEN2_STATS =
+    static const std::vector<pkmn::e_stat> GEN2_STATS =
     {
-        "HP", "Attack", "Defense", "Speed", "Special",
-        "Special Attack", "Special Defense"
+        pkmn::e_stat::HP,
+        pkmn::e_stat::ATTACK,
+        pkmn::e_stat::DEFENSE,
+        pkmn::e_stat::SPEED,
+        pkmn::e_stat::SPECIAL,
+        pkmn::e_stat::SPECIAL_ATTACK,
+        pkmn::e_stat::SPECIAL_DEFENSE
     };
-    static const std::vector<std::string> MODERN_STATS =
+    static const std::vector<pkmn::e_stat> MODERN_STATS =
     {
-        "HP", "Attack", "Defense", "Speed",
-        "Special Attack", "Special Defense"
+        pkmn::e_stat::HP,
+        pkmn::e_stat::ATTACK,
+        pkmn::e_stat::DEFENSE,
+        pkmn::e_stat::SPEED,
+        pkmn::e_stat::SPECIAL_ATTACK,
+        pkmn::e_stat::SPECIAL_DEFENSE
+    };
+    static const std::vector<std::string> STAT_NAMES_FROM_ENUM =
+    {
+        "None",
+        "HP",
+        "Attack",
+        "Defense",
+        "Speed",
+        "Special",
+        "Special Attack",
+        "Special Defense"
     };
 
     BOOST_STATIC_CONSTEXPR int COLOSSEUM_ID = 19;

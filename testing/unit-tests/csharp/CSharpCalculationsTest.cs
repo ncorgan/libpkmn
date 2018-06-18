@@ -2032,17 +2032,17 @@ public class CSharpCalculationsTest {
         // Make sure expected exceptions are thrown.
         Assert.Throws<ArgumentOutOfRangeException>(
             delegate {
-                PKMN.Calculations.GetGBStat("Not a stat", 1, 1, 1, 1);
+                PKMN.Calculations.GetGBStat(PKMN.Stat.NONE, 1, 1, 1, 1);
             }
         );
         Assert.Throws<IndexOutOfRangeException>(
             delegate {
-                PKMN.Calculations.GetGBStat("Attack", 1, 1, 123456, 1);
+                PKMN.Calculations.GetGBStat(PKMN.Stat.ATTACK, 1, 1, 123456, 1);
             }
         );
         Assert.Throws<IndexOutOfRangeException>(
             delegate {
-                PKMN.Calculations.GetGBStat("Attack", 1, 1, 1, 12345);
+                PKMN.Calculations.GetGBStat(PKMN.Stat.ATTACK, 1, 1, 1, 12345);
             }
         );
 
@@ -2051,8 +2051,8 @@ public class CSharpCalculationsTest {
          *
          * Source: http://bulbapedia.bulbagarden.net/wiki/Statistic#In_Generations_I_and_II
          */
-        Assert.That(PKMN.Calculations.GetGBStat("HP", 81, 35, 22850, 7), Is.EqualTo(189).Within(1));
-        Assert.That(PKMN.Calculations.GetGBStat("Attack", 81, 55, 23140, 8), Is.EqualTo(137).Within(1));
+        Assert.That(PKMN.Calculations.GetGBStat(PKMN.Stat.HP, 81, 35, 22850, 7), Is.EqualTo(189).Within(1));
+        Assert.That(PKMN.Calculations.GetGBStat(PKMN.Stat.ATTACK, 81, 55, 23140, 8), Is.EqualTo(137).Within(1));
     }
 
     [Test]
@@ -2060,27 +2060,27 @@ public class CSharpCalculationsTest {
         // Make sure expected exceptions are thrown.
         Assert.Throws<ArgumentOutOfRangeException>(
             delegate {
-                PKMN.Calculations.GetModernStat("Not a stat", 1, 1.0f, 1, 1, 1);
+                PKMN.Calculations.GetModernStat(PKMN.Stat.NONE, 1, 1.0f, 1, 1, 1);
             }
         );
         Assert.Throws<ArgumentOutOfRangeException>(
             delegate {
-                PKMN.Calculations.GetModernStat("Special", 1, 1.0f, 1, 1, 1);
+                PKMN.Calculations.GetModernStat(PKMN.Stat.SPECIAL, 1, 1.0f, 1, 1, 1);
             }
         );
         Assert.Throws<ArgumentOutOfRangeException>(
             delegate {
-                PKMN.Calculations.GetModernStat("Attack", 1, 0.666f, 1, 1, 1);
+                PKMN.Calculations.GetModernStat(PKMN.Stat.ATTACK, 1, 0.666f, 1, 1, 1);
             }
         );
         Assert.Throws<IndexOutOfRangeException>(
             delegate {
-                PKMN.Calculations.GetModernStat("Attack", 1, 1.0f, 1, 12345, 1);
+                PKMN.Calculations.GetModernStat(PKMN.Stat.ATTACK, 1, 1.0f, 1, 12345, 1);
             }
         );
         Assert.Throws<IndexOutOfRangeException>(
             delegate {
-                PKMN.Calculations.GetModernStat("Attack", 1, 1.0f, 1, 1, 12345);
+                PKMN.Calculations.GetModernStat(PKMN.Stat.ATTACK, 1, 1.0f, 1, 1, 12345);
             }
         );
 
@@ -2089,7 +2089,7 @@ public class CSharpCalculationsTest {
          *
          * Source: http://bulbapedia.bulbagarden.net/wiki/Statistic#In_Generation_III_onward
          */
-        Assert.That(PKMN.Calculations.GetModernStat("HP", 78, 1.0f, 108, 74, 24), Is.EqualTo(289).Within(1));
-        Assert.That(PKMN.Calculations.GetModernStat("Attack", 78, 1.1f, 130, 195, 12), Is.EqualTo(280).Within(1));
+        Assert.That(PKMN.Calculations.GetModernStat(PKMN.Stat.HP, 78, 1.0f, 108, 74, 24), Is.EqualTo(289).Within(1));
+        Assert.That(PKMN.Calculations.GetModernStat(PKMN.Stat.ATTACK, 78, 1.1f, 130, 195, 12), Is.EqualTo(280).Within(1));
     }
 }

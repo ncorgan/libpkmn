@@ -19,13 +19,20 @@ namespace fs = boost::filesystem;
 
 static const std::pair<std::string, std::string> none_pair("None", "None");
 static const std::pair<std::string, std::string> invalid_pair("Unknown", "Unknown");
-static const std::map<std::string, int> bad_stat_map_old = boost::assign::map_list_of
-    ("HP", 0)("Attack", 0)("Defense", 0)
-    ("Speed", 0)("Special", 0)
+static const std::map<pkmn::e_stat, int> bad_stat_map_old = boost::assign::map_list_of
+    (pkmn::e_stat::HP, 0)
+    (pkmn::e_stat::ATTACK, 0)
+    (pkmn::e_stat::DEFENSE, 0)
+    (pkmn::e_stat::SPEED, 0)
+    (pkmn::e_stat::SPECIAL, 0)
 ;
-static const std::map<std::string, int> bad_stat_map = boost::assign::map_list_of
-    ("HP", 0)("Attack", 0)("Defense", 0)
-    ("Speed", 0)("Special Attack", 0)("Special Defense", 0)
+static const std::map<pkmn::e_stat, int> bad_stat_map = boost::assign::map_list_of
+    (pkmn::e_stat::HP, 0)
+    (pkmn::e_stat::ATTACK, 0)
+    (pkmn::e_stat::DEFENSE, 0)
+    (pkmn::e_stat::SPEED, 0)
+    (pkmn::e_stat::SPECIAL_ATTACK, 0)
+    (pkmn::e_stat::SPECIAL_DEFENSE, 0)
 ;
 
 static const std::string games[] = {
@@ -374,12 +381,12 @@ static void _pokemon_entry_test(
     EXPECT_EQ("None", pokemon_entry_gen1.get_hidden_ability());
     EXPECT_TRUE(pokemon_entry_gen1.get_egg_groups() == none_pair);
 
-    std::map<std::string, int> base_stats1 = pokemon_entry_gen1.get_base_stats();
-    EXPECT_EQ(90, base_stats1.at("HP"));
-    EXPECT_EQ(85, base_stats1.at("Attack"));
-    EXPECT_EQ(100, base_stats1.at("Defense"));
-    EXPECT_EQ(85, base_stats1.at("Speed"));
-    EXPECT_EQ(125, base_stats1.at("Special"));
+    std::map<pkmn::e_stat, int> base_stats1 = pokemon_entry_gen1.get_base_stats();
+    EXPECT_EQ(90, base_stats1.at(pkmn::e_stat::HP));
+    EXPECT_EQ(85, base_stats1.at(pkmn::e_stat::ATTACK));
+    EXPECT_EQ(100, base_stats1.at(pkmn::e_stat::DEFENSE));
+    EXPECT_EQ(85, base_stats1.at(pkmn::e_stat::SPEED));
+    EXPECT_EQ(125, base_stats1.at(pkmn::e_stat::SPECIAL));
 
     EXPECT_TRUE(pokemon_entry_gen1.get_EV_yields() == base_stats1);
     EXPECT_EQ(215, pokemon_entry_gen1.get_experience_yield());
@@ -436,20 +443,20 @@ static void _pokemon_entry_test(
     EXPECT_EQ("Monster", egg_groups2.first);
     EXPECT_EQ("Water 1", egg_groups2.second);
 
-    std::map<std::string, int> base_stats2 = pokemon_entry_gen2.get_base_stats();
-    EXPECT_EQ(85, base_stats2.at("HP"));
-    EXPECT_EQ(105, base_stats2.at("Attack"));
-    EXPECT_EQ(100, base_stats2.at("Defense"));
-    EXPECT_EQ(78, base_stats2.at("Speed"));
-    EXPECT_EQ(79, base_stats2.at("Special Attack"));
-    EXPECT_EQ(83, base_stats2.at("Special Defense"));
+    std::map<pkmn::e_stat, int> base_stats2 = pokemon_entry_gen2.get_base_stats();
+    EXPECT_EQ(85, base_stats2.at(pkmn::e_stat::HP));
+    EXPECT_EQ(105, base_stats2.at(pkmn::e_stat::ATTACK));
+    EXPECT_EQ(100, base_stats2.at(pkmn::e_stat::DEFENSE));
+    EXPECT_EQ(78, base_stats2.at(pkmn::e_stat::SPEED));
+    EXPECT_EQ(79, base_stats2.at(pkmn::e_stat::SPECIAL_ATTACK));
+    EXPECT_EQ(83, base_stats2.at(pkmn::e_stat::SPECIAL_DEFENSE));
 
-    std::map<std::string, int> EV_yields2 = pokemon_entry_gen2.get_EV_yields();
-    EXPECT_EQ(85, EV_yields2.at("HP"));
-    EXPECT_EQ(105, EV_yields2.at("Attack"));
-    EXPECT_EQ(100, EV_yields2.at("Defense"));
-    EXPECT_EQ(78, EV_yields2.at("Speed"));
-    EXPECT_EQ(79, EV_yields2.at("Special"));
+    std::map<pkmn::e_stat, int> EV_yields2 = pokemon_entry_gen2.get_EV_yields();
+    EXPECT_EQ(85, EV_yields2.at(pkmn::e_stat::HP));
+    EXPECT_EQ(105, EV_yields2.at(pkmn::e_stat::ATTACK));
+    EXPECT_EQ(100, EV_yields2.at(pkmn::e_stat::DEFENSE));
+    EXPECT_EQ(78, EV_yields2.at(pkmn::e_stat::SPEED));
+    EXPECT_EQ(79, EV_yields2.at(pkmn::e_stat::SPECIAL));
 
     EXPECT_EQ(210, pokemon_entry_gen2.get_experience_yield());
     EXPECT_EQ(117360, pokemon_entry_gen2.get_experience_at_level(50));
@@ -501,21 +508,21 @@ static void _pokemon_entry_test(
     EXPECT_EQ("Undiscovered", egg_groups_gba.first);
     EXPECT_EQ("None", egg_groups_gba.second);
 
-    std::map<std::string, int> base_stats_gba = pokemon_entry_gba.get_base_stats();
-    EXPECT_EQ(80, base_stats_gba.at("HP"));
-    EXPECT_EQ(50, base_stats_gba.at("Attack"));
-    EXPECT_EQ(100, base_stats_gba.at("Defense"));
-    EXPECT_EQ(50, base_stats_gba.at("Speed"));
-    EXPECT_EQ(100, base_stats_gba.at("Special Attack"));
-    EXPECT_EQ(200, base_stats_gba.at("Special Defense"));
+    std::map<pkmn::e_stat, int> base_stats_gba = pokemon_entry_gba.get_base_stats();
+    EXPECT_EQ(80, base_stats_gba.at(pkmn::e_stat::HP));
+    EXPECT_EQ(50, base_stats_gba.at(pkmn::e_stat::ATTACK));
+    EXPECT_EQ(100, base_stats_gba.at(pkmn::e_stat::DEFENSE));
+    EXPECT_EQ(50, base_stats_gba.at(pkmn::e_stat::SPEED));
+    EXPECT_EQ(100, base_stats_gba.at(pkmn::e_stat::SPECIAL_ATTACK));
+    EXPECT_EQ(200, base_stats_gba.at(pkmn::e_stat::SPECIAL_DEFENSE));
 
-    std::map<std::string, int> EV_yields_gba = pokemon_entry_gba.get_EV_yields();
-    EXPECT_EQ(0, EV_yields_gba.at("HP"));
-    EXPECT_EQ(0, EV_yields_gba.at("Attack"));
-    EXPECT_EQ(0, EV_yields_gba.at("Defense"));
-    EXPECT_EQ(0, EV_yields_gba.at("Speed"));
-    EXPECT_EQ(0, EV_yields_gba.at("Special Attack"));
-    EXPECT_EQ(3, EV_yields_gba.at("Special Defense"));
+    std::map<pkmn::e_stat, int> EV_yields_gba = pokemon_entry_gba.get_EV_yields();
+    EXPECT_EQ(0, EV_yields_gba.at(pkmn::e_stat::HP));
+    EXPECT_EQ(0, EV_yields_gba.at(pkmn::e_stat::ATTACK));
+    EXPECT_EQ(0, EV_yields_gba.at(pkmn::e_stat::DEFENSE));
+    EXPECT_EQ(0, EV_yields_gba.at(pkmn::e_stat::SPEED));
+    EXPECT_EQ(0, EV_yields_gba.at(pkmn::e_stat::SPECIAL_ATTACK));
+    EXPECT_EQ(3, EV_yields_gba.at(pkmn::e_stat::SPECIAL_DEFENSE));
 
     EXPECT_EQ(216, pokemon_entry_gba.get_experience_yield());
     EXPECT_EQ(156250, pokemon_entry_gba.get_experience_at_level(50));
@@ -567,21 +574,21 @@ static void _pokemon_entry_test(
     EXPECT_EQ("Fairy", egg_groups_gcn.first);
     EXPECT_EQ("Grass", egg_groups_gcn.second);
 
-    std::map<std::string, int> base_stats_gcn = pokemon_entry_gcn.get_base_stats();
-    EXPECT_EQ(60, base_stats_gcn.at("HP"));
-    EXPECT_EQ(40, base_stats_gcn.at("Attack"));
-    EXPECT_EQ(60, base_stats_gcn.at("Defense"));
-    EXPECT_EQ(35, base_stats_gcn.at("Speed"));
-    EXPECT_EQ(40, base_stats_gcn.at("Special Attack"));
-    EXPECT_EQ(60, base_stats_gcn.at("Special Defense"));
+    std::map<pkmn::e_stat, int> base_stats_gcn = pokemon_entry_gcn.get_base_stats();
+    EXPECT_EQ(60, base_stats_gcn.at(pkmn::e_stat::HP));
+    EXPECT_EQ(40, base_stats_gcn.at(pkmn::e_stat::ATTACK));
+    EXPECT_EQ(60, base_stats_gcn.at(pkmn::e_stat::DEFENSE));
+    EXPECT_EQ(35, base_stats_gcn.at(pkmn::e_stat::SPEED));
+    EXPECT_EQ(40, base_stats_gcn.at(pkmn::e_stat::SPECIAL_ATTACK));
+    EXPECT_EQ(60, base_stats_gcn.at(pkmn::e_stat::SPECIAL_DEFENSE));
 
-    std::map<std::string, int> EV_yields_gcn = pokemon_entry_gcn.get_EV_yields();
-    EXPECT_EQ(1, EV_yields_gcn.at("HP"));
-    EXPECT_EQ(0, EV_yields_gcn.at("Attack"));
-    EXPECT_EQ(0, EV_yields_gcn.at("Defense"));
-    EXPECT_EQ(0, EV_yields_gcn.at("Speed"));
-    EXPECT_EQ(0, EV_yields_gcn.at("Special Attack"));
-    EXPECT_EQ(0, EV_yields_gcn.at("Special Defense"));
+    std::map<pkmn::e_stat, int> EV_yields_gcn = pokemon_entry_gcn.get_EV_yields();
+    EXPECT_EQ(1, EV_yields_gcn.at(pkmn::e_stat::HP));
+    EXPECT_EQ(0, EV_yields_gcn.at(pkmn::e_stat::ATTACK));
+    EXPECT_EQ(0, EV_yields_gcn.at(pkmn::e_stat::DEFENSE));
+    EXPECT_EQ(0, EV_yields_gcn.at(pkmn::e_stat::SPEED));
+    EXPECT_EQ(0, EV_yields_gcn.at(pkmn::e_stat::SPECIAL_ATTACK));
+    EXPECT_EQ(0, EV_yields_gcn.at(pkmn::e_stat::SPECIAL_DEFENSE));
 
     EXPECT_EQ(65, pokemon_entry_gcn.get_experience_yield());
     EXPECT_EQ(142500, pokemon_entry_gcn.get_experience_at_level(50));
@@ -628,21 +635,21 @@ static void _pokemon_entry_test(
     EXPECT_EQ("Bug", egg_groups_gen4.first);
     EXPECT_EQ("None", egg_groups_gen4.second);
 
-    std::map<std::string, int> base_stats_gen4 = pokemon_entry_gen4.get_base_stats();
-    EXPECT_EQ(37, base_stats_gen4.at("HP"));
-    EXPECT_EQ(25, base_stats_gen4.at("Attack"));
-    EXPECT_EQ(41, base_stats_gen4.at("Defense"));
-    EXPECT_EQ(25, base_stats_gen4.at("Speed"));
-    EXPECT_EQ(25, base_stats_gen4.at("Special Attack"));
-    EXPECT_EQ(41, base_stats_gen4.at("Special Defense"));
+    std::map<pkmn::e_stat, int> base_stats_gen4 = pokemon_entry_gen4.get_base_stats();
+    EXPECT_EQ(37, base_stats_gen4.at(pkmn::e_stat::HP));
+    EXPECT_EQ(25, base_stats_gen4.at(pkmn::e_stat::ATTACK));
+    EXPECT_EQ(41, base_stats_gen4.at(pkmn::e_stat::DEFENSE));
+    EXPECT_EQ(25, base_stats_gen4.at(pkmn::e_stat::SPEED));
+    EXPECT_EQ(25, base_stats_gen4.at(pkmn::e_stat::SPECIAL_ATTACK));
+    EXPECT_EQ(41, base_stats_gen4.at(pkmn::e_stat::SPECIAL_DEFENSE));
 
-    std::map<std::string, int> EV_yields_gen4 = pokemon_entry_gen4.get_EV_yields();
-    EXPECT_EQ(0, EV_yields_gen4.at("HP"));
-    EXPECT_EQ(0, EV_yields_gen4.at("Attack"));
-    EXPECT_EQ(1, EV_yields_gen4.at("Defense"));
-    EXPECT_EQ(0, EV_yields_gen4.at("Speed"));
-    EXPECT_EQ(0, EV_yields_gen4.at("Special Attack"));
-    EXPECT_EQ(0, EV_yields_gen4.at("Special Defense"));
+    std::map<pkmn::e_stat, int> EV_yields_gen4 = pokemon_entry_gen4.get_EV_yields();
+    EXPECT_EQ(0, EV_yields_gen4.at(pkmn::e_stat::HP));
+    EXPECT_EQ(0, EV_yields_gen4.at(pkmn::e_stat::ATTACK));
+    EXPECT_EQ(1, EV_yields_gen4.at(pkmn::e_stat::DEFENSE));
+    EXPECT_EQ(0, EV_yields_gen4.at(pkmn::e_stat::SPEED));
+    EXPECT_EQ(0, EV_yields_gen4.at(pkmn::e_stat::SPECIAL_ATTACK));
+    EXPECT_EQ(0, EV_yields_gen4.at(pkmn::e_stat::SPECIAL_DEFENSE));
 
     EXPECT_EQ(54, pokemon_entry_gen4.get_experience_yield());
     EXPECT_EQ(117360, pokemon_entry_gen4.get_experience_at_level(50));
@@ -694,21 +701,21 @@ static void _pokemon_entry_test(
     EXPECT_EQ("Water 1", egg_groups_gen5.first);
     EXPECT_EQ("Amorphous", egg_groups_gen5.second);
 
-    std::map<std::string, int> base_stats_gen5 = pokemon_entry_gen5.get_base_stats();
-    EXPECT_EQ(109, base_stats_gen5.at("HP"));
-    EXPECT_EQ(66, base_stats_gen5.at("Attack"));
-    EXPECT_EQ(84, base_stats_gen5.at("Defense"));
-    EXPECT_EQ(32, base_stats_gen5.at("Speed"));
-    EXPECT_EQ(81, base_stats_gen5.at("Special Attack"));
-    EXPECT_EQ(99, base_stats_gen5.at("Special Defense"));
+    std::map<pkmn::e_stat, int> base_stats_gen5 = pokemon_entry_gen5.get_base_stats();
+    EXPECT_EQ(109, base_stats_gen5.at(pkmn::e_stat::HP));
+    EXPECT_EQ(66, base_stats_gen5.at(pkmn::e_stat::ATTACK));
+    EXPECT_EQ(84, base_stats_gen5.at(pkmn::e_stat::DEFENSE));
+    EXPECT_EQ(32, base_stats_gen5.at(pkmn::e_stat::SPEED));
+    EXPECT_EQ(81, base_stats_gen5.at(pkmn::e_stat::SPECIAL_ATTACK));
+    EXPECT_EQ(99, base_stats_gen5.at(pkmn::e_stat::SPECIAL_DEFENSE));
 
-    std::map<std::string, int> EV_yields_gen5 = pokemon_entry_gen5.get_EV_yields();
-    EXPECT_EQ(2, EV_yields_gen5.at("HP"));
-    EXPECT_EQ(0, EV_yields_gen5.at("Attack"));
-    EXPECT_EQ(0, EV_yields_gen5.at("Defense"));
-    EXPECT_EQ(0, EV_yields_gen5.at("Speed"));
-    EXPECT_EQ(0, EV_yields_gen5.at("Special Attack"));
-    EXPECT_EQ(0, EV_yields_gen5.at("Special Defense"));
+    std::map<pkmn::e_stat, int> EV_yields_gen5 = pokemon_entry_gen5.get_EV_yields();
+    EXPECT_EQ(2, EV_yields_gen5.at(pkmn::e_stat::HP));
+    EXPECT_EQ(0, EV_yields_gen5.at(pkmn::e_stat::ATTACK));
+    EXPECT_EQ(0, EV_yields_gen5.at(pkmn::e_stat::DEFENSE));
+    EXPECT_EQ(0, EV_yields_gen5.at(pkmn::e_stat::SPEED));
+    EXPECT_EQ(0, EV_yields_gen5.at(pkmn::e_stat::SPECIAL_ATTACK));
+    EXPECT_EQ(0, EV_yields_gen5.at(pkmn::e_stat::SPECIAL_DEFENSE));
 
     EXPECT_EQ(165, pokemon_entry_gen5.get_experience_yield());
     EXPECT_EQ(125000, pokemon_entry_gen5.get_experience_at_level(50));
@@ -760,21 +767,21 @@ static void _pokemon_entry_test(
     EXPECT_EQ("Field", egg_groups_gen6.first);
     EXPECT_EQ("None", egg_groups_gen6.second);
 
-    std::map<std::string, int> base_stats_gen6 = pokemon_entry_gen6.get_base_stats();
-    EXPECT_EQ(95, base_stats_gen6.at("HP"));
-    EXPECT_EQ(65, base_stats_gen6.at("Attack"));
-    EXPECT_EQ(65, base_stats_gen6.at("Defense"));
-    EXPECT_EQ(60, base_stats_gen6.at("Speed"));
-    EXPECT_EQ(110, base_stats_gen6.at("Special Attack"));
-    EXPECT_EQ(130, base_stats_gen6.at("Special Defense"));
+    std::map<pkmn::e_stat, int> base_stats_gen6 = pokemon_entry_gen6.get_base_stats();
+    EXPECT_EQ(95, base_stats_gen6.at(pkmn::e_stat::HP));
+    EXPECT_EQ(65, base_stats_gen6.at(pkmn::e_stat::ATTACK));
+    EXPECT_EQ(65, base_stats_gen6.at(pkmn::e_stat::DEFENSE));
+    EXPECT_EQ(60, base_stats_gen6.at(pkmn::e_stat::SPEED));
+    EXPECT_EQ(110, base_stats_gen6.at(pkmn::e_stat::SPECIAL_ATTACK));
+    EXPECT_EQ(130, base_stats_gen6.at(pkmn::e_stat::SPECIAL_DEFENSE));
 
-    std::map<std::string, int> EV_yields_gen6 = pokemon_entry_gen6.get_EV_yields();
-    EXPECT_EQ(0, EV_yields_gen6.at("HP"));
-    EXPECT_EQ(0, EV_yields_gen6.at("Attack"));
-    EXPECT_EQ(0, EV_yields_gen6.at("Defense"));
-    EXPECT_EQ(0, EV_yields_gen6.at("Speed"));
-    EXPECT_EQ(0, EV_yields_gen6.at("Special Attack"));
-    EXPECT_EQ(2, EV_yields_gen6.at("Special Defense"));
+    std::map<pkmn::e_stat, int> EV_yields_gen6 = pokemon_entry_gen6.get_EV_yields();
+    EXPECT_EQ(0, EV_yields_gen6.at(pkmn::e_stat::HP));
+    EXPECT_EQ(0, EV_yields_gen6.at(pkmn::e_stat::ATTACK));
+    EXPECT_EQ(0, EV_yields_gen6.at(pkmn::e_stat::DEFENSE));
+    EXPECT_EQ(0, EV_yields_gen6.at(pkmn::e_stat::SPEED));
+    EXPECT_EQ(0, EV_yields_gen6.at(pkmn::e_stat::SPECIAL_ATTACK));
+    EXPECT_EQ(2, EV_yields_gen6.at(pkmn::e_stat::SPECIAL_DEFENSE));
 
     EXPECT_EQ(184, pokemon_entry_gen6.get_experience_yield());
     EXPECT_EQ(125000, pokemon_entry_gen6.get_experience_at_level(50));

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -39,25 +39,25 @@ public class Gen2PokemonTests
         // Gender is tied to IVs, so make sure the abstraction reflects that.
 
         pokemon.Gender = PKMN.Gender.MALE;
-        Assert.AreEqual(pokemon.IVs["Attack"], 15);
+        Assert.AreEqual(pokemon.IVs[PKMN.Stat.ATTACK], 15);
         pokemon.Gender = PKMN.Gender.FEMALE;
-        Assert.Less(pokemon.IVs["Attack"], 15);
+        Assert.Less(pokemon.IVs[PKMN.Stat.ATTACK], 15);
 
-        pokemon.IVs["Attack"] = 0;
+        pokemon.IVs[PKMN.Stat.ATTACK] = 0;
         Assert.AreEqual(pokemon.Gender, PKMN.Gender.FEMALE);
-        pokemon.IVs["Attack"] = 15;
+        pokemon.IVs[PKMN.Stat.ATTACK] = 15;
         Assert.AreEqual(pokemon.Gender, PKMN.Gender.MALE);
 
         // Shininess is tied to IVs, so make sure the abstraction reflects that.
 
         pokemon.IsShiny = false;
-        Assert.AreEqual(pokemon.IVs["Attack"], 13);
+        Assert.AreEqual(pokemon.IVs[PKMN.Stat.ATTACK], 13);
 
         pokemon.IsShiny = true;
-        Assert.AreEqual(pokemon.IVs["Attack"], 15);
-        Assert.AreEqual(pokemon.IVs["Defense"], 10);
-        Assert.AreEqual(pokemon.IVs["Speed"], 10);
-        Assert.AreEqual(pokemon.IVs["Special"], 10);
+        Assert.AreEqual(pokemon.IVs[PKMN.Stat.ATTACK], 15);
+        Assert.AreEqual(pokemon.IVs[PKMN.Stat.DEFENSE], 10);
+        Assert.AreEqual(pokemon.IVs[PKMN.Stat.SPEED], 10);
+        Assert.AreEqual(pokemon.IVs[PKMN.Stat.SPECIAL], 10);
     }
 }
 

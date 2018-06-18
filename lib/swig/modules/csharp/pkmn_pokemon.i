@@ -62,7 +62,7 @@ using Database;"
 %attributeval(pkmn::swig::pokemon, pkmn::swig::ribbon_map, Ribbons, get_ribbons);
 %attributeval(pkmn::swig::pokemon, pkmn::swig::contest_stat_map, ContestStats, get_contest_stats);
 %attributeval(pkmn::swig::pokemon, pkmn::swig::move_slots, Moves, get_moves);
-%attributeval(pkmn::swig::pokemon, %arg(std::map<std::string, int>), Stats, get_stats);
+%attributeval(pkmn::swig::pokemon, %arg(std::map<pkmn::e_stat, int>), Stats, get_stats);
 %attributestring(pkmn::swig::pokemon, std::string, IconFilepath, get_icon_filepath);
 %attributestring(pkmn::swig::pokemon, std::string, SpriteFilepath, get_sprite_filepath);
 %attributeval(pkmn::swig::pokemon, %arg(pkmn::swig::numeric_attribute_map<pkmn::pokemon>), NumericAttributes, get_numeric_attributes);

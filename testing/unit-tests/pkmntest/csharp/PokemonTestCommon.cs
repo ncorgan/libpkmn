@@ -615,7 +615,7 @@ public class PokemonTestCommon
         Assert.IsTrue(System.IO.File.Exists(pokemon.IconFilepath));
         Assert.IsTrue(System.IO.File.Exists(pokemon.SpriteFilepath));
 
-        Assert.AreEqual(pokemon.Stats["HP"], pokemon.CurrentHP);
+        Assert.AreEqual(pokemon.Stats[PKMN.Stat.HP], pokemon.CurrentHP);
     }
 
     private static void CheckInitialMaps(
@@ -626,46 +626,46 @@ public class PokemonTestCommon
 
         // EVs
 
-        Assert.IsTrue(pokemon.EVs.ContainsKey("HP"));
-        Assert.IsTrue(pokemon.EVs.ContainsKey("Attack"));
-        Assert.IsTrue(pokemon.EVs.ContainsKey("Defense"));
-        Assert.IsTrue(pokemon.EVs.ContainsKey("Speed"));
+        Assert.IsTrue(pokemon.EVs.ContainsKey(PKMN.Stat.HP));
+        Assert.IsTrue(pokemon.EVs.ContainsKey(PKMN.Stat.ATTACK));
+        Assert.IsTrue(pokemon.EVs.ContainsKey(PKMN.Stat.DEFENSE));
+        Assert.IsTrue(pokemon.EVs.ContainsKey(PKMN.Stat.SPEED));
         if(generation >= 3)
         {
-            Assert.IsFalse(pokemon.EVs.ContainsKey("Special"));
-            Assert.IsTrue(pokemon.EVs.ContainsKey("Special Attack"));
-            Assert.IsTrue(pokemon.EVs.ContainsKey("Special Defense"));
+            Assert.IsFalse(pokemon.EVs.ContainsKey(PKMN.Stat.SPECIAL));
+            Assert.IsTrue(pokemon.EVs.ContainsKey(PKMN.Stat.SPECIAL_ATTACK));
+            Assert.IsTrue(pokemon.EVs.ContainsKey(PKMN.Stat.SPECIAL_DEFENSE));
         }
         else
         {
-            Assert.IsTrue(pokemon.EVs.ContainsKey("Special"));
-            Assert.IsFalse(pokemon.EVs.ContainsKey("Special Attack"));
-            Assert.IsFalse(pokemon.EVs.ContainsKey("Special Defense"));
+            Assert.IsTrue(pokemon.EVs.ContainsKey(PKMN.Stat.SPECIAL));
+            Assert.IsFalse(pokemon.EVs.ContainsKey(PKMN.Stat.SPECIAL_ATTACK));
+            Assert.IsFalse(pokemon.EVs.ContainsKey(PKMN.Stat.SPECIAL_DEFENSE));
         }
-        foreach(string key in pokemon.EVs.Keys)
+        foreach(PKMN.Stat key in pokemon.EVs.Keys)
         {
             Assert.AreEqual(pokemon.EVs[key], 0);
         }
 
         // IVs
 
-        Assert.IsTrue(pokemon.IVs.ContainsKey("HP"));
-        Assert.IsTrue(pokemon.IVs.ContainsKey("Attack"));
-        Assert.IsTrue(pokemon.IVs.ContainsKey("Defense"));
-        Assert.IsTrue(pokemon.IVs.ContainsKey("Speed"));
+        Assert.IsTrue(pokemon.IVs.ContainsKey(PKMN.Stat.HP));
+        Assert.IsTrue(pokemon.IVs.ContainsKey(PKMN.Stat.ATTACK));
+        Assert.IsTrue(pokemon.IVs.ContainsKey(PKMN.Stat.DEFENSE));
+        Assert.IsTrue(pokemon.IVs.ContainsKey(PKMN.Stat.SPEED));
         if(generation >= 3)
         {
-            Assert.IsFalse(pokemon.IVs.ContainsKey("Special"));
-            Assert.IsTrue(pokemon.IVs.ContainsKey("Special Attack"));
-            Assert.IsTrue(pokemon.IVs.ContainsKey("Special Defense"));
+            Assert.IsFalse(pokemon.IVs.ContainsKey(PKMN.Stat.SPECIAL));
+            Assert.IsTrue(pokemon.IVs.ContainsKey(PKMN.Stat.SPECIAL_ATTACK));
+            Assert.IsTrue(pokemon.IVs.ContainsKey(PKMN.Stat.SPECIAL_DEFENSE));
         }
         else
         {
-            Assert.IsTrue(pokemon.IVs.ContainsKey("Special"));
-            Assert.IsFalse(pokemon.IVs.ContainsKey("Special Attack"));
-            Assert.IsFalse(pokemon.IVs.ContainsKey("Special Defense"));
+            Assert.IsTrue(pokemon.IVs.ContainsKey(PKMN.Stat.SPECIAL));
+            Assert.IsFalse(pokemon.IVs.ContainsKey(PKMN.Stat.SPECIAL_ATTACK));
+            Assert.IsFalse(pokemon.IVs.ContainsKey(PKMN.Stat.SPECIAL_DEFENSE));
         }
-        foreach(string key in pokemon.IVs.Keys)
+        foreach(PKMN.Stat key in pokemon.IVs.Keys)
         {
             Assert.IsTrue(pokemon.IVs[key] >= 0);
             Assert.IsTrue(pokemon.IVs[key] <= ((generation >= 3) ? 31 : 15));
@@ -673,23 +673,23 @@ public class PokemonTestCommon
 
         // Stats
 
-        Assert.IsTrue(pokemon.Stats.ContainsKey("HP"));
-        Assert.IsTrue(pokemon.Stats.ContainsKey("Attack"));
-        Assert.IsTrue(pokemon.Stats.ContainsKey("Defense"));
-        Assert.IsTrue(pokemon.Stats.ContainsKey("Speed"));
+        Assert.IsTrue(pokemon.Stats.ContainsKey(PKMN.Stat.HP));
+        Assert.IsTrue(pokemon.Stats.ContainsKey(PKMN.Stat.ATTACK));
+        Assert.IsTrue(pokemon.Stats.ContainsKey(PKMN.Stat.DEFENSE));
+        Assert.IsTrue(pokemon.Stats.ContainsKey(PKMN.Stat.SPEED));
         if(generation >= 2)
         {
-            Assert.IsFalse(pokemon.Stats.ContainsKey("Special"));
-            Assert.IsTrue(pokemon.Stats.ContainsKey("Special Attack"));
-            Assert.IsTrue(pokemon.Stats.ContainsKey("Special Defense"));
+            Assert.IsFalse(pokemon.Stats.ContainsKey(PKMN.Stat.SPECIAL));
+            Assert.IsTrue(pokemon.Stats.ContainsKey(PKMN.Stat.SPECIAL_ATTACK));
+            Assert.IsTrue(pokemon.Stats.ContainsKey(PKMN.Stat.SPECIAL_DEFENSE));
         }
         else
         {
-            Assert.IsTrue(pokemon.Stats.ContainsKey("Special"));
-            Assert.IsFalse(pokemon.Stats.ContainsKey("Special Attack"));
-            Assert.IsFalse(pokemon.Stats.ContainsKey("Special Defense"));
+            Assert.IsTrue(pokemon.Stats.ContainsKey(PKMN.Stat.SPECIAL));
+            Assert.IsFalse(pokemon.Stats.ContainsKey(PKMN.Stat.SPECIAL_ATTACK));
+            Assert.IsFalse(pokemon.Stats.ContainsKey(PKMN.Stat.SPECIAL_DEFENSE));
         }
-        foreach(string key in pokemon.Stats.Keys)
+        foreach(PKMN.Stat key in pokemon.Stats.Keys)
         {
             Assert.IsTrue(pokemon.Stats[key] >= 0);
             Assert.IsTrue(pokemon.Stats[key] <= 65535);
@@ -1377,25 +1377,25 @@ public class PokemonTestCommon
         Assert.Throws<IndexOutOfRangeException>(
             delegate
             {
-                pokemon.CurrentHP = pokemon.Stats["HP"] + 1;
+                pokemon.CurrentHP = pokemon.Stats[PKMN.Stat.HP] + 1;
             }
         );
 
         pokemon.CurrentHP = 0;
         Assert.AreEqual(0, pokemon.CurrentHP);
 
-        pokemon.CurrentHP = pokemon.Stats["HP"] - 1;
-        Assert.AreEqual(pokemon.Stats["HP"] - 1, pokemon.CurrentHP);
+        pokemon.CurrentHP = pokemon.Stats[PKMN.Stat.HP] - 1;
+        Assert.AreEqual(pokemon.Stats[PKMN.Stat.HP] - 1, pokemon.CurrentHP);
 
-        pokemon.CurrentHP = pokemon.Stats["HP"];
-        Assert.AreEqual(pokemon.Stats["HP"], pokemon.CurrentHP);
+        pokemon.CurrentHP = pokemon.Stats[PKMN.Stat.HP];
+        Assert.AreEqual(pokemon.Stats[PKMN.Stat.HP], pokemon.CurrentHP);
 
         // Set the HP stat to lower than the current HP, and make sure
         // it's updated.
 
         int currentHP = pokemon.CurrentHP;
-        pokemon.EVs["HP"] = 0;
-        pokemon.IVs["HP"] = 0;
+        pokemon.EVs[PKMN.Stat.HP] = 0;
+        pokemon.IVs[PKMN.Stat.HP] = 0;
         Assert.LessOrEqual(pokemon.CurrentHP, currentHP);
 
         int generation = Util.GameToGeneration(pokemon.Game);

@@ -502,7 +502,7 @@ namespace pkmn { namespace breeding {
                );
     }
 
-    std::map<std::string, int> get_gen2_ideal_child_IVs(
+    std::map<pkmn::e_stat, int> get_gen2_ideal_child_IVs(
         const pkmn::pokemon::sptr& mother,
         const pkmn::pokemon::sptr& father,
         pkmn::e_gender child_gender
@@ -511,7 +511,7 @@ namespace pkmn { namespace breeding {
         bool is_mother_ditto = (mother->get_database_entry().get_species_id() == DITTO_SPECIES_ID);
         bool is_father_ditto = (father->get_database_entry().get_species_id() == DITTO_SPECIES_ID);
 
-        std::map<std::string, int> parent_IVs;
+        std::map<pkmn::e_stat, int> parent_IVs;
         if(is_mother_ditto)
         {
             parent_IVs = mother->get_IVs();
@@ -528,19 +528,19 @@ namespace pkmn { namespace breeding {
                                                                 : father->get_IVs();
         }
 
-        std::map<std::string, int> ideal_child_IVs;
+        std::map<pkmn::e_stat, int> ideal_child_IVs;
 
         // Use PKSav to set the IVs, as the HP IV is derived from the others.
         uint16_t pksav_IV = 0;
 
         // The Defense IV comes straight from the parent.
-        BOOST_ASSERT(parent_IVs.count("Defense") > 0);
+        BOOST_ASSERT(parent_IVs.count(pkmn::e_stat::DEFENSE) > 0);
 
-        ideal_child_IVs["Defense"] = parent_IVs["Defense"];
+        ideal_child_IVs[pkmn::e_stat::DEFENSE] = parent_IVs[pkmn::e_stat::DEFENSE];
         PKSAV_CALL(
             pksav_set_gb_IV(
                 PKSAV_GB_IV_DEFENSE,
-                static_cast<uint8_t>(parent_IVs["Defense"]),
+                static_cast<uint8_t>(parent_IVs[pkmn::e_stat::DEFENSE]),
                 &pksav_IV
             );
         )
@@ -550,14 +550,14 @@ namespace pkmn { namespace breeding {
         // it would be increased by 8, and if it was above it, it would be
         // decreased by 8. As this function returns ideal valid IVs, we will
         // add a low IV and leave a high IV as is.
-        BOOST_ASSERT(parent_IVs.count("Special") > 0);
+        BOOST_ASSERT(parent_IVs.count(pkmn::e_stat::SPECIAL) > 0);
 
-        int IV_special = parent_IVs["Special"];
+        int IV_special = parent_IVs[pkmn::e_stat::SPECIAL];
         if(IV_special < 8)
         {
             IV_special += 8;
         }
-        ideal_child_IVs["Special"] = IV_special;
+        ideal_child_IVs[pkmn::e_stat::SPECIAL] = IV_special;
         PKSAV_CALL(
             pksav_set_gb_IV(
                 PKSAV_GB_IV_SPECIAL,
@@ -568,7 +568,7 @@ namespace pkmn { namespace breeding {
 
         // Attack and Speed IVs are generated randomly, but as this function
         // returns ideal valid IVs, we'll just use the highest valid values.
-        ideal_child_IVs["Attack"] = PKSAV_MAX_GB_IV;
+        ideal_child_IVs[pkmn::e_stat::ATTACK] = PKSAV_MAX_GB_IV;
         PKSAV_CALL(
             pksav_set_gb_IV(
                 PKSAV_GB_IV_ATTACK,
@@ -577,7 +577,7 @@ namespace pkmn { namespace breeding {
             );
         )
 
-        ideal_child_IVs["Speed"]  = PKSAV_MAX_GB_IV;
+        ideal_child_IVs[pkmn::e_stat::SPEED]  = PKSAV_MAX_GB_IV;
         PKSAV_CALL(
             pksav_set_gb_IV(
                 PKSAV_GB_IV_SPEED,
@@ -595,23 +595,23 @@ namespace pkmn { namespace breeding {
                 sizeof(pksav_IVs)
             );
         )
-        ideal_child_IVs["HP"] = pksav_IVs[PKSAV_GB_IV_HP];
+        ideal_child_IVs[pkmn::e_stat::HP] = pksav_IVs[PKSAV_GB_IV_HP];
 
         BOOST_ASSERT(map_keys_to_vector(ideal_child_IVs) == map_keys_to_vector(parent_IVs));
         return ideal_child_IVs;
     }
 
-    static std::map<std::string, int> combine_maps_with_higher_values(
-        const std::map<std::string, int>& map1,
-        const std::map<std::string, int>& map2
+    static std::map<pkmn::e_stat, int> combine_maps_with_higher_values(
+        const std::map<pkmn::e_stat, int>& map1,
+        const std::map<pkmn::e_stat, int>& map2
     )
     {
         BOOST_ASSERT(map_keys_to_vector(map1) == map_keys_to_vector(map2));
 
-        std::map<std::string, int> combined_map;
+        std::map<pkmn::e_stat, int> combined_map;
         for(const auto& map1_pair: map1)
         {
-            const std::string& key = map1_pair.first;
+            pkmn::e_stat key = map1_pair.first;
             int value = map1_pair.second;
 
             combined_map[key] = std::max(value, map2.at(key));
@@ -640,12 +640,12 @@ namespace pkmn { namespace breeding {
     }
 
     void copy_highest_IV_and_remove_from_input_map(
-        std::map<std::string, int>& r_input_map,
-        std::map<std::string, int>& r_output_map
+        std::map<pkmn::e_stat, int>& r_input_map,
+        std::map<pkmn::e_stat, int>& r_output_map
     )
     {
         auto max_IV_iter = map_max_value_iter(r_input_map);
-        const std::string& stat = max_IV_iter->first;
+        pkmn::e_stat stat = max_IV_iter->first;
         int IV = max_IV_iter->second;
 
         r_output_map[stat] = IV;
@@ -654,7 +654,7 @@ namespace pkmn { namespace breeding {
         r_input_map.erase(max_IV_iter);
     }
 
-    static std::map<std::string, int> get_rs_frlg_ideal_child_IVs(
+    static std::map<pkmn::e_stat, int> get_rs_frlg_ideal_child_IVs(
         const pkmn::pokemon::sptr& mother,
         const pkmn::pokemon::sptr& father
     )
@@ -665,16 +665,16 @@ namespace pkmn { namespace breeding {
          * highest unique IVs from each parent and return the maximum
          * valid value for the rest.
          */
-        std::map<std::string, int> mother_IVs = mother->get_IVs();
-        std::map<std::string, int> father_IVs = father->get_IVs();
+        std::map<pkmn::e_stat, int> mother_IVs = mother->get_IVs();
+        std::map<pkmn::e_stat, int> father_IVs = father->get_IVs();
         BOOST_ASSERT(map_keys_to_vector(mother_IVs) == map_keys_to_vector(father_IVs));
 
-        std::map<std::string, int> max_parent_IVs = combine_maps_with_higher_values(
+        std::map<pkmn::e_stat, int> max_parent_IVs = combine_maps_with_higher_values(
                                                         mother_IVs,
                                                         father_IVs
                                                     );
 
-        std::map<std::string, int> ideal_child_IVs;
+        std::map<pkmn::e_stat, int> ideal_child_IVs;
 
         BOOST_STATIC_CONSTEXPR size_t num_inherited_IVs = 3;
         for(size_t iteration = 0; iteration < num_inherited_IVs; ++iteration)
@@ -689,7 +689,7 @@ namespace pkmn { namespace breeding {
         // IVs should have the max value.
         for(const auto& IV_map_pair: max_parent_IVs)
         {
-            const std::string& stat = IV_map_pair.first;
+            pkmn::e_stat stat = IV_map_pair.first;
 
             ideal_child_IVs[stat] = PKSAV_MAX_IV;
         }
@@ -699,16 +699,16 @@ namespace pkmn { namespace breeding {
     }
 
     // https://stackoverflow.com/a/180772/2425605
-    std::map<std::string, int> get_filtered_map(
-        const std::map<std::string, int>& input_map,
-        const std::vector<std::string>& keys_to_remove
+    std::map<pkmn::e_stat, int> get_filtered_map(
+        const std::map<pkmn::e_stat, int>& input_map,
+        const std::vector<pkmn::e_stat>& keys_to_remove
     )
     {
-        std::map<std::string, int> output_map(input_map);
+        std::map<pkmn::e_stat, int> output_map(input_map);
 
         for(auto map_iter = input_map.begin(); map_iter != input_map.end();)
         {
-            const std::string& key = map_iter->first;
+            pkmn::e_stat key = map_iter->first;
 
             auto key_iter = std::find(
                                 keys_to_remove.begin(),
@@ -728,7 +728,7 @@ namespace pkmn { namespace breeding {
         return output_map;
     }
 
-    std::map<std::string, int> get_emerald_dp_ideal_child_IVs(
+    std::map<pkmn::e_stat, int> get_emerald_dp_ideal_child_IVs(
         const pkmn::pokemon::sptr& mother,
         const pkmn::pokemon::sptr& father
     )
@@ -738,33 +738,36 @@ namespace pkmn { namespace breeding {
          * inherited. Third, an IV (not HP or Defense) will be inherited. The
          * rest will be randomly generated.
          */
-        std::map<std::string, int> mother_IVs = mother->get_IVs();
-        std::map<std::string, int> father_IVs = father->get_IVs();
+        std::map<pkmn::e_stat, int> mother_IVs = mother->get_IVs();
+        std::map<pkmn::e_stat, int> father_IVs = father->get_IVs();
         BOOST_ASSERT(map_keys_to_vector(mother_IVs) == map_keys_to_vector(father_IVs));
 
-        std::map<std::string, int> ideal_child_IVs;
+        std::map<pkmn::e_stat, int> ideal_child_IVs;
 
-        std::map<std::string, int> max_parent_IVs = combine_maps_with_higher_values(
-                                                        mother_IVs,
-                                                        father_IVs
-                                                    );
+        std::map<pkmn::e_stat, int> max_parent_IVs = combine_maps_with_higher_values(
+                                                         mother_IVs,
+                                                         father_IVs
+                                                     );
         copy_highest_IV_and_remove_from_input_map(
             max_parent_IVs,
             ideal_child_IVs
         );
 
-        std::map<std::string, int> max_parent_IVs_minus_hp = get_filtered_map(
-                                                                 max_parent_IVs,
-                                                                 {"HP"}
-                                                             );
+        std::map<pkmn::e_stat, int> max_parent_IVs_minus_hp = get_filtered_map(
+                                                                  max_parent_IVs,
+                                                                  {pkmn::e_stat::HP}
+                                                              );
         copy_highest_IV_and_remove_from_input_map(
             max_parent_IVs_minus_hp,
             ideal_child_IVs
         );
 
-        std::map<std::string, int> max_parent_IVs_minus_hp_and_def = get_filtered_map(
+        std::map<pkmn::e_stat, int> max_parent_IVs_minus_hp_and_def = get_filtered_map(
                                                                          max_parent_IVs,
-                                                                         {"HP", "Defense"}
+                                                                         {
+                                                                             pkmn::e_stat::HP,
+                                                                             pkmn::e_stat::DEFENSE
+                                                                         }
                                                                      );
         copy_highest_IV_and_remove_from_input_map(
             max_parent_IVs_minus_hp_and_def,
@@ -774,7 +777,7 @@ namespace pkmn { namespace breeding {
         // Use the highest possible value for the remaining IVs.
         for(const auto& max_parent_IV_pair: max_parent_IVs)
         {
-            const std::string& stat = max_parent_IV_pair.first;
+            pkmn::e_stat stat = max_parent_IV_pair.first;
             int IV = max_parent_IV_pair.second;
 
             if(ideal_child_IVs.count(stat) == 0)
@@ -787,7 +790,7 @@ namespace pkmn { namespace breeding {
         return ideal_child_IVs;
     }
 
-    std::map<std::string, int> get_ideal_child_IVs(
+    std::map<pkmn::e_stat, int> get_ideal_child_IVs(
         const pkmn::pokemon::sptr& mother,
         const pkmn::pokemon::sptr& father,
         pkmn::e_gender child_gender
@@ -853,7 +856,7 @@ namespace pkmn { namespace breeding {
         const int generation = pkmn::database::game_name_to_generation(game);
         BOOST_ASSERT(generation >= 2);
 
-        std::map<std::string, int> ideal_child_IVs;
+        std::map<pkmn::e_stat, int> ideal_child_IVs;
 
         switch(generation)
         {

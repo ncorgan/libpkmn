@@ -427,6 +427,19 @@ namespace pkmn
         );
     }
 
+    inline void enforce_EV_bounds(
+        pkmn::e_stat stat,
+        int value,
+        bool is_game_modern
+    )
+    {
+        enforce_EV_bounds(
+            STAT_NAMES_FROM_ENUM[int(stat)],
+            value,
+            is_game_modern
+        );
+    }
+
     inline void enforce_IV_bounds(
         const std::string& stat,
         int value,
@@ -443,6 +456,19 @@ namespace pkmn
             value,
             min_value,
             max_value
+        );
+    }
+
+    inline void enforce_IV_bounds(
+        pkmn::e_stat stat,
+        int value,
+        bool is_game_modern
+    )
+    {
+        enforce_IV_bounds(
+            STAT_NAMES_FROM_ENUM[int(stat)],
+            value,
+            is_game_modern
         );
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -17,6 +17,9 @@ PKMN_LUA_INIT
     #include <pkmn/database/move_entry.hpp>
     #include <pkmn/database/pokemon_entry.hpp>
 %}
+
+%rename(stat) pkmn::e_stat;
+%import <pkmn/enums/stat.hpp>
 
 %include <lua/pkmn_item_entry.i>
 %include <lua/pkmn_move_entry.i>

@@ -203,7 +203,7 @@ namespace pkmn { namespace conversions {
         );
         to->current_hp = pksav_bigendian16(
                              pkmn::calculations::get_gb_stat(
-                                 "HP", from->level, hp_stat,
+                                 pkmn::e_stat::HP, from->level, hp_stat,
                                  pksav_bigendian16(from->ev_hp),
                                  IVs[PKSAV_GB_IV_HP]
                              )

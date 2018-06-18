@@ -12,6 +12,8 @@
 #include <pkmn/database/levelup_move.hpp>
 #include <pkmn/database/move_entry.hpp>
 
+#include <pkmn/enums/stat.hpp>
+
 #include <map>
 #include <string>
 #include <vector>
@@ -260,7 +262,7 @@ namespace pkmn { namespace database {
              *          the stats present in the given generation and whose values
              *          are all 0.
              */
-            std::map<std::string, int> get_base_stats() const;
+            std::map<pkmn::e_stat, int> get_base_stats() const;
 
             /*!
              * @brief Returns this Pokémon's EV yields for the given game.
@@ -277,7 +279,7 @@ namespace pkmn { namespace database {
              *          the stats present in the given generation and whose values
              *          are all 0.
              */
-            std::map<std::string, int> get_EV_yields() const;
+            std::map<pkmn::e_stat, int> get_EV_yields() const;
 
             /*!
              * @brief Returns this Pokémon's base experience yield.

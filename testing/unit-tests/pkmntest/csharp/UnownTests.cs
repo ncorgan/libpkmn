@@ -29,10 +29,10 @@ public class UnownTests
 
             // Make sure IVs are properly set.
             string formFromIVs = PKMN.Calculations.Gen2UnownForm(
-                                     unown.IVs["Attack"],
-                                     unown.IVs["Defense"],
-                                     unown.IVs["Speed"],
-                                     unown.IVs["Special"]
+                                     unown.IVs[PKMN.Stat.ATTACK],
+                                     unown.IVs[PKMN.Stat.DEFENSE],
+                                     unown.IVs[PKMN.Stat.SPEED],
+                                     unown.IVs[PKMN.Stat.SPECIAL]
                                  );
             Assert.AreEqual(unown.Form, formFromIVs);
 
@@ -49,10 +49,10 @@ public class UnownTests
             Assert.AreEqual(unown.Form, form);
 
             string formFromIVs = PKMN.Calculations.Gen2UnownForm(
-                                     unown.IVs["Attack"],
-                                     unown.IVs["Defense"],
-                                     unown.IVs["Speed"],
-                                     unown.IVs["Special"]
+                                     unown.IVs[PKMN.Stat.ATTACK],
+                                     unown.IVs[PKMN.Stat.DEFENSE],
+                                     unown.IVs[PKMN.Stat.SPEED],
+                                     unown.IVs[PKMN.Stat.SPECIAL]
                                  );
             Assert.AreEqual(unown.Form, formFromIVs);
 
@@ -61,10 +61,10 @@ public class UnownTests
         }
 
         // Make sure setting IVs properly changes the form.
-        unown.IVs["Attack"] = 10;
-        unown.IVs["Defense"] = 9;
-        unown.IVs["Speed"] = 1;
-        unown.IVs["Special"] = 14;
+        unown.IVs[PKMN.Stat.ATTACK] = 10;
+        unown.IVs[PKMN.Stat.DEFENSE] = 9;
+        unown.IVs[PKMN.Stat.SPEED] = 1;
+        unown.IVs[PKMN.Stat.SPECIAL] = 14;
         Assert.AreEqual(unown.Form, "G");
     }
 

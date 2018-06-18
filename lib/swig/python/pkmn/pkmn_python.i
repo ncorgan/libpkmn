@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2015-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -12,6 +12,8 @@ PKMN_PYTHON_INIT
 
 %{
     #include <pkmn/utils/paths.hpp>
+
+    #include <pkmn/enums/stat.hpp>
 
     #include "private_exports.hpp"
 %}
@@ -31,7 +33,9 @@ namespace pkmn { namespace priv {
 // a struct and point SWIG at that
 
 %rename(gender) pkmn::e_gender;
+%rename(stat) pkmn::e_stat;
 %include <pkmn/enums/gender.hpp>
+%include <pkmn/enums/stat.hpp>
 
 // Attribute Maps
 %include <python/pkmn_attribute_maps.i>

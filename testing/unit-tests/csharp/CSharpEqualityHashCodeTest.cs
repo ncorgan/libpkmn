@@ -337,35 +337,35 @@ public class CSharpEqualityHashCodeTest
      */
 
     [Test]
-    public void StringIntDictTest()
+    public void StatIntDictTest()
     {
-        PKMN.StringIntDict stringIntDict = new PKMN.StringIntDict();
-        stringIntDict["key1"] = 12;
-        stringIntDict["key2"] = 34;
-        stringIntDict["key3"] = 56;
-        stringIntDict["key4"] = 78;
-        stringIntDict["key5"] = 90;
+        PKMN.StatDict statDict = new PKMN.StatDict();
+        statDict[PKMN.Stat.HP] = 12;
+        statDict[PKMN.Stat.ATTACK] = 34;
+        statDict[PKMN.Stat.DEFENSE] = 56;
+        statDict[PKMN.Stat.SPEED] = 78;
+        statDict[PKMN.Stat.SPECIAL] = 90;
 
-        PKMN.StringIntDict stringIntDictSame = new PKMN.StringIntDict();
-        stringIntDictSame["key5"] = 90;
-        stringIntDictSame["key4"] = 78;
-        stringIntDictSame["key3"] = 56;
-        stringIntDictSame["key2"] = 34;
-        stringIntDictSame["key1"] = 12;
+        PKMN.StatDict statDictSame = new PKMN.StatDict();
+        statDictSame[PKMN.Stat.SPECIAL] = 90;
+        statDictSame[PKMN.Stat.SPEED] = 78;
+        statDictSame[PKMN.Stat.DEFENSE] = 56;
+        statDictSame[PKMN.Stat.ATTACK] = 34;
+        statDictSame[PKMN.Stat.HP] = 12;
 
-        PKMN.StringIntDict stringIntDictShuffled = new PKMN.StringIntDict();
-        stringIntDictShuffled["key1"] = 78;
-        stringIntDictShuffled["key2"] = 12;
-        stringIntDictShuffled["key3"] = 90;
-        stringIntDictShuffled["key4"] = 34;
-        stringIntDictShuffled["key5"] = 56;
+        PKMN.StatDict statDictShuffled = new PKMN.StatDict();
+        statDictShuffled[PKMN.Stat.HP] = 78;
+        statDictShuffled[PKMN.Stat.ATTACK] = 12;
+        statDictShuffled[PKMN.Stat.DEFENSE] = 90;
+        statDictShuffled[PKMN.Stat.SPEED] = 34;
+        statDictShuffled[PKMN.Stat.SPECIAL] = 56;
 
-        Assert.AreEqual(stringIntDict, stringIntDict);
-        Assert.AreEqual(stringIntDict, stringIntDictSame);
-        Assert.AreEqual(stringIntDict.GetHashCode(), stringIntDictSame.GetHashCode());
+        Assert.AreEqual(statDict, statDict);
+        Assert.AreEqual(statDict, statDictSame);
+        Assert.AreEqual(statDict.GetHashCode(), statDictSame.GetHashCode());
 
-        Assert.AreNotEqual(stringIntDict, stringIntDictShuffled);
-        Assert.AreNotEqual(stringIntDict.GetHashCode(), stringIntDictShuffled.GetHashCode());
+        Assert.AreNotEqual(statDict, statDictShuffled);
+        Assert.AreNotEqual(statDict.GetHashCode(), statDictShuffled.GetHashCode());
     }
 
     [Test]

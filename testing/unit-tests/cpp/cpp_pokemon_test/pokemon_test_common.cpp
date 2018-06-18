@@ -89,7 +89,7 @@ static void check_initial_values(
     EXPECT_TRUE(fs::exists(pokemon->get_icon_filepath()));
     EXPECT_TRUE(fs::exists(pokemon->get_sprite_filepath()));
 
-    EXPECT_EQ(pokemon->get_current_hp(), pokemon->get_stats().at("HP"));
+    EXPECT_EQ(pokemon->get_current_hp(), pokemon->get_stats().at(pkmn::e_stat::HP));
 }
 
 static void check_initial_maps(
@@ -97,57 +97,57 @@ static void check_initial_maps(
 ) {
     int generation = game_generations.at(pokemon->get_game());
 
-    const std::map<std::string, int>& EVs = pokemon->get_EVs();
-    EXPECT_EQ(1, EVs.count("HP"));
-    EXPECT_EQ(1, EVs.count("Attack"));
-    EXPECT_EQ(1, EVs.count("Defense"));
-    EXPECT_EQ(1, EVs.count("Speed"));
+    const std::map<pkmn::e_stat, int>& EVs = pokemon->get_EVs();
+    EXPECT_EQ(1, EVs.count(pkmn::e_stat::HP));
+    EXPECT_EQ(1, EVs.count(pkmn::e_stat::ATTACK));
+    EXPECT_EQ(1, EVs.count(pkmn::e_stat::DEFENSE));
+    EXPECT_EQ(1, EVs.count(pkmn::e_stat::SPEED));
     if(generation >= 3) {
-        EXPECT_EQ(0, EVs.count("Special"));
-        EXPECT_EQ(1, EVs.count("Special Attack"));
-        EXPECT_EQ(1, EVs.count("Special Defense"));
+        EXPECT_EQ(0, EVs.count(pkmn::e_stat::SPECIAL));
+        EXPECT_EQ(1, EVs.count(pkmn::e_stat::SPECIAL_ATTACK));
+        EXPECT_EQ(1, EVs.count(pkmn::e_stat::SPECIAL_DEFENSE));
     } else {
-        EXPECT_EQ(1, EVs.count("Special"));
-        EXPECT_EQ(0, EVs.count("Special Attack"));
-        EXPECT_EQ(0, EVs.count("Special Defense"));
+        EXPECT_EQ(1, EVs.count(pkmn::e_stat::SPECIAL));
+        EXPECT_EQ(0, EVs.count(pkmn::e_stat::SPECIAL_ATTACK));
+        EXPECT_EQ(0, EVs.count(pkmn::e_stat::SPECIAL_DEFENSE));
     }
     for(auto EV_iter = EVs.begin(); EV_iter != EVs.end(); ++EV_iter)
     {
-        EXPECT_EQ(EV_iter->second, 0) << EV_iter->first;
+        EXPECT_EQ(EV_iter->second, 0) << int(EV_iter->first);
     }
 
-    const std::map<std::string, int>& IVs = pokemon->get_IVs();
-    EXPECT_EQ(1, IVs.count("HP"));
-    EXPECT_EQ(1, IVs.count("Attack"));
-    EXPECT_EQ(1, IVs.count("Defense"));
-    EXPECT_EQ(1, IVs.count("Speed"));
+    const std::map<pkmn::e_stat, int>& IVs = pokemon->get_IVs();
+    EXPECT_EQ(1, IVs.count(pkmn::e_stat::HP));
+    EXPECT_EQ(1, IVs.count(pkmn::e_stat::ATTACK));
+    EXPECT_EQ(1, IVs.count(pkmn::e_stat::DEFENSE));
+    EXPECT_EQ(1, IVs.count(pkmn::e_stat::SPEED));
     if(generation >= 3) {
-        EXPECT_EQ(0, IVs.count("Special"));
-        EXPECT_EQ(1, IVs.count("Special Attack"));
-        EXPECT_EQ(1, IVs.count("Special Defense"));
+        EXPECT_EQ(0, IVs.count(pkmn::e_stat::SPECIAL));
+        EXPECT_EQ(1, IVs.count(pkmn::e_stat::SPECIAL_ATTACK));
+        EXPECT_EQ(1, IVs.count(pkmn::e_stat::SPECIAL_DEFENSE));
     } else {
-        EXPECT_EQ(1, IVs.count("Special"));
-        EXPECT_EQ(0, IVs.count("Special Attack"));
-        EXPECT_EQ(0, IVs.count("Special Defense"));
+        EXPECT_EQ(1, IVs.count(pkmn::e_stat::SPECIAL));
+        EXPECT_EQ(0, IVs.count(pkmn::e_stat::SPECIAL_ATTACK));
+        EXPECT_EQ(0, IVs.count(pkmn::e_stat::SPECIAL_DEFENSE));
     }
     for(auto IV_iter = IVs.begin(); IV_iter != IVs.end(); ++IV_iter) {
         EXPECT_GE(IV_iter->second, 0);
         EXPECT_LE(IV_iter->second, (generation >= 3) ? MODERN_IV_MAX : GB_IV_MAX);
     }
 
-    const std::map<std::string, int>& stats = pokemon->get_stats();
-    EXPECT_EQ(1, stats.count("HP"));
-    EXPECT_EQ(1, stats.count("Attack"));
-    EXPECT_EQ(1, stats.count("Defense"));
-    EXPECT_EQ(1, stats.count("Speed"));
+    const std::map<pkmn::e_stat, int>& stats = pokemon->get_stats();
+    EXPECT_EQ(1, stats.count(pkmn::e_stat::HP));
+    EXPECT_EQ(1, stats.count(pkmn::e_stat::ATTACK));
+    EXPECT_EQ(1, stats.count(pkmn::e_stat::DEFENSE));
+    EXPECT_EQ(1, stats.count(pkmn::e_stat::SPEED));
     if(generation >= 2) {
-        EXPECT_EQ(0, stats.count("Special"));
-        EXPECT_EQ(1, stats.count("Special Attack"));
-        EXPECT_EQ(1, stats.count("Special Defense"));
+        EXPECT_EQ(0, stats.count(pkmn::e_stat::SPECIAL));
+        EXPECT_EQ(1, stats.count(pkmn::e_stat::SPECIAL_ATTACK));
+        EXPECT_EQ(1, stats.count(pkmn::e_stat::SPECIAL_DEFENSE));
     } else {
-        EXPECT_EQ(1, stats.count("Special"));
-        EXPECT_EQ(0, stats.count("Special Attack"));
-        EXPECT_EQ(0, stats.count("Special Defense"));
+        EXPECT_EQ(1, stats.count(pkmn::e_stat::SPECIAL));
+        EXPECT_EQ(0, stats.count(pkmn::e_stat::SPECIAL_ATTACK));
+        EXPECT_EQ(0, stats.count(pkmn::e_stat::SPECIAL_DEFENSE));
     }
     for(auto stat_iter = stats.begin(); stat_iter != stats.end(); ++stat_iter) {
         EXPECT_GE(stat_iter->second, 0);
@@ -671,9 +671,9 @@ static void test_setting_stats(
     int generation = game_generations.at(pokemon->get_game());
 
     // Make sure setting EVs only impacts the specific EV.
-    const std::map<std::string, int>& EVs = pokemon->get_EVs();
+    const std::map<pkmn::e_stat, int>& EVs = pokemon->get_EVs();
     for(auto EVs_iter = EVs.begin(); EVs_iter != EVs.end(); ++EVs_iter) {
-        std::map<std::string, int> EVs_before = pokemon->get_EVs();
+        std::map<pkmn::e_stat, int> EVs_before = pokemon->get_EVs();
         int new_value = std::rand() % ((generation >= 3) ? MODERN_EV_MAX : GB_EV_MAX);
         pokemon->set_EV(EVs_iter->first, new_value);
 
@@ -688,9 +688,9 @@ static void test_setting_stats(
 
     if(generation >= 3) {
         // Make sure setting IVs only impacts the specific IV.
-        const std::map<std::string, int>& IVs = pokemon->get_IVs();
+        const std::map<pkmn::e_stat, int>& IVs = pokemon->get_IVs();
         for(auto IVs_iter = IVs.begin(); IVs_iter != IVs.end(); ++IVs_iter) {
-            std::map<std::string, int> IVs_before = pokemon->get_IVs();
+            std::map<pkmn::e_stat, int> IVs_before = pokemon->get_IVs();
             int new_value = std::rand() % MODERN_IV_MAX;
             pokemon->set_IV(IVs_iter->first, new_value);
 
@@ -723,15 +723,15 @@ static void test_setting_stats(
         }
     } else {
         // HP is tied to every other IV, so ignore that check.
-        const std::map<std::string, int>& IVs = pokemon->get_IVs();
+        const std::map<pkmn::e_stat, int>& IVs = pokemon->get_IVs();
         for(auto IVs_iter = IVs.begin(); IVs_iter != IVs.end(); ++IVs_iter) {
-            std::map<std::string, int> IVs_before = pokemon->get_IVs();
+            std::map<pkmn::e_stat, int> IVs_before = pokemon->get_IVs();
             int new_value = std::rand() % GB_IV_MAX;
             pokemon->set_IV(IVs_iter->first, new_value);
             for(auto IVs_before_iter = IVs_before.begin(); IVs_before_iter != IVs_before.end(); ++IVs_before_iter) {
                 if(IVs_before_iter->first == IVs_iter->first) {
                     EXPECT_EQ(new_value, IVs_iter->second);
-                } else if(IVs_before_iter->first != "HP" and IVs_iter->first != "HP") {
+                } else if(IVs_before_iter->first != pkmn::e_stat::HP and IVs_iter->first != pkmn::e_stat::HP) {
                     EXPECT_EQ(IVs_before_iter->second, IVs.at(IVs_before_iter->first));
                 }
             }
@@ -739,29 +739,29 @@ static void test_setting_stats(
     }
 
     // Check bounds for setting current HP.
-    const std::map<std::string, int>& stats = pokemon->get_stats();
+    const std::map<pkmn::e_stat, int>& stats = pokemon->get_stats();
 
     EXPECT_THROW(
         pokemon->set_current_hp(-1);
     , std::out_of_range);
     EXPECT_THROW(
-        pokemon->set_current_hp(stats.at("HP")+1);
+        pokemon->set_current_hp(stats.at(pkmn::e_stat::HP)+1);
     , std::out_of_range);
 
     pokemon->set_current_hp(0);
     EXPECT_EQ(0, pokemon->get_current_hp());
 
-    pokemon->set_current_hp(stats.at("HP")-1);
-    EXPECT_EQ(stats.at("HP")-1, pokemon->get_current_hp());
+    pokemon->set_current_hp(stats.at(pkmn::e_stat::HP)-1);
+    EXPECT_EQ(stats.at(pkmn::e_stat::HP)-1, pokemon->get_current_hp());
 
-    pokemon->set_current_hp(stats.at("HP"));
-    EXPECT_EQ(stats.at("HP"), pokemon->get_current_hp());
+    pokemon->set_current_hp(stats.at(pkmn::e_stat::HP));
+    EXPECT_EQ(stats.at(pkmn::e_stat::HP), pokemon->get_current_hp());
 
     // Set the HP stat to lower than the current HP, and make sure it's
     // updated.
     int current_hp = pokemon->get_current_hp();
-    pokemon->set_EV("HP", 0);
-    pokemon->set_IV("HP", 0);
+    pokemon->set_EV(pkmn::e_stat::HP, 0);
+    pokemon->set_IV(pkmn::e_stat::HP, 0);
     EXPECT_LE(pokemon->get_current_hp(), current_hp);
 }
 

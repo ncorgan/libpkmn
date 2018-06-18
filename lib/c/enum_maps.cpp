@@ -25,13 +25,13 @@ namespace pkmn { namespace c {
     {
         static const stat_bimap_t STAT_BIMAP =
         boost::assign::list_of<stat_bimap_t::relation>
-            ("HP",              PKMN_STAT_HP)
-            ("Attack",          PKMN_STAT_ATTACK)
-            ("Defense",         PKMN_STAT_DEFENSE)
-            ("Speed",           PKMN_STAT_SPEED)
-            ("Special",         PKMN_STAT_SPECIAL)
-            ("Special Attack",  PKMN_STAT_SPATK)
-            ("Special Defense", PKMN_STAT_SPDEF)
+            (pkmn::e_stat::HP,              PKMN_STAT_HP)
+            (pkmn::e_stat::ATTACK,          PKMN_STAT_ATTACK)
+            (pkmn::e_stat::DEFENSE,         PKMN_STAT_DEFENSE)
+            (pkmn::e_stat::SPEED,           PKMN_STAT_SPEED)
+            (pkmn::e_stat::SPECIAL,         PKMN_STAT_SPECIAL)
+            (pkmn::e_stat::SPECIAL_ATTACK,  PKMN_STAT_SPATK)
+            (pkmn::e_stat::SPECIAL_DEFENSE, PKMN_STAT_SPDEF)
         ;
 
         return STAT_BIMAP;

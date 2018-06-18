@@ -11,8 +11,10 @@
 #include <pkmn/move_slot.hpp>
 #include <pkmn/database/move_entry.hpp>
 #include <pkmn/database/pokemon_entry.hpp>
-#include <pkmn/enums/gender.hpp>
 #include <pkmn/types/class_with_attributes.hpp>
+
+#include <pkmn/enums/gender.hpp>
+#include <pkmn/enums/stat.hpp>
 
 #include <cstdint>
 #include <memory>
@@ -240,17 +242,17 @@ namespace pkmn {
                 int pp
             ) = 0;
 
-            virtual const std::map<std::string, int>& get_EVs() = 0;
+            virtual const std::map<pkmn::e_stat, int>& get_EVs() = 0;
 
             virtual void set_EV(
-                const std::string& stat,
+                pkmn::e_stat stat,
                 int value
             ) = 0;
 
-            virtual const std::map<std::string, int>& get_IVs() = 0;
+            virtual const std::map<pkmn::e_stat, int>& get_IVs() = 0;
 
             virtual void set_IV(
-                const std::string& stat,
+                pkmn::e_stat stat,
                 int value
             ) = 0;
 
@@ -260,7 +262,7 @@ namespace pkmn {
                 int hp
             ) = 0;
 
-            virtual const std::map<std::string, int>& get_stats() = 0;
+            virtual const std::map<pkmn::e_stat, int>& get_stats() = 0;
 
             virtual std::string get_icon_filepath() = 0;
 

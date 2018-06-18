@@ -12,6 +12,37 @@
 namespace pksav
 {
 
+// Stats
+
+const gb_IV_bimap_t& get_gb_IV_bimap()
+{
+    static const gb_IV_bimap_t GB_IV_BIMAP =
+    boost::assign::list_of<gb_IV_bimap_t::relation>
+        (pkmn::e_stat::HP,      PKSAV_GB_IV_HP)
+        (pkmn::e_stat::ATTACK,  PKSAV_GB_IV_ATTACK)
+        (pkmn::e_stat::DEFENSE, PKSAV_GB_IV_DEFENSE)
+        (pkmn::e_stat::SPEED,   PKSAV_GB_IV_SPEED)
+        (pkmn::e_stat::SPECIAL, PKSAV_GB_IV_SPECIAL)
+    ;
+
+    return GB_IV_BIMAP;
+}
+
+const IV_bimap_t& get_IV_bimap()
+{
+    static const IV_bimap_t IV_BIMAP =
+    boost::assign::list_of<IV_bimap_t::relation>
+        (pkmn::e_stat::HP,              PKSAV_IV_HP)
+        (pkmn::e_stat::ATTACK,          PKSAV_IV_ATTACK)
+        (pkmn::e_stat::DEFENSE,         PKSAV_IV_DEFENSE)
+        (pkmn::e_stat::SPEED,           PKSAV_IV_SPEED)
+        (pkmn::e_stat::SPECIAL_ATTACK,  PKSAV_IV_SPATK)
+        (pkmn::e_stat::SPECIAL_DEFENSE, PKSAV_IV_SPDEF)
+    ;
+
+    return IV_BIMAP;
+}
+
 // Genders
 
 const gen2_gender_bimap_t& get_gen2_gender_bimap()

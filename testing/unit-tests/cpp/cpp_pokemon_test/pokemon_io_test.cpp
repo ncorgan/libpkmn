@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -78,13 +78,13 @@ static pkmn::pokemon::sptr get_random_pokemon(
         ret->set_move(move, i);
     }
 
-    const std::map<std::string, int>& EVs = ret->get_EVs();
+    const std::map<pkmn::e_stat, int>& EVs = ret->get_EVs();
     for(auto iter = EVs.begin(); iter != EVs.end(); ++iter)
     {
         ret->set_EV(iter->first, (rand() % 256));
     }
 
-    const std::map<std::string, int>& IVs = ret->get_IVs();
+    const std::map<pkmn::e_stat, int>& IVs = ret->get_IVs();
     for(auto iter = IVs.begin(); iter != IVs.end(); ++iter)
     {
         ret->set_IV(iter->first, (rand() % 16));
@@ -149,22 +149,22 @@ static void compare_pokemon(
     EXPECT_EQ(pokemon1->get_nickname(), pokemon2->get_nickname());
     EXPECT_EQ(pokemon1->get_original_trainer_name(), pokemon2->get_original_trainer_name());
 
-    const std::map<std::string, int>& EVs1 = pokemon1->get_EVs();
-    const std::map<std::string, int>& EVs2 = pokemon2->get_EVs();
+    const std::map<pkmn::e_stat, int>& EVs1 = pokemon1->get_EVs();
+    const std::map<pkmn::e_stat, int>& EVs2 = pokemon2->get_EVs();
     for(auto iter = EVs1.begin(); iter != EVs1.end(); ++iter)
     {
         EXPECT_EQ(iter->second, EVs2.at(iter->first));
     }
 
-    const std::map<std::string, int>& IVs1 = pokemon1->get_IVs();
-    const std::map<std::string, int>& IVs2 = pokemon2->get_IVs();
+    const std::map<pkmn::e_stat, int>& IVs1 = pokemon1->get_IVs();
+    const std::map<pkmn::e_stat, int>& IVs2 = pokemon2->get_IVs();
     for(auto iter = IVs1.begin(); iter != IVs1.end(); ++iter)
     {
         EXPECT_EQ(iter->second, IVs2.at(iter->first));
     }
 
-    const std::map<std::string, int>& stats1 = pokemon1->get_stats();
-    const std::map<std::string, int>& stats2 = pokemon2->get_stats();
+    const std::map<pkmn::e_stat, int>& stats1 = pokemon1->get_stats();
+    const std::map<pkmn::e_stat, int>& stats2 = pokemon2->get_stats();
     for(auto iter = stats1.begin(); iter != stats1.end(); ++iter)
     {
         EXPECT_EQ(iter->second, stats2.at(iter->first));
@@ -350,32 +350,32 @@ TEST(pokemon_io_test, test_outside_3gpkm) {
         EXPECT_EQ(expected_mightyena_moves[i], mightyena_moves[i].move);
     }
 
-    const std::map<std::string, int>& mightyena_EVs = mightyena->get_EVs();
+    const std::map<pkmn::e_stat, int>& mightyena_EVs = mightyena->get_EVs();
     EXPECT_EQ(6, mightyena_EVs.size());
-    EXPECT_EQ(30, mightyena_EVs.at("HP"));
-    EXPECT_EQ(110, mightyena_EVs.at("Attack"));
-    EXPECT_EQ(32, mightyena_EVs.at("Defense"));
-    EXPECT_EQ(48, mightyena_EVs.at("Speed"));
-    EXPECT_EQ(17, mightyena_EVs.at("Special Attack"));
-    EXPECT_EQ(83, mightyena_EVs.at("Special Defense"));
+    EXPECT_EQ(30, mightyena_EVs.at(pkmn::e_stat::HP));
+    EXPECT_EQ(110, mightyena_EVs.at(pkmn::e_stat::ATTACK));
+    EXPECT_EQ(32, mightyena_EVs.at(pkmn::e_stat::DEFENSE));
+    EXPECT_EQ(48, mightyena_EVs.at(pkmn::e_stat::SPEED));
+    EXPECT_EQ(17, mightyena_EVs.at(pkmn::e_stat::SPECIAL_ATTACK));
+    EXPECT_EQ(83, mightyena_EVs.at(pkmn::e_stat::SPECIAL_DEFENSE));
 
-    const std::map<std::string, int>& mightyena_IVs = mightyena->get_IVs();
+    const std::map<pkmn::e_stat, int>& mightyena_IVs = mightyena->get_IVs();
     EXPECT_EQ(6, mightyena_IVs.size());
-    EXPECT_EQ(26, mightyena_IVs.at("HP"));
-    EXPECT_EQ(28, mightyena_IVs.at("Attack"));
-    EXPECT_EQ(4, mightyena_IVs.at("Defense"));
-    EXPECT_EQ(13, mightyena_IVs.at("Speed"));
-    EXPECT_EQ(25, mightyena_IVs.at("Special Attack"));
-    EXPECT_EQ(26, mightyena_IVs.at("Special Defense"));
+    EXPECT_EQ(26, mightyena_IVs.at(pkmn::e_stat::HP));
+    EXPECT_EQ(28, mightyena_IVs.at(pkmn::e_stat::ATTACK));
+    EXPECT_EQ(4, mightyena_IVs.at(pkmn::e_stat::DEFENSE));
+    EXPECT_EQ(13, mightyena_IVs.at(pkmn::e_stat::SPEED));
+    EXPECT_EQ(25, mightyena_IVs.at(pkmn::e_stat::SPECIAL_ATTACK));
+    EXPECT_EQ(26, mightyena_IVs.at(pkmn::e_stat::SPECIAL_DEFENSE));
 
-    const std::map<std::string, int>& mightyena_stats = mightyena->get_stats();
+    const std::map<pkmn::e_stat, int>& mightyena_stats = mightyena->get_stats();
     EXPECT_EQ(6, mightyena_stats.size());
-    EXPECT_EQ(146, mightyena_stats.at("HP"));
-    EXPECT_EQ(122, mightyena_stats.at("Attack"));
-    EXPECT_EQ(81, mightyena_stats.at("Defense"));
-    EXPECT_EQ(87, mightyena_stats.at("Speed"));
-    EXPECT_EQ(79, mightyena_stats.at("Special Attack"));
-    EXPECT_EQ(88, mightyena_stats.at("Special Defense"));
+    EXPECT_EQ(146, mightyena_stats.at(pkmn::e_stat::HP));
+    EXPECT_EQ(122, mightyena_stats.at(pkmn::e_stat::ATTACK));
+    EXPECT_EQ(81, mightyena_stats.at(pkmn::e_stat::DEFENSE));
+    EXPECT_EQ(87, mightyena_stats.at(pkmn::e_stat::SPEED));
+    EXPECT_EQ(79, mightyena_stats.at(pkmn::e_stat::SPECIAL_ATTACK));
+    EXPECT_EQ(88, mightyena_stats.at(pkmn::e_stat::SPECIAL_DEFENSE));
 }
 
 // These tests makes sure that when a Pokémon is exported and re-imported, that

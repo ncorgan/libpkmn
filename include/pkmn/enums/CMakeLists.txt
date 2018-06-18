@@ -8,6 +8,7 @@
 IF(NOT PKMN_DONT_INSTALL_HEADERS)
     SET(pkmn_enums_headers
         gender.hpp
+        stat.hpp
     )
 
     INSTALL(

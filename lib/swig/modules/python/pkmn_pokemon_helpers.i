@@ -19,17 +19,17 @@
 
 // Replace methods with more idiomatic Python.
 
-%attributeval(pkmn::swig::EV_map, %arg(std::vector<std::string>), keys, keys);
+%attributeval(pkmn::swig::EV_map, %arg(std::vector<pkmn::e_stat>), keys, keys);
 
 %extend pkmn::swig::EV_map
 {
-    int __getitem__(const std::string& stat)
+    int __getitem__(pkmn::e_stat stat)
     {
         return self->get_EV(stat);
     }
 
     void __setitem__(
-        const std::string& stat,
+        pkmn::e_stat stat,
         int value
     )
     {
@@ -52,17 +52,17 @@
 
 // Replace methods with more idiomatic Python.
 
-%attributeval(pkmn::swig::IV_map, %arg(std::vector<std::string>), keys, keys);
+%attributeval(pkmn::swig::IV_map, %arg(std::vector<pkmn::e_stat>), keys, keys);
 
 %extend pkmn::swig::IV_map
 {
-    int __getitem__(const std::string& stat)
+    int __getitem__(pkmn::e_stat stat)
     {
         return self->get_IV(stat);
     }
 
     void __setitem__(
-        const std::string& stat,
+        pkmn::e_stat stat,
         int value
     )
     {

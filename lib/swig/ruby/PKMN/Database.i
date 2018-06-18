@@ -19,6 +19,8 @@ PKMN_RUBY_INIT
     #include <pkmn/database/lists.hpp>
 %}
 
+%import <pkmn/enums/stat.hpp>
+
 %include <pkmn/database/lists.hpp>
 %include <ruby/pkmn_item_entry.i>
 %include <ruby/pkmn_move_entry.i>

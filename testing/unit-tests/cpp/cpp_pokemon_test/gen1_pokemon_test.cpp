@@ -81,14 +81,14 @@ TEST_P(gen1_pokemon_test, gen1_pokemon_test) {
 
     EXPECT_EQ(pokemon->get_original_trainer_id(), int(pksav_bigendian16(native_pc->ot_id)));
 
-    const std::map<std::string, int>& EVs = pokemon->get_EVs();
-    EXPECT_EQ(EVs.at("HP"), int(pksav_bigendian16(native_pc->ev_hp)));
-    EXPECT_EQ(EVs.at("Attack") , int(pksav_bigendian16(native_pc->ev_atk)));
-    EXPECT_EQ(EVs.at("Defense"), int(pksav_bigendian16(native_pc->ev_def)));
-    EXPECT_EQ(EVs.at("Speed"), int(pksav_bigendian16(native_pc->ev_spd)));
-    EXPECT_EQ(EVs.at("Special"), int(pksav_bigendian16(native_pc->ev_spcl)));
+    const std::map<pkmn::e_stat, int>& EVs = pokemon->get_EVs();
+    EXPECT_EQ(EVs.at(pkmn::e_stat::HP), int(pksav_bigendian16(native_pc->ev_hp)));
+    EXPECT_EQ(EVs.at(pkmn::e_stat::ATTACK) , int(pksav_bigendian16(native_pc->ev_atk)));
+    EXPECT_EQ(EVs.at(pkmn::e_stat::DEFENSE), int(pksav_bigendian16(native_pc->ev_def)));
+    EXPECT_EQ(EVs.at(pkmn::e_stat::SPEED), int(pksav_bigendian16(native_pc->ev_spd)));
+    EXPECT_EQ(EVs.at(pkmn::e_stat::SPECIAL), int(pksav_bigendian16(native_pc->ev_spcl)));
 
-    const std::map<std::string, int>& IVs = pokemon->get_IVs();
+    const std::map<pkmn::e_stat, int>& IVs = pokemon->get_IVs();
     uint8_t pksav_IVs[PKSAV_NUM_GB_IVS] = {0};
     PKSAV_CALL(
         pksav_get_gb_IVs(
@@ -98,21 +98,21 @@ TEST_P(gen1_pokemon_test, gen1_pokemon_test) {
         );
     )
 
-    EXPECT_EQ(IVs.at("HP"),      int(pksav_IVs[PKSAV_GB_IV_HP]));
-    EXPECT_EQ(IVs.at("Attack"),  int(pksav_IVs[PKSAV_GB_IV_ATTACK]));
-    EXPECT_EQ(IVs.at("Defense"), int(pksav_IVs[PKSAV_GB_IV_DEFENSE]));
-    EXPECT_EQ(IVs.at("Speed"),   int(pksav_IVs[PKSAV_GB_IV_SPEED]));
-    EXPECT_EQ(IVs.at("Special"), int(pksav_IVs[PKSAV_GB_IV_SPECIAL]));
+    EXPECT_EQ(IVs.at(pkmn::e_stat::HP),      int(pksav_IVs[PKSAV_GB_IV_HP]));
+    EXPECT_EQ(IVs.at(pkmn::e_stat::ATTACK),  int(pksav_IVs[PKSAV_GB_IV_ATTACK]));
+    EXPECT_EQ(IVs.at(pkmn::e_stat::DEFENSE), int(pksav_IVs[PKSAV_GB_IV_DEFENSE]));
+    EXPECT_EQ(IVs.at(pkmn::e_stat::SPEED),   int(pksav_IVs[PKSAV_GB_IV_SPEED]));
+    EXPECT_EQ(IVs.at(pkmn::e_stat::SPECIAL), int(pksav_IVs[PKSAV_GB_IV_SPECIAL]));
 
     /*
      * Party data
      */
     EXPECT_EQ(pokemon->get_level(), int(native_party_data->level));
-    EXPECT_EQ(pokemon->get_stats().at("HP"), int(pksav_bigendian16(native_party_data->max_hp)));
-    EXPECT_EQ(pokemon->get_stats().at("Attack"), int(pksav_bigendian16(native_party_data->atk)));
-    EXPECT_EQ(pokemon->get_stats().at("Defense"), int(pksav_bigendian16(native_party_data->def)));
-    EXPECT_EQ(pokemon->get_stats().at("Speed"), int(pksav_bigendian16(native_party_data->spd)));
-    EXPECT_EQ(pokemon->get_stats().at("Special"), int(pksav_bigendian16(native_party_data->spcl)));
+    EXPECT_EQ(pokemon->get_stats().at(pkmn::e_stat::HP), int(pksav_bigendian16(native_party_data->max_hp)));
+    EXPECT_EQ(pokemon->get_stats().at(pkmn::e_stat::ATTACK), int(pksav_bigendian16(native_party_data->atk)));
+    EXPECT_EQ(pokemon->get_stats().at(pkmn::e_stat::DEFENSE), int(pksav_bigendian16(native_party_data->def)));
+    EXPECT_EQ(pokemon->get_stats().at(pkmn::e_stat::SPEED), int(pksav_bigendian16(native_party_data->spd)));
+    EXPECT_EQ(pokemon->get_stats().at(pkmn::e_stat::SPECIAL), int(pksav_bigendian16(native_party_data->spcl)));
 
     /*
      * Test attributes.

@@ -2144,21 +2144,21 @@ TEST(cpp_calculations_test, gb_stat_test) {
     // Invalid stat
     EXPECT_THROW(
         pkmn::calculations::get_gb_stat(
-            "Not a stat", 1, 1, 1, 1
+            pkmn::e_stat::NONE, 1, 1, 1, 1
         );
     , std::invalid_argument);
 
     // Invalid EV
     EXPECT_THROW(
         pkmn::calculations::get_gb_stat(
-            "Attack", 1, 1, 123456, 1
+            pkmn::e_stat::ATTACK, 1, 1, 123456, 1
         );
     , std::out_of_range);
 
     // Invalid IV
     EXPECT_THROW(
         pkmn::calculations::get_gb_stat(
-            "Attack", 1, 1, 1, 12345
+            pkmn::e_stat::ATTACK, 1, 1, 1, 12345
         );
     , std::out_of_range);
 
@@ -2169,37 +2169,37 @@ TEST(cpp_calculations_test, gb_stat_test) {
      */
     PKMN_EXPECT_STAT_CLOSE(
         pkmn::calculations::get_gb_stat(
-            "HP", 81, 35, 22850, 7
+            pkmn::e_stat::HP, 81, 35, 22850, 7
         ), 189
     );
     PKMN_EXPECT_STAT_CLOSE(
         pkmn::calculations::get_gb_stat(
-            "Attack", 81, 55, 23140, 8
+            pkmn::e_stat::ATTACK, 81, 55, 23140, 8
         ), 137
     );
     PKMN_EXPECT_STAT_CLOSE(
         pkmn::calculations::get_gb_stat(
-            "Defense", 81, 30, 17280, 13
+            pkmn::e_stat::DEFENSE, 81, 30, 17280, 13
         ), 101
     );
     PKMN_EXPECT_STAT_CLOSE(
         pkmn::calculations::get_gb_stat(
-            "Special", 81, 50, 19625, 9
+            pkmn::e_stat::SPECIAL, 81, 50, 19625, 9
         ), 128
     );
     PKMN_EXPECT_STAT_CLOSE(
         pkmn::calculations::get_gb_stat(
-            "Special Attack", 81, 50, 19625, 9
+            pkmn::e_stat::SPECIAL_ATTACK, 81, 50, 19625, 9
         ), 128
     );
     PKMN_EXPECT_STAT_CLOSE(
         pkmn::calculations::get_gb_stat(
-            "Special Defense", 81, 40, 19625, 9
+            pkmn::e_stat::SPECIAL_DEFENSE, 81, 40, 19625, 9
         ), 112
     );
     PKMN_EXPECT_STAT_CLOSE(
         pkmn::calculations::get_gb_stat(
-            "Speed", 81, 90, 24795, 5
+            pkmn::e_stat::SPEED, 81, 90, 24795, 5
         ), 190
     );
 }
@@ -2212,35 +2212,35 @@ TEST(cpp_calculations_test, modern_stat_test) {
     // Invalid stat
     EXPECT_THROW(
         pkmn::calculations::get_modern_stat(
-            "Not a stat", 1, 1.0f, 1, 1, 1
+            pkmn::e_stat::NONE, 1, 1.0f, 1, 1, 1
         );
     , std::invalid_argument);
 
     // No Special past Generation I
     EXPECT_THROW(
         pkmn::calculations::get_modern_stat(
-            "Special", 1, 1.0f, 1, 1, 1
+            pkmn::e_stat::SPECIAL, 1, 1.0f, 1, 1, 1
         );
     , std::invalid_argument);
 
     // Invalid nature modifier
     EXPECT_THROW(
         pkmn::calculations::get_modern_stat(
-            "Attack", 1, 0.666f, 1, 1, 1
+            pkmn::e_stat::ATTACK, 1, 0.666f, 1, 1, 1
         );
     , std::domain_error);
 
     // Invalid EV
     EXPECT_THROW(
         pkmn::calculations::get_modern_stat(
-            "Attack", 1, 1.0f, 1, 12345, 1
+            pkmn::e_stat::ATTACK, 1, 1.0f, 1, 12345, 1
         );
     , std::out_of_range);
 
     // Invalid IV
     EXPECT_THROW(
         pkmn::calculations::get_modern_stat(
-            "Attack", 1, 1.0f, 1, 1, 12345
+            pkmn::e_stat::ATTACK, 1, 1.0f, 1, 1, 12345
         );
     , std::out_of_range);
 
@@ -2251,32 +2251,32 @@ TEST(cpp_calculations_test, modern_stat_test) {
      */
     PKMN_EXPECT_STAT_CLOSE(
         pkmn::calculations::get_modern_stat(
-            "HP", 78, 1.0f, 108, 74, 24
+            pkmn::e_stat::HP, 78, 1.0f, 108, 74, 24
         ), 289
     );
     PKMN_EXPECT_STAT_CLOSE(
         pkmn::calculations::get_modern_stat(
-            "Attack", 78, 1.1f, 130, 195, 12
+            pkmn::e_stat::ATTACK, 78, 1.1f, 130, 195, 12
         ), 280
     );
     PKMN_EXPECT_STAT_CLOSE(
         pkmn::calculations::get_modern_stat(
-            "Defense", 78, 1.0f, 95, 86, 30
+            pkmn::e_stat::DEFENSE, 78, 1.0f, 95, 86, 30
         ), 193
     );
     PKMN_EXPECT_STAT_CLOSE(
         pkmn::calculations::get_modern_stat(
-            "Special Attack", 78, 0.9f, 80, 48, 16
+            pkmn::e_stat::SPECIAL_ATTACK, 78, 0.9f, 80, 48, 16
         ), 136
     );
     PKMN_EXPECT_STAT_CLOSE(
         pkmn::calculations::get_modern_stat(
-            "Special Defense", 78, 1.0f, 85, 84, 23
+            pkmn::e_stat::SPECIAL_DEFENSE, 78, 1.0f, 85, 84, 23
         ), 171
     );
     PKMN_EXPECT_STAT_CLOSE(
         pkmn::calculations::get_modern_stat(
-            "Speed", 78, 1.0f, 102, 23, 5
+            pkmn::e_stat::SPEED, 78, 1.0f, 102, 23, 5
         ), 172
     );
 }

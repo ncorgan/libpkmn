@@ -60,11 +60,11 @@ namespace pkmn {
 
             const pkmn::move_slots_t& get_moves() override final;
 
-            const std::map<std::string, int>& get_EVs() override final;
+            const std::map<pkmn::e_stat, int>& get_EVs() override final;
 
-            const std::map<std::string, int>& get_IVs() override final;
+            const std::map<pkmn::e_stat, int>& get_IVs() override final;
 
-            const std::map<std::string, int>& get_stats() override final;
+            const std::map<pkmn::e_stat, int>& get_stats() override final;
 
             virtual std::string get_icon_filepath() override;
 
@@ -107,7 +107,9 @@ namespace pkmn {
 
         protected:
             pkmn::move_slots_t _moves;
-            std::map<std::string, int> _contest_stats, _stats, _EVs, _IVs;
+            std::map<std::string, int> _contest_stats;
+            std::map<pkmn::e_stat, int> _EVs, _IVs, _stats;
+
             std::map<std::string, bool> _markings, _ribbons;
 
             pkmn::database::pokemon_entry _database_entry;
@@ -171,13 +173,13 @@ namespace pkmn {
             );
 
             void _set_gb_IV(
-                const std::string& stat,
+                pkmn::e_stat stat,
                 int value,
                 uint16_t* iv_data_ptr
             );
 
             void _set_modern_IV(
-                const std::string& stat,
+                pkmn::e_stat stat,
                 int value,
                 uint32_t* iv_data_ptr
             );

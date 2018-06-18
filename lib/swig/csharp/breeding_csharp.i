@@ -24,6 +24,7 @@ PKMN_CSHARP_INIT
 %include <pkmn_csharp_docs.i>
 
 %import <pkmn/enums/gender.hpp>
+%import <pkmn/enums/stat.hpp>
 
 %include <pkmn/breeding/child_info.hpp>
 %include <pkmn/breeding/compatibility.hpp>

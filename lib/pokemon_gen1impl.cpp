@@ -688,7 +688,7 @@ namespace pkmn
     }
 
     void pokemon_gen1impl::set_IV(
-        const std::string& stat,
+        pkmn::e_stat stat,
         int value
     )
     {
@@ -779,7 +779,7 @@ namespace pkmn
     }
 
     void pokemon_gen1impl::set_EV(
-        const std::string& stat,
+        pkmn::e_stat stat,
         int value
     )
     {
@@ -792,25 +792,27 @@ namespace pkmn
 
         boost::lock_guard<pokemon_gen1impl> lock(*this);
 
-        if(stat == "HP")
+        switch(stat)
         {
-            GEN1_PC_RCAST->ev_hp = pksav_bigendian16(uint16_t(value));
-        }
-        else if(stat == "Attack")
-        {
-            GEN1_PC_RCAST->ev_atk = pksav_bigendian16(uint16_t(value));
-        }
-        else if(stat == "Defense")
-        {
-            GEN1_PC_RCAST->ev_def = pksav_bigendian16(uint16_t(value));
-        }
-        else if(stat == "Speed")
-        {
-            GEN1_PC_RCAST->ev_spd = pksav_bigendian16(uint16_t(value));
-        }
-        else
-        {
-            GEN1_PC_RCAST->ev_spcl = pksav_bigendian16(uint16_t(value));
+            case pkmn::e_stat::HP:
+                GEN1_PC_RCAST->ev_hp = pksav_bigendian16(uint16_t(value));
+                break;
+
+            case pkmn::e_stat::ATTACK:
+                GEN1_PC_RCAST->ev_atk = pksav_bigendian16(uint16_t(value));
+                break;
+
+            case pkmn::e_stat::DEFENSE:
+                GEN1_PC_RCAST->ev_def = pksav_bigendian16(uint16_t(value));
+                break;
+
+            case pkmn::e_stat::SPEED:
+                GEN1_PC_RCAST->ev_spd = pksav_bigendian16(uint16_t(value));
+                break;
+
+            default:
+                GEN1_PC_RCAST->ev_spcl = pksav_bigendian16(uint16_t(value));
+                break;
         }
 
         _update_EV_map();
@@ -832,7 +834,7 @@ namespace pkmn
             "Current HP",
             hp,
             0,
-            _stats["HP"]
+            _stats[pkmn::e_stat::HP]
         );
 
         boost::lock_guard<pokemon_gen1impl> lock(*this);
@@ -904,20 +906,20 @@ namespace pkmn
 
     void pokemon_gen1impl::_update_EV_map()
     {
-        _EVs["HP"]      = int(pksav_bigendian16(GEN1_PC_RCAST->ev_hp));
-        _EVs["Attack"]  = int(pksav_bigendian16(GEN1_PC_RCAST->ev_atk));
-        _EVs["Defense"] = int(pksav_bigendian16(GEN1_PC_RCAST->ev_def));
-        _EVs["Speed"]   = int(pksav_bigendian16(GEN1_PC_RCAST->ev_spd));
-        _EVs["Special"] = int(pksav_bigendian16(GEN1_PC_RCAST->ev_spcl));
+        _EVs[pkmn::e_stat::HP]      = int(pksav_bigendian16(GEN1_PC_RCAST->ev_hp));
+        _EVs[pkmn::e_stat::ATTACK]  = int(pksav_bigendian16(GEN1_PC_RCAST->ev_atk));
+        _EVs[pkmn::e_stat::DEFENSE] = int(pksav_bigendian16(GEN1_PC_RCAST->ev_def));
+        _EVs[pkmn::e_stat::SPEED]   = int(pksav_bigendian16(GEN1_PC_RCAST->ev_spd));
+        _EVs[pkmn::e_stat::SPECIAL] = int(pksav_bigendian16(GEN1_PC_RCAST->ev_spcl));
     }
 
     void pokemon_gen1impl::_update_stat_map()
     {
-        _stats["HP"]      = int(pksav_bigendian16(GEN1_PARTY_RCAST->max_hp));
-        _stats["Attack"]  = int(pksav_bigendian16(GEN1_PARTY_RCAST->atk));
-        _stats["Defense"] = int(pksav_bigendian16(GEN1_PARTY_RCAST->def));
-        _stats["Speed"]   = int(pksav_bigendian16(GEN1_PARTY_RCAST->spd));
-        _stats["Special"] = int(pksav_bigendian16(GEN1_PARTY_RCAST->spcl));
+        _stats[pkmn::e_stat::HP]      = int(pksav_bigendian16(GEN1_PARTY_RCAST->max_hp));
+        _stats[pkmn::e_stat::ATTACK]  = int(pksav_bigendian16(GEN1_PARTY_RCAST->atk));
+        _stats[pkmn::e_stat::DEFENSE] = int(pksav_bigendian16(GEN1_PARTY_RCAST->def));
+        _stats[pkmn::e_stat::SPEED]   = int(pksav_bigendian16(GEN1_PARTY_RCAST->spd));
+        _stats[pkmn::e_stat::SPECIAL] = int(pksav_bigendian16(GEN1_PARTY_RCAST->spcl));
     }
 
     void pokemon_gen1impl::_register_attributes()

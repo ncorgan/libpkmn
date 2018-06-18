@@ -19,17 +19,17 @@
 
 // Replace methods with more idiomatic Ruby.
 
-%attributeval(pkmn::swig::EV_map, %arg(std::vector<std::string>), keys, keys);
+%attributeval(pkmn::swig::EV_map, %arg(std::vector<pkmn::e_stat>), keys, keys);
 
 %extend pkmn::swig::EV_map
 {
-    int __getitem__(const std::string& stat)
+    int __getitem__(pkmn::e_stat stat)
     {
         return self->get_EV(stat);
     }
 
     void __setitem__(
-        const std::string& stat,
+        pkmn::e_stat stat,
         int value
     )
     {
@@ -49,10 +49,10 @@
         }
 
         VALUE k, v;
-        std::vector<std::string> keys = self->keys();
-        for(const std::string& key: keys)
+        std::vector<pkmn::e_stat> keys = self->keys();
+        for(pkmn::e_stat key: keys)
         {
-            k = SWIG_From_std_string(key);
+            k = SWIG_From_int(int(key));
             v = SWIG_From_int(self->get_EV(key));
             rb_yield_values(2, k, v);
         }
@@ -71,17 +71,17 @@
 
 // Replace methods with more idiomatic Ruby.
 
-%attributeval(pkmn::swig::IV_map, %arg(std::vector<std::string>), keys, keys);
+%attributeval(pkmn::swig::IV_map, %arg(std::vector<pkmn::e_stat>), keys, keys);
 
 %extend pkmn::swig::IV_map
 {
-    int __getitem__(const std::string& stat)
+    int __getitem__(pkmn::e_stat stat)
     {
         return self->get_IV(stat);
     }
 
     void __setitem__(
-        const std::string& stat,
+        pkmn::e_stat stat,
         int value
     )
     {
@@ -101,10 +101,10 @@
         }
 
         VALUE k, v;
-        std::vector<std::string> keys = self->keys();
-        for(const std::string& key: keys)
+        std::vector<pkmn::e_stat> keys = self->keys();
+        for(pkmn::e_stat key: keys)
         {
-            k = SWIG_From_std_string(key);
+            k = SWIG_From_int(int(key));
             v = SWIG_From_int(self->get_IV(key));
             rb_yield_values(2, k, v);
         }

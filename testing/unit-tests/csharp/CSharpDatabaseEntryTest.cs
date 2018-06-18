@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -160,21 +160,21 @@ public class CSharpDatabaseEntryTest {
         Assert.AreEqual(pokemonEntry.HiddenAbility, "Sand Veil");
         Assert.AreEqual(pokemonEntry.EggGroups, (new PKMN.StringPair("Water 1", "Amorphous")));
 
-        PKMN.StringIntDict baseStats = pokemonEntry.BaseStats;
-        Assert.AreEqual(baseStats["HP"], 109);
-        Assert.AreEqual(baseStats["Attack"], 66);
-        Assert.AreEqual(baseStats["Defense"], 84);
-        Assert.AreEqual(baseStats["Speed"], 32);
-        Assert.AreEqual(baseStats["Special Attack"], 81);
-        Assert.AreEqual(baseStats["Special Defense"], 99);
+        PKMN.StatDict baseStats = pokemonEntry.BaseStats;
+        Assert.AreEqual(baseStats[PKMN.Stat.HP], 109);
+        Assert.AreEqual(baseStats[PKMN.Stat.ATTACK], 66);
+        Assert.AreEqual(baseStats[PKMN.Stat.DEFENSE], 84);
+        Assert.AreEqual(baseStats[PKMN.Stat.SPEED], 32);
+        Assert.AreEqual(baseStats[PKMN.Stat.SPECIAL_ATTACK], 81);
+        Assert.AreEqual(baseStats[PKMN.Stat.SPECIAL_DEFENSE], 99);
 
-        PKMN.StringIntDict evYields = pokemonEntry.EVYields;
-        Assert.AreEqual(evYields["HP"], 2);
-        Assert.AreEqual(evYields["Attack"], 0);
-        Assert.AreEqual(evYields["Defense"], 0);
-        Assert.AreEqual(evYields["Speed"], 0);
-        Assert.AreEqual(evYields["Special Attack"], 0);
-        Assert.AreEqual(evYields["Special Defense"], 0);
+        PKMN.StatDict evYields = pokemonEntry.EVYields;
+        Assert.AreEqual(evYields[PKMN.Stat.HP], 2);
+        Assert.AreEqual(evYields[PKMN.Stat.ATTACK], 0);
+        Assert.AreEqual(evYields[PKMN.Stat.DEFENSE], 0);
+        Assert.AreEqual(evYields[PKMN.Stat.SPEED], 0);
+        Assert.AreEqual(evYields[PKMN.Stat.SPECIAL_ATTACK], 0);
+        Assert.AreEqual(evYields[PKMN.Stat.SPECIAL_DEFENSE], 0);
 
         Assert.AreEqual(pokemonEntry.ExperienceYield, 165);
         Assert.AreEqual(pokemonEntry.GetExperienceAtLevel(50), 125000);

@@ -25,6 +25,8 @@ namespace pkmn { namespace swig {
     typedef std::map<std::string, bool> string_bool_map;
     typedef std::map<std::string, int> string_int_map;
 
+    typedef std::map<pkmn::e_stat, int> stat_map;
+
     class EV_map
     {
         public:
@@ -36,12 +38,12 @@ namespace pkmn { namespace swig {
             }
 
             inline int get_EV(
-                const std::string& stat
+                pkmn::e_stat stat
             )
             {
                 BOOST_ASSERT(_pokemon.get() != nullptr);
 
-                const string_int_map& EVs = _pokemon->get_EVs();
+                const stat_map& EVs = _pokemon->get_EVs();
                 if(EVs.count(stat) == 0)
                 {
                     throw std::invalid_argument("Invalid stat.");
@@ -51,7 +53,7 @@ namespace pkmn { namespace swig {
             }
 
             inline void set_EV(
-                const std::string& stat,
+                pkmn::e_stat stat,
                 int value
             )
             {
@@ -67,17 +69,17 @@ namespace pkmn { namespace swig {
                 return _pokemon->get_EVs().size();
             }
 
-            inline std::vector<std::string> keys()
+            inline std::vector<pkmn::e_stat> keys()
             {
                 BOOST_ASSERT(_pokemon.get() != nullptr);
 
-                return pkmn::map_keys_to_vector<string_int_map, std::string>(
+                return pkmn::map_keys_to_vector<stat_map, pkmn::e_stat>(
                            _pokemon->get_EVs()
                        );
             }
 
             inline bool has_key(
-                const std::string& key
+                pkmn::e_stat key
             )
             {
                 BOOST_ASSERT(_pokemon.get() != nullptr);
@@ -110,7 +112,6 @@ namespace pkmn { namespace swig {
 
         private:
             const pkmn::pokemon::sptr& _pokemon;
-
     };
 
     class IV_map
@@ -124,12 +125,12 @@ namespace pkmn { namespace swig {
             }
 
             inline int get_IV(
-                const std::string& stat
+                pkmn::e_stat stat
             )
             {
                 BOOST_ASSERT(_pokemon.get() != nullptr);
 
-                const string_int_map& IVs = _pokemon->get_IVs();
+                const stat_map& IVs = _pokemon->get_IVs();
                 if(IVs.count(stat) == 0)
                 {
                     throw std::invalid_argument("Invalid stat.");
@@ -139,7 +140,7 @@ namespace pkmn { namespace swig {
             }
 
             inline void set_IV(
-                const std::string& stat,
+                pkmn::e_stat stat,
                 int value
             )
             {
@@ -155,17 +156,17 @@ namespace pkmn { namespace swig {
                 return _pokemon->get_IVs().size();
             }
 
-            inline std::vector<std::string> keys()
+            inline std::vector<pkmn::e_stat> keys()
             {
                 BOOST_ASSERT(_pokemon.get() != nullptr);
 
-                return pkmn::map_keys_to_vector<string_int_map, std::string>(
+                return pkmn::map_keys_to_vector<stat_map, pkmn::e_stat>(
                            _pokemon->get_IVs()
                        );
             }
 
             inline bool has_key(
-                const std::string& key
+                pkmn::e_stat key
             )
             {
                 BOOST_ASSERT(_pokemon.get() != nullptr);

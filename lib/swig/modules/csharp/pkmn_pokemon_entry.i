@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -26,8 +26,8 @@
 %attributeval(pkmn::database::pokemon_entry, %arg(std::pair<std::string, std::string>), Abilities, get_abilities);
 %attributestring(pkmn::database::pokemon_entry, std::string, HiddenAbility, get_hidden_ability);
 %attributeval(pkmn::database::pokemon_entry, %arg(std::pair<std::string, std::string>), EggGroups, get_egg_groups);
-%attributeval(pkmn::database::pokemon_entry, %arg(std::map<std::string, int>), BaseStats, get_base_stats);
-%attributeval(pkmn::database::pokemon_entry, %arg(std::map<std::string, int>), EVYields, get_EV_yields);
+%attributeval(pkmn::database::pokemon_entry, %arg(std::map<pkmn::e_stat, int>), BaseStats, get_base_stats);
+%attributeval(pkmn::database::pokemon_entry, %arg(std::map<pkmn::e_stat, int>), EVYields, get_EV_yields);
 %attribute(pkmn::database::pokemon_entry, int, ExperienceYield, get_experience_yield);
 %attributeval(pkmn::database::pokemon_entry, %arg(std::vector<pkmn::database::levelup_move>), LevelupMoves, get_levelup_moves);
 %attributeval(pkmn::database::pokemon_entry, %arg(std::vector<pkmn::database::move_entry>), TMHMMoves, get_tm_hm_moves);

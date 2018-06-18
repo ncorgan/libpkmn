@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -8,22 +8,26 @@
 %include <python/python_init.i>
 PKMN_PYTHON_INIT
 
+%{
+    #include <pkmn/enums/stat.hpp>
+%}
+
 /*
- * This file contains all pure STL wrappers. Other .i files can declare maps,
- * pairs, and vectors of their classes, but there's no reason for multiple
- * files to declare string vectors, etc.
+ * This file contains STL wrappers with either pure STL types or LibPKMN enums.
  */
+
+%rename(stat) pkmn::e_stat;
+%include <pkmn/enums/stat.hpp>
 
 %include <std_string.i>
 
 // std::map
-PKMN_PYTHON_MAP(std::string, bool,        string_bool_dict)
-PKMN_PYTHON_MAP(std::string, std::string, string_string_dict)
-PKMN_PYTHON_MAP(std::string, int,         string_int_dict)
+PKMN_PYTHON_MAP(pkmn::e_stat, int, stat_dict);
 
 // std::pair
 PKMN_PYTHON_PAIR(std::string, std::string, string_pair)
 
 // std::vector
-PKMN_PYTHON_VECTOR(int, int_list)
-PKMN_PYTHON_VECTOR(std::string, string_list)
+PKMN_PYTHON_VECTOR(int,          int_list)
+PKMN_PYTHON_VECTOR(std::string,  string_list)
+PKMN_PYTHON_VECTOR(pkmn::e_stat, stat_list);

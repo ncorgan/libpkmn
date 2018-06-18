@@ -29,7 +29,9 @@ PKMN_LUA_INIT
 %}
 
 %rename(gender) pkmn::e_gender;
+%rename(stat) pkmn::e_stat;
 %import <pkmn/enums/gender.hpp>
+%import <pkmn/enums/stat.hpp>
 
 %include <pkmn/calculations/form.hpp>
 %include <pkmn/calculations/gender.hpp>

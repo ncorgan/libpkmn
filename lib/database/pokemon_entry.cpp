@@ -653,31 +653,43 @@ namespace pkmn { namespace database {
     /*
      * Just return these for None and Invalid entries
      */
-    static const std::map<std::string, int> _bad_stat_map_old = boost::assign::map_list_of
-        ("HP", 0)("Attack", 0)("Defense", 0)
-        ("Speed", 0)("Special", 0)
+    static const std::map<pkmn::e_stat, int> _bad_stat_map_old = boost::assign::map_list_of
+        (pkmn::e_stat::HP, 0)
+        (pkmn::e_stat::ATTACK, 0)
+        (pkmn::e_stat::DEFENSE, 0)
+        (pkmn::e_stat::SPEED, 0)
+        (pkmn::e_stat::SPECIAL, 0)
     ;
-    static const std::map<std::string, int> _bad_stat_map = boost::assign::map_list_of
-        ("HP", 0)("Attack", 0)("Defense", 0)
-        ("Speed", 0)("Special Attack", 0)("Special Defense", 0)
+    static const std::map<pkmn::e_stat, int> _bad_stat_map = boost::assign::map_list_of
+        (pkmn::e_stat::HP, 0)
+        (pkmn::e_stat::ATTACK, 0)
+        (pkmn::e_stat::DEFENSE, 0)
+        (pkmn::e_stat::SPEED, 0)
+        (pkmn::e_stat::SPECIAL_ATTACK, 0)
+        (pkmn::e_stat::SPECIAL_DEFENSE, 0)
     ;
 
     static inline void execute_stat_stmt_and_get(
-        SQLite::Statement &stmt,
-        std::map<std::string, int> &ret,
-        const std::string& key
-    ) {
-        stmt.executeStep();
-        ret[key] = stmt.getColumn(0);
+        SQLite::Statement& r_stmt,
+        std::map<pkmn::e_stat, int>& r_ret,
+        pkmn::e_stat key
+    )
+    {
+        r_stmt.executeStep();
+        r_ret[key] = r_stmt.getColumn(0);
     }
 
-    std::map<std::string, int> pokemon_entry::get_base_stats() const {
-        std::map<std::string, int> ret;
+    std::map<pkmn::e_stat, int> pokemon_entry::get_base_stats() const
+    {
+        std::map<pkmn::e_stat, int> ret;
 
-        if(_none or _invalid) {
+        if(_none or _invalid)
+        {
             ret = (_generation == 1) ? _bad_stat_map_old
                                      : _bad_stat_map;
-        } else {
+        }
+        else
+        {
             static BOOST_CONSTEXPR const char* old_query = \
                 "SELECT base_stat FROM pokemon_stats WHERE pokemon_id=? AND "
                 "stat_id IN (1,2,3,6,9)";
@@ -692,38 +704,46 @@ namespace pkmn { namespace database {
             );
             stmt.bind(1, _pokemon_id);
 
-            execute_stat_stmt_and_get(stmt, ret, "HP");
-            execute_stat_stmt_and_get(stmt, ret, "Attack");
-            execute_stat_stmt_and_get(stmt, ret, "Defense");
+            execute_stat_stmt_and_get(stmt, ret, pkmn::e_stat::HP);
+            execute_stat_stmt_and_get(stmt, ret, pkmn::e_stat::ATTACK);
+            execute_stat_stmt_and_get(stmt, ret, pkmn::e_stat::DEFENSE);
             if(_generation == 1) {
-                execute_stat_stmt_and_get(stmt, ret, "Speed");
-                execute_stat_stmt_and_get(stmt, ret, "Special");
+                execute_stat_stmt_and_get(stmt, ret, pkmn::e_stat::SPEED);
+                execute_stat_stmt_and_get(stmt, ret, pkmn::e_stat::SPECIAL);
             } else {
-                execute_stat_stmt_and_get(stmt, ret, "Special Attack");
-                execute_stat_stmt_and_get(stmt, ret, "Special Defense");
-                execute_stat_stmt_and_get(stmt, ret, "Speed");
+                execute_stat_stmt_and_get(stmt, ret, pkmn::e_stat::SPECIAL_ATTACK);
+                execute_stat_stmt_and_get(stmt, ret, pkmn::e_stat::SPECIAL_DEFENSE);
+                execute_stat_stmt_and_get(stmt, ret, pkmn::e_stat::SPEED);
             }
         }
 
         return ret;
     }
 
-    std::map<std::string, int> pokemon_entry::get_EV_yields() const {
-        std::map<std::string, int> ret;
+    std::map<pkmn::e_stat, int> pokemon_entry::get_EV_yields() const
+    {
+        std::map<pkmn::e_stat, int> ret;
 
-        if(_none or _invalid) {
+        if(_none or _invalid)
+        {
             ret = (_generation <= 2) ? _bad_stat_map_old
                                      : _bad_stat_map;
-        } else if(_generation == 1) {
+        }
+        else if(_generation == 1)
+        {
             // EV's are just base stats
             ret = this->get_base_stats();
-        } else if(_generation == 2) {
+        }
+        else if(_generation == 2)
+        {
             // EV's almost match base stats but just have Special
             ret = this->get_base_stats();
-            ret["Special"] = ret["Special Attack"];
-            ret.erase("Special Attack");
-            ret.erase("Special Defense");
-        } else {
+            ret[pkmn::e_stat::SPECIAL] = ret[pkmn::e_stat::SPECIAL_ATTACK];
+            ret.erase(pkmn::e_stat::SPECIAL_ATTACK);
+            ret.erase(pkmn::e_stat::SPECIAL_DEFENSE);
+        }
+        else
+        {
             static BOOST_CONSTEXPR const char* query = \
                 "SELECT effort FROM pokemon_stats WHERE pokemon_id=? AND "
                 "stat_id IN (1,2,3,4,5,6)";
@@ -731,12 +751,12 @@ namespace pkmn { namespace database {
             SQLite::Statement stmt(get_connection(), query);
             stmt.bind(1, _pokemon_id);
 
-            execute_stat_stmt_and_get(stmt, ret, "HP");
-            execute_stat_stmt_and_get(stmt, ret, "Attack");
-            execute_stat_stmt_and_get(stmt, ret, "Defense");
-            execute_stat_stmt_and_get(stmt, ret, "Special Attack");
-            execute_stat_stmt_and_get(stmt, ret, "Special Defense");
-            execute_stat_stmt_and_get(stmt, ret, "Speed");
+            execute_stat_stmt_and_get(stmt, ret, pkmn::e_stat::HP);
+            execute_stat_stmt_and_get(stmt, ret, pkmn::e_stat::ATTACK);
+            execute_stat_stmt_and_get(stmt, ret, pkmn::e_stat::DEFENSE);
+            execute_stat_stmt_and_get(stmt, ret, pkmn::e_stat::SPECIAL_ATTACK);
+            execute_stat_stmt_and_get(stmt, ret, pkmn::e_stat::SPECIAL_DEFENSE);
+            execute_stat_stmt_and_get(stmt, ret, pkmn::e_stat::SPEED);
         }
 
         return ret;

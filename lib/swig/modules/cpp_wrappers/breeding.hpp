@@ -44,7 +44,7 @@ namespace pkmn { namespace swig { namespace breeding {
                );
     }
 
-    inline std::map<std::string, int> get_ideal_child_IVs(
+    inline std::map<pkmn::e_stat, int> get_ideal_child_IVs(
         const pkmn::swig::pokemon& mother,
         const pkmn::swig::pokemon& father,
         pkmn::e_gender child_gender

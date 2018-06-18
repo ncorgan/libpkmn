@@ -1106,7 +1106,7 @@ namespace pkmn
     }
 
     void pokemon_gbaimpl::set_IV(
-        const std::string& stat,
+        pkmn::e_stat stat,
         int value
     )
     {
@@ -1274,7 +1274,7 @@ namespace pkmn
     }
 
     void pokemon_gbaimpl::set_EV(
-        const std::string& stat,
+        pkmn::e_stat stat,
         int value
     )
     {
@@ -1287,29 +1287,31 @@ namespace pkmn
 
         boost::lock_guard<pokemon_gbaimpl> lock(*this);
 
-        if(stat == "HP")
+        switch(stat)
         {
-            _effort->ev_hp = uint8_t(value);
-        }
-        else if(stat == "Attack")
-        {
-            _effort->ev_atk = uint8_t(value);
-        }
-        else if(stat == "Defense")
-        {
-            _effort->ev_def = uint8_t(value);
-        }
-        else if(stat == "Speed")
-        {
-            _effort->ev_spd = uint8_t(value);
-        }
-        else if(stat == "Special Attack")
-        {
-            _effort->ev_spatk = uint8_t(value);
-        }
-        else
-        {
-            _effort->ev_spdef = uint8_t(value);
+            case pkmn::e_stat::HP:
+                _effort->ev_hp = uint8_t(value);
+                break;
+
+            case pkmn::e_stat::ATTACK:
+                _effort->ev_atk = uint8_t(value);
+                break;
+
+            case pkmn::e_stat::DEFENSE:
+                _effort->ev_def = uint8_t(value);
+                break;
+
+            case pkmn::e_stat::SPEED:
+                _effort->ev_spd = uint8_t(value);
+                break;
+
+            case pkmn::e_stat::SPECIAL_ATTACK:
+                _effort->ev_spatk = uint8_t(value);
+                break;
+
+            default:
+                _effort->ev_spdef = uint8_t(value);
+                break;
         }
 
         _update_EV_map();
@@ -1331,7 +1333,7 @@ namespace pkmn
             "Current HP",
             hp,
             0,
-            _stats["HP"]
+            _stats[pkmn::e_stat::HP]
         );
 
         boost::lock_guard<pokemon_gbaimpl> lock(*this);
@@ -1531,22 +1533,23 @@ namespace pkmn
         _ribbons["World"]    = bool(_misc->ribbons_obedience & PKSAV_GBA_WORLD_RIBBON_MASK);
     }
 
-    void pokemon_gbaimpl::_update_EV_map() {
-        _EVs["HP"]              = int(_effort->ev_hp);
-        _EVs["Attack"]          = int(_effort->ev_atk);
-        _EVs["Defense"]         = int(_effort->ev_def);
-        _EVs["Speed"]           = int(_effort->ev_spd);
-        _EVs["Special Attack"]  = int(_effort->ev_spatk);
-        _EVs["Special Defense"] = int(_effort->ev_spdef);
+    void pokemon_gbaimpl::_update_EV_map()
+    {
+        _EVs[pkmn::e_stat::HP]              = int(_effort->ev_hp);
+        _EVs[pkmn::e_stat::ATTACK]          = int(_effort->ev_atk);
+        _EVs[pkmn::e_stat::DEFENSE]         = int(_effort->ev_def);
+        _EVs[pkmn::e_stat::SPEED]           = int(_effort->ev_spd);
+        _EVs[pkmn::e_stat::SPECIAL_ATTACK]  = int(_effort->ev_spatk);
+        _EVs[pkmn::e_stat::SPECIAL_DEFENSE] = int(_effort->ev_spdef);
     }
 
     void pokemon_gbaimpl::_update_stat_map() {
-        _stats["HP"]              = int(pksav_littleendian16(GBA_PARTY_RCAST->max_hp));
-        _stats["Attack"]          = int(pksav_littleendian16(GBA_PARTY_RCAST->atk));
-        _stats["Defense"]         = int(pksav_littleendian16(GBA_PARTY_RCAST->def));
-        _stats["Speed"]           = int(pksav_littleendian16(GBA_PARTY_RCAST->spd));
-        _stats["Special Attack"]  = int(pksav_littleendian16(GBA_PARTY_RCAST->spatk));
-        _stats["Special Defense"] = int(pksav_littleendian16(GBA_PARTY_RCAST->spdef));
+        _stats[pkmn::e_stat::HP]              = int(pksav_littleendian16(GBA_PARTY_RCAST->max_hp));
+        _stats[pkmn::e_stat::ATTACK]          = int(pksav_littleendian16(GBA_PARTY_RCAST->atk));
+        _stats[pkmn::e_stat::DEFENSE]         = int(pksav_littleendian16(GBA_PARTY_RCAST->def));
+        _stats[pkmn::e_stat::SPEED]           = int(pksav_littleendian16(GBA_PARTY_RCAST->spd));
+        _stats[pkmn::e_stat::SPECIAL_ATTACK]  = int(pksav_littleendian16(GBA_PARTY_RCAST->spatk));
+        _stats[pkmn::e_stat::SPECIAL_DEFENSE] = int(pksav_littleendian16(GBA_PARTY_RCAST->spdef));
     }
 
     void pokemon_gbaimpl::_set_unown_form_from_personality() {

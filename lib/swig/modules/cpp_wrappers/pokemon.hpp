@@ -625,7 +625,7 @@ namespace pkmn { namespace swig {
             }
 
             // Stats are read-only, so no need to wrap.
-            inline std::map<std::string, int> get_stats()
+            inline std::map<pkmn::e_stat, int> get_stats()
             {
                 BOOST_ASSERT(_pokemon.get() != nullptr);
 

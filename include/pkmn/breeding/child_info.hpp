@@ -10,6 +10,9 @@
 #include <pkmn/config.hpp>
 #include <pkmn/pokemon.hpp>
 
+#include <pkmn/enums/gender.hpp>
+#include <pkmn/enums/stat.hpp>
+
 #include <map>
 #include <string>
 #include <vector>
@@ -30,7 +33,7 @@ namespace pkmn { namespace breeding {
         const std::string& child_species
     );
 
-    PKMN_API std::map<std::string, int> get_ideal_child_IVs(
+    PKMN_API std::map<pkmn::e_stat, int> get_ideal_child_IVs(
         const pkmn::pokemon::sptr& mother,
         const pkmn::pokemon::sptr& father,
         pkmn::e_gender child_gender

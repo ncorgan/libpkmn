@@ -226,17 +226,17 @@ TEST(cpp_swig_wrapper_test, test_pokedex)
 }
 
 static void test_EV_IV_keys(
-    const std::vector<std::string>& map_keys
+    const std::vector<pkmn::e_stat>& map_keys
 )
 {
-    static const std::vector<std::string> expected_keys =
+    static const std::vector<pkmn::e_stat> expected_keys =
     {
-        "Attack",
-        "Defense",
-        "HP",
-        "Special Attack",
-        "Special Defense",
-        "Speed"
+        pkmn::e_stat::HP,
+        pkmn::e_stat::ATTACK,
+        pkmn::e_stat::DEFENSE,
+        pkmn::e_stat::SPEED,
+        pkmn::e_stat::SPECIAL_ATTACK,
+        pkmn::e_stat::SPECIAL_DEFENSE
     };
     EXPECT_EQ(expected_keys, map_keys);
 }
@@ -264,18 +264,18 @@ TEST(cpp_swig_wrapper_test, test_pokemon_helpers)
     test_EV_IV_keys(EV_map.keys());
 
     // Set EV through the Pokémon.
-    pokemon->set_EV("Attack", 25);
-    EXPECT_EQ(25, pokemon->get_EVs().at("Attack"));
-    EXPECT_EQ(25, EV_map.get_EV("Attack"));
+    pokemon->set_EV(pkmn::e_stat::ATTACK, 25);
+    EXPECT_EQ(25, pokemon->get_EVs().at(pkmn::e_stat::ATTACK));
+    EXPECT_EQ(25, EV_map.get_EV(pkmn::e_stat::ATTACK));
 
     // Set EV through the wrapper class.
-    EV_map.set_EV("Defense", 5);
-    EXPECT_EQ(5, EV_map.get_EV("Defense"));
-    EXPECT_EQ(5, pokemon->get_EVs().at("Defense"));
+    EV_map.set_EV(pkmn::e_stat::DEFENSE, 5);
+    EXPECT_EQ(5, EV_map.get_EV(pkmn::e_stat::DEFENSE));
+    EXPECT_EQ(5, pokemon->get_EVs().at(pkmn::e_stat::DEFENSE));
 
     // Test has_key.
-    EXPECT_TRUE(EV_map.has_key("HP"));
-    EXPECT_FALSE(EV_map.has_key("Not a key"));
+    EXPECT_TRUE(EV_map.has_key(pkmn::e_stat::HP));
+    EXPECT_FALSE(EV_map.has_key(pkmn::e_stat::NONE));
 
     //
     // IVs
@@ -286,18 +286,18 @@ TEST(cpp_swig_wrapper_test, test_pokemon_helpers)
     test_EV_IV_keys(IV_map.keys());
 
     // Set IV through the Pokémon.
-    pokemon->set_IV("Attack", 11);
-    EXPECT_EQ(11, pokemon->get_IVs().at("Attack"));
-    EXPECT_EQ(11, IV_map.get_IV("Attack"));
+    pokemon->set_IV(pkmn::e_stat::ATTACK, 11);
+    EXPECT_EQ(11, pokemon->get_IVs().at(pkmn::e_stat::ATTACK));
+    EXPECT_EQ(11, IV_map.get_IV(pkmn::e_stat::ATTACK));
 
     // Set IV through the wrapper class.
-    IV_map.set_IV("Defense", 2);
-    EXPECT_EQ(2, IV_map.get_IV("Defense"));
-    EXPECT_EQ(2, pokemon->get_IVs().at("Defense"));
+    IV_map.set_IV(pkmn::e_stat::DEFENSE, 2);
+    EXPECT_EQ(2, IV_map.get_IV(pkmn::e_stat::DEFENSE));
+    EXPECT_EQ(2, pokemon->get_IVs().at(pkmn::e_stat::DEFENSE));
 
     // Test has_key.
-    EXPECT_TRUE(IV_map.has_key("HP"));
-    EXPECT_FALSE(IV_map.has_key("Not a key"));
+    EXPECT_TRUE(IV_map.has_key(pkmn::e_stat::HP));
+    EXPECT_FALSE(IV_map.has_key(pkmn::e_stat::NONE));
 
     //
     // Markings
@@ -393,7 +393,7 @@ TEST(cpp_swig_wrapper_test, test_pokemon)
                              5
                          );
 
-    const std::map<std::string, int>& stats = swig_pokemon.get_stats();
+    const std::map<pkmn::e_stat, int>& stats = swig_pokemon.get_stats();
     EXPECT_EQ(6, stats.size());
 
     EXPECT_EQ("Bulbasaur", swig_pokemon.get_species());
@@ -475,14 +475,14 @@ TEST(cpp_swig_wrapper_test, test_pokemon)
     swig_pokemon.get_moves().get_move_slot(0).set_pp(2);
     EXPECT_EQ(2, swig_pokemon.get_moves().get_move_slot(0).get_pp());
 
-    swig_pokemon.set_current_hp(stats.at("HP")-1);
-    EXPECT_EQ(stats.at("HP")-1, swig_pokemon.get_current_hp());
+    swig_pokemon.set_current_hp(stats.at(pkmn::e_stat::HP)-1);
+    EXPECT_EQ(stats.at(pkmn::e_stat::HP)-1, swig_pokemon.get_current_hp());
 
-    swig_pokemon.get_EVs().set_EV("Attack", 5);
-    EXPECT_EQ(5, swig_pokemon.get_EVs().get_EV("Attack"));
+    swig_pokemon.get_EVs().set_EV(pkmn::e_stat::ATTACK, 5);
+    EXPECT_EQ(5, swig_pokemon.get_EVs().get_EV(pkmn::e_stat::ATTACK));
 
-    swig_pokemon.get_IVs().set_IV("Attack", 5);
-    EXPECT_EQ(5, swig_pokemon.get_IVs().get_IV("Attack"));
+    swig_pokemon.get_IVs().set_IV(pkmn::e_stat::ATTACK, 5);
+    EXPECT_EQ(5, swig_pokemon.get_IVs().get_IV(pkmn::e_stat::ATTACK));
 
     swig_pokemon.get_markings().set_marking("Triangle", true);
     EXPECT_TRUE(swig_pokemon.get_markings().get_marking("Triangle"));
@@ -610,16 +610,16 @@ TEST(cpp_swig_wrapper_test, test_game_save)
      * equivalent C# code.
      *
      * PKMN.GameSave gameSave = new PKMN.GameSave(filepath);
-     * gameSave.PokemonParty[1].EVs["Attack"] = 20;
-     * gameSave.PokemonPC[5][20].IVs["Attack"] = 5;
+     * gameSave.PokemonParty[1].EVs[pkmn::e_stat::ATTACK] = 20;
+     * gameSave.PokemonPC[5][20].IVs[pkmn::e_stat::ATTACK] = 5;
      * gameSave.ItemBag["Items"][0].Item = "Repel";
      */
-    swig_game_save.get_pokemon_party().get_pokemon(1).get_EVs().set_EV("Attack", 20);
-    swig_game_save.get_pokemon_pc().get_box(5).get_pokemon(20).get_IVs().set_IV("HP", 5);
+    swig_game_save.get_pokemon_party().get_pokemon(1).get_EVs().set_EV(pkmn::e_stat::ATTACK, 20);
+    swig_game_save.get_pokemon_pc().get_box(5).get_pokemon(20).get_IVs().set_IV(pkmn::e_stat::HP, 5);
     swig_game_save.get_item_bag().get_pocket("Items").at(0).set_item("Repel");
 
-    EXPECT_EQ(20, swig_game_save.get_pokemon_party().get_pokemon(1).get_EVs().get_EV("Attack"));
-    EXPECT_EQ(5, swig_game_save.get_pokemon_pc().get_box(5).get_pokemon(20).get_IVs().get_IV("HP"));
+    EXPECT_EQ(20, swig_game_save.get_pokemon_party().get_pokemon(1).get_EVs().get_EV(pkmn::e_stat::ATTACK));
+    EXPECT_EQ(5, swig_game_save.get_pokemon_pc().get_box(5).get_pokemon(20).get_IVs().get_IV(pkmn::e_stat::HP));
     EXPECT_EQ("Repel", swig_game_save.get_item_bag().get_pocket("Items").at(0).get_item());
 }
 
@@ -656,16 +656,16 @@ TEST(cpp_swig_wrapper_test, test_breeding)
 
     const pkmn::e_gender child_gender = pkmn::e_gender::FEMALE;
 
-    std::map<std::string, int> ideal_child_IVs_cpp = pkmn::breeding::get_ideal_child_IVs(
-                                                         mother,
-                                                         father,
-                                                         child_gender
-                                                     );
-    std::map<std::string, int> ideal_child_IVs_swig = pkmn::swig::breeding::get_ideal_child_IVs(
-                                                          mother_swig,
-                                                          father_swig,
+    std::map<pkmn::e_stat, int> ideal_child_IVs_cpp = pkmn::breeding::get_ideal_child_IVs(
+                                                          mother,
+                                                          father,
                                                           child_gender
                                                       );
+    std::map<pkmn::e_stat, int> ideal_child_IVs_swig = pkmn::swig::breeding::get_ideal_child_IVs(
+                                                           mother_swig,
+                                                           father_swig,
+                                                           child_gender
+                                                       );
     EXPECT_EQ(ideal_child_IVs_cpp, ideal_child_IVs_swig);
 }
 

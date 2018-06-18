@@ -411,7 +411,7 @@ namespace pkmn
 
         return pkmn::calculations::gen2_pokemon_gender(
                    _database_entry.get_name(),
-                   _IVs["Attack"]
+                   _IVs[pkmn::e_stat::ATTACK]
                );
     }
 
@@ -441,7 +441,7 @@ namespace pkmn
                 }
                 else
                 {
-                    set_IV("Attack", PKSAV_MAX_GB_IV);
+                    set_IV(pkmn::e_stat::ATTACK, PKSAV_MAX_GB_IV);
                 }
             }
             else if(gender == pkmn::e_gender::FEMALE)
@@ -455,19 +455,19 @@ namespace pkmn
                     // Set the IV to the max it can be while still being female.
                     if(pkmn::fp_compare_equal(chance_male, 0.875f))
                     {
-                        set_IV("Attack", 1);
+                        set_IV(pkmn::e_stat::ATTACK, 1);
                     }
                     else if(pkmn::fp_compare_equal(chance_male, 0.75f))
                     {
-                        set_IV("Attack", 3);
+                        set_IV(pkmn::e_stat::ATTACK, 3);
                     }
                     else if(pkmn::fp_compare_equal(chance_male, 0.5f))
                     {
-                        set_IV("Attack", 6);
+                        set_IV(pkmn::e_stat::ATTACK, 6);
                     }
                     else
                     {
-                        set_IV("Attack", 11);
+                        set_IV(pkmn::e_stat::ATTACK, 11);
                     }
                 }
             }
@@ -483,10 +483,10 @@ namespace pkmn
         boost::lock_guard<pokemon_gen2impl> lock(*this);
 
         return pkmn::calculations::gen2_shiny(
-                   _IVs["Attack"],
-                   _IVs["Defense"],
-                   _IVs["Speed"],
-                   _IVs["Special"]
+                   _IVs[pkmn::e_stat::ATTACK],
+                   _IVs[pkmn::e_stat::DEFENSE],
+                   _IVs[pkmn::e_stat::SPEED],
+                   _IVs[pkmn::e_stat::SPECIAL]
                );
     }
 
@@ -509,7 +509,7 @@ namespace pkmn
         }
         else
         {
-            set_IV("Attack", 13);
+            set_IV(pkmn::e_stat::ATTACK, 13);
         }
 
         if(_database_entry.get_species_id() == UNOWN_ID)
@@ -891,7 +891,7 @@ namespace pkmn
     }
 
     void pokemon_gen2impl::set_IV(
-        const std::string& stat,
+        pkmn::e_stat stat,
         int value
     )
     {
@@ -987,7 +987,7 @@ namespace pkmn
     }
 
     void pokemon_gen2impl::set_EV(
-        const std::string& stat,
+        pkmn::e_stat stat,
         int value
     )
     {
@@ -1001,25 +1001,27 @@ namespace pkmn
 
         boost::lock_guard<pokemon_gen2impl> lock(*this);
 
-        if(stat == "HP")
+        switch(stat)
         {
-            GEN2_PC_RCAST->ev_hp = pksav_bigendian16(uint16_t(value));
-        }
-        else if(stat == "Attack")
-        {
-            GEN2_PC_RCAST->ev_atk = pksav_bigendian16(uint16_t(value));
-        }
-        else if(stat == "Defense")
-        {
-            GEN2_PC_RCAST->ev_def = pksav_bigendian16(uint16_t(value));
-        }
-        else if(stat == "Speed")
-        {
-            GEN2_PC_RCAST->ev_spd = pksav_bigendian16(uint16_t(value));
-        }
-        else
-        {
-            GEN2_PC_RCAST->ev_spcl = pksav_bigendian16(uint16_t(value));
+            case pkmn::e_stat::HP:
+                GEN2_PC_RCAST->ev_hp = pksav_bigendian16(uint16_t(value));
+                break;
+
+            case pkmn::e_stat::ATTACK:
+                GEN2_PC_RCAST->ev_atk = pksav_bigendian16(uint16_t(value));
+                break;
+
+            case pkmn::e_stat::DEFENSE:
+                GEN2_PC_RCAST->ev_def = pksav_bigendian16(uint16_t(value));
+                break;
+
+            case pkmn::e_stat::SPEED:
+                GEN2_PC_RCAST->ev_spd = pksav_bigendian16(uint16_t(value));
+                break;
+
+            default:
+                GEN2_PC_RCAST->ev_spcl = pksav_bigendian16(uint16_t(value));
+                break;
         }
 
         _update_EV_map();
@@ -1041,7 +1043,7 @@ namespace pkmn
             "Current HP",
             hp,
             0,
-            _stats["HP"]
+            _stats[pkmn::e_stat::HP]
         );
 
         boost::lock_guard<pokemon_gen2impl> lock(*this);
@@ -1090,31 +1092,31 @@ namespace pkmn
 
     void pokemon_gen2impl::_update_EV_map()
     {
-        _EVs["HP"]      = int(pksav_bigendian16(GEN2_PC_RCAST->ev_hp));
-        _EVs["Attack"]  = int(pksav_bigendian16(GEN2_PC_RCAST->ev_atk));
-        _EVs["Defense"] = int(pksav_bigendian16(GEN2_PC_RCAST->ev_def));
-        _EVs["Speed"]   = int(pksav_bigendian16(GEN2_PC_RCAST->ev_spd));
-        _EVs["Special"] = int(pksav_bigendian16(GEN2_PC_RCAST->ev_spcl));
+        _EVs[pkmn::e_stat::HP]      = int(pksav_bigendian16(GEN2_PC_RCAST->ev_hp));
+        _EVs[pkmn::e_stat::ATTACK]  = int(pksav_bigendian16(GEN2_PC_RCAST->ev_atk));
+        _EVs[pkmn::e_stat::DEFENSE] = int(pksav_bigendian16(GEN2_PC_RCAST->ev_def));
+        _EVs[pkmn::e_stat::SPEED]   = int(pksav_bigendian16(GEN2_PC_RCAST->ev_spd));
+        _EVs[pkmn::e_stat::SPECIAL] = int(pksav_bigendian16(GEN2_PC_RCAST->ev_spcl));
     }
 
     void pokemon_gen2impl::_update_stat_map()
     {
-        _stats["HP"]              = int(pksav_bigendian16(GEN2_PARTY_RCAST->max_hp));
-        _stats["Attack"]          = int(pksav_bigendian16(GEN2_PARTY_RCAST->atk));
-        _stats["Defense"]         = int(pksav_bigendian16(GEN2_PARTY_RCAST->def));
-        _stats["Speed"]           = int(pksav_bigendian16(GEN2_PARTY_RCAST->spd));
-        _stats["Special Attack"]  = int(pksav_bigendian16(GEN2_PARTY_RCAST->spatk));
-        _stats["Special Defense"] = int(pksav_bigendian16(GEN2_PARTY_RCAST->spdef));
+        _stats[pkmn::e_stat::HP]              = int(pksav_bigendian16(GEN2_PARTY_RCAST->max_hp));
+        _stats[pkmn::e_stat::ATTACK]          = int(pksav_bigendian16(GEN2_PARTY_RCAST->atk));
+        _stats[pkmn::e_stat::DEFENSE]         = int(pksav_bigendian16(GEN2_PARTY_RCAST->def));
+        _stats[pkmn::e_stat::SPEED]           = int(pksav_bigendian16(GEN2_PARTY_RCAST->spd));
+        _stats[pkmn::e_stat::SPECIAL_ATTACK]  = int(pksav_bigendian16(GEN2_PARTY_RCAST->spatk));
+        _stats[pkmn::e_stat::SPECIAL_DEFENSE] = int(pksav_bigendian16(GEN2_PARTY_RCAST->spdef));
     }
 
     void pokemon_gen2impl::_set_unown_form_from_IVs()
     {
         _database_entry.set_form(
             pkmn::calculations::gen2_unown_form(
-                _IVs["Attack"],
-                _IVs["Defense"],
-                _IVs["Speed"],
-                _IVs["Special"]
+                _IVs[pkmn::e_stat::ATTACK],
+                _IVs[pkmn::e_stat::DEFENSE],
+                _IVs[pkmn::e_stat::SPEED],
+                _IVs[pkmn::e_stat::SPECIAL]
             )
         );
     }
@@ -1126,42 +1128,42 @@ namespace pkmn
         // Set the maximum possible Special IV for the given form.
         uint16_t num = std::min<uint16_t>(uint16_t((form[0] - 'A') * 10) + 9, 255);
 
-        uint8_t IV_attack = uint8_t(_IVs["Attack"]);
+        uint8_t IV_attack = uint8_t(_IVs[pkmn::e_stat::ATTACK]);
         IV_attack &= ~0x6;
         IV_attack |= ((num & 0xC0) >> 5);
 
-        uint8_t IV_defense = uint8_t(_IVs["Defense"]);
+        uint8_t IV_defense = uint8_t(_IVs[pkmn::e_stat::DEFENSE]);
         IV_defense &= ~0x6;
         IV_defense |= ((num & 0x30) >> 3);
 
-        uint8_t IV_speed = uint8_t(_IVs["Speed"]);
+        uint8_t IV_speed = uint8_t(_IVs[pkmn::e_stat::SPEED]);
         IV_speed &= ~0x6;
         IV_speed |= ((num & 0xC) >> 1);
 
-        uint8_t IV_special = uint8_t(_IVs["Special"]);
+        uint8_t IV_special = uint8_t(_IVs[pkmn::e_stat::SPECIAL]);
         IV_special &= ~0x6;
         IV_special |= ((num & 0x3) << 1);
 
         _set_gb_IV(
-            "Attack",
+            pkmn::e_stat::ATTACK,
             IV_attack,
             &GEN2_PC_RCAST->iv_data
         );
 
         _set_gb_IV(
-            "Defense",
+            pkmn::e_stat::DEFENSE,
             IV_defense,
             &GEN2_PC_RCAST->iv_data
         );
 
         _set_gb_IV(
-            "Speed",
+            pkmn::e_stat::SPEED,
             IV_speed,
             &GEN2_PC_RCAST->iv_data
         );
 
         _set_gb_IV(
-            "Special",
+            pkmn::e_stat::SPECIAL,
             IV_special,
             &GEN2_PC_RCAST->iv_data
         );

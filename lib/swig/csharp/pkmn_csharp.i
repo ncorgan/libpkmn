@@ -16,6 +16,8 @@ PKMN_CSHARP_INIT
 %{
     #include <pkmn/build_info.hpp>
 
+    #include <pkmn/enums/stat.hpp>
+
     #include "private_exports.hpp"
 
     inline std::string GetSWIGVersion()
@@ -53,6 +55,7 @@ std::string GetSWIGVersion();
 
 // Enums
 %include <pkmn/enums/gender.hpp>
+%include <pkmn/enums/stat.hpp>
 
 // Attribute Maps
 %include <csharp/pkmn_attribute_maps.i>

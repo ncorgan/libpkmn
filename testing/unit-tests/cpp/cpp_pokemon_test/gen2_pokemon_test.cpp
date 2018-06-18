@@ -49,28 +49,28 @@ TEST_P(gen2_pokemon_test, gen2_pokemon_test) {
     );
 
     // Gender affects IVs, so make sure the abstraction reflects that.
-    const std::map<std::string, int>& IVs = pokemon->get_IVs();
+    const std::map<pkmn::e_stat, int>& IVs = pokemon->get_IVs();
     pokemon->set_gender(pkmn::e_gender::MALE);
-    EXPECT_EQ(15, IVs.at("Attack"));
+    EXPECT_EQ(15, IVs.at(pkmn::e_stat::ATTACK));
     pokemon->set_gender(pkmn::e_gender::FEMALE);
-    EXPECT_LT(IVs.at("Attack"), 15);
+    EXPECT_LT(IVs.at(pkmn::e_stat::ATTACK), 15);
 
-    pokemon->set_IV("Attack", 0);
+    pokemon->set_IV(pkmn::e_stat::ATTACK, 0);
     EXPECT_EQ(pkmn::e_gender::FEMALE, pokemon->get_gender());
-    pokemon->set_IV("Attack", 15);
+    pokemon->set_IV(pkmn::e_stat::ATTACK, 15);
     EXPECT_EQ(pkmn::e_gender::MALE, pokemon->get_gender());
 
     // Shininess affects IVs, so make sure the abstraction reflects that.
     pokemon->set_shininess(false);
     EXPECT_FALSE(pokemon->is_shiny());
-    EXPECT_EQ(13, IVs.at("Attack"));
+    EXPECT_EQ(13, IVs.at(pkmn::e_stat::ATTACK));
 
     pokemon->set_shininess(true);
     EXPECT_TRUE(pokemon->is_shiny());
-    EXPECT_EQ(15, IVs.at("Attack"));
-    EXPECT_EQ(10, IVs.at("Defense"));
-    EXPECT_EQ(10, IVs.at("Speed"));
-    EXPECT_EQ(10, IVs.at("Special"));
+    EXPECT_EQ(15, IVs.at(pkmn::e_stat::ATTACK));
+    EXPECT_EQ(10, IVs.at(pkmn::e_stat::DEFENSE));
+    EXPECT_EQ(10, IVs.at(pkmn::e_stat::SPEED));
+    EXPECT_EQ(10, IVs.at(pkmn::e_stat::SPECIAL));
 
     // On the C++ level, make sure functions that affect the same PKSav field don't impact each other.
     std::string location_met_before_change = pokemon->get_location_met(false);
@@ -158,12 +158,12 @@ TEST_P(gen2_pokemon_test, gen2_pokemon_test) {
         );
     }
 
-    const std::map<std::string, int>& EVs = pokemon->get_EVs();
-    EXPECT_EQ(EVs.at("HP"), int(pksav_bigendian16(native_pc->ev_hp)));
-    EXPECT_EQ(EVs.at("Attack"), int(pksav_bigendian16(native_pc->ev_atk)));
-    EXPECT_EQ(EVs.at("Defense"), int(pksav_bigendian16(native_pc->ev_def)));
-    EXPECT_EQ(EVs.at("Speed"), int(pksav_bigendian16(native_pc->ev_spd)));
-    EXPECT_EQ(EVs.at("Special"), int(pksav_bigendian16(native_pc->ev_spcl)));
+    const std::map<pkmn::e_stat, int>& EVs = pokemon->get_EVs();
+    EXPECT_EQ(EVs.at(pkmn::e_stat::HP), int(pksav_bigendian16(native_pc->ev_hp)));
+    EXPECT_EQ(EVs.at(pkmn::e_stat::ATTACK), int(pksav_bigendian16(native_pc->ev_atk)));
+    EXPECT_EQ(EVs.at(pkmn::e_stat::DEFENSE), int(pksav_bigendian16(native_pc->ev_def)));
+    EXPECT_EQ(EVs.at(pkmn::e_stat::SPEED), int(pksav_bigendian16(native_pc->ev_spd)));
+    EXPECT_EQ(EVs.at(pkmn::e_stat::SPECIAL), int(pksav_bigendian16(native_pc->ev_spcl)));
 
     uint8_t pksav_IVs[PKSAV_NUM_GB_IVS] = {0};
     PKSAV_CALL(
@@ -174,24 +174,24 @@ TEST_P(gen2_pokemon_test, gen2_pokemon_test) {
         )
     )
 
-    EXPECT_EQ(IVs.at("HP"),      int(pksav_IVs[PKSAV_GB_IV_HP]));
-    EXPECT_EQ(IVs.at("Attack"),  int(pksav_IVs[PKSAV_GB_IV_ATTACK]));
-    EXPECT_EQ(IVs.at("Defense"), int(pksav_IVs[PKSAV_GB_IV_DEFENSE]));
-    EXPECT_EQ(IVs.at("Speed"),   int(pksav_IVs[PKSAV_GB_IV_SPEED]));
-    EXPECT_EQ(IVs.at("Special"), int(pksav_IVs[PKSAV_GB_IV_SPECIAL]));
+    EXPECT_EQ(IVs.at(pkmn::e_stat::HP),      int(pksav_IVs[PKSAV_GB_IV_HP]));
+    EXPECT_EQ(IVs.at(pkmn::e_stat::ATTACK),  int(pksav_IVs[PKSAV_GB_IV_ATTACK]));
+    EXPECT_EQ(IVs.at(pkmn::e_stat::DEFENSE), int(pksav_IVs[PKSAV_GB_IV_DEFENSE]));
+    EXPECT_EQ(IVs.at(pkmn::e_stat::SPEED),   int(pksav_IVs[PKSAV_GB_IV_SPEED]));
+    EXPECT_EQ(IVs.at(pkmn::e_stat::SPECIAL), int(pksav_IVs[PKSAV_GB_IV_SPECIAL]));
 
     EXPECT_EQ(pokemon->get_level(), int(native_pc->level));
 
     /*
      * Party data
      */
-    EXPECT_EQ(pokemon->get_stats().at("HP"), int(pksav_bigendian16(native_party_data->max_hp)));
+    EXPECT_EQ(pokemon->get_stats().at(pkmn::e_stat::HP), int(pksav_bigendian16(native_party_data->max_hp)));
     EXPECT_EQ(pokemon->get_current_hp(), int(pksav_bigendian16(native_party_data->current_hp)));
-    EXPECT_EQ(pokemon->get_stats().at("Attack"), int(pksav_bigendian16(native_party_data->atk)));
-    EXPECT_EQ(pokemon->get_stats().at("Defense"), int(pksav_bigendian16(native_party_data->def)));
-    EXPECT_EQ(pokemon->get_stats().at("Speed"), int(pksav_bigendian16(native_party_data->spd)));
-    EXPECT_EQ(pokemon->get_stats().at("Special Attack"), int(pksav_bigendian16(native_party_data->spatk)));
-    EXPECT_EQ(pokemon->get_stats().at("Special Defense") , int(pksav_bigendian16(native_party_data->spdef)));
+    EXPECT_EQ(pokemon->get_stats().at(pkmn::e_stat::ATTACK), int(pksav_bigendian16(native_party_data->atk)));
+    EXPECT_EQ(pokemon->get_stats().at(pkmn::e_stat::DEFENSE), int(pksav_bigendian16(native_party_data->def)));
+    EXPECT_EQ(pokemon->get_stats().at(pkmn::e_stat::SPEED), int(pksav_bigendian16(native_party_data->spd)));
+    EXPECT_EQ(pokemon->get_stats().at(pkmn::e_stat::SPECIAL_ATTACK), int(pksav_bigendian16(native_party_data->spatk)));
+    EXPECT_EQ(pokemon->get_stats().at(pkmn::e_stat::SPECIAL_DEFENSE) , int(pksav_bigendian16(native_party_data->spdef)));
 }
 
 static const std::vector<std::pair<std::string, std::string>> params = {

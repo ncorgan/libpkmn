@@ -32,6 +32,7 @@ PKMN_RUBY_INIT
 %}
 
 %import <pkmn/enums/gender.hpp>
+%import <pkmn/enums/stat.hpp>
 
 %include <pkmn/calculations/form.hpp>
 %include <pkmn/calculations/gender.hpp>

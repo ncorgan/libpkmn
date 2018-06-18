@@ -503,10 +503,10 @@ namespace pkmn { namespace c {
         *p_attribute_names_out = std::move(temp_attribute_names_c);
     }
 
-    template <typename key_type, typename c_enum_type, typename buffer_type>
+    template <typename map_key_type, typename bimap_key_type, typename c_enum_type, typename buffer_type>
     static void copy_map_to_buffer(
-        const std::map<std::string, buffer_type>& value_map,
-        const boost::bimap<key_type, c_enum_type>& value_enum_bimap,
+        const std::map<map_key_type, buffer_type>& value_map,
+        const boost::bimap<bimap_key_type, c_enum_type>& value_enum_bimap,
         buffer_type* p_values_buffer_out,
         size_t value_buffer_size,
         size_t actual_num_values,
@@ -527,7 +527,7 @@ namespace pkmn { namespace c {
             c_enum_type value_enum = c_enum_type(value);
             BOOST_ASSERT(value_enum_bimap.right.count(value_enum) > 0);
 
-            const key_type& cpp_key = value_enum_bimap.right.at(value_enum);
+            const bimap_key_type& cpp_key = value_enum_bimap.right.at(value_enum);
             if(value_map.count(cpp_key) > 0)
             {
                 p_values_buffer_out[value] = value_map.at(value_enum_bimap.right.at(value_enum));

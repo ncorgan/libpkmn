@@ -139,28 +139,28 @@ public class PokemonIOTests
         }
 
         Assert.AreEqual(mightyena.EVs.Count, 6);
-        Assert.AreEqual(mightyena.EVs["HP"], 30);
-        Assert.AreEqual(mightyena.EVs["Attack"], 110);
-        Assert.AreEqual(mightyena.EVs["Defense"], 32);
-        Assert.AreEqual(mightyena.EVs["Speed"], 48);
-        Assert.AreEqual(mightyena.EVs["Special Attack"], 17);
-        Assert.AreEqual(mightyena.EVs["Special Defense"], 83);
+        Assert.AreEqual(mightyena.EVs[PKMN.Stat.HP], 30);
+        Assert.AreEqual(mightyena.EVs[PKMN.Stat.ATTACK], 110);
+        Assert.AreEqual(mightyena.EVs[PKMN.Stat.DEFENSE], 32);
+        Assert.AreEqual(mightyena.EVs[PKMN.Stat.SPEED], 48);
+        Assert.AreEqual(mightyena.EVs[PKMN.Stat.SPECIAL_ATTACK], 17);
+        Assert.AreEqual(mightyena.EVs[PKMN.Stat.SPECIAL_DEFENSE], 83);
 
         Assert.AreEqual(mightyena.IVs.Count, 6);
-        Assert.AreEqual(mightyena.IVs["HP"], 26);
-        Assert.AreEqual(mightyena.IVs["Attack"], 28);
-        Assert.AreEqual(mightyena.IVs["Defense"], 4);
-        Assert.AreEqual(mightyena.IVs["Speed"], 13);
-        Assert.AreEqual(mightyena.IVs["Special Attack"], 25);
-        Assert.AreEqual(mightyena.IVs["Special Defense"], 26);
+        Assert.AreEqual(mightyena.IVs[PKMN.Stat.HP], 26);
+        Assert.AreEqual(mightyena.IVs[PKMN.Stat.ATTACK], 28);
+        Assert.AreEqual(mightyena.IVs[PKMN.Stat.DEFENSE], 4);
+        Assert.AreEqual(mightyena.IVs[PKMN.Stat.SPEED], 13);
+        Assert.AreEqual(mightyena.IVs[PKMN.Stat.SPECIAL_ATTACK], 25);
+        Assert.AreEqual(mightyena.IVs[PKMN.Stat.SPECIAL_DEFENSE], 26);
 
         Assert.AreEqual(mightyena.Stats.Count, 6);
-        Assert.AreEqual(mightyena.Stats["HP"], 146);
-        Assert.AreEqual(mightyena.Stats["Attack"], 122);
-        Assert.AreEqual(mightyena.Stats["Defense"], 81);
-        Assert.AreEqual(mightyena.Stats["Speed"], 87);
-        Assert.AreEqual(mightyena.Stats["Special Attack"], 79);
-        Assert.AreEqual(mightyena.Stats["Special Defense"], 88);
+        Assert.AreEqual(mightyena.Stats[PKMN.Stat.HP], 146);
+        Assert.AreEqual(mightyena.Stats[PKMN.Stat.ATTACK], 122);
+        Assert.AreEqual(mightyena.Stats[PKMN.Stat.DEFENSE], 81);
+        Assert.AreEqual(mightyena.Stats[PKMN.Stat.SPEED], 87);
+        Assert.AreEqual(mightyena.Stats[PKMN.Stat.SPECIAL_ATTACK], 79);
+        Assert.AreEqual(mightyena.Stats[PKMN.Stat.SPECIAL_DEFENSE], 88);
     }
 }
 

@@ -9,6 +9,7 @@
 #define INCLUDED_PKMN_PKSAV_ENUM_MAPS_HPP
 
 #include <pkmn/enums/gender.hpp>
+#include <pkmn/enums/stat.hpp>
 
 #include <pksav/gen1/options.h>
 #include <pksav/gen1/pokemon.h>
@@ -24,6 +25,7 @@
 
 #include <pksav/common/condition.h>
 #include <pksav/common/nature.h>
+#include <pksav/common/stats.h>
 
 #include <boost/assign.hpp>
 #include <boost/bimap.hpp>
@@ -32,6 +34,13 @@
 
 namespace pksav
 {
+    // Stats
+    typedef boost::bimap<pkmn::e_stat, enum pksav_gb_IV> gb_IV_bimap_t;
+    typedef boost::bimap<pkmn::e_stat, enum pksav_IV> IV_bimap_t;
+
+    const gb_IV_bimap_t& get_gb_IV_bimap();
+    const IV_bimap_t& get_IV_bimap();
+
     // Genders
     typedef boost::bimap<pkmn::e_gender, enum pksav_gen2_gender> gen2_gender_bimap_t;
 

@@ -112,11 +112,11 @@ internal class Util
             ret.Moves[moveIndex].Move = move;
         }
 
-        foreach(string EV in ret.EVs.Keys)
+        foreach(PKMN.Stat EV in ret.EVs.Keys)
         {
             ret.EVs[EV] = rng.Next(0, 255);
         }
-        foreach(string IV in ret.IVs.Keys)
+        foreach(PKMN.Stat IV in ret.IVs.Keys)
         {
             ret.IVs[IV] = rng.Next(0, 15);
         }
@@ -180,19 +180,19 @@ internal class Util
         Assert.AreEqual(pokemon1.OriginalTrainerName, pokemon2.OriginalTrainerName);
 
         Assert.AreEqual(pokemon1.EVs.Keys, pokemon2.EVs.Keys);
-        foreach(string EV in pokemon1.EVs.Keys)
+        foreach(PKMN.Stat EV in pokemon1.EVs.Keys)
         {
             Assert.AreEqual(pokemon1.EVs[EV], pokemon2.EVs[EV]);
         }
 
         Assert.AreEqual(pokemon1.IVs.Keys, pokemon2.IVs.Keys);
-        foreach(string IV in pokemon1.IVs.Keys)
+        foreach(PKMN.Stat IV in pokemon1.IVs.Keys)
         {
             Assert.AreEqual(pokemon1.IVs[IV], pokemon2.IVs[IV]);
         }
 
         Assert.AreEqual(pokemon1.Stats.Keys, pokemon2.Stats.Keys);
-        foreach(string stat in pokemon1.Stats.Keys)
+        foreach(PKMN.Stat stat in pokemon1.Stats.Keys)
         {
             Assert.AreEqual(pokemon1.Stats[stat], pokemon2.Stats[stat]);
         }

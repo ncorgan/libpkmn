@@ -197,7 +197,7 @@ namespace pkmn {
             ) override final;
 
             void set_IV(
-                const std::string& stat,
+                pkmn::e_stat stat,
                 int value
             ) override final;
 
@@ -227,7 +227,7 @@ namespace pkmn {
             ) override final;
 
             void set_EV(
-                const std::string& stat,
+                pkmn::e_stat stat,
                 int value
             ) override final;
 
