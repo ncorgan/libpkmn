@@ -13,6 +13,8 @@
 
 %import <python/pkmn_game_save_helpers.i>
 
+%rename(game_save_type) pkmn::swig::e_game_save_type;
+
 %ignore pkmn::swig::game_save::game_save();
 %ignore pkmn::swig::game_save::game_save(const pkmn::game_save::sptr&);
 %ignore pkmn::swig::game_save::cptr();

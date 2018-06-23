@@ -31,6 +31,19 @@
 
 namespace pkmn {
 
+    enum class e_game_save_type
+    {
+        NONE = 0,
+        RED_BLUE,
+        YELLOW,
+        GOLD_SILVER,
+        CRYSTAL,
+        RUBY_SAPPHIRE,
+        EMERALD,
+        FIRERED_LEAFGREEN,
+        COLOSSEUM_XD
+    };
+
     /*!
      * @brief A class that provides a common interface for editing various
      *        main-series Pokémon games.
@@ -50,18 +63,9 @@ namespace pkmn {
             /*!
              * @brief Returns what type of game save is at the given filepath.
              *
-             * Possible return values:
-             *  * "Red/Blue"
-             *  * "Yellow"
-             *  * "Gold/Silver"
-             *  * "Crystal"
-             *  * "Ruby/Sapphire/Emerald"
-             *  * "FireRed/LeafGreen"
-             *  * "Colosseum/XD"
-             *
              * \param filepath The filepath to check
              */
-            static std::string detect_type(
+            static pkmn::e_game_save_type detect_type(
                 const std::string& filepath
             );
 

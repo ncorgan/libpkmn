@@ -52,9 +52,9 @@ replacements = dict(Ev = "EV",
 
 def generate_new_name(old_name, pascal):
     if old_name.endswith("_t"):
-        old_name = old_name.replace("_t","")
+        old_name = old_name[:-2]
     if old_name.startswith("e_"):
-        old_name = old_name.replace("e_","")
+        old_name = old_name[2:]
 
     if pascal:
         new_name = old_name[0].upper() + ''.join(x for x in old_name.title()[1:] if not (x.isspace() or x == '_'))

@@ -29,6 +29,19 @@
 
 namespace pkmn { namespace swig {
 
+    enum class e_game_save_type
+    {
+        NONE = 0,
+        RED_BLUE,
+        YELLOW,
+        GOLD_SILVER,
+        CRYSTAL,
+        RUBY_SAPPHIRE,
+        EMERALD,
+        FIRERED_LEAFGREEN,
+        COLOSSEUM_XD,
+    };
+
     class game_save
     {
         public:
@@ -49,11 +62,13 @@ namespace pkmn { namespace swig {
                 _generation = pkmn::priv::game_enum_to_generation(_game_save->get_game());
             }
 
-            static std::string detect_type(
+            static pkmn::swig::e_game_save_type detect_type(
                 const std::string& filepath
             )
             {
-                return pkmn::game_save::detect_type(filepath);
+                return static_cast<pkmn::swig::e_game_save_type>(
+                           pkmn::game_save::detect_type(filepath)
+                       );
             }
 
             inline std::string get_filepath()

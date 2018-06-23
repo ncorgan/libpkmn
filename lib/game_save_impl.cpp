@@ -31,32 +31,6 @@ namespace fs = boost::filesystem;
 
 namespace pkmn {
 
-    typedef enum
-    {
-        PKMN_SAVE_TYPE_NONE = 0,
-        PKMN_SAVE_TYPE_RED_BLUE,
-        PKMN_SAVE_TYPE_YELLOW,
-        PKMN_SAVE_TYPE_GOLD_SILVER,
-        PKMN_SAVE_TYPE_CRYSTAL,
-        PKMN_SAVE_TYPE_RUBY_SAPPHIRE,
-        PKMN_SAVE_TYPE_EMERALD,
-        PKMN_SAVE_TYPE_FIRERED_LEAFGREEN,
-        PKMN_SAVE_TYPE_COLOSSEUM_XD,
-    } pkmn_save_type_t;
-
-    static const std::vector<std::string> SAVE_TYPE_NAMES =
-    {
-        "None",
-        "Red/Blue",
-        "Yellow",
-        "Gold/Silver",
-        "Crystal",
-        "Ruby/Sapphire",
-        "Emerald",
-        "FireRed/LeafGreen",
-        "Colosseum/XD"
-    };
-
     BOOST_STATIC_CONSTEXPR size_t GCN_COLOSSEUM_BIN_SIZE = 0x60000;
     BOOST_STATIC_CONSTEXPR size_t GCN_COLOSSEUM_GCI_SIZE = 0x60040;
     BOOST_STATIC_CONSTEXPR size_t GCN_XD_BIN_SIZE = 0x56000;
@@ -65,33 +39,33 @@ namespace pkmn {
     // Map PKSav save type enums to LibPKMN save type enum. The std::hash<int>
     // is needed because enums can't be used as unordered_map keys until C++14.
     template <typename pksav_enum_type>
-    using pksav_enum_map_t = std::unordered_map<pksav_enum_type, pkmn_save_type_t, std::hash<int>>;
+    using pksav_enum_map_t = std::unordered_map<pksav_enum_type, pkmn::e_game_save_type, std::hash<int>>;
 
     static const pksav_enum_map_t<enum pksav_gen1_save_type> PKSAV_GEN1_ENUM_MAP =
     {
-        {PKSAV_GEN1_SAVE_TYPE_NONE,     PKMN_SAVE_TYPE_NONE},
-        {PKSAV_GEN1_SAVE_TYPE_RED_BLUE, PKMN_SAVE_TYPE_RED_BLUE},
-        {PKSAV_GEN1_SAVE_TYPE_YELLOW,   PKMN_SAVE_TYPE_YELLOW}
+        {PKSAV_GEN1_SAVE_TYPE_NONE,     pkmn::e_game_save_type::NONE},
+        {PKSAV_GEN1_SAVE_TYPE_RED_BLUE, pkmn::e_game_save_type::RED_BLUE},
+        {PKSAV_GEN1_SAVE_TYPE_YELLOW,   pkmn::e_game_save_type::YELLOW}
     };
     static const pksav_enum_map_t<enum pksav_gen2_save_type> PKSAV_GEN2_ENUM_MAP =
     {
-        {PKSAV_GEN2_SAVE_TYPE_NONE,    PKMN_SAVE_TYPE_NONE},
-        {PKSAV_GEN2_SAVE_TYPE_GS,      PKMN_SAVE_TYPE_GOLD_SILVER},
-        {PKSAV_GEN2_SAVE_TYPE_CRYSTAL, PKMN_SAVE_TYPE_CRYSTAL}
+        {PKSAV_GEN2_SAVE_TYPE_NONE,    pkmn::e_game_save_type::NONE},
+        {PKSAV_GEN2_SAVE_TYPE_GS,      pkmn::e_game_save_type::GOLD_SILVER},
+        {PKSAV_GEN2_SAVE_TYPE_CRYSTAL, pkmn::e_game_save_type::CRYSTAL}
     };
     static const pksav_enum_map_t<enum pksav_gba_save_type> PKSAV_GBA_ENUM_MAP =
     {
-        {PKSAV_GBA_SAVE_TYPE_NONE,    PKMN_SAVE_TYPE_NONE},
-        {PKSAV_GBA_SAVE_TYPE_RS,      PKMN_SAVE_TYPE_RUBY_SAPPHIRE},
-        {PKSAV_GBA_SAVE_TYPE_EMERALD, PKMN_SAVE_TYPE_EMERALD},
-        {PKSAV_GBA_SAVE_TYPE_FRLG,    PKMN_SAVE_TYPE_FIRERED_LEAFGREEN}
+        {PKSAV_GBA_SAVE_TYPE_NONE,    pkmn::e_game_save_type::NONE},
+        {PKSAV_GBA_SAVE_TYPE_RS,      pkmn::e_game_save_type::RUBY_SAPPHIRE},
+        {PKSAV_GBA_SAVE_TYPE_EMERALD, pkmn::e_game_save_type::EMERALD},
+        {PKSAV_GBA_SAVE_TYPE_FRLG,    pkmn::e_game_save_type::FIRERED_LEAFGREEN}
     };
 
-    static pkmn_save_type_t _detect_save_type(
+    static pkmn::e_game_save_type _detect_save_type(
         const std::vector<uint8_t>& data
     )
     {
-        pkmn_save_type_t ret = PKMN_SAVE_TYPE_NONE;
+        pkmn::e_game_save_type ret = pkmn::e_game_save_type::NONE;
 
         size_t data_size = data.size();
 
@@ -120,11 +94,11 @@ namespace pkmn {
             size_t save_index = 0;
             if(gcn_save_uptr->getMostRecentValidSlot(0, &save_index))
             {
-                ret = PKMN_SAVE_TYPE_COLOSSEUM_XD;
+                ret = pkmn::e_game_save_type::COLOSSEUM_XD;
             }
         }
 
-        if(ret == PKMN_SAVE_TYPE_NONE)
+        if(ret == pkmn::e_game_save_type::NONE)
         {
             enum pksav_gba_save_type gba_save_type = PKSAV_GBA_SAVE_TYPE_NONE;
             PKSAV_CALL(
@@ -140,7 +114,7 @@ namespace pkmn {
 
             // Checking Gen I before Gen II tends to remove Generation II saves
             // registering as Generation I.
-            if(ret == PKMN_SAVE_TYPE_NONE)
+            if(ret == pkmn::e_game_save_type::NONE)
             {
                 enum pksav_gen1_save_type gen1_save_type = PKSAV_GEN1_SAVE_TYPE_NONE;
                 PKSAV_CALL(
@@ -154,7 +128,7 @@ namespace pkmn {
                 BOOST_ASSERT(PKSAV_GEN1_ENUM_MAP.count(gen1_save_type) > 0);
                 ret = PKSAV_GEN1_ENUM_MAP.at(gen1_save_type);
 
-                if(ret == PKMN_SAVE_TYPE_NONE)
+                if(ret == pkmn::e_game_save_type::NONE)
                 {
                     enum pksav_gen2_save_type gen2_save_type = PKSAV_GEN2_SAVE_TYPE_NONE;
                     PKSAV_CALL(
@@ -174,7 +148,7 @@ namespace pkmn {
         return ret;
     }
 
-    static pkmn_save_type_t _detect_save_type(
+    pkmn::e_game_save_type game_save::detect_type(
         const std::string& filepath
     )
     {
@@ -193,19 +167,8 @@ namespace pkmn {
         return _detect_save_type(raw);
     }
 
-    std::string game_save::detect_type(
-        const std::string& filepath
-    )
-    {
-        pkmn_save_type_t save_type = _detect_save_type(filepath);
-        BOOST_ASSERT(save_type >= PKMN_SAVE_TYPE_NONE);
-        BOOST_ASSERT(save_type < SAVE_TYPE_NAMES.size());
-
-        return SAVE_TYPE_NAMES[save_type];
-    }
-
     game_save::sptr game_save::from_file(
-        const std::string &filepath
+        const std::string& filepath
     )
     {
         size_t filesize = size_t(fs::file_size(filepath));
@@ -215,39 +178,39 @@ namespace pkmn {
         ifile.read(reinterpret_cast<char*>(raw.data()), filesize);
         ifile.close();
 
-        pkmn_save_type_t save_type = _detect_save_type(raw);
+        pkmn::e_game_save_type save_type = _detect_save_type(raw);
 
         switch(save_type)
         {
-            case PKMN_SAVE_TYPE_RED_BLUE:
-            case PKMN_SAVE_TYPE_YELLOW:
+            case pkmn::e_game_save_type::RED_BLUE:
+            case pkmn::e_game_save_type::YELLOW:
                 return std::make_shared<game_save_gen1impl>(
                            filepath,
                            std::move(raw)
                        );
 
-            case PKMN_SAVE_TYPE_GOLD_SILVER:
-            case PKMN_SAVE_TYPE_CRYSTAL:
+            case pkmn::e_game_save_type::GOLD_SILVER:
+            case pkmn::e_game_save_type::CRYSTAL:
                 return std::make_shared<game_save_gen2impl>(
                            filepath,
                            std::move(raw)
                        );
 
-            case PKMN_SAVE_TYPE_RUBY_SAPPHIRE:
-            case PKMN_SAVE_TYPE_EMERALD:
-            case PKMN_SAVE_TYPE_FIRERED_LEAFGREEN:
+            case pkmn::e_game_save_type::RUBY_SAPPHIRE:
+            case pkmn::e_game_save_type::EMERALD:
+            case pkmn::e_game_save_type::FIRERED_LEAFGREEN:
                 return std::make_shared<game_save_gbaimpl>(
                            filepath,
                            std::move(raw)
                        );
 
-            case PKMN_SAVE_TYPE_COLOSSEUM_XD:
+            case pkmn::e_game_save_type::COLOSSEUM_XD:
                 return std::make_shared<game_save_gcnimpl>(
                            filepath,
                            std::move(raw)
                        );
 
-            case PKMN_SAVE_TYPE_NONE:
+            case pkmn::e_game_save_type::NONE:
             default:
                 throw std::invalid_argument("Invalid save (or unimplemented).");
         }

@@ -18,7 +18,7 @@ public class CSharpGameSaveTest
     public void RedGameSaveTest()
     {
         PKMNTest.GameSaveTest.TestGameSave(
-            "Red/Blue",
+            PKMN.GameSaveType.RED_BLUE,
             PKMN.Game.RED,
             "red_blue/pokemon_red.sav"
         );
@@ -31,7 +31,7 @@ public class CSharpGameSaveTest
     public void YellowGameSaveTest()
     {
         PKMNTest.GameSaveTest.TestGameSave(
-            "Yellow",
+            PKMN.GameSaveType.YELLOW,
             PKMN.Game.YELLOW,
             "yellow/pokemon_yellow.sav"
         );
@@ -44,7 +44,7 @@ public class CSharpGameSaveTest
     public void GoldGameSaveTest()
     {
         PKMNTest.GameSaveTest.TestGameSave(
-            "Gold/Silver",
+            PKMN.GameSaveType.GOLD_SILVER,
             PKMN.Game.GOLD,
             "gold_silver/pokemon_gold.sav"
         );
@@ -57,7 +57,7 @@ public class CSharpGameSaveTest
     public void CrystalGameSaveTest()
     {
         PKMNTest.GameSaveTest.TestGameSave(
-            "Crystal",
+            PKMN.GameSaveType.CRYSTAL,
             PKMN.Game.CRYSTAL,
             "crystal/pokemon_crystal.sav"
         );
@@ -70,7 +70,7 @@ public class CSharpGameSaveTest
     public void RubyGameSaveTest()
     {
         PKMNTest.GameSaveTest.TestGameSave(
-            "Ruby/Sapphire",
+            PKMN.GameSaveType.RUBY_SAPPHIRE,
             PKMN.Game.RUBY,
             "ruby_sapphire/pokemon_ruby.sav"
         );
@@ -83,7 +83,7 @@ public class CSharpGameSaveTest
     public void EmeraldGameSaveTest()
     {
         PKMNTest.GameSaveTest.TestGameSave(
-            "Emerald",
+            PKMN.GameSaveType.EMERALD,
             PKMN.Game.EMERALD,
             "emerald/pokemon_emerald.sav"
         );
@@ -96,7 +96,7 @@ public class CSharpGameSaveTest
     public void FireRedGameSaveTest()
     {
         PKMNTest.GameSaveTest.TestGameSave(
-            "FireRed/LeafGreen",
+            PKMN.GameSaveType.FIRERED_LEAFGREEN,
             PKMN.Game.FIRERED,
             "firered_leafgreen/pokemon_firered.sav"
         );
@@ -109,7 +109,7 @@ public class CSharpGameSaveTest
     public void ColosseumGameSaveTest()
     {
         PKMNTest.GameSaveTest.TestGameSave(
-            "Colosseum/XD",
+            PKMN.GameSaveType.COLOSSEUM_XD,
             PKMN.Game.COLOSSEUM,
             "gamecube_saves/pokemon_colosseum.gci"
         );
@@ -122,7 +122,7 @@ public class CSharpGameSaveTest
     public void XDGameSaveTest()
     {
         PKMNTest.GameSaveTest.TestGameSave(
-            "Colosseum/XD",
+            PKMN.GameSaveType.COLOSSEUM_XD,
             PKMN.Game.XD,
             "gamecube_saves/pokemon_xd.gci"
         );

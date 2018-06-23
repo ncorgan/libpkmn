@@ -1,8 +1,8 @@
 /*
- * p_Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
- * p_Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
- * p_or copy at http://opensource.org/licenses/MIT)
+ * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
+ * or copy at http://opensource.org/licenses/MIT)
  */
 
 #include "cpp_to_c.hpp"
@@ -15,19 +15,6 @@
 
 #include <pkmn-c/game_save.h>
 
-static const std::unordered_map<std::string, enum pkmn_game_save_type> GAME_SAVE_TYPES =
-{
-    {"None", PKMN_GAME_SAVE_TYPE_NONE},
-    {"Red/Blue", PKMN_GAME_SAVE_TYPE_RED_BLUE},
-    {"Yellow", PKMN_GAME_SAVE_TYPE_YELLOW},
-    {"Gold/Silver", PKMN_GAME_SAVE_TYPE_GOLD_SILVER},
-    {"Crystal", PKMN_GAME_SAVE_TYPE_CRYSTAL},
-    {"Ruby/Sapphire", PKMN_GAME_SAVE_TYPE_RUBY_SAPPHIRE},
-    {"Emerald", PKMN_GAME_SAVE_TYPE_EMERALD},
-    {"FireRed/LeafGreen", PKMN_GAME_SAVE_TYPE_FIRERED_LEAFGREEN},
-    {"Colosseum/XD", PKMN_GAME_SAVE_TYPE_COLOSSEUM_XD}
-};
-
 enum pkmn_error pkmn_game_save_detect_type(
     const char* p_filepath,
     enum pkmn_game_save_type* p_game_save_type_out
@@ -37,10 +24,13 @@ enum pkmn_error pkmn_game_save_detect_type(
     PKMN_CHECK_NULL_PARAM(p_game_save_type_out);
 
     PKMN_CPP_TO_C(
-        std::string cpp_game_save_type = pkmn::game_save::detect_type(p_filepath);
-        BOOST_ASSERT(GAME_SAVE_TYPES.count(cpp_game_save_type) > 0);
+        const pkmn::c::game_save_type_bimap_t& game_save_type_bimap =
+            pkmn::c::get_game_save_type_bimap();
 
-        *p_game_save_type_out = GAME_SAVE_TYPES.at(cpp_game_save_type);
+        pkmn::e_game_save_type cpp_game_save_type = pkmn::game_save::detect_type(p_filepath);
+        BOOST_ASSERT(game_save_type_bimap.right.count(cpp_game_save_type) > 0);
+
+        *p_game_save_type_out = game_save_type_bimap.left.at(cpp_game_save_type);
     )
 }
 

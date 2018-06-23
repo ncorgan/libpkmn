@@ -45,6 +45,24 @@ namespace pkmn { namespace c {
         return GAME_BIMAP;
     }
 
+    const game_save_type_bimap_t& get_game_save_type_bimap()
+    {
+        static const game_save_type_bimap_t GAME_SAVE_TYPE_BIMAP =
+        boost::assign::list_of<game_save_type_bimap_t::relation>
+            (pkmn::e_game_save_type::NONE, PKMN_GAME_SAVE_TYPE_NONE)
+            (pkmn::e_game_save_type::RED_BLUE, PKMN_GAME_SAVE_TYPE_RED_BLUE)
+            (pkmn::e_game_save_type::YELLOW, PKMN_GAME_SAVE_TYPE_YELLOW)
+            (pkmn::e_game_save_type::GOLD_SILVER, PKMN_GAME_SAVE_TYPE_GOLD_SILVER)
+            (pkmn::e_game_save_type::CRYSTAL, PKMN_GAME_SAVE_TYPE_CRYSTAL)
+            (pkmn::e_game_save_type::RUBY_SAPPHIRE, PKMN_GAME_SAVE_TYPE_RUBY_SAPPHIRE)
+            (pkmn::e_game_save_type::EMERALD, PKMN_GAME_SAVE_TYPE_EMERALD)
+            (pkmn::e_game_save_type::FIRERED_LEAFGREEN, PKMN_GAME_SAVE_TYPE_FIRERED_LEAFGREEN)
+            (pkmn::e_game_save_type::COLOSSEUM_XD, PKMN_GAME_SAVE_TYPE_COLOSSEUM_XD)
+        ;
+
+        return GAME_SAVE_TYPE_BIMAP;
+    }
+
     const gender_bimap_t& get_gender_bimap()
     {
         static const gender_bimap_t GENDER_BIMAP =

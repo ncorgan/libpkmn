@@ -605,7 +605,7 @@ public class GameSaveTest
     }
 
     public static void TestGameSave(
-        string type,
+        PKMN.GameSaveType type,
         PKMN.Game game,
         string subPath
     )

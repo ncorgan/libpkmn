@@ -61,7 +61,7 @@ namespace pkmntest {
     static const fs::path PKSAV_TEST_SAVES(pkmn_getenv("PKSAV_TEST_SAVES"));
 
     typedef std::tuple<
-                std::string,
+                pkmn::e_game_save_type,
                 pkmn::e_game,
                 std::string>
             game_save_test_params_t;
@@ -1065,15 +1065,51 @@ namespace pkmntest {
     static const fs::path TMP_DIR(pkmn::get_tmp_dir());
 
     static const game_save_test_params_t params[] = {
-        game_save_test_params_t("Red/Blue", pkmn::e_game::RED, "red_blue/pokemon_red.sav"),
-        game_save_test_params_t("Yellow", pkmn::e_game::YELLOW, "yellow/pokemon_yellow.sav"),
-        game_save_test_params_t("Gold/Silver", pkmn::e_game::GOLD, "gold_silver/pokemon_gold.sav"),
-        game_save_test_params_t("Crystal", pkmn::e_game::CRYSTAL, "crystal/pokemon_crystal.sav"),
-        game_save_test_params_t("Ruby/Sapphire", pkmn::e_game::RUBY, "ruby_sapphire/pokemon_ruby.sav"),
-        game_save_test_params_t("Emerald", pkmn::e_game::EMERALD, "emerald/pokemon_emerald.sav"),
-        game_save_test_params_t("FireRed/LeafGreen", pkmn::e_game::FIRERED, "firered_leafgreen/pokemon_firered.sav"),
-        game_save_test_params_t("Colosseum/XD", pkmn::e_game::COLOSSEUM, "gamecube_saves/pokemon_colosseum.gci"),
-        game_save_test_params_t("Colosseum/XD", pkmn::e_game::XD, "gamecube_saves/pokemon_xd.gci")
+        game_save_test_params_t(
+            pkmn::e_game_save_type::RED_BLUE,
+            pkmn::e_game::RED,
+            "red_blue/pokemon_red.sav"
+        ),
+        game_save_test_params_t(
+            pkmn::e_game_save_type::YELLOW,
+            pkmn::e_game::YELLOW,
+            "yellow/pokemon_yellow.sav"
+        ),
+        game_save_test_params_t(
+            pkmn::e_game_save_type::GOLD_SILVER,
+            pkmn::e_game::GOLD,
+            "gold_silver/pokemon_gold.sav"
+        ),
+        game_save_test_params_t(
+            pkmn::e_game_save_type::CRYSTAL,
+            pkmn::e_game::CRYSTAL,
+            "crystal/pokemon_crystal.sav"
+        ),
+        game_save_test_params_t(
+            pkmn::e_game_save_type::RUBY_SAPPHIRE,
+            pkmn::e_game::RUBY,
+            "ruby_sapphire/pokemon_ruby.sav"
+        ),
+        game_save_test_params_t(
+            pkmn::e_game_save_type::EMERALD,
+            pkmn::e_game::EMERALD,
+            "emerald/pokemon_emerald.sav"
+        ),
+        game_save_test_params_t(
+            pkmn::e_game_save_type::FIRERED_LEAFGREEN,
+            pkmn::e_game::FIRERED,
+            "firered_leafgreen/pokemon_firered.sav"
+        ),
+        game_save_test_params_t(
+            pkmn::e_game_save_type::COLOSSEUM_XD,
+            pkmn::e_game::COLOSSEUM,
+            "gamecube_saves/pokemon_colosseum.gci"
+        ),
+        game_save_test_params_t(
+            pkmn::e_game_save_type::COLOSSEUM_XD,
+            pkmn::e_game::XD,
+            "gamecube_saves/pokemon_xd.gci"
+        )
     };
 
     TEST_P(game_save_test, game_save_test) {

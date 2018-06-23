@@ -563,6 +563,11 @@ TEST(cpp_swig_wrapper_test, test_game_save)
 {
     fs::path save_filepath(PKSAV_TEST_SAVES / "firered_leafgreen" / "pokemon_firered.sav");
 
+    EXPECT_EQ(
+        pkmn::swig::e_game_save_type::FIRERED_LEAFGREEN,
+        pkmn::swig::game_save::detect_type(save_filepath.string())
+    );
+
     pkmn::swig::game_save swig_game_save(save_filepath.string());
 
     EXPECT_EQ(save_filepath.string(), swig_game_save.get_filepath());
