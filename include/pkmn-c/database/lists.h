@@ -9,6 +9,7 @@
 
 #include <pkmn-c/config.h>
 #include <pkmn-c/error.h>
+#include <pkmn-c/types/game.h>
 #include <pkmn-c/types/string_types.h>
 
 #include <stdbool.h>
@@ -34,23 +35,23 @@ PKMN_C_API enum pkmn_error pkmn_database_gamecube_shadow_pokemon_list(
 );
 
 PKMN_C_API enum pkmn_error pkmn_database_hm_move_list(
-    const char* p_game,
+    enum pkmn_game game,
     struct pkmn_string_list* p_hm_move_list_out
 );
 
 PKMN_C_API enum pkmn_error pkmn_database_item_list(
-    const char* p_game,
+    enum pkmn_game game,
     struct pkmn_string_list* p_item_list_out
 );
 
 PKMN_C_API enum pkmn_error pkmn_database_location_list(
-    const char* p_game,
+    enum pkmn_game game,
     bool whole_generation,
     struct pkmn_string_list* p_location_list_out
 );
 
 PKMN_C_API enum pkmn_error pkmn_database_move_list(
-    const char* p_game,
+    enum pkmn_game game,
     struct pkmn_string_list* p_move_list_out
 );
 
@@ -78,12 +79,12 @@ PKMN_C_API enum pkmn_error pkmn_database_super_training_medal_list(
 );
 
 PKMN_C_API enum pkmn_error pkmn_database_tm_move_list(
-    const char* p_game,
+    enum pkmn_game game,
     struct pkmn_string_list* p_tm_move_list_out
 );
 
 PKMN_C_API enum pkmn_error pkmn_database_type_list(
-    const char* p_game,
+    enum pkmn_game game,
     struct pkmn_string_list* p_type_list_out
 );
 

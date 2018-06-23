@@ -6,7 +6,9 @@
  */
 
 #include "cpp_to_c.hpp"
+#include "enum_maps.hpp"
 #include "error_internal.hpp"
+#include "exception_internal.hpp"
 
 #include <boost/assert.hpp>
 #include <boost/thread/mutex.hpp>
@@ -15,16 +17,26 @@
 
 enum pkmn_error pkmn_item_list_init(
     const char* p_name,
-    const char* p_game,
+    enum pkmn_game game,
     struct pkmn_item_list* p_item_list_out
 )
 {
     PKMN_CHECK_NULL_PARAM(p_name);
-    PKMN_CHECK_NULL_PARAM(p_game);
     PKMN_CHECK_NULL_PARAM(p_item_list_out);
 
     PKMN_CPP_TO_C(
-        pkmn::item_list::sptr cpp = pkmn::item_list::make(p_name, p_game);
+        const pkmn::c::game_bimap_t& game_bimap = pkmn::c::get_game_bimap();
+
+        pkmn::enforce_value_in_map_keys(
+            "Game",
+            game,
+            game_bimap.right
+        );
+
+        pkmn::item_list::sptr cpp = pkmn::item_list::make(
+                                        p_name,
+                                        game_bimap.right.at(game)
+                                    );
 
         pkmn::c::init_item_list(
             cpp,
@@ -40,7 +52,7 @@ enum pkmn_error pkmn_item_list_free(
     PKMN_CHECK_NULL_PARAM(p_item_list);
 
     pkmn::c::free_pointer_and_set_to_null(&p_item_list->p_name);
-    pkmn::c::free_pointer_and_set_to_null(&p_item_list->p_game);
+    p_item_list->game = PKMN_GAME_NONE;
     p_item_list->capacity = 0;
 
     PKMN_CPP_TO_C(

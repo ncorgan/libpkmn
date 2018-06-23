@@ -11,6 +11,7 @@
 #include <pkmn-c/error.h>
 #include <pkmn-c/pokemon.h>
 
+#include <pkmn-c/types/game.h>
 #include <pkmn-c/types/gender.h>
 #include <pkmn-c/types/string_types.h>
 
@@ -23,7 +24,7 @@ extern "C" {
 PKMN_C_API enum pkmn_error pkmn_breeding_get_possible_child_species(
     const char* p_mother_species,
     const char* p_father_species,
-    const char* p_game,
+    enum pkmn_game game,
     struct pkmn_string_list* p_possible_child_species_out
 );
 

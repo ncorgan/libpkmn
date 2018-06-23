@@ -16,6 +16,7 @@
 #include "utils/misc.hpp"
 
 #include "database/database_common.hpp"
+#include "database/enum_conversions.hpp"
 #include "database/id_to_string.hpp"
 
 #include <pkmn/exception.hpp>
@@ -30,10 +31,10 @@ namespace pkmn {
 
     item_list::sptr item_list::make(
         const std::string& name,
-        const std::string& game
+        pkmn::e_game game
     )
     {
-        int game_id = pkmn::database::game_name_to_id(game);
+        int game_id = pkmn::database::game_enum_to_id(game);
         int generation = pkmn::database::game_id_to_generation(game_id);
         int item_list_id = 0;
         int capacity = 0;
@@ -53,7 +54,9 @@ namespace pkmn {
         {
             item_list_id = stmt.getColumn(0);
             capacity = stmt.getColumn(1);
-        } else {
+        }
+        else
+        {
             throw std::invalid_argument("Invalid list.");
         }
 
@@ -207,11 +210,9 @@ namespace pkmn {
                );
     }
 
-    std::string item_list_impl::get_game()
+    pkmn::e_game item_list_impl::get_game()
     {
-        return pkmn::database::game_id_to_name(
-                   _game_id
-               );
+        return pkmn::database::game_id_to_enum(_game_id);
     }
 
     int item_list_impl::get_capacity()

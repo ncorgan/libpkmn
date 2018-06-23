@@ -9,6 +9,42 @@
 
 namespace pkmn { namespace c {
 
+    const game_bimap_t& get_game_bimap()
+    {
+        static const game_bimap_t GAME_BIMAP =
+        boost::assign::list_of<game_bimap_t::relation>
+            (pkmn::e_game::NONE,           PKMN_GAME_NONE)
+            (pkmn::e_game::RED,            PKMN_GAME_RED)
+            (pkmn::e_game::BLUE,           PKMN_GAME_BLUE)
+            (pkmn::e_game::YELLOW,         PKMN_GAME_YELLOW)
+            (pkmn::e_game::GOLD,           PKMN_GAME_GOLD)
+            (pkmn::e_game::SILVER,         PKMN_GAME_SILVER)
+            (pkmn::e_game::CRYSTAL,        PKMN_GAME_CRYSTAL)
+            (pkmn::e_game::RUBY,           PKMN_GAME_RUBY)
+            (pkmn::e_game::SAPPHIRE,       PKMN_GAME_SAPPHIRE)
+            (pkmn::e_game::EMERALD,        PKMN_GAME_EMERALD)
+            (pkmn::e_game::FIRERED,        PKMN_GAME_FIRERED)
+            (pkmn::e_game::LEAFGREEN,      PKMN_GAME_LEAFGREEN)
+            (pkmn::e_game::COLOSSEUM,      PKMN_GAME_COLOSSEUM)
+            (pkmn::e_game::XD,             PKMN_GAME_XD)
+            (pkmn::e_game::DIAMOND,        PKMN_GAME_DIAMOND)
+            (pkmn::e_game::PEARL,          PKMN_GAME_PEARL)
+            (pkmn::e_game::PLATINUM,       PKMN_GAME_PLATINUM)
+            (pkmn::e_game::HEARTGOLD,      PKMN_GAME_HEARTGOLD)
+            (pkmn::e_game::SOULSILVER,     PKMN_GAME_SOULSILVER)
+            (pkmn::e_game::BLACK,          PKMN_GAME_BLACK)
+            (pkmn::e_game::WHITE,          PKMN_GAME_WHITE)
+            (pkmn::e_game::BLACK2,         PKMN_GAME_BLACK2)
+            (pkmn::e_game::WHITE2,         PKMN_GAME_WHITE2)
+            (pkmn::e_game::X,              PKMN_GAME_X)
+            (pkmn::e_game::Y,              PKMN_GAME_Y)
+            (pkmn::e_game::OMEGA_RUBY,     PKMN_GAME_OMEGA_RUBY)
+            (pkmn::e_game::ALPHA_SAPPHIRE, PKMN_GAME_ALPHA_SAPPHIRE)
+        ;
+
+        return GAME_BIMAP;
+    }
+
     const gender_bimap_t& get_gender_bimap()
     {
         static const gender_bimap_t GENDER_BIMAP =

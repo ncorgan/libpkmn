@@ -29,7 +29,7 @@ public class Gen2ItemsTest
 
     public static void ItemPocketTest(
         PKMN.ItemList itemPocket,
-        string game
+        PKMN.Game game
     )
     {
         // Check unchanging and initial values.
@@ -76,7 +76,7 @@ public class Gen2ItemsTest
 
     public static void KeyItemPocketTest(
         PKMN.ItemList keyItemPocket,
-        string game
+        PKMN.Game game
     )
     {
         // Check unchanging and initial values.
@@ -107,7 +107,7 @@ public class Gen2ItemsTest
         );
 
         // Crystal-specific items.
-        if(game.Equals("Crystal"))
+        if(game == PKMN.Game.CRYSTAL)
         {
             foreach(string crystalItem in CrystalItemNames)
             {
@@ -170,7 +170,7 @@ public class Gen2ItemsTest
 
     public static void BallPocketTest(
         PKMN.ItemList ballPocket,
-        string game
+        PKMN.Game game
     )
     {
         // Check unchanging and initial values.
@@ -217,7 +217,7 @@ public class Gen2ItemsTest
 
     public static void TMHMPocketTest(
         PKMN.ItemList tmhmPocket,
-        string game
+        PKMN.Game game
     )
     {
         // Check unchanging and initial values.
@@ -299,7 +299,7 @@ public class Gen2ItemsTest
 
     public static void ItemPCTest(
         PKMN.ItemList itemPC,
-        string game
+        PKMN.Game game
     )
     {
         // Check unchanging and initial values.
@@ -324,7 +324,7 @@ public class Gen2ItemsTest
         );
 
         // Crystal-specific items.
-        if(game.Equals("Crystal"))
+        if(game == PKMN.Game.CRYSTAL)
         {
             foreach(string crystalItem in CrystalItemNames)
             {
@@ -358,7 +358,7 @@ public class Gen2ItemsTest
 
     public static void ItemBagTest(
         PKMN.ItemBag itemBag,
-        string game
+        PKMN.Game game
     )
     {
         // Check unchanging and initial values.
@@ -447,7 +447,7 @@ public class Gen2ItemsTest
         Assert.AreEqual(itemBag["TM/HM"][50].Amount, 0);
 
         // Make sure we can't add Crystal-specific items with a Gold/Silver bag.
-        if(game.Equals("Crystal"))
+        if(game == PKMN.Game.CRYSTAL)
         {
             for(int i = 0; i < CrystalItemNames.Length; ++i)
             {

@@ -9,6 +9,8 @@
 
 #include <pkmn/config.hpp>
 
+#include <pkmn/enums/game.hpp>
+
 #include <memory>
 #include <string>
 #include <vector>
@@ -32,12 +34,10 @@ namespace pkmn
              * \param game Which game this Pokédex corresponds to
              * \throws pkmn::feature_not_in_game_error If game is a Gamecube game
              */
-            static sptr make(
-                const std::string& game
-            );
+            static sptr make(pkmn::e_game game);
 
             //! Returns the game this Pokédex corresponds to.
-            virtual std::string get_game() = 0;
+            virtual pkmn::e_game get_game() = 0;
 
             /*!
              * @brief Returns whether a given Pokémon is registered as seen.

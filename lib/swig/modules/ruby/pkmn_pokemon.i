@@ -23,7 +23,7 @@
 // Convert getter/setter functions into attributes for more idiomatic Ruby.
 
 %attributestring(pkmn::swig::pokemon, std::string, species, get_species);
-%attributestring(pkmn::swig::pokemon, std::string, game, get_game);
+%attribute(pkmn::swig::pokemon, pkmn::e_game, game, get_game);
 %attributestring(pkmn::swig::pokemon, std::string, form, get_form, set_form);
 %attribute(pkmn::swig::pokemon, bool, is_egg, is_egg, set_is_egg);
 %attributeval(pkmn::swig::pokemon, pkmn::database::pokemon_entry, database_entry, get_database_entry);
@@ -39,7 +39,7 @@
 %attribute(pkmn::swig::pokemon, int, current_trainer_friendship, get_current_trainer_friendship, set_current_trainer_friendship);
 %attributestring(pkmn::swig::pokemon, std::string, ability, get_ability, set_ability);
 %attribute(pkmn::swig::pokemon, int, level_met, get_level_met, set_level_met);
-%attributestring(pkmn::swig::pokemon, std::string, original_game, get_original_game, set_original_game);
+%attribute(pkmn::swig::pokemon, pkmn::e_game, original_game, get_original_game, set_original_game);
 %attribute(pkmn::swig::pokemon, uint32_t, personality, get_personality, set_personality);
 %attribute(pkmn::swig::pokemon, int, experience, get_experience, set_experience);
 %attribute(pkmn::swig::pokemon, int, level, get_level, set_level);

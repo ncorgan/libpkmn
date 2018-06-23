@@ -7,6 +7,8 @@
 
 #include "item_test_common.hpp"
 
+#include <pkmntest/util.hpp>
+
 #include <pkmn/exception.hpp>
 #include <pkmn/database/item_entry.hpp>
 #include <pkmn/database/lists.hpp>
@@ -148,7 +150,7 @@ void gen2_key_item_pocket_test(
     );
 
     // Crystal-specific items.
-    if(key_item_pocket->get_game() == "Crystal")
+    if(key_item_pocket->get_game() == pkmn::e_game::CRYSTAL)
     {
         for(const std::string& item: crystal_items)
         {
@@ -439,7 +441,7 @@ void gen2_item_pc_test(
     test_item_list_empty_slots(item_pc);
 
     // Crystal-specific items.
-    if(item_pc->get_game() == "Crystal")
+    if(item_pc->get_game() == pkmn::e_game::CRYSTAL)
     {
         for(const std::string& crystal_item: crystal_items)
         {
@@ -513,23 +515,23 @@ TEST_P(gen2_item_list_test, item_list_test) {
     gen2_test_fcns.at(get_name())(get_item_list());
 }
 
-static const std::vector<std::pair<std::string, std::string>> item_list_params =
+static const std::vector<std::pair<pkmn::e_game, std::string>> item_list_params =
 {
-    {"Gold", "Items"},
-    {"Gold", "KeyItems"},
-    {"Gold", "Balls"},
-    {"Gold", "TM/HM"},
-    {"Gold", "PC"},
-    {"Silver", "Items"},
-    {"Silver", "KeyItems"},
-    {"Silver", "Balls"},
-    {"Silver", "TM/HM"},
-    {"Silver", "PC"},
-    {"Crystal", "Items"},
-    {"Crystal", "KeyItems"},
-    {"Crystal", "Balls"},
-    {"Crystal", "TM/HM"},
-    {"Crystal", "PC"},
+    {pkmn::e_game::GOLD, "Items"},
+    {pkmn::e_game::GOLD, "KeyItems"},
+    {pkmn::e_game::GOLD, "Balls"},
+    {pkmn::e_game::GOLD, "TM/HM"},
+    {pkmn::e_game::GOLD, "PC"},
+    {pkmn::e_game::SILVER, "Items"},
+    {pkmn::e_game::SILVER, "KeyItems"},
+    {pkmn::e_game::SILVER, "Balls"},
+    {pkmn::e_game::SILVER, "TM/HM"},
+    {pkmn::e_game::SILVER, "PC"},
+    {pkmn::e_game::CRYSTAL, "Items"},
+    {pkmn::e_game::CRYSTAL, "KeyItems"},
+    {pkmn::e_game::CRYSTAL, "Balls"},
+    {pkmn::e_game::CRYSTAL, "TM/HM"},
+    {pkmn::e_game::CRYSTAL, "PC"},
 };
 
 INSTANTIATE_TEST_CASE_P(
@@ -710,7 +712,7 @@ TEST_P(gen2_item_bag_test, item_bag_test)
     EXPECT_EQ(0, tm_hm_slots.at(50).amount);
 
     // Make sure we can't add/remove Crystal-specific items with a Gold/Silver bag.
-    if(get_game() == "Crystal")
+    if(get_game() == pkmn::e_game::CRYSTAL)
     {
         for(int item_index = 0; item_index < 4; ++item_index)
         {
@@ -753,13 +755,8 @@ TEST_P(gen2_item_bag_test, item_bag_test)
     );
 }
 
-static const std::vector<std::string> item_bag_params =
-{
-    "Gold", "Silver", "Crystal"
-};
-
 INSTANTIATE_TEST_CASE_P(
     cpp_gen2_item_bag_test,
     gen2_item_bag_test,
-    ::testing::ValuesIn(item_bag_params)
+    ::testing::ValuesIn(pkmntest::GEN2_GAMES)
 );

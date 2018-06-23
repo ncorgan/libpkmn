@@ -1,11 +1,13 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
  */
 
 #include "item_test_common.hpp"
+
+#include <pkmntest/util.hpp>
 
 #include <pkmn/exception.hpp>
 #include <pkmn/database/item_entry.hpp>
@@ -48,7 +50,7 @@ class gcn_item_list_test: public item_list_test {};
  */
 static void check_libpkmgc_class(
     const pkmn::item_slots_t& item_slots,
-    const std::string& game,
+    pkmn::e_game game,
     const LibPkmGC::Item* p_native_items,
     int expected_num_items
 )
@@ -81,7 +83,7 @@ void gcn_item_pocket_test(
 {
     ASSERT_EQ("Items", item_pocket->get_name());
 
-    bool colosseum = (item_pocket->get_game() == "Colosseum");
+    bool colosseum = (item_pocket->get_game() == pkmn::e_game::COLOSSEUM);
 
     int capacity = colosseum ? 20 : 30;
     ASSERT_EQ(capacity, item_pocket->get_capacity());
@@ -148,7 +150,7 @@ void gcn_key_item_pocket_test(
 {
     ASSERT_EQ("Key Items", key_item_pocket->get_name());
 
-    bool colosseum = (key_item_pocket->get_game() == "Colosseum");
+    bool colosseum = (key_item_pocket->get_game() == pkmn::e_game::COLOSSEUM);
     std::string gcn_item = colosseum ? "Ein File S" : "Miror Radar";
 
     int capacity = 43;
@@ -233,7 +235,7 @@ void gcn_ball_pocket_test(
 {
     ASSERT_EQ("Poké Balls", ball_pocket->get_name());
 
-    bool colosseum = (ball_pocket->get_game() == "Colosseum");
+    bool colosseum = (ball_pocket->get_game() == pkmn::e_game::COLOSSEUM);
     int capacity = 16;
     ASSERT_EQ(capacity, ball_pocket->get_capacity());
     ASSERT_EQ(size_t(capacity), ball_pocket->as_vector().size());
@@ -295,7 +297,7 @@ void gcn_tm_pocket_test(
 {
     ASSERT_EQ("TMs", tm_pocket->get_name());
 
-    bool colosseum = (tm_pocket->get_game() == "Colosseum");
+    bool colosseum = (tm_pocket->get_game() == pkmn::e_game::COLOSSEUM);
     int capacity = 64;
     ASSERT_EQ(capacity, tm_pocket->get_capacity());
     ASSERT_EQ(size_t(capacity), tm_pocket->as_vector().size());
@@ -359,7 +361,7 @@ void gcn_berry_pocket_test(
 ) {
     ASSERT_EQ("Berries", berry_pocket->get_name());
 
-    bool colosseum = (berry_pocket->get_game() == "Colosseum");
+    bool colosseum = (berry_pocket->get_game() == pkmn::e_game::COLOSSEUM);
     int capacity = 46;
     ASSERT_EQ(capacity, berry_pocket->get_capacity());
     ASSERT_EQ(size_t(capacity), berry_pocket->as_vector().size());
@@ -422,7 +424,7 @@ void gcn_cologne_pocket_test(
 {
     ASSERT_EQ("Colognes", cologne_pocket->get_name());
 
-    bool colosseum = (cologne_pocket->get_game() == "Colosseum");
+    bool colosseum = (cologne_pocket->get_game() == pkmn::e_game::COLOSSEUM);
     int capacity = 3;
     ASSERT_EQ(capacity, cologne_pocket->get_capacity());
     ASSERT_EQ(size_t(capacity), cologne_pocket->as_vector().size());
@@ -534,7 +536,7 @@ void gcn_item_pc_test(
     ASSERT_EQ("PC", item_pc->get_name());
     ASSERT_EQ(235, item_pc->get_capacity());
     ASSERT_EQ(235, item_pc->as_vector().size());
-    bool colosseum = (item_pc->get_game() == "Colosseum");
+    bool colosseum = (item_pc->get_game() == pkmn::e_game::COLOSSEUM);
 
     // Make sure item slots start as correctly empty
     test_item_list_empty_slots(item_pc);
@@ -581,24 +583,24 @@ TEST_P(gcn_item_list_test, item_list_test)
     gcn_test_fcns.at(get_name())(get_item_list());
 }
 
-static const std::vector<std::pair<std::string, std::string>> item_list_params =
+static const std::vector<std::pair<pkmn::e_game, std::string>> item_list_params =
 {
-    {"Colosseum", "Items"},
-    {"Colosseum", "Key Items"},
-    {"Colosseum", "Poké Balls"},
-    {"Colosseum", "TMs"},
-    {"Colosseum", "Berries"},
-    {"Colosseum", "Colognes"},
-    {"Colosseum", "PC"},
+    {pkmn::e_game::COLOSSEUM, "Items"},
+    {pkmn::e_game::COLOSSEUM, "Key Items"},
+    {pkmn::e_game::COLOSSEUM, "Poké Balls"},
+    {pkmn::e_game::COLOSSEUM, "TMs"},
+    {pkmn::e_game::COLOSSEUM, "Berries"},
+    {pkmn::e_game::COLOSSEUM, "Colognes"},
+    {pkmn::e_game::COLOSSEUM, "PC"},
 
-    {"XD", "Items"},
-    {"XD", "Key Items"},
-    {"XD", "Poké Balls"},
-    {"XD", "TMs"},
-    {"XD", "Berries"},
-    {"XD", "Colognes"},
-    {"XD", "Battle CDs"},
-    {"XD", "PC"}
+    {pkmn::e_game::XD, "Items"},
+    {pkmn::e_game::XD, "Key Items"},
+    {pkmn::e_game::XD, "Poké Balls"},
+    {pkmn::e_game::XD, "TMs"},
+    {pkmn::e_game::XD, "Berries"},
+    {pkmn::e_game::XD, "Colognes"},
+    {pkmn::e_game::XD, "Battle CDs"},
+    {pkmn::e_game::XD, "PC"}
 };
 
 INSTANTIATE_TEST_CASE_P(
@@ -612,8 +614,8 @@ class gcn_item_bag_test: public item_bag_test {};
 TEST_P(gcn_item_bag_test, item_bag_test)
 {
     const pkmn::item_bag::sptr& bag = get_item_bag();
-    const std::string& game = get_game();
-    bool colosseum = (game == "Colosseum");
+    pkmn::e_game game = get_game();
+    bool colosseum = (game == pkmn::e_game::COLOSSEUM);
     int num_pockets = colosseum ? 6 : 7;
 
     const pkmn::item_pockets_t& pockets = bag->get_pockets();
@@ -853,13 +855,8 @@ TEST_P(gcn_item_bag_test, item_bag_test)
     );
 }
 
-static const std::vector<std::string> item_bag_params =
-{
-    "Colosseum", "XD"
-};
-
 INSTANTIATE_TEST_CASE_P(
     cpp_gcn_item_bag_test,
     gcn_item_bag_test,
-    ::testing::ValuesIn(item_bag_params)
+    ::testing::ValuesIn(pkmntest::GCN_GAMES)
 );

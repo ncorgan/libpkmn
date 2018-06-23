@@ -1,12 +1,14 @@
 /*
- * p_Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * p_Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * p_Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * p_or copy at http://opensource.org/licenses/MIT)
  */
 
 #include "cpp_to_c.hpp"
+#include "enum_maps.hpp"
 #include "error_internal.hpp"
+#include "exception_internal.hpp"
 
 #include <boost/thread/mutex.hpp>
 
@@ -15,16 +17,23 @@
 #include <cstdio>
 
 enum pkmn_error pkmn_item_bag_init(
-    const char* p_game,
+    enum pkmn_game game,
     struct pkmn_item_bag* p_item_bag_out
 )
 {
-    PKMN_CHECK_NULL_PARAM(p_game);
     PKMN_CHECK_NULL_PARAM(p_item_bag_out);
 
     PKMN_CPP_TO_C(
-        pkmn::item_bag::sptr cpp = pkmn::item_bag::make(p_game);
+        const pkmn::c::game_bimap_t& GAME_BIMAP = pkmn::c::get_game_bimap();
+        pkmn::enforce_value_in_map_keys(
+            "Game",
+            game,
+            GAME_BIMAP.right
+        );
 
+        pkmn::item_bag::sptr cpp = pkmn::item_bag::make(
+                                       GAME_BIMAP.right.at(game)
+                                   );
         pkmn::c::init_item_bag(
             cpp,
             p_item_bag_out
@@ -38,7 +47,7 @@ enum pkmn_error pkmn_item_bag_free(
 {
     PKMN_CHECK_NULL_PARAM(p_item_bag);
 
-    pkmn::c::free_pointer_and_set_to_null(&p_item_bag->p_game);
+    p_item_bag->game = PKMN_GAME_NONE;
     pkmn_string_list_free(&p_item_bag->pocket_names);
 
     PKMN_CPP_TO_C(

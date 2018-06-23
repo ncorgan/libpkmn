@@ -80,14 +80,14 @@ public class Gen3PokemonTests
     }
 
     static public void PokemonTest(
-        string game,
+        PKMN.Game game,
         string species
     )
     {
         PKMN.Pokemon pokemon = new PKMN.Pokemon(species, game, "", 30);
 
         PokemonTestParams testParams;
-        bool isGamecube = (game.Equals("Colosseum") || game.Equals("XD"));
+        bool isGamecube = (game == PKMN.Game.COLOSSEUM) || (game == PKMN.Game.XD);
 
         if(isGamecube)
         {
@@ -101,8 +101,12 @@ public class Gen3PokemonTests
                                  new string[]{"New Bark Town", "Twinleaf Town"},
                                  new string[]{"Swallow", "Flamethrower", "Return", "Fire Blast"},
                                  new string[]{"Roost", "Flame Burst"},
-                                 new string[]{"Ruby", "Sapphire", "Emerald", "FireRed", "LeafGreen", "Colosseum/XD", "Colosseum", "XD"},
-                                 new string[]{"Gold", "HeartGold"}
+                                 new PKMN.Game[]{
+                                         PKMN.Game.RUBY, PKMN.Game.SAPPHIRE, PKMN.Game.EMERALD,
+                                         PKMN.Game.FIRERED, PKMN.Game.LEAFGREEN,
+                                         PKMN.Game.COLOSSEUM, PKMN.Game.XD
+                                     },
+                                 new PKMN.Game[]{PKMN.Game.GOLD, PKMN.Game.HEARTGOLD}
                              );
         }
         else
@@ -117,8 +121,12 @@ public class Gen3PokemonTests
                                  new string[]{"New Bark Town", "Twinleaf Town"},
                                  new string[]{"Swallow", "Flamethrower", "Return", "Fire Blast"},
                                  new string[]{"Shadow Sky", "Roost"},
-                                 new string[]{"Ruby", "Sapphire", "Emerald", "FireRed", "LeafGreen", "Colosseum/XD", "Colosseum", "XD"},
-                                 new string[]{"Gold", "HeartGold"}
+                                 new PKMN.Game[]{
+                                         PKMN.Game.RUBY, PKMN.Game.SAPPHIRE, PKMN.Game.EMERALD,
+                                         PKMN.Game.FIRERED, PKMN.Game.LEAFGREEN,
+                                         PKMN.Game.COLOSSEUM, PKMN.Game.XD
+                                     },
+                                 new PKMN.Game[]{PKMN.Game.GOLD, PKMN.Game.HEARTGOLD}
                              );
         }
 
@@ -152,7 +160,7 @@ public class Gen3PokemonTests
 
         if(isGamecube)
         {
-            string shadowSpecies = game.Equals("Colosseum") ? "Ledian" : "Ledyba";
+            string shadowSpecies = (game == PKMN.Game.COLOSSEUM) ? "Ledian" : "Ledyba";
 
             PKMN.Pokemon shadowPokemon = new PKMN.Pokemon(shadowSpecies, game, "", 50);
             Assert.AreEqual(shadowPokemon.Form, "Standard");

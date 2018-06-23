@@ -34,7 +34,7 @@ namespace pkmn {
 
             virtual ~pokemon_box_impl() {}
 
-            std::string get_game() override final;
+            pkmn::e_game get_game() override final;
 
             const pkmn::pokemon::sptr& get_pokemon(
                 int index

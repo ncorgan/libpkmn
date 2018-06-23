@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -64,7 +64,7 @@ namespace PKMN
 
         public class ItemListComboBox: System.Windows.Forms.ComboBox
         {
-            public ItemListComboBox(string game)
+            public ItemListComboBox(Game game)
             {
                 StringList items = Database.Lists.ItemList(game);
                 foreach(string item in items)
@@ -76,7 +76,7 @@ namespace PKMN
 
         public class LocationListComboBox: System.Windows.Forms.ComboBox
         {
-            public LocationListComboBox(string game, bool wholeGeneration)
+            public LocationListComboBox(Game game, bool wholeGeneration)
             {
                 StringList locations = Database.Lists.LocationList(game, wholeGeneration);
                 foreach(string location in locations)
@@ -88,7 +88,7 @@ namespace PKMN
 
         public class MoveListComboBox: System.Windows.Forms.ComboBox
         {
-            public MoveListComboBox(string game)
+            public MoveListComboBox(Game game)
             {
                 StringList moves = Database.Lists.MoveList(game);
                 foreach(string move in moves)
@@ -160,7 +160,7 @@ namespace PKMN
 
         public class TypeListComboBox: System.Windows.Forms.ComboBox
         {
-            public TypeListComboBox(string game)
+            public TypeListComboBox(Game game)
             {
                 StringList types = Database.Lists.TypeList(game);
                 foreach(string type in types)

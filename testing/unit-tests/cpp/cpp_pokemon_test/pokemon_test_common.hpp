@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -19,25 +19,26 @@
 #include <string>
 #include <utility>
 
-class pokemon_test: public ::testing::TestWithParam<std::pair<std::string, std::string> > {
+class pokemon_test: public ::testing::TestWithParam<std::pair<pkmn::e_game, std::string> >
+{
     public:
-        static PKMNTEST_INLINE void SetUpTestCase() {
-            std::srand((unsigned int)std::time(NULL));
-        }
-
-        PKMNTEST_INLINE pkmn::pokemon::sptr get_pokemon() {
+        inline pkmn::pokemon::sptr get_pokemon()
+        {
             return _pokemon;
         }
 
-        PKMNTEST_INLINE const std::string& get_game() {
+        inline pkmn::e_game get_game()
+        {
             return _game;
         }
 
-        PKMNTEST_INLINE const std::string& get_species() {
+        inline const std::string& get_species()
+        {
             return _species;
         }
 
-        PKMNTEST_INLINE void reset() {
+        inline void reset()
+        {
              _pokemon = pkmn::pokemon::make(GetParam().second, _game, "", 30);
 
             ASSERT_NE(nullptr, _pokemon.get());
@@ -46,7 +47,8 @@ class pokemon_test: public ::testing::TestWithParam<std::pair<std::string, std::
         }
 
     protected:
-        void SetUp() {
+        void SetUp()
+        {
             _game = GetParam().first;
             _species = GetParam().second;
             reset();
@@ -54,11 +56,13 @@ class pokemon_test: public ::testing::TestWithParam<std::pair<std::string, std::
 
     private:
 
-        std::string _species, _game;
+        std::string _species;
+        pkmn::e_game _game;
         pkmn::pokemon::sptr _pokemon;
 };
 
-typedef struct {
+typedef struct
+{
     std::string valid_ball;
     std::vector<std::string> invalid_balls;
 
@@ -72,8 +76,8 @@ typedef struct {
     std::vector<std::string> moves;
     std::vector<std::string> invalid_moves;
 
-    std::vector<std::string> valid_original_games;
-    std::vector<std::string> invalid_original_games;
+    std::vector<pkmn::e_game> valid_original_games;
+    std::vector<pkmn::e_game> invalid_original_games;
 } pkmn_test_values_t;
 
 void pokemon_test_common(

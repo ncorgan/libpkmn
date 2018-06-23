@@ -43,11 +43,11 @@ public class PokemonTestCommon
     };
 
     private static void TestGen1Forms(
-        string game
+        PKMN.Game game
     )
     {
         int generation = Util.GameToGeneration(game);
-        bool isORAS = (game.Equals("Omega Ruby") || game.Equals("Alpha Sapphire"));
+        bool isORAS = (game == PKMN.Game.OMEGA_RUBY) || (game == PKMN.Game.ALPHA_SAPPHIRE);
 
         // Check that Mega forms only work in their given games.
         foreach(string species in Gen1PokemonWithXYMegaForms)
@@ -140,11 +140,11 @@ public class PokemonTestCommon
     }
 
     private static void TestGen2Forms(
-        string game
+        PKMN.Game game
     )
     {
         int generation = Util.GameToGeneration(game);
-        bool isORAS = (game.Equals("Omega Ruby") || game.Equals("Alpha Sapphire"));
+        bool isORAS = (game == PKMN.Game.OMEGA_RUBY) || (game == PKMN.Game.ALPHA_SAPPHIRE);
 
         // Check that Mega forms only work in their given games.
         foreach(string species in Gen2PokemonWithXYMegaForms)
@@ -195,7 +195,7 @@ public class PokemonTestCommon
         }
 
         // Unown's "!" and "?" forms aren't in Generation II.
-        PKMN.Database.PokemonEntry unownEntry = new PKMN.Database.PokemonEntry("Unown", "Omega Ruby", "");
+        PKMN.Database.PokemonEntry unownEntry = new PKMN.Database.PokemonEntry("Unown", PKMN.Game.OMEGA_RUBY, "");
         foreach(string form in unownEntry.Forms)
         {
             if(form.Equals("!") || form.Equals("?"))
@@ -226,12 +226,12 @@ public class PokemonTestCommon
     }
 
     private static void TestGen3Forms(
-        string game,
+        PKMN.Game game,
         bool gcn
     )
     {
         int generation = Util.GameToGeneration(game);
-        bool isORAS = (game.Equals("Omega Ruby") || game.Equals("Alpha Sapphire"));
+        bool isORAS = (game == PKMN.Game.OMEGA_RUBY) || (game == PKMN.Game.ALPHA_SAPPHIRE);
 
         // Check that Mega forms only work in their given games.
         foreach(string species in Gen3PokemonWithXYMegaForms)
@@ -268,7 +268,7 @@ public class PokemonTestCommon
         }
 
         // Castform should always work.
-        PKMN.Database.PokemonEntry castformEntry = new PKMN.Database.PokemonEntry("Castform", "Omega Ruby", "");
+        PKMN.Database.PokemonEntry castformEntry = new PKMN.Database.PokemonEntry("Castform", PKMN.Game.OMEGA_RUBY, "");
         foreach(string form in castformEntry.Forms)
         {
             PKMN.Pokemon castform = new PKMN.Pokemon("Castform", game, form, 30);
@@ -310,7 +310,7 @@ public class PokemonTestCommon
         // In Generation III, Deoxys's form is game-specific.
         if(generation == 3)
         {
-            if(game.Equals("Ruby") || game.Equals("Sapphire") || game.Equals("Colosseum") || game.Equals("XD"))
+            if((game == PKMN.Game.RUBY) || (game == PKMN.Game.SAPPHIRE) || (game == PKMN.Game.COLOSSEUM) || (game == PKMN.Game.XD))
             {
                 PKMN.Pokemon deoxys = new PKMN.Pokemon("Deoxys", game, "Normal", 70);
                 Assert.IsTrue(System.IO.File.Exists(deoxys.IconFilepath));
@@ -325,7 +325,7 @@ public class PokemonTestCommon
                 );
             }
 
-            if(game.Equals("FireRed"))
+            if(game == PKMN.Game.FIRERED)
             {
                 PKMN.Pokemon deoxys = new PKMN.Pokemon("Deoxys", game, "Attack", 70);
                 Assert.IsTrue(System.IO.File.Exists(deoxys.IconFilepath));
@@ -341,7 +341,7 @@ public class PokemonTestCommon
                 );
             }
 
-            if(game.Equals("LeafGreen"))
+            if(game == PKMN.Game.LEAFGREEN)
             {
                 PKMN.Pokemon deoxys = new PKMN.Pokemon("Deoxys", game, "Defense", 70);
                 Assert.IsTrue(System.IO.File.Exists(deoxys.IconFilepath));
@@ -357,7 +357,7 @@ public class PokemonTestCommon
                 );
             }
 
-            if(game.Equals("Emerald"))
+            if(game == PKMN.Game.EMERALD)
             {
                 PKMN.Pokemon deoxys = new PKMN.Pokemon("Deoxys", game, "Speed", 70);
                 Assert.IsTrue(System.IO.File.Exists(deoxys.IconFilepath));
@@ -376,7 +376,7 @@ public class PokemonTestCommon
         else
         {
             // Past Generation III, Deoxys's form can be switched.
-            PKMN.Database.PokemonEntry deoxysEntry = new PKMN.Database.PokemonEntry("Deoxys", "Omega Ruby", "");
+            PKMN.Database.PokemonEntry deoxysEntry = new PKMN.Database.PokemonEntry("Deoxys", PKMN.Game.OMEGA_RUBY, "");
             foreach(string form in deoxysEntry.Forms)
             {
                 PKMN.Pokemon deoxys = new PKMN.Pokemon("Deoxys", game, form, 70);
@@ -387,7 +387,7 @@ public class PokemonTestCommon
     }
 
     public static void FormTest(
-        string game
+        PKMN.Game game
     )
     {
         int generation = Util.GameToGeneration(game);
@@ -409,13 +409,13 @@ public class PokemonTestCommon
         {
             TestGen3Forms(
                 game,
-                (game.Equals("Colosseum") || game.Equals("XD"))
+                ((game == PKMN.Game.COLOSSEUM) || (game == PKMN.Game.XD))
             );
         }
     }
 
     public static void GenderTest(
-        string game
+        PKMN.Game game
     ) {
 
         // Single-gender
@@ -580,11 +580,11 @@ public class PokemonTestCommon
 
             // There is no distinction between Colosseum and XD in the game
             // storage.
-            if(pokemon.Game.Equals("Colosseum") || pokemon.Game.Equals("XD"))
+            if((pokemon.Game == PKMN.Game.COLOSSEUM) || (pokemon.Game == PKMN.Game.XD))
             {
                 Assert.AreEqual(
                     pokemon.OriginalGame,
-                    "Colosseum/XD"
+                    PKMN.Game.COLOSSEUM
                 );
             }
             else
@@ -596,7 +596,7 @@ public class PokemonTestCommon
         {
             // Default values since getters shouldn't throw exceptions.
             Assert.AreEqual("", pokemon.Ball);
-            Assert.AreEqual("", pokemon.OriginalGame);
+            Assert.AreEqual(PKMN.Game.NONE, pokemon.OriginalGame);
         }
 
         Assert.AreEqual(
@@ -1248,20 +1248,20 @@ public class PokemonTestCommon
 
     static private void TestSettingOriginalGame(
         PKMN.Pokemon pokemon,
-        string[] validGames,
-        string[] invalidGames
+        PKMN.Game[] validGames,
+        PKMN.Game[] invalidGames
     )
     {
         int generation = Util.GameToGeneration(pokemon.Game);
 
         if(generation >= 3)
         {
-            foreach(string validGame in validGames)
+            foreach(PKMN.Game validGame in validGames)
             {
                 pokemon.OriginalGame = validGame;
-                if(validGame.Equals("Colosseum") || validGame.Equals("XD"))
+                if((validGame == PKMN.Game.COLOSSEUM) || (validGame == PKMN.Game.XD))
                 {
-                    Assert.AreEqual("Colosseum/XD", pokemon.OriginalGame);
+                    Assert.AreEqual(PKMN.Game.COLOSSEUM, pokemon.OriginalGame);
                 }
                 else
                 {
@@ -1269,7 +1269,7 @@ public class PokemonTestCommon
                 }
             }
 
-            foreach(string invalidGame in invalidGames)
+            foreach(PKMN.Game invalidGame in invalidGames)
             {
                 Assert.Throws<ArgumentOutOfRangeException>(
                     delegate
@@ -1283,7 +1283,7 @@ public class PokemonTestCommon
         {
             // The getter shouldn't throw by convention, but the setter will.
 
-            Assert.AreEqual("", pokemon.OriginalGame);
+            Assert.AreEqual(PKMN.Game.NONE, pokemon.OriginalGame);
 
             Assert.Throws<ApplicationException>(
                 delegate

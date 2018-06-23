@@ -13,17 +13,33 @@
 
 #include <string.h>
 
-static void test_gen1_pokemon_forms(
-    const char* game
-)
+static inline bool is_game_rs(enum pkmn_game game)
 {
-    TEST_ASSERT_NOT_NULL(game);
+    return (game == PKMN_GAME_RUBY) || (game == PKMN_GAME_SAPPHIRE);
+}
 
+static inline bool is_game_gamecube(enum pkmn_game game)
+{
+    return (game == PKMN_GAME_COLOSSEUM) || (game == PKMN_GAME_XD);
+}
+
+static inline bool is_game_hgss(enum pkmn_game game)
+{
+    return (game == PKMN_GAME_HEARTGOLD) || (game == PKMN_GAME_SOULSILVER);
+}
+
+static inline bool is_game_oras(enum pkmn_game game)
+{
+    return (game == PKMN_GAME_OMEGA_RUBY) || (game == PKMN_GAME_ALPHA_SAPPHIRE);
+}
+
+static void test_gen1_pokemon_forms(enum pkmn_game game)
+{
     enum pkmn_error error = PKMN_ERROR_NONE;
     struct pkmn_pokemon pokemon =
     {
         .p_species = NULL,
-        .p_game = NULL,
+        .game = PKMN_GAME_NONE,
         .p_internal = NULL
     };
 
@@ -77,7 +93,7 @@ static void test_gen1_pokemon_forms(
                     100,
                     &pokemon
                 );
-        if(!strcmp(game, "Omega Ruby") || !strcmp(game, "Alpha Sapphire"))
+        if(is_game_oras(game))
         {
             PKMN_TEST_ASSERT_SUCCESS(error);
             TEST_ASSERT_NOT_NULL(pokemon.p_internal);
@@ -97,7 +113,7 @@ static void test_gen1_pokemon_forms(
     struct pkmn_database_pokemon_entry oras_pikachu_entry;
     error = pkmn_database_get_pokemon_entry(
                 "Pikachu",
-                "Omega Ruby",
+                PKMN_GAME_OMEGA_RUBY,
                 "",
                 &oras_pikachu_entry
             );
@@ -115,7 +131,7 @@ static void test_gen1_pokemon_forms(
                     5,
                     &pokemon
                 );
-        if(!strcmp(game, "Omega Ruby") || !strcmp(game, "Alpha Sapphire"))
+        if(is_game_oras(game))
         {
             PKMN_TEST_ASSERT_SUCCESS(error);
             TEST_ASSERT_NOT_NULL(pokemon.p_internal);
@@ -189,17 +205,13 @@ static void test_gen1_pokemon_forms(
     }
 }
 
-static void test_gen2_pokemon_forms(
-    const char* game
-)
+static void test_gen2_pokemon_forms(enum pkmn_game game)
 {
-    TEST_ASSERT_NOT_NULL(game);
-
     enum pkmn_error error = PKMN_ERROR_NONE;
     struct pkmn_pokemon pokemon =
     {
         .p_species = NULL,
-        .p_game = NULL,
+        .game = PKMN_GAME_NONE,
         .p_internal = NULL
     };
 
@@ -245,7 +257,7 @@ static void test_gen2_pokemon_forms(
                 100,
                 &pokemon
             );
-    if(!strcmp(game, "Omega Ruby") || !strcmp(game, "Alpha Sapphire"))
+    if(is_game_oras(game))
     {
         PKMN_TEST_ASSERT_SUCCESS(error);
         TEST_ASSERT_NOT_NULL(pokemon.p_internal);
@@ -267,7 +279,7 @@ static void test_gen2_pokemon_forms(
                 100,
                 &pokemon
             );
-    if(!strcmp(game, "HeartGold") || !strcmp(game, "SoulSilver"))
+    if(is_game_hgss(game))
     {
         PKMN_TEST_ASSERT_SUCCESS(error);
         TEST_ASSERT_NOT_NULL(pokemon.p_internal);
@@ -285,7 +297,7 @@ static void test_gen2_pokemon_forms(
     struct pkmn_database_pokemon_entry unown_entry;
     error = pkmn_database_get_pokemon_entry(
                 "Unown",
-                "Omega Ruby",
+                PKMN_GAME_OMEGA_RUBY,
                 "",
                 &unown_entry
             );
@@ -355,17 +367,13 @@ static void test_gen2_pokemon_forms(
     TEST_ASSERT_NULL(pokemon.p_internal);
 }
 
-static void test_gen3_pokemon_forms(
-    const char* game
-)
+static void test_gen3_pokemon_forms(enum pkmn_game game)
 {
-    TEST_ASSERT_NOT_NULL(game);
-
     enum pkmn_error error = PKMN_ERROR_NONE;
     struct pkmn_pokemon pokemon =
     {
         .p_species = NULL,
-        .p_game = NULL,
+        .game = PKMN_GAME_NONE,
         .p_internal = NULL
     };
 
@@ -420,7 +428,7 @@ static void test_gen3_pokemon_forms(
                     100,
                     &pokemon
                 );
-        if(!strcmp(game, "Omega Ruby") || !strcmp(game, "Alpha Sapphire"))
+        if(is_game_oras(game))
         {
             PKMN_TEST_ASSERT_SUCCESS(error);
             TEST_ASSERT_NOT_NULL(pokemon.p_internal);
@@ -439,7 +447,7 @@ static void test_gen3_pokemon_forms(
     struct pkmn_database_pokemon_entry castform_entry;
     error = pkmn_database_get_pokemon_entry(
                 "Castform",
-                "Omega Ruby",
+                PKMN_GAME_OMEGA_RUBY,
                 "",
                 &castform_entry
             );
@@ -490,7 +498,7 @@ static void test_gen3_pokemon_forms(
                     70,
                     &pokemon
                 );
-        if(!strcmp(game, "Omega Ruby") || !strcmp(game, "Alpha Sapphire"))
+        if(is_game_oras(game))
         {
             PKMN_TEST_ASSERT_SUCCESS(error);
             TEST_ASSERT_NOT_NULL(pokemon.p_internal);
@@ -515,8 +523,7 @@ static void test_gen3_pokemon_forms(
                     70,
                     &pokemon
                 );
-        if(!strcmp(game, "Ruby") || !strcmp(game, "Sapphire") ||
-           !strcmp(game, "Colosseum") || !strcmp(game, "XD"))
+        if(is_game_rs(game) || is_game_gamecube(game))
         {
             PKMN_TEST_ASSERT_SUCCESS(error);
             TEST_ASSERT_NOT_NULL(pokemon.p_internal);
@@ -537,7 +544,7 @@ static void test_gen3_pokemon_forms(
                     70,
                     &pokemon
                 );
-        if(!strcmp(game, "FireRed"))
+        if(game == PKMN_GAME_FIRERED)
         {
             PKMN_TEST_ASSERT_SUCCESS(error);
             TEST_ASSERT_NOT_NULL(pokemon.p_internal);
@@ -558,7 +565,7 @@ static void test_gen3_pokemon_forms(
                     70,
                     &pokemon
                 );
-        if(!strcmp(game, "LeafGreen"))
+        if(game == PKMN_GAME_LEAFGREEN)
         {
             PKMN_TEST_ASSERT_SUCCESS(error);
             TEST_ASSERT_NOT_NULL(pokemon.p_internal);
@@ -579,7 +586,7 @@ static void test_gen3_pokemon_forms(
                     70,
                     &pokemon
                 );
-        if(!strcmp(game, "Emerald"))
+        if(game == PKMN_GAME_EMERALD)
         {
             PKMN_TEST_ASSERT_SUCCESS(error);
             TEST_ASSERT_NOT_NULL(pokemon.p_internal);
@@ -631,82 +638,82 @@ static void test_gen3_pokemon_forms(
 
 void red_form_test()
 {
-    test_gen1_pokemon_forms("Red");
+    test_gen1_pokemon_forms(PKMN_GAME_RED);
 }
 
 void blue_form_test()
 {
-    test_gen1_pokemon_forms("Blue");
+    test_gen1_pokemon_forms(PKMN_GAME_BLUE);
 }
 
 void yellow_form_test()
 {
-    test_gen1_pokemon_forms("Yellow");
+    test_gen1_pokemon_forms(PKMN_GAME_YELLOW);
 }
 
 void gold_form_test()
 {
-    test_gen1_pokemon_forms("Gold");
-    test_gen2_pokemon_forms("Gold");
+    test_gen1_pokemon_forms(PKMN_GAME_GOLD);
+    test_gen2_pokemon_forms(PKMN_GAME_GOLD);
 }
 
 void silver_form_test()
 {
-    test_gen1_pokemon_forms("Silver");
-    test_gen2_pokemon_forms("Silver");
+    test_gen1_pokemon_forms(PKMN_GAME_SILVER);
+    test_gen2_pokemon_forms(PKMN_GAME_SILVER);
 }
 
 void crystal_form_test()
 {
-    test_gen1_pokemon_forms("Crystal");
-    test_gen2_pokemon_forms("Crystal");
+    test_gen1_pokemon_forms(PKMN_GAME_CRYSTAL);
+    test_gen2_pokemon_forms(PKMN_GAME_CRYSTAL);
 }
 
 void ruby_form_test()
 {
-    test_gen1_pokemon_forms("Ruby");
-    test_gen2_pokemon_forms("Ruby");
-    test_gen3_pokemon_forms("Ruby");
+    test_gen1_pokemon_forms(PKMN_GAME_RUBY);
+    test_gen2_pokemon_forms(PKMN_GAME_RUBY);
+    test_gen3_pokemon_forms(PKMN_GAME_RUBY);
 }
 
 void sapphire_form_test()
 {
-    test_gen1_pokemon_forms("Sapphire");
-    test_gen2_pokemon_forms("Sapphire");
-    test_gen3_pokemon_forms("Sapphire");
+    test_gen1_pokemon_forms(PKMN_GAME_SAPPHIRE);
+    test_gen2_pokemon_forms(PKMN_GAME_SAPPHIRE);
+    test_gen3_pokemon_forms(PKMN_GAME_SAPPHIRE);
 }
 
 void emerald_form_test()
 {
-    test_gen1_pokemon_forms("Emerald");
-    test_gen2_pokemon_forms("Emerald");
-    test_gen3_pokemon_forms("Emerald");
+    test_gen1_pokemon_forms(PKMN_GAME_EMERALD);
+    test_gen2_pokemon_forms(PKMN_GAME_EMERALD);
+    test_gen3_pokemon_forms(PKMN_GAME_EMERALD);
 }
 
 void firered_form_test()
 {
-    test_gen1_pokemon_forms("FireRed");
-    test_gen2_pokemon_forms("FireRed");
-    test_gen3_pokemon_forms("FireRed");
+    test_gen1_pokemon_forms(PKMN_GAME_FIRERED);
+    test_gen2_pokemon_forms(PKMN_GAME_FIRERED);
+    test_gen3_pokemon_forms(PKMN_GAME_FIRERED);
 }
 
 void leafgreen_form_test()
 {
-    test_gen1_pokemon_forms("LeafGreen");
-    test_gen2_pokemon_forms("LeafGreen");
-    test_gen3_pokemon_forms("LeafGreen");
+    test_gen1_pokemon_forms(PKMN_GAME_LEAFGREEN);
+    test_gen2_pokemon_forms(PKMN_GAME_LEAFGREEN);
+    test_gen3_pokemon_forms(PKMN_GAME_LEAFGREEN);
 }
 
 void colosseum_form_test()
 {
-    test_gen1_pokemon_forms("Colosseum");
-    test_gen2_pokemon_forms("Colosseum");
-    test_gen3_pokemon_forms("Colosseum");
+    test_gen1_pokemon_forms(PKMN_GAME_COLOSSEUM);
+    test_gen2_pokemon_forms(PKMN_GAME_COLOSSEUM);
+    test_gen3_pokemon_forms(PKMN_GAME_COLOSSEUM);
 }
 
 void xd_form_test()
 {
-    test_gen1_pokemon_forms("XD");
-    test_gen2_pokemon_forms("XD");
-    test_gen3_pokemon_forms("XD");
+    test_gen1_pokemon_forms(PKMN_GAME_XD);
+    test_gen2_pokemon_forms(PKMN_GAME_XD);
+    test_gen3_pokemon_forms(PKMN_GAME_XD);
 }

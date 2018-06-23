@@ -13,27 +13,23 @@
 #include <stdlib.h>
 #include <time.h>
 
-static void pokedex_test(
-    const char* p_game
-)
+static void pokedex_test(enum pkmn_game game)
 {
-    TEST_ASSERT_NOT_NULL(p_game);
-
     enum pkmn_error error = PKMN_ERROR_NONE;
     struct pkmn_pokedex pokedex =
     {
-        .p_game = NULL,
+        .game = PKMN_GAME_NONE,
         .p_internal = NULL
     };
 
-    int generation = game_to_generation(p_game);
+    int generation = game_to_generation(game);
 
     error = pkmn_pokedex_init(
-                p_game,
+                game,
                 &pokedex
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
-    TEST_ASSERT_EQUAL_STRING(p_game, pokedex.p_game);
+    TEST_ASSERT_EQUAL(game, pokedex.game);
     TEST_ASSERT_NOT_NULL(pokedex.p_internal);
 
     // Check initial values.
@@ -222,29 +218,28 @@ static void pokedex_test(
 
     error = pkmn_pokedex_free(&pokedex);
     PKMN_TEST_ASSERT_SUCCESS(error);
-    TEST_ASSERT_NULL(pokedex.p_game);
     TEST_ASSERT_NULL(pokedex.p_internal);
 }
 
-#define POKEDEX_TEST_FCN(game) \
+#define POKEDEX_TEST_FCN(game_enum, game) \
 static void game ## _test_pokedex() \
 { \
-    pokedex_test(#game); \
+    pokedex_test(game_enum); \
 }
 
-POKEDEX_TEST_FCN(Red)
-POKEDEX_TEST_FCN(Blue)
-POKEDEX_TEST_FCN(Yellow)
+POKEDEX_TEST_FCN(PKMN_GAME_RED, Red)
+POKEDEX_TEST_FCN(PKMN_GAME_BLUE, Blue)
+POKEDEX_TEST_FCN(PKMN_GAME_YELLOW, Yellow)
 
-POKEDEX_TEST_FCN(Gold)
-POKEDEX_TEST_FCN(Silver)
-POKEDEX_TEST_FCN(Crystal)
+POKEDEX_TEST_FCN(PKMN_GAME_GOLD, Gold)
+POKEDEX_TEST_FCN(PKMN_GAME_SILVER, Silver)
+POKEDEX_TEST_FCN(PKMN_GAME_CRYSTAL, Crystal)
 
-POKEDEX_TEST_FCN(Ruby)
-POKEDEX_TEST_FCN(Sapphire)
-POKEDEX_TEST_FCN(Emerald)
-POKEDEX_TEST_FCN(FireRed)
-POKEDEX_TEST_FCN(LeafGreen)
+POKEDEX_TEST_FCN(PKMN_GAME_RUBY, Ruby)
+POKEDEX_TEST_FCN(PKMN_GAME_SAPPHIRE, Sapphire)
+POKEDEX_TEST_FCN(PKMN_GAME_EMERALD, Emerald)
+POKEDEX_TEST_FCN(PKMN_GAME_FIRERED, FireRed)
+POKEDEX_TEST_FCN(PKMN_GAME_LEAFGREEN, LeafGreen)
 
 PKMN_C_TEST_MAIN(
     PKMN_C_TEST(Red_test_pokedex)

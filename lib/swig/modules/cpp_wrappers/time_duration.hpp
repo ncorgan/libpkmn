@@ -26,7 +26,7 @@ namespace pkmn { namespace swig {
                 BOOST_ASSERT(_internal.get() != nullptr);
 
                 _cached_time_duration = _internal->get_time_played();
-                _generation = pkmn::priv::game_name_to_generation(
+                _generation = pkmn::priv::game_enum_to_generation(
                                   _internal->get_game()
                               );
             }

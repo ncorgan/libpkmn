@@ -38,8 +38,8 @@ TEST_P(gen1_pokemon_test, gen1_pokemon_test) {
             {"Slash", "Flamethrower", "Tail Whip", "Fire Blast"},
             {"Return"},
 
-            {"Red"},
-            {"Red"}
+            {pkmn::e_game::RED},
+            {pkmn::e_game::RED}
         }
     );
 
@@ -120,10 +120,11 @@ TEST_P(gen1_pokemon_test, gen1_pokemon_test) {
     EXPECT_EQ(pokemon->get_numeric_attribute("Catch rate"), int(native_pc->catch_rate));
 }
 
-static const std::vector<std::pair<std::string, std::string>> params = {
-    {"Red", "Charmander"},
-    {"Blue", "Squirtle"},
-    {"Yellow", "Bulbasaur"}
+static const std::vector<std::pair<pkmn::e_game, std::string>> params =
+{
+    {pkmn::e_game::RED, "Charmander"},
+    {pkmn::e_game::BLUE, "Squirtle"},
+    {pkmn::e_game::YELLOW, "Bulbasaur"}
 };
 
 INSTANTIATE_TEST_CASE_P(

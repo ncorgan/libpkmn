@@ -1,7 +1,7 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
- * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
+ * Distributed under the MIT License (MIT) (Se accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
  */
 
@@ -32,24 +32,22 @@
 #include <boost/filesystem.hpp>
 #include <boost/format.hpp>
 
-#ifdef PKMN_QT4
-#include <QtCore/QString>
-#include <QtGui/QImage>
-#else
 #include <QImage>
 #include <QString>
-#endif
 
 namespace fs = boost::filesystem;
 
-void QtTest::testGetQtVersion() {
+void QtTest::testGetQtVersion()
+{
     QString versionFromLibPKMN(pkmn::build_info::get_qt_version().c_str());
     QString versionFromQt(qVersion());
     QCOMPARE(versionFromLibPKMN, versionFromQt);
 }
 
-void QtTest::testAbilityListComboBox() {
-    try {
+void QtTest::testAbilityListComboBox()
+{
+    try
+    {
         pkmn::qt::AbilityListComboBox abilities(6, nullptr);
         QCOMPARE(abilities.count(), 191);
 
@@ -57,13 +55,17 @@ void QtTest::testAbilityListComboBox() {
         QCOMPARE(abilities.currentText(), QString("Adaptability"));
         abilities.setCurrentIndex(190);
         QCOMPARE(abilities.currentText(), QString("Zen Mode"));
-    } catch(const std::exception &e) {
+    }
+    catch(const std::exception& e)
+    {
         QFAIL(e.what());
     }
 }
 
-void QtTest::testGameListComboBox() {
-    try {
+void QtTest::testGameListComboBox()
+{
+    try
+    {
         pkmn::qt::GameListComboBox games(6, true, nullptr);
         QCOMPARE(games.count(), 26);
 
@@ -71,7 +73,8 @@ void QtTest::testGameListComboBox() {
         QCOMPARE(games.currentText(), QString("Red"));
         games.setCurrentIndex(25);
         QCOMPARE(games.currentText(), QString("Alpha Sapphire"));
-    } catch(const std::exception &e) {
+    }
+    catch(const std::exception& e){
         QFAIL(e.what());
     }
 }
@@ -86,56 +89,70 @@ void QtTest::testGamecubeShadowPokemonListComboBox()
         pkmn::qt::GamecubeShadowPokemonListComboBox xdShadowPokemon(false, nullptr);
         QCOMPARE(xdShadowPokemon.count(), 83);
     }
-    catch(const std::exception &e)
+    catch(const std::exception& e)
     {
         QFAIL(e.what());
     }
 }
 
-void QtTest::testItemListComboBox() {
-    try {
-        pkmn::qt::ItemListComboBox items(QString("HeartGold"), nullptr);
+void QtTest::testItemListComboBox()
+{
+    try
+    {
+        pkmn::qt::ItemListComboBox items(pkmn::e_game::HEARTGOLD, nullptr);
         QCOMPARE(items.count(), 513);
 
         items.setCurrentIndex(0);
         QCOMPARE(items.currentText(), QString("Adamant Orb"));
         items.setCurrentIndex(512);
         QCOMPARE(items.currentText(), QString("Zoom Lens"));
-    } catch(const std::exception &e) {
+    }
+    catch(const std::exception& e)
+    {
         QFAIL(e.what());
     }
 }
 
-void QtTest::testLocationListComboBox() {
-    try {
-        pkmn::qt::LocationListComboBox locations(QString("Emerald"), false, nullptr);
+void QtTest::testLocationListComboBox()
+{
+    try
+    {
+        pkmn::qt::LocationListComboBox locations(pkmn::e_game::EMERALD, false, nullptr);
         QCOMPARE(locations.count(), 106);
 
         locations.setCurrentIndex(0);
         QCOMPARE(locations.currentText(), QString("Abandoned Ship"));
         locations.setCurrentIndex(105);
         QCOMPARE(locations.currentText(), QString("Victory Road"));
-    } catch(const std::exception &e) {
+    }
+    catch(const std::exception& e)
+    {
         QFAIL(e.what());
     }
 }
 
-void QtTest::testMoveListComboBox() {
-    try {
-        pkmn::qt::MoveListComboBox moves(QString("Red"), nullptr);
+void QtTest::testMoveListComboBox()
+{
+    try
+    {
+        pkmn::qt::MoveListComboBox moves(pkmn::e_game::RED, nullptr);
         QCOMPARE(moves.count(), 165);
 
         moves.setCurrentIndex(0);
         QCOMPARE(moves.currentText(), QString("Pound"));
         moves.setCurrentIndex(164);
         QCOMPARE(moves.currentText(), QString("Struggle"));
-    } catch(const std::exception &e) {
+    }
+    catch(const std::exception& e)
+    {
         QFAIL(e.what());
     }
 }
 
-void QtTest::testNatureListComboBox() {
-    try {
+void QtTest::testNatureListComboBox()
+{
+    try
+    {
         pkmn::qt::NatureListComboBox natures(nullptr);
         QCOMPARE(natures.count(), 25);
 
@@ -143,13 +160,17 @@ void QtTest::testNatureListComboBox() {
         QCOMPARE(natures.currentText(), QString("Hardy"));
         natures.setCurrentIndex(24);
         QCOMPARE(natures.currentText(), QString("Quirky"));
-    } catch(const std::exception &e) {
+    }
+    catch(const std::exception& e)
+    {
         QFAIL(e.what());
     }
 }
 
-void QtTest::testPokemonListComboBox() {
-    try {
+void QtTest::testPokemonListComboBox()
+{
+    try
+    {
         pkmn::qt::PokemonListComboBox pokemon(1, true, nullptr);
         QCOMPARE(pokemon.count(), 151);
 
@@ -157,13 +178,17 @@ void QtTest::testPokemonListComboBox() {
         QCOMPARE(pokemon.currentText(), QString("Bulbasaur"));
         pokemon.setCurrentIndex(150);
         QCOMPARE(pokemon.currentText(), QString("Mew"));
-    } catch(const std::exception &e) {
+    }
+    catch(const std::exception& e)
+    {
         QFAIL(e.what());
     }
 }
 
-void QtTest::testRegionListComboBox() {
-    try {
+void QtTest::testRegionListComboBox()
+{
+    try
+    {
         pkmn::qt::RegionListComboBox regions(nullptr);
         QCOMPARE(regions.count(), 7);
 
@@ -171,16 +196,21 @@ void QtTest::testRegionListComboBox() {
         QCOMPARE(regions.currentText(), QString("Kanto"));
         regions.setCurrentIndex(6);
         QCOMPARE(regions.currentText(), QString("Kalos"));
-    } catch(const std::exception &e) {
+    }
+    catch(const std::exception& e)
+    {
         QFAIL(e.what());
     }
 }
 
-void QtTest::testRibbonListComboBox() {
+void QtTest::testRibbonListComboBox()
+{
 }
 
-void QtTest::testSuperTrainingMedalListComboBox() {
-    try {
+void QtTest::testSuperTrainingMedalListComboBox()
+{
+    try
+    {
         pkmn::qt::SuperTrainingMedalListComboBox superTrainingMedals(nullptr);
         QCOMPARE(superTrainingMedals.count(), 30);
 
@@ -188,7 +218,9 @@ void QtTest::testSuperTrainingMedalListComboBox() {
         QCOMPARE(superTrainingMedals.currentText(), QString("Sp. Atk Level 1"));
         superTrainingMedals.setCurrentIndex(29);
         QCOMPARE(superTrainingMedals.currentText(), QString("The Battle for the Best!"));
-    } catch(const std::exception &e) {
+    }
+    catch(const std::exception& e)
+    {
         QFAIL(e.what());
     }
 }
@@ -253,16 +285,20 @@ void QtTest::testSpinda()
     }
 }
 
-void QtTest::testTypeListComboBox() {
-    try {
-        pkmn::qt::TypeListComboBox types(QString("Alpha Sapphire"), nullptr);
+void QtTest::testTypeListComboBox()
+{
+    try
+    {
+        pkmn::qt::TypeListComboBox types(pkmn::e_game::ALPHA_SAPPHIRE, nullptr);
         QCOMPARE(types.count(), 18);
 
         types.setCurrentIndex(0);
         QCOMPARE(types.currentText(), QString("Normal"));
         types.setCurrentIndex(17);
         QCOMPARE(types.currentText(), QString("Fairy"));
-    } catch(const std::exception &e) {
+    }
+    catch(const std::exception& e)
+    {
         QFAIL(e.what());
     }
 }

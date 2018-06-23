@@ -9,18 +9,19 @@
 
 #include <pkmn-c/config.h>
 #include <pkmn-c/error.h>
+#include <pkmn-c/types/game.h>
 #include <pkmn-c/types/levelup_move.h>
 #include <pkmn-c/types/stats.h>
 #include <pkmn-c/types/string_types.h>
 
 #include <stdbool.h>
 
-#define PKMN_C_NUM_STATS 7
+#define PKMN_C_NUM_STATS (7)
 
 struct pkmn_database_pokemon_entry
 {
     char* p_name;
-    char* p_game;
+    enum pkmn_game game;
     char* p_species;
     char* p_form;
     char* p_pokedex_entry;
@@ -51,7 +52,7 @@ extern "C" {
 
 PKMN_C_API enum pkmn_error pkmn_database_get_pokemon_entry(
     const char* p_species,
-    const char* p_game,
+    enum pkmn_game game,
     const char* p_form,
     struct pkmn_database_pokemon_entry* p_pokemon_entry_out
 );

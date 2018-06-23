@@ -12,7 +12,7 @@
 static const struct pkmn_pokemon empty_pokemon =
 {
     .p_species = NULL,
-    .p_game = NULL,
+    .game = PKMN_GAME_NONE,
     .p_internal = NULL
 };
 static const struct pkmn_pokemon_list empty_pokemon_list =
@@ -55,7 +55,7 @@ static void test_empty_daycare(
         TEST_ASSERT_NOT_NULL(pokemon.p_internal);
 
         TEST_ASSERT_EQUAL_STRING("None", pokemon.p_species);
-        TEST_ASSERT_EQUAL_STRING(p_daycare->p_game, pokemon.p_game);
+        TEST_ASSERT_EQUAL(p_daycare->game, pokemon.game);
 
         error = pkmn_pokemon_free(&pokemon);
         PKMN_TEST_ASSERT_SUCCESS(error);
@@ -81,9 +81,9 @@ static void test_empty_daycare(
             "None",
             pokemon_list.p_pokemon[levelup_pokemon_index].p_species
         );
-        TEST_ASSERT_EQUAL_STRING(
-            p_daycare->p_game,
-            pokemon_list.p_pokemon[levelup_pokemon_index].p_game
+        TEST_ASSERT_EQUAL(
+            p_daycare->game,
+            pokemon_list.p_pokemon[levelup_pokemon_index].game
         );
     }
 
@@ -139,7 +139,7 @@ static void test_empty_daycare(
             TEST_ASSERT_NOT_NULL(pokemon.p_internal);
 
             TEST_ASSERT_EQUAL_STRING("None", pokemon.p_species);
-            TEST_ASSERT_EQUAL_STRING(p_daycare->p_game, pokemon.p_game);
+            TEST_ASSERT_EQUAL(p_daycare->game, pokemon.game);
 
             error = pkmn_pokemon_free(&pokemon);
             PKMN_TEST_ASSERT_SUCCESS(error);
@@ -165,9 +165,9 @@ static void test_empty_daycare(
                 "None",
                 pokemon_list.p_pokemon[breeding_pokemon_index].p_species
             );
-            TEST_ASSERT_EQUAL_STRING(
-                p_daycare->p_game,
-                pokemon_list.p_pokemon[breeding_pokemon_index].p_game
+            TEST_ASSERT_EQUAL(
+                p_daycare->game,
+                pokemon_list.p_pokemon[breeding_pokemon_index].game
             );
         }
 
@@ -195,7 +195,7 @@ static void test_setting_pokemon_in_daycare(
     struct pkmn_pokemon venusaur = empty_pokemon;
     error = pkmn_pokemon_init(
                 "Venusaur",
-                p_daycare->p_game,
+                p_daycare->game,
                 "",
                 50,
                 &venusaur
@@ -238,7 +238,7 @@ static void test_setting_pokemon_in_daycare(
 
         error = pkmn_pokemon_init(
                     "Blastoise",
-                    p_daycare->p_game,
+                    p_daycare->game,
                     "",
                     50,
                     &blastoise
@@ -255,7 +255,7 @@ static void test_setting_pokemon_in_daycare(
 
         error = pkmn_pokemon_init(
                     "Marowak",
-                    p_daycare->p_game,
+                    p_daycare->game,
                     "",
                     50,
                     &marowak
@@ -338,18 +338,16 @@ static void test_setting_pokemon_in_daycare(
 }
 
 static void daycare_test_common(
-    const char* game,
+    enum pkmn_game game,
     size_t expected_levelup_capacity,
     size_t expected_breeding_capacity
 )
 {
-    TEST_ASSERT_NOT_NULL(game);
-
     enum pkmn_error error = PKMN_ERROR_NONE;
 
     struct pkmn_daycare daycare =
     {
-        .p_game = NULL,
+        .game = PKMN_GAME_NONE,
 
         .can_breed_pokemon = false,
 
@@ -365,7 +363,7 @@ static void daycare_test_common(
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_NOT_NULL(daycare.p_internal);
-    TEST_ASSERT_EQUAL_STRING(game, daycare.p_game);
+    TEST_ASSERT_EQUAL(game, daycare.game);
 
     TEST_ASSERT_EQUAL_STRING(
         "None",
@@ -392,7 +390,7 @@ static void daycare_test_common(
 
     error = pkmn_daycare_free(&daycare);
     PKMN_TEST_ASSERT_SUCCESS(error);
-    TEST_ASSERT_NULL(daycare.p_game);
+    TEST_ASSERT_EQUAL(PKMN_GAME_NONE, daycare.game);
     TEST_ASSERT_FALSE(daycare.can_breed_pokemon);
     TEST_ASSERT_EQUAL(0, daycare.levelup_pokemon_capacity);
     TEST_ASSERT_EQUAL(0, daycare.breeding_pokemon_capacity);
@@ -403,42 +401,42 @@ static void daycare_test_common(
 
 static void red_daycare_test()
 {
-    daycare_test_common("Red", 1, 0);
+    daycare_test_common(PKMN_GAME_RED, 1, 0);
 }
 
 // Blue
 
 static void blue_daycare_test()
 {
-    daycare_test_common("Blue", 1, 0);
+    daycare_test_common(PKMN_GAME_BLUE, 1, 0);
 }
 
 // Yellow
 
 static void yellow_daycare_test()
 {
-    daycare_test_common("Yellow", 1, 0);
+    daycare_test_common(PKMN_GAME_YELLOW, 1, 0);
 }
 
 // Gold
 
 static void gold_daycare_test()
 {
-    daycare_test_common("Gold", 2, 2);
+    daycare_test_common(PKMN_GAME_GOLD, 2, 2);
 }
 
 // Silver
 
 static void silver_daycare_test()
 {
-    daycare_test_common("Silver", 2, 2);
+    daycare_test_common(PKMN_GAME_SILVER, 2, 2);
 }
 
 // Crystal
 
 static void crystal_daycare_test()
 {
-    daycare_test_common("Crystal", 2, 2);
+    daycare_test_common(PKMN_GAME_CRYSTAL, 2, 2);
 }
 
 /*
@@ -482,14 +480,14 @@ static void leafgreen_daycare_test()
 
 static void colosseum_daycare_test()
 {
-    daycare_test_common("Colosseum", 1, 0);
+    daycare_test_common(PKMN_GAME_COLOSSEUM, 1, 0);
 }
 
 // XD
 
 static void xd_daycare_test()
 {
-    daycare_test_common("XD", 1, 0);
+    daycare_test_common(PKMN_GAME_XD, 1, 0);
 }
 
 PKMN_C_TEST_MAIN(

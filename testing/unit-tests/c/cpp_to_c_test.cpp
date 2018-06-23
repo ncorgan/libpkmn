@@ -534,7 +534,7 @@ TEST(cpp_to_c_test, item_slots_cpp_to_c_test)
 TEST(cpp_to_c_test, levelup_move_cpp_to_c_test)
 {
     pkmn::database::levelup_move levelup_move_cpp(
-        pkmn::database::move_entry("Scratch", "Red"),
+        pkmn::database::move_entry("Scratch", pkmn::e_game::RED),
         50
     );
 
@@ -558,15 +558,15 @@ TEST(cpp_to_c_test, levelup_moves_cpp_to_c_test)
     pkmn::database::levelup_moves_t levelup_moves_cpp =
     {
         pkmn::database::levelup_move(
-            pkmn::database::move_entry("Scratch", "Red"),
+            pkmn::database::move_entry("Scratch", pkmn::e_game::RED),
             50
         ),
         pkmn::database::levelup_move(
-            pkmn::database::move_entry("Synthesis", "Silver"),
+            pkmn::database::move_entry("Synthesis", pkmn::e_game::SILVER),
             5
         ),
         pkmn::database::levelup_move(
-            pkmn::database::move_entry("Frenzy Plant", "Emerald"),
+            pkmn::database::move_entry("Frenzy Plant", pkmn::e_game::EMERALD),
             37
         )
     };
@@ -596,9 +596,9 @@ TEST(cpp_to_c_test, move_list_cpp_to_c_test)
 {
     pkmn::database::move_list_t move_list_cpp =
     {
-        pkmn::database::move_entry("Scratch", "Red"),
-        pkmn::database::move_entry("Synthesis", "Silver"),
-        pkmn::database::move_entry("Frenzy Plant", "Emerald")
+        pkmn::database::move_entry("Scratch", pkmn::e_game::RED),
+        pkmn::database::move_entry("Synthesis", pkmn::e_game::SILVER),
+        pkmn::database::move_entry("Frenzy Plant", pkmn::e_game::EMERALD)
     };
 
     struct pkmn_string_list string_list_c = { NULL, 0 };
@@ -684,9 +684,9 @@ TEST(cpp_to_c_test, pokemon_entries_cpp_to_c_test)
 {
     pkmn::database::pokemon_entries_t pokemon_entries_cpp =
     {
-        pkmn::database::pokemon_entry("Charmander", "Red", ""),
-        pkmn::database::pokemon_entry("Totodile", "Gold", ""),
-        pkmn::database::pokemon_entry("Treecko", "Ruby", "")
+        pkmn::database::pokemon_entry("Charmander", pkmn::e_game::RED, ""),
+        pkmn::database::pokemon_entry("Totodile", pkmn::e_game::GOLD, ""),
+        pkmn::database::pokemon_entry("Treecko", pkmn::e_game::RUBY, "")
     };
 
     struct pkmn_string_list string_list_c = { NULL, 0 };
@@ -712,13 +712,13 @@ TEST(cpp_to_c_test, pokemon_list_cpp_to_c)
     pkmn::pokemon_list_t pokemon_list_cpp =
     {
         pkmn::pokemon::make(
-            "Charmander", "Red", "", 5
+            "Charmander", pkmn::e_game::RED, "", 5
         ),
         pkmn::pokemon::make(
-            "Squirtle", "Blue", "", 10
+            "Squirtle", pkmn::e_game::BLUE, "", 10
         ),
         pkmn::pokemon::make(
-            "Bulbasaur", "Yellow", "", 15
+            "Bulbasaur", pkmn::e_game::YELLOW, "", 15
         )
     };
 
@@ -738,9 +738,9 @@ TEST(cpp_to_c_test, pokemon_list_cpp_to_c)
             pokemon_list_cpp[i]->get_species().c_str(),
             pokemon_list_c.p_pokemon[i].p_species
         );
-        EXPECT_STREQ(
-            pokemon_list_cpp[i]->get_game().c_str(),
-            pokemon_list_c.p_pokemon[i].p_game
+        EXPECT_EQ(
+            int(pokemon_list_cpp[i]->get_game()),
+            (pokemon_list_c.p_pokemon[i].game)
         );
 
         error = pkmn_pokemon_get_level(
@@ -765,9 +765,9 @@ TEST(cpp_to_c_test, pokemon_box_list_cpp_to_c_test)
 {
     pkmn::pokemon_box_list_t pokemon_box_list_cpp =
     {
-        pkmn::pokemon_box::make("Gold"),
-        pkmn::pokemon_box::make("Ruby"),
-        pkmn::pokemon_box::make("FireRed")
+        pkmn::pokemon_box::make(pkmn::e_game::GOLD),
+        pkmn::pokemon_box::make(pkmn::e_game::RUBY),
+        pkmn::pokemon_box::make(pkmn::e_game::FIRERED)
     };
 
     pokemon_box_list_cpp[0]->set_name("ABCD");
@@ -786,9 +786,9 @@ TEST(cpp_to_c_test, pokemon_box_list_cpp_to_c_test)
     {
         char name_c[BUFFER_LEN] = {0};
 
-        EXPECT_STREQ(
-            pokemon_box_list_cpp[index]->get_game().c_str(),
-            pokemon_box_list_c.p_boxes[index].p_game
+        EXPECT_EQ(
+            int(pokemon_box_list_cpp[index]->get_game()),
+            int(pokemon_box_list_c.p_boxes[index].game)
         );
 
         error = pkmn_pokemon_box_get_name(

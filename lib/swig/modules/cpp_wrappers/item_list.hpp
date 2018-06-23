@@ -37,7 +37,7 @@ namespace pkmn { namespace swig {
 
             explicit item_list(
                 const std::string& name,
-                const std::string& game
+                pkmn::e_game game
             ): _item_list(pkmn::item_list::make(name, game))
             {
                 BOOST_ASSERT(_item_list.get() != nullptr);
@@ -50,7 +50,7 @@ namespace pkmn { namespace swig {
                 return _item_list->get_name();
             }
 
-            inline std::string get_game()
+            inline pkmn::e_game get_game()
             {
                 BOOST_ASSERT(_item_list.get() != nullptr);
 

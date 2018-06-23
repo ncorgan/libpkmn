@@ -12,13 +12,11 @@
 namespace pkmn { namespace qt {
 
     MoveListComboBox::MoveListComboBox(
-        const QString& game,
+        pkmn::e_game game,
         QWidget* parent
     ): QComboBox(parent)
     {
-        std::vector<std::string> moves = pkmn::database::get_move_list(
-                                             game.toStdString()
-                                         );
+        std::vector<std::string> moves = pkmn::database::get_move_list(game);
         for(const std::string& move: moves)
         {
             addItem(QString::fromStdString(move));

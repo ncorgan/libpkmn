@@ -48,7 +48,7 @@ namespace pkmn {
 
             std::string get_form() override final;
 
-            std::string get_game() override final;
+            pkmn::e_game get_game() override final;
 
             const pkmn::database::pokemon_entry& get_database_entry() override final;
 

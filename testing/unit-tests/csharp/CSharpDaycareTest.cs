@@ -121,21 +121,21 @@ public class CSharpDaycareTest
         }
     }
 
-    [TestCase("Red", false)]
-    [TestCase("Blue", false)]
-    [TestCase("Yellow", false)]
-    [TestCase("Gold", true)]
-    [TestCase("Silver", true)]
-    [TestCase("Crystal", true)]
+    [TestCase(PKMN.Game.RED, false)]
+    [TestCase(PKMN.Game.BLUE, false)]
+    [TestCase(PKMN.Game.YELLOW, false)]
+    [TestCase(PKMN.Game.GOLD, true)]
+    [TestCase(PKMN.Game.SILVER, true)]
+    [TestCase(PKMN.Game.CRYSTAL, true)]
     /*[TestCase("Ruby", true)]
     [TestCase("Sapphire", true)]
     [TestCase("Emerald", true)]
     [TestCase("FireRed", true)]
     [TestCase("LeafGreen", true)]*/
-    [TestCase("Colosseum", false)]
-    [TestCase("XD", false)]
+    [TestCase(PKMN.Game.COLOSSEUM, false)]
+    [TestCase(PKMN.Game.XD, false)]
     public void DaycareTest(
-        string game,
+        PKMN.Game game,
         bool canBreed
     )
     {

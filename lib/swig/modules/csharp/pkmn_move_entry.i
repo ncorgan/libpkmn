@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -14,7 +14,7 @@
 // Convert getter/setter functions into attributes for more idiomatic C#.
 
 %attributestring(pkmn::database::move_entry, std::string, Name, get_name);
-%attributestring(pkmn::database::move_entry, std::string, Game, get_game);
+%attribute(pkmn::database::move_entry, pkmn::e_game, Game, get_game);
 %attributestring(pkmn::database::move_entry, std::string, MoveType, get_type);
 %attributestring(pkmn::database::move_entry, std::string, Description, get_description);
 %attributestring(pkmn::database::move_entry, std::string, Target, get_target);
@@ -70,7 +70,7 @@
     public override int GetHashCode()
     {
         return HashCodeBuilder.Create().AddValue<string>(this.Name)
-                                       .AddValue<string>(this.Game)
+                                       .AddValue<Game>(this.Game)
                                        .ToHashCode();
     }
 %}

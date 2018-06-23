@@ -10,6 +10,8 @@
 #include <pkmn/config.hpp>
 #include <pkmn/pokemon_box.hpp>
 
+#include <pkmn/enums/game.hpp>
+
 #include <memory>
 #include <string>
 #include <vector>
@@ -44,14 +46,12 @@ namespace pkmn
              * \param game Which game the PC corresponds to
              * \throws std::invalid_argument If the given game is invalid
              */
-            static sptr make(
-                const std::string& game
-            );
+            static sptr make(pkmn::e_game game);
 
             /*!
              * @brief Returns the game this box comes from.
              */
-            virtual std::string get_game()  = 0;
+            virtual pkmn::e_game get_game()  = 0;
 
             /*!
              * @brief Returns the number of boxes in this PC.

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -122,13 +122,13 @@ static void hm_move_list_test()
 
     // Make sure invalid calls return an error
     error = pkmn_database_hm_move_list(
-                "Not a game",
+                PKMN_GAME_NONE,
                 &hm_moves
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_INVALID_ARGUMENT, error);
 
     error = pkmn_database_hm_move_list(
-                "Red",
+                PKMN_GAME_RED,
                 &hm_moves
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
@@ -160,13 +160,13 @@ static void item_list_test()
 
     // Make sure invalid calls return an error
     error = pkmn_database_item_list(
-                "Not a game",
+                PKMN_GAME_NONE,
                 &items
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_INVALID_ARGUMENT, error);
 
     error = pkmn_database_item_list(
-                "HeartGold",
+                PKMN_GAME_HEARTGOLD,
                 &items
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
@@ -197,13 +197,14 @@ static void location_list_test()
 
     // Make sure invalid calls return an error
     error = pkmn_database_location_list(
-                "Not a game", false,
+                PKMN_GAME_NONE, false,
                 &locations
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_INVALID_ARGUMENT, error);
 
     error = pkmn_database_location_list(
-                     "Emerald", false,
+                     PKMN_GAME_EMERALD,
+                     false,
                      &locations
                  );
     PKMN_TEST_ASSERT_SUCCESS(error);
@@ -234,13 +235,13 @@ static void move_list_test()
 
     // Make sure invalid calls return an error
     error = pkmn_database_move_list(
-                "Not a game",
+                PKMN_GAME_NONE,
                 &moves
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_INVALID_ARGUMENT, error);
 
     error = pkmn_database_move_list(
-                "Red",
+                PKMN_GAME_RED,
                 &moves
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
@@ -401,13 +402,13 @@ static void tm_move_list_test()
 
     // Make sure invalid calls return an error
     error = pkmn_database_tm_move_list(
-                "Not a game",
+                PKMN_GAME_NONE,
                 &tm_moves
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_INVALID_ARGUMENT, error);
 
     error = pkmn_database_tm_move_list(
-                "Red",
+                PKMN_GAME_RED,
                 &tm_moves
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
@@ -439,13 +440,13 @@ static void type_list_test()
 
     // Make sure invalid calls return an error
     error = pkmn_database_type_list(
-                "Not a game",
+                PKMN_GAME_NONE,
                 &types
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_INVALID_ARGUMENT, error);
 
     error = pkmn_database_type_list(
-                "Alpha Sapphire",
+                PKMN_GAME_ALPHA_SAPPHIRE,
                 &types
             );
     PKMN_TEST_ASSERT_SUCCESS(error);

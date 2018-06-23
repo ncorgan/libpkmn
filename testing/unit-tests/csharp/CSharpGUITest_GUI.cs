@@ -37,7 +37,7 @@ public class CSharpGUITest
     [Test]
     public void ItemListComboBoxTest()
     {
-        PKMN.GUI.ItemListComboBox itemListComboBox = new PKMN.GUI.ItemListComboBox("HeartGold");
+        PKMN.GUI.ItemListComboBox itemListComboBox = new PKMN.GUI.ItemListComboBox(PKMN.Game.HEARTGOLD);
         Assert.AreEqual(itemListComboBox.Items.Count, 513);
         Assert.AreEqual(itemListComboBox.Items[0], "Adamant Orb");
         Assert.AreEqual(itemListComboBox.Items[512], "Zoom Lens");
@@ -46,7 +46,7 @@ public class CSharpGUITest
     [Test]
     public void LocationListComboBoxTest()
     {
-        PKMN.GUI.LocationListComboBox locationListComboBox = new PKMN.GUI.LocationListComboBox("Emerald", false);
+        PKMN.GUI.LocationListComboBox locationListComboBox = new PKMN.GUI.LocationListComboBox(PKMN.Game.EMERALD, false);
         Assert.AreEqual(locationListComboBox.Items.Count, 106);
         Assert.AreEqual(locationListComboBox.Items[0], "Abandoned Ship");
         Assert.AreEqual(locationListComboBox.Items[105], "Victory Road");
@@ -55,7 +55,7 @@ public class CSharpGUITest
     [Test]
     public void MoveListComboBoxTest()
     {
-        PKMN.GUI.MoveListComboBox moveListComboBox = new PKMN.GUI.MoveListComboBox("Red");
+        PKMN.GUI.MoveListComboBox moveListComboBox = new PKMN.GUI.MoveListComboBox(PKMN.Game.RED);
         Assert.AreEqual(moveListComboBox.Items.Count, 165);
         Assert.AreEqual(moveListComboBox.Items[0], "Pound");
         Assert.AreEqual(moveListComboBox.Items[164], "Struggle");
@@ -245,7 +245,7 @@ public class CSharpGUITest
     [Test]
     public void TypeListComboBoxTest()
     {
-        PKMN.GUI.TypeListComboBox typeListComboBox = new PKMN.GUI.TypeListComboBox("Alpha Sapphire");
+        PKMN.GUI.TypeListComboBox typeListComboBox = new PKMN.GUI.TypeListComboBox(PKMN.Game.ALPHA_SAPPHIRE);
         Assert.AreEqual(typeListComboBox.Items.Count, 18);
         Assert.AreEqual(typeListComboBox.Items[0], "Normal");
         Assert.AreEqual(typeListComboBox.Items[17], "Fairy");
@@ -254,7 +254,7 @@ public class CSharpGUITest
     [Test]
     public void PokemonImageTest()
     {
-        PKMN.Pokemon pokemon = new PKMN.Pokemon("Bulbasaur", "Red", "", 5);
+        PKMN.Pokemon pokemon = new PKMN.Pokemon("Bulbasaur", PKMN.Game.RED, "", 5);
 
         // These calls succeeding is enough to show that the image (or the image
         // generated for Mono) was loaded successfully.
@@ -265,7 +265,7 @@ public class CSharpGUITest
     [Test]
     public void PokemonDatabaseEntryImageTest()
     {
-        PKMN.Database.PokemonEntry pokemonEntry = new PKMN.Database.PokemonEntry("Bulbasaur", "Red", "");
+        PKMN.Database.PokemonEntry pokemonEntry = new PKMN.Database.PokemonEntry("Bulbasaur", PKMN.Game.RED, "");
 
         // These calls succeeding is enough to show that the image (or the image
         // generated for Mono) was loaded successfully.

@@ -9,6 +9,7 @@
 
 #include <pkmn-c/types/attribute_names.h>
 #include <pkmn-c/types/condition.h>
+#include <pkmn-c/types/game.h>
 #include <pkmn-c/types/gender.h>
 #include <pkmn-c/types/hidden_power.h>
 #include <pkmn-c/types/int_pair.h>

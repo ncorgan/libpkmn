@@ -242,7 +242,7 @@ namespace pkmn { namespace swig {
 
                 size_t ret = 0;
 
-                if(pkmn::priv::game_name_to_generation(_pokemon->get_game()) >= 3)
+                if(pkmn::priv::game_enum_to_generation(_pokemon->get_game()) >= 3)
                 {
                     ret = _pokemon->get_markings().size();
                 }
@@ -256,7 +256,7 @@ namespace pkmn { namespace swig {
 
                 std::vector<std::string> ret;
 
-                if(pkmn::priv::game_name_to_generation(_pokemon->get_game()) >= 3)
+                if(pkmn::priv::game_enum_to_generation(_pokemon->get_game()) >= 3)
                 {
                     ret = pkmn::map_keys_to_vector<string_bool_map, std::string>(
                               _pokemon->get_markings()
@@ -352,7 +352,7 @@ namespace pkmn { namespace swig {
 
                 size_t ret = 0;
 
-                if(pkmn::priv::game_name_to_generation(_pokemon->get_game()) >= 3)
+                if(pkmn::priv::game_enum_to_generation(_pokemon->get_game()) >= 3)
                 {
                     ret = _pokemon->get_ribbons().size();
                 }
@@ -366,7 +366,7 @@ namespace pkmn { namespace swig {
 
                 std::vector<std::string> ret;
 
-                if(pkmn::priv::game_name_to_generation(_pokemon->get_game()) >= 3)
+                if(pkmn::priv::game_enum_to_generation(_pokemon->get_game()) >= 3)
                 {
                     ret = pkmn::map_keys_to_vector<string_bool_map, std::string>(
                               _pokemon->get_ribbons()
@@ -444,7 +444,7 @@ namespace pkmn { namespace swig {
 
                 size_t ret = 0;
 
-                if(pkmn::priv::game_name_to_generation(_pokemon->get_game()) >= 3)
+                if(pkmn::priv::game_enum_to_generation(_pokemon->get_game()) >= 3)
                 {
                     ret = _pokemon->get_contest_stats().size();
                 }
@@ -458,7 +458,7 @@ namespace pkmn { namespace swig {
 
                 std::vector<std::string> ret;
 
-                if(pkmn::priv::game_name_to_generation(_pokemon->get_game()) >= 3)
+                if(pkmn::priv::game_enum_to_generation(_pokemon->get_game()) >= 3)
                 {
                     ret = pkmn::map_keys_to_vector<string_int_map, std::string>(
                               _pokemon->get_contest_stats()

@@ -12,11 +12,13 @@
 #include "pokemon_gbaimpl.hpp"
 #include "pokemon_gcnimpl.hpp"
 
+#include "utils/floating_point_comparison.hpp"
 #include "utils/misc.hpp"
+
 #include "database/database_common.hpp"
+#include "database/enum_conversions.hpp"
 #include "database/id_to_string.hpp"
 #include "database/index_to_string.hpp"
-#include "utils/floating_point_comparison.hpp"
 
 #include "io/pk1.hpp"
 #include "io/pk2.hpp"
@@ -46,12 +48,12 @@ namespace pkmn
 
     pokemon::sptr pokemon::make(
         const std::string& species,
-        const std::string& game,
+        pkmn::e_game game,
         const std::string& form,
         int level
     )
     {
-        int game_id = pkmn::database::game_name_to_id(game);
+        int game_id = pkmn::database::game_enum_to_id(game);
 
         pkmn::database::pokemon_entry database_entry(
                                           species,
@@ -186,7 +188,7 @@ namespace pkmn
         return _database_entry.get_form();
     }
 
-    std::string pokemon_impl::get_game()
+    pkmn::e_game pokemon_impl::get_game()
     {
         boost::lock_guard<pokemon_impl> lock(*this);
 

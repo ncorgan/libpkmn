@@ -6,7 +6,9 @@
  */
 
 #include "cpp_to_c.hpp"
+#include "enum_maps.hpp"
 #include "error_internal.hpp"
+#include "exception_internal.hpp"
 
 #include <boost/assert.hpp>
 #include <boost/thread/mutex.hpp>
@@ -14,15 +16,24 @@
 #include <pkmn-c/pokemon_party.h>
 
 enum pkmn_error pkmn_pokemon_party_init(
-    const char* p_game,
+    enum pkmn_game game,
     struct pkmn_pokemon_party* p_pokemon_party_out
 )
 {
-    PKMN_CHECK_NULL_PARAM(p_game);
     PKMN_CHECK_NULL_PARAM(p_pokemon_party_out);
 
     PKMN_CPP_TO_C(
-        pkmn::pokemon_party::sptr cpp = pkmn::pokemon_party::make(p_game);
+        const pkmn::c::game_bimap_t& game_bimap = pkmn::c::get_game_bimap();
+
+        pkmn::enforce_value_in_map_keys(
+            "Game",
+            game,
+            game_bimap.right
+        );
+
+        pkmn::pokemon_party::sptr cpp = pkmn::pokemon_party::make(
+                                            game_bimap.right.at(game)
+                                        );
 
         pkmn::c::init_pokemon_party(
             cpp,
@@ -37,7 +48,7 @@ enum pkmn_error pkmn_pokemon_party_free(
 {
     PKMN_CHECK_NULL_PARAM(p_pokemon_party);
 
-    pkmn::c::free_pointer_and_set_to_null(&p_pokemon_party->p_game);
+    p_pokemon_party->game = PKMN_GAME_NONE;
     p_pokemon_party->capacity = 0;
 
     PKMN_CPP_TO_C(

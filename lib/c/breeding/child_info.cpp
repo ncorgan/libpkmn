@@ -18,21 +18,28 @@
 enum pkmn_error pkmn_breeding_get_possible_child_species(
     const char* p_mother_species,
     const char* p_father_species,
-    const char* p_game,
+    enum pkmn_game game,
     struct pkmn_string_list* p_possible_child_species_out
 )
 {
     PKMN_CHECK_NULL_PARAM(p_mother_species);
     PKMN_CHECK_NULL_PARAM(p_father_species);
-    PKMN_CHECK_NULL_PARAM(p_game);
     PKMN_CHECK_NULL_PARAM(p_possible_child_species_out);
 
     PKMN_CPP_TO_C(
+        const pkmn::c::game_bimap_t& game_bimap = pkmn::c::get_game_bimap();
+
+        pkmn::enforce_value_in_map_keys(
+            "Game",
+            game,
+            game_bimap.right
+        );
+
         pkmn::c::string_list_cpp_to_c(
             pkmn::breeding::get_possible_child_species(
                 p_mother_species,
                 p_father_species,
-                p_game
+                game_bimap.right.at(game)
             ),
             p_possible_child_species_out
         );

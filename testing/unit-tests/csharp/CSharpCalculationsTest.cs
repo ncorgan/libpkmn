@@ -1928,12 +1928,12 @@ public class CSharpCalculationsTest {
          * for each relevant Pokémon.
          */
         PKMN.Database.PokemonEntry[] pokemonWithSizeChecks = {
-            new PKMN.Database.PokemonEntry("Barboach", "Ruby", ""),
-            new PKMN.Database.PokemonEntry("Shroomish", "Ruby", ""),
-            new PKMN.Database.PokemonEntry("Seedot", "Emerald", ""),
-            new PKMN.Database.PokemonEntry("Lotad", "Emerald", ""),
-            new PKMN.Database.PokemonEntry("Magikarp", "FireRed", ""),
-            new PKMN.Database.PokemonEntry("Heracross", "FireRed", "")
+            new PKMN.Database.PokemonEntry("Barboach", PKMN.Game.RUBY, ""),
+            new PKMN.Database.PokemonEntry("Shroomish", PKMN.Game.RUBY, ""),
+            new PKMN.Database.PokemonEntry("Seedot", PKMN.Game.EMERALD, ""),
+            new PKMN.Database.PokemonEntry("Lotad", PKMN.Game.EMERALD, ""),
+            new PKMN.Database.PokemonEntry("Magikarp", PKMN.Game.FIRERED, ""),
+            new PKMN.Database.PokemonEntry("Heracross", PKMN.Game.FIRERED, "")
         };
 
         for(int i = 0; i < pokemonWithSizeChecks.Length; ++i) {

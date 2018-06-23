@@ -6,7 +6,9 @@
  */
 
 #include "cpp_to_c.hpp"
+#include "enum_maps.hpp"
 #include "error_internal.hpp"
+#include "exception_internal.hpp"
 
 #include <pkmn-c/database/item_entry.h>
 
@@ -17,18 +19,25 @@
 
 enum pkmn_error pkmn_database_get_item_entry(
     const char* p_item_name,
-    const char* p_item_game,
+    enum pkmn_game game,
     struct pkmn_database_item_entry* p_item_entry_out
 )
 {
     PKMN_CHECK_NULL_PARAM(p_item_name);
-    PKMN_CHECK_NULL_PARAM(p_item_game);
     PKMN_CHECK_NULL_PARAM(p_item_entry_out);
 
     PKMN_CPP_TO_C(
+        const pkmn::c::game_bimap_t& game_bimap = pkmn::c::get_game_bimap();
+
+        pkmn::enforce_value_in_map_keys(
+            "Game",
+            game,
+            game_bimap.right
+        );
+
         pkmn::database::item_entry item_entry_cpp(
                                        p_item_name,
-                                       p_item_game
+                                       game_bimap.right.at(game)
                                    );
         pkmn::c::item_entry_cpp_to_c(
             item_entry_cpp,
@@ -44,12 +53,12 @@ enum pkmn_error pkmn_database_item_entry_free(
     PKMN_CHECK_NULL_PARAM(p_item_entry);
 
     pkmn::c::free_pointer_and_set_to_null(&p_item_entry->p_name);
-    pkmn::c::free_pointer_and_set_to_null(&p_item_entry->p_game);
     pkmn::c::free_pointer_and_set_to_null(&p_item_entry->p_category);
     pkmn::c::free_pointer_and_set_to_null(&p_item_entry->p_description);
     pkmn::c::free_pointer_and_set_to_null(&p_item_entry->p_pocket);
     pkmn::c::free_pointer_and_set_to_null(&p_item_entry->p_fling_effect);
 
+    p_item_entry->game = PKMN_GAME_NONE;
     p_item_entry->cost = 0;
     p_item_entry->holdable = false;
     p_item_entry->fling_power = 0;

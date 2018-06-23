@@ -26,20 +26,20 @@ namespace pkmn { namespace swig {
             explicit pokemon_pc(
                 const pkmn::pokemon_pc::sptr& cpp_pokemon_pc
             ): _pokemon_pc(cpp_pokemon_pc),
-               _generation(pkmn::priv::game_name_to_generation(cpp_pokemon_pc->get_game()))
+               _generation(pkmn::priv::game_enum_to_generation(cpp_pokemon_pc->get_game()))
             {
                 BOOST_ASSERT(_pokemon_pc.get() != nullptr);
             }
 
             explicit pokemon_pc(
-                const std::string& game
+                pkmn::e_game game
             ): _pokemon_pc(pkmn::pokemon_pc::make(game)),
-               _generation(pkmn::priv::game_name_to_generation(game))
+               _generation(pkmn::priv::game_enum_to_generation(game))
             {
                 BOOST_ASSERT(_pokemon_pc.get() != nullptr);
             }
 
-            inline std::string get_game()
+            inline pkmn::e_game get_game()
             {
                 BOOST_ASSERT(_pokemon_pc.get() != nullptr);
 

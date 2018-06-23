@@ -9,9 +9,10 @@
 
 #include <pkmn/config.hpp>
 
+#include <pkmn/enums/game.hpp>
+
 #ifdef PKMN_ENABLE_QT
 #include <QComboBox>
-#include <QString>
 #endif
 
 namespace pkmn { namespace qt {
@@ -32,7 +33,7 @@ namespace pkmn { namespace qt {
              * \throws std::invalid_argument if the given game is invalid
              */
             TypeListComboBox(
-                const QString& game,
+                pkmn::e_game game,
                 QWidget* parent
             );
 

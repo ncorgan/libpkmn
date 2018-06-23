@@ -30,7 +30,7 @@ using Database;"
 // Convert getter/setter functions into attributes for more idiomatic C#.
 
 %attributestring(pkmn::swig::pokemon, std::string, Species, get_species);
-%attributestring(pkmn::swig::pokemon, std::string, Game, get_game);
+%attribute(pkmn::swig::pokemon, pkmn::e_game, Game, get_game);
 %attributestring(pkmn::swig::pokemon, std::string, Form, get_form, set_form);
 %attribute(pkmn::swig::pokemon, bool, IsEgg, is_egg, set_is_egg);
 %attributestring(pkmn::swig::pokemon, std::string, Nickname, get_nickname, set_nickname);
@@ -52,7 +52,7 @@ using Database;"
 %attribute(pkmn::swig::pokemon, int, LevelMet, get_level_met, set_level_met);
 %attributestring(pkmn::swig::pokemon, std::string, LocationMet, get_location_met, set_location_met);
 %attributestring(pkmn::swig::pokemon, std::string, LocationMetAsEgg, get_location_met_as_egg, set_location_met_as_egg);
-%attributestring(pkmn::swig::pokemon, std::string, OriginalGame, get_original_game, set_original_game);
+%attribute(pkmn::swig::pokemon, pkmn::e_game, OriginalGame, get_original_game, set_original_game);
 %attribute(pkmn::swig::pokemon, uint32_t, Personality, get_personality, set_personality);
 %attribute(pkmn::swig::pokemon, int, Experience, get_experience, set_experience);
 %attribute(pkmn::swig::pokemon, int, Level, get_level, set_level);

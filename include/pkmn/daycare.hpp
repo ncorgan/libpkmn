@@ -10,6 +10,8 @@
 #include <pkmn/config.hpp>
 #include <pkmn/pokemon.hpp>
 
+#include <pkmn/enums/game.hpp>
+
 #include <map>
 #include <memory>
 #include <string>
@@ -21,9 +23,9 @@ namespace pkmn {
         public:
             typedef std::shared_ptr<daycare> sptr;
 
-            static sptr make(const std::string& game);
+            static sptr make(pkmn::e_game game);
 
-            virtual std::string get_game() = 0;
+            virtual pkmn::e_game get_game() = 0;
 
             virtual const pkmn::pokemon::sptr& get_levelup_pokemon(
                 int index

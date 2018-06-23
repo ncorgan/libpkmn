@@ -18,7 +18,9 @@ PKMN_LUA_INIT
     #include <pkmn/database/pokemon_entry.hpp>
 %}
 
+%rename(game) pkmn::e_game;
 %rename(stat) pkmn::e_stat;
+%import <pkmn/enums/game.hpp>
 %import <pkmn/enums/stat.hpp>
 
 %include <lua/pkmn_item_entry.i>

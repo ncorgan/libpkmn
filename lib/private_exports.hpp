@@ -10,6 +10,8 @@
 
 #include <pkmn/config.hpp>
 
+#include <pkmn/enums/game.hpp>
+
 #include <string>
 
 /*
@@ -22,6 +24,8 @@ namespace pkmn { namespace priv {
     PKMN_API int game_name_to_generation(
         const std::string& game
     );
+
+    PKMN_API int game_enum_to_generation(pkmn::e_game game);
 
     PKMN_API void initialize_database_connection();
 

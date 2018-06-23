@@ -36,13 +36,13 @@ namespace pkmn { namespace swig {
             }
 
             explicit item_bag(
-                const std::string& game
+                pkmn::e_game game
             ): _item_bag(pkmn::item_bag::make(game))
             {
                 BOOST_ASSERT(_item_bag.get() != nullptr);
             }
 
-            inline std::string get_game()
+            inline pkmn::e_game get_game()
             {
                 BOOST_ASSERT(_item_bag.get() != nullptr);
 

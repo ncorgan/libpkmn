@@ -27,15 +27,15 @@ namespace pkmn { namespace swig {
             explicit pokemon_box(
                 const pkmn::pokemon_box::sptr& cpp_pokemon_box
             ): _pokemon_box(cpp_pokemon_box),
-               _generation(pkmn::priv::game_name_to_generation(cpp_pokemon_box->get_game()))
+               _generation(pkmn::priv::game_enum_to_generation(cpp_pokemon_box->get_game()))
             {
                 BOOST_ASSERT(_pokemon_box.get() != nullptr);
             }
 
             explicit pokemon_box(
-                const std::string& game
+                pkmn::e_game game
             ): _pokemon_box(pkmn::pokemon_box::make(game)),
-               _generation(pkmn::priv::game_name_to_generation(game))
+               _generation(pkmn::priv::game_enum_to_generation(game))
             {
                 BOOST_ASSERT(_pokemon_box.get() != nullptr);
             }
@@ -63,7 +63,7 @@ namespace pkmn { namespace swig {
                 _pokemon_box->set_name(name);
             }
 
-            inline std::string get_game()
+            inline pkmn::e_game get_game()
             {
                 BOOST_ASSERT(_pokemon_box.get() != nullptr);
 

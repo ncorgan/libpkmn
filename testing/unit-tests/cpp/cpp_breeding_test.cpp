@@ -75,7 +75,7 @@ INSTANTIATE_TEST_CASE_P(
 typedef std::tuple<
             std::string,             // Mother species
             std::string,             // Father species
-            std::string,             // Game
+            pkmn::e_game,            // Game
             bool,                    // Are parents interchangeable?
             std::vector<std::string> // Possible child species
         > possible_child_species_test_params_t;
@@ -89,7 +89,7 @@ TEST_P(possible_child_species_test, test_possible_child_species)
     // Extract input tuple into readable variable names.
     const std::string& mother_species                      = std::get<0>(test_params);
     const std::string& father_species                      = std::get<1>(test_params);
-    const std::string& game                                = std::get<2>(test_params);
+    const pkmn::e_game& game                               = std::get<2>(test_params);
     bool are_parents_interchangeable                       = std::get<3>(test_params);
     const std::vector<std::string>& possible_child_species = std::get<4>(test_params);
 
@@ -118,67 +118,67 @@ static const std::vector<possible_child_species_test_params_t> POSSIBLE_CHILD_SP
 {
     // Any Pokémon, when bred with Ditto, will determine the child's species, no
     // matter the gender.
-    possible_child_species_test_params_t("Jynx", "Ditto", "Gold", false, {"Smoochum"}),
-    possible_child_species_test_params_t("Ditto", "Hitmonchan", "Gold", false, {"Tyrogue"}),
+    possible_child_species_test_params_t("Jynx", "Ditto", pkmn::e_game::GOLD, false, {"Smoochum"}),
+    possible_child_species_test_params_t("Ditto", "Hitmonchan", pkmn::e_game::GOLD, false, {"Tyrogue"}),
 
     // Both Ditto and genderless species should be able to be given as either the
     // mother or father.
-    possible_child_species_test_params_t("Magneton", "Ditto", "Gold", true, {"Magnemite"}),
-    possible_child_species_test_params_t("Ditto", "Magneton", "Gold", true, {"Magnemite"}),
+    possible_child_species_test_params_t("Magneton", "Ditto", pkmn::e_game::GOLD, true, {"Magnemite"}),
+    possible_child_species_test_params_t("Ditto", "Magneton", pkmn::e_game::GOLD, true, {"Magnemite"}),
 
     // Some species had baby Pokémon added to their evolutionary lines in later games.
     // In the older games, they should only be able to breed to their existing earliest
     // evolution, and later, they should be able to breed to both this species and the
     // new baby evolution.
 
-    possible_child_species_test_params_t("Marill", "Ditto", "Gold", true, {"Marill"}),
-    possible_child_species_test_params_t("Azumarill", "Ditto", "Gold", true, {"Marill"}),
-    possible_child_species_test_params_t("Marill", "Ditto", "Ruby", true, {"Marill", "Azurill"}),
-    possible_child_species_test_params_t("Azumarill", "Ditto", "Ruby", true, {"Marill", "Azurill"}),
+    possible_child_species_test_params_t("Marill", "Ditto", pkmn::e_game::GOLD, true, {"Marill"}),
+    possible_child_species_test_params_t("Azumarill", "Ditto", pkmn::e_game::GOLD, true, {"Marill"}),
+    possible_child_species_test_params_t("Marill", "Ditto", pkmn::e_game::RUBY, true, {"Marill", "Azurill"}),
+    possible_child_species_test_params_t("Azumarill", "Ditto", pkmn::e_game::RUBY, true, {"Marill", "Azurill"}),
 
-    possible_child_species_test_params_t("Wobbuffet", "Ditto", "Gold", true, {"Wobbuffet"}),
-    possible_child_species_test_params_t("Wobbuffet", "Ditto", "Ruby", true, {"Wobbuffet", "Wynaut"}),
+    possible_child_species_test_params_t("Wobbuffet", "Ditto", pkmn::e_game::GOLD, true, {"Wobbuffet"}),
+    possible_child_species_test_params_t("Wobbuffet", "Ditto", pkmn::e_game::RUBY, true, {"Wobbuffet", "Wynaut"}),
 
-    possible_child_species_test_params_t("Roselia", "Ditto", "Ruby", true, {"Roselia"}),
-    possible_child_species_test_params_t("Roselia", "Ditto", "Diamond", true, {"Roselia", "Budew"}),
-    possible_child_species_test_params_t("Roserade", "Ditto", "Diamond", true, {"Roselia", "Budew"}),
+    possible_child_species_test_params_t("Roselia", "Ditto", pkmn::e_game::RUBY, true, {"Roselia"}),
+    possible_child_species_test_params_t("Roselia", "Ditto", pkmn::e_game::DIAMOND, true, {"Roselia", "Budew"}),
+    possible_child_species_test_params_t("Roserade", "Ditto", pkmn::e_game::DIAMOND, true, {"Roselia", "Budew"}),
 
-    possible_child_species_test_params_t("Chimecho", "Ditto", "Ruby", true, {"Chimecho"}),
-    possible_child_species_test_params_t("Chimecho", "Ditto", "Diamond", true, {"Chimecho", "Chingling"}),
+    possible_child_species_test_params_t("Chimecho", "Ditto", pkmn::e_game::RUBY, true, {"Chimecho"}),
+    possible_child_species_test_params_t("Chimecho", "Ditto", pkmn::e_game::DIAMOND, true, {"Chimecho", "Chingling"}),
 
-    possible_child_species_test_params_t("Sudowoodo", "Ditto", "Gold", true, {"Sudowoodo"}),
-    possible_child_species_test_params_t("Sudowoodo", "Ditto", "Diamond", true, {"Sudowoodo", "Bonsly"}),
+    possible_child_species_test_params_t("Sudowoodo", "Ditto", pkmn::e_game::GOLD, true, {"Sudowoodo"}),
+    possible_child_species_test_params_t("Sudowoodo", "Ditto", pkmn::e_game::DIAMOND, true, {"Sudowoodo", "Bonsly"}),
 
-    possible_child_species_test_params_t("Mr. Mime", "Ditto", "Gold", true, {"Mr. Mime"}),
-    possible_child_species_test_params_t("Mr. Mime", "Ditto", "Diamond", true, {"Mr. Mime", "Mime Jr."}),
+    possible_child_species_test_params_t("Mr. Mime", "Ditto", pkmn::e_game::GOLD, true, {"Mr. Mime"}),
+    possible_child_species_test_params_t("Mr. Mime", "Ditto", pkmn::e_game::DIAMOND, true, {"Mr. Mime", "Mime Jr."}),
 
-    possible_child_species_test_params_t("Chansey", "Ditto", "Gold", false, {"Chansey"}),
-    possible_child_species_test_params_t("Blissey", "Ditto", "Gold", false, {"Chansey"}),
-    possible_child_species_test_params_t("Chansey", "Ditto", "Diamond", false, {"Chansey", "Happiny"}),
-    possible_child_species_test_params_t("Blissey", "Ditto", "Diamond", false, {"Chansey", "Happiny"}),
+    possible_child_species_test_params_t("Chansey", "Ditto", pkmn::e_game::GOLD, false, {"Chansey"}),
+    possible_child_species_test_params_t("Blissey", "Ditto", pkmn::e_game::GOLD, false, {"Chansey"}),
+    possible_child_species_test_params_t("Chansey", "Ditto", pkmn::e_game::DIAMOND, false, {"Chansey", "Happiny"}),
+    possible_child_species_test_params_t("Blissey", "Ditto", pkmn::e_game::DIAMOND, false, {"Chansey", "Happiny"}),
 
-    possible_child_species_test_params_t("Mantine", "Ditto", "Gold", true, {"Mantine"}),
-    possible_child_species_test_params_t("Mantine", "Ditto", "Diamond", true, {"Mantine", "Mantyke"}),
+    possible_child_species_test_params_t("Mantine", "Ditto", pkmn::e_game::GOLD, true, {"Mantine"}),
+    possible_child_species_test_params_t("Mantine", "Ditto", pkmn::e_game::DIAMOND, true, {"Mantine", "Mantyke"}),
 
-    possible_child_species_test_params_t("Snorlax", "Ditto", "Gold", true, {"Snorlax"}),
-    possible_child_species_test_params_t("Snorlax", "Ditto", "Diamond", true, {"Snorlax", "Munchlax"}),
+    possible_child_species_test_params_t("Snorlax", "Ditto", pkmn::e_game::GOLD, true, {"Snorlax"}),
+    possible_child_species_test_params_t("Snorlax", "Ditto", pkmn::e_game::DIAMOND, true, {"Snorlax", "Munchlax"}),
 
     // In Generation V+, Nidoran♂ and Volbeat has a chance to produce one of two different species.
     // Their female counterparts have always had this chance.
 
-    possible_child_species_test_params_t("Nidoran♀", "Ditto", "Gold", false, {"Nidoran♀", "Nidoran♂"}),
-    possible_child_species_test_params_t("Nidoran♀", "Ditto", "Black", false, {"Nidoran♀", "Nidoran♂"}),
-    possible_child_species_test_params_t("Ditto", "Nidoran♂", "Gold", false, {"Nidoran♂"}),
-    possible_child_species_test_params_t("Ditto", "Nidoran♂", "Black", false, {"Nidoran♀", "Nidoran♂"}),
+    possible_child_species_test_params_t("Nidoran♀", "Ditto", pkmn::e_game::GOLD, false, {"Nidoran♀", "Nidoran♂"}),
+    possible_child_species_test_params_t("Nidoran♀", "Ditto", pkmn::e_game::BLACK, false, {"Nidoran♀", "Nidoran♂"}),
+    possible_child_species_test_params_t("Ditto", "Nidoran♂", pkmn::e_game::GOLD, false, {"Nidoran♂"}),
+    possible_child_species_test_params_t("Ditto", "Nidoran♂", pkmn::e_game::BLACK, false, {"Nidoran♀", "Nidoran♂"}),
 
-    possible_child_species_test_params_t("Illumise", "Ditto", "Ruby", false, {"Volbeat", "Illumise"}),
-    possible_child_species_test_params_t("Illumise", "Ditto", "Black", false, {"Volbeat", "Illumise"}),
-    possible_child_species_test_params_t("Ditto", "Volbeat", "Ruby", false, {"Volbeat"}),
-    possible_child_species_test_params_t("Ditto", "Volbeat", "Black", false, {"Volbeat", "Illumise"}),
+    possible_child_species_test_params_t("Illumise", "Ditto", pkmn::e_game::RUBY, false, {"Volbeat", "Illumise"}),
+    possible_child_species_test_params_t("Illumise", "Ditto", pkmn::e_game::BLACK, false, {"Volbeat", "Illumise"}),
+    possible_child_species_test_params_t("Ditto", "Volbeat", pkmn::e_game::RUBY, false, {"Volbeat"}),
+    possible_child_species_test_params_t("Ditto", "Volbeat", pkmn::e_game::BLACK, false, {"Volbeat", "Illumise"}),
 
     // Manaphy is an odd case in that it breeds to a Pokémon that doesn't evolve into it.
-    possible_child_species_test_params_t("Manaphy", "Ditto", "Diamond", true, {"Phione"}),
-    possible_child_species_test_params_t("Phione", "Ditto", "Diamond", true, {"Phione"}),
+    possible_child_species_test_params_t("Manaphy", "Ditto", pkmn::e_game::DIAMOND, true, {"Phione"}),
+    possible_child_species_test_params_t("Phione", "Ditto", pkmn::e_game::DIAMOND, true, {"Phione"}),
 };
 
 INSTANTIATE_TEST_CASE_P(

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -29,15 +29,15 @@ public class GBAItemsTest
 
     public static void ItemPocketTest(
         PKMN.ItemList itemPocket,
-        string game
+        PKMN.Game game
     )
     {
         int expectedLength = 0;
-        if(game.Equals("Ruby") || game.Equals("Sapphire"))
+        if((game == PKMN.Game.RUBY) || (game == PKMN.Game.SAPPHIRE))
         {
             expectedLength = 20;
         }
-        else if(game.Equals("Emerald"))
+        else if(game == PKMN.Game.EMERALD)
         {
             expectedLength = 30;
         }
@@ -96,11 +96,11 @@ public class GBAItemsTest
 
     public static void KeyItemPocketTest(
         PKMN.ItemList keyItemPocket,
-        string game
+        PKMN.Game game
     )
     {
         int expectedLength = 0;
-        if(game.Equals("Ruby") || game.Equals("Sapphire"))
+        if((game == PKMN.Game.RUBY) || (game == PKMN.Game.SAPPHIRE))
         {
             expectedLength = 20;
         }
@@ -141,14 +141,14 @@ public class GBAItemsTest
             keyItemPocket,
             new string[]{"Ein File S", "Powerup Part", "Gonzap's Key", "Krane Memo 1"}
         );
-        if(game.Equals("Ruby") || game.Equals("Sapphire"))
+        if((game == PKMN.Game.RUBY) || (game == PKMN.Game.SAPPHIRE))
         {
             ItemsTestsCommon.TestItemListInvalidItems(
                 keyItemPocket,
                 new string[]{"Helix Fossil", "Tea", "Ruby"}
             );
         }
-        if(!game.Equals("Emerald"))
+        if(game != PKMN.Game.EMERALD)
         {
             ItemsTestsCommon.TestItemListInvalidItems(
                 keyItemPocket,
@@ -173,11 +173,11 @@ public class GBAItemsTest
 
     public static void BallPocketTest(
         PKMN.ItemList ballPocket,
-        string game
+        PKMN.Game game
     )
     {
         int expectedLength = 0;
-        if(game.Equals("FireRed") || game.Equals("LeafGreen"))
+        if((game == PKMN.Game.FIRERED) || (game == PKMN.Game.LEAFGREEN))
         {
             expectedLength = 13;
         }
@@ -230,13 +230,13 @@ public class GBAItemsTest
 
     public static void TMHMPocketTest(
         PKMN.ItemList tmhmPocket,
-        string game
+        PKMN.Game game
     )
     {
         int expectedLength = 0;
         string expectedName = "";
 
-        if(game.Equals("FireRed") || game.Equals("LeafGreen"))
+        if((game == PKMN.Game.FIRERED) || (game == PKMN.Game.LEAFGREEN))
         {
             expectedLength = 58;
             expectedName = "TM Case";
@@ -291,13 +291,13 @@ public class GBAItemsTest
 
     public static void BerryPocketTest(
         PKMN.ItemList berryPocket,
-        string game
+        PKMN.Game game
     )
     {
         int expectedLength = 0;
         string expectedName = "";
 
-        if(game.Equals("FireRed") || game.Equals("LeafGreen"))
+        if((game == PKMN.Game.FIRERED) || (game == PKMN.Game.LEAFGREEN))
         {
             expectedLength = 43;
             expectedName = "Berry Pouch";
@@ -352,7 +352,7 @@ public class GBAItemsTest
 
     public static void ItemPCTest(
         PKMN.ItemList itemPC,
-        string game
+        PKMN.Game game
     )
     {
         // Check unchanging and initial values.
@@ -387,7 +387,7 @@ public class GBAItemsTest
         );
 
         PKMN.StringList fullItemList = PKMN.Database.Lists.ItemList(game);
-        if(game.Equals("FireRed") || game.Equals("LeafGreen"))
+        if((game == PKMN.Game.FIRERED) || (game == PKMN.Game.LEAFGREEN))
         {
             Assert.AreEqual(itemPC.ValidItems.Count, fullItemList.Count-2);
             Assert.IsFalse(itemPC.ValidItems.Contains("Berry Pouch"));
@@ -401,12 +401,12 @@ public class GBAItemsTest
 
     public static void ItemBagTest(
         PKMN.ItemBag itemBag,
-        string game
+        PKMN.Game game
     )
     {
         string tmhmPocketName = "";
         string berryPocketName = "";
-        if(game.Equals("FireRed") || game.Equals("LeafGreen"))
+        if((game == PKMN.Game.FIRERED) || (game == PKMN.Game.LEAFGREEN))
         {
             tmhmPocketName = "TM Case";
             berryPocketName = "Berry Pouch";

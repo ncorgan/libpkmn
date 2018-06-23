@@ -47,7 +47,7 @@ static const struct pkmn_move_slots empty_move_slots =
 static const struct pkmn_pokemon empty_pokemon =
 {
     .p_species = NULL,
-    .p_game = NULL,
+    .game = PKMN_GAME_NONE,
     .p_internal = NULL
 };
 
@@ -206,12 +206,8 @@ static void test_location_met(
 
 // Generation I
 
-static void pk1_test(
-    const char* game
-)
+static void pk1_test(enum pkmn_game game)
 {
-    TEST_ASSERT_NOT_NULL(game);
-
     enum pkmn_error error = PKMN_ERROR_NONE;
 
     char tmp_dir[STRBUFFER_LEN] = {0};
@@ -226,10 +222,10 @@ static void pk1_test(
     snprintf(
         pk1_path,
         sizeof(pk1_path),
-        "%s%s%s_%d.pk1",
+        "%s%s%d_%d.pk1",
         tmp_dir,
         FS_SEPARATOR,
-        game,
+        (int)game,
         rand()
     );
 
@@ -270,27 +266,23 @@ static void pk1_test(
 
 void red_pk1_test()
 {
-    pk1_test("Red");
+    pk1_test(PKMN_GAME_RED);
 }
 
 void blue_pk1_test()
 {
-    pk1_test("Blue");
+    pk1_test(PKMN_GAME_BLUE);
 }
 
 void yellow_pk1_test()
 {
-    pk1_test("Yellow");
+    pk1_test(PKMN_GAME_YELLOW);
 }
 
 // Generation II
 
-static void pk2_test(
-    const char* game
-)
+static void pk2_test(enum pkmn_game game)
 {
-    TEST_ASSERT_NOT_NULL(game);
-
     enum pkmn_error error = PKMN_ERROR_NONE;
 
     char tmp_dir[STRBUFFER_LEN] = {0};
@@ -305,10 +297,10 @@ static void pk2_test(
     snprintf(
         pk2_path,
         sizeof(pk2_path),
-        "%s%s%s_%d.pk2",
+        "%s%s%d_%d.pk2",
         tmp_dir,
         FS_SEPARATOR,
-        game,
+        (int)game,
         rand()
     );
 
@@ -349,27 +341,23 @@ static void pk2_test(
 
 void gold_pk2_test()
 {
-    pk2_test("Gold");
+    pk2_test(PKMN_GAME_GOLD);
 }
 
 void silver_pk2_test()
 {
-    pk2_test("Silver");
+    pk2_test(PKMN_GAME_SILVER);
 }
 
 void crystal_pk2_test()
 {
-    pk2_test("Crystal");
+    pk2_test(PKMN_GAME_CRYSTAL);
 }
 
 // Generation III
 
-static void _3gpkm_test(
-    const char* game
-)
+static void _3gpkm_test(enum pkmn_game game)
 {
-    TEST_ASSERT_NOT_NULL(game);
-
     enum pkmn_error error = PKMN_ERROR_NONE;
 
     char tmp_dir[STRBUFFER_LEN] = {0};
@@ -384,10 +372,10 @@ static void _3gpkm_test(
     snprintf(
         _3gpkm_path,
         sizeof(_3gpkm_path),
-        "%s%s%s_%d.3gpkm",
+        "%s%s%d_%d.3gpkm",
         tmp_dir,
         FS_SEPARATOR,
-        game,
+        (int)game,
         rand()
     );
 
@@ -428,27 +416,27 @@ static void _3gpkm_test(
 
 void ruby_3gpkm_test()
 {
-    _3gpkm_test("Ruby");
+    _3gpkm_test(PKMN_GAME_RUBY);
 }
 
 void sapphire_3gpkm_test()
 {
-    _3gpkm_test("Sapphire");
+    _3gpkm_test(PKMN_GAME_SAPPHIRE);
 }
 
 void emerald_3gpkm_test()
 {
-    _3gpkm_test("Emerald");
+    _3gpkm_test(PKMN_GAME_EMERALD);
 }
 
 void firered_3gpkm_test()
 {
-    _3gpkm_test("FireRed");
+    _3gpkm_test(PKMN_GAME_FIRERED);
 }
 
 void leafgreen_3gpkm_test()
 {
-    _3gpkm_test("LeafGreen");
+    _3gpkm_test(PKMN_GAME_LEAFGREEN);
 }
 
 void test_outside_3gpkm()
@@ -477,7 +465,7 @@ void test_outside_3gpkm()
     PKMN_TEST_ASSERT_SUCCESS(error);
 
     TEST_ASSERT_EQUAL_STRING("Mightyena", pokemon.p_species);
-    TEST_ASSERT_EQUAL_STRING("Emerald", pokemon.p_game);
+    TEST_ASSERT_EQUAL(PKMN_GAME_EMERALD, pokemon.game);
 
     test_pokemon_string(
         &pokemon,
@@ -539,12 +527,6 @@ void test_outside_3gpkm()
         false,
         "Route 120"
     );
-    test_pokemon_string(
-        &pokemon,
-        "Original game",
-        "Emerald",
-        pkmn_pokemon_get_original_game
-    );
     test_pokemon_uint32(
         &pokemon,
         "Personality",
@@ -563,6 +545,14 @@ void test_outside_3gpkm()
         50,
         pkmn_pokemon_get_level
     );
+
+    enum pkmn_game original_game = PKMN_GAME_NONE;
+    error = pkmn_pokemon_get_original_game(
+        &pokemon,
+        &original_game
+    );
+    PKMN_TEST_ASSERT_SUCCESS(error);
+    TEST_ASSERT_EQUAL(PKMN_GAME_EMERALD, original_game);
 
     bool markings[PKMN_NUM_MARKINGS] = {false};
     error = pkmn_pokemon_get_markings(

@@ -10,13 +10,14 @@
 #include <pkmn-c/config.h>
 #include <pkmn-c/error.h>
 
+#include <pkmn-c/types/game.h>
 #include <pkmn-c/types/string_types.h>
 
 #include <stdbool.h>
 
 struct pkmn_pokedex
 {
-    char* p_game;
+    enum pkmn_game game;
 
     void* p_internal;
 };
@@ -26,7 +27,7 @@ extern "C" {
 #endif
 
 PKMN_C_API enum pkmn_error pkmn_pokedex_init(
-    const char* p_game,
+    enum pkmn_game game,
     struct pkmn_pokedex* p_pokedex_out
 );
 

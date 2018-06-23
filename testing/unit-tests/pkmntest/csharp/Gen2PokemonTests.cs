@@ -14,7 +14,7 @@ namespace PKMNTest
 public class Gen2PokemonTests
 {
     public static void PokemonTest(
-        string game,
+        PKMN.Game game,
         string species
     )
     {
@@ -30,8 +30,8 @@ public class Gen2PokemonTests
                                                new string[]{"Littleroot Town", "Petalburg Woods"},
                                                new string[]{"Slash", "Flamethrower", "Return", "Fire Blast"},
                                                new string[]{"Frenzy Plant", "Roost"},
-                                               new string[]{"Gold"},
-                                               new string[]{"Gold"}
+                                               new PKMN.Game[]{PKMN.Game.GOLD},
+                                               new PKMN.Game[]{PKMN.Game.GOLD}
                                            );
 
         PokemonTestCommon.TestCommon(pokemon, testParams);

@@ -7,6 +7,8 @@
 
 #include "item_test_common.hpp"
 
+#include <pkmntest/util.hpp>
+
 #include "utils/misc.hpp"
 
 #include <pkmn/exception.hpp>
@@ -41,7 +43,7 @@ class gba_item_list_test: public item_list_test {};
  */
 static void check_pksav_struct(
     const pkmn::item_slots_t& item_slots,
-    const std::string& game,
+    pkmn::e_game game,
     int expected_num_items,
     const struct pksav_item* p_native_items
 )
@@ -72,13 +74,13 @@ void gba_item_pocket_test(
     ASSERT_EQ("Items", item_pocket->get_name());
 
     int capacity = 0;
-    std::string game = item_pocket->get_game();
+    pkmn::e_game game = item_pocket->get_game();
 
-    if(game == "Ruby" or game == "Sapphire")
+    if(game == pkmn::e_game::RUBY or game == pkmn::e_game::SAPPHIRE)
     {
         capacity = 20;
     }
-    else if(game == "Emerald")
+    else if(game == pkmn::e_game::EMERALD)
     {
         capacity = 30;
     }
@@ -153,10 +155,10 @@ void gba_key_item_pocket_test(
 {
     ASSERT_EQ("Key Items", key_item_pocket->get_name());
 
-    std::string game = key_item_pocket->get_game();
+    pkmn::e_game game = key_item_pocket->get_game();
 
     int capacity = 0;
-    if(game == "Ruby" or game == "Sapphire")
+    if(game == pkmn::e_game::RUBY or game == pkmn::e_game::SAPPHIRE)
     {
         capacity = 20;
     }
@@ -209,13 +211,13 @@ void gba_key_item_pocket_test(
         key_item_pocket,
         gcn_items
     );
-    if(game == "Ruby" or game == "Sapphire") {
+    if(game == pkmn::e_game::RUBY or game == pkmn::e_game::SAPPHIRE) {
         test_item_list_invalid_items(
             key_item_pocket,
             frlg_items
         );
     }
-    if(game != "Emerald") {
+    if(game != pkmn::e_game::EMERALD) {
         test_item_list_invalid_items(
             key_item_pocket,
             emerald_items
@@ -249,10 +251,10 @@ void gba_ball_pocket_test(
 {
     ASSERT_EQ("Poké Balls", ball_pocket->get_name());
 
-    std::string game = ball_pocket->get_game();
+    pkmn::e_game game = ball_pocket->get_game();
 
     int capacity = 0;
-    if(game == "FireRed" or game == "LeafGreen")
+    if(game == pkmn::e_game::FIRERED or game == pkmn::e_game::LEAFGREEN)
     {
         capacity = 13;
     }
@@ -317,9 +319,9 @@ void gba_tmhm_pocket_test(
 {
     int capacity = 0;
 
-    std::string game = tmhm_pocket->get_game();
+    pkmn::e_game game = tmhm_pocket->get_game();
 
-    if(game == "FireRed" or game == "LeafGreen")
+    if(game == pkmn::e_game::FIRERED or game == pkmn::e_game::LEAFGREEN)
     {
         ASSERT_EQ("TM Case", tmhm_pocket->get_name());
         capacity = 58;
@@ -386,9 +388,9 @@ void gba_berry_pocket_test(
 {
     int capacity = 0;
 
-    std::string game = berry_pocket->get_game();
+    pkmn::e_game game = berry_pocket->get_game();
 
-    if(game == "FireRed" or game == "LeafGreen")
+    if(game == pkmn::e_game::FIRERED or game == pkmn::e_game::LEAFGREEN)
     {
         ASSERT_EQ("Berry Pouch", berry_pocket->get_name());
         capacity = 43;
@@ -488,11 +490,11 @@ void gba_item_pc_test(
     // For FR/LG, the Berry Pouch and TM Case cannot be added to the PC, as
     // they are also bag pockets, so make sure this is reflects in the
     // get_valid_items() call.
-    std::string game = item_pc->get_game();
+    pkmn::e_game game = item_pc->get_game();
     const std::vector<std::string>& valid_items = item_pc->get_valid_items();
     std::vector<std::string> all_items = pkmn::database::get_item_list(game);
 
-    if((game == "FireRed") || (game == "LeafGreen"))
+    if((game == pkmn::e_game::FIRERED) || (game == pkmn::e_game::LEAFGREEN))
     {
         EXPECT_EQ(all_items.size()-2, valid_items.size());
 
@@ -521,38 +523,38 @@ TEST_P(gba_item_list_test, item_list_test)
     gba_test_fcns.at(get_name())(get_item_list());
 }
 
-static const std::vector<std::pair<std::string, std::string>> item_list_params =
+static const std::vector<std::pair<pkmn::e_game, std::string>> item_list_params =
 {
-    {"Ruby", "Items"},
-    {"Ruby", "Key Items"},
-    {"Ruby", "Poké Balls"},
-    {"Ruby", "TMs & HMs"},
-    {"Ruby", "Berries"},
-    {"Ruby", "PC"},
-    {"Sapphire", "Items"},
-    {"Sapphire", "Key Items"},
-    {"Sapphire", "Poké Balls"},
-    {"Sapphire", "TMs & HMs"},
-    {"Sapphire", "Berries"},
-    {"Sapphire", "PC"},
-    {"Emerald", "Items"},
-    {"Emerald", "Key Items"},
-    {"Emerald", "Poké Balls"},
-    {"Emerald", "TMs & HMs"},
-    {"Emerald", "Berries"},
-    {"Emerald", "PC"},
-    {"FireRed", "Items"},
-    {"FireRed", "Key Items"},
-    {"FireRed", "Poké Balls"},
-    {"FireRed", "TM Case"},
-    {"FireRed", "Berry Pouch"},
-    {"FireRed", "PC"},
-    {"LeafGreen", "Items"},
-    {"LeafGreen", "Key Items"},
-    {"LeafGreen", "Poké Balls"},
-    {"LeafGreen", "TM Case"},
-    {"LeafGreen", "Berry Pouch"},
-    {"LeafGreen", "PC"},
+    {pkmn::e_game::RUBY, "Items"},
+    {pkmn::e_game::RUBY, "Key Items"},
+    {pkmn::e_game::RUBY, "Poké Balls"},
+    {pkmn::e_game::RUBY, "TMs & HMs"},
+    {pkmn::e_game::RUBY, "Berries"},
+    {pkmn::e_game::RUBY, "PC"},
+    {pkmn::e_game::SAPPHIRE, "Items"},
+    {pkmn::e_game::SAPPHIRE, "Key Items"},
+    {pkmn::e_game::SAPPHIRE, "Poké Balls"},
+    {pkmn::e_game::SAPPHIRE, "TMs & HMs"},
+    {pkmn::e_game::SAPPHIRE, "Berries"},
+    {pkmn::e_game::SAPPHIRE, "PC"},
+    {pkmn::e_game::EMERALD, "Items"},
+    {pkmn::e_game::EMERALD, "Key Items"},
+    {pkmn::e_game::EMERALD, "Poké Balls"},
+    {pkmn::e_game::EMERALD, "TMs & HMs"},
+    {pkmn::e_game::EMERALD, "Berries"},
+    {pkmn::e_game::EMERALD, "PC"},
+    {pkmn::e_game::FIRERED, "Items"},
+    {pkmn::e_game::FIRERED, "Key Items"},
+    {pkmn::e_game::FIRERED, "Poké Balls"},
+    {pkmn::e_game::FIRERED, "TM Case"},
+    {pkmn::e_game::FIRERED, "Berry Pouch"},
+    {pkmn::e_game::FIRERED, "PC"},
+    {pkmn::e_game::LEAFGREEN, "Items"},
+    {pkmn::e_game::LEAFGREEN, "Key Items"},
+    {pkmn::e_game::LEAFGREEN, "Poké Balls"},
+    {pkmn::e_game::LEAFGREEN, "TM Case"},
+    {pkmn::e_game::LEAFGREEN, "Berry Pouch"},
+    {pkmn::e_game::LEAFGREEN, "PC"},
 };
 
 INSTANTIATE_TEST_CASE_P(
@@ -567,8 +569,8 @@ TEST_P(gba_item_bag_test, item_bag_test)
 {
     const pkmn::item_bag::sptr& bag = get_item_bag();
 
-    const std::string& game = get_game();
-    bool is_frlg = (game == "FireRed" or game == "LeafGreen");
+    pkmn::e_game game = get_game();
+    bool is_frlg = (game == pkmn::e_game::FIRERED or game == pkmn::e_game::LEAFGREEN);
     std::string berry_pocket_name = is_frlg ? "Berry Pouch" : "Berries";
     std::string tmhm_pocket_name = is_frlg ? "TM Case" : "TMs & HMs";
 
@@ -664,7 +666,7 @@ TEST_P(gba_item_bag_test, item_bag_test)
      * PKSav struct.
      */
     const union pksav_gba_item_bag* native = static_cast<const union pksav_gba_item_bag*>(bag->get_native());
-    if(game == "Ruby" or game == "Sapphire")
+    if(game == pkmn::e_game::RUBY or game == pkmn::e_game::SAPPHIRE)
     {
         check_pksav_struct(
             item_slots,
@@ -697,7 +699,7 @@ TEST_P(gba_item_bag_test, item_bag_test)
             native->rs.berries
         );
     }
-    else if(game == "Emerald")
+    else if(game == pkmn::e_game::EMERALD)
     {
         check_pksav_struct(
             item_slots,
@@ -811,13 +813,8 @@ TEST_P(gba_item_bag_test, item_bag_test)
     );
 }
 
-static const std::vector<std::string> item_bag_params =
-{
-    "Ruby", "Sapphire", "Emerald", "FireRed", "LeafGreen"
-};
-
 INSTANTIATE_TEST_CASE_P(
     cpp_gba_item_bag_test,
     gba_item_bag_test,
-    ::testing::ValuesIn(item_bag_params)
+    ::testing::ValuesIn(pkmntest::GBA_GAMES)
 );

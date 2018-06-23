@@ -16,44 +16,58 @@ internal class Util
     private static System.Random rng = new System.Random();
 
     internal static int GameToGeneration(
-        string game
+        PKMN.Game game
     )
     {
-        if(game.Equals("Red") || game.Equals("Blue") || game.Equals("Yellow"))
+        int ret = 0;
+        switch(game)
         {
-            return 1;
+            case PKMN.Game.RED:
+            case PKMN.Game.BLUE:
+            case PKMN.Game.YELLOW:
+                ret = 1;
+                break;
+
+            case PKMN.Game.GOLD:
+            case PKMN.Game.SILVER:
+            case PKMN.Game.CRYSTAL:
+                ret = 2;
+                break;
+
+            case PKMN.Game.RUBY:
+            case PKMN.Game.SAPPHIRE:
+            case PKMN.Game.EMERALD:
+            case PKMN.Game.FIRERED:
+            case PKMN.Game.LEAFGREEN:
+            case PKMN.Game.COLOSSEUM:
+            case PKMN.Game.XD:
+                ret = 3;
+                break;
+
+            case PKMN.Game.DIAMOND:
+            case PKMN.Game.PEARL:
+            case PKMN.Game.PLATINUM:
+            case PKMN.Game.HEARTGOLD:
+            case PKMN.Game.SOULSILVER:
+                ret = 4;
+                break;
+
+            case PKMN.Game.BLACK:
+            case PKMN.Game.WHITE:
+            case PKMN.Game.BLACK2:
+            case PKMN.Game.WHITE2:
+                ret = 5;
+                break;
+
+            case PKMN.Game.X:
+            case PKMN.Game.Y:
+            case PKMN.Game.OMEGA_RUBY:
+            case PKMN.Game.ALPHA_SAPPHIRE:
+                ret = 6;
+                break;
         }
-        else if(game.Equals("Gold") || game.Equals("Silver") || game.Equals("Crystal"))
-        {
-            return 2;
-        }
-        else if(game.Equals("Ruby") || game.Equals("Sapphire") || game.Equals("Emerald") ||
-                game.Equals("FireRed") || game.Equals("LeafGreen") ||
-                game.Equals("Colosseum") || game.Equals("XD")
-        )
-        {
-            return 3;
-        }
-        else if(game.Equals("Diamond") || game.Equals("Pearl") || game.Equals("Platinum") ||
-                  game.Equals("HeartGold") || game.Equals("SoulSilver")
-        )
-        {
-            return 4;
-        }
-        else if(game.Equals("Black") || game.Equals("White") ||
-                game.Equals("Black 2") || game.Equals("White 2")
-        )
-        {
-            return 5;
-        }
-        else if(game.Equals("X") || game.Equals("Y") ||
-                game.Equals("Omega Ruby") || game.Equals("Alpha Sapphire")) {
-            return 6;
-        }
-        else
-        {
-            return 0;
-        }
+
+        return ret;
     }
 
     internal static bool RandomBool()
@@ -70,7 +84,7 @@ internal class Util
     }
 
     internal static PKMN.Pokemon GetRandomPokemon(
-        string game,
+        PKMN.Game game,
         PKMN.StringList itemList,
         PKMN.StringList moveList,
         PKMN.StringList pokemonList
@@ -161,7 +175,7 @@ internal class Util
         PKMN.Pokemon pokemon2
     )
     {
-        string game = pokemon1.Game;
+        PKMN.Game game = pokemon1.Game;
         int generation = Util.GameToGeneration(game);
 
         // There is no way to tell what game an imported Generation I-II

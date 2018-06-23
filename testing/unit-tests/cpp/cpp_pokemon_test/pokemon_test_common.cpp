@@ -7,6 +7,7 @@
 
 #include "pokemon_test_common.hpp"
 
+#include "private_exports.hpp"
 #include "pksav/enum_maps.hpp"
 #include "types/rng.hpp"
 
@@ -32,10 +33,11 @@ BOOST_STATIC_CONSTEXPR int STAT_MAX      = 65536;
 
 static void check_initial_values(
     pkmn::pokemon::sptr pokemon
-) {
-    std::string game = pokemon->get_game();
+)
+{
+    pkmn::e_game game = pokemon->get_game();
 
-    int generation = game_generations.at(game);
+    int generation = pkmn::priv::game_enum_to_generation(game);
     EXPECT_EQ("Standard", pokemon->get_form());
 
     EXPECT_EQ("None", pokemon->get_condition());
@@ -69,9 +71,12 @@ static void check_initial_values(
         EXPECT_EQ("Premier Ball", pokemon->get_ball());
 
         // There is no distinction between Colosseum and XD in the game storage.
-        if(game == "Colosseum" or game == "XD") {
-            EXPECT_EQ("Colosseum/XD", pokemon->get_original_game());
-        } else {
+        if((game == pkmn::e_game::COLOSSEUM) || (game == pkmn::e_game::XD))
+        {
+            EXPECT_EQ(pkmn::e_game::COLOSSEUM, pokemon->get_original_game());
+        }
+        else
+        {
             EXPECT_EQ(game, pokemon->get_original_game());
         }
     }
@@ -95,7 +100,7 @@ static void check_initial_values(
 static void check_initial_maps(
     pkmn::pokemon::sptr pokemon
 ) {
-    int generation = game_generations.at(pokemon->get_game());
+    int generation = pkmn::priv::game_enum_to_generation(pokemon->get_game());
 
     const std::map<pkmn::e_stat, int>& EVs = pokemon->get_EVs();
     EXPECT_EQ(1, EVs.count(pkmn::e_stat::HP));
@@ -200,7 +205,7 @@ static void check_initial_maps(
 static void test_image_filepaths(
     pkmn::pokemon::sptr pokemon
 ) {
-    int generation = game_generations.at(pokemon->get_game());
+    int generation = pkmn::priv::game_enum_to_generation(pokemon->get_game());
 
     EXPECT_TRUE(fs::exists(pokemon->get_icon_filepath()));
 
@@ -223,7 +228,7 @@ static void test_image_filepaths(
 static void test_setting_ability(
     pkmn::pokemon::sptr pokemon
 ) {
-    int generation = game_generations.at(pokemon->get_game());
+    int generation = pkmn::priv::game_enum_to_generation(pokemon->get_game());
 
     if(generation >= 3) {
         std::pair<std::string, std::string> abilities = pokemon->get_database_entry().get_abilities();
@@ -265,7 +270,7 @@ static void test_setting_ball(
     const std::string& ball_name,
     const std::vector<std::string> &invalid_ball_names
 ) {
-    int generation = game_generations.at(pokemon->get_game());
+    int generation = pkmn::priv::game_enum_to_generation(pokemon->get_game());
 
     if(generation >= 3) {
         pokemon->set_ball(ball_name);
@@ -291,7 +296,7 @@ static void test_setting_condition(
 )
 {
     // TODO: add enum_maps to pkmntest library
-    /*int generation = game_generations.at(pokemon->get_game());
+    /*int generation = pkmn::priv::game_enum_to_generation(pokemon->get_game());
 
     if(generation <= 2)
     {
@@ -317,7 +322,7 @@ static void test_setting_condition(
 static void test_setting_friendship(
     pkmn::pokemon::sptr pokemon
 ) {
-    int generation = game_generations.at(pokemon->get_game());
+    int generation = pkmn::priv::game_enum_to_generation(pokemon->get_game());
 
     if(generation >= 2) {
         pokemon->set_current_trainer_friendship(123);
@@ -343,7 +348,7 @@ static void test_setting_item(
     const std::string& item_name,
     const std::vector<std::string> &invalid_item_names
 ) {
-    int generation = game_generations.at(pokemon->get_game());
+    int generation = pkmn::priv::game_enum_to_generation(pokemon->get_game());
 
     if(generation >= 2) {
         pokemon->set_held_item(item_name);
@@ -370,7 +375,7 @@ static void test_setting_item(
 static void test_setting_levels(
     pkmn::pokemon::sptr pokemon
 ) {
-    int generation = game_generations.at(pokemon->get_game());
+    int generation = pkmn::priv::game_enum_to_generation(pokemon->get_game());
 
     EXPECT_THROW(
         pokemon->set_level(-1);
@@ -441,7 +446,7 @@ static void test_setting_location_met(
     const std::vector<std::string> &locations,
     const std::vector<std::string> &invalid_locations
 ) {
-    int generation = game_generations.at(pokemon->get_game());
+    int generation = pkmn::priv::game_enum_to_generation(pokemon->get_game());
     ASSERT_GE(locations.size(), 1);
 
     switch(generation) {
@@ -506,7 +511,7 @@ static void test_setting_location_met(
 static void test_setting_markings(
     pkmn::pokemon::sptr pokemon
 ) {
-    int generation = game_generations.at(pokemon->get_game());
+    int generation = pkmn::priv::game_enum_to_generation(pokemon->get_game());
 
     if(generation >= 3) {
         const std::map<std::string, bool>& markings = pokemon->get_markings();
@@ -587,18 +592,21 @@ static void test_setting_moves(
 
 static void test_setting_original_game(
     pkmn::pokemon::sptr pokemon,
-    const std::vector<std::string> &games,
-    const std::vector<std::string> &invalid_games
+    const std::vector<pkmn::e_game> &games,
+    const std::vector<pkmn::e_game> &invalid_games
 ) {
-    int generation = game_generations.at(pokemon->get_game());
+    int generation = pkmn::priv::game_enum_to_generation(pokemon->get_game());
     ASSERT_GE(games.size(), 1);
 
     if(generation >= 3) {
         for(int i = 0; i < int(games.size()); ++i) {
             pokemon->set_original_game(games[i]);
-            if(games[i] == "Colosseum" or games[i] == "XD") {
-                EXPECT_EQ("Colosseum/XD", pokemon->get_original_game());
-            } else {
+            if((games[i] == pkmn::e_game::COLOSSEUM) || (games[i] == pkmn::e_game::XD))
+            {
+                EXPECT_EQ(pkmn::e_game::COLOSSEUM, pokemon->get_original_game());
+            }
+            else
+            {
                 EXPECT_EQ(games[i], pokemon->get_original_game());
             }
         }
@@ -620,7 +628,7 @@ static void test_setting_original_game(
 static void test_setting_personality(
     pkmn::pokemon::sptr pokemon
 ) {
-    int generation = game_generations.at(pokemon->get_game());
+    int generation = pkmn::priv::game_enum_to_generation(pokemon->get_game());
 
     if(generation >= 3) {
         pokemon->set_personality(0x7F3AB3A8);
@@ -639,7 +647,7 @@ static void test_setting_pokerus(
     pkmn::pokemon::sptr pokemon
 )
 {
-    int generation = game_generations.at(pokemon->get_game());
+    int generation = pkmn::priv::game_enum_to_generation(pokemon->get_game());
 
     if(generation >= 2)
     {
@@ -668,7 +676,7 @@ static void test_setting_pokerus(
 static void test_setting_stats(
     pkmn::pokemon::sptr pokemon
 ) {
-    int generation = game_generations.at(pokemon->get_game());
+    int generation = pkmn::priv::game_enum_to_generation(pokemon->get_game());
 
     // Make sure setting EVs only impacts the specific EV.
     const std::map<pkmn::e_stat, int>& EVs = pokemon->get_EVs();
@@ -768,7 +776,7 @@ static void test_setting_stats(
 static void test_setting_trainer_info(
     pkmn::pokemon::sptr pokemon
 ) {
-    int generation = game_generations.at(pokemon->get_game());
+    int generation = pkmn::priv::game_enum_to_generation(pokemon->get_game());
 
     EXPECT_THROW(
         pokemon->set_nickname(""),
@@ -839,8 +847,6 @@ void pokemon_test_common(
     pkmn::pokemon::sptr pokemon,
     const pkmn_test_values_t &test_values
 ) {
-    std::string game = pokemon->get_game();
-
     check_initial_maps(pokemon);
     check_initial_values(pokemon);
     test_setting_ability(pokemon);

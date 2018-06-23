@@ -13,6 +13,7 @@
 #include "exception_internal.hpp"
 
 #include "database/database_common.hpp"
+#include "database/enum_conversions.hpp"
 #include "database/id_to_string.hpp"
 
 #include <boost/assert.hpp>
@@ -22,10 +23,10 @@
 
 namespace pkmn {
 
-    daycare::sptr daycare::make(const std::string& game)
+    daycare::sptr daycare::make(pkmn::e_game game)
     {
-        int game_id = pkmn::database::game_name_to_id(game);
-        int generation = pkmn::database::game_name_to_generation(game);
+        int game_id = pkmn::database::game_enum_to_id(game);
+        int generation = pkmn::database::game_id_to_generation(game_id);
 
         daycare::sptr ret;
 
@@ -76,9 +77,9 @@ namespace pkmn {
 
     daycare_impl::~daycare_impl() {}
 
-    std::string daycare_impl::get_game()
+    pkmn::e_game daycare_impl::get_game()
     {
-        return pkmn::database::game_id_to_name(_game_id);
+        return pkmn::database::game_id_to_enum(_game_id);
     }
 
     const pkmn::pokemon::sptr& daycare_impl::get_levelup_pokemon(

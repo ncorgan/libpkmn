@@ -14,6 +14,7 @@
 
 #include <pkmn-c/types/attribute_names.h>
 #include <pkmn-c/types/condition.h>
+#include <pkmn-c/types/game.h>
 #include <pkmn-c/types/language.h>
 #include <pkmn-c/types/marking.h>
 #include <pkmn-c/types/move_slot.h>
@@ -23,7 +24,7 @@
 struct pkmn_pokemon
 {
     char* p_species;
-    char* p_game;
+    enum pkmn_game game;
 
     void* p_internal;
 };
@@ -38,7 +39,7 @@ PKMN_C_API const char* pkmn_pokemon_default_trainer_name();
 
 PKMN_C_API enum pkmn_error pkmn_pokemon_init(
     const char* p_species,
-    const char* p_game,
+    enum pkmn_game game,
     const char* p_form,
     int level,
     struct pkmn_pokemon* p_pokemon_out
@@ -59,7 +60,7 @@ PKMN_C_API const char* pkmn_pokemon_strerror(
 
 PKMN_C_API enum pkmn_error pkmn_pokemon_to_game(
     const struct pkmn_pokemon* p_pokemon,
-    const char* p_game,
+    enum pkmn_game game,
     struct pkmn_pokemon* p_new_pokemon_out
 );
 
@@ -259,14 +260,12 @@ PKMN_C_API enum pkmn_error pkmn_pokemon_set_location_met(
 
 PKMN_C_API enum pkmn_error pkmn_pokemon_get_original_game(
     const struct pkmn_pokemon* p_pokemon,
-    char* p_original_game_out,
-    size_t original_game_buffer_len,
-    size_t* p_actual_original_game_len_out
+    enum pkmn_game* p_original_game_out
 );
 
 PKMN_C_API enum pkmn_error pkmn_pokemon_set_original_game(
     const struct pkmn_pokemon* p_pokemon,
-    const char* p_game
+    enum pkmn_game game
 );
 
 PKMN_C_API enum pkmn_error pkmn_pokemon_get_personality(

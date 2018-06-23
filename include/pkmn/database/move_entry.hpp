@@ -9,6 +9,8 @@
 
 #include <pkmn/config.hpp>
 
+#include <pkmn/enums/game.hpp>
+
 #include <string>
 #include <vector>
 
@@ -53,13 +55,13 @@ namespace pkmn { namespace database {
              * It accounts for differences between games, such as changes in base PP or priority.
              *
              * \param move_name Move's name (does not need to match name in given game)
-             * \param game_name Which game this move is from
+             * \param game Which game this move is from
              * \throw std::invalid_argument If the move or game name is invalid
              * \throw std::invalid_argument If the given move was not in the given game
              */
             move_entry(
                 const std::string& move_name,
-                const std::string& game_name
+                pkmn::e_game game
             );
 
             move_entry(const move_entry&) = default;
@@ -86,9 +88,9 @@ namespace pkmn { namespace database {
             std::string get_name() const;
 
             /*!
-             * @brief Returns the name of the game associated with this entry.
+             * @brief Returns the game associated with this entry.
              */
-            std::string get_game() const;
+            pkmn::e_game get_game() const;
 
             /*!
              * @brief Returns the move's type.

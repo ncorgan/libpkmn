@@ -12,6 +12,7 @@
 #include <pkmn/database/levelup_move.hpp>
 #include <pkmn/database/move_entry.hpp>
 
+#include <pkmn/enums/game.hpp>
 #include <pkmn/enums/stat.hpp>
 
 #include <map>
@@ -74,7 +75,7 @@ namespace pkmn { namespace database {
              */
             pokemon_entry(
                 const std::string& species_name,
-                const std::string& game_name,
+                pkmn::e_game game,
                 const std::string& form_name
             );
 
@@ -98,7 +99,7 @@ namespace pkmn { namespace database {
             /*!
              * @brief Returns the game this entry corresponds to.
              */
-            std::string get_game() const;
+            pkmn::e_game get_game() const;
 
             /*!
              * @brief Returns the Pokémon's species.

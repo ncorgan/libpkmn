@@ -36,7 +36,7 @@ namespace pkmn {
 
             void save() override final;
 
-            std::string get_game() override final;
+            pkmn::e_game get_game() override final;
 
             virtual const pkmn::pokedex::sptr& get_pokedex() override;
 

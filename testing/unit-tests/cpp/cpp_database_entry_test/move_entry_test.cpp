@@ -5,39 +5,13 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
+#include <pkmntest/util.hpp>
+
 #include <pkmn/database/move_entry.hpp>
 
 #include <gtest/gtest.h>
 
-static const std::string games[] = {
-    "Red",
-    "Blue",
-    "Yellow",
-    "Gold",
-    "Silver",
-    "Crystal",
-    "Ruby",
-    "Sapphire",
-    "Emerald",
-    "FireRed",
-    "LeafGreen",
-    "Colosseum",
-    "XD",
-    "Diamond",
-    "Pearl",
-    "HeartGold",
-    "SoulSilver",
-    "Black",
-    "White",
-    "Black 2",
-    "White 2",
-    "X",
-    "Y",
-    "Omega Ruby",
-    "Alpha Sapphire"
-};
-
-class move_entry_none_test: public ::testing::TestWithParam<std::string> {};
+class move_entry_none_test: public ::testing::TestWithParam<pkmn::e_game> {};
 
 TEST_P(move_entry_none_test, move_entry_none_test) {
     pkmn::database::move_entry none_entry("None", GetParam());
@@ -60,7 +34,7 @@ TEST_P(move_entry_none_test, move_entry_none_test) {
 INSTANTIATE_TEST_CASE_P(
     cpp_move_entry_none_test,
     move_entry_none_test,
-    ::testing::ValuesIn(games)
+    ::testing::ValuesIn(pkmntest::ALL_GAMES)
 );
 
 class move_entry_test: public ::testing::Test {
@@ -73,13 +47,13 @@ class move_entry_test: public ::testing::Test {
             byid_gen4   = pkmn::database::move_entry(418,13);
             byid_gen5   = pkmn::database::move_entry(525,17);
             byid_gen6   = pkmn::database::move_entry(609,24);
-            byname_gen1 = pkmn::database::move_entry("Earthquake", "Red");
-            byname_gen2 = pkmn::database::move_entry("Octazooka", "Silver");
-            byname_gba  = pkmn::database::move_entry("Memento", "Ruby");
-            byname_gcn  = pkmn::database::move_entry("Shadow Blitz", "XD");
-            byname_gen4 = pkmn::database::move_entry("Bullet Punch", "Pearl");
-            byname_gen5 = pkmn::database::move_entry("Dragon Tail", "Black");
-            byname_gen6 = pkmn::database::move_entry("Nuzzle", "Y");
+            byname_gen1 = pkmn::database::move_entry("Earthquake", pkmn::e_game::RED);
+            byname_gen2 = pkmn::database::move_entry("Octazooka", pkmn::e_game::SILVER);
+            byname_gba  = pkmn::database::move_entry("Memento", pkmn::e_game::RUBY);
+            byname_gcn  = pkmn::database::move_entry("Shadow Blitz", pkmn::e_game::XD);
+            byname_gen4 = pkmn::database::move_entry("Bullet Punch", pkmn::e_game::PEARL);
+            byname_gen5 = pkmn::database::move_entry("Dragon Tail", pkmn::e_game::BLACK);
+            byname_gen6 = pkmn::database::move_entry("Nuzzle", pkmn::e_game::Y);
         }
 
         static pkmn::database::move_entry byid_gen1, byname_gen1;
@@ -142,7 +116,7 @@ static void _move_entry_test(
 
     // Generation I entry
     EXPECT_EQ("Earthquake", move_entry_gen1.get_name());
-    EXPECT_EQ("Red", move_entry_gen1.get_game());
+    EXPECT_EQ(pkmn::e_game::RED, move_entry_gen1.get_game());
     EXPECT_EQ("Ground", move_entry_gen1.get_type());
     (void)move_entry_gen1.get_description();
     EXPECT_EQ("All other Pokémon", move_entry_gen1.get_target());
@@ -161,7 +135,7 @@ static void _move_entry_test(
 
     // Generation II entry
     EXPECT_EQ("Octazooka", move_entry_gen2.get_name());
-    EXPECT_EQ("Silver", move_entry_gen2.get_game());
+    EXPECT_EQ(pkmn::e_game::SILVER, move_entry_gen2.get_game());
     EXPECT_EQ("Water", move_entry_gen2.get_type());
     (void)move_entry_gen2.get_description();
     EXPECT_EQ("Selected Pokémon", move_entry_gen2.get_target());
@@ -180,7 +154,7 @@ static void _move_entry_test(
 
     // GBA entry
     EXPECT_EQ("Memento", move_entry_gba.get_name());
-    EXPECT_EQ("Ruby", move_entry_gba.get_game());
+    EXPECT_EQ(pkmn::e_game::RUBY, move_entry_gba.get_game());
     EXPECT_EQ("Dark", move_entry_gba.get_type());
     (void)move_entry_gba.get_description();
     EXPECT_EQ("Selected Pokémon", move_entry_gba.get_target());
@@ -199,7 +173,7 @@ static void _move_entry_test(
 
     // Gamecube entry
     EXPECT_EQ("Shadow Blitz", move_entry_gcn.get_name());
-    EXPECT_EQ("XD", move_entry_gcn.get_game());
+    EXPECT_EQ(pkmn::e_game::XD, move_entry_gcn.get_game());
     EXPECT_EQ("Shadow", move_entry_gcn.get_type());
     (void)move_entry_gcn.get_description();
     EXPECT_EQ("Selected Pokémon", move_entry_gcn.get_target());
@@ -218,7 +192,7 @@ static void _move_entry_test(
 
     // Generation IV entry
     EXPECT_EQ("Bullet Punch", move_entry_gen4.get_name());
-    EXPECT_EQ("Pearl", move_entry_gen4.get_game());
+    EXPECT_EQ(pkmn::e_game::PEARL, move_entry_gen4.get_game());
     EXPECT_EQ("Steel", move_entry_gen4.get_type());
     (void)move_entry_gen4.get_description();
     EXPECT_EQ("Selected Pokémon", move_entry_gen4.get_target());
@@ -237,7 +211,7 @@ static void _move_entry_test(
 
     // Generation V entry
     EXPECT_EQ("Dragon Tail", move_entry_gen5.get_name());
-    EXPECT_EQ("Black", move_entry_gen5.get_game());
+    EXPECT_EQ(pkmn::e_game::BLACK, move_entry_gen5.get_game());
     EXPECT_EQ("Dragon", move_entry_gen5.get_type());
     (void)move_entry_gen5.get_description();
     EXPECT_EQ("Selected Pokémon", move_entry_gen5.get_target());
@@ -256,7 +230,7 @@ static void _move_entry_test(
 
     // Generation VI entry
     EXPECT_EQ("Nuzzle", move_entry_gen6.get_name());
-    EXPECT_EQ("Y", move_entry_gen6.get_game());
+    EXPECT_EQ(pkmn::e_game::Y, move_entry_gen6.get_game());
     EXPECT_EQ("Electric", move_entry_gen6.get_type());
     (void)move_entry_gen6.get_description();
     EXPECT_EQ("Selected Pokémon", move_entry_gen6.get_target());

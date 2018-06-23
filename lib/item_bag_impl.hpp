@@ -27,7 +27,7 @@ namespace pkmn {
 
             virtual ~item_bag_impl() {};
 
-            std::string get_game() override final;
+            pkmn::e_game get_game() override final;
 
             const pkmn::item_list::sptr& get_pocket(
                 const std::string& name

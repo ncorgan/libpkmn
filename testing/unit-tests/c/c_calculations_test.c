@@ -2252,16 +2252,25 @@ static void pokemon_size_test() {
      * There are no known good calculations, so just check for reasonable values
      * for each relevant Pokémon.
      */
-    static const char* pokemon_with_size_checks[] = {
-        "Barboach", "Shroomish", "Seedot", "Lotad", "Magikarp", "Heracross"
+    struct size_test_params
+    {
+        char* p_species;
+        enum pkmn_game game;
     };
-    static const char* games[] = {
-        "Ruby", "Ruby", "Emerald", "Emerald", "FireRed", "FireRed"
+    static const struct size_test_params test_params[] =
+    {
+        {"Barboach", PKMN_GAME_RUBY},
+        {"Shroomish", PKMN_GAME_RUBY},
+        {"Seedot", PKMN_GAME_EMERALD},
+        {"Lotad", PKMN_GAME_EMERALD},
+        {"Magikarp", PKMN_GAME_FIRERED},
+        {"Heracross", PKMN_GAME_FIRERED},
     };
+
     for(int i = 0; i < 6; ++i) {
         error = pkmn_database_get_pokemon_entry(
-                    pokemon_with_size_checks[i],
-                    games[i],
+                    test_params[i].p_species,
+                    test_params[i].game,
                     "",
                     &entry
                 );

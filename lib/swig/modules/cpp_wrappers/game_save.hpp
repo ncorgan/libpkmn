@@ -35,7 +35,7 @@ namespace pkmn { namespace swig {
             explicit game_save(
                 const pkmn::game_save::sptr& cpp_game_save
             ): _game_save(cpp_game_save),
-               _generation(pkmn::priv::game_name_to_generation(cpp_game_save->get_game()))
+               _generation(pkmn::priv::game_enum_to_generation(cpp_game_save->get_game()))
             {
                 BOOST_ASSERT(_game_save.get() != nullptr);
             }
@@ -46,7 +46,7 @@ namespace pkmn { namespace swig {
             {
                 BOOST_ASSERT(_game_save.get() != nullptr);
 
-                _generation = pkmn::priv::game_name_to_generation(_game_save->get_game());
+                _generation = pkmn::priv::game_enum_to_generation(_game_save->get_game());
             }
 
             static std::string detect_type(
@@ -79,7 +79,7 @@ namespace pkmn { namespace swig {
                 _game_save->save_as(filepath);
             }
 
-            inline std::string get_game()
+            inline pkmn::e_game get_game()
             {
                 BOOST_ASSERT(_game_save.get() != nullptr);
 
@@ -209,10 +209,10 @@ namespace pkmn { namespace swig {
             {
                 BOOST_ASSERT(_game_save.get() != nullptr);
 
-                static const std::vector<std::string> GAMES_WITH_NO_RIVALS =
+                static const std::vector<pkmn::e_game> GAMES_WITH_NO_RIVALS =
                 {
-                    "Colosseum",
-                    "XD"
+                    pkmn::e_game::COLOSSEUM,
+                    pkmn::e_game::XD
                 };
                 if(pkmn::does_vector_contain_value(GAMES_WITH_NO_RIVALS, this->get_game()))
                 {
@@ -253,9 +253,9 @@ namespace pkmn { namespace swig {
             {
                 BOOST_ASSERT(_game_save.get() != nullptr);
 
-                std::string game = this->get_game();
+                pkmn::e_game game = this->get_game();
 
-                if((game == "Colosseum") or (game == "XD"))
+                if((game == pkmn::e_game::COLOSSEUM) || (game == pkmn::e_game::XD))
                 {
                     return pkmn::swig::pokedex();
                 }

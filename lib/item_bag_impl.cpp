@@ -12,6 +12,7 @@
 #include "item_bag_gcnimpl.hpp"
 
 #include "database/database_common.hpp"
+#include "database/enum_conversions.hpp"
 #include "database/id_to_string.hpp"
 
 #include "exception_internal.hpp"
@@ -27,18 +28,13 @@
 
 namespace pkmn {
 
-    item_bag::sptr item_bag::make(
-        const std::string& game
-    )
+    item_bag::sptr item_bag::make(pkmn::e_game game)
     {
-        int game_id = pkmn::database::game_name_to_id(
-                          game
-                      );
-        int generation = pkmn::database::game_id_to_generation(
-                             game_id
-                         );
+        int game_id = pkmn::database::game_enum_to_id(game);
+        int generation = pkmn::database::game_id_to_generation(game_id);
 
-        switch(generation) {
+        switch(generation)
+        {
             case 1:
                 return std::make_shared<item_bag_gen1impl>(
                            game_id, nullptr
@@ -88,11 +84,9 @@ namespace pkmn {
         );
     }
 
-    std::string item_bag_impl::get_game()
+    pkmn::e_game item_bag_impl::get_game()
     {
-        return pkmn::database::game_id_to_name(
-                   _game_id
-               );
+        return pkmn::database::game_id_to_enum(_game_id);
     }
 
     const pkmn::item_list::sptr& item_bag_impl::get_pocket(

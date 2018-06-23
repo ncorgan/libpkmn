@@ -68,7 +68,7 @@ enum pkmn_error pkmn_game_save_free(
 {
     PKMN_CHECK_NULL_PARAM(p_game_save);
 
-    pkmn::c::free_pointer_and_set_to_null(&p_game_save->p_game);
+    p_game_save->game = PKMN_GAME_NONE;
 
     PKMN_CPP_TO_C(
         pkmn::c::delete_pointer_and_set_to_null(

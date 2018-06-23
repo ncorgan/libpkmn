@@ -43,8 +43,8 @@ TEST_P(gen2_pokemon_test, gen2_pokemon_test) {
             {"Slash", "Flamethrower", "Return", "Fire Blast"},
             {"Frenzy Plant", "Roost"},
 
-            {"Gold"},
-            {"Gold"}
+            {pkmn::e_game::GOLD},
+            {pkmn::e_game::GOLD}
         }
     );
 
@@ -194,10 +194,11 @@ TEST_P(gen2_pokemon_test, gen2_pokemon_test) {
     EXPECT_EQ(pokemon->get_stats().at(pkmn::e_stat::SPECIAL_DEFENSE) , int(pksav_bigendian16(native_party_data->spdef)));
 }
 
-static const std::vector<std::pair<std::string, std::string>> params = {
-    {"Gold", "Cyndaquil"},
-    {"Silver", "Totodile"},
-    {"Crystal", "Chikorita"}
+static const std::vector<std::pair<pkmn::e_game, std::string>> params =
+{
+    {pkmn::e_game::GOLD, "Cyndaquil"},
+    {pkmn::e_game::SILVER, "Totodile"},
+    {pkmn::e_game::CRYSTAL, "Chikorita"}
 };
 
 INSTANTIATE_TEST_CASE_P(

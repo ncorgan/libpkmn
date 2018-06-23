@@ -14,11 +14,11 @@
 
 namespace fs = boost::filesystem;
 
-class gen2_unown_test: public ::testing::TestWithParam<std::string> {};
-class gen3_unown_test: public ::testing::TestWithParam<std::string> {};
+class gen2_unown_test: public ::testing::TestWithParam<pkmn::e_game> {};
+class gen3_unown_test: public ::testing::TestWithParam<pkmn::e_game> {};
 
 TEST_P(gen2_unown_test, gen2_unown_test) {
-    std::string game = GetParam();
+    pkmn::e_game game = GetParam();
 
     pkmn::database::pokemon_entry unown_entry(
         "Unown",
@@ -78,7 +78,7 @@ TEST_P(gen2_unown_test, gen2_unown_test) {
 }
 
 TEST_P(gen3_unown_test, gen3_unown_test) {
-    std::string game = GetParam();
+    pkmn::e_game game = GetParam();
 
     pkmn::database::pokemon_entry unown_entry(
         "Unown",
@@ -121,10 +121,11 @@ TEST_P(gen3_unown_test, gen3_unown_test) {
     }
 }
 
-static const std::string gen2_games[] = {
-    "Gold",
-    "Silver",
-    "Crystal"
+static const std::vector<pkmn::e_game> gen2_games =
+{
+    pkmn::e_game::GOLD,
+    pkmn::e_game::SILVER,
+    pkmn::e_game::CRYSTAL
 };
 
 INSTANTIATE_TEST_CASE_P(
@@ -133,14 +134,15 @@ INSTANTIATE_TEST_CASE_P(
     ::testing::ValuesIn(gen2_games)
 );
 
-static const std::string gen3_games[] = {
-    "Ruby",
-    "Sapphire",
-    "Emerald",
-    "FireRed",
-    "LeafGreen",
-    "Colosseum",
-    "XD"
+static const std::vector<pkmn::e_game> gen3_games =
+{
+    pkmn::e_game::RUBY,
+    pkmn::e_game::SAPPHIRE,
+    pkmn::e_game::EMERALD,
+    pkmn::e_game::FIRERED,
+    pkmn::e_game::LEAFGREEN,
+    pkmn::e_game::COLOSSEUM,
+    pkmn::e_game::XD
 };
 
 INSTANTIATE_TEST_CASE_P(

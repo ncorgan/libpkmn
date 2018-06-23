@@ -5,10 +5,13 @@
 # or copy at http://opensource.org/licenses/MIT)
 #
 
+# TODO: move enums to new enums directory
+
 IF(NOT PKMN_DONT_INSTALL_HEADERS)
     SET(pkmn_c_types_headers
         attribute_names.h
         condition.h
+        game.h
         gender.h
         hidden_power.h
         int_pair.h

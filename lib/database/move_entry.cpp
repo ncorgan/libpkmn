@@ -7,6 +7,7 @@
 
 #include "exception_internal.hpp"
 #include "utils/misc.hpp"
+#include "enum_conversions.hpp"
 #include "database_common.hpp"
 #include "id_to_string.hpp"
 
@@ -78,14 +79,12 @@ namespace pkmn { namespace database {
 
     move_entry::move_entry(
         const std::string& move_name,
-        const std::string& game_name
+        pkmn::e_game game
     ):
         _none(move_name == "None")
     {
         // Input validation
-        _game_id = pkmn::database::game_name_to_id(
-                       game_name
-                   );
+        _game_id = pkmn::database::game_enum_to_id(game);
         _generation = pkmn::database::game_id_to_generation(
                           _game_id
                       );
@@ -129,10 +128,9 @@ namespace pkmn { namespace database {
         return ret;
     }
 
-    std::string move_entry::get_game() const {
-        return pkmn::database::game_id_to_name(
-                   _game_id
-               );
+    pkmn::e_game move_entry::get_game() const
+    {
+        return pkmn::database::game_id_to_enum(_game_id);
     }
 
     std::string move_entry::get_type() const {

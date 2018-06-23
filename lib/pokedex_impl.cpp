@@ -11,7 +11,9 @@
 #include "pokedex_gbaimpl.hpp"
 
 #include "database/database_common.hpp"
+#include "database/enum_conversions.hpp"
 #include "database/id_to_string.hpp"
+
 #include "pksav/pksav_call.hpp"
 
 #include <pkmn/exception.hpp>
@@ -29,11 +31,9 @@ namespace pkmn
         0, 151, 251, 386, 493, 649, 721, 807
     };
 
-    pokedex::sptr pokedex::make(
-        const std::string& game
-    )
+    pokedex::sptr pokedex::make(pkmn::e_game game)
     {
-        int game_id = pkmn::database::game_name_to_id(game);
+        int game_id = pkmn::database::game_enum_to_id(game);
         int generation = pkmn::database::game_id_to_generation(game_id);
 
         pokedex::sptr ret;
@@ -88,9 +88,9 @@ namespace pkmn
        _our_mem(false)
     {}
 
-    std::string pokedex_impl::get_game()
+    pkmn::e_game pokedex_impl::get_game()
     {
-        return pkmn::database::game_id_to_name(_game_id);
+        return pkmn::database::game_id_to_enum(_game_id);
     }
 
     void pokedex_impl::set_has_seen(

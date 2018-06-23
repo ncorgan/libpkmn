@@ -27,7 +27,7 @@ namespace pkmn { namespace calculations {
             false
         );
 
-        pkmn::database::pokemon_entry entry(species, "Crystal", "");
+        pkmn::database::pokemon_entry entry(species, pkmn::e_game::CRYSTAL, "");
         float chance_male = entry.get_chance_male();
         float chance_female = entry.get_chance_female();
 
@@ -80,7 +80,7 @@ namespace pkmn { namespace calculations {
     {
         uint8_t truncated_pid = uint8_t(personality & 0xFF);
 
-        pkmn::database::pokemon_entry entry(species, "Omega Ruby", "");
+        pkmn::database::pokemon_entry entry(species, pkmn::e_game::OMEGA_RUBY, "");
         float chance_male = entry.get_chance_male();
         float chance_female = entry.get_chance_female();
 

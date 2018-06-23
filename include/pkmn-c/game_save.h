@@ -17,6 +17,7 @@
 #include <pkmn-c/pokemon_pc.h>
 
 #include <pkmn-c/types/attribute_names.h>
+#include <pkmn-c/types/game.h>
 #include <pkmn-c/types/gender.h>
 #include <pkmn-c/types/time_duration.h>
 #include <pkmn-c/types/trainer_info.h>
@@ -47,7 +48,7 @@ enum pkmn_game_save_type
 
 struct pkmn_game_save
 {
-    char* p_game;
+    enum pkmn_game game;
 
     void* p_internal;
 };

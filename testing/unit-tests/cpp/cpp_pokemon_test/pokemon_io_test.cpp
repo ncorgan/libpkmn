@@ -6,6 +6,7 @@
  */
 
 #include "env.hpp"
+#include "private_exports.hpp"
 #include "types/rng.hpp"
 
 #include <pkmntest/util.hpp>
@@ -15,6 +16,7 @@
 #include <pkmn/utils/paths.hpp>
 
 #include <boost/filesystem.hpp>
+#include <boost/format.hpp>
 
 #include <gtest/gtest.h>
 
@@ -45,9 +47,10 @@ static bool get_random_bool()
 }
 
 static pkmn::pokemon::sptr get_random_pokemon(
-    const std::string& game
-) {
-    int generation = game_generations.at(game);
+    pkmn::e_game game
+)
+{
+    int generation = pkmn::priv::game_enum_to_generation(game);
     pkmn::rng<uint32_t> rng;
 
     std::vector<std::string> item_list = pkmn::database::get_item_list(game);
@@ -130,9 +133,10 @@ static pkmn::pokemon::sptr get_random_pokemon(
 static void compare_pokemon(
     pkmn::pokemon::sptr pokemon1,
     pkmn::pokemon::sptr pokemon2
-) {
-    std::string game = pokemon1->get_game();
-    int generation = game_generations.at(game);
+)
+{
+    pkmn::e_game game = pokemon1->get_game();
+    int generation = pkmn::priv::game_enum_to_generation(game);
 
     // There is no way to determine what game an imported Generation I-II
     // Pokémon comes from, so LibPKMN defaults to a default valid game.
@@ -222,11 +226,11 @@ static void compare_pokemon(
 
 // Actual tests
 
-class pk1_test: public ::testing::TestWithParam<std::string> {};
+class pk1_test: public ::testing::TestWithParam<pkmn::e_game> {};
 
 TEST_P(pk1_test, test_saving_and_loading_pk1)
 {
-    std::string game = GetParam();
+    pkmn::e_game game = GetParam();
 
     pkmn::pokemon::sptr random_pokemon = get_random_pokemon(game);
     std::string tmp_path = export_pokemon_to_tmp_file(random_pokemon, "pk1");
@@ -237,7 +241,12 @@ TEST_P(pk1_test, test_saving_and_loading_pk1)
     std::remove(tmp_path.c_str());
 }
 
-static const std::vector<std::string> GEN1_GAMES = {"Red", "Blue", "Yellow"};
+static const std::vector<pkmn::e_game> GEN1_GAMES =
+{
+    pkmn::e_game::RED,
+    pkmn::e_game::BLUE,
+    pkmn::e_game::YELLOW
+};
 
 INSTANTIATE_TEST_CASE_P(
     pk1_test,
@@ -245,11 +254,11 @@ INSTANTIATE_TEST_CASE_P(
     ::testing::ValuesIn(GEN1_GAMES)
 );
 
-class pk2_test: public ::testing::TestWithParam<std::string> {};
+class pk2_test: public ::testing::TestWithParam<pkmn::e_game> {};
 
 TEST_P(pk2_test, test_saving_and_loading_pk2)
 {
-    std::string game = GetParam();
+    pkmn::e_game game = GetParam();
 
     pkmn::pokemon::sptr random_pokemon = get_random_pokemon(game);
     std::string tmp_path = export_pokemon_to_tmp_file(random_pokemon, "pk2");
@@ -260,7 +269,12 @@ TEST_P(pk2_test, test_saving_and_loading_pk2)
     std::remove(tmp_path.c_str());
 }
 
-static const std::vector<std::string> GEN2_GAMES = {"Gold", "Silver", "Crystal"};
+static const std::vector<pkmn::e_game> GEN2_GAMES =
+{
+    pkmn::e_game::GOLD,
+    pkmn::e_game::SILVER,
+    pkmn::e_game::CRYSTAL
+};
 
 INSTANTIATE_TEST_CASE_P(
     pk2_test,
@@ -268,11 +282,11 @@ INSTANTIATE_TEST_CASE_P(
     ::testing::ValuesIn(GEN2_GAMES)
 );
 
-class _3gpkm_test: public ::testing::TestWithParam<std::string> {};
+class _3gpkm_test: public ::testing::TestWithParam<pkmn::e_game> {};
 
 TEST_P(_3gpkm_test, test_saving_and_loading_3gpkm)
 {
-    std::string game = GetParam();
+    pkmn::e_game game = GetParam();
 
     pkmn::pokemon::sptr random_pokemon = get_random_pokemon(game);
     std::string tmp_path = export_pokemon_to_tmp_file(random_pokemon, "3gpkm");
@@ -283,7 +297,14 @@ TEST_P(_3gpkm_test, test_saving_and_loading_3gpkm)
     std::remove(tmp_path.c_str());
 }
 
-static const std::vector<std::string> GBA_GAMES = {"Ruby", "Sapphire", "Emerald", "FireRed", "LeafGreen"};
+static const std::vector<pkmn::e_game> GBA_GAMES =
+{
+    pkmn::e_game::RUBY,
+    pkmn::e_game::SAPPHIRE,
+    pkmn::e_game::EMERALD,
+    pkmn::e_game::FIRERED,
+    pkmn::e_game::LEAFGREEN
+};
 
 INSTANTIATE_TEST_CASE_P(
     _3gpkm_test,
@@ -299,7 +320,7 @@ TEST(pokemon_io_test, test_outside_3gpkm) {
                                         (_3GPKM_DIR / "MIGHTYENA.3gpkm").string()
                                     );
     EXPECT_EQ("Mightyena", mightyena->get_species());
-    EXPECT_EQ("Emerald", mightyena->get_game());
+    EXPECT_EQ(pkmn::e_game::EMERALD, mightyena->get_game());
     EXPECT_EQ("Standard", mightyena->get_form());
     EXPECT_EQ("MIGHTYENA", mightyena->get_nickname());
     EXPECT_FALSE(mightyena->is_shiny());
@@ -314,7 +335,7 @@ TEST(pokemon_io_test, test_outside_3gpkm) {
     EXPECT_EQ("Great Ball", mightyena->get_ball());
     EXPECT_EQ(25, mightyena->get_level_met());
     EXPECT_EQ("Route 120", mightyena->get_location_met(false));
-    EXPECT_EQ("Emerald", mightyena->get_original_game());
+    EXPECT_EQ(pkmn::e_game::EMERALD, mightyena->get_original_game());
     EXPECT_EQ(3557601241, mightyena->get_personality());
     EXPECT_EQ(128734, mightyena->get_experience());
     EXPECT_EQ(50, mightyena->get_level());
@@ -385,7 +406,7 @@ typedef struct
 {
     std::string species;
     std::string file_extension;
-    std::vector<std::string> games;
+    std::vector<pkmn::e_game> games;
 } io_form_test_params_t;
 
 class io_form_test: public ::testing::TestWithParam<io_form_test_params_t> {};
@@ -394,7 +415,7 @@ TEST_P(io_form_test, test_form_is_preserved_after_io)
 {
     io_form_test_params_t test_params = GetParam();
 
-    for(const std::string& game: test_params.games)
+    for(pkmn::e_game game: test_params.games)
     {
         std::vector<std::string> forms = pkmn::database::pokemon_entry(
                                              test_params.species,
@@ -467,7 +488,15 @@ TEST_P(io_form_test, test_form_is_preserved_after_io)
 
 static const std::vector<io_form_test_params_t> GEN2_IO_FORM_TEST_PARAMS =
 {
-    {"Unown", "pk2", {"Gold", "Silver", "Crystal"}}
+    {
+        "Unown",
+        "pk2",
+        {
+            pkmn::e_game::GOLD,
+            pkmn::e_game::SILVER,
+            pkmn::e_game::CRYSTAL
+        }
+    }
 };
 
 INSTANTIATE_TEST_CASE_P(
@@ -480,7 +509,17 @@ INSTANTIATE_TEST_CASE_P(
 
 static const std::vector<io_form_test_params_t> GEN3_IO_FORM_TEST_PARAMS =
 {
-    {"Unown", "3gpkm", {"Ruby", "Sapphire", "Emerald", "FireRed", "LeafGreen"}}
+    {
+        "Unown",
+        "3gpkm",
+        {
+            pkmn::e_game::RUBY,
+            pkmn::e_game::SAPPHIRE,
+            pkmn::e_game::EMERALD,
+            pkmn::e_game::FIRERED,
+            pkmn::e_game::LEAFGREEN
+        }
+    }
 };
 
 INSTANTIATE_TEST_CASE_P(

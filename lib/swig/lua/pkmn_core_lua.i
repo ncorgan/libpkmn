@@ -75,5 +75,3 @@ namespace pkmn { namespace priv {
 // Game Save
 %include <lua/pkmn_game_save_helpers.i>
 %include <lua/pkmn_game_save.i>
-
-%include <pkmn_statics.i>

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -19,7 +19,7 @@ public class PokemonIOTests
     private static string TmpDir = PKMN.Paths.GetTmpDir();
 
     public static void TestLoadingAndSavingPK1(
-        string game
+        PKMN.Game game
     )
     {
         string pk1Path = System.IO.Path.Combine(TmpDir, String.Format("{0}_{1}.pk1", game, rng.Next()));
@@ -38,7 +38,7 @@ public class PokemonIOTests
     }
 
     public static void TestLoadingAndSavingPK2(
-        string game
+        PKMN.Game game
     )
     {
         string pk2Path = System.IO.Path.Combine(TmpDir, String.Format("{0}_{1}.pk2", game, rng.Next()));
@@ -57,7 +57,7 @@ public class PokemonIOTests
     }
 
     public static void TestLoadingAndSaving3GPKM(
-        string game
+        PKMN.Game game
     )
     {
         string _3gpkmPath = System.IO.Path.Combine(TmpDir, String.Format("{0}_{1}.3gpkm", game, rng.Next()));
@@ -86,7 +86,7 @@ public class PokemonIOTests
                                           System.IO.Path.Combine(_3GPKMDir, "MIGHTYENA.3gpkm")
                                       );
         Assert.AreEqual(mightyena.Species, "Mightyena");
-        Assert.AreEqual(mightyena.Game, "Emerald");
+        Assert.AreEqual(mightyena.Game, PKMN.Game.EMERALD);
         Assert.AreEqual(mightyena.Form, "Standard");
         Assert.AreEqual(mightyena.Nickname, "MIGHTYENA");
         Assert.IsFalse(mightyena.IsShiny);
@@ -101,7 +101,7 @@ public class PokemonIOTests
         Assert.AreEqual(mightyena.Ball, "Great Ball");
         Assert.AreEqual(mightyena.LevelMet, 25);
         Assert.AreEqual(mightyena.LocationMet, "Route 120");
-        Assert.AreEqual(mightyena.OriginalGame, "Emerald");
+        Assert.AreEqual(mightyena.OriginalGame, PKMN.Game.EMERALD);
         Assert.AreEqual(mightyena.Personality, 3557601241);
         Assert.AreEqual(mightyena.Experience, 128734);
         Assert.AreEqual(mightyena.Level, 50);

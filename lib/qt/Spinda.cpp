@@ -176,15 +176,15 @@ namespace pkmn { namespace qt {
         switch(generation)
         {
             case 3:
-                spinda_entry = pkmn::database::pokemon_entry("Spinda", "Ruby", "");
+                spinda_entry = pkmn::database::pokemon_entry("Spinda", pkmn::e_game::RUBY, "");
                 break;
 
             case 4:
-                spinda_entry = pkmn::database::pokemon_entry("Spinda", "Diamond", "");
+                spinda_entry = pkmn::database::pokemon_entry("Spinda", pkmn::e_game::DIAMOND, "");
                 break;
 
             case 5:
-                spinda_entry = pkmn::database::pokemon_entry("Spinda", "Black", "");
+                spinda_entry = pkmn::database::pokemon_entry("Spinda", pkmn::e_game::BLACK, "");
                 break;
         }
         input_path = fs::path(spinda_entry.get_sprite_filepath(false, shiny));

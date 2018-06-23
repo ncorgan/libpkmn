@@ -9,6 +9,7 @@
 #include "utils/misc.hpp"
 
 #include "database_common.hpp"
+#include "enum_conversions.hpp"
 #include "id_to_string.hpp"
 
 #include <pkmn/config.hpp>
@@ -26,7 +27,8 @@ namespace pkmn { namespace database {
 
     std::vector<std::string> get_ability_list(
         int generation
-    ) {
+    )
+    {
         pkmn::enforce_bounds("generation", generation, 3, 6);
 
         static BOOST_CONSTEXPR const char* query =
@@ -45,7 +47,8 @@ namespace pkmn { namespace database {
     std::vector<std::string> get_game_list(
         int generation,
         bool include_previous
-    ) {
+    )
+    {
         pkmn::enforce_bounds("generation", generation, 1, 6);
 
         static BOOST_CONSTEXPR const char* with_previous_query =
@@ -84,7 +87,7 @@ namespace pkmn { namespace database {
     }
 
     std::vector<std::string> get_hm_move_list(
-        const std::string& game
+        pkmn::e_game game
     )
     {
         static BOOST_CONSTEXPR const char* query =
@@ -92,7 +95,7 @@ namespace pkmn { namespace database {
             "WHERE machines.version_group_id=? AND machines.machine_number>=101 "
             "AND move_names.local_language_id=9 ORDER BY machines.machine_number";
 
-        int game_id = game_name_to_id(game);
+        int game_id = game_enum_to_id(game);
 
         if(game_is_gamecube(game_id))
         {
@@ -113,9 +116,10 @@ namespace pkmn { namespace database {
     }
 
     std::vector<std::string> get_item_list(
-        const std::string& game
-    ) {
-        int game_id = pkmn::database::game_name_to_id(game);
+        pkmn::e_game game
+    )
+    {
+        int game_id = pkmn::database::game_enum_to_id(game);
 
         std::vector<std::string> ret;
         pkmn::database::_get_item_list(
@@ -132,7 +136,8 @@ namespace pkmn { namespace database {
      * version-exclusive indices, so we need to detect these and filter them out.
      */
 
-    BOOST_STATIC_CONSTEXPR int version_group_region_ids[][2] = {
+    BOOST_STATIC_CONSTEXPR int version_group_region_ids[][2] =
+    {
         {0,0}, // None
         {1,1}, // Red/Blue
         {1,1}, // Yellow
@@ -154,12 +159,14 @@ namespace pkmn { namespace database {
 
     PKMN_CONSTEXPR_OR_INLINE bool version_group_has_single_region(
         int version_group_id
-    ) {
+    )
+    {
         return (version_group_region_ids[version_group_id][0] == \
                 version_group_region_ids[version_group_id][1]);
     }
 
-    BOOST_STATIC_CONSTEXPR int version_group_location_index_bounds[][4][2] = {
+    BOOST_STATIC_CONSTEXPR int version_group_location_index_bounds[][4][2] =
+    {
         {{0,0},{0,0},{0,0},{0,0}}, // None
         {{0,0},{0,0},{0,0},{0,0}}, // Red/Blue
         {{0,0},{0,0},{0x0},{0,0}}, // Yellow
@@ -179,7 +186,8 @@ namespace pkmn { namespace database {
         {{170,60003},{0,0},{0,0},{0,0}} // OR/AS
     };
 
-    BOOST_STATIC_CONSTEXPR int num_ranges_in_version_group[] = {
+    BOOST_STATIC_CONSTEXPR int num_ranges_in_version_group[] =
+    {
         0, // None
         0, // Red/Blue
         0, // Yellow
@@ -208,14 +216,17 @@ namespace pkmn { namespace database {
         std::vector<std::string> &ret,
         int game_id,
         bool whole_generation
-    ) {
+    )
+    {
         std::vector<size_t> to_erase;
 
-        for(size_t i = 0; i < ret.size(); ++i) {
+        for(size_t i = 0; i < ret.size(); ++i)
+        {
             if(std::find(
                    location_names_to_fix.begin(), location_names_to_fix.end(), ret[i]
                ) != location_names_to_fix.end()
-            ) {
+            )
+            {
                 int location_id = pkmn::database::location_name_to_id(ret[i]);
                 bool different_found = true;
                 bool different_applies = true;
@@ -225,13 +236,20 @@ namespace pkmn { namespace database {
                                              &different_applies
                                          );
 
-                if(different_found) {
-                    if(whole_generation) {
+                if(different_found)
+                {
+                    if(whole_generation)
+                    {
                         ret.emplace_back(new_string);
-                    } else if(different_applies) {
-                        if(new_string.empty()) {
+                    }
+                    else if(different_applies)
+                    {
+                        if(new_string.empty())
+                        {
                             to_erase.emplace_back(i);
-                        } else {
+                        }
+                        else
+                        {
                             ret[i] = new_string;
                         }
                     }
@@ -239,28 +257,33 @@ namespace pkmn { namespace database {
             }
         }
 
-        if(not to_erase.empty()) {
-            for(size_t i = (to_erase.size()-1); i < to_erase.size(); --i) {
+        if(not to_erase.empty())
+        {
+            for(size_t i = (to_erase.size()-1); i < to_erase.size(); --i)
+            {
                 ret.erase(ret.begin() + to_erase[i]);
             }
         }
     }
 
     std::vector<std::string> get_location_list(
-        const std::string& game,
+        pkmn::e_game game,
         bool whole_generation
-    ) {
-        int game_id          = game_name_to_id(game);
+    )
+    {
+        int game_id          = game_enum_to_id(game);
         int version_group_id = game_id_to_version_group(game_id);
         int generation       = game_id_to_generation(game_id);
         std::vector<std::string> ret;
 
         // TODO: add Generation I locations
-        if(generation == 1) {
+        if(generation == 1)
+        {
             return ret;
         }
 
-        if(game_is_gamecube(game_id)) {
+        if(game_is_gamecube(game_id))
+        {
             BOOST_STATIC_CONSTEXPR int COLOSSEUM = 19;
 
             static BOOST_CONSTEXPR const char* query =
@@ -273,8 +296,11 @@ namespace pkmn { namespace database {
                 (whole_generation ? 0 : ((game_id == COLOSSEUM) ? 1 : 0)),
                 (whole_generation ? 1 : ((game_id == COLOSSEUM) ? 1 : 0))
             );
-        } else {
-            if(whole_generation) {
+        }
+        else
+        {
+            if(whole_generation)
+            {
                 static BOOST_CONSTEXPR const char* query =
                     "SELECT name FROM location_names WHERE local_language_id=9 "
                     "AND location_id IN (SELECT locations.id FROM locations "
@@ -285,13 +311,16 @@ namespace pkmn { namespace database {
                 pkmn::database::query_db_list_bind1<std::string, int>(
                     query, ret, generation
                 );
-            } else {
+            }
+            else
+            {
                 /*
                  * Figure out how many ranges of item indices there are and form the query
                  * from there. This looks ugly and verbose, but a constexpr array of strings
                  * is much faster than dynamically forming the query.
                  */
-                static BOOST_CONSTEXPR const char* queries[] = {
+                static BOOST_CONSTEXPR const char* queries[] =
+                {
                     "",
 
                     "SELECT name FROM location_names WHERE local_language_id=9 "
@@ -329,7 +358,8 @@ namespace pkmn { namespace database {
                     "     (location_game_indices.game_index>=? AND location_game_indices.game_index<=?)))",
                 };
 
-                for(int i = 0; i < (version_group_has_single_region(version_group_id) ? 1 : 2); ++i) {
+                for(int i = 0; i < (version_group_has_single_region(version_group_id) ? 1 : 2); ++i)
+                {
                     SQLite::Statement stmt(
                         get_connection(),
                         queries[num_ranges_in_version_group[version_group_id]]
@@ -339,20 +369,24 @@ namespace pkmn { namespace database {
 
                     stmt.bind(3, version_group_location_index_bounds[version_group_id][0][0]);
                     stmt.bind(4, version_group_location_index_bounds[version_group_id][0][1]);
-                    if(num_ranges_in_version_group[version_group_id] > 1) {
+                    if(num_ranges_in_version_group[version_group_id] > 1)
+                    {
                         stmt.bind(5, version_group_location_index_bounds[version_group_id][1][0]);
                         stmt.bind(6, version_group_location_index_bounds[version_group_id][1][1]);
                     }
-                    if(num_ranges_in_version_group[version_group_id] > 2) {
+                    if(num_ranges_in_version_group[version_group_id] > 2)
+                    {
                         stmt.bind(7, version_group_location_index_bounds[version_group_id][2][0]);
                         stmt.bind(8, version_group_location_index_bounds[version_group_id][2][1]);
                     }
-                    if(num_ranges_in_version_group[version_group_id] > 3) {
+                    if(num_ranges_in_version_group[version_group_id] > 3)
+                    {
                         stmt.bind(9, version_group_location_index_bounds[version_group_id][3][0]);
                         stmt.bind(10, version_group_location_index_bounds[version_group_id][3][1]);
                     }
 
-                    while(stmt.executeStep()) {
+                    while(stmt.executeStep())
+                    {
                         ret.push_back(static_cast<const char*>(stmt.getColumn(0)));
                     }
                 }
@@ -365,7 +399,7 @@ namespace pkmn { namespace database {
     }
 
     std::vector<std::string> get_move_list(
-        const std::string& game
+        pkmn::e_game game
     )
     {
         static BOOST_CONSTEXPR const char* main_query =
@@ -373,8 +407,8 @@ namespace pkmn { namespace database {
             "move_id IN (SELECT id FROM moves WHERE generation_id<=? AND "
             "type_id<100) ORDER BY move_id";
 
-        int game_id = game_name_to_id(game);
-        int generation = game_name_to_generation(game);
+        int game_id = game_enum_to_id(game);
+        int generation = game_enum_to_generation(game);
 
         std::vector<std::string> ret;
 
@@ -477,7 +511,8 @@ namespace pkmn { namespace database {
         return ret;
     }
 
-    std::vector<std::string> get_nature_list() {
+    std::vector<std::string> get_nature_list()
+    {
         static BOOST_CONSTEXPR const char* query =
             "SELECT nature_names.name FROM nature_names INNER JOIN natures ON "
             "(nature_names.nature_id=natures.id) WHERE nature_names.local_language_id=9 "
@@ -494,7 +529,8 @@ namespace pkmn { namespace database {
     std::vector<std::string> get_pokemon_list(
         int generation,
         bool include_previous
-    ) {
+    )
+    {
         pkmn::enforce_bounds("generation", generation, 1, 6);
 
         static BOOST_CONSTEXPR const char* with_previous_query =
@@ -516,7 +552,8 @@ namespace pkmn { namespace database {
         return ret;
     }
 
-    std::vector<std::string> get_region_list() {
+    std::vector<std::string> get_region_list()
+    {
         static BOOST_CONSTEXPR const char* query =
             "SELECT name FROM region_names WHERE local_language_id=9 "
             "AND region_id<=6 ORDER BY region_id";
@@ -532,12 +569,14 @@ namespace pkmn { namespace database {
 
     std::vector<std::string> get_ribbon_list(
         int generation
-    ) {
+    )
+    {
         (void)generation;
         return std::vector<std::string>();
     }
 
-    std::vector<std::string> get_super_training_medal_list() {
+    std::vector<std::string> get_super_training_medal_list()
+    {
         static BOOST_CONSTEXPR const char* query =
             "SELECT name FROM ribbons_medals WHERE super_training_medal=1";
 
@@ -550,7 +589,7 @@ namespace pkmn { namespace database {
     }
 
     std::vector<std::string> get_tm_move_list(
-        const std::string& game
+        pkmn::e_game game
     )
     {
         static BOOST_CONSTEXPR const char* query =
@@ -558,7 +597,7 @@ namespace pkmn { namespace database {
             "WHERE machines.version_group_id=? AND machines.machine_number<101 "
             "AND move_names.local_language_id=9 ORDER BY machines.machine_number";
 
-        int game_id = game_name_to_id(game);
+        int game_id = game_enum_to_id(game);
         int version_group_id = 0;
 
         if(game_is_gamecube(game_id))
@@ -581,9 +620,10 @@ namespace pkmn { namespace database {
     }
 
     std::vector<std::string> get_type_list(
-        const std::string& game
-    ) {
-        int generation = game_name_to_generation(game);
+        pkmn::e_game game
+    )
+    {
+        int generation = game_enum_to_generation(game);
 
         static BOOST_CONSTEXPR const char* query =
             "SELECT name FROM type_names WHERE local_language_id=9 AND "
@@ -598,15 +638,17 @@ namespace pkmn { namespace database {
         BOOST_STATIC_CONSTEXPR int GOLD   = 4;
         BOOST_STATIC_CONSTEXPR int SS     = 16;
 
-        int game_id = game_name_to_id(game);
+        int game_id = game_enum_to_id(game);
 
         // The Shadow type only exists in the Gamecube games
-        if(game_is_gamecube(game_id)) {
+        if(game_is_gamecube(game_id))
+        {
             ret.emplace_back("Shadow");
         }
 
-        // The ??? type only exists in Generations II-II
-        if((game_id >= GOLD and game_id <= SS) or game_is_gamecube(game_id)) {
+        // The ??? type only exists in Generations II-IV
+        if((game_id >= GOLD and game_id <= SS) or game_is_gamecube(game_id))
+        {
             ret.emplace_back("???");
         }
 

@@ -38,18 +38,18 @@ namespace pkmn { namespace swig {
             explicit pokemon(
                 const pkmn::pokemon::sptr& cpp_pokemon
             ): _pokemon(cpp_pokemon),
-               _generation(pkmn::priv::game_name_to_generation(cpp_pokemon->get_game()))
+               _generation(pkmn::priv::game_enum_to_generation(cpp_pokemon->get_game()))
             {
                 BOOST_ASSERT(_pokemon.get() != nullptr);
             }
 
             pokemon(
                 const std::string& species,
-                const std::string& game,
+                pkmn::e_game game,
                 const std::string& form,
                 int level
             ): _pokemon(pkmn::pokemon::make(species, game, form, level)),
-               _generation(pkmn::priv::game_name_to_generation(game))
+               _generation(pkmn::priv::game_enum_to_generation(game))
             {
                 BOOST_ASSERT(_pokemon.get() != nullptr);
             }
@@ -60,15 +60,13 @@ namespace pkmn { namespace swig {
             {
                 BOOST_ASSERT(_pokemon.get() != nullptr);
 
-                _generation = pkmn::priv::game_name_to_generation(_pokemon->get_game());
+                _generation = pkmn::priv::game_enum_to_generation(_pokemon->get_game());
             }
 
             static const uint32_t DEFAULT_TRAINER_ID;
             static const std::string DEFAULT_TRAINER_NAME;
 
-            inline pokemon to_game(
-                const std::string& game
-            )
+            inline pokemon to_game(pkmn::e_game game)
             {
                 BOOST_ASSERT(_pokemon.get() != nullptr);
 
@@ -91,7 +89,7 @@ namespace pkmn { namespace swig {
                 return _pokemon->get_species();
             }
 
-            inline std::string get_game()
+            inline pkmn::e_game get_game()
             {
                 BOOST_ASSERT(_pokemon.get() != nullptr);
 
@@ -511,7 +509,7 @@ namespace pkmn { namespace swig {
                 _pokemon->set_location_met(location, true);
             }
 
-            inline std::string get_original_game()
+            inline pkmn::e_game get_original_game()
             {
                 BOOST_ASSERT(_pokemon.get() != nullptr);
 
@@ -521,13 +519,11 @@ namespace pkmn { namespace swig {
                 }
                 else
                 {
-                    return "";
+                    return pkmn::e_game::NONE;
                 }
             }
 
-            inline void set_original_game(
-                const std::string& original_game
-            )
+            inline void set_original_game(pkmn::e_game original_game)
             {
                 BOOST_ASSERT(_pokemon.get() != nullptr);
 

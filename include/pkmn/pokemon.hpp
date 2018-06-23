@@ -13,6 +13,7 @@
 #include <pkmn/database/pokemon_entry.hpp>
 #include <pkmn/types/class_with_attributes.hpp>
 
+#include <pkmn/enums/game.hpp>
 #include <pkmn/enums/gender.hpp>
 #include <pkmn/enums/language.hpp>
 #include <pkmn/enums/stat.hpp>
@@ -36,7 +37,7 @@ namespace pkmn {
 
             static sptr make(
                 const std::string& species,
-                const std::string& game,
+                pkmn::e_game game,
                 const std::string& form,
                 int level
             );
@@ -49,9 +50,7 @@ namespace pkmn {
 
             static const std::string DEFAULT_TRAINER_NAME;
 
-            virtual sptr to_game(
-                const std::string& game
-            ) = 0;
+            virtual sptr to_game(pkmn::e_game game) = 0;
 
             virtual void export_to_file(
                 const std::string& filepath
@@ -59,7 +58,7 @@ namespace pkmn {
 
             virtual std::string get_species() = 0;
 
-            virtual std::string get_game() = 0;
+            virtual pkmn::e_game get_game() = 0;
 
             virtual std::string get_form() = 0;
 
@@ -186,11 +185,9 @@ namespace pkmn {
                 bool as_egg
             ) = 0;
 
-            virtual std::string get_original_game() = 0;
+            virtual pkmn::e_game get_original_game() = 0;
 
-            virtual void set_original_game(
-                const std::string& game
-            ) = 0;
+            virtual void set_original_game(pkmn::e_game game) = 0;
 
             virtual uint32_t get_personality() = 0;
 

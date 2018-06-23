@@ -14,7 +14,7 @@
 // Convert getter/setter functions into attributes for more idiomatic Python.
 
 %attributestring(pkmn::database::move_entry, std::string, name, get_name);
-%attributestring(pkmn::database::move_entry, std::string, game, get_game);
+%attribute(pkmn::database::move_entry, pkmn::e_game, game, get_game);
 %attributestring(pkmn::database::move_entry, std::string, type, get_type);
 %attributestring(pkmn::database::move_entry, std::string, description, get_description);
 %attributestring(pkmn::database::move_entry, std::string, target, get_target);

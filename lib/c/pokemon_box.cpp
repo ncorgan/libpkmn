@@ -1,12 +1,14 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
  */
 
 #include "cpp_to_c.hpp"
+#include "enum_maps.hpp"
 #include "error_internal.hpp"
+#include "exception_internal.hpp"
 
 #include <boost/assert.hpp>
 #include <boost/thread/mutex.hpp>
@@ -14,15 +16,24 @@
 #include <pkmn-c/pokemon_box.h>
 
 enum pkmn_error pkmn_pokemon_box_init(
-    const char* p_game,
+    enum pkmn_game game,
     struct pkmn_pokemon_box* p_pokemon_box_out
 )
 {
-    PKMN_CHECK_NULL_PARAM(p_game);
     PKMN_CHECK_NULL_PARAM(p_pokemon_box_out);
 
     PKMN_CPP_TO_C(
-        pkmn::pokemon_box::sptr cpp = pkmn::pokemon_box::make(p_game);
+        const pkmn::c::game_bimap_t& game_bimap = pkmn::c::get_game_bimap();
+
+        pkmn::enforce_value_in_map_keys(
+            "Game",
+            game,
+            game_bimap.right
+        );
+
+        pkmn::pokemon_box::sptr cpp = pkmn::pokemon_box::make(
+                                          game_bimap.right.at(game)
+                                      );
 
         pkmn::c::init_pokemon_box(
             cpp,
@@ -37,7 +48,7 @@ enum pkmn_error pkmn_pokemon_box_free(
 {
     PKMN_CHECK_NULL_PARAM(p_pokemon_box);
 
-    pkmn::c::free_pointer_and_set_to_null(&p_pokemon_box->p_game);
+    p_pokemon_box->game = PKMN_GAME_NONE;
     p_pokemon_box->capacity = 0;
 
     PKMN_CPP_TO_C(

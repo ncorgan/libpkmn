@@ -5,7 +5,11 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
+#include "private_exports.hpp"
+
 #include "item_test_common.hpp"
+
+#include <pkmntest/util.hpp>
 
 #include <pkmn/exception.hpp>
 #include <pkmn/database/item_entry.hpp>
@@ -37,7 +41,7 @@ class gen1_item_list_test: public item_list_test {};
  */
 static void check_pksav_struct(
     const pkmn::item_slots_t& item_slots,
-    const std::string& game,
+    pkmn::e_game game,
     int expected_num_items,
     const void* p_native,
     bool is_pc
@@ -144,14 +148,14 @@ TEST_P(gen1_item_list_test, item_list_test)
     gen1_test_fcns.at(get_name())(get_item_list());
 }
 
-static const std::vector<std::pair<std::string, std::string>> item_list_params =
+static const std::vector<std::pair<pkmn::e_game, std::string>> item_list_params =
 {
-    {"Red", "Items"},
-    {"Red", "PC"},
-    {"Blue", "Items"},
-    {"Blue", "PC"},
-    {"Yellow", "Items"},
-    {"Yellow", "PC"},
+    {pkmn::e_game::RED, "Items"},
+    {pkmn::e_game::RED, "PC"},
+    {pkmn::e_game::BLUE, "Items"},
+    {pkmn::e_game::BLUE, "PC"},
+    {pkmn::e_game::YELLOW, "Items"},
+    {pkmn::e_game::YELLOW, "PC"},
 };
 
 INSTANTIATE_TEST_CASE_P(
@@ -221,13 +225,8 @@ TEST_P(gen1_item_bag_test, item_bag_test)
     }
 }
 
-static const std::vector<std::string> item_bag_params =
-{
-    "Red", "Blue", "Yellow"
-};
-
 INSTANTIATE_TEST_CASE_P(
     cpp_gen1_item_bag_test,
     gen1_item_bag_test,
-    ::testing::ValuesIn(item_bag_params)
+    ::testing::ValuesIn(pkmntest::GEN1_GAMES)
 );

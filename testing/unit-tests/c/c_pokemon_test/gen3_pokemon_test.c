@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -185,17 +185,16 @@ static void test_ribbons(
 
 static void gba_pokemon_test(
     const char* species,
-    const char* game
+    enum pkmn_game game
 )
 {
     TEST_ASSERT_NOT_NULL(species);
-    TEST_ASSERT_NOT_NULL(game);
 
     enum pkmn_error error = PKMN_ERROR_NONE;
     struct pkmn_pokemon pokemon =
     {
         .p_species = NULL,
-        .p_game = NULL,
+        .game = PKMN_GAME_NONE,
         .p_internal = NULL
     };
 
@@ -224,12 +223,16 @@ static void gba_pokemon_test(
         .moves = (char*[]){"Swallow", "Flamethrower", "Return", "Fire Blast", NULL},
         .invalid_moves = (char*[]){"Shadow Sky", "Roost", NULL},
 
-        .valid_original_games = (char*[]){
-            "Ruby", "Sapphire", "Emerald", "FireRed", "LeafGreen",
-            "Colosseum", "XD", "Colosseum/XD",
-            NULL
+        .valid_original_games = (enum pkmn_game[]){
+            PKMN_GAME_RUBY, PKMN_GAME_SAPPHIRE, PKMN_GAME_EMERALD,
+            PKMN_GAME_FIRERED, PKMN_GAME_LEAFGREEN,
+            PKMN_GAME_COLOSSEUM, PKMN_GAME_XD,
+            PKMN_GAME_NONE
         },
-        .invalid_original_games = (char*[]){"Gold", "HeartGold", NULL}
+        .invalid_original_games = (enum pkmn_game[]){
+            PKMN_GAME_GOLD, PKMN_GAME_HEARTGOLD,
+            PKMN_GAME_NONE
+        }
     };
 
     pokemon_test_common(
@@ -248,17 +251,16 @@ static void gba_pokemon_test(
 
 static void gcn_pokemon_test(
     const char* species,
-    const char* game
+    enum pkmn_game game
 )
 {
     TEST_ASSERT_NOT_NULL(species);
-    TEST_ASSERT_NOT_NULL(game);
 
     enum pkmn_error error = PKMN_ERROR_NONE;
     struct pkmn_pokemon pokemon =
     {
         .p_species = NULL,
-        .p_game = NULL,
+        .game = PKMN_GAME_NONE,
         .p_internal = NULL
     };
 
@@ -287,12 +289,16 @@ static void gcn_pokemon_test(
         .moves = (char*[]){"Swallow", "Flamethrower", "Return", "Fire Blast", NULL},
         .invalid_moves = (char*[]){"Roost", "Flame Burst", NULL},
 
-        .valid_original_games = (char*[]){
-            "Ruby", "Sapphire", "Emerald", "FireRed", "LeafGreen",
-            "Colosseum", "XD", "Colosseum/XD",
-            NULL
+        .valid_original_games = (enum pkmn_game[]){
+            PKMN_GAME_RUBY, PKMN_GAME_SAPPHIRE, PKMN_GAME_EMERALD,
+            PKMN_GAME_FIRERED, PKMN_GAME_LEAFGREEN,
+            PKMN_GAME_COLOSSEUM, PKMN_GAME_XD,
+            PKMN_GAME_NONE
         },
-        .invalid_original_games = (char*[]){"Gold", "HeartGold", NULL}
+        .invalid_original_games = (enum pkmn_game[]){
+            PKMN_GAME_GOLD, PKMN_GAME_HEARTGOLD,
+            PKMN_GAME_NONE
+        }
     };
 
     pokemon_test_common(
@@ -311,35 +317,35 @@ static void gcn_pokemon_test(
 
 void ruby_pokemon_test()
 {
-    gba_pokemon_test("Torchic", "Ruby");
+    gba_pokemon_test("Torchic", PKMN_GAME_RUBY);
 }
 
 void sapphire_pokemon_test()
 {
-    gba_pokemon_test("Mudkip", "Sapphire");
+    gba_pokemon_test("Mudkip", PKMN_GAME_SAPPHIRE);
 }
 
 void emerald_pokemon_test()
 {
-    gba_pokemon_test("Treecko", "Emerald");
+    gba_pokemon_test("Treecko", PKMN_GAME_EMERALD);
 }
 
 void firered_pokemon_test()
 {
-    gba_pokemon_test("Charmander", "FireRed");
+    gba_pokemon_test("Charmander", PKMN_GAME_FIRERED);
 }
 
 void leafgreen_pokemon_test()
 {
-    gba_pokemon_test("Bulbasaur", "LeafGreen");
+    gba_pokemon_test("Bulbasaur", PKMN_GAME_LEAFGREEN);
 }
 
 void colosseum_pokemon_test()
 {
-    gcn_pokemon_test("Espeon", "Colosseum");
+    gcn_pokemon_test("Espeon", PKMN_GAME_COLOSSEUM);
 }
 
 void xd_pokemon_test()
 {
-    gcn_pokemon_test("Umbreon", "XD");
+    gcn_pokemon_test("Umbreon", PKMN_GAME_XD);
 }

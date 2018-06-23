@@ -12,13 +12,13 @@
 namespace pkmn { namespace qt {
 
     LocationListComboBox::LocationListComboBox(
-        const QString& game,
+        pkmn::e_game game,
         bool wholeGeneration,
         QWidget* parent
     ): QComboBox(parent)
     {
         std::vector<std::string> locations = pkmn::database::get_location_list(
-                                                 game.toStdString(),
+                                                 game,
                                                  wholeGeneration
                                              );
         for(const std::string& location: locations)

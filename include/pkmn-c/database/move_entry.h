@@ -10,12 +10,14 @@
 #include <pkmn-c/config.h>
 #include <pkmn-c/error.h>
 
+#include <pkmn-c/types/game.h>
+
 #include <stdbool.h>
 
 struct pkmn_database_move_entry
 {
     char* p_name;
-    char* p_game;
+    enum pkmn_game game;
     char* p_description;
     char* p_target;
     char* p_damage_class;
@@ -34,7 +36,7 @@ extern "C" {
 
 PKMN_C_API enum pkmn_error pkmn_database_get_move_entry(
     const char* p_move_name,
-    const char* p_move_game,
+    enum pkmn_game game,
     struct pkmn_database_move_entry* p_move_entry_out
 );
 

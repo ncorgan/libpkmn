@@ -1,9 +1,13 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
  */
+
+#include "private_exports.hpp"
+
+#include <pkmntest/util.hpp>
 
 #include <pkmn/database/pokemon_entry.hpp>
 #include <pkmn/exception.hpp>
@@ -35,45 +39,13 @@ static const std::map<pkmn::e_stat, int> bad_stat_map = boost::assign::map_list_
     (pkmn::e_stat::SPECIAL_DEFENSE, 0)
 ;
 
-static const std::string games[] = {
-    "Red",
-    "Blue",
-    "Yellow",
-    "Gold",
-    "Silver",
-    "Crystal",
-    "Ruby",
-    "Sapphire",
-    "Emerald",
-    "FireRed",
-    "LeafGreen",
-    "Colosseum",
-    "XD",
-    "Diamond",
-    "Pearl",
-    "HeartGold",
-    "SoulSilver",
-    "Black",
-    "White",
-    "Black 2",
-    "White 2",
-    "X",
-    "Y",
-    "Omega Ruby",
-    "Alpha Sapphire"
-};
-
-BOOST_STATIC_CONSTEXPR int GENERATIONS[] = {
-    0,1,1,1,2,2,2,3,3,3,3,3,4,4,4,4,4,5,5,3,3,5,5,6,6,6,6
-};
-
 BOOST_STATIC_CONSTEXPR int YELLOW = 3;
 BOOST_STATIC_CONSTEXPR int CRYSTAL = 6;
 BOOST_STATIC_CONSTEXPR int COLOSSEUM = 19;
 BOOST_STATIC_CONSTEXPR int XD = 20;
 BOOST_STATIC_CONSTEXPR int X = 23;
 
-class pokemon_entry_none_test: public ::testing::TestWithParam<std::string> {};
+class pokemon_entry_none_test: public ::testing::TestWithParam<pkmn::e_game> {};
 
 TEST_P(pokemon_entry_none_test, pokemon_entry_none_test) {
     pkmn::database::pokemon_entry none_entry("None", GetParam(), "");
@@ -136,14 +108,14 @@ TEST_P(pokemon_entry_none_test, pokemon_entry_none_test) {
 INSTANTIATE_TEST_CASE_P(
     cpp_pokemon_entry_none_test,
     pokemon_entry_none_test,
-    ::testing::ValuesIn(games)
+    ::testing::ValuesIn(pkmntest::ALL_GAMES)
 );
 
-class pokemon_entry_evolutions_test: public ::testing::TestWithParam<std::string> {};
+class pokemon_entry_evolutions_test: public ::testing::TestWithParam<pkmn::e_game> {};
 
 TEST_P(pokemon_entry_evolutions_test, pokemon_entry_evolutions_test) {
     pkmn::database::pokemon_entry eevee_entry("Eevee", GetParam(), "");
-    int generation = GENERATIONS[eevee_entry.get_game_id()];
+    int generation = pkmn::priv::game_enum_to_generation(eevee_entry.get_game());
 
     pkmn::database::pokemon_entries_t evolutions = eevee_entry.get_evolutions();
     EXPECT_GE(evolutions.size(), 3);
@@ -178,7 +150,7 @@ TEST_P(pokemon_entry_evolutions_test, pokemon_entry_evolutions_test) {
 INSTANTIATE_TEST_CASE_P(
     cpp_pokemon_entry_evolutions_test,
     pokemon_entry_evolutions_test,
-    ::testing::ValuesIn(games)
+    ::testing::ValuesIn(pkmntest::ALL_GAMES)
 );
 
 class pokemon_entry_test: public ::testing::Test {
@@ -191,13 +163,13 @@ class pokemon_entry_test: public ::testing::Test {
             byindex_gen4 = pkmn::database::pokemon_entry(401,13);
             byindex_gen5 = pkmn::database::pokemon_entry(618,21);
             byindex_gen6 = pkmn::database::pokemon_entry(700,26);
-            byname_gen1 = pkmn::database::pokemon_entry("Articuno", "Yellow", "");
-            byname_gen2 = pkmn::database::pokemon_entry("Feraligatr", "Gold", "");
-            byname_gba = pkmn::database::pokemon_entry("Regice", "Emerald", "");
-            byname_gcn = pkmn::database::pokemon_entry("Shroomish", "XD", "");
-            byname_gen4 = pkmn::database::pokemon_entry("Kricketot", "Pearl", "");
-            byname_gen5 = pkmn::database::pokemon_entry("Stunfisk", "Black 2", "");
-            byname_gen6 = pkmn::database::pokemon_entry("Sylveon", "Alpha Sapphire", "");
+            byname_gen1 = pkmn::database::pokemon_entry("Articuno", pkmn::e_game::YELLOW, "");
+            byname_gen2 = pkmn::database::pokemon_entry("Feraligatr", pkmn::e_game::GOLD, "");
+            byname_gba = pkmn::database::pokemon_entry("Regice", pkmn::e_game::EMERALD, "");
+            byname_gcn = pkmn::database::pokemon_entry("Shroomish", pkmn::e_game::XD, "");
+            byname_gen4 = pkmn::database::pokemon_entry("Kricketot", pkmn::e_game::PEARL, "");
+            byname_gen5 = pkmn::database::pokemon_entry("Stunfisk", pkmn::e_game::BLACK2, "");
+            byname_gen6 = pkmn::database::pokemon_entry("Sylveon", pkmn::e_game::ALPHA_SAPPHIRE, "");
         }
 
         static pkmn::database::pokemon_entry byindex_gen1, byname_gen1;
@@ -232,27 +204,27 @@ TEST_F(pokemon_entry_test, wrong_game_test) {
     // Pokémon from later generations
     EXPECT_THROW(
         pkmn::database::pokemon_entry snubbull(
-            "Snubbull", "Yellow", ""
+            "Snubbull", pkmn::e_game::YELLOW, ""
         );
     , std::invalid_argument);
     EXPECT_THROW(
         pkmn::database::pokemon_entry ralts(
-            "Ralts", "Silver", ""
+            "Ralts", pkmn::e_game::SILVER, ""
         );
     , std::invalid_argument);
     EXPECT_THROW(
         pkmn::database::pokemon_entry budew(
-            "Budew", "Sapphire", ""
+            "Budew", pkmn::e_game::SAPPHIRE, ""
         );
     , std::invalid_argument);
     EXPECT_THROW(
         pkmn::database::pokemon_entry liepard(
-            "Liepard", "Pearl", ""
+            "Liepard", pkmn::e_game::PEARL, ""
         );
     , std::invalid_argument);
     EXPECT_THROW(
         pkmn::database::pokemon_entry espurr(
-            "Espurr", "White", ""
+            "Espurr", pkmn::e_game::WHITE, ""
         );
     , std::invalid_argument);
 
@@ -262,35 +234,35 @@ TEST_F(pokemon_entry_test, wrong_game_test) {
      */
     EXPECT_THROW(
         pkmn::database::pokemon_entry arceus(
-            "Arceus", "Diamond", "Fairy"
+            "Arceus", pkmn::e_game::DIAMOND, "Fairy"
         );
     , std::invalid_argument);
     pkmn::database::pokemon_entry arceus1(
-        "Arceus", "Y", "Fairy"
+        "Arceus", pkmn::e_game::Y, "Fairy"
     );
     EXPECT_THROW(
         pkmn::database::pokemon_entry arceus(
-            "Arceus", "Black", "???"
+            "Arceus", pkmn::e_game::BLACK, "???"
         );
     , std::invalid_argument);
     pkmn::database::pokemon_entry arceus2(
-        "Arceus", "Pearl", "???"
+        "Arceus", pkmn::e_game::PEARL, "???"
     );
     EXPECT_THROW(
         pkmn::database::pokemon_entry pichu(
-            "Pichu", "Silver", "Spiky-eared"
+            "Pichu", pkmn::e_game::SILVER, "Spiky-eared"
         );
     , std::invalid_argument);
     pkmn::database::pokemon_entry pichu(
-        "Pichu", "HeartGold", "Spiky-eared"
+        "Pichu", pkmn::e_game::HEARTGOLD, "Spiky-eared"
     );
     EXPECT_THROW(
         pkmn::database::pokemon_entry pikachu(
-            "Pikachu", "Ruby", "Belle"
+            "Pikachu", pkmn::e_game::RUBY, "Belle"
         );
     , std::invalid_argument);
     pkmn::database::pokemon_entry pikachu(
-        "Pikachu", "Omega Ruby", "Belle"
+        "Pikachu", pkmn::e_game::OMEGA_RUBY, "Belle"
     );
 }
 
@@ -300,10 +272,10 @@ TEST_F(pokemon_entry_test, wrong_game_test) {
  */
 TEST_F(pokemon_entry_test, changing_type_test) {
     pkmn::database::pokemon_entry clefairy5(
-        "Clefairy", "Black", ""
+        "Clefairy", pkmn::e_game::BLACK, ""
     );
     pkmn::database::pokemon_entry clefairy6(
-        "Clefairy", "Y", ""
+        "Clefairy", pkmn::e_game::Y, ""
     );
 
     std::pair<std::string, std::string> clefairy_types5 = clefairy5.get_types();
@@ -316,10 +288,10 @@ TEST_F(pokemon_entry_test, changing_type_test) {
     EXPECT_EQ("None", clefairy_types6.second);
 
     pkmn::database::pokemon_entry jigglypuff5(
-        "Jigglypuff", "Black", ""
+        "Jigglypuff", pkmn::e_game::BLACK, ""
     );
     pkmn::database::pokemon_entry jigglypuff6(
-        "Jigglypuff", "Y", ""
+        "Jigglypuff", pkmn::e_game::Y, ""
     );
 
     std::pair<std::string, std::string> jigglypuff_types5 = jigglypuff5.get_types();
@@ -362,7 +334,7 @@ static void _pokemon_entry_test(
      * Generation I entry
      */
     EXPECT_EQ("Articuno", pokemon_entry_gen1.get_name());
-    EXPECT_EQ("Yellow", pokemon_entry_gen1.get_game());
+    EXPECT_EQ(pkmn::e_game::YELLOW, pokemon_entry_gen1.get_game());
     EXPECT_EQ("Freeze", pokemon_entry_gen1.get_species());
     EXPECT_GT(pokemon_entry_gen1.get_pokedex_entry().size(), 0);
     EXPECT_EQ("Standard", pokemon_entry_gen1.get_form());
@@ -421,7 +393,7 @@ static void _pokemon_entry_test(
      * Generation II entry
      */
     EXPECT_EQ("Feraligatr", pokemon_entry_gen2.get_name());
-    EXPECT_EQ("Gold", pokemon_entry_gen2.get_game());
+    EXPECT_EQ(pkmn::e_game::GOLD, pokemon_entry_gen2.get_game());
     EXPECT_EQ("Big Jaw", pokemon_entry_gen2.get_species());
     EXPECT_GT(pokemon_entry_gen2.get_pokedex_entry().size(), 0);
     EXPECT_EQ("Standard", pokemon_entry_gen2.get_form());
@@ -483,7 +455,7 @@ static void _pokemon_entry_test(
      * Game Boy Advance entry
      */
     EXPECT_EQ("Regice", pokemon_entry_gba.get_name());
-    EXPECT_EQ("Emerald", pokemon_entry_gba.get_game());
+    EXPECT_EQ(pkmn::e_game::EMERALD, pokemon_entry_gba.get_game());
     EXPECT_EQ("Iceberg", pokemon_entry_gba.get_species());
     EXPECT_GT(pokemon_entry_gba.get_pokedex_entry().size(), 0);
     EXPECT_EQ("Standard", pokemon_entry_gba.get_form());
@@ -549,7 +521,7 @@ static void _pokemon_entry_test(
      * Gamecube entry
      */
     EXPECT_EQ("Shroomish", pokemon_entry_gcn.get_name());
-    EXPECT_EQ("XD", pokemon_entry_gcn.get_game());
+    EXPECT_EQ(pkmn::e_game::XD, pokemon_entry_gcn.get_game());
     EXPECT_EQ("Mushroom", pokemon_entry_gcn.get_species());
     EXPECT_GT(pokemon_entry_gcn.get_pokedex_entry().size(), 0);
     EXPECT_EQ("Standard", pokemon_entry_gcn.get_form());
@@ -610,7 +582,7 @@ static void _pokemon_entry_test(
      * Generation IV entry
      */
     EXPECT_EQ("Kricketot", pokemon_entry_gen4.get_name());
-    EXPECT_EQ("Pearl", pokemon_entry_gen4.get_game());
+    EXPECT_EQ(pkmn::e_game::PEARL, pokemon_entry_gen4.get_game());
     EXPECT_EQ("Cricket", pokemon_entry_gen4.get_species());
     EXPECT_GT(pokemon_entry_gen4.get_pokedex_entry().size(), 0);
     EXPECT_EQ("Standard", pokemon_entry_gen4.get_form());
@@ -676,7 +648,7 @@ static void _pokemon_entry_test(
      * Generation V entry
      */
     EXPECT_EQ("Stunfisk", pokemon_entry_gen5.get_name());
-    EXPECT_EQ("Black 2", pokemon_entry_gen5.get_game());
+    EXPECT_EQ(pkmn::e_game::BLACK2, pokemon_entry_gen5.get_game());
     EXPECT_EQ("Trap", pokemon_entry_gen5.get_species());
     EXPECT_GT(pokemon_entry_gen5.get_pokedex_entry().size(), 0);
     EXPECT_EQ("Standard", pokemon_entry_gen5.get_form());
@@ -742,7 +714,7 @@ static void _pokemon_entry_test(
      * Generation VI entry
      */
     EXPECT_EQ("Sylveon", pokemon_entry_gen6.get_name());
-    EXPECT_EQ("Alpha Sapphire", pokemon_entry_gen6.get_game());
+    EXPECT_EQ(pkmn::e_game::ALPHA_SAPPHIRE, pokemon_entry_gen6.get_game());
     EXPECT_EQ("Intertwining", pokemon_entry_gen6.get_species());
     EXPECT_GT(pokemon_entry_gen6.get_pokedex_entry().size(), 0);
     EXPECT_EQ("Standard", pokemon_entry_gen6.get_form());

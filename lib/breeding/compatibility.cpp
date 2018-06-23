@@ -152,7 +152,7 @@ namespace pkmn { namespace breeding {
         const std::string& species2
     )
     {
-        static const std::string ENTRY_GAME = "X";
+        static const pkmn::e_game ENTRY_GAME = pkmn::e_game::X;
 
         pkmn::database::pokemon_entry species1_entry(species1, ENTRY_GAME, "");
         pkmn::database::pokemon_entry species2_entry(species2, ENTRY_GAME, "");

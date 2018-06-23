@@ -10,6 +10,7 @@
 #include <pkmn/config.hpp>
 #include <pkmn/pokemon.hpp>
 
+#include <pkmn/enums/game.hpp>
 #include <pkmn/enums/gender.hpp>
 #include <pkmn/enums/stat.hpp>
 
@@ -22,7 +23,7 @@ namespace pkmn { namespace breeding {
     PKMN_API std::vector<std::string> get_possible_child_species(
         const std::string& mother_species,
         const std::string& father_species,
-        const std::string& game
+        pkmn::e_game game
     );
 
 #ifndef SWIG

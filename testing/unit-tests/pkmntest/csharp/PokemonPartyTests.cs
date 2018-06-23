@@ -48,8 +48,8 @@ public class PokemonPartyTests
 
     private static void TestSettingPokemon(
         PKMN.PokemonParty party,
-        string[] validOtherGames,
-        string invalidOtherGame
+        PKMN.Game[] validOtherGames,
+        PKMN.Game invalidOtherGame
     )
     {
         PKMN.Pokemon originalFirst = party[0];
@@ -142,7 +142,7 @@ public class PokemonPartyTests
 
         // Make sure converting Pokémon before putting them in the party works (or doesn't)
         // as expected.
-        foreach(string validGame in validOtherGames)
+        foreach(PKMN.Game validGame in validOtherGames)
         {
             PKMN.Pokemon pikachu = new PKMN.Pokemon("Pikachu", validGame, "", 50);
             Assert.AreEqual(validGame, pikachu.Game);
@@ -164,8 +164,8 @@ public class PokemonPartyTests
 
     public static void TestPokemonParty(
         PKMN.PokemonParty party,
-        string[] validOtherGames,
-        string invalidOtherGame
+        PKMN.Game[] validOtherGames,
+        PKMN.Game invalidOtherGame
     )
     {
         TestEmptyPokemonParty(party);

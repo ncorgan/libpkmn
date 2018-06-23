@@ -11,19 +11,19 @@ using NUnit.Framework;
 [TestFixture]
 public class CSharpPokedexTest
 {
-    [TestCase("Red")]
-    [TestCase("Blue")]
-    [TestCase("Yellow")]
-    [TestCase("Gold")]
-    [TestCase("Silver")]
-    [TestCase("Crystal")]
-    [TestCase("Ruby")]
-    [TestCase("Sapphire")]
-    [TestCase("Emerald")]
-    [TestCase("FireRed")]
-    [TestCase("LeafGreen")]
+    [TestCase(PKMN.Game.RED)]
+    [TestCase(PKMN.Game.BLUE)]
+    [TestCase(PKMN.Game.YELLOW)]
+    [TestCase(PKMN.Game.GOLD)]
+    [TestCase(PKMN.Game.SILVER)]
+    [TestCase(PKMN.Game.CRYSTAL)]
+    [TestCase(PKMN.Game.RUBY)]
+    [TestCase(PKMN.Game.SAPPHIRE)]
+    [TestCase(PKMN.Game.EMERALD)]
+    [TestCase(PKMN.Game.FIRERED)]
+    [TestCase(PKMN.Game.LEAFGREEN)]
     public void PokedexTest(
-        string game
+        PKMN.Game game
     )
     {
         PKMNTest.PokedexTests.TestPokedex(

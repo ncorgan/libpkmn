@@ -23,13 +23,13 @@ namespace pkmn { namespace swig {
         public:
             pokedex():
                 _pokedex(nullptr),
-                _game(""),
+                _game(pkmn::e_game::NONE),
                 _is_gamecube_game(false)
             {}
 
-            pokedex(const std::string& game):
+            pokedex(pkmn::e_game game):
                 _game(game),
-                _is_gamecube_game((game == "Colosseum") or (game == "XD"))
+                _is_gamecube_game((game == pkmn::e_game::COLOSSEUM) || (game == pkmn::e_game::XD))
             {
                 if(not _is_gamecube_game)
                 {
@@ -48,7 +48,7 @@ namespace pkmn { namespace swig {
                 BOOST_ASSERT(_pokedex.get() != nullptr);
             }
 
-            inline std::string get_game()
+            inline pkmn::e_game get_game()
             {
                 return _game;
             }
@@ -139,7 +139,7 @@ namespace pkmn { namespace swig {
         private:
             pkmn::pokedex::sptr _pokedex;
 
-            std::string _game;
+            pkmn::e_game _game;
             bool _is_gamecube_game;
     };
 

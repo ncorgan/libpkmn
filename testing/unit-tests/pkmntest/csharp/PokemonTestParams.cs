@@ -25,8 +25,8 @@ public class PokemonTestParams
         string[] invalidLocations,
         string[] validMoves,
         string[] invalidMoves,
-        string[] validOriginalGames,
-        string[] invalidOriginalGames
+        PKMN.Game[] validOriginalGames,
+        PKMN.Game[] invalidOriginalGames
     )
     {
         ValidBall = validBall;
@@ -55,8 +55,8 @@ public class PokemonTestParams
     public string[] ValidMoves;
     public string[] InvalidMoves;
 
-    public string[] ValidOriginalGames;
-    public string[] InvalidOriginalGames;
+    public PKMN.Game[] ValidOriginalGames;
+    public PKMN.Game[] InvalidOriginalGames;
 }
 
 }

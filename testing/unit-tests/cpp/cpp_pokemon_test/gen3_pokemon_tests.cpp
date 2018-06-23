@@ -139,8 +139,19 @@ TEST_P(gba_pokemon_test, gba_pokemon_test) {
             {"Swallow", "Flamethrower", "Return", "Fire Blast"},
             {"Shadow Sky", "Roost"},
 
-            {"Ruby", "Sapphire", "Emerald", "FireRed", "LeafGreen", "Colosseum", "XD", "Colosseum/XD"},
-            {"Gold", "HeartGold"}
+            {
+                pkmn::e_game::RUBY,
+                pkmn::e_game::SAPPHIRE,
+                pkmn::e_game::EMERALD,
+                pkmn::e_game::FIRERED,
+                pkmn::e_game::LEAFGREEN,
+                pkmn::e_game::COLOSSEUM,
+                pkmn::e_game::XD,
+            },
+            {
+                pkmn::e_game::GOLD,
+                pkmn::e_game::HEARTGOLD
+            }
         }
     );
 
@@ -391,8 +402,19 @@ TEST_P(gcn_pokemon_test, gcn_pokemon_test) {
             {"Swallow", "Flamethrower", "Return", "Fire Blast"},
             {"Roost", "Flame Burst"},
 
-            {"Colosseum", "XD", "Colosseum/XD", "Ruby", "Sapphire", "Emerald", "FireRed", "LeafGreen"},
-            {"Gold", "HeartGold"}
+            {
+                pkmn::e_game::RUBY,
+                pkmn::e_game::SAPPHIRE,
+                pkmn::e_game::EMERALD,
+                pkmn::e_game::FIRERED,
+                pkmn::e_game::LEAFGREEN,
+                pkmn::e_game::COLOSSEUM,
+                pkmn::e_game::XD,
+            },
+            {
+                pkmn::e_game::GOLD,
+                pkmn::e_game::HEARTGOLD
+            }
         }
     );
 
@@ -557,7 +579,7 @@ TEST_P(gcn_pokemon_test, gcn_pokemon_test) {
     );
 
     // Confirm setting the Shadow form works properly under the hood.
-    bool colosseum = (get_game() == "Colosseum");
+    bool colosseum = (get_game() == pkmn::e_game::COLOSSEUM);
     std::string species = colosseum ? "Ledian" : "Ledyba";
     LibPkmGC::u16 shadow_pokemon_id = colosseum ? 22 : 83;
 
@@ -582,12 +604,13 @@ TEST_P(gcn_pokemon_test, gcn_pokemon_test) {
     EXPECT_EQ(0, native_shadow_pokemon->shadowPkmID);
 }
 
-static const std::vector<std::pair<std::string, std::string>> gba_params = {
-    {"Ruby", "Torchic"},
-    {"Sapphire", "Mudkip"},
-    {"Emerald", "Treecko"},
-    {"FireRed", "Charmander"},
-    {"LeafGreen", "Bulbasaur"},
+static const std::vector<std::pair<pkmn::e_game, std::string>> gba_params =
+{
+    {pkmn::e_game::RUBY, "Torchic"},
+    {pkmn::e_game::SAPPHIRE, "Mudkip"},
+    {pkmn::e_game::EMERALD, "Treecko"},
+    {pkmn::e_game::FIRERED, "Charmander"},
+    {pkmn::e_game::LEAFGREEN, "Bulbasaur"},
 };
 
 INSTANTIATE_TEST_CASE_P(
@@ -596,9 +619,10 @@ INSTANTIATE_TEST_CASE_P(
     ::testing::ValuesIn(gba_params)
 );
 
-static const std::vector<std::pair<std::string, std::string>> gcn_params = {
-    {"Colosseum", "Espeon"},
-    {"XD", "Umbreon"}
+static const std::vector<std::pair<pkmn::e_game, std::string>> gcn_params =
+{
+    {pkmn::e_game::COLOSSEUM, "Espeon"},
+    {pkmn::e_game::XD, "Umbreon"}
 };
 
 INSTANTIATE_TEST_CASE_P(

@@ -11,9 +11,12 @@
 #include "pokemon_gcnimpl.hpp"
 
 #include "conversions/gen3_conversions.hpp"
+
 #include "database/database_common.hpp"
+#include "database/enum_conversions.hpp"
 #include "database/id_to_string.hpp"
 #include "database/index_to_string.hpp"
+
 #include "libpkmgc_includes.hpp"
 
 #include "pksav/enum_maps.hpp"
@@ -323,9 +326,7 @@ namespace pkmn
         }
     }
 
-    pokemon::sptr pokemon_gbaimpl::to_game(
-        const std::string& game
-    )
+    pokemon::sptr pokemon_gbaimpl::to_game(pkmn::e_game game)
     {
         boost::lock_guard<pokemon_gbaimpl> lock(*this);
 
@@ -335,7 +336,7 @@ namespace pkmn
         pksav_pokemon.pc_data = *GBA_PC_RCAST;
         pksav_pokemon.party_data = *GBA_PARTY_RCAST;
 
-        int game_id = pkmn::database::game_name_to_id(game);
+        int game_id = pkmn::database::game_enum_to_id(game);
         int generation = pkmn::database::game_id_to_generation(game_id);
         switch(generation)
         {
@@ -984,40 +985,18 @@ namespace pkmn
         }
     }
 
-    std::string pokemon_gbaimpl::get_original_game()
+    pkmn::e_game pokemon_gbaimpl::get_original_game()
     {
         boost::lock_guard<pokemon_gbaimpl> lock(*this);
 
-        std::string ret;
-
-        uint16_t original_game = PKSAV_GBA_POKEMON_ORIGIN_GAME(_misc->origin_info);
-
-        if(original_game == 15)
-        {
-            ret = "Colosseum/XD";
-        }
-        else
-        {
-            ret = pkmn::database::game_index_to_name(original_game);
-        }
-
-        return ret;
+        return pkmn::database::game_index_to_enum(
+                   PKSAV_GBA_POKEMON_ORIGIN_GAME(_misc->origin_info)
+               );
     }
 
-    void pokemon_gbaimpl::set_original_game(
-        const std::string& game
-    )
+    void pokemon_gbaimpl::set_original_game(pkmn::e_game game)
     {
-        std::string game_to_test;
-        if(game == "Colosseum/XD")
-        {
-            game_to_test = "Colosseum";
-        }
-        else
-        {
-            game_to_test = game;
-        }
-        int generation = pkmn::database::game_name_to_generation(game_to_test);
+        int generation = pkmn::database::game_enum_to_generation(game);
         if(generation != 3)
         {
             throw std::invalid_argument("Game must be from Generation III.");
@@ -1026,9 +1005,7 @@ namespace pkmn
         boost::lock_guard<pokemon_gbaimpl> lock(*this);
 
         _misc->origin_info &= ~PKSAV_GBA_POKEMON_ORIGIN_GAME_MASK;
-        uint16_t game_index = uint16_t(pkmn::database::game_name_to_index(
-                                           game_to_test
-                                       ));
+        uint16_t game_index = uint16_t(pkmn::database::game_enum_to_index(game));
 
         _misc->origin_info |= (game_index << PKSAV_GBA_POKEMON_ORIGIN_GAME_OFFSET);
     }

@@ -9,6 +9,8 @@
 
 #include <pkmn/config.hpp>
 
+#include <pkmn/enums/game.hpp>
+
 #include <string>
 #include <vector>
 
@@ -46,7 +48,7 @@ namespace pkmn { namespace database {
     );
 
     PKMN_API std::vector<std::string> get_hm_move_list(
-        const std::string& game
+        pkmn::e_game game
     );
 
     /*!
@@ -56,7 +58,7 @@ namespace pkmn { namespace database {
      * \throws std::invalid_argument if the given game is invalid
      */
     PKMN_API std::vector<std::string> get_item_list(
-        const std::string& game
+        pkmn::e_game game
     );
 
     /*!
@@ -70,7 +72,7 @@ namespace pkmn { namespace database {
      * \throws std::invalid_argument if the given game is invalid
      */
     PKMN_API std::vector<std::string> get_location_list(
-        const std::string& game,
+        pkmn::e_game game,
         bool whole_generation
     );
 
@@ -80,7 +82,7 @@ namespace pkmn { namespace database {
      * \param game which game
      */
     PKMN_API std::vector<std::string> get_move_list(
-        const std::string& game
+        pkmn::e_game game
     );
 
     /*!
@@ -122,7 +124,7 @@ namespace pkmn { namespace database {
     PKMN_API std::vector<std::string> get_super_training_medal_list();
 
     PKMN_API std::vector<std::string> get_tm_move_list(
-        const std::string& game
+        pkmn::e_game game
     );
 
     /*!
@@ -132,7 +134,7 @@ namespace pkmn { namespace database {
      * \throws std::invalid_argument if the given game is invalid
      */
     PKMN_API std::vector<std::string> get_type_list(
-        const std::string& game
+        pkmn::e_game game
     );
 }}
 

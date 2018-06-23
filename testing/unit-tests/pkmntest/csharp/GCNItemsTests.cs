@@ -40,10 +40,10 @@ public class GCNItemsTest
 
     public static void ItemPocketTest(
         PKMN.ItemList itemPocket,
-        string game
+        PKMN.Game game
     )
     {
-        bool colosseum = game.Equals("Colosseum");
+        bool colosseum = (game == PKMN.Game.COLOSSEUM);
         int expectedLength = colosseum ? 20 : 30;
 
         // Check unchanging and initial values.
@@ -100,10 +100,10 @@ public class GCNItemsTest
 
     public static void KeyItemPocketTest(
         PKMN.ItemList keyItemPocket,
-        string game
+        PKMN.Game game
     )
     {
-        bool colosseum = game.Equals("Colosseum");
+        bool colosseum = (game == PKMN.Game.COLOSSEUM);
         string keyItem = colosseum ? "Ein File S" : "Gonzap's Key";
         int expectedLength = 43;
 
@@ -187,10 +187,10 @@ public class GCNItemsTest
 
     public static void BallPocketTest(
         PKMN.ItemList ballPocket,
-        string game
+        PKMN.Game game
     )
     {
-        bool colosseum = game.Equals("Colosseum");
+        bool colosseum = (game == PKMN.Game.COLOSSEUM);
         int expectedLength = 16;
 
         // Check unchanging and initial values.
@@ -247,10 +247,10 @@ public class GCNItemsTest
 
     public static void TMPocketTest(
         PKMN.ItemList tmPocket,
-        string game
+        PKMN.Game game
     )
     {
-        bool colosseum = game.Equals("Colosseum");
+        bool colosseum = (game == PKMN.Game.COLOSSEUM);
         int expectedLength = 64;
 
         // Check unchanging and initial values.
@@ -307,10 +307,10 @@ public class GCNItemsTest
 
     public static void BerryPocketTest(
         PKMN.ItemList berryPocket,
-        string game
+        PKMN.Game game
     )
     {
-        bool colosseum = game.Equals("Colosseum");
+        bool colosseum = (game == PKMN.Game.COLOSSEUM);
         int expectedLength = 46;
 
         // Check unchanging and initial values.
@@ -367,10 +367,10 @@ public class GCNItemsTest
 
     public static void ColognePocketTest(
         PKMN.ItemList colognePocket,
-        string game
+        PKMN.Game game
     )
     {
-        bool colosseum = game.Equals("Colosseum");
+        bool colosseum = (game == PKMN.Game.COLOSSEUM);
         int expectedLength = 3;
 
         // Check unchanging and initial values.
@@ -433,7 +433,7 @@ public class GCNItemsTest
 
     public static void BattleCDPocketTest(
         PKMN.ItemList battleCDPocket,
-        string game
+        PKMN.Game game
     ) {
         int expectedLength = 60;
 
@@ -475,10 +475,10 @@ public class GCNItemsTest
 
     public static void ItemPCTest(
         PKMN.ItemList itemPC,
-        string game
+        PKMN.Game game
     )
     {
-        bool colosseum = game.Equals("Colosseum");
+        bool colosseum = (game == PKMN.Game.COLOSSEUM);
 
         // Check unchanging and initial values.
         Assert.AreEqual(itemPC.Name, "PC");
@@ -517,10 +517,10 @@ public class GCNItemsTest
 
     public static void ItemBagTest(
         PKMN.ItemBag itemBag,
-        string game
+        PKMN.Game game
     )
     {
-        bool colosseum = game.Equals("Colosseum");
+        bool colosseum = (game == PKMN.Game.COLOSSEUM);
         string keyItem = colosseum ? "Ein File S" : "Gonzap's Key";
 
         // Check unchanging and initial values.

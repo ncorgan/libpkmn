@@ -62,11 +62,11 @@ public class CSharpListsTest
         Assert.Throws<ArgumentOutOfRangeException>(
             delegate
             {
-                PKMN.Database.Lists.HMMoveList("Not a game");
+                PKMN.Database.Lists.HMMoveList(PKMN.Game.NONE);
             }
         );
 
-        PKMN.StringList hmMoveList = PKMN.Database.Lists.HMMoveList("Red");
+        PKMN.StringList hmMoveList = PKMN.Database.Lists.HMMoveList(PKMN.Game.RED);
         Assert.AreEqual(hmMoveList.Count, 5);
         Assert.AreEqual(hmMoveList[0], "Cut");
         Assert.AreEqual(hmMoveList[4], "Flash");
@@ -79,11 +79,11 @@ public class CSharpListsTest
         Assert.Throws<ArgumentOutOfRangeException>(
             delegate
             {
-                PKMN.Database.Lists.ItemList("Not a game");
+                PKMN.Database.Lists.ItemList(PKMN.Game.NONE);
             }
         );
 
-        PKMN.StringList itemList = PKMN.Database.Lists.ItemList("HeartGold");
+        PKMN.StringList itemList = PKMN.Database.Lists.ItemList(PKMN.Game.HEARTGOLD);
         Assert.AreEqual(itemList.Count, 513);
         Assert.AreEqual(itemList[0], "Adamant Orb");
         Assert.AreEqual(itemList[512], "Zoom Lens");
@@ -96,11 +96,11 @@ public class CSharpListsTest
         Assert.Throws<ArgumentOutOfRangeException>(
             delegate
             {
-                PKMN.Database.Lists.LocationList("Not a game", false);
+                PKMN.Database.Lists.LocationList(PKMN.Game.NONE, false);
             }
         );
 
-        PKMN.StringList locationList = PKMN.Database.Lists.LocationList("Emerald", false);
+        PKMN.StringList locationList = PKMN.Database.Lists.LocationList(PKMN.Game.EMERALD, false);
         Assert.AreEqual(locationList.Count, 106);
         Assert.AreEqual(locationList[0], "Abandoned Ship");
         Assert.AreEqual(locationList[105], "Victory Road");
@@ -113,11 +113,11 @@ public class CSharpListsTest
         Assert.Throws<ArgumentOutOfRangeException>(
             delegate
             {
-                PKMN.Database.Lists.MoveList("Not a game");
+                PKMN.Database.Lists.MoveList(PKMN.Game.NONE);
             }
         );
 
-        PKMN.StringList moveList = PKMN.Database.Lists.MoveList("Red");
+        PKMN.StringList moveList = PKMN.Database.Lists.MoveList(PKMN.Game.RED);
         Assert.AreEqual(moveList.Count, 165);
         Assert.AreEqual(moveList[0], "Pound");
         Assert.AreEqual(moveList[164], "Struggle");
@@ -180,11 +180,11 @@ public class CSharpListsTest
         Assert.Throws<ArgumentOutOfRangeException>(
             delegate
             {
-                PKMN.Database.Lists.TMMoveList("Not a game");
+                PKMN.Database.Lists.TMMoveList(PKMN.Game.NONE);
             }
         );
 
-        PKMN.StringList tmMoveList = PKMN.Database.Lists.TMMoveList("Red");
+        PKMN.StringList tmMoveList = PKMN.Database.Lists.TMMoveList(PKMN.Game.RED);
         Assert.AreEqual(tmMoveList.Count, 50);
         Assert.AreEqual(tmMoveList[0], "Mega Punch");
         Assert.AreEqual(tmMoveList[49], "Substitute");
@@ -197,11 +197,11 @@ public class CSharpListsTest
         Assert.Throws<ArgumentOutOfRangeException>(
             delegate
             {
-                PKMN.Database.Lists.TypeList("Not a game");
+                PKMN.Database.Lists.TypeList(PKMN.Game.NONE);
             }
         );
 
-        PKMN.StringList typeList = PKMN.Database.Lists.TypeList("Alpha Sapphire");
+        PKMN.StringList typeList = PKMN.Database.Lists.TypeList(PKMN.Game.ALPHA_SAPPHIRE);
         Assert.AreEqual(typeList.Count, 18);
         Assert.AreEqual(typeList[0], "Normal");
         Assert.AreEqual(typeList[17], "Fairy");

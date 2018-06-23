@@ -11,8 +11,11 @@
 #include "pokemon_gen2impl.hpp"
 
 #include "conversions/gb_conversions.hpp"
+
 #include "database/database_common.hpp"
+#include "database/enum_conversions.hpp"
 #include "database/id_to_string.hpp"
+
 #include "pksav/enum_maps.hpp"
 #include "pksav/party_data.hpp"
 #include "pksav/pksav_call.hpp"
@@ -243,9 +246,7 @@ namespace pkmn
         }
     }
 
-    pokemon::sptr pokemon_gen1impl::to_game(
-        const std::string& game
-    )
+    pokemon::sptr pokemon_gen1impl::to_game(pkmn::e_game game)
     {
         boost::lock_guard<pokemon_gen1impl> lock(*this);
 
@@ -255,7 +256,7 @@ namespace pkmn
         pksav_pokemon.pc_data = *GEN1_PC_RCAST;
         pksav_pokemon.party_data = *GEN1_PARTY_RCAST;
 
-        int game_id = pkmn::database::game_name_to_id(game);
+        int game_id = pkmn::database::game_enum_to_id(game);
         int generation = pkmn::database::game_id_to_generation(game_id);
         switch(generation)
         {
@@ -594,14 +595,12 @@ namespace pkmn
         throw pkmn::feature_not_in_game_error("Location caught is not recorded in Generation I.");
     }
 
-    std::string pokemon_gen1impl::get_original_game()
+    pkmn::e_game pokemon_gen1impl::get_original_game()
     {
         throw pkmn::feature_not_in_game_error("Original game is not recorded in Generation I.");
     }
 
-    void pokemon_gen1impl::set_original_game(
-        PKMN_UNUSED(const std::string& game)
-    )
+    void pokemon_gen1impl::set_original_game(pkmn::e_game)
     {
         throw pkmn::feature_not_in_game_error("Original game is not recorded in Generation I.");
     }

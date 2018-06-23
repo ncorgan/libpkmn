@@ -60,11 +60,10 @@ void get_random_pokemon(
     struct pkmn_pokemon* p_pokemon,
     struct pkmn_string_list* p_item_list,
     const char* species,
-    const char* game
+    enum pkmn_game game
 )
 {
     TEST_ASSERT_NOT_NULL(p_pokemon);
-    TEST_ASSERT_NOT_NULL(game);
 
     enum pkmn_error error = PKMN_ERROR_NONE;
     int generation = game_to_generation(game);
@@ -630,7 +629,7 @@ void compare_pokemon(
 
     enum pkmn_error error = PKMN_ERROR_NONE;
 
-    int generation = game_to_generation(p_pokemon1->p_game);
+    int generation = game_to_generation(p_pokemon1->game);
 
     TEST_ASSERT_EQUAL_STRING(
         p_pokemon1->p_species,
@@ -641,9 +640,9 @@ void compare_pokemon(
     // Pokémon comes from, so LibPKMN defaults to a default valid game.
     if(generation >= 3)
     {
-        TEST_ASSERT_EQUAL_STRING(
-            p_pokemon1->p_game,
-            p_pokemon2->p_game
+        TEST_ASSERT_EQUAL(
+            p_pokemon1->game,
+            p_pokemon2->game
         );
         compare_pokemon_strings(
             p_pokemon1,

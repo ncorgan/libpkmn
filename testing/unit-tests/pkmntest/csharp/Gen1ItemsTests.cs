@@ -25,7 +25,7 @@ public class Gen1ItemsTest
 
     public static void ItemListCommon(
         PKMN.ItemList itemList,
-        string game
+        PKMN.Game game
     )
     {
         // Make sure item slots start as correctly empty.
@@ -59,7 +59,7 @@ public class Gen1ItemsTest
 
     public static void ItemListTest(
         PKMN.ItemList itemList,
-        string game
+        PKMN.Game game
     )
     {
         // Check unchanging and initial values.
@@ -73,7 +73,7 @@ public class Gen1ItemsTest
 
     public static void ItemPCTest(
         PKMN.ItemList itemPC,
-        string game
+        PKMN.Game game
     )
     {
         // Check unchanging and initial values.
@@ -87,7 +87,7 @@ public class Gen1ItemsTest
 
     public static void ItemBagTest(
         PKMN.ItemBag itemBag,
-        string game
+        PKMN.Game game
     )
     {
         // Check unchanging and initial values.

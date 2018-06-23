@@ -17,16 +17,14 @@
 static const struct pkmn_pokemon empty_pokemon =
 {
     .p_species = NULL,
-    .p_game = NULL,
+    .game = PKMN_GAME_NONE,
     .p_internal = NULL
 };
 
 #define STRBUFFER_LEN 1024
 static char strbuffer[STRBUFFER_LEN] = {0};
 
-static void gen2_unown_test(
-    const char* game
-)
+static void gen2_unown_test(enum pkmn_game game)
 {
     enum pkmn_error error = PKMN_ERROR_NONE;
     struct pkmn_pokemon unown = empty_pokemon;
@@ -215,12 +213,8 @@ static void gen2_unown_test(
     PKMN_TEST_ASSERT_SUCCESS(error);
 }
 
-static void gen3_unown_test(
-    const char* game
-)
+static void gen3_unown_test(enum pkmn_game game)
 {
-    TEST_ASSERT_NOT_NULL(game);
-
     enum pkmn_error error = PKMN_ERROR_NONE;
     struct pkmn_pokemon unown = empty_pokemon;
     uint32_t personality = 0;
@@ -279,7 +273,8 @@ static void gen3_unown_test(
             strbuffer
         );
 
-        if(strcmp(game, "Colosseum") && strcmp(game, "XD")) {
+        if((game == PKMN_GAME_COLOSSEUM) || (game == PKMN_GAME_XD))
+        {
             error = pkmn_pokemon_get_icon_filepath(
                         &unown,
                         strbuffer,
@@ -369,50 +364,50 @@ static void gen3_unown_test(
 
 void gold_unown_test()
 {
-    gen2_unown_test("Gold");
+    gen2_unown_test(PKMN_GAME_GOLD);
 }
 
 void silver_unown_test()
 {
-    gen2_unown_test("Silver");
+    gen2_unown_test(PKMN_GAME_SILVER);
 }
 
 void crystal_unown_test()
 {
-    gen2_unown_test("Crystal");
+    gen2_unown_test(PKMN_GAME_CRYSTAL);
 }
 
 void ruby_unown_test()
 {
-    gen3_unown_test("Ruby");
+    gen3_unown_test(PKMN_GAME_RUBY);
 }
 
 void sapphire_unown_test()
 {
-    gen3_unown_test("Sapphire");
+    gen3_unown_test(PKMN_GAME_SAPPHIRE);
 }
 
 void emerald_unown_test()
 {
-    gen3_unown_test("Emerald");
+    gen3_unown_test(PKMN_GAME_EMERALD);
 }
 
 void firered_unown_test()
 {
-    gen3_unown_test("FireRed");
+    gen3_unown_test(PKMN_GAME_FIRERED);
 }
 
 void leafgreen_unown_test()
 {
-    gen3_unown_test("LeafGreen");
+    gen3_unown_test(PKMN_GAME_LEAFGREEN);
 }
 
 void colosseum_unown_test()
 {
-    gen3_unown_test("Colosseum");
+    gen3_unown_test(PKMN_GAME_COLOSSEUM);
 }
 
 void xd_unown_test()
 {
-    gen3_unown_test("XD");
+    gen3_unown_test(PKMN_GAME_XD);
 }

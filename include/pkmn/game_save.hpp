@@ -14,6 +14,7 @@
 #include <pkmn/pokemon_party.hpp>
 #include <pkmn/pokemon_pc.hpp>
 
+#include <pkmn/enums/game.hpp>
 #include <pkmn/enums/gender.hpp>
 
 #include <pkmn/types/class_with_attributes.hpp>
@@ -113,7 +114,7 @@ namespace pkmn {
              * version group, LibPKMN will attempt to use the filename to determine
              * the specific game.
              */
-            virtual std::string get_game() = 0;
+            virtual pkmn::e_game get_game() = 0;
 
             virtual pkmn::time_duration get_time_played() = 0;
 

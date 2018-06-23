@@ -34,21 +34,28 @@ const char* pkmn_pokemon_default_trainer_name()
 
 enum pkmn_error pkmn_pokemon_init(
     const char* p_species,
-    const char* p_game,
+    enum pkmn_game game,
     const char* p_form,
     int level,
     struct pkmn_pokemon* p_pokemon_out
 )
 {
     PKMN_CHECK_NULL_PARAM(p_species);
-    PKMN_CHECK_NULL_PARAM(p_game);
     PKMN_CHECK_NULL_PARAM(p_form);
     PKMN_CHECK_NULL_PARAM(p_pokemon_out);
 
     PKMN_CPP_TO_C(
+        const pkmn::c::game_bimap_t& game_bimap = pkmn::c::get_game_bimap();
+
+        pkmn::enforce_value_in_map_keys(
+            "Game",
+            game,
+            game_bimap.right
+        );
+
         pkmn::pokemon::sptr cpp = pkmn::pokemon::make(
                                       p_species,
-                                      p_game,
+                                      game_bimap.right.at(game),
                                       p_form,
                                       level
                                   );
@@ -85,7 +92,7 @@ enum pkmn_error pkmn_pokemon_free(
     PKMN_CHECK_NULL_PARAM(p_pokemon);
 
     pkmn::c::free_pointer_and_set_to_null(&p_pokemon->p_species);
-    pkmn::c::free_pointer_and_set_to_null(&p_pokemon->p_game);
+    p_pokemon->game = PKMN_GAME_NONE;
 
     PKMN_CPP_TO_C(
         pkmn::c::delete_pointer_and_set_to_null(
@@ -122,17 +129,26 @@ const char* pkmn_pokemon_strerror(
 
 enum pkmn_error pkmn_pokemon_to_game(
     const struct pkmn_pokemon* p_pokemon,
-    const char* p_game,
+    enum pkmn_game game,
     struct pkmn_pokemon* p_new_pokemon_out
 )
 {
     PKMN_CHECK_NULL_PARAM(p_pokemon);
     pkmn_pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
-    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_game, p_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_new_pokemon_out, p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
-        pkmn::pokemon::sptr new_pokemon_cpp = p_internal->cpp->to_game(p_game);
+        const pkmn::c::game_bimap_t& game_bimap = pkmn::c::get_game_bimap();
+
+        pkmn::enforce_value_in_map_keys(
+            "Game",
+            game,
+            game_bimap.right
+        );
+
+        pkmn::pokemon::sptr new_pokemon_cpp = p_internal->cpp->to_game(
+                                                  game_bimap.right.at(game)
+                                              );
 
         pkmn::c::init_pokemon(
             new_pokemon_cpp,
@@ -758,9 +774,7 @@ enum pkmn_error pkmn_pokemon_set_location_met(
 
 enum pkmn_error pkmn_pokemon_get_original_game(
     const struct pkmn_pokemon* p_pokemon,
-    char* p_original_game_out,
-    size_t original_game_buffer_len,
-    size_t* p_actual_original_game_len_out
+    enum pkmn_game* p_original_game_out
 )
 {
     PKMN_CHECK_NULL_PARAM(p_pokemon);
@@ -768,26 +782,33 @@ enum pkmn_error pkmn_pokemon_get_original_game(
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_original_game_out, p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
-        pkmn::c::string_cpp_to_c(
-            p_internal->cpp->get_original_game(),
-            p_original_game_out,
-            original_game_buffer_len,
-            p_actual_original_game_len_out
-        );
+        pkmn::e_game original_game_cpp = p_internal->cpp->get_original_game();
+
+        const pkmn::c::game_bimap_t& game_bimap = pkmn::c::get_game_bimap();
+        BOOST_ASSERT(game_bimap.left.count(original_game_cpp) > 0);
+
+        *p_original_game_out = game_bimap.left.at(original_game_cpp);
     )
 }
 
 enum pkmn_error pkmn_pokemon_set_original_game(
     const struct pkmn_pokemon* p_pokemon,
-    const char* p_game
+    enum pkmn_game original_game
 )
 {
     PKMN_CHECK_NULL_PARAM(p_pokemon);
     pkmn_pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
-    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_game, p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
-        p_internal->cpp->set_original_game(p_game);
+        const pkmn::c::game_bimap_t& game_bimap = pkmn::c::get_game_bimap();
+
+        pkmn::enforce_value_in_map_keys(
+            "Original game",
+            original_game,
+            game_bimap.right
+        );
+
+        p_internal->cpp->set_original_game(game_bimap.right.at(original_game));
     )
 }
 

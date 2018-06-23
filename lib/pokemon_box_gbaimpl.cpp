@@ -183,16 +183,14 @@ namespace pkmn {
         }
     }
 
-    std::vector<std::string> get_valid_gba_wallpaper_names(
-        const std::string& game
-    )
+    std::vector<std::string> get_valid_gba_wallpaper_names(pkmn::e_game game)
     {
         std::vector<std::string> valid_wallpaper_names =
             pkmn::map_keys_to_vector(pksav::get_gba_box_wallpaper_bimap().left);
 
         std::vector<std::string> game_specific_wallpaper_names;
 
-        if((game == "FireRed") or (game == "LeafGreen"))
+        if((game == pkmn::e_game::FIRERED) or (game == pkmn::e_game::LEAFGREEN))
         {
             game_specific_wallpaper_names =
                 pkmn::map_keys_to_vector(pksav::get_gba_frlg_box_wallpaper_bimap().left);

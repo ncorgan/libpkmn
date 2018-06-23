@@ -6,7 +6,9 @@
  */
 
 #include "cpp_to_c.hpp"
+#include "enum_maps.hpp"
 #include "error_internal.hpp"
+#include "exception_internal.hpp"
 
 #include <boost/assert.hpp>
 #include <boost/thread/mutex.hpp>
@@ -16,15 +18,22 @@
 #include <cstdio>
 
 enum pkmn_error pkmn_pokedex_init(
-    const char* p_game,
+    enum pkmn_game game,
     struct pkmn_pokedex* p_pokedex_out
 )
 {
-    PKMN_CHECK_NULL_PARAM(p_game);
     PKMN_CHECK_NULL_PARAM(p_pokedex_out);
 
     PKMN_CPP_TO_C(
-        pkmn::pokedex::sptr cpp = pkmn::pokedex::make(p_game);
+        const pkmn::c::game_bimap_t& game_bimap = pkmn::c::get_game_bimap();
+
+        pkmn::enforce_value_in_map_keys(
+            "Game",
+            game,
+            game_bimap.right
+        );
+
+        pkmn::pokedex::sptr cpp = pkmn::pokedex::make(game_bimap.right.at(game));
 
         pkmn::c::init_pokedex(
             cpp,
@@ -39,7 +48,7 @@ enum pkmn_error pkmn_pokedex_free(
 {
     PKMN_CHECK_NULL_PARAM(p_pokedex);
 
-    pkmn::c::free_pointer_and_set_to_null(&p_pokedex->p_game);
+    p_pokedex->game = PKMN_GAME_NONE;
 
     PKMN_CPP_TO_C(
         pkmn::c::delete_pointer_and_set_to_null(

@@ -17,12 +17,12 @@ static char strbuffer[STRBUFFER_LEN] = {0};
 static const struct pkmn_pokemon empty_pokemon =
 {
     .p_species = NULL,
-    .p_game = NULL,
+    .game = PKMN_GAME_NONE,
     .p_internal = NULL
 };
 static const struct pkmn_pokemon_box empty_pokemon_box =
 {
-    .p_game = NULL,
+    .game = PKMN_GAME_NONE,
     .capacity = 0,
     .p_internal = NULL
 };
@@ -50,7 +50,7 @@ static void test_empty_pokemon_box(
 
     enum pkmn_error error = PKMN_ERROR_NONE;
 
-    int generation = game_to_generation(p_box->p_game);
+    int generation = game_to_generation(p_box->game);
 
     error = pkmn_pokemon_box_get_name(
                 p_box,
@@ -91,9 +91,9 @@ static void test_empty_pokemon_box(
             "None",
             pokemon_list.p_pokemon[pokemon_index].p_species
         );
-        TEST_ASSERT_EQUAL_STRING(
-            p_box->p_game,
-            pokemon_list.p_pokemon[pokemon_index].p_game
+        TEST_ASSERT_EQUAL(
+            p_box->game,
+            pokemon_list.p_pokemon[pokemon_index].game
         );
     }
 
@@ -111,7 +111,7 @@ static void test_box_name(
 
     enum pkmn_error error = PKMN_ERROR_NONE;
 
-    int generation = game_to_generation(p_box->p_game);
+    int generation = game_to_generation(p_box->game);
 
     if(generation == 1)
     {
@@ -167,7 +167,7 @@ static void test_setting_pokemon_in_box(
     struct pkmn_pokemon original_first = empty_pokemon;
     struct pkmn_pokemon original_second = empty_pokemon;
 
-    int generation = game_to_generation(p_box->p_game);
+    int generation = game_to_generation(p_box->game);
 
     error = pkmn_pokemon_box_get_pokemon(
                 p_box,
@@ -224,7 +224,7 @@ static void test_setting_pokemon_in_box(
 
     error = pkmn_pokemon_init(
                 "Bulbasaur",
-                p_box->p_game,
+                p_box->game,
                 "",
                 5,
                 &bulbasaur
@@ -234,7 +234,7 @@ static void test_setting_pokemon_in_box(
 
     error = pkmn_pokemon_init(
                 "Charmander",
-                p_box->p_game,
+                p_box->game,
                 "",
                 5,
                 &charmander
@@ -244,7 +244,7 @@ static void test_setting_pokemon_in_box(
 
     error = pkmn_pokemon_init(
                 "Squirtle",
-                p_box->p_game,
+                p_box->game,
                 "",
                 5,
                 &squirtle
@@ -557,9 +557,9 @@ static void test_empty_pokemon_pc(
 
     for(size_t box_index = 0; box_index < pokemon_box_list.length; ++box_index)
     {
-        TEST_ASSERT_EQUAL_STRING(
-            p_pc->p_game,
-            pokemon_box_list.p_boxes[box_index].p_game
+        TEST_ASSERT_EQUAL(
+            p_pc->game,
+            pokemon_box_list.p_boxes[box_index].game
         );
         test_empty_pokemon_box(
             &pokemon_box_list.p_boxes[box_index]
@@ -581,7 +581,7 @@ static void test_pc_box_names(
     enum pkmn_error error = PKMN_ERROR_NONE;
     struct pkmn_string_list box_names = empty_string_list;
 
-    int generation = game_to_generation(p_pc->p_game);
+    int generation = game_to_generation(p_pc->game);
 
     if(generation == 1)
     {
@@ -709,12 +709,8 @@ static void test_setting_pokemon_in_boxes(
     TEST_ASSERT_EQUAL(0, pokemon_p_boxes.length);
 }
 
-static void pokemon_box_test(
-    const char* game
-)
+static void pokemon_box_test(enum pkmn_game game)
 {
-    TEST_ASSERT_NOT_NULL(game);
-
     enum pkmn_error error = PKMN_ERROR_NONE;
     struct pkmn_pokemon_box pokemon_box = empty_pokemon_box;
 
@@ -723,6 +719,7 @@ static void pokemon_box_test(
                 &pokemon_box
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
+    TEST_ASSERT_EQUAL(game, pokemon_box.game);
     TEST_ASSERT_NOT_NULL(pokemon_box.p_internal);
 
     TEST_ASSERT_EQUAL_STRING(
@@ -739,16 +736,12 @@ static void pokemon_box_test(
     TEST_ASSERT_NULL(pokemon_box.p_internal);
 }
 
-static void pokemon_pc_test(
-    const char* game
-)
+static void pokemon_pc_test(enum pkmn_game game)
 {
-    TEST_ASSERT_NOT_NULL(game);
-
     enum pkmn_error error = PKMN_ERROR_NONE;
     struct pkmn_pokemon_pc pokemon_pc =
     {
-        .p_game = NULL,
+        .game = PKMN_GAME_NONE,
         .p_internal = NULL
     };
 
@@ -757,6 +750,7 @@ static void pokemon_pc_test(
                 &pokemon_pc
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
+    TEST_ASSERT_EQUAL(game, pokemon_pc.game);
     TEST_ASSERT_NOT_NULL(pokemon_pc.p_internal);
 
     TEST_ASSERT_EQUAL_STRING(
@@ -773,29 +767,29 @@ static void pokemon_pc_test(
     TEST_ASSERT_NULL(pokemon_pc.p_internal);
 }
 
-#define BOX_AND_PC_TEST_FCNS(test_game, game_name) \
+#define BOX_AND_PC_TEST_FCNS(test_game_enum, test_game, game_name) \
     static void test_game ## _pokemon_box_test() \
     { \
-        pokemon_box_test(game_name); \
+        pokemon_box_test(test_game_enum); \
     } \
     static void test_game ## _pokemon_pc_test() \
     { \
-        pokemon_pc_test(game_name); \
+        pokemon_pc_test(test_game_enum); \
     }
 
-BOX_AND_PC_TEST_FCNS(red, "Red")
-BOX_AND_PC_TEST_FCNS(blue, "Blue")
-BOX_AND_PC_TEST_FCNS(yellow, "Yellow")
-BOX_AND_PC_TEST_FCNS(gold, "Gold")
-BOX_AND_PC_TEST_FCNS(silver, "Silver")
-BOX_AND_PC_TEST_FCNS(crystal, "Crystal")
-BOX_AND_PC_TEST_FCNS(ruby, "Ruby")
-BOX_AND_PC_TEST_FCNS(sapphire, "Sapphire")
-BOX_AND_PC_TEST_FCNS(emerald, "Emerald")
-BOX_AND_PC_TEST_FCNS(firered, "FireRed")
-BOX_AND_PC_TEST_FCNS(leafgreen, "LeafGreen")
-BOX_AND_PC_TEST_FCNS(colosseum, "Colosseum")
-BOX_AND_PC_TEST_FCNS(xd, "XD")
+BOX_AND_PC_TEST_FCNS(PKMN_GAME_RED, red, "Red")
+BOX_AND_PC_TEST_FCNS(PKMN_GAME_BLUE, blue, "Blue")
+BOX_AND_PC_TEST_FCNS(PKMN_GAME_YELLOW, yellow, "Yellow")
+BOX_AND_PC_TEST_FCNS(PKMN_GAME_GOLD, gold, "Gold")
+BOX_AND_PC_TEST_FCNS(PKMN_GAME_SILVER, silver, "Silver")
+BOX_AND_PC_TEST_FCNS(PKMN_GAME_CRYSTAL, crystal, "Crystal")
+BOX_AND_PC_TEST_FCNS(PKMN_GAME_RUBY, ruby, "Ruby")
+BOX_AND_PC_TEST_FCNS(PKMN_GAME_SAPPHIRE, sapphire, "Sapphire")
+BOX_AND_PC_TEST_FCNS(PKMN_GAME_EMERALD, emerald, "Emerald")
+BOX_AND_PC_TEST_FCNS(PKMN_GAME_FIRERED, firered, "FireRed")
+BOX_AND_PC_TEST_FCNS(PKMN_GAME_LEAFGREEN, leafgreen, "LeafGreen")
+BOX_AND_PC_TEST_FCNS(PKMN_GAME_COLOSSEUM, colosseum, "Colosseum")
+BOX_AND_PC_TEST_FCNS(PKMN_GAME_XD, xd, "XD")
 
 #define BOX_AND_PC_TESTS(test_game) \
     PKMN_C_TEST(test_game ## _pokemon_box_test) \

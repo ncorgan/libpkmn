@@ -14,7 +14,7 @@ namespace PKMNTest
 public class UnownTests
 {
     public static void Gen2UnownTest(
-        string game
+        PKMN.Game game
     )
     {
         PKMN.Database.PokemonEntry unownEntry = new PKMN.Database.PokemonEntry(
@@ -69,7 +69,7 @@ public class UnownTests
     }
 
     public static void Gen3UnownTest(
-        string game
+        PKMN.Game game
     )
     {
         PKMN.Database.PokemonEntry unownEntry = new PKMN.Database.PokemonEntry(

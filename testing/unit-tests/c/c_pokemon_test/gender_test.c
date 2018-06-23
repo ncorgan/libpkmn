@@ -12,16 +12,12 @@
 static const struct pkmn_pokemon empty_pokemon =
 {
     .p_species = NULL,
-    .p_game = NULL,
+    .game = PKMN_GAME_NONE,
     .p_internal = NULL
 };
 
-static void gender_test(
-    const char* game
-)
+static void gender_test(enum pkmn_game game)
 {
-    TEST_ASSERT_NOT_NULL(game);
-
     enum pkmn_error error = PKMN_ERROR_NONE;
     enum pkmn_gender gender = PKMN_GENDER_GENDERLESS;
 
@@ -208,50 +204,50 @@ static void gender_test(
 
 void gold_gender_test()
 {
-    gender_test("Gold");
+    gender_test(PKMN_GAME_GOLD);
 }
 
 void silver_gender_test()
 {
-    gender_test("Silver");
+    gender_test(PKMN_GAME_SILVER);
 }
 
 void crystal_gender_test()
 {
-    gender_test("Crystal");
+    gender_test(PKMN_GAME_CRYSTAL);
 }
 
 void ruby_gender_test()
 {
-    gender_test("Ruby");
+    gender_test(PKMN_GAME_RUBY);
 }
 
 void sapphire_gender_test()
 {
-    gender_test("Sapphire");
+    gender_test(PKMN_GAME_SAPPHIRE);
 }
 
 void emerald_gender_test()
 {
-    gender_test("Emerald");
+    gender_test(PKMN_GAME_EMERALD);
 }
 
 void firered_gender_test()
 {
-    gender_test("FireRed");
+    gender_test(PKMN_GAME_FIRERED);
 }
 
 void leafgreen_gender_test()
 {
-    gender_test("LeafGreen");
+    gender_test(PKMN_GAME_LEAFGREEN);
 }
 
 void colosseum_gender_test()
 {
-    gender_test("Colosseum");
+    gender_test(PKMN_GAME_COLOSSEUM);
 }
 
 void xd_gender_test()
 {
-    gender_test("XD");
+    gender_test(PKMN_GAME_XD);
 }

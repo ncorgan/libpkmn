@@ -7,6 +7,7 @@
 
 #include "exception_internal.hpp"
 #include "database/database_common.hpp"
+#include "database/enum_conversions.hpp"
 #include "database/id_to_string.hpp"
 #include "pksav/pksav_call.hpp"
 #include "types/rng.hpp"
@@ -73,7 +74,7 @@ namespace pkmn { namespace breeding {
     std::vector<std::string> get_possible_child_species(
         const std::string& mother_species,
         const std::string& father_species,
-        const std::string& game
+        pkmn::e_game game
     )
     {
         if(!are_pokemon_species_compatible(mother_species, father_species))
@@ -128,7 +129,7 @@ namespace pkmn { namespace breeding {
                 pkmn::database::species_id_to_name(NIDORAN_M_SPECIES_ID)
             );
 
-            if(pkmn::database::game_name_to_generation(game) >= 5)
+            if(pkmn::database::game_enum_to_generation(game) >= 5)
             {
                 // Output should be sorted by species ID
                 possible_child_species.insert(
@@ -140,7 +141,7 @@ namespace pkmn { namespace breeding {
         else if(is_mother_ditto && is_father_volbeat)
         {
             possible_child_species.emplace_back("Volbeat");
-            if(pkmn::database::game_name_to_generation(game) >= 5)
+            if(pkmn::database::game_enum_to_generation(game) >= 5)
             {
                 possible_child_species.emplace_back("Illumise");
             }
@@ -250,8 +251,8 @@ namespace pkmn { namespace breeding {
             throw std::invalid_argument(error_message);
         }
 
-        const std::string game = mother->get_game();
-        const int generation = pkmn::database::game_name_to_generation(game);
+        const pkmn::e_game game = mother->get_game();
+        const int generation = pkmn::database::game_enum_to_generation(game);
 
         BOOST_STATIC_CONSTEXPR size_t MAX_NUM_MOVES = 4;
         std::vector<std::string> child_moves;
@@ -271,7 +272,7 @@ namespace pkmn { namespace breeding {
         if(child_species == "Pichu")
         {
             bool has_volt_tackle_policy = (generation >= 4) ||
-                                          (game == "Emerald");
+                                          (game == pkmn::e_game::EMERALD);
 
             if(has_volt_tackle_policy)
             {
@@ -369,7 +370,7 @@ namespace pkmn { namespace breeding {
          * In Crystal, if the father knows any moves that the child can learn via
          * a Move Tutor, the child will hatch knowing these move(s).
          */
-        if((child_moves.size() < MAX_NUM_MOVES) && (game == "Crystal"))
+        if((child_moves.size() < MAX_NUM_MOVES) && (game == pkmn::e_game::CRYSTAL))
         {
             pkmn::database::move_list_t child_tutor_moves = child_entry.get_tutor_moves();
 
@@ -464,7 +465,7 @@ namespace pkmn { namespace breeding {
         const std::string& species
     )
     {
-        static const std::string ENTRY_GAME = "X";
+        static const pkmn::e_game ENTRY_GAME = pkmn::e_game::X;
 
         return fp_compare_not_equal(
                    pkmn::database::pokemon_entry(species, ENTRY_GAME, "").get_chance_male(),
@@ -476,7 +477,7 @@ namespace pkmn { namespace breeding {
         const std::string& species
     )
     {
-        static const std::string ENTRY_GAME = "X";
+        static const pkmn::e_game ENTRY_GAME = pkmn::e_game::X;
 
         return fp_compare_not_equal(
                    pkmn::database::pokemon_entry(species, ENTRY_GAME, "").get_chance_female(),
@@ -488,7 +489,7 @@ namespace pkmn { namespace breeding {
         const std::string& species
     )
     {
-        static const std::string ENTRY_GAME = "X";
+        static const pkmn::e_game ENTRY_GAME = pkmn::e_game::X;
 
         pkmn::database::pokemon_entry species_entry(species, ENTRY_GAME, "");
 
@@ -852,8 +853,8 @@ namespace pkmn { namespace breeding {
             throw std::invalid_argument(error_message);
         }
 
-        const std::string game = mother->get_game();
-        const int generation = pkmn::database::game_name_to_generation(game);
+        const pkmn::e_game game = mother->get_game();
+        const int generation = pkmn::database::game_enum_to_generation(game);
         BOOST_ASSERT(generation >= 2);
 
         std::map<pkmn::e_stat, int> ideal_child_IVs;
@@ -869,7 +870,7 @@ namespace pkmn { namespace breeding {
                 break;
 
             case 3:
-                if(game == "Emerald")
+                if(game == pkmn::e_game::EMERALD)
                 {
                     ideal_child_IVs = get_emerald_dp_ideal_child_IVs(
                                           mother,

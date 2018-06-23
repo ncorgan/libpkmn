@@ -39,9 +39,7 @@ namespace pkmn {
 
             ~pokemon_gbaimpl();
 
-            pokemon::sptr to_game(
-                const std::string& game
-            ) override final;
+            pokemon::sptr to_game(pkmn::e_game game) final;
 
             void export_to_file(
                 const std::string& filepath
@@ -168,11 +166,9 @@ namespace pkmn {
                 bool as_egg
             ) override final;
 
-            std::string get_original_game() override final;
+            pkmn::e_game get_original_game() final;
 
-            void set_original_game(
-                const std::string& game
-            ) override final;
+            void set_original_game(pkmn::e_game game) final;
 
             uint32_t get_personality() override final;
 

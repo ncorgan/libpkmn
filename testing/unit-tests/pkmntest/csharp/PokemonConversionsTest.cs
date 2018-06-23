@@ -18,8 +18,8 @@ public class PokemonConversionsTest
     public static void ConversionsTest(
         string species,
         string form,
-        string originGame,
-        string destGame
+        PKMN.Game originGame,
+        PKMN.Game destGame
     )
     {
         PKMN.Pokemon firstPokemon = new PKMN.Pokemon(species, originGame, form, 50);
@@ -27,7 +27,7 @@ public class PokemonConversionsTest
         int originGeneration = Util.GameToGeneration(originGame);
         int destGeneration = Util.GameToGeneration(destGame);
         int minGeneration = System.Math.Min(originGeneration, destGeneration);
-        string gameForLists = (minGeneration == originGeneration) ? originGame : destGame;
+        PKMN.Game gameForLists = (minGeneration == originGeneration) ? originGame : destGame;
 
         PKMN.StringList items = PKMN.Database.Lists.ItemList(gameForLists);
         PKMN.StringList moves = PKMN.Database.Lists.MoveList(gameForLists);
@@ -76,7 +76,7 @@ public class PokemonConversionsTest
             firstPokemon.IsShiny = Util.RandomBool();
             firstPokemon.CurrentTrainerFriendship = rng.Next(0, 255);
 
-            if(!originGame.Equals("Gold") && !originGame.Equals("Silver"))
+            if((originGame == PKMN.Game.GOLD) || (originGame == PKMN.Game.CRYSTAL))
             {
                 firstPokemon.OriginalTrainerGender = Util.RandomBool() ? PKMN.Gender.MALE : PKMN.Gender.FEMALE;
             }

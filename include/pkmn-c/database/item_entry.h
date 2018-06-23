@@ -10,6 +10,8 @@
 #include <pkmn-c/config.h>
 #include <pkmn-c/error.h>
 
+#include <pkmn-c/types/game.h>
+
 #include <stdbool.h>
 
 /*!
@@ -34,7 +36,7 @@ struct pkmn_database_item_entry
     /*!
      * @brief The game associated with this entry.
      */
-    char* p_game;
+    enum pkmn_game game;
     /*!
      * @brief This item's category.
      *
@@ -119,7 +121,7 @@ extern "C" {
  */
 PKMN_C_API enum pkmn_error pkmn_database_get_item_entry(
     const char* p_item_name,
-    const char* p_item_game,
+    enum pkmn_game game,
     struct pkmn_database_item_entry* p_item_entry_out
 );
 

@@ -13,17 +13,16 @@
 
 static void gen2_pokemon_test(
     const char* species,
-    const char* game
+    enum pkmn_game game
 )
 {
     TEST_ASSERT_NOT_NULL(species);
-    TEST_ASSERT_NOT_NULL(game);
 
     enum pkmn_error error = PKMN_ERROR_NONE;
     struct pkmn_pokemon pokemon =
     {
         .p_species = NULL,
-        .p_game = NULL,
+        .game = PKMN_GAME_NONE,
         .p_internal = NULL
     };
 
@@ -52,8 +51,8 @@ static void gen2_pokemon_test(
         .moves = (char*[]){"Slash", "Flamethrower", "Return", "Fire Blast", NULL},
         .invalid_moves = (char*[]){"Frenzy Plant", "Roost", NULL},
 
-        .valid_original_games = (char*[]){"Gold", NULL},
-        .invalid_original_games = (char*[]){"Gold", NULL}
+        .valid_original_games = (enum pkmn_game[]){PKMN_GAME_GOLD, PKMN_GAME_NONE},
+        .invalid_original_games = (enum pkmn_game[]){PKMN_GAME_GOLD, PKMN_GAME_NONE}
     };
 
     pokemon_test_common(
@@ -156,15 +155,15 @@ static void gen2_pokemon_test(
 
 void gold_pokemon_test()
 {
-    gen2_pokemon_test("Cyndaquil", "Gold");
+    gen2_pokemon_test("Cyndaquil", PKMN_GAME_GOLD);
 }
 
 void silver_pokemon_test()
 {
-    gen2_pokemon_test("Totodile", "Silver");
+    gen2_pokemon_test("Totodile", PKMN_GAME_SILVER);
 }
 
 void crystal_pokemon_test()
 {
-    gen2_pokemon_test("Chikorita", "Crystal");
+    gen2_pokemon_test("Chikorita", PKMN_GAME_CRYSTAL);
 }

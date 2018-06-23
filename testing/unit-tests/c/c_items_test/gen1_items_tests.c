@@ -82,7 +82,7 @@ static void gen1_item_list_test_common(
         .length = 0
     };
     error = pkmn_database_item_list(
-                p_item_list->p_game,
+                p_item_list->game,
                 &full_item_list
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
@@ -99,31 +99,26 @@ static void gen1_item_list_test_common(
 
 static void gen1_item_pocket_test(
     struct pkmn_item_list* p_item_pocket,
-    const char* game
+    enum pkmn_game game
 )
 {
     TEST_ASSERT_NOT_NULL(p_item_pocket);
-    TEST_ASSERT_NOT_NULL(game);
 
     TEST_ASSERT_EQUAL_STRING("Items", p_item_pocket->p_name);
-    TEST_ASSERT_EQUAL_STRING(game, p_item_pocket->p_game);
+    TEST_ASSERT_EQUAL(game, p_item_pocket->game);
     TEST_ASSERT_EQUAL(20, p_item_pocket->capacity);
 
     gen1_item_list_test_common(p_item_pocket);
 }
 
-static void gen1_item_pc_test(
-    const char* game
-)
+static void gen1_item_pc_test(enum pkmn_game game)
 {
-    TEST_ASSERT_NOT_NULL(game);
-
     enum pkmn_error error = PKMN_ERROR_NONE;
 
     struct pkmn_item_list item_pc =
     {
         .p_name = NULL,
-        .p_game = NULL,
+        .game = PKMN_GAME_NONE,
         .capacity = 0,
         .p_internal = NULL
     };
@@ -137,7 +132,7 @@ static void gen1_item_pc_test(
     TEST_ASSERT_NOT_NULL(item_pc.p_internal);
 
     TEST_ASSERT_EQUAL_STRING("PC", item_pc.p_name);
-    TEST_ASSERT_EQUAL_STRING(game, item_pc.p_game);
+    TEST_ASSERT_EQUAL(game, item_pc.game);
     TEST_ASSERT_EQUAL(50, item_pc.capacity);
 
     gen1_item_list_test_common(&item_pc);
@@ -147,17 +142,13 @@ static void gen1_item_pc_test(
     TEST_ASSERT_NULL(item_pc.p_internal);
 }
 
-static void gen1_item_bag_test(
-    const char* game
-)
+static void gen1_item_bag_test(enum pkmn_game game)
 {
-    TEST_ASSERT_NOT_NULL(game);
-
     enum pkmn_error error = PKMN_ERROR_NONE;
 
     struct pkmn_item_bag item_bag =
     {
-        .p_game = NULL,
+        .game = PKMN_GAME_NONE,
         .pocket_names =
         {
             .pp_strings = NULL,
@@ -171,7 +162,7 @@ static void gen1_item_bag_test(
                 &item_bag
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
-    TEST_ASSERT_EQUAL_STRING(game, item_bag.p_game);
+    TEST_ASSERT_EQUAL(game, item_bag.game);
 
     TEST_ASSERT_EQUAL_STRING(
         "None",
@@ -184,7 +175,7 @@ static void gen1_item_bag_test(
     struct pkmn_item_list item_pocket =
     {
         .p_name = NULL,
-        .p_game = NULL,
+        .game = PKMN_GAME_NONE,
         .capacity = 0,
         .p_internal = NULL
     };
@@ -254,7 +245,7 @@ static void gen1_item_bag_test(
     PKMN_TEST_ASSERT_SUCCESS(error);
 }
 
-#define GEN1_ITEM_TESTS(test_game) \
+#define GEN1_ITEM_TESTS(test_game_enum, test_game) \
 void test_gen1_item_pocket_ ## test_game () \
 { \
     enum pkmn_error error = PKMN_ERROR_NONE; \
@@ -262,14 +253,14 @@ void test_gen1_item_pocket_ ## test_game () \
     struct pkmn_item_list item_pocket = \
     { \
         .p_name = NULL, \
-        .p_game = NULL, \
+        .game = PKMN_GAME_NONE, \
         .capacity = 0, \
         .p_internal = NULL \
     }; \
  \
     error = pkmn_item_list_init( \
                 "Items", \
-                #test_game, \
+                test_game_enum, \
                 &item_pocket \
             ); \
     PKMN_TEST_ASSERT_SUCCESS(error); \
@@ -277,7 +268,7 @@ void test_gen1_item_pocket_ ## test_game () \
  \
     gen1_item_pocket_test( \
         &item_pocket, \
-        #test_game \
+        test_game_enum \
     ); \
  \
     error = pkmn_item_list_free(&item_pocket); \
@@ -286,13 +277,13 @@ void test_gen1_item_pocket_ ## test_game () \
 } \
 void test_gen1_item_pc_ ## test_game () \
 { \
-    gen1_item_pc_test(#test_game); \
+    gen1_item_pc_test(test_game_enum); \
 } \
 void test_gen1_item_bag_ ## test_game () \
 { \
-    gen1_item_bag_test(#test_game); \
+    gen1_item_bag_test(test_game_enum); \
 }
 
-GEN1_ITEM_TESTS(Red)
-GEN1_ITEM_TESTS(Blue)
-GEN1_ITEM_TESTS(Yellow)
+GEN1_ITEM_TESTS(PKMN_GAME_RED, Red)
+GEN1_ITEM_TESTS(PKMN_GAME_BLUE, Blue)
+GEN1_ITEM_TESTS(PKMN_GAME_YELLOW, Yellow)

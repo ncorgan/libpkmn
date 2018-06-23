@@ -23,7 +23,7 @@ using System.Runtime.InteropServices;"
 
 // Convert getter/setter functions into attributes for more idiomatic C#.
 
-%attributestring(pkmn::swig::game_save, std::string, Game, get_game);
+%attribute(pkmn::swig::game_save, pkmn::e_game, Game, get_game);
 %attributestring(pkmn::swig::game_save, std::string, Filepath, get_filepath);
 %attributestring(pkmn::swig::game_save, std::string, TrainerName, get_trainer_name, set_trainer_name);
 %attribute(pkmn::swig::game_save, uint16_t, TrainerPublicID, get_trainer_public_id, set_trainer_public_id);

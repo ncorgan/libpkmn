@@ -28,20 +28,20 @@ namespace pkmn { namespace swig {
             explicit daycare(
                 const pkmn::daycare::sptr& cpp_daycare
             ): _daycare(cpp_daycare),
-               _generation(pkmn::priv::game_name_to_generation(cpp_daycare->get_game()))
+               _generation(pkmn::priv::game_enum_to_generation(cpp_daycare->get_game()))
             {
                 BOOST_ASSERT(_daycare.get() != nullptr);
             }
 
             daycare(
-                const std::string& game
+                pkmn::e_game game
             ): _daycare(pkmn::daycare::make(game)),
-               _generation(pkmn::priv::game_name_to_generation(game))
+               _generation(pkmn::priv::game_enum_to_generation(game))
             {
                 BOOST_ASSERT(_daycare.get() != nullptr);
             }
 
-            inline std::string get_game()
+            inline pkmn::e_game get_game()
             {
                 BOOST_ASSERT(_daycare.get() != nullptr);
 

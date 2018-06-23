@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -26,7 +26,7 @@ namespace pkmn
 
             virtual ~pokedex_impl() {};
 
-            std::string get_game() override final;
+            pkmn::e_game get_game() override final;
 
             void set_has_seen(
                 const std::string& species,

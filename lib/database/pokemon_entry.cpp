@@ -9,6 +9,7 @@
 #include "utils/misc.hpp"
 
 #include "database_common.hpp"
+#include "enum_conversions.hpp"
 #include "id_to_index.hpp"
 #include "id_to_string.hpp"
 
@@ -226,7 +227,7 @@ namespace pkmn { namespace database {
 
     pokemon_entry::pokemon_entry(
         const std::string& species_name,
-        const std::string& game_name,
+        pkmn::e_game game,
         const std::string& form_name
     ):
         _none(species_name == "None"),
@@ -236,9 +237,9 @@ namespace pkmn { namespace database {
         /*
          * Game-related info
          */
-        _game_id = pkmn::database::game_name_to_id(
-                          game_name
-                      );
+        _game_id = pkmn::database::game_enum_to_id(
+                       game
+                   );
         _generation = pkmn::database::game_id_to_generation(
                           _game_id
                       );
@@ -276,11 +277,10 @@ namespace pkmn { namespace database {
         return ret;
     }
 
-    std::string pokemon_entry::get_game() const {
-        return pkmn::database::game_id_to_name(
-                   _game_id
-               );
-    }
+    pkmn::e_game pokemon_entry::get_game() const
+    {
+        return pkmn::database::game_id_to_enum(_game_id);
+    };
 
     std::string pokemon_entry::get_species() const {
         std::string ret;
@@ -1046,21 +1046,24 @@ namespace pkmn { namespace database {
         return ret;
     }
 
-    pkmn::database::pokemon_entries_t pokemon_entry::get_evolutions() const {
+    pkmn::database::pokemon_entries_t pokemon_entry::get_evolutions() const
+    {
         pkmn::database::pokemon_entries_t ret;
 
-        if(not (_none or _invalid)) {
+        if(not (_none or _invalid))
+        {
             static BOOST_CONSTEXPR const char* query = \
                 "SELECT name FROM pokemon_species_names WHERE local_language_id=9 AND "
                 "pokemon_species_id IN (SELECT id FROM pokemon_species WHERE "
                 "evolves_from_species_id=? AND generation_id<=?)";
 
-            std::string game = this->get_game();
+            const pkmn::e_game game = this->get_game();
 
             SQLite::Statement stmt(get_connection(), query);
             stmt.bind(1, _species_id);
             stmt.bind(2, _generation);
-            while(stmt.executeStep()) {
+            while(stmt.executeStep())
+            {
                 ret.emplace_back(
                     pokemon_entry(
                         std::string(stmt.getColumn(0)),
@@ -1156,7 +1159,7 @@ namespace pkmn { namespace database {
                                     if(form_id != _species_id) {
                                         throw std::invalid_argument(
                                             str(boost::format("Deoxys can only be in its Normal Forme in %s.")
-                                                    % this->get_game().c_str()
+                                                    % game_enum_to_name(this->get_game()).c_str()
                                                )
                                         );
                                     }

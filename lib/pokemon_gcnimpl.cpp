@@ -13,6 +13,7 @@
 #include "conversions/gen3_conversions.hpp"
 
 #include "database/database_common.hpp"
+#include "database/enum_conversions.hpp"
 #include "database/id_to_index.hpp"
 #include "database/id_to_string.hpp"
 #include "database/index_to_string.hpp"
@@ -175,7 +176,8 @@ namespace pkmn
             GC_RCAST->contestAchievements[i] = LibPkmGC::NoContestWon;
         }
 
-        set_original_game("Colosseum/XD");
+        // The in-game storage doesn't distinguish between Colosseum and XD.
+        set_original_game(pkmn::e_game::COLOSSEUM);
 
         // Populate abstractions
         _update_ribbons_map();
@@ -304,15 +306,13 @@ namespace pkmn
         }
     }
 
-    pokemon::sptr pokemon_gcnimpl::to_game(
-        const std::string& game
-    )
+    pokemon::sptr pokemon_gcnimpl::to_game(pkmn::e_game game)
     {
         boost::lock_guard<pokemon_gcnimpl> lock(*this);
 
         pkmn::pokemon::sptr ret;
 
-        int game_id = pkmn::database::game_name_to_id(game);
+        int game_id = pkmn::database::game_enum_to_id(game);
         int generation = pkmn::database::game_id_to_generation(game_id);
         switch(generation)
         {
@@ -947,41 +947,29 @@ namespace pkmn
         }
     }
 
-    std::string pokemon_gcnimpl::get_original_game()
+    pkmn::e_game pokemon_gcnimpl::get_original_game()
     {
         boost::lock_guard<pokemon_gcnimpl> lock(*this);
 
-        std::string ret;
+        pkmn::e_game ret = pkmn::e_game::NONE;
 
         if(GC_RCAST->version.game == LibPkmGC::Colosseum_XD)
         {
-            ret = "Colosseum/XD";
+            ret = pkmn::e_game::COLOSSEUM;
         }
         else
         {
-            ret = pkmn::database::game_index_to_name(int(
-                       GC_RCAST->version.game
-                   ));
+            ret = pkmn::database::game_index_to_enum(int(
+                      GC_RCAST->version.game
+                  ));
         }
 
         return ret;
     }
 
-    void pokemon_gcnimpl::set_original_game(
-        const std::string& game
-    )
+    void pokemon_gcnimpl::set_original_game(pkmn::e_game game)
     {
-        std::string game_to_test;
-        if(game == "Colosseum/XD")
-        {
-            game_to_test = "Colosseum";
-        }
-        else
-        {
-            game_to_test = game;
-        }
-
-        int generation = pkmn::database::game_name_to_generation(game_to_test);
+        int generation = pkmn::database::game_enum_to_generation(game);
         if(generation != 3)
         {
             throw std::invalid_argument("Game must be from Generation III.");
@@ -989,14 +977,14 @@ namespace pkmn
 
         boost::lock_guard<pokemon_gcnimpl> lock(*this);
 
-        if(game == "Colosseum" or game == "XD" or game == "Colosseum/XD")
+        if((game == pkmn::e_game::COLOSSEUM) || (game == pkmn::e_game::XD))
         {
             GC_RCAST->version.game = LibPkmGC::Colosseum_XD;
         }
         else
         {
             GC_RCAST->version.game = LibPkmGC::GameIndex(
-                                         pkmn::database::game_name_to_index(game)
+                                         pkmn::database::game_enum_to_index(game)
                                      );
         }
     }

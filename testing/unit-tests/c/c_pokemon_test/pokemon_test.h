@@ -24,8 +24,8 @@ typedef struct {
     char** moves;
     char** invalid_moves;
 
-    char** valid_original_games;
-    char** invalid_original_games;
+    enum pkmn_game* valid_original_games;
+    enum pkmn_game* invalid_original_games;
 } pkmn_test_values_t;
 
 void pokemon_test_common(

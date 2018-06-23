@@ -19,7 +19,7 @@
 
 // Convert getter/setter functions into attributes for more idiomatic Lua.
 
-%attributestring(pkmn::swig::pokedex, std::string, game, get_game);
+%attribute(pkmn::swig::pokedex, pkmn::e_game, game, get_game);
 %attribute(pkmn::swig::pokedex, int, num_seen, get_num_seen);
 %attributeval(pkmn::swig::pokedex, pkmn::swig::pokedex_has_seen_helper, seen_pokemon_map, get_has_seen);
 %attributeval(pkmn::swig::pokedex, %arg(std::vector<std::string>), all_seen, get_all_seen);

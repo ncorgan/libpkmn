@@ -15,7 +15,9 @@ PKMN_PYTHON_INIT
 // Convert Doxygen docs to Python docstrings
 %include <pkmn_python_docstrings.i>
 
+%rename(game) pkmn::e_game;
 %rename(stat) pkmn::e_stat;
+%import <pkmn/enums/game.hpp>
 %import <pkmn/enums/stat.hpp>
 
 %include <python/pkmn_database_item_entry.i>

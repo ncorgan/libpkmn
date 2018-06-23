@@ -13,7 +13,6 @@ void test_item_list_empty_slots(
 {
     ASSERT_EQ(0, list->get_num_items());
 
-    std::string game = list->get_game();
     const pkmn::item_slots_t& item_slots = list->as_vector();
     ASSERT_EQ(list->get_capacity(), item_slots.size());
     for(const pkmn::item_slot& item_slot: item_slots)

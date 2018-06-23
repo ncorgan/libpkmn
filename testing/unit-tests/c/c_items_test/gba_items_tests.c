@@ -28,21 +28,30 @@ static const char* WRONG_GAME_ALL_POCKET_ITEM_NAMES[] =
     "Berry", "Occa Berry",
 };
 
+static inline bool is_game_rs(enum pkmn_game game)
+{
+    return (game == PKMN_GAME_RUBY) || (game == PKMN_GAME_SAPPHIRE);
+}
+
+static inline bool is_game_frlg(enum pkmn_game game)
+{
+    return (game == PKMN_GAME_FIRERED) || (game == PKMN_GAME_LEAFGREEN);
+}
+
 static void gba_item_pocket_test(
     struct pkmn_item_list* p_item_pocket,
-    const char* game
+    enum pkmn_game game
 )
 {
     TEST_ASSERT_NOT_NULL(p_item_pocket);
     TEST_ASSERT_NOT_NULL(p_item_pocket->p_internal);
-    TEST_ASSERT_NOT_NULL(game);
 
     size_t expected_capacity = 0;
-    if(!strcmp(game, "Ruby") || !strcmp(game, "Sapphire"))
+    if(is_game_rs(game))
     {
         expected_capacity = 20;
     }
-    else if(!strcmp(game, "Emerald"))
+    else if(game == PKMN_GAME_EMERALD)
     {
         expected_capacity = 30;
     }
@@ -52,7 +61,7 @@ static void gba_item_pocket_test(
     }
 
     TEST_ASSERT_EQUAL_STRING("Items", p_item_pocket->p_name);
-    TEST_ASSERT_EQUAL_STRING(game, p_item_pocket->p_game);
+    TEST_ASSERT_EQUAL(game, p_item_pocket->game);
     TEST_ASSERT_EQUAL(expected_capacity, p_item_pocket->capacity);
 
     // Make sure item slots start as completely empty.
@@ -116,15 +125,14 @@ static void gba_item_pocket_test(
 
 static void gba_key_item_pocket_test(
     struct pkmn_item_list* p_key_item_pocket,
-    const char* game
+    enum pkmn_game game
 )
 {
     TEST_ASSERT_NOT_NULL(p_key_item_pocket);
     TEST_ASSERT_NOT_NULL(p_key_item_pocket->p_internal);
-    TEST_ASSERT_NOT_NULL(game);
 
     size_t expected_capacity = 0;
-    if(!strcmp(game, "Ruby") || !strcmp(game, "Sapphire"))
+    if(is_game_rs(game))
     {
         expected_capacity = 20;
     }
@@ -134,7 +142,7 @@ static void gba_key_item_pocket_test(
     }
 
     TEST_ASSERT_EQUAL_STRING("Key Items", p_key_item_pocket->p_name);
-    TEST_ASSERT_EQUAL_STRING(game, p_key_item_pocket->p_game);
+    TEST_ASSERT_EQUAL(game, p_key_item_pocket->game);
     TEST_ASSERT_EQUAL(expected_capacity, p_key_item_pocket->capacity);
 
     // Make sure item slots start as completely empty.
@@ -160,11 +168,11 @@ static void gba_key_item_pocket_test(
     const char* emerald_items[] = {"Magma Emblem", "Old Sea Map"};
 
     test_item_list_invalid_items(p_key_item_pocket, gcn_items, 4);
-    if(!strcmp(game, "Ruby") || !strcmp(game, "Sapphire"))
+    if(is_game_rs(game))
     {
         test_item_list_invalid_items(p_key_item_pocket, frlg_items, 3);
     }
-    if(strcmp(game, "Emerald"))
+    if(game != PKMN_GAME_EMERALD)
     {
         test_item_list_invalid_items(p_key_item_pocket, emerald_items, 2);
     }
@@ -195,9 +203,9 @@ static void gba_key_item_pocket_test(
         .length = 0
     };
     enum pkmn_error error = pkmn_item_list_get_valid_items(
-                             p_key_item_pocket,
-                             &valid_items
-                         );
+                                p_key_item_pocket,
+                                &valid_items
+                            );
     PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_NOT_NULL(valid_items.pp_strings);
     TEST_ASSERT_TRUE(valid_items.length > 0);
@@ -209,15 +217,14 @@ static void gba_key_item_pocket_test(
 
 static void gba_ball_pocket_test(
     struct pkmn_item_list* p_ball_pocket,
-    const char* game
+    enum pkmn_game game
 )
 {
     TEST_ASSERT_NOT_NULL(p_ball_pocket);
     TEST_ASSERT_NOT_NULL(p_ball_pocket->p_internal);
-    TEST_ASSERT_NOT_NULL(game);
 
     size_t expected_capacity = 0;
-    if(!strcmp(game, "FireRed") || !strcmp(game, "LeafGreen"))
+    if(is_game_frlg(game))
     {
         expected_capacity = 13;
     }
@@ -227,7 +234,7 @@ static void gba_ball_pocket_test(
     }
 
     TEST_ASSERT_EQUAL_STRING("Poké Balls", p_ball_pocket->p_name);
-    TEST_ASSERT_EQUAL_STRING(game, p_ball_pocket->p_game);
+    TEST_ASSERT_EQUAL(game, p_ball_pocket->game);
     TEST_ASSERT_EQUAL(expected_capacity, p_ball_pocket->capacity);
 
     // Make sure item slots start as completely empty.
@@ -287,16 +294,15 @@ static void gba_ball_pocket_test(
 
 static void gba_tmhm_pocket_test(
     struct pkmn_item_list* p_tmhm_pocket,
-    const char* game
+    enum pkmn_game game
 )
 {
     TEST_ASSERT_NOT_NULL(p_tmhm_pocket);
     TEST_ASSERT_NOT_NULL(p_tmhm_pocket->p_internal);
-    TEST_ASSERT_NOT_NULL(game);
 
     const char* expected_pocket_name = NULL;
     size_t expected_capacity = 0;
-    if(!strcmp(game, "FireRed") || !strcmp(game, "LeafGreen"))
+    if(is_game_frlg(game))
     {
         expected_pocket_name = "TM Case";
         expected_capacity = 58;
@@ -308,7 +314,7 @@ static void gba_tmhm_pocket_test(
     }
 
     TEST_ASSERT_EQUAL_STRING(expected_pocket_name, p_tmhm_pocket->p_name);
-    TEST_ASSERT_EQUAL_STRING(game, p_tmhm_pocket->p_game);
+    TEST_ASSERT_EQUAL(game, p_tmhm_pocket->game);
     TEST_ASSERT_EQUAL(expected_capacity, p_tmhm_pocket->capacity);
 
     // Make sure item slots start as completely empty.
@@ -368,16 +374,15 @@ static void gba_tmhm_pocket_test(
 
 static void gba_berry_pocket_test(
     struct pkmn_item_list* p_berry_pocket,
-    const char* game
+    enum pkmn_game game
 )
 {
     TEST_ASSERT_NOT_NULL(p_berry_pocket);
     TEST_ASSERT_NOT_NULL(p_berry_pocket->p_internal);
-    TEST_ASSERT_NOT_NULL(game);
 
     const char* expected_pocket_name = NULL;
     size_t expected_capacity = 0;
-    if(!strcmp(game, "FireRed") || !strcmp(game, "LeafGreen"))
+    if(is_game_frlg(game))
     {
         expected_pocket_name = "Berry Pouch";
         expected_capacity = 43;
@@ -389,7 +394,7 @@ static void gba_berry_pocket_test(
     }
 
     TEST_ASSERT_EQUAL_STRING(expected_pocket_name, p_berry_pocket->p_name);
-    TEST_ASSERT_EQUAL_STRING(game, p_berry_pocket->p_game);
+    TEST_ASSERT_EQUAL(game, p_berry_pocket->game);
     TEST_ASSERT_EQUAL(expected_capacity, p_berry_pocket->capacity);
 
     // Make sure item slots start as completely empty.
@@ -447,16 +452,12 @@ static void gba_berry_pocket_test(
     TEST_ASSERT_EQUAL(0, valid_items.length);
 }
 
-static void gba_item_pc_test(
-    const char* game
-)
+static void gba_item_pc_test(enum pkmn_game game)
 {
-    TEST_ASSERT_NOT_NULL(game);
-
     struct pkmn_item_list item_pc =
     {
         .p_name = NULL,
-        .p_game = NULL,
+        .game = PKMN_GAME_NONE,
         .capacity = 0,
         .p_internal = NULL
     };
@@ -471,7 +472,7 @@ static void gba_item_pc_test(
     PKMN_TEST_ASSERT_SUCCESS(error);
 
     TEST_ASSERT_EQUAL_STRING("PC", item_pc.p_name);
-    TEST_ASSERT_EQUAL_STRING(game, item_pc.p_game);
+    TEST_ASSERT_EQUAL(game, item_pc.game);
     TEST_ASSERT_EQUAL(50, item_pc.capacity);
     TEST_ASSERT_NOT_NULL(item_pc.p_internal);
 
@@ -524,14 +525,14 @@ static void gba_item_pc_test(
         .length = 0
     };
     error = pkmn_database_item_list(
-                item_pc.p_game,
+                item_pc.game,
                 &full_item_list
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_NOT_NULL(full_item_list.pp_strings);
     TEST_ASSERT_TRUE(full_item_list.length > 0);
 
-    if(!strcmp(item_pc.p_game, "FireRed") || !strcmp(item_pc.p_game, "LeafGreen"))
+    if(is_game_frlg(game))
     {
         TEST_ASSERT_EQUAL(full_item_list.length-2, valid_items.length);
         TEST_ASSERT_FALSE(string_list_contains(&valid_items, "Berry Pouch"));
@@ -610,17 +611,13 @@ static void get_bag_pockets(
     PKMN_TEST_ASSERT_SUCCESS(error);
 }
 
-static void gba_item_bag_test(
-    const char* game
-)
+static void gba_item_bag_test(enum pkmn_game game)
 {
-    TEST_ASSERT_NOT_NULL(game);
-
     enum pkmn_error error = PKMN_ERROR_NONE;
 
     struct pkmn_item_bag item_bag =
     {
-        .p_game = NULL,
+        .game = PKMN_GAME_NONE,
         .pocket_names =
         {
             .pp_strings = NULL,
@@ -648,7 +645,7 @@ static void gba_item_bag_test(
 
     const char* tmhm_pocket_name = NULL;
     const char* berry_pocket_name = NULL;
-    if(!strcmp(game, "FireRed") || !strcmp(game, "LeafGreen"))
+    if(is_game_frlg(game))
     {
         tmhm_pocket_name = "TM Case";
         berry_pocket_name = "Berry Pouch";
@@ -783,7 +780,7 @@ static void gba_item_bag_test(
     PKMN_TEST_ASSERT_SUCCESS(error);
 }
 
-#define GBA_ITEM_TESTS(test_game) \
+#define GBA_ITEM_TESTS(test_game_enum, test_game) \
 void test_gba_item_pocket_ ## test_game () \
 { \
     enum pkmn_error error = PKMN_ERROR_NONE; \
@@ -791,14 +788,14 @@ void test_gba_item_pocket_ ## test_game () \
     struct pkmn_item_list item_pocket = \
     { \
         .p_name = NULL, \
-        .p_game = NULL, \
+        .game = PKMN_GAME_NONE, \
         .capacity = 0, \
         .p_internal = NULL \
     }; \
  \
     error = pkmn_item_list_init( \
                 "Items", \
-                #test_game, \
+                test_game_enum, \
                 &item_pocket \
             ); \
     PKMN_TEST_ASSERT_SUCCESS(error); \
@@ -806,7 +803,7 @@ void test_gba_item_pocket_ ## test_game () \
  \
     gba_item_pocket_test( \
         &item_pocket, \
-        #test_game \
+        test_game_enum \
     ); \
  \
     error = pkmn_item_list_free(&item_pocket); \
@@ -820,14 +817,14 @@ void test_gba_key_item_pocket_ ## test_game () \
     struct pkmn_item_list key_item_pocket = \
     { \
         .p_name = NULL, \
-        .p_game = NULL, \
+        .game = PKMN_GAME_NONE, \
         .capacity = 0, \
         .p_internal = NULL \
     }; \
  \
     error = pkmn_item_list_init( \
                 "Key Items", \
-                #test_game, \
+                test_game_enum, \
                 &key_item_pocket \
             ); \
     PKMN_TEST_ASSERT_SUCCESS(error); \
@@ -835,7 +832,7 @@ void test_gba_key_item_pocket_ ## test_game () \
  \
     gba_key_item_pocket_test( \
         &key_item_pocket, \
-        #test_game \
+        test_game_enum \
     ); \
  \
     error = pkmn_item_list_free(&key_item_pocket); \
@@ -849,14 +846,14 @@ void test_gba_ball_pocket_ ## test_game () \
     struct pkmn_item_list ball_pocket = \
     { \
         .p_name = NULL, \
-        .p_game = NULL, \
+        .game = PKMN_GAME_NONE, \
         .capacity = 0, \
         .p_internal = NULL \
     }; \
  \
     error = pkmn_item_list_init( \
                 "Poké Balls", \
-                #test_game, \
+                test_game_enum, \
                 &ball_pocket \
             ); \
     PKMN_TEST_ASSERT_SUCCESS(error); \
@@ -864,7 +861,7 @@ void test_gba_ball_pocket_ ## test_game () \
  \
     gba_ball_pocket_test( \
         &ball_pocket, \
-        #test_game \
+        test_game_enum \
     ); \
  \
     error = pkmn_item_list_free(&ball_pocket); \
@@ -878,13 +875,13 @@ void test_gba_tmhm_pocket_ ## test_game () \
     struct pkmn_item_list tmhm_pocket = \
     { \
         .p_name = NULL, \
-        .p_game = NULL, \
+        .game = PKMN_GAME_NONE, \
         .capacity = 0, \
         .p_internal = NULL \
     }; \
  \
     const char* pocket_name = NULL; \
-    if(!strcmp(#test_game, "FireRed") || !strcmp(#test_game, "LeafGreen")) \
+    if(is_game_frlg(test_game_enum)) \
     { \
         pocket_name = "TM Case"; \
     } \
@@ -895,7 +892,7 @@ void test_gba_tmhm_pocket_ ## test_game () \
  \
     error = pkmn_item_list_init( \
                 pocket_name, \
-                #test_game, \
+                test_game_enum, \
                 &tmhm_pocket \
             ); \
     PKMN_TEST_ASSERT_SUCCESS(error); \
@@ -903,7 +900,7 @@ void test_gba_tmhm_pocket_ ## test_game () \
  \
     gba_tmhm_pocket_test( \
         &tmhm_pocket, \
-        #test_game \
+        test_game_enum \
     ); \
  \
     error = pkmn_item_list_free(&tmhm_pocket); \
@@ -917,13 +914,13 @@ void test_gba_berry_pocket_ ## test_game () \
     struct pkmn_item_list berry_pocket = \
     { \
         .p_name = NULL, \
-        .p_game = NULL, \
+        .game = PKMN_GAME_NONE, \
         .capacity = 0, \
         .p_internal = NULL \
     }; \
  \
     const char* pocket_name = NULL; \
-    if(!strcmp(#test_game, "FireRed") || !strcmp(#test_game, "LeafGreen")) \
+    if(is_game_frlg(test_game_enum)) \
     { \
         pocket_name = "Berry Pouch"; \
     } \
@@ -934,7 +931,7 @@ void test_gba_berry_pocket_ ## test_game () \
  \
     error = pkmn_item_list_init( \
                 pocket_name, \
-                #test_game, \
+                test_game_enum, \
                 &berry_pocket \
             ); \
     PKMN_TEST_ASSERT_SUCCESS(error); \
@@ -942,7 +939,7 @@ void test_gba_berry_pocket_ ## test_game () \
  \
     gba_berry_pocket_test( \
         &berry_pocket, \
-        #test_game \
+        test_game_enum \
     ); \
  \
     error = pkmn_item_list_free(&berry_pocket); \
@@ -951,15 +948,15 @@ void test_gba_berry_pocket_ ## test_game () \
 } \
 void test_gba_item_pc_ ## test_game () \
 { \
-    gba_item_pc_test(#test_game); \
+    gba_item_pc_test(test_game_enum); \
 } \
 void test_gba_item_bag_ ## test_game () \
 { \
-    gba_item_bag_test(#test_game); \
+    gba_item_bag_test(test_game_enum); \
 }
 
-GBA_ITEM_TESTS(Ruby)
-GBA_ITEM_TESTS(Sapphire)
-GBA_ITEM_TESTS(Emerald)
-GBA_ITEM_TESTS(FireRed)
-GBA_ITEM_TESTS(LeafGreen)
+GBA_ITEM_TESTS(PKMN_GAME_RUBY, Ruby)
+GBA_ITEM_TESTS(PKMN_GAME_SAPPHIRE, Sapphire)
+GBA_ITEM_TESTS(PKMN_GAME_EMERALD, Emerald)
+GBA_ITEM_TESTS(PKMN_GAME_FIRERED, FireRed)
+GBA_ITEM_TESTS(PKMN_GAME_LEAFGREEN, LeafGreen)

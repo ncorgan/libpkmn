@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -11,23 +11,114 @@ using NUnit.Framework;
 [TestFixture]
 public class CSharpPokemonPCTest
 {
-    [TestCase("Red", new string[]{"Blue", "Yellow", "Gold", "Silver", "Crystal"}, "Ruby")]
-    [TestCase("Blue", new string[]{"Red", "Yellow", "Gold", "Silver", "Crystal"}, "Sapphire")]
-    [TestCase("Yellow", new string[]{"Red", "Blue", "Gold", "Silver", "Crystal"}, "Emerald")]
-    [TestCase("Gold", new string[]{"Red", "Blue", "Yellow", "Silver", "Crystal"}, "FireRed")]
-    [TestCase("Silver", new string[]{"Red", "Blue", "Yellow", "Gold", "Crystal"}, "LeafGreen")]
-    [TestCase("Crystal", new string[]{"Red", "Blue", "Yellow", "Gold", "Silver"}, "Colosseum")]
-    [TestCase("Ruby", new string[]{"Sapphire", "Emerald", "FireRed", "LeafGreen", "Colosseum", "XD"}, "Red")]
-    [TestCase("Sapphire", new string[]{"Ruby", "Emerald", "FireRed", "LeafGreen", "Colosseum", "XD"}, "Blue")]
-    [TestCase("Emerald", new string[]{"Ruby", "Sapphire", "FireRed", "LeafGreen", "Colosseum", "XD"}, "Yellow")]
-    [TestCase("FireRed", new string[]{"Ruby", "Sapphire", "Emerald", "LeafGreen", "Colosseum", "XD"}, "Gold")]
-    [TestCase("LeafGreen", new string[]{"Ruby", "Sapphire", "Emerald", "FireRed", "Colosseum", "XD"}, "Silver")]
-    [TestCase("Colosseum", new string[]{"Ruby", "Sapphire", "Emerald", "FireRed", "LeafGreen", "XD"}, "Crystal")]
-    [TestCase("XD", new string[]{"Ruby", "Sapphire", "Emerald", "FireRed", "LeafGreen", "Colosseum"}, "Red")]
+    [TestCase(
+        PKMN.Game.RED,
+        new PKMN.Game[]{
+            PKMN.Game.BLUE, PKMN.Game.YELLOW,
+            PKMN.Game.GOLD, PKMN.Game.SILVER, PKMN.Game.CRYSTAL
+        },
+        PKMN.Game.RUBY
+    )]
+    [TestCase(
+        PKMN.Game.BLUE,
+        new PKMN.Game[]{
+            PKMN.Game.RED, PKMN.Game.YELLOW,
+            PKMN.Game.GOLD, PKMN.Game.SILVER, PKMN.Game.CRYSTAL
+        },
+        PKMN.Game.SAPPHIRE
+    )]
+    [TestCase(
+        PKMN.Game.YELLOW,
+        new PKMN.Game[]{
+            PKMN.Game.RED, PKMN.Game.BLUE,
+            PKMN.Game.GOLD, PKMN.Game.SILVER, PKMN.Game.CRYSTAL
+        },
+        PKMN.Game.EMERALD
+    )]
+    [TestCase(
+        PKMN.Game.GOLD,
+        new PKMN.Game[]{
+            PKMN.Game.RED, PKMN.Game.BLUE, PKMN.Game.YELLOW,
+            PKMN.Game.SILVER, PKMN.Game.CRYSTAL
+        },
+        PKMN.Game.FIRERED
+    )]
+    [TestCase(
+        PKMN.Game.SILVER,
+        new PKMN.Game[]{
+            PKMN.Game.RED, PKMN.Game.BLUE, PKMN.Game.YELLOW,
+            PKMN.Game.GOLD, PKMN.Game.CRYSTAL
+        },
+        PKMN.Game.LEAFGREEN
+    )]
+    [TestCase(
+        PKMN.Game.CRYSTAL,
+        new PKMN.Game[]{
+            PKMN.Game.RED, PKMN.Game.BLUE, PKMN.Game.YELLOW,
+            PKMN.Game.GOLD, PKMN.Game.SILVER
+        },
+        PKMN.Game.COLOSSEUM
+    )]
+    [TestCase(
+        PKMN.Game.RUBY,
+        new PKMN.Game[]{
+            PKMN.Game.SAPPHIRE, PKMN.Game.EMERALD, PKMN.Game.FIRERED, PKMN.Game.LEAFGREEN,
+            PKMN.Game.COLOSSEUM, PKMN.Game.XD
+        },
+        PKMN.Game.RED
+    )]
+    [TestCase(
+        PKMN.Game.SAPPHIRE,
+        new PKMN.Game[]{
+            PKMN.Game.RUBY, PKMN.Game.EMERALD, PKMN.Game.FIRERED, PKMN.Game.LEAFGREEN,
+            PKMN.Game.COLOSSEUM, PKMN.Game.XD
+        },
+        PKMN.Game.BLUE
+    )]
+    [TestCase(
+        PKMN.Game.EMERALD,
+        new PKMN.Game[]{
+            PKMN.Game.RUBY, PKMN.Game.SAPPHIRE, PKMN.Game.FIRERED, PKMN.Game.LEAFGREEN,
+            PKMN.Game.COLOSSEUM, PKMN.Game.XD
+        },
+        PKMN.Game.YELLOW
+    )]
+    [TestCase(
+        PKMN.Game.FIRERED,
+        new PKMN.Game[]{
+            PKMN.Game.RUBY, PKMN.Game.SAPPHIRE, PKMN.Game.EMERALD, PKMN.Game.LEAFGREEN,
+            PKMN.Game.COLOSSEUM, PKMN.Game.XD
+        },
+        PKMN.Game.GOLD
+    )]
+    [TestCase(
+        PKMN.Game.LEAFGREEN,
+        new PKMN.Game[]{
+            PKMN.Game.RUBY, PKMN.Game.SAPPHIRE, PKMN.Game.EMERALD, PKMN.Game.FIRERED,
+            PKMN.Game.COLOSSEUM, PKMN.Game.XD
+        },
+        PKMN.Game.SILVER
+    )]
+    [TestCase(
+        PKMN.Game.COLOSSEUM,
+        new PKMN.Game[]{
+            PKMN.Game.RUBY, PKMN.Game.SAPPHIRE, PKMN.Game.EMERALD, PKMN.Game.FIRERED, PKMN.Game.LEAFGREEN,
+            PKMN.Game.XD
+        },
+        PKMN.Game.CRYSTAL
+    )]
+    [TestCase(
+        PKMN.Game.XD,
+        new PKMN.Game[]{
+            PKMN.Game.RUBY, PKMN.Game.SAPPHIRE, PKMN.Game.EMERALD, PKMN.Game.FIRERED, PKMN.Game.LEAFGREEN,
+            PKMN.Game.COLOSSEUM
+        },
+        PKMN.Game.RED
+    )]
     public void PokemonBoxTest(
-        string game,
-        string[] validOtherGames,
-        string invalidOtherGame
+        PKMN.Game game,
+        PKMN.Game[] validOtherGames,
+        PKMN.Game invalidOtherGame
     )
     {
         PKMNTest.PokemonPCTests.TestPokemonBox(
@@ -37,23 +128,114 @@ public class CSharpPokemonPCTest
         );
     }
 
-    [TestCase("Red", new string[]{"Blue", "Yellow", "Gold", "Silver", "Crystal"}, "Ruby")]
-    [TestCase("Blue", new string[]{"Red", "Yellow", "Gold", "Silver", "Crystal"}, "Sapphire")]
-    [TestCase("Yellow", new string[]{"Red", "Blue", "Gold", "Silver", "Crystal"}, "Emerald")]
-    [TestCase("Gold", new string[]{"Red", "Blue", "Yellow", "Silver", "Crystal"}, "FireRed")]
-    [TestCase("Silver", new string[]{"Red", "Blue", "Yellow", "Gold", "Crystal"}, "LeafGreen")]
-    [TestCase("Crystal", new string[]{"Red", "Blue", "Yellow", "Gold", "Silver"}, "Colosseum")]
-    [TestCase("Ruby", new string[]{"Sapphire", "Emerald", "FireRed", "LeafGreen", "Colosseum", "XD"}, "Red")]
-    [TestCase("Sapphire", new string[]{"Ruby", "Emerald", "FireRed", "LeafGreen", "Colosseum", "XD"}, "Blue")]
-    [TestCase("Emerald", new string[]{"Ruby", "Sapphire", "FireRed", "LeafGreen", "Colosseum", "XD"}, "Yellow")]
-    [TestCase("FireRed", new string[]{"Ruby", "Sapphire", "Emerald", "LeafGreen", "Colosseum", "XD"}, "Gold")]
-    [TestCase("LeafGreen", new string[]{"Ruby", "Sapphire", "Emerald", "FireRed", "Colosseum", "XD"}, "Silver")]
-    [TestCase("Colosseum", new string[]{"Ruby", "Sapphire", "Emerald", "FireRed", "LeafGreen", "XD"}, "Crystal")]
-    [TestCase("XD", new string[]{"Ruby", "Sapphire", "Emerald", "FireRed", "LeafGreen", "Colosseum"}, "Red")]
+    [TestCase(
+        PKMN.Game.RED,
+        new PKMN.Game[]{
+            PKMN.Game.BLUE, PKMN.Game.YELLOW,
+            PKMN.Game.GOLD, PKMN.Game.SILVER, PKMN.Game.CRYSTAL
+        },
+        PKMN.Game.RUBY
+    )]
+    [TestCase(
+        PKMN.Game.BLUE,
+        new PKMN.Game[]{
+            PKMN.Game.RED, PKMN.Game.YELLOW,
+            PKMN.Game.GOLD, PKMN.Game.SILVER, PKMN.Game.CRYSTAL
+        },
+        PKMN.Game.SAPPHIRE
+    )]
+    [TestCase(
+        PKMN.Game.YELLOW,
+        new PKMN.Game[]{
+            PKMN.Game.RED, PKMN.Game.BLUE,
+            PKMN.Game.GOLD, PKMN.Game.SILVER, PKMN.Game.CRYSTAL
+        },
+        PKMN.Game.EMERALD
+    )]
+    [TestCase(
+        PKMN.Game.GOLD,
+        new PKMN.Game[]{
+            PKMN.Game.RED, PKMN.Game.BLUE, PKMN.Game.YELLOW,
+            PKMN.Game.SILVER, PKMN.Game.CRYSTAL
+        },
+        PKMN.Game.FIRERED
+    )]
+    [TestCase(
+        PKMN.Game.SILVER,
+        new PKMN.Game[]{
+            PKMN.Game.RED, PKMN.Game.BLUE, PKMN.Game.YELLOW,
+            PKMN.Game.GOLD, PKMN.Game.CRYSTAL
+        },
+        PKMN.Game.LEAFGREEN
+    )]
+    [TestCase(
+        PKMN.Game.CRYSTAL,
+        new PKMN.Game[]{
+            PKMN.Game.RED, PKMN.Game.BLUE, PKMN.Game.YELLOW,
+            PKMN.Game.GOLD, PKMN.Game.SILVER
+        },
+        PKMN.Game.COLOSSEUM
+    )]
+    [TestCase(
+        PKMN.Game.RUBY,
+        new PKMN.Game[]{
+            PKMN.Game.SAPPHIRE, PKMN.Game.EMERALD, PKMN.Game.FIRERED, PKMN.Game.LEAFGREEN,
+            PKMN.Game.COLOSSEUM, PKMN.Game.XD
+        },
+        PKMN.Game.RED
+    )]
+    [TestCase(
+        PKMN.Game.SAPPHIRE,
+        new PKMN.Game[]{
+            PKMN.Game.RUBY, PKMN.Game.EMERALD, PKMN.Game.FIRERED, PKMN.Game.LEAFGREEN,
+            PKMN.Game.COLOSSEUM, PKMN.Game.XD
+        },
+        PKMN.Game.BLUE
+    )]
+    [TestCase(
+        PKMN.Game.EMERALD,
+        new PKMN.Game[]{
+            PKMN.Game.RUBY, PKMN.Game.SAPPHIRE, PKMN.Game.FIRERED, PKMN.Game.LEAFGREEN,
+            PKMN.Game.COLOSSEUM, PKMN.Game.XD
+        },
+        PKMN.Game.YELLOW
+    )]
+    [TestCase(
+        PKMN.Game.FIRERED,
+        new PKMN.Game[]{
+            PKMN.Game.RUBY, PKMN.Game.SAPPHIRE, PKMN.Game.EMERALD, PKMN.Game.LEAFGREEN,
+            PKMN.Game.COLOSSEUM, PKMN.Game.XD
+        },
+        PKMN.Game.GOLD
+    )]
+    [TestCase(
+        PKMN.Game.LEAFGREEN,
+        new PKMN.Game[]{
+            PKMN.Game.RUBY, PKMN.Game.SAPPHIRE, PKMN.Game.EMERALD, PKMN.Game.FIRERED,
+            PKMN.Game.COLOSSEUM, PKMN.Game.XD
+        },
+        PKMN.Game.SILVER
+    )]
+    [TestCase(
+        PKMN.Game.COLOSSEUM,
+        new PKMN.Game[]{
+            PKMN.Game.RUBY, PKMN.Game.SAPPHIRE, PKMN.Game.EMERALD, PKMN.Game.FIRERED, PKMN.Game.LEAFGREEN,
+            PKMN.Game.XD
+        },
+        PKMN.Game.CRYSTAL
+    )]
+    [TestCase(
+        PKMN.Game.XD,
+        new PKMN.Game[]{
+            PKMN.Game.RUBY, PKMN.Game.SAPPHIRE, PKMN.Game.EMERALD, PKMN.Game.FIRERED, PKMN.Game.LEAFGREEN,
+            PKMN.Game.COLOSSEUM
+        },
+        PKMN.Game.RED
+    )]
     public void PokemonPCTest(
-        string game,
-        string[] validOtherGames,
-        string invalidOtherGame
+        PKMN.Game game,
+        PKMN.Game[] validOtherGames,
+        PKMN.Game invalidOtherGame
     )
     {
         PKMNTest.PokemonPCTests.TestPokemonPC(

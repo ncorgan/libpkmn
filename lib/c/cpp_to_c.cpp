@@ -6,6 +6,7 @@
  */
 
 #include "cpp_to_c.hpp"
+#include "enum_maps.hpp"
 
 #include "private_exports.hpp"
 
@@ -21,25 +22,29 @@ namespace pkmn { namespace c {
     // LibPKMN wrapper class initialization.
 
     template <typename libpkmn_cpp_type, typename libpkmn_c_type>
-    static void init_c_internal_class(
+    static void init_common(
         const std::shared_ptr<libpkmn_cpp_type>& libpkmn_sptr,
-        libpkmn_c_type* libpkmn_c_struct_out
+        libpkmn_c_type* p_libpkmn_c_struct_out
     )
     {
         BOOST_ASSERT(libpkmn_sptr.get() != nullptr);
-        BOOST_ASSERT(libpkmn_c_struct_out != nullptr);
+        BOOST_ASSERT(p_libpkmn_c_struct_out != nullptr);
 
-        libpkmn_c_struct_out->p_internal = new pkmn_c_internal_class_t<libpkmn_cpp_type>;
+        p_libpkmn_c_struct_out->game = pkmn::c::get_game_bimap().left.at(
+                                           libpkmn_sptr->get_game()
+                                       );
+
+        p_libpkmn_c_struct_out->p_internal = new pkmn_c_internal_class_t<libpkmn_cpp_type>;
         pkmn_c_internal_class_t<libpkmn_cpp_type>* p_internal =
             reinterpret_cast<pkmn_c_internal_class_t<libpkmn_cpp_type>*>(
-                libpkmn_c_struct_out->p_internal
+                p_libpkmn_c_struct_out->p_internal
             );
 
         p_internal->cpp = libpkmn_sptr;
         p_internal->last_error = "None";
-        p_internal->generation = pkmn::priv::game_name_to_generation(
-                                       libpkmn_sptr->get_game()
-                                   );
+        p_internal->generation = pkmn::priv::game_enum_to_generation(
+                                     libpkmn_sptr->get_game()
+                                 );
     }
 
     void init_daycare(
@@ -56,7 +61,7 @@ namespace pkmn { namespace c {
         // a concern.
         struct pkmn_daycare temp_daycare_c =
         {
-            nullptr, // p_game
+            PKMN_GAME_NONE, // game
 
             false, // can_breed_pokemon
 
@@ -66,13 +71,9 @@ namespace pkmn { namespace c {
             nullptr  // p_internal
         };
 
-        init_c_internal_class(
+        init_common(
             daycare_cpp,
             &temp_daycare_c
-        );
-        string_cpp_to_c_alloc(
-            daycare_cpp->get_game(),
-            &temp_daycare_c.p_game
         );
 
         temp_daycare_c.can_breed_pokemon = daycare_cpp->can_breed_pokemon();
@@ -99,7 +100,8 @@ namespace pkmn { namespace c {
         // a concern.
         struct pkmn_item_bag temp_item_bag_c =
         {
-            nullptr, // p_game
+            PKMN_GAME_NONE, // game
+
             // pocket_names
             {
                 nullptr, // pp_strings
@@ -108,13 +110,9 @@ namespace pkmn { namespace c {
             nullptr // p_internal
         };
 
-        init_c_internal_class(
+        init_common(
             item_bag_cpp,
             &temp_item_bag_c
-        );
-        string_cpp_to_c_alloc(
-            item_bag_cpp->get_game(),
-            &temp_item_bag_c.p_game
         );
         string_list_cpp_to_c(
             item_bag_cpp->get_pocket_names(),
@@ -141,22 +139,18 @@ namespace pkmn { namespace c {
         struct pkmn_item_list temp_item_list_c =
         {
             nullptr, // p_name
-            nullptr, // p_game
+            PKMN_GAME_NONE, // game
             0ULL,    // capacity
             nullptr  // p_internal
         };
 
-        init_c_internal_class(
+        init_common(
             item_list_cpp,
             &temp_item_list_c
         );
         string_cpp_to_c_alloc(
             item_list_cpp->get_name(),
             &temp_item_list_c.p_name
-        );
-        string_cpp_to_c_alloc(
-            item_list_cpp->get_game(),
-            &temp_item_list_c.p_game
         );
         temp_item_list_c.capacity = item_list_cpp->get_capacity();
 
@@ -179,17 +173,13 @@ namespace pkmn { namespace c {
         // a concern.
         struct pkmn_pokedex temp_pokedex_c =
         {
-            nullptr, // p_game
+            PKMN_GAME_NONE, // game
             nullptr  // p_internal
         };
 
-        init_c_internal_class(
+        init_common(
             pokedex_cpp,
             &temp_pokedex_c
-        );
-        string_cpp_to_c_alloc(
-            pokedex_cpp->get_game(),
-            &temp_pokedex_c.p_game
         );
 
         // Everything succeeded, so move it into the pointer the caller
@@ -212,21 +202,17 @@ namespace pkmn { namespace c {
         struct pkmn_pokemon temp_pokemon_c =
         {
             nullptr, // p_species
-            nullptr, // p_game
+            PKMN_GAME_NONE, // game
             nullptr  // p_internal
         };
 
-        init_c_internal_class(
+        init_common(
             pokemon_cpp,
             &temp_pokemon_c
         );
         string_cpp_to_c_alloc(
             pokemon_cpp->get_species(),
             &temp_pokemon_c.p_species
-        );
-        string_cpp_to_c_alloc(
-            pokemon_cpp->get_game(),
-            &temp_pokemon_c.p_game
         );
 
         // Everything succeeded, so move it into the pointer the caller
@@ -248,18 +234,14 @@ namespace pkmn { namespace c {
         // a concern.
         struct pkmn_pokemon_box temp_pokemon_box_c =
         {
-            nullptr, // p_game
+            PKMN_GAME_NONE, // game
             0ULL,    // capacity
             nullptr  // p_internal
         };
 
-        init_c_internal_class(
+        init_common(
             pokemon_box_cpp,
             &temp_pokemon_box_c
-        );
-        string_cpp_to_c_alloc(
-            pokemon_box_cpp->get_game(),
-            &temp_pokemon_box_c.p_game
         );
         temp_pokemon_box_c.capacity = pokemon_box_cpp->get_capacity();
 
@@ -282,18 +264,14 @@ namespace pkmn { namespace c {
         // a concern.
         struct pkmn_pokemon_party temp_pokemon_party_c =
         {
-            nullptr, // p_game
+            PKMN_GAME_NONE, // game
             0ULL,    // capacity
             nullptr  // p_internal
         };
 
-        init_c_internal_class(
+        init_common(
             pokemon_party_cpp,
             &temp_pokemon_party_c
-        );
-        string_cpp_to_c_alloc(
-            pokemon_party_cpp->get_game(),
-            &temp_pokemon_party_c.p_game
         );
         temp_pokemon_party_c.capacity = 6ULL;
 
@@ -316,18 +294,14 @@ namespace pkmn { namespace c {
         // a concern.
         struct pkmn_pokemon_pc temp_pokemon_pc_c =
         {
-            nullptr, // p_game
+            PKMN_GAME_NONE, // game
             0ULL,    // capacity
             nullptr  // p_internal
         };
 
-        init_c_internal_class(
+        init_common(
             pokemon_pc_cpp,
             &temp_pokemon_pc_c
-        );
-        string_cpp_to_c_alloc(
-            pokemon_pc_cpp->get_game(),
-            &temp_pokemon_pc_c.p_game
         );
         temp_pokemon_pc_c.capacity = pokemon_pc_cpp->get_num_boxes();
 
@@ -350,17 +324,13 @@ namespace pkmn { namespace c {
         // a concern.
         struct pkmn_game_save temp_game_save_c =
         {
-            nullptr, // p_game
+            PKMN_GAME_NONE, // game
             nullptr  // p_internal
         };
 
-        init_c_internal_class(
+        init_common(
             game_save_cpp,
             &temp_game_save_c
-        );
-        string_cpp_to_c_alloc(
-            game_save_cpp->get_game(),
-            &temp_game_save_c.p_game
         );
 
         // Everything succeeded, so move it into the pointer the caller
@@ -654,7 +624,7 @@ namespace pkmn { namespace c {
         struct pkmn_database_item_entry temp_item_entry_c =
         {
             nullptr, // p_name
-            nullptr, // p_game
+            PKMN_GAME_NONE, // game
             nullptr, // p_category
             nullptr, // p_pocket
             nullptr, // p_description
@@ -667,10 +637,6 @@ namespace pkmn { namespace c {
         string_cpp_to_c_alloc(
             item_entry_cpp.get_name(),
             &temp_item_entry_c.p_name
-        );
-        string_cpp_to_c_alloc(
-            item_entry_cpp.get_game(),
-            &temp_item_entry_c.p_game
         );
         string_cpp_to_c_alloc(
             item_entry_cpp.get_category(),
@@ -688,6 +654,10 @@ namespace pkmn { namespace c {
             item_entry_cpp.get_fling_effect(),
             &temp_item_entry_c.p_fling_effect
         );
+
+        const game_bimap_t& game_bimap = get_game_bimap();
+        BOOST_ASSERT(game_bimap.left.count(item_entry_cpp.get_game()) > 0);
+        temp_item_entry_c.game = game_bimap.left.at(item_entry_cpp.get_game());
 
         temp_item_entry_c.cost = item_entry_cpp.get_cost();
         temp_item_entry_c.holdable = item_entry_cpp.holdable();
@@ -712,7 +682,7 @@ namespace pkmn { namespace c {
         struct pkmn_database_move_entry temp_move_entry_c =
         {
             nullptr, // p_name
-            nullptr, // p_game
+            PKMN_GAME_NONE, // game
             nullptr, // p_description
             nullptr, // p_target
             nullptr, // p_damage_class
@@ -728,10 +698,6 @@ namespace pkmn { namespace c {
         string_cpp_to_c_alloc(
             move_entry_cpp.get_name(),
             &temp_move_entry_c.p_name
-        );
-        string_cpp_to_c_alloc(
-            move_entry_cpp.get_game(),
-            &temp_move_entry_c.p_game
         );
         string_cpp_to_c_alloc(
             move_entry_cpp.get_description(),
@@ -762,6 +728,10 @@ namespace pkmn { namespace c {
             &temp_move_entry_c.p_super_contest_effect
         );
 
+        const game_bimap_t& game_bimap = get_game_bimap();
+        BOOST_ASSERT(game_bimap.left.count(move_entry_cpp.get_game()) > 0);
+        temp_move_entry_c.game = game_bimap.left.at(move_entry_cpp.get_game());
+
         temp_move_entry_c.base_power = move_entry_cpp.get_base_power();
         for(int num_pp = 0; num_pp < 4; ++num_pp)
         {
@@ -784,7 +754,7 @@ namespace pkmn { namespace c {
         struct pkmn_database_pokemon_entry temp_pokemon_entry_c =
         {
             nullptr, // p_name
-            nullptr, // p_game
+            PKMN_GAME_NONE, // game
             nullptr, // p_species
             nullptr, // p_form
             nullptr, // p_pokedex_entry
@@ -850,10 +820,6 @@ namespace pkmn { namespace c {
             &temp_pokemon_entry_c.p_name
         );
         string_cpp_to_c_alloc(
-            pokemon_entry_cpp.get_game(),
-            &temp_pokemon_entry_c.p_game
-        );
-        string_cpp_to_c_alloc(
             pokemon_entry_cpp.get_form(),
             &temp_pokemon_entry_c.p_form
         );
@@ -882,6 +848,10 @@ namespace pkmn { namespace c {
             pokemon_entry_cpp.get_egg_groups(),
             &temp_pokemon_entry_c.egg_groups
         );
+
+        const game_bimap_t& game_bimap = get_game_bimap();
+        BOOST_ASSERT(game_bimap.left.count(pokemon_entry_cpp.get_game()) > 0);
+        temp_pokemon_entry_c.game = game_bimap.left.at(pokemon_entry_cpp.get_game());
 
         temp_pokemon_entry_c.height = pokemon_entry_cpp.get_height();
         temp_pokemon_entry_c.weight = pokemon_entry_cpp.get_weight();

@@ -19,6 +19,7 @@ PKMN_CSHARP_INIT
 // Convert Doxygen docs to C# docstrings
 %include <pkmn_csharp_docs.i>
 
+%import <pkmn/enums/game.hpp>
 %import <pkmn/enums/stat.hpp>
 
 %include <csharp/pkmn_item_entry.i>

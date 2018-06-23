@@ -22,7 +22,7 @@
 // Convert getter/setter functions into attributes for more idiomatic Lua.
 
 %attributestring(pkmn::swig::item_list, std::string, name, get_name);
-%attributestring(pkmn::swig::item_list, std::string, game, get_game);
+%attribute(pkmn::swig::item_list, pkmn::e_game, game, get_game);
 %attribute(pkmn::swig::item_list, int, num_items, get_num_items);
 %attributeval(pkmn::swig::item_list, %arg(std::vector<std::string>), valid_items, get_valid_items);
 

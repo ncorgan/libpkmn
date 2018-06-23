@@ -78,8 +78,8 @@ public class PokemonPCTests
 
     private static void TestSettingPokemon(
         PKMN.PokemonBox box,
-        string[] validOtherGames,
-        string invalidOtherGame
+        PKMN.Game[] validOtherGames,
+        PKMN.Game invalidOtherGame
     )
     {
         int generation = Util.GameToGeneration(box.Game);
@@ -189,7 +189,7 @@ public class PokemonPCTests
 
         // Make sure converting Pokémon before putting them in the box works (or doesn't)
         // as expected.
-        foreach(string validGame in validOtherGames)
+        foreach(PKMN.Game validGame in validOtherGames)
         {
             PKMN.Pokemon pikachu = new PKMN.Pokemon("Pikachu", validGame, "", 50);
             Assert.AreEqual(validGame, pikachu.Game);
@@ -211,8 +211,8 @@ public class PokemonPCTests
 
     public static void TestPokemonBox(
         PKMN.PokemonBox box,
-        string[] validOtherGames,
-        string invalidOtherGame
+        PKMN.Game[] validOtherGames,
+        PKMN.Game invalidOtherGame
     )
     {
         TestEmptyPokemonBox(box);
@@ -266,8 +266,8 @@ public class PokemonPCTests
 
     private static void TestSettingPokemonInBoxes(
         PKMN.PokemonPC PC,
-        string[] validOtherGames,
-        string invalidOtherGame
+        PKMN.Game[] validOtherGames,
+        PKMN.Game invalidOtherGame
     )
     {
         for(int i = 0; i < PC.Length; ++i)
@@ -280,8 +280,8 @@ public class PokemonPCTests
 
     public static void TestPokemonPC(
         PKMN.PokemonPC PC,
-        string[] validOtherGames,
-        string invalidOtherGame
+        PKMN.Game[] validOtherGames,
+        PKMN.Game invalidOtherGame
     )
     {
         TestEmptyPokemonPC(PC);

@@ -19,6 +19,8 @@ PKMN_CSHARP_INIT
 // Convert Doxygen docs to C# docstrings
 %include <pkmn_csharp_docs.i>
 
+%import <pkmn/enums/game.hpp>
+
 %rename(AbilityList) get_ability_list;
 %rename(GameList) get_game_list;
 %rename(GamecubeShadowPokemonList) get_gamecube_shadow_pokemon_list;

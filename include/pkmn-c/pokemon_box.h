@@ -11,6 +11,7 @@
 #include <pkmn-c/error.h>
 
 #include <pkmn-c/pokemon.h>
+#include <pkmn-c/types/game.h>
 #include <pkmn-c/types/pokemon_list.h>
 
 /*!
@@ -25,7 +26,7 @@ struct pkmn_pokemon_box
     /*!
      * @brief The game this box is associated with.
      */
-    char* p_game;
+    enum pkmn_game game;
 
     /*!
      * @brief How many Pokémon this party can hold.
@@ -51,7 +52,7 @@ extern "C" {
  * \returns ::PKMN_ERROR_INVALID_ARGUMENT if the game is invalid
  */
 PKMN_C_API enum pkmn_error pkmn_pokemon_box_init(
-    const char* p_game,
+    enum pkmn_game game,
     struct pkmn_pokemon_box* p_pokemon_box_out
 );
 

@@ -6,6 +6,7 @@
  */
 
 #include "database_common.hpp"
+#include "enum_conversions.hpp"
 #include "id_to_index.hpp"
 #include "id_to_string.hpp"
 #include "../utils/misc.hpp"
@@ -213,7 +214,7 @@ namespace pkmn { namespace database {
 
     item_entry::item_entry(
         const std::string& item_name,
-        const std::string& game_name
+        pkmn::e_game game
     ):
         _none(item_name == "None"),
         _invalid(false)
@@ -222,9 +223,7 @@ namespace pkmn { namespace database {
          * Get version information. This validates the game input and gives
          * us the information we need to get version-specific information.
          */
-        _game_id = pkmn::database::game_name_to_id(
-                       game_name
-                   );
+        _game_id = pkmn::database::game_enum_to_id(game);
         _generation = pkmn::database::game_id_to_generation(
                           _game_id
                       );
@@ -298,11 +297,9 @@ namespace pkmn { namespace database {
         return ret;
     }
 
-    std::string item_entry::get_game() const
+    pkmn::e_game item_entry::get_game() const
     {
-        return pkmn::database::game_id_to_name(
-                   _game_id
-               );
+        return pkmn::database::game_id_to_enum(_game_id);
     }
 
     std::string item_entry::get_category() const

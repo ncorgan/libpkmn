@@ -5,6 +5,7 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
+#include "private_exports.hpp"
 #include "types/rng.hpp"
 
 #include <pkmntest/util.hpp>
@@ -55,8 +56,8 @@ typedef struct
     std::string species;
     std::string form;
 
-    std::string origin_game;
-    std::string dest_game;
+    pkmn::e_game origin_game;
+    pkmn::e_game dest_game;
 } conversions_test_params_t;
 
 class conversions_test: public ::testing::TestWithParam<conversions_test_params_t> {};
@@ -73,10 +74,10 @@ TEST_P(conversions_test, conversions_test)
                                             50
                                         );
 
-    int origin_generation = game_generations.at(params.origin_game);
-    int dest_generation = game_generations.at(params.dest_game);
+    int origin_generation = pkmn::priv::game_enum_to_generation(params.origin_game);
+    int dest_generation = pkmn::priv::game_enum_to_generation(params.dest_game);
     int min_generation = std::min<int>(origin_generation, dest_generation);
-    std::string game_for_lists = (min_generation == origin_generation) ? params.origin_game : params.dest_game;
+    pkmn::e_game game_for_lists = (min_generation == origin_generation) ? params.origin_game : params.dest_game;
 
     // Set random values. TODO: EVs, IVs
     pkmn::rng<int> int_rng;
@@ -147,7 +148,7 @@ TEST_P(conversions_test, conversions_test)
         first_pokemon->set_shininess(random_bool());
         first_pokemon->set_current_trainer_friendship(uint8_rng.rand());
 
-        if(params.origin_game != "Gold" and params.origin_game != "Silver")
+        if((params.origin_game != pkmn::e_game::GOLD) and (params.origin_game != pkmn::e_game::SILVER))
         {
             first_pokemon->set_original_trainer_gender(random_bool() ? pkmn::e_gender::MALE : pkmn::e_gender::FEMALE);
         }
@@ -238,50 +239,50 @@ TEST_P(conversions_test, conversions_test)
 static const conversions_test_params_t TEST_PARAMS[] =
 {
     // Generation I -> Generation I
-    {"Bulbasaur", "", "Red", "Yellow"},
+    {"Bulbasaur", "", pkmn::e_game::RED, pkmn::e_game::YELLOW},
 
     // Generation I -> Generation II
-    {"Squirtle", "", "Blue", "Gold"},
+    {"Squirtle", "", pkmn::e_game::BLUE, pkmn::e_game::GOLD},
 
     // Generation II -> Generation II
-    {"Cyndaquil", "", "Gold", "Crystal"},
-    {"Totodile", "", "Crystal", "Gold"},
+    {"Cyndaquil", "", pkmn::e_game::GOLD, pkmn::e_game::CRYSTAL},
+    {"Totodile", "", pkmn::e_game::CRYSTAL, pkmn::e_game::GOLD},
 
     // Generation II -> Generation I
-    {"Charmander", "", "Silver", "Blue"},
+    {"Charmander", "", pkmn::e_game::SILVER, pkmn::e_game::BLUE},
 
     // GBA -> GBA
-    {"Torchic", "", "Ruby", "Sapphire"},
-    {"Mudkip", "", "Ruby", "Emerald"},
-    {"Treecko", "", "Ruby", "FireRed"},
-    {"Torchic", "", "Emerald", "Sapphire"},
-    {"Mudkip", "", "Emerald", "Emerald"},
-    {"Treecko", "", "Emerald", "FireRed"},
-    {"Charmander", "", "FireRed", "Sapphire"},
-    {"Squirtle", "", "FireRed", "Emerald"},
-    {"Bulbasaur", "", "FireRed", "FireRed"},
+    {"Torchic", "", pkmn::e_game::RUBY, pkmn::e_game::SAPPHIRE},
+    {"Mudkip", "", pkmn::e_game::RUBY, pkmn::e_game::EMERALD},
+    {"Treecko", "", pkmn::e_game::RUBY, pkmn::e_game::FIRERED},
+    {"Torchic", "", pkmn::e_game::EMERALD, pkmn::e_game::SAPPHIRE},
+    {"Mudkip", "", pkmn::e_game::EMERALD, pkmn::e_game::EMERALD},
+    {"Treecko", "", pkmn::e_game::EMERALD, pkmn::e_game::FIRERED},
+    {"Charmander", "", pkmn::e_game::FIRERED, pkmn::e_game::SAPPHIRE},
+    {"Squirtle", "", pkmn::e_game::FIRERED, pkmn::e_game::EMERALD},
+    {"Bulbasaur", "", pkmn::e_game::FIRERED, pkmn::e_game::FIRERED},
 
     // GBA -> GCN
-    {"Eevee", "", "Ruby", "Colosseum"},
-    {"Espeon", "", "Emerald", "Colosseum"},
-    {"Umbreon", "", "FireRed", "Colosseum"},
-    {"Eevee", "", "Ruby", "XD"},
-    {"Espeon", "", "Emerald", "XD"},
-    {"Umbreon", "", "FireRed", "XD"},
+    {"Eevee", "", pkmn::e_game::RUBY, pkmn::e_game::COLOSSEUM},
+    {"Espeon", "", pkmn::e_game::EMERALD, pkmn::e_game::COLOSSEUM},
+    {"Umbreon", "", pkmn::e_game::FIRERED, pkmn::e_game::COLOSSEUM},
+    {"Eevee", "", pkmn::e_game::RUBY, pkmn::e_game::XD},
+    {"Espeon", "", pkmn::e_game::EMERALD, pkmn::e_game::XD},
+    {"Umbreon", "", pkmn::e_game::FIRERED, pkmn::e_game::XD},
 
     // GCN -> GBA
-    {"Eevee", "", "Colosseum", "Sapphire"},
-    {"Espeon", "", "Colosseum", "Emerald"},
-    {"Umbreon", "", "Colosseum", "LeafGreen"},
-    {"Eevee", "", "XD", "Sapphire"},
-    {"Espeon", "", "XD", "Emerald"},
-    {"Umbreon", "", "XD", "LeafGreen"},
+    {"Eevee", "", pkmn::e_game::COLOSSEUM, pkmn::e_game::SAPPHIRE},
+    {"Espeon", "", pkmn::e_game::COLOSSEUM, pkmn::e_game::EMERALD},
+    {"Umbreon", "", pkmn::e_game::COLOSSEUM, pkmn::e_game::LEAFGREEN},
+    {"Eevee", "", pkmn::e_game::XD, pkmn::e_game::SAPPHIRE},
+    {"Espeon", "", pkmn::e_game::XD, pkmn::e_game::EMERALD},
+    {"Umbreon", "", pkmn::e_game::XD, pkmn::e_game::LEAFGREEN},
 
     // GCN -> GCN
-    {"Vaporeon", "", "Colosseum", "Colosseum"},
-    {"Jolteon", "", "Colosseum", "XD"},
-    {"Vaporeon", "", "XD", "XD"},
-    {"Jolteon", "", "XD", "Colosseum"}
+    {"Vaporeon", "", pkmn::e_game::COLOSSEUM, pkmn::e_game::COLOSSEUM},
+    {"Jolteon", "", pkmn::e_game::COLOSSEUM, pkmn::e_game::XD},
+    {"Vaporeon", "", pkmn::e_game::XD, pkmn::e_game::XD},
+    {"Jolteon", "", pkmn::e_game::XD, pkmn::e_game::COLOSSEUM}
 };
 
 INSTANTIATE_TEST_CASE_P(

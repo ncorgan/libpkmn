@@ -15,6 +15,7 @@
 #include <pksav/gen2.h>
 #include <pksav/gba.h>
 
+#include "private_exports.hpp"
 #include "pksav/pksav_call.hpp"
 
 #include "libpkmgc_includes.hpp"
@@ -25,8 +26,8 @@
 #include <string>
 
 typedef std::tuple<
-            std::string, // game
-            bool         // can_breed
+            pkmn::e_game, // game
+            bool          // can_breed
         > test_params_t;
 
 class daycare_test: public ::testing::TestWithParam<test_params_t> {};
@@ -34,7 +35,7 @@ class daycare_test: public ::testing::TestWithParam<test_params_t> {};
 TEST_P(daycare_test, test_empty_daycare)
 {
     test_params_t test_params = GetParam();
-    const std::string& game = std::get<0>(test_params);
+    pkmn::e_game game = std::get<0>(test_params);
     bool can_breed = std::get<1>(test_params);
 
     pkmn::daycare::sptr daycare = pkmn::daycare::make(game);
@@ -124,7 +125,7 @@ TEST_P(daycare_test, test_empty_daycare)
 TEST_P(daycare_test, test_setting_pokemon)
 {
     test_params_t test_params = GetParam();
-    const std::string& game = std::get<0>(test_params);
+    pkmn::e_game game = std::get<0>(test_params);
 
     pkmn::daycare::sptr daycare = pkmn::daycare::make(game);
 
@@ -164,7 +165,7 @@ TEST_P(daycare_test, test_setting_pokemon)
 
     if(daycare->can_breed_pokemon())
     {
-        int generation = game_generations.at(game);
+        int generation = pkmn::priv::game_enum_to_generation(game);
 
         const pkmn::pokemon_list_t& breeding_pokemon =
             daycare->get_breeding_pokemon_as_vector();
@@ -230,18 +231,18 @@ TEST_P(daycare_test, test_setting_pokemon)
 static const std::vector<test_params_t> TEST_PARAMS =
 {
     // Generation I
-    test_params_t("Red", false),
-    test_params_t("Blue", false),
-    test_params_t("Yellow", false),
+    test_params_t(pkmn::e_game::RED,   false),
+    test_params_t(pkmn::e_game::BLUE,  false),
+    test_params_t(pkmn::e_game::YELLOW, false),
 
     // Generation II
-    test_params_t("Gold", true),
-    test_params_t("Silver", true),
-    test_params_t("Crystal", true),
+    test_params_t(pkmn::e_game::GOLD,    true),
+    test_params_t(pkmn::e_game::SILVER,  true),
+    test_params_t(pkmn::e_game::CRYSTAL, true),
 
     // Gamecube
-    test_params_t("Colosseum", false),
-    test_params_t("XD", false),
+    test_params_t(pkmn::e_game::COLOSSEUM, false),
+    test_params_t(pkmn::e_game::XD,        false),
 };
 
 INSTANTIATE_TEST_CASE_P(

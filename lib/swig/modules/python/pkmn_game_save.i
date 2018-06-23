@@ -19,7 +19,7 @@
 
 // Convert getter/setter functions into attributes for more idiomatic Python.
 
-%attributestring(pkmn::swig::game_save, std::string, game, get_game);
+%attribute(pkmn::swig::game_save, pkmn::e_game, game, get_game);
 %attributeval(pkmn::swig::game_save, pkmn::swig::game_save_time_played, time_played, get_time_played);
 %attributestring(pkmn::swig::game_save, std::string, filepath, get_filepath);
 %attributestring(pkmn::swig::game_save, std::string, trainer_name, get_trainer_name, set_trainer_name);

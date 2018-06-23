@@ -12,7 +12,7 @@
 %include <attribute.i>
 
 %attributestring(pkmn::database::pokemon_entry, std::string, Name, get_name);
-%attributestring(pkmn::database::pokemon_entry, std::string, Game, get_game);
+%attribute(pkmn::database::pokemon_entry, e_game, Game, get_game);
 %attributestring(pkmn::database::pokemon_entry, std::string, Species, get_species);
 %attributestring(pkmn::database::pokemon_entry, std::string, PokedexEntry, get_pokedex_entry);
 %attributestring(pkmn::database::pokemon_entry, std::string, Form, get_form, set_form);
@@ -129,7 +129,7 @@
     public override int GetHashCode()
     {
         return HashCodeBuilder.Create().AddValue<string>(this.Name)
-                                       .AddValue<string>(this.Game)
+                                       .AddValue<Game>(this.Game)
                                        .AddValue<string>(this.Form)
                                        .ToHashCode();
     }

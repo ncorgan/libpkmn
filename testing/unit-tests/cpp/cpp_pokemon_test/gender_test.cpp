@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -17,10 +17,11 @@
 
 namespace fs = boost::filesystem;
 
-class gender_test: public ::testing::TestWithParam<std::string> {};
+class gender_test: public ::testing::TestWithParam<pkmn::e_game> {};
 
-TEST_P(gender_test, gender_test) {
-    std::string game = GetParam();
+TEST_P(gender_test, gender_test)
+{
+    pkmn::e_game game = GetParam();
 
     // Single-gender
     pkmn::pokemon::sptr nidorina = pkmn::pokemon::make(
@@ -94,17 +95,18 @@ TEST_P(gender_test, gender_test) {
     }
 }
 
-static const std::string games[] = {
-    "Gold",
-    "Silver",
-    "Crystal",
-    "Ruby",
-    "Sapphire",
-    "Emerald",
-    "FireRed",
-    "LeafGreen",
-    "Colosseum",
-    "XD"
+static const std::vector<pkmn::e_game> games =
+{
+    pkmn::e_game::GOLD,
+    pkmn::e_game::SILVER,
+    pkmn::e_game::CRYSTAL,
+    pkmn::e_game::RUBY,
+    pkmn::e_game::SAPPHIRE,
+    pkmn::e_game::EMERALD,
+    pkmn::e_game::FIRERED,
+    pkmn::e_game::LEAFGREEN,
+    pkmn::e_game::COLOSSEUM,
+    pkmn::e_game::XD
 };
 
 INSTANTIATE_TEST_CASE_P(

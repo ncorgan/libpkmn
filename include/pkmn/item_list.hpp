@@ -10,6 +10,8 @@
 #include <pkmn/config.hpp>
 #include <pkmn/item_slot.hpp>
 
+#include <pkmn/enums/game.hpp>
+
 #include <map>
 #include <memory>
 #include <string>
@@ -52,7 +54,7 @@ namespace pkmn {
              */
             static sptr make(
                 const std::string& name,
-                const std::string& game
+                pkmn::e_game game
             );
 
             /*!
@@ -63,7 +65,7 @@ namespace pkmn {
             /*!
              * @brief Returns which game this item list comes from.
              */
-            virtual std::string get_game() = 0;
+            virtual pkmn::e_game get_game() = 0;
 
             /*!
              * @brief Returns how many unique items can be stored in this list.

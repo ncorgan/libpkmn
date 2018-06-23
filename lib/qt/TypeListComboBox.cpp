@@ -12,13 +12,11 @@
 namespace pkmn { namespace qt {
 
     TypeListComboBox::TypeListComboBox(
-        const QString& game,
+        pkmn::e_game game,
         QWidget* parent
     ): QComboBox(parent)
     {
-        std::vector<std::string> types = pkmn::database::get_type_list(
-                                             game.toStdString()
-                                         );
+        std::vector<std::string> types = pkmn::database::get_type_list(game);
         for(const std::string& type: types)
         {
             addItem(QString::fromStdString(type));

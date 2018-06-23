@@ -12,6 +12,7 @@
 #include "pokemon_box_gcnimpl.hpp"
 
 #include "database/database_common.hpp"
+#include "database/enum_conversions.hpp"
 #include "database/id_to_string.hpp"
 
 #include "utils/misc.hpp"
@@ -22,11 +23,9 @@
 
 namespace pkmn {
 
-    pokemon_box::sptr pokemon_box::make(
-        const std::string& game
-    )
+    pokemon_box::sptr pokemon_box::make(pkmn::e_game game)
     {
-        int game_id = pkmn::database::game_name_to_id(game);
+        int game_id = pkmn::database::game_enum_to_id(game);
         int generation = pkmn::database::game_id_to_generation(game_id);
 
         switch(generation)
@@ -67,11 +66,9 @@ namespace pkmn {
        _generation(pkmn::database::game_id_to_generation(game_id))
     {}
 
-    std::string pokemon_box_impl::get_game()
+    pkmn::e_game pokemon_box_impl::get_game()
     {
-        return pkmn::database::game_id_to_name(
-                   _game_id
-               );
+        return pkmn::database::game_id_to_enum(_game_id);
     }
 
     const pkmn::pokemon::sptr& pokemon_box_impl::get_pokemon(

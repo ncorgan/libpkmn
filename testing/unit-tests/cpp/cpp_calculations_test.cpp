@@ -1930,12 +1930,12 @@ TEST(cpp_calculations_test, pokemon_size_test) {
      * for each relevant Pokémon.
      */
     static const std::vector<pkmn::database::pokemon_entry> pokemon_with_size_checks = boost::assign::list_of
-        (pkmn::database::pokemon_entry("Barboach", "Ruby", ""))
-        (pkmn::database::pokemon_entry("Shroomish", "Ruby", ""))
-        (pkmn::database::pokemon_entry("Seedot", "Emerald", ""))
-        (pkmn::database::pokemon_entry("Lotad", "Emerald", ""))
-        (pkmn::database::pokemon_entry("Magikarp", "FireRed", ""))
-        (pkmn::database::pokemon_entry("Heracross", "FireRed", ""))
+        (pkmn::database::pokemon_entry("Barboach",  pkmn::e_game::RUBY, ""))
+        (pkmn::database::pokemon_entry("Shroomish", pkmn::e_game::RUBY, ""))
+        (pkmn::database::pokemon_entry("Seedot",    pkmn::e_game::EMERALD, ""))
+        (pkmn::database::pokemon_entry("Lotad",     pkmn::e_game::EMERALD, ""))
+        (pkmn::database::pokemon_entry("Magikarp",  pkmn::e_game::FIRERED, ""))
+        (pkmn::database::pokemon_entry("Heracross", pkmn::e_game::LEAFGREEN, ""))
     ;
 
     // Test input validation.

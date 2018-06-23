@@ -19,7 +19,7 @@ public class CSharpGameSaveTest
     {
         PKMNTest.GameSaveTest.TestGameSave(
             "Red/Blue",
-            "Red",
+            PKMN.Game.RED,
             "red_blue/pokemon_red.sav"
         );
     }
@@ -32,7 +32,7 @@ public class CSharpGameSaveTest
     {
         PKMNTest.GameSaveTest.TestGameSave(
             "Yellow",
-            "Yellow",
+            PKMN.Game.YELLOW,
             "yellow/pokemon_yellow.sav"
         );
     }
@@ -45,7 +45,7 @@ public class CSharpGameSaveTest
     {
         PKMNTest.GameSaveTest.TestGameSave(
             "Gold/Silver",
-            "Gold",
+            PKMN.Game.GOLD,
             "gold_silver/pokemon_gold.sav"
         );
     }
@@ -58,7 +58,7 @@ public class CSharpGameSaveTest
     {
         PKMNTest.GameSaveTest.TestGameSave(
             "Crystal",
-            "Crystal",
+            PKMN.Game.CRYSTAL,
             "crystal/pokemon_crystal.sav"
         );
     }
@@ -71,7 +71,7 @@ public class CSharpGameSaveTest
     {
         PKMNTest.GameSaveTest.TestGameSave(
             "Ruby/Sapphire",
-            "Ruby",
+            PKMN.Game.RUBY,
             "ruby_sapphire/pokemon_ruby.sav"
         );
     }
@@ -84,7 +84,7 @@ public class CSharpGameSaveTest
     {
         PKMNTest.GameSaveTest.TestGameSave(
             "Emerald",
-            "Emerald",
+            PKMN.Game.EMERALD,
             "emerald/pokemon_emerald.sav"
         );
     }
@@ -97,7 +97,7 @@ public class CSharpGameSaveTest
     {
         PKMNTest.GameSaveTest.TestGameSave(
             "FireRed/LeafGreen",
-            "FireRed",
+            PKMN.Game.FIRERED,
             "firered_leafgreen/pokemon_firered.sav"
         );
     }
@@ -110,7 +110,7 @@ public class CSharpGameSaveTest
     {
         PKMNTest.GameSaveTest.TestGameSave(
             "Colosseum/XD",
-            "Colosseum",
+            PKMN.Game.COLOSSEUM,
             "gamecube_saves/pokemon_colosseum.gci"
         );
     }
@@ -123,7 +123,7 @@ public class CSharpGameSaveTest
     {
         PKMNTest.GameSaveTest.TestGameSave(
             "Colosseum/XD",
-            "XD",
+            PKMN.Game.XD,
             "gamecube_saves/pokemon_xd.gci"
         );
     }

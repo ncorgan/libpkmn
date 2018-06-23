@@ -9,6 +9,7 @@
 
 #include <pkmntest-c/config.h>
 
+#include <pkmn-c/types/game.h>
 #include <pkmn-c/types/string_types.h>
 
 #include <stdbool.h>
@@ -48,39 +49,58 @@ static inline bool string_list_contains(
     return false;
 }
 
-static inline int game_to_generation(
-    const char* game
-)
+static inline int game_to_generation(enum pkmn_game game)
 {
     int ret = 0;
-    if(!strcmp(game, "Red") || !strcmp(game, "Blue") || !strcmp(game, "Yellow"))
+
+    switch(game)
     {
-        ret = 1;
-    }
-    else if(!strcmp(game, "Gold") || !strcmp(game, "Silver") || !strcmp(game, "Crystal"))
-    {
-        ret = 2;
-    }
-    else if(!strcmp(game, "Ruby") || !strcmp(game, "Sapphire") || !strcmp(game, "Emerald") ||
-            !strcmp(game, "FireRed") || !strcmp(game, "LeafGreen") ||
-            !strcmp(game, "Colosseum") || !strcmp(game, "XD"))
-    {
-        ret = 3;
-    }
-    else if(!strcmp(game, "Diamond") || !strcmp(game, "Pearl") || !strcmp(game, "Platinum") ||
-              !strcmp(game, "HeartGold") || !strcmp(game, "SoulSilver"))
-    {
-        ret = 4;
-    }
-    else if(!strcmp(game, "Black") || !strcmp(game, "White") ||
-              !strcmp(game, "Black 2") || !strcmp(game, "White 2"))
-    {
-        ret = 5;
-    }
-    else if(!strcmp(game, "X") || !strcmp(game, "Y") ||
-            !strcmp(game, "Omega Ruby") || !strcmp(game, "Alpha Sapphire"))
-    {
-        ret = 6;
+        case PKMN_GAME_RED:
+        case PKMN_GAME_BLUE:
+        case PKMN_GAME_YELLOW:
+            ret = 1;
+            break;
+
+        case PKMN_GAME_GOLD:
+        case PKMN_GAME_SILVER:
+        case PKMN_GAME_CRYSTAL:
+            ret = 2;
+            break;
+
+        case PKMN_GAME_RUBY:
+        case PKMN_GAME_SAPPHIRE:
+        case PKMN_GAME_EMERALD:
+        case PKMN_GAME_FIRERED:
+        case PKMN_GAME_LEAFGREEN:
+        case PKMN_GAME_COLOSSEUM:
+        case PKMN_GAME_XD:
+            ret = 3;
+            break;
+
+        case PKMN_GAME_DIAMOND:
+        case PKMN_GAME_PEARL:
+        case PKMN_GAME_PLATINUM:
+        case PKMN_GAME_HEARTGOLD:
+        case PKMN_GAME_SOULSILVER:
+            ret = 4;
+            break;
+
+        case PKMN_GAME_BLACK:
+        case PKMN_GAME_WHITE:
+        case PKMN_GAME_BLACK2:
+        case PKMN_GAME_WHITE2:
+            ret = 5;
+            break;
+
+        case PKMN_GAME_X:
+        case PKMN_GAME_Y:
+        case PKMN_GAME_OMEGA_RUBY:
+        case PKMN_GAME_ALPHA_SAPPHIRE:
+            ret = 6;
+            break;
+
+        default:
+            break;
     }
 
     return ret;

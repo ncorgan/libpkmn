@@ -14,7 +14,7 @@
 // Convert getter/setter functions into attributes for more idiomatic Ruby.
 
 %attributestring(pkmn::database::pokemon_entry, std::string, name, get_name);
-%attributestring(pkmn::database::pokemon_entry, std::string, game, get_game);
+%attribute(pkmn::database::pokemon_entry, pkmn::e_game, game, get_game);
 %attributestring(pkmn::database::pokemon_entry, std::string, species, get_species);
 %attributestring(pkmn::database::pokemon_entry, std::string, pokedex_entry, get_pokedex_entry);
 %attributestring(pkmn::database::pokemon_entry, std::string, form, get_form, set_form);

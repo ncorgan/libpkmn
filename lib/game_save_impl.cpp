@@ -10,6 +10,8 @@
 #include "game_save_gen2impl.hpp"
 #include "game_save_gbaimpl.hpp"
 #include "game_save_gcnimpl.hpp"
+
+#include "database/enum_conversions.hpp"
 #include "database/id_to_string.hpp"
 
 #include "libpkmgc_includes.hpp"
@@ -276,9 +278,9 @@ namespace pkmn {
         save_as(_filepath);
     }
 
-    std::string game_save_impl::get_game()
+    pkmn::e_game game_save_impl::get_game()
     {
-        return pkmn::database::game_id_to_name(_game_id);
+        return pkmn::database::game_id_to_enum(_game_id);
     }
 
     const pkmn::pokedex::sptr& game_save_impl::get_pokedex()

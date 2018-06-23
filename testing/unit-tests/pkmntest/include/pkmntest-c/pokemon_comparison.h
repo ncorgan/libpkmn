@@ -28,7 +28,7 @@ PKMNTEST_C_API void get_random_pokemon(
     struct pkmn_pokemon* p_pokemon,
     struct pkmn_string_list* p_item_list, // Can be NULL
     const char* species, // Can be NULL
-    const char* game
+    enum pkmn_game game
 );
 
 PKMNTEST_C_API void compare_pokemon(

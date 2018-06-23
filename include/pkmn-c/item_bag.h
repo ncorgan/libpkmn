@@ -11,6 +11,7 @@
 #include <pkmn-c/error.h>
 
 #include <pkmn-c/item_list.h>
+#include <pkmn-c/types/game.h>
 #include <pkmn-c/types/string_types.h>
 
 /*!
@@ -29,7 +30,7 @@ struct pkmn_item_bag
     /*!
      * @brief The game this bag is associated with.
      */
-    char* p_game;
+    enum pkmn_game game;
 
     /*!
      * @brief A list of the names of this bag's pockets.
@@ -58,7 +59,7 @@ extern "C" {
  * \returns ::PKMN_ERROR_NULL_POINTER if either parameter is NULL
  */
 PKMN_C_API enum pkmn_error pkmn_item_bag_init(
-    const char* p_game,
+    enum pkmn_game game,
     struct pkmn_item_bag* p_item_bag_out
 );
 

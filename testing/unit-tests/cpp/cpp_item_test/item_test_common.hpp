@@ -22,7 +22,7 @@
 typedef void (*item_list_test_fcn_t)(const pkmn::item_list::sptr&);
 typedef std::map<std::string, item_list_test_fcn_t> item_list_test_fcns_t;
 
-class item_list_test: public ::testing::TestWithParam<std::pair<std::string, std::string> >
+class item_list_test: public ::testing::TestWithParam<std::pair<pkmn::e_game, std::string> >
 {
     public:
         inline pkmn::item_list::sptr get_item_list()
@@ -30,7 +30,7 @@ class item_list_test: public ::testing::TestWithParam<std::pair<std::string, std
             return _item_list;
         }
 
-        inline const std::string& get_game()
+        inline pkmn::e_game get_game()
         {
             return _game;
         }
@@ -58,7 +58,8 @@ class item_list_test: public ::testing::TestWithParam<std::pair<std::string, std
 
     private:
 
-        std::string _name, _game;
+        std::string _name;
+        pkmn::e_game _game;
         pkmn::item_list::sptr _item_list;
 };
 
@@ -81,14 +82,14 @@ void test_item_list_add_remove(
     const std::vector<std::string> &item_names
 );
 
-class item_bag_test: public ::testing::TestWithParam<std::string> {
+class item_bag_test: public ::testing::TestWithParam<pkmn::e_game> {
     public:
         // We need access to the specific sptr instance.
         inline const pkmn::item_bag::sptr& get_item_bag() {
             return _item_bag;
         }
 
-        inline const std::string& get_game() {
+        inline pkmn::e_game get_game() {
             return _game;
         }
 
@@ -108,7 +109,7 @@ class item_bag_test: public ::testing::TestWithParam<std::string> {
 
     private:
 
-        std::string _game;
+        pkmn::e_game _game;
         pkmn::item_bag::sptr _item_bag;
 };
 

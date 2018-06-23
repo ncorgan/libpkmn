@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -14,7 +14,7 @@
 // Convert getter/setter functions into attributes for more idiomatic Lua.
 
 %attributestring(pkmn::database::move_entry, std::string, name, get_name);
-%attributestring(pkmn::database::move_entry, std::string, game, get_game);
+%attribute(pkmn::database::move_entry, pkmn::e_game, game, get_game);
 %attributestring(pkmn::database::move_entry, std::string, type, get_type);
 %attributestring(pkmn::database::move_entry, std::string, description, get_description);
 %attributestring(pkmn::database::move_entry, std::string, target, get_target);

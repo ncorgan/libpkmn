@@ -31,13 +31,13 @@ namespace pkmn { namespace swig {
             }
 
             explicit pokemon_party(
-                const std::string& game
+                pkmn::e_game game
             ): _pokemon_party(pkmn::pokemon_party::make(game))
             {
                 BOOST_ASSERT(_pokemon_party.get() != nullptr);
             }
 
-            inline std::string get_game()
+            inline pkmn::e_game get_game()
             {
                 BOOST_ASSERT(_pokemon_party.get() != nullptr);
 

@@ -39,7 +39,7 @@ static const struct pkmn_trainer_info empty_trainer_info =
 static const struct pkmn_database_move_entry empty_move_entry =
 {
     .p_name = NULL,
-    .p_game = NULL,
+    .game = PKMN_GAME_NONE,
     .p_description = NULL,
     .p_target = NULL,
     .p_damage_class = NULL,
@@ -55,7 +55,7 @@ static const struct pkmn_database_move_entry empty_move_entry =
 static const struct pkmn_database_pokemon_entry empty_pokemon_entry =
 {
     .p_name = NULL,
-    .p_game = NULL,
+    .game = PKMN_GAME_NONE,
     .p_species = NULL,
     .p_form = NULL,
     .p_pokedex_entry = NULL,
@@ -122,6 +122,11 @@ static const struct pkmn_move_slots empty_move_slots =
     .length = 0
 };
 
+static inline bool is_game_gamecube(enum pkmn_game game)
+{
+    return (game == PKMN_GAME_COLOSSEUM) || (game == PKMN_GAME_XD);
+}
+
 static void check_initial_values(
     struct pkmn_pokemon* p_pokemon
 )
@@ -146,12 +151,12 @@ static void check_initial_values(
         p_pokemon->p_species,
         pokemon_entry.p_name
     );
-    TEST_ASSERT_EQUAL_STRING(
-        p_pokemon->p_game,
-        pokemon_entry.p_game
+    TEST_ASSERT_EQUAL(
+        p_pokemon->game,
+        pokemon_entry.game
     );
 
-    int generation = game_to_generation(p_pokemon->p_game);
+    int generation = game_to_generation(p_pokemon->game);
 
     error = pkmn_pokemon_get_form(
                 p_pokemon,
@@ -264,28 +269,21 @@ static void check_initial_values(
             strbuffer
         );
 
-        // There is no distinction between Colosseum and XD in the game storage.
+        enum pkmn_game original_game = PKMN_GAME_NONE;
         error = pkmn_pokemon_get_original_game(
                     p_pokemon,
-                    strbuffer,
-                    sizeof(strbuffer),
-                    NULL
+                    &original_game
                 );
         PKMN_TEST_ASSERT_SUCCESS(error);
 
-        if(!strcmp(p_pokemon->p_game, "Colosseum") || !strcmp(p_pokemon->p_game, "XD"))
+        // There is no distinction between Colosseum and XD in the game storage.
+        if(is_game_gamecube(p_pokemon->game))
         {
-            TEST_ASSERT_EQUAL_STRING(
-                "Colosseum/XD",
-                strbuffer
-            );
+            TEST_ASSERT_EQUAL(PKMN_GAME_COLOSSEUM, original_game);
         }
         else
         {
-            TEST_ASSERT_EQUAL_STRING(
-                p_pokemon->p_game,
-                strbuffer
-            );
+            TEST_ASSERT_EQUAL(p_pokemon->game, original_game);
         }
     }
 
@@ -374,7 +372,7 @@ static void check_initial_maps(
 {
     TEST_ASSERT_NOT_NULL(p_pokemon);
 
-    int generation = game_to_generation(p_pokemon->p_game);
+    int generation = game_to_generation(p_pokemon->game);
 
     enum pkmn_error error = PKMN_ERROR_NONE;
 
@@ -571,7 +569,7 @@ static void test_image_filepaths(
     enum pkmn_error error = PKMN_ERROR_NONE;
     char strbuffer[STRBUFFER_LEN] = {0};
 
-    int generation = game_to_generation(p_pokemon->p_game);
+    int generation = game_to_generation(p_pokemon->game);
 
     error = pkmn_pokemon_get_icon_filepath(
                 p_pokemon,
@@ -636,7 +634,7 @@ static void test_setting_ability(
     enum pkmn_error error = PKMN_ERROR_NONE;
     char strbuffer[STRBUFFER_LEN] = {0};
 
-    int generation = game_to_generation(p_pokemon->p_game);
+    int generation = game_to_generation(p_pokemon->game);
 
     if(generation >= 3)
     {
@@ -755,7 +753,7 @@ static void test_setting_ball(
     enum pkmn_error error = PKMN_ERROR_NONE;
     char strbuffer[STRBUFFER_LEN] = {0};
 
-    int generation = game_to_generation(p_pokemon->p_game);
+    int generation = game_to_generation(p_pokemon->game);
 
     if(generation >= 3)
     {
@@ -813,7 +811,7 @@ static void test_setting_condition(
 
     enum pkmn_error error = PKMN_ERROR_NONE;
 
-    int generation = game_to_generation(p_pokemon->p_game);
+    int generation = game_to_generation(p_pokemon->game);
 
     enum pkmn_condition last_condition = (generation <= 2) ? PKMN_CONDITION_PARALYSIS
                                                         : PKMN_CONDITION_BAD_POISON;
@@ -845,7 +843,7 @@ static void test_setting_friendship(
 
     enum pkmn_error error = PKMN_ERROR_NONE;
 
-    int generation = game_to_generation(p_pokemon->p_game);
+    int generation = game_to_generation(p_pokemon->game);
 
     if(generation >= 2)
     {
@@ -907,7 +905,7 @@ static void test_setting_held_item(
     enum pkmn_error error = PKMN_ERROR_NONE;
     char strbuffer[STRBUFFER_LEN] = {0};
 
-    int generation = game_to_generation(p_pokemon->p_game);
+    int generation = game_to_generation(p_pokemon->game);
 
     if(generation >= 2)
     {
@@ -965,7 +963,7 @@ static void test_setting_levels(
 
     enum pkmn_error error = PKMN_ERROR_NONE;
 
-    int generation = game_to_generation(p_pokemon->p_game);
+    int generation = game_to_generation(p_pokemon->game);
 
     error = pkmn_pokemon_set_level(
                 p_pokemon,
@@ -1160,7 +1158,7 @@ static void test_setting_location_met(
     char strbuffer[STRBUFFER_LEN] = {0};
     enum pkmn_error error = PKMN_ERROR_NONE;
 
-    int generation = game_to_generation(p_pokemon->p_game);
+    int generation = game_to_generation(p_pokemon->game);
 
     switch(generation)
     {
@@ -1312,7 +1310,7 @@ static void test_setting_markings(
     enum pkmn_error error = PKMN_ERROR_NONE;
     bool has_markings[PKMN_NUM_MARKINGS];
 
-    int generation = game_to_generation(p_pokemon->p_game);
+    int generation = game_to_generation(p_pokemon->game);
 
     if(generation >= 3)
     {
@@ -1403,7 +1401,7 @@ static void test_setting_moves(
         struct pkmn_database_move_entry move_entry = empty_move_entry;
         error = pkmn_database_get_move_entry(
                     valid_move_names[move_index],
-                    p_pokemon->p_game,
+                    p_pokemon->game,
                     &move_entry
                 );
         PKMN_TEST_ASSERT_SUCCESS(error);
@@ -1470,54 +1468,53 @@ static void test_setting_moves(
 
 static void test_setting_original_game(
     struct pkmn_pokemon* p_pokemon,
-    const char** valid_game_names,
-    const char** invalid_game_names
+    enum pkmn_game* valid_games,
+    enum pkmn_game* invalid_games
 )
 {
     TEST_ASSERT_NOT_NULL(p_pokemon);
-    TEST_ASSERT_NOT_NULL(valid_game_names);
-    TEST_ASSERT_NOT_NULL(invalid_game_names);
+    TEST_ASSERT_NOT_NULL(valid_games);
+    TEST_ASSERT_NOT_NULL(invalid_games);
 
-    char strbuffer[STRBUFFER_LEN] = {0};
     enum pkmn_error error = PKMN_ERROR_NONE;
+    enum pkmn_game original_game = PKMN_GAME_NONE;
 
-    int generation = game_to_generation(p_pokemon->p_game);
+    int generation = game_to_generation(p_pokemon->game);
 
     if(generation >= 3)
     {
-        for(size_t game_index = 0; valid_game_names[game_index]; ++game_index)
+        for(size_t game_index = 0;
+            valid_games[game_index] != PKMN_GAME_NONE;
+            ++game_index)
         {
             error = pkmn_pokemon_set_original_game(
                         p_pokemon,
-                        valid_game_names[game_index]
+                        valid_games[game_index]
                     );
             PKMN_TEST_ASSERT_SUCCESS(error);
+
             error = pkmn_pokemon_get_original_game(
                         p_pokemon,
-                        strbuffer,
-                        sizeof(strbuffer),
-                        NULL
+                        &original_game
                     );
             PKMN_TEST_ASSERT_SUCCESS(error);
-            if(!strcmp(valid_game_names[game_index], "Colosseum") ||
-               !strcmp(valid_game_names[game_index], "XD"))
+            if(is_game_gamecube(valid_games[game_index]))
             {
-                TEST_ASSERT_EQUAL_STRING("Colosseum/XD", strbuffer);
+                TEST_ASSERT_EQUAL(PKMN_GAME_COLOSSEUM, original_game);
             }
             else
             {
-                TEST_ASSERT_EQUAL_STRING(
-                    valid_game_names[game_index],
-                    strbuffer
-                );
+                TEST_ASSERT_EQUAL(valid_games[game_index], original_game);
             }
         }
 
-        for(size_t game_index = 0; invalid_game_names[game_index]; ++game_index)
+        for(size_t game_index = 0;
+            invalid_games[game_index] != PKMN_GAME_NONE;
+            ++game_index)
         {
             error = pkmn_pokemon_set_original_game(
                         p_pokemon,
-                        invalid_game_names[game_index]
+                        invalid_games[game_index]
                     );
             TEST_ASSERT_EQUAL(PKMN_ERROR_INVALID_ARGUMENT, error);
         }
@@ -1526,14 +1523,12 @@ static void test_setting_original_game(
     {
         error = pkmn_pokemon_get_original_game(
                     p_pokemon,
-                    strbuffer,
-                    sizeof(strbuffer),
-                    NULL
+                    &original_game
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_FEATURE_NOT_IN_GAME_ERROR, error);
         error = pkmn_pokemon_set_original_game(
                     p_pokemon,
-                    valid_game_names[0]
+                    valid_games[0]
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_FEATURE_NOT_IN_GAME_ERROR, error);
     }
@@ -1547,7 +1542,7 @@ static void test_setting_personality(
 
     enum pkmn_error error = PKMN_ERROR_NONE;
 
-    int generation = game_to_generation(p_pokemon->p_game);
+    int generation = game_to_generation(p_pokemon->game);
 
     const uint32_t personality = 0x7F3AB3A8;
     uint32_t personality_from_pokemon = 0;
@@ -1589,7 +1584,7 @@ static void test_setting_pokerus(
 
     enum pkmn_error error = PKMN_ERROR_NONE;
 
-    int generation = game_to_generation(p_pokemon->p_game);
+    int generation = game_to_generation(p_pokemon->game);
 
     int pokerus_duration_from_pokemon = 0;
 
@@ -1646,7 +1641,7 @@ static void test_setting_stats(
 
     enum pkmn_error error = PKMN_ERROR_NONE;
 
-    int generation = game_to_generation(p_pokemon->p_game);
+    int generation = game_to_generation(p_pokemon->game);
 
     int EVs[PKMN_NUM_STATS] = {0};
     error = pkmn_pokemon_get_EVs(
@@ -1812,7 +1807,7 @@ static void test_setting_trainer_info(
     enum pkmn_error error = PKMN_ERROR_NONE;
     char strbuffer[STRBUFFER_LEN] = {0};
 
-    int generation = game_to_generation(p_pokemon->p_game);
+    int generation = game_to_generation(p_pokemon->game);
 
     const char* nickname = "foobarbaz";
     const char* trainer_name = "foobar";
@@ -2001,8 +1996,8 @@ void pokemon_test_common(
     );
     test_setting_original_game(
         p_pokemon,
-        (const char**)(p_test_values->valid_original_games),
-        (const char**)(p_test_values->invalid_original_games)
+        (enum pkmn_game*)(p_test_values->valid_original_games),
+        (enum pkmn_game*)(p_test_values->invalid_original_games)
     );
     test_setting_personality(p_pokemon);
     test_setting_pokerus(p_pokemon);
