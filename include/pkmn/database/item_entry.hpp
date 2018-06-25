@@ -9,6 +9,7 @@
 
 #include <pkmn/config.hpp>
 
+#include <pkmn/enums/item.hpp>
 #include <pkmn/enums/game.hpp>
 
 #include <string>

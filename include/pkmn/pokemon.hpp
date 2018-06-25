@@ -13,9 +13,15 @@
 #include <pkmn/database/pokemon_entry.hpp>
 #include <pkmn/types/class_with_attributes.hpp>
 
+#include <pkmn/enums/ability.hpp>
+#include <pkmn/enums/ball.hpp>
 #include <pkmn/enums/game.hpp>
 #include <pkmn/enums/gender.hpp>
+#include <pkmn/enums/item.hpp>
 #include <pkmn/enums/language.hpp>
+#include <pkmn/enums/move.hpp>
+#include <pkmn/enums/nature.hpp>
+#include <pkmn/enums/species.hpp>
 #include <pkmn/enums/stat.hpp>
 
 #include <cstdint>

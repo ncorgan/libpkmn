@@ -10,6 +10,9 @@
 #include <pkmn/config.hpp>
 
 #include <pkmn/enums/game.hpp>
+#include <pkmn/enums/move.hpp>
+#include <pkmn/enums/move_damage_class.hpp>
+#include <pkmn/enums/type.hpp>
 
 #include <string>
 #include <vector>

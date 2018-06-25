@@ -12,8 +12,11 @@
 #include <pkmn/database/levelup_move.hpp>
 #include <pkmn/database/move_entry.hpp>
 
+#include <pkmn/enums/egg_group.hpp>
 #include <pkmn/enums/game.hpp>
+#include <pkmn/enums/species.hpp>
 #include <pkmn/enums/stat.hpp>
+#include <pkmn/enums/type.hpp>
 
 #include <map>
 #include <string>
