@@ -9,8 +9,6 @@
 #include "enum_maps.hpp"
 #include "error_internal.hpp"
 
-#include "exception_internal.hpp"
-
 #include <pkmn-c/breeding/child_info.h>
 
 #include <pkmn/breeding/child_info.hpp>
@@ -27,19 +25,11 @@ enum pkmn_error pkmn_breeding_get_possible_child_species(
     PKMN_CHECK_NULL_PARAM(p_possible_child_species_out);
 
     PKMN_CPP_TO_C(
-        const pkmn::c::game_bimap_t& game_bimap = pkmn::c::get_game_bimap();
-
-        pkmn::enforce_value_in_map_keys(
-            "Game",
-            game,
-            game_bimap.right
-        );
-
         pkmn::c::string_list_cpp_to_c(
             pkmn::breeding::get_possible_child_species(
                 p_mother_species,
                 p_father_species,
-                game_bimap.right.at(game)
+                static_cast<pkmn::e_game>(game)
             ),
             p_possible_child_species_out
         );
@@ -85,19 +75,11 @@ enum pkmn_error pkmn_breeding_get_ideal_child_IVs(
     // p_actual_num_IVs_out can be NULL
 
     PKMN_CPP_TO_C(
-        const pkmn::c::gender_bimap_t& gender_bimap = pkmn::c::get_gender_bimap();
-
-        pkmn::enforce_value_in_map_keys(
-            "Gender",
-            gender,
-            gender_bimap.right
-        );
-
         pkmn::c::copy_map_to_buffer(
             pkmn::breeding::get_ideal_child_IVs(
                 POKEMON_INTERNAL_RCAST(p_mother->p_internal)->cpp,
                 POKEMON_INTERNAL_RCAST(p_father->p_internal)->cpp,
-                gender_bimap.right.at(gender)
+                static_cast<pkmn::e_gender>(gender)
             ),
             pkmn::c::get_stat_bimap(),
             p_IVs_buffer_out,

@@ -30,7 +30,7 @@ namespace pkmn { namespace c {
         BOOST_ASSERT(libpkmn_sptr.get() != nullptr);
         BOOST_ASSERT(p_libpkmn_c_struct_out != nullptr);
 
-        p_libpkmn_c_struct_out->game = pkmn::c::get_game_bimap().left.at(
+        p_libpkmn_c_struct_out->game = static_cast<enum pkmn_game>(
                                            libpkmn_sptr->get_game()
                                        );
 
@@ -655,9 +655,7 @@ namespace pkmn { namespace c {
             &temp_item_entry_c.p_fling_effect
         );
 
-        const game_bimap_t& game_bimap = get_game_bimap();
-        BOOST_ASSERT(game_bimap.left.count(item_entry_cpp.get_game()) > 0);
-        temp_item_entry_c.game = game_bimap.left.at(item_entry_cpp.get_game());
+        temp_item_entry_c.game = static_cast<enum pkmn_game>(item_entry_cpp.get_game());
 
         temp_item_entry_c.cost = item_entry_cpp.get_cost();
         temp_item_entry_c.holdable = item_entry_cpp.holdable();
@@ -728,9 +726,7 @@ namespace pkmn { namespace c {
             &temp_move_entry_c.p_super_contest_effect
         );
 
-        const game_bimap_t& game_bimap = get_game_bimap();
-        BOOST_ASSERT(game_bimap.left.count(move_entry_cpp.get_game()) > 0);
-        temp_move_entry_c.game = game_bimap.left.at(move_entry_cpp.get_game());
+        temp_move_entry_c.game = static_cast<enum pkmn_game>(move_entry_cpp.get_game());
 
         temp_move_entry_c.base_power = move_entry_cpp.get_base_power();
         for(int num_pp = 0; num_pp < 4; ++num_pp)
@@ -849,9 +845,7 @@ namespace pkmn { namespace c {
             &temp_pokemon_entry_c.egg_groups
         );
 
-        const game_bimap_t& game_bimap = get_game_bimap();
-        BOOST_ASSERT(game_bimap.left.count(pokemon_entry_cpp.get_game()) > 0);
-        temp_pokemon_entry_c.game = game_bimap.left.at(pokemon_entry_cpp.get_game());
+        temp_pokemon_entry_c.game = static_cast<enum pkmn_game>(pokemon_entry_cpp.get_game());
 
         temp_pokemon_entry_c.height = pokemon_entry_cpp.get_height();
         temp_pokemon_entry_c.weight = pokemon_entry_cpp.get_weight();

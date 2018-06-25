@@ -6,9 +6,7 @@
  */
 
 #include "cpp_to_c.hpp"
-#include "enum_maps.hpp"
 #include "error_internal.hpp"
-#include "exception_internal.hpp"
 
 #include <boost/assert.hpp>
 #include <boost/thread/mutex.hpp>
@@ -24,13 +22,9 @@ enum pkmn_error pkmn_game_save_detect_type(
     PKMN_CHECK_NULL_PARAM(p_game_save_type_out);
 
     PKMN_CPP_TO_C(
-        const pkmn::c::game_save_type_bimap_t& game_save_type_bimap =
-            pkmn::c::get_game_save_type_bimap();
-
-        pkmn::e_game_save_type cpp_game_save_type = pkmn::game_save::detect_type(p_filepath);
-        BOOST_ASSERT(game_save_type_bimap.right.count(cpp_game_save_type) > 0);
-
-        *p_game_save_type_out = game_save_type_bimap.left.at(cpp_game_save_type);
+        *p_game_save_type_out = static_cast<enum pkmn_game_save_type>(
+                                    pkmn::game_save::detect_type(p_filepath)
+                                );
     )
 }
 
@@ -166,11 +160,9 @@ enum pkmn_error pkmn_game_save_get_trainer_info(
 
         if(p_internal->generation >= 2)
         {
-            pkmn::e_gender cpp_gender = p_internal->cpp->get_trainer_gender();
-
-            const pkmn::c::gender_bimap_t& gender_bimap = pkmn::c::get_gender_bimap();
-            BOOST_ASSERT(gender_bimap.left.count(cpp_gender) > 0);
-            trainer_info.gender = gender_bimap.left.at(cpp_gender);
+            trainer_info.gender = static_cast<enum pkmn_gender>(
+                                      p_internal->cpp->get_trainer_gender()
+                                  );
         }
         else
         {
@@ -243,16 +235,8 @@ enum pkmn_error pkmn_game_save_set_trainer_gender(
     pkmn_game_save_internal_t* p_internal = GAME_SAVE_INTERNAL_RCAST(p_game_save->p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
-        pkmn::enforce_value_in_vector(
-            "Gender",
-            gender,
-            {PKMN_GENDER_MALE, PKMN_GENDER_FEMALE}
-        );
-
-        const pkmn::c::gender_bimap_t& gender_bimap = pkmn::c::get_gender_bimap();
-
         p_internal->cpp->set_trainer_gender(
-            gender_bimap.right.at(gender)
+            static_cast<pkmn::e_gender>(gender)
         );
     )
 }

@@ -6,9 +6,7 @@
  */
 
 #include "cpp_to_c.hpp"
-#include "enum_maps.hpp"
 #include "error_internal.hpp"
-#include "exception_internal.hpp"
 
 #include <boost/assert.hpp>
 #include <boost/thread/mutex.hpp>
@@ -23,15 +21,7 @@ enum pkmn_error pkmn_daycare_init(
     PKMN_CHECK_NULL_PARAM(p_daycare_out);
 
     PKMN_CPP_TO_C(
-        const pkmn::c::game_bimap_t& game_bimap = pkmn::c::get_game_bimap();
-
-        pkmn::enforce_value_in_map_keys(
-            "Game",
-            game,
-            game_bimap.right
-        );
-
-        pkmn::daycare::sptr cpp = pkmn::daycare::make(game_bimap.right.at(game));
+        pkmn::daycare::sptr cpp = pkmn::daycare::make(static_cast<pkmn::e_game>(game));
 
         pkmn::c::init_daycare(
             cpp,

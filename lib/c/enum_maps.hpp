@@ -31,20 +31,12 @@
 
 namespace pkmn { namespace c {
 
-    typedef boost::bimap<pkmn::e_game, enum pkmn_game> game_bimap_t;
-    typedef boost::bimap<pkmn::e_game_save_type, enum pkmn_game_save_type> game_save_type_bimap_t;
-    typedef boost::bimap<pkmn::e_gender, enum pkmn_gender> gender_bimap_t;
-    typedef boost::bimap<pkmn::e_language, enum pkmn_language> language_bimap_t;
     typedef boost::bimap<pkmn::e_stat, enum pkmn_stat> stat_bimap_t;
 
     typedef boost::bimap<std::string, enum pkmn_contest_stat> contest_stat_bimap_t;
     typedef boost::bimap<std::string, enum pkmn_condition> condition_bimap_t;
     typedef boost::bimap<std::string, enum pkmn_marking> marking_bimap_t;
 
-    const game_bimap_t& get_game_bimap();
-    const game_save_type_bimap_t& get_game_save_type_bimap();
-    const gender_bimap_t& get_gender_bimap();
-    const language_bimap_t& get_language_bimap();
     const stat_bimap_t& get_stat_bimap();
     const contest_stat_bimap_t& get_contest_stat_bimap();
     const condition_bimap_t& get_condition_bimap();

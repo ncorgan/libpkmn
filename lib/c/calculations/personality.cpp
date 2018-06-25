@@ -6,7 +6,6 @@
  */
 
 #include "enum_maps.hpp"
-#include "exception_internal.hpp"
 #include "error_internal.hpp"
 
 #include <pkmn-c/calculations/personality.h>
@@ -29,19 +28,12 @@ enum pkmn_error pkmn_calculations_generate_personality(
     PKMN_CHECK_NULL_PARAM(p_personality_out);
 
     PKMN_CPP_TO_C(
-        const pkmn::c::gender_bimap_t& gender_bimap = pkmn::c::get_gender_bimap();
-        pkmn::enforce_value_in_map_keys(
-            "Gender",
-            gender,
-            gender_bimap.right
-        );
-
         *p_personality_out = pkmn::calculations::generate_personality(
                                  p_species,
                                  trainer_id,
                                  shiny,
                                  p_ability,
-                                 gender_bimap.right.at(gender),
+                                 static_cast<pkmn::e_gender>(gender),
                                  p_nature
                              );
     )

@@ -5,7 +5,6 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-#include "enum_maps.hpp"
 #include "error_internal.hpp"
 
 #include <pkmn-c/calculations/gender.h>
@@ -25,15 +24,11 @@ enum pkmn_error pkmn_calculations_gen2_pokemon_gender(
     PKMN_CHECK_NULL_PARAM(p_gender_out);
 
     PKMN_CPP_TO_C(
-        const pkmn::c::gender_bimap_t& gender_bimap = pkmn::c::get_gender_bimap();
-        auto gender_iter = gender_bimap.left.find(
-                               pkmn::calculations::gen2_pokemon_gender(
-                                   p_species, IV_attack
-                               )
-                           );
-        BOOST_ASSERT(gender_iter != gender_bimap.left.end());
-
-        *p_gender_out = gender_iter->second;
+        *p_gender_out = static_cast<enum pkmn_gender>(
+                            pkmn::calculations::gen2_pokemon_gender(
+                                p_species, IV_attack
+                            )
+                        );
     )
 }
 
@@ -47,14 +42,10 @@ enum pkmn_error pkmn_calculations_modern_pokemon_gender(
     PKMN_CHECK_NULL_PARAM(p_gender_out);
 
     PKMN_CPP_TO_C(
-        const pkmn::c::gender_bimap_t& gender_bimap = pkmn::c::get_gender_bimap();
-        auto gender_iter = gender_bimap.left.find(
-                               pkmn::calculations::modern_pokemon_gender(
-                                   p_species, personality
-                               )
-                           );
-        BOOST_ASSERT(gender_iter != gender_bimap.left.end());
-
-        *p_gender_out = gender_iter->second;
+        *p_gender_out = static_cast<enum pkmn_gender>(
+                            pkmn::calculations::modern_pokemon_gender(
+                                p_species, personality
+                            )
+                        );
     )
 }

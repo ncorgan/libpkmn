@@ -5,8 +5,8 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-#include "enum_maps.hpp"
 #include "cpp_to_c.hpp"
+#include "enum_maps.hpp"
 #include "error_internal.hpp"
 #include "exception_internal.hpp"
 
@@ -45,17 +45,9 @@ enum pkmn_error pkmn_pokemon_init(
     PKMN_CHECK_NULL_PARAM(p_pokemon_out);
 
     PKMN_CPP_TO_C(
-        const pkmn::c::game_bimap_t& game_bimap = pkmn::c::get_game_bimap();
-
-        pkmn::enforce_value_in_map_keys(
-            "Game",
-            game,
-            game_bimap.right
-        );
-
         pkmn::pokemon::sptr cpp = pkmn::pokemon::make(
                                       p_species,
-                                      game_bimap.right.at(game),
+                                      static_cast<pkmn::e_game>(game),
                                       p_form,
                                       level
                                   );
@@ -138,16 +130,8 @@ enum pkmn_error pkmn_pokemon_to_game(
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_new_pokemon_out, p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
-        const pkmn::c::game_bimap_t& game_bimap = pkmn::c::get_game_bimap();
-
-        pkmn::enforce_value_in_map_keys(
-            "Game",
-            game,
-            game_bimap.right
-        );
-
         pkmn::pokemon::sptr new_pokemon_cpp = p_internal->cpp->to_game(
-                                                  game_bimap.right.at(game)
+                                                  static_cast<pkmn::e_game>(game)
                                               );
 
         pkmn::c::init_pokemon(
@@ -338,9 +322,7 @@ enum pkmn_error pkmn_pokemon_get_gender(
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
         pkmn::e_gender gender = p_internal->cpp->get_gender();
 
-        const pkmn::c::gender_bimap_t& gender_bimap = pkmn::c::get_gender_bimap();
-        BOOST_ASSERT(gender_bimap.left.count(gender) > 0);
-        *p_gender_out = gender_bimap.left.at(gender);
+        *p_gender_out = static_cast<enum pkmn_gender>(gender);
     )
 }
 
@@ -353,16 +335,8 @@ enum pkmn_error pkmn_pokemon_set_gender(
     pkmn_pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
-        const pkmn::c::gender_bimap_t& gender_bimap = pkmn::c::get_gender_bimap();
-
-        pkmn::enforce_value_in_map_keys(
-            "Gender",
-            gender,
-            gender_bimap.right
-        );
-
         p_internal->cpp->set_gender(
-            gender_bimap.right.at(gender)
+            static_cast<pkmn::e_gender>(gender)
         );
     )
 }
@@ -480,9 +454,7 @@ enum pkmn_error pkmn_pokemon_get_original_trainer_info(
         {
             pkmn::e_gender original_trainer_gender = p_internal->cpp->get_original_trainer_gender();
 
-            const pkmn::c::gender_bimap_t& gender_bimap = pkmn::c::get_gender_bimap();
-            BOOST_ASSERT(gender_bimap.left.count(original_trainer_gender) > 0);
-            trainer_info.gender = gender_bimap.left.at(original_trainer_gender);
+            trainer_info.gender = static_cast<enum pkmn_gender>(original_trainer_gender);
         }
 
         *p_original_trainer_info_out = std::move(trainer_info);
@@ -555,16 +527,8 @@ enum pkmn_error pkmn_pokemon_set_original_trainer_gender(
     pkmn_pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
-        const pkmn::c::gender_bimap_t& gender_bimap = pkmn::c::get_gender_bimap();
-
-        pkmn::enforce_value_in_map_keys(
-            "Original trainer gender",
-            original_trainer_gender,
-            gender_bimap.right
-        );
-
         p_internal->cpp->set_original_trainer_gender(
-            gender_bimap.right.at(original_trainer_gender)
+            static_cast<pkmn::e_gender>(original_trainer_gender)
         );
     )
 }
@@ -579,12 +543,9 @@ enum pkmn_error pkmn_pokemon_get_language(
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_language_out, p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
-        const pkmn::c::language_bimap_t& language_bimap = pkmn::c::get_language_bimap();
-
-        pkmn::e_language cpp_language = p_internal->cpp->get_language();
-        BOOST_ASSERT(gender_bimap.left.count(cpp_language) > 0);
-
-        *p_language_out = language_bimap.left.at(cpp_language);
+        *p_language_out = static_cast<enum pkmn_language>(
+                              p_internal->cpp->get_language()
+                          );
     )
 }
 
@@ -597,16 +558,8 @@ enum pkmn_error pkmn_pokemon_set_language(
     pkmn_pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
-        const pkmn::c::language_bimap_t& language_bimap = pkmn::c::get_language_bimap();
-
-        pkmn::enforce_value_in_map_keys(
-            "Language",
-            language,
-            language_bimap.right
-        );
-
         p_internal->cpp->set_language(
-            language_bimap.right.at(language)
+            static_cast<pkmn::e_language>(language)
         );
     )
 }
@@ -784,10 +737,7 @@ enum pkmn_error pkmn_pokemon_get_original_game(
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
         pkmn::e_game original_game_cpp = p_internal->cpp->get_original_game();
 
-        const pkmn::c::game_bimap_t& game_bimap = pkmn::c::get_game_bimap();
-        BOOST_ASSERT(game_bimap.left.count(original_game_cpp) > 0);
-
-        *p_original_game_out = game_bimap.left.at(original_game_cpp);
+        *p_original_game_out = static_cast<enum pkmn_game>(original_game_cpp);
     )
 }
 
@@ -800,15 +750,7 @@ enum pkmn_error pkmn_pokemon_set_original_game(
     pkmn_pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
-        const pkmn::c::game_bimap_t& game_bimap = pkmn::c::get_game_bimap();
-
-        pkmn::enforce_value_in_map_keys(
-            "Original game",
-            original_game,
-            game_bimap.right
-        );
-
-        p_internal->cpp->set_original_game(game_bimap.right.at(original_game));
+        p_internal->cpp->set_original_game(static_cast<pkmn::e_game>(original_game));
     )
 }
 

@@ -6,9 +6,7 @@
  */
 
 #include "cpp_to_c.hpp"
-#include "enum_maps.hpp"
 #include "error_internal.hpp"
-#include "exception_internal.hpp"
 
 #include <pkmn-c/database/item_entry.h>
 
@@ -27,17 +25,9 @@ enum pkmn_error pkmn_database_get_item_entry(
     PKMN_CHECK_NULL_PARAM(p_item_entry_out);
 
     PKMN_CPP_TO_C(
-        const pkmn::c::game_bimap_t& game_bimap = pkmn::c::get_game_bimap();
-
-        pkmn::enforce_value_in_map_keys(
-            "Game",
-            game,
-            game_bimap.right
-        );
-
         pkmn::database::item_entry item_entry_cpp(
                                        p_item_name,
-                                       game_bimap.right.at(game)
+                                       static_cast<pkmn::e_game>(game)
                                    );
         pkmn::c::item_entry_cpp_to_c(
             item_entry_cpp,
