@@ -10,12 +10,12 @@
 
 #include <pkmn-c/game_save.h>
 
-#include <pkmn-c/types/condition.h>
-#include <pkmn-c/types/game.h>
-#include <pkmn-c/types/gender.h>
-#include <pkmn-c/types/language.h>
-#include <pkmn-c/types/marking.h>
-#include <pkmn-c/types/stats.h>
+#include <pkmn-c/enums/condition.h>
+#include <pkmn-c/enums/game.h>
+#include <pkmn-c/enums/gender.h>
+#include <pkmn-c/enums/language.h>
+#include <pkmn-c/enums/marking.h>
+#include <pkmn-c/enums/stat.h>
 
 #include <pkmn/game_save.hpp>
 

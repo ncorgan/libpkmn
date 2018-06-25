@@ -10,7 +10,8 @@
 #include <pkmn-c/config.h>
 #include <pkmn-c/error.h>
 
-#include <pkmn-c/types/gender.h>
+#include <pkmn-c/enums/gender.h>
+
 #include <pkmn-c/types/trainer_id.h>
 
 struct pkmn_trainer_info

@@ -10,7 +10,7 @@
 #include <pkmn-c/config.h>
 #include <pkmn-c/error.h>
 
-#include <pkmn-c/types/game.h>
+#include <pkmn-c/enums/game.h>
 
 #include <stdbool.h>
 

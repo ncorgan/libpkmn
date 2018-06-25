@@ -9,14 +9,14 @@
 
 #include <pkmn-c/config.h>
 #include <pkmn-c/error.h>
-#include <pkmn-c/types/game.h>
+
+#include <pkmn-c/enums/game.h>
+#include <pkmn-c/enums/stat.h>
+
 #include <pkmn-c/types/levelup_move.h>
-#include <pkmn-c/types/stats.h>
 #include <pkmn-c/types/string_types.h>
 
 #include <stdbool.h>
-
-#define PKMN_C_NUM_STATS (7)
 
 struct pkmn_database_pokemon_entry
 {
@@ -35,8 +35,8 @@ struct pkmn_database_pokemon_entry
     struct pkmn_string_pair abilities;
     char* p_hidden_ability;
     struct pkmn_string_pair egg_groups;
-    int base_stats[PKMN_C_NUM_STATS];
-    int EV_yields[PKMN_C_NUM_STATS];
+    int base_stats[PKMN_NUM_STATS];
+    int EV_yields[PKMN_NUM_STATS];
     int experience_yield;
     struct pkmn_levelup_moves levelup_moves;
     struct pkmn_string_list tm_hm_moves;

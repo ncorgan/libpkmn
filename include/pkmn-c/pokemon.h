@@ -12,13 +12,15 @@
 
 #include <pkmn-c/database/pokemon_entry.h>
 
+#include <pkmn-c/enums/condition.h>
+#include <pkmn-c/enums/contest_stat.h>
+#include <pkmn-c/enums/game.h>
+#include <pkmn-c/enums/language.h>
+#include <pkmn-c/enums/marking.h>
+#include <pkmn-c/enums/stat.h>
+
 #include <pkmn-c/types/attribute_names.h>
-#include <pkmn-c/types/condition.h>
-#include <pkmn-c/types/game.h>
-#include <pkmn-c/types/language.h>
-#include <pkmn-c/types/marking.h>
 #include <pkmn-c/types/move_slot.h>
-#include <pkmn-c/types/stats.h>
 #include <pkmn-c/types/trainer_info.h>
 
 struct pkmn_pokemon

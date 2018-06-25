@@ -11,7 +11,9 @@
 #include <pkmn-c/error.h>
 
 #include <pkmn-c/item_list.h>
-#include <pkmn-c/types/game.h>
+
+#include <pkmn-c/enums/game.h>
+
 #include <pkmn-c/types/string_types.h>
 
 /*!

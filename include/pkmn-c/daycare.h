@@ -12,7 +12,8 @@
 
 #include <pkmn-c/pokemon.h>
 
-#include <pkmn-c/types/game.h>
+#include <pkmn-c/enums/game.h>
+
 #include <pkmn-c/types/pokemon_list.h>
 
 #include <stdbool.h>

@@ -12,7 +12,8 @@
 
 #include <pkmn-c/pokemon_box.h>
 
-#include <pkmn-c/types/game.h>
+#include <pkmn-c/enums/game.h>
+
 #include <pkmn-c/types/pokemon_box_list.h>
 #include <pkmn-c/types/string_types.h>
 

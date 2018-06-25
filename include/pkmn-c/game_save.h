@@ -16,9 +16,10 @@
 #include <pkmn-c/pokemon_party.h>
 #include <pkmn-c/pokemon_pc.h>
 
+#include <pkmn-c/enums/game.h>
+#include <pkmn-c/enums/gender.h>
+
 #include <pkmn-c/types/attribute_names.h>
-#include <pkmn-c/types/game.h>
-#include <pkmn-c/types/gender.h>
 #include <pkmn-c/types/time_duration.h>
 #include <pkmn-c/types/trainer_info.h>
 

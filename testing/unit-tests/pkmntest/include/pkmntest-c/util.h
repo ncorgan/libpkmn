@@ -9,7 +9,8 @@
 
 #include <pkmntest-c/config.h>
 
-#include <pkmn-c/types/game.h>
+#include <pkmn-c/enums/game.h>
+
 #include <pkmn-c/types/string_types.h>
 
 #include <stdbool.h>

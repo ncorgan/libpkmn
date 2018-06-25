@@ -7,19 +7,13 @@
 
 IF(NOT PKMN_DONT_INSTALL_HEADERS)
     SET(pkmn_c_types_headers
-        attribute_names.h
-        hidden_power.h
-        int_pair.h
-        item_slot.h
-        levelup_move.h
-        move_slot.h
-        natural_gift.h
-        pokemon_list.h
-        pokemon_box_list.h
-        string_types.h
-        time_duration.h
-        trainer_id.h
-        trainer_info.h
+        condition.h
+        contest_stat.h
+        game.h
+        gender.h
+        language.h
+        marking.h
+        stat.h
     )
 
     INSTALL(

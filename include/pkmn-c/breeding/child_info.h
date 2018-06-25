@@ -11,8 +11,9 @@
 #include <pkmn-c/error.h>
 #include <pkmn-c/pokemon.h>
 
-#include <pkmn-c/types/game.h>
-#include <pkmn-c/types/gender.h>
+#include <pkmn-c/enums/game.h>
+#include <pkmn-c/enums/gender.h>
+
 #include <pkmn-c/types/string_types.h>
 
 #include <stdlib.h>
