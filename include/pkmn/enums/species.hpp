@@ -3,8 +3,6 @@
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
- *
- * This file was generated: 2018-06-24 20:41:44.492597
  */
 
 #ifndef PKMN_ENUMS_SPECIES_HPP

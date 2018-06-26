@@ -15,8 +15,13 @@
 #include <pkmn-c/enums/condition.h>
 #include <pkmn-c/enums/contest_stat.h>
 #include <pkmn-c/enums/game.h>
+#include <pkmn-c/enums/gender.h>
+#include <pkmn-c/enums/item.h>
 #include <pkmn-c/enums/language.h>
 #include <pkmn-c/enums/marking.h>
+#include <pkmn-c/enums/move.h>
+#include <pkmn-c/enums/nature.h>
+#include <pkmn-c/enums/species.h>
 #include <pkmn-c/enums/stat.h>
 
 #include <pkmn-c/types/attribute_names.h>

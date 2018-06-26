@@ -11,6 +11,8 @@
 #include <pkmn-c/error.h>
 
 #include <pkmn-c/enums/game.h>
+#include <pkmn-c/enums/move.h>
+#include <pkmn-c/enums/move_damage_class.h>
 
 #include <stdbool.h>
 

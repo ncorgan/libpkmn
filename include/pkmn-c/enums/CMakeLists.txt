@@ -7,13 +7,22 @@
 
 IF(NOT PKMN_DONT_INSTALL_HEADERS)
     SET(pkmn_c_types_headers
+        ability.h
+        ball.h
         condition.h
         contest_stat.h
+        egg_group.h
         game.h
         gender.h
+        item.h
         language.h
         marking.h
+        move.h
+        move_damage_class.h
+        nature.h
+        species.h
         stat.h
+        type.h
     )
 
     INSTALL(

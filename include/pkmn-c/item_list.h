@@ -11,6 +11,7 @@
 #include <pkmn-c/error.h>
 
 #include <pkmn-c/enums/game.h>
+#include <pkmn-c/enums/item.h>
 
 #include <pkmn-c/types/item_slot.h>
 #include <pkmn-c/types/string_types.h>

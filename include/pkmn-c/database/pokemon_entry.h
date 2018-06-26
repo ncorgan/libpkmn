@@ -10,8 +10,12 @@
 #include <pkmn-c/config.h>
 #include <pkmn-c/error.h>
 
+#include <pkmn-c/enums/ability.h>
+#include <pkmn-c/enums/egg_group.h>
 #include <pkmn-c/enums/game.h>
+#include <pkmn-c/enums/species.h>
 #include <pkmn-c/enums/stat.h>
+#include <pkmn-c/enums/type.h>
 
 #include <pkmn-c/types/levelup_move.h>
 #include <pkmn-c/types/string_types.h>

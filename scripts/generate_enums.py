@@ -12,7 +12,6 @@
 # dependencies on PySQLite3 and Unidecode.
 ###############################################################
 
-import datetime
 from optparse import OptionParser
 import os
 import sqlite3
@@ -150,23 +149,21 @@ def get_types(c):
 
     return types
 
-def generate_enum_file(enum_name, enum_values, output_dir):
+def generate_cpp_enum_file(enum_name, enum_values):
     file_contents = """/*
  * Copyright (c) 2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
- *
- * This file was generated: {0}
  */
 
-#ifndef PKMN_ENUMS_{1}_HPP
-#define PKMN_ENUMS_{1}_HPP
+#ifndef PKMN_ENUMS_{0}_HPP
+#define PKMN_ENUMS_{0}_HPP
 
 namespace pkmn
 {{
-    enum class e_{2}
-    {{""".format(datetime.datetime.now(), enum_name.upper(), enum_name)
+    enum class e_{1}
+    {{""".format(enum_name.upper(), enum_name)
 
     for enum_value in enum_values:
         file_contents += """
@@ -182,24 +179,80 @@ namespace pkmn
     with open("{0}.hpp".format(enum_name), "w") as output:
         output.write(file_contents)
 
+def generate_c_enum_file(enum_name, enum_values):
+    file_contents = """/*
+ * Copyright (c) 2018 Nicholas Corgan (n.corgan@gmail.com)
+ *
+ * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
+ * or copy at http://opensource.org/licenses/MIT)
+ */
+
+#ifndef PKMN_C_ENUMS_{0}_H
+#define PKMN_C_ENUMS_{0}_H
+
+enum pkmn_{1}
+{{""".format(enum_name.upper(), enum_name)
+
+    for enum_value in enum_values:
+        file_contents += """
+    PKMN_{0}_{1},""".format(enum_name.upper(), enum_value)
+
+    file_contents += """
+}};
+
+#endif /* PKMN_C_ENUMS_{0}_H */
+""".format(enum_name.upper())
+
+    with open("{0}.h".format(enum_name), "w") as output:
+        output.write(file_contents)
+
 if __name__ == "__main__":
 
     parser = OptionParser()
     parser.add_option("--database-path", type="string", help="LibPKMN database location")
-    parser.add_option("--output-dir", type="string", help="Output directory")
+    parser.add_option("--include-dir", type="string", help="Output directory")
     (options,args) = parser.parse_args()
 
     conn = sqlite3.connect(options.database_path)
     c = conn.cursor()
 
-    os.chdir(options.output_dir)
+    include_dir = ""
+    if os.path.isabs(options.include_dir):
+        include_dir = options.include_dir
+    else:
+        script_dir = os.path.dirname(os.path.realpath(__file__))
+        include_dir = os.path.join(script_dir, options.include_dir)
 
-    generate_enum_file("ability", get_abilities(c), options.output_dir)
-    generate_enum_file("ball", get_balls(c), options.output_dir)
-    generate_enum_file("egg_group", get_egg_groups(c), options.output_dir)
-    generate_enum_file("item", get_items(c), options.output_dir)
-    generate_enum_file("move", get_moves(c), options.output_dir)
-    generate_enum_file("move_damage_class", get_move_damage_classes(c), options.output_dir)
-    generate_enum_file("nature", get_natures(c), options.output_dir)
-    generate_enum_file("species", get_species(c), options.output_dir)
-    generate_enum_file("type", get_types(c), options.output_dir)
+    abilities = get_abilities(c)
+    balls = get_balls(c)
+    egg_groups = get_egg_groups(c)
+    items = get_items(c)
+    moves = get_moves(c)
+    move_damage_classes = get_move_damage_classes(c)
+    natures = get_natures(c)
+    species = get_species(c)
+    types = get_types(c)
+
+    os.chdir(os.path.join(include_dir, "pkmn/enums"))
+
+    generate_cpp_enum_file("ability", abilities)
+    generate_cpp_enum_file("ball", balls)
+    generate_cpp_enum_file("egg_group", egg_groups)
+    generate_cpp_enum_file("item", items)
+    generate_cpp_enum_file("move", moves)
+    generate_cpp_enum_file("move_damage_class", move_damage_classes)
+    generate_cpp_enum_file("nature", natures)
+    generate_cpp_enum_file("species", species)
+    generate_cpp_enum_file("type", types)
+
+    os.chdir(os.path.join(include_dir, "pkmn-c/enums"))
+
+    generate_c_enum_file("ability", abilities)
+    generate_c_enum_file("ball", balls)
+    generate_c_enum_file("egg_group", egg_groups)
+    generate_c_enum_file("item", items)
+    generate_c_enum_file("move", moves)
+    generate_c_enum_file("move_damage_class", move_damage_classes)
+    generate_c_enum_file("nature", natures)
+    generate_c_enum_file("species", species)
+    generate_c_enum_file("type", types)
