@@ -4,8 +4,8 @@
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
  */
-#ifndef PKMN_C_TYPES_GAME_H
-#define PKMN_C_TYPES_GAME_H
+#ifndef PKMN_C_ENUMS_GAME_H
+#define PKMN_C_ENUMS_GAME_H
 
 enum pkmn_game
 {
@@ -46,4 +46,4 @@ enum pkmn_game
     PKMN_GAME_ALPHA_SAPPHIRE
 };
 
-#endif /* PKMN_C_TYPES_GAME_H */
+#endif /* PKMN_C_ENUMS_GAME_H */

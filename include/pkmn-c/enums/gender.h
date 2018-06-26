@@ -4,8 +4,8 @@
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
  */
-#ifndef PKMN_C_TYPES_GENDER_H
-#define PKMN_C_TYPES_GENDER_H
+#ifndef PKMN_C_ENUMS_GENDER_H
+#define PKMN_C_ENUMS_GENDER_H
 
 //! Valid genders in the Pokémon games.
 enum pkmn_gender
@@ -16,4 +16,4 @@ enum pkmn_gender
     PKMN_GENDER_GENDERLESS
 };
 
-#endif /* PKMN_C_TYPES_GENDER_H */
+#endif /* PKMN_C_ENUMS_GENDER_H */

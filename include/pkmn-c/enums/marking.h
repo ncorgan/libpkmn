@@ -4,8 +4,8 @@
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
  */
-#ifndef PKMN_C_TYPES_MARKING_H
-#define PKMN_C_TYPES_MARKING_H
+#ifndef PKMN_C_ENUMS_MARKING_H
+#define PKMN_C_ENUMS_MARKING_H
 
 /*!
  * @brief The number of valid markings.
@@ -38,4 +38,4 @@ enum pkmn_marking
     PKMN_MARKING_DIAMOND,
 };
 
-#endif /* PKMN_C_TYPES_MARKING_H */
+#endif /* PKMN_C_ENUMS_MARKING_H */

@@ -4,8 +4,8 @@
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
  */
-#ifndef PKMN_C_TYPES_CONDITION_H
-#define PKMN_C_TYPES_CONDITION_H
+#ifndef PKMN_C_ENUMS_CONDITION_H
+#define PKMN_C_ENUMS_CONDITION_H
 
 /*!
  * @brief Status effects with which a Pokémon can be inflicted.
@@ -34,4 +34,4 @@ enum pkmn_condition
     PKMN_CONDITION_BAD_POISON
 };
 
-#endif /* PKMN_C_TYPES_CONDITION_H */
+#endif /* PKMN_C_ENUMS_CONDITION_H */

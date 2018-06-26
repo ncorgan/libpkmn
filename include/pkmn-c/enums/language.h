@@ -4,8 +4,8 @@
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
  */
-#ifndef PKMN_C_TYPES_LANGUAGE_H
-#define PKMN_C_TYPES_LANGUAGE_H
+#ifndef PKMN_C_ENUMS_LANGUAGE_H
+#define PKMN_C_ENUMS_LANGUAGE_H
 
 enum pkmn_language
 {
@@ -19,4 +19,4 @@ enum pkmn_language
     PKMN_LANGUAGE_KOREAN
 };
 
-#endif /* PKMN_C_TYPES_LANGUAGE_H */
+#endif /* PKMN_C_ENUMS_LANGUAGE_H */
