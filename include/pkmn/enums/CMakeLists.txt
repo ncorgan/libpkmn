@@ -9,6 +9,7 @@ IF(NOT PKMN_DONT_INSTALL_HEADERS)
     SET(pkmn_enums_headers
         ability.hpp
         ball.hpp
+        condition.hpp
         egg_group.hpp
         game.hpp
         gender.hpp
