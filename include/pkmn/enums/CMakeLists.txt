@@ -10,6 +10,7 @@ IF(NOT PKMN_DONT_INSTALL_HEADERS)
         ability.hpp
         ball.hpp
         condition.hpp
+        enum_to_string.hpp
         egg_group.hpp
         game.hpp
         gender.hpp

@@ -16,10 +16,7 @@ PKMN_CSHARP_INIT
 %{
     #include <pkmn/build_info.hpp>
 
-    #include <pkmn/enums/game.hpp>
-    #include <pkmn/enums/gender.hpp>
-    #include <pkmn/enums/language.hpp>
-    #include <pkmn/enums/stat.hpp>
+    #include <pkmn/enums/enum_to_string.hpp>
 
     #include "private_exports.hpp"
 
@@ -59,6 +56,7 @@ std::string GetSWIGVersion();
 // Enums
 %include <pkmn/enums/ability.hpp>
 %include <pkmn/enums/ball.hpp>
+%include <pkmn/enums/condition.hpp>
 %include <pkmn/enums/egg_group.hpp>
 %include <pkmn/enums/game.hpp>
 %include <pkmn/enums/gender.hpp>
@@ -73,6 +71,8 @@ std::string GetSWIGVersion();
 %include <pkmn/enums/species.hpp>
 %include <pkmn/enums/stat.hpp>
 %include <pkmn/enums/type.hpp>
+
+%include <pkmn/enums/enum_to_string.hpp>
 
 // Attribute Maps
 %include <csharp/pkmn_attribute_maps.i>
