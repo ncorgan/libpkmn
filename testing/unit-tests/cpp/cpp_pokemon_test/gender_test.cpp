@@ -25,7 +25,7 @@ TEST_P(gender_test, gender_test)
 
     // Single-gender
     pkmn::pokemon::sptr nidorina = pkmn::pokemon::make(
-                                       "Nidorina",
+                                       pkmn::e_species::NIDORINA,
                                        game,
                                        "",
                                        50
@@ -40,7 +40,7 @@ TEST_P(gender_test, gender_test)
     , std::invalid_argument);
 
     pkmn::pokemon::sptr nidorino = pkmn::pokemon::make(
-                                       "Nidorino",
+                                       pkmn::e_species::NIDORINO,
                                        game,
                                        "",
                                        50
@@ -55,7 +55,7 @@ TEST_P(gender_test, gender_test)
     , std::invalid_argument);
 
     pkmn::pokemon::sptr magnemite = pkmn::pokemon::make(
-                                        "Magnemite",
+                                        pkmn::e_species::MAGNEMITE,
                                         game,
                                         "",
                                         50
@@ -69,12 +69,13 @@ TEST_P(gender_test, gender_test)
         magnemite->set_gender(pkmn::e_gender::FEMALE);
     , std::invalid_argument);
 
-    static const std::vector<std::string> mixed_pokemon = boost::assign::list_of
-        ("Charmander") // 87.5% male
-        ("Growlithe")  // 75% male
-        ("Pidgey")     // 50% male
-        ("Vulpix")     // 25% male
-    ;
+    static const std::vector<pkmn::e_species> mixed_pokemon =
+    {
+        pkmn::e_species::CHARMANDER, // 87.5% male
+        pkmn::e_species::GROWLITHE,  // 75% male
+        pkmn::e_species::PIDGEY,     // 50% male
+        pkmn::e_species::VULPIX,     // 25% male
+    };
 
     for(auto pokemon_iter = mixed_pokemon.begin(); pokemon_iter != mixed_pokemon.end(); ++pokemon_iter) {
         pkmn::pokemon::sptr pokemon = pkmn::pokemon::make(

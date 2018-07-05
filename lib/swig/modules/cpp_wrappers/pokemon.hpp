@@ -44,7 +44,7 @@ namespace pkmn { namespace swig {
             }
 
             pokemon(
-                const std::string& species,
+                pkmn::e_species species,
                 pkmn::e_game game,
                 const std::string& form,
                 int level
@@ -82,7 +82,7 @@ namespace pkmn { namespace swig {
                 _pokemon->export_to_file(filepath);
             }
 
-            inline std::string get_species()
+            inline pkmn::e_species get_species()
             {
                 BOOST_ASSERT(_pokemon.get() != nullptr);
 

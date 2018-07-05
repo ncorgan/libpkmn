@@ -36,7 +36,7 @@ namespace pkmn { namespace swig {
             }
 
             inline bool get_has_seen(
-                const std::string& species
+                pkmn::e_species species
             )
             {
                 if(_is_gamecube_game)
@@ -55,7 +55,7 @@ namespace pkmn { namespace swig {
             }
 
             inline void set_has_seen(
-                const std::string& species,
+                pkmn::e_species species,
                 bool value
             )
             {
@@ -108,7 +108,7 @@ namespace pkmn { namespace swig {
             {}
 
             inline bool get_has_caught(
-                const std::string& species
+                pkmn::e_species species
             )
             {
                 if(_is_gamecube_game)
@@ -127,7 +127,7 @@ namespace pkmn { namespace swig {
             }
 
             inline void set_has_caught(
-                const std::string& species,
+                pkmn::e_species species,
                 bool value
             )
             {

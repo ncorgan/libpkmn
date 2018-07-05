@@ -25,7 +25,26 @@
 
 namespace pkmn { namespace database {
 
-    std::vector<std::string> get_ability_list(
+    std::vector<pkmn::e_ability> get_ability_list(
+        int generation
+    )
+    {
+        pkmn::enforce_bounds("generation", generation, 3, 6);
+
+        static const std::string query =
+            "SELECT id FROM abilities WHERE generation_id<=? AND is_main_series=1";
+
+        std::vector<pkmn::e_ability> abilities;
+        pkmn::database::query_db_enum_list_bind1(
+            query,
+            abilities,
+            generation
+        );
+
+        return abilities;
+    }
+
+    std::vector<std::string> get_ability_name_list(
         int generation
     )
     {
@@ -34,7 +53,7 @@ namespace pkmn { namespace database {
         static BOOST_CONSTEXPR const char* query =
             "SELECT name FROM ability_names WHERE local_language_id=9 AND "
             "ability_id IN (SELECT id FROM abilities WHERE generation_id<=? "
-            "AND is_main_series=1) ORDER BY name";
+            "AND is_main_series=1) ORDER BY ability_id";
 
         std::vector<std::string> ret;
         pkmn::database::query_db_list_bind1<std::string, int>(
@@ -44,57 +63,94 @@ namespace pkmn { namespace database {
         return ret;
     }
 
-    std::vector<std::string> get_game_list(
+    std::vector<pkmn::e_game> get_game_list(
         int generation,
         bool include_previous
     )
     {
         pkmn::enforce_bounds("generation", generation, 1, 6);
 
-        static BOOST_CONSTEXPR const char* with_previous_query =
-            "SELECT name FROM version_names WHERE local_language_id=9 AND version_id IN "
-            "(SELECT id FROM versions WHERE version_group_id IN "
-            "(SELECT id FROM version_groups WHERE generation_id<=?))";
+        static const std::string with_previous_query =
+            "SELECT id FROM versions WHERE version_group_id IN "
+            "(SELECT id FROM version_groups WHERE generation_id<=?)";
 
-        static BOOST_CONSTEXPR const char* no_previous_query =
-            "SELECT name FROM version_names WHERE local_language_id=9 AND version_id IN "
-            "(SELECT id FROM versions WHERE version_group_id IN "
-            "(SELECT id FROM version_groups WHERE generation_id=?))";
+        static const std::string no_previous_query =
+            "SELECT id FROM versions WHERE version_group_id IN "
+            "(SELECT id FROM version_groups WHERE generation_id=?)";
 
-        std::vector<std::string> ret;
-        pkmn::database::query_db_list_bind1<std::string, int>(
-            (include_previous ? with_previous_query : no_previous_query),
-            ret, generation
+        std::vector<int> game_ids;
+        pkmn::database::query_db_list_bind1(
+            include_previous ? with_previous_query.c_str() : no_previous_query.c_str(),
+            game_ids,
+            generation
         );
 
-        return ret;
+        // The games in Veekun's database aren't listed in a sensible order,
+        // with the Gamecube games (Generation III) being listed with the
+        // Generation V games. So we need to convert it to our order.
+        std::vector<pkmn::e_game> games;
+        for(int game_id: game_ids)
+        {
+            games.emplace_back(game_id_to_enum(game_id));
+        }
+
+        return games;
     }
 
-    std::vector<std::string> get_gamecube_shadow_pokemon_list(
+    std::vector<std::string> get_game_name_list(
+        int generation,
+        bool include_previous
+    )
+    {
+        pkmn::enforce_bounds("generation", generation, 1, 6);
+
+        std::vector<pkmn::e_game> games = get_game_list(generation, include_previous);
+
+        std::vector<std::string> game_names;
+        for(pkmn::e_game game: games)
+        {
+            game_names.emplace_back(game_enum_to_name(game));
+        }
+
+        return game_names;
+    }
+
+    std::vector<pkmn::e_species> get_gamecube_shadow_pokemon_list(
+        bool colosseum
+    )
+    {
+        static const std::string query =
+            "SELECT DISTINCT species_id FROM shadow_pokemon WHERE colosseum=? ORDER BY species_id";
+
+        std::vector<pkmn::e_species> species;
+        pkmn::database::query_db_enum_list_bind1(
+            query,
+            species,
+            (colosseum ? 1 : 0)
+        );
+
+        return species;
+    }
+
+    std::vector<std::string> get_gamecube_shadow_pokemon_name_list(
         bool colosseum
     )
     {
         static BOOST_CONSTEXPR const char* shadow_pokemon_query =
             "SELECT name FROM pokemon_species_names WHERE local_language_id=9 AND pokemon_species_id IN "
-            "(SELECT species_id FROM shadow_pokemon WHERE colosseum=?)";
+            "(SELECT species_id FROM shadow_pokemon WHERE colosseum=?) ORDER BY pokemon_species_id";
 
         std::vector<std::string> ret;
         pkmn::database::query_db_list_bind1<std::string, int>(
             shadow_pokemon_query, ret, (colosseum ? 1 : 0)
         );
-        std::sort(ret.begin(), ret.end(), boost::algorithm::is_less());
         return ret;
     }
 
-    std::vector<std::string> get_hm_move_list(
+    std::vector<pkmn::e_move> get_hm_move_list(
         pkmn::e_game game
     )
     {
-        static BOOST_CONSTEXPR const char* query =
-            "SELECT name FROM move_names INNER JOIN machines ON (machines.move_id=move_names.move_id) "
-            "WHERE machines.version_group_id=? AND machines.machine_number>=101 "
-            "AND move_names.local_language_id=9 ORDER BY machines.machine_number";
-
         int game_id = game_enum_to_id(game);
 
         if(game_is_gamecube(game_id))
@@ -104,6 +160,41 @@ namespace pkmn { namespace database {
                       game
                   );
         }
+
+        static const std::string query =
+            "SELECT move_names.move_id FROM move_names INNER JOIN machines ON (machines.move_id=move_names.move_id) "
+            "WHERE machines.version_group_id=? AND machines.machine_number>=101 "
+            "AND move_names.local_language_id=9 ORDER BY machines.machine_number";
+
+        int version_group_id = game_id_to_version_group(game_id);
+
+        std::vector<pkmn::e_move> hm_moves;
+        pkmn::database::query_db_enum_list_bind1(
+            query,
+            hm_moves,
+            version_group_id
+        );
+        return hm_moves;
+    }
+
+    std::vector<std::string> get_hm_move_name_list(
+        pkmn::e_game game
+    )
+    {
+        int game_id = game_enum_to_id(game);
+
+        if(game_is_gamecube(game_id))
+        {
+            throw pkmn::feature_not_in_game_error(
+                      "HMs",
+                      game
+                  );
+        }
+
+        static BOOST_CONSTEXPR const char* query =
+            "SELECT name FROM move_names INNER JOIN machines ON (machines.move_id=move_names.move_id) "
+            "WHERE machines.version_group_id=? AND machines.machine_number>=101 "
+            "AND move_names.local_language_id=9 ORDER BY machines.machine_number";
 
         int version_group_id = game_id_to_version_group(game_id);
 
@@ -115,18 +206,46 @@ namespace pkmn { namespace database {
         return ret;
     }
 
-    std::vector<std::string> get_item_list(
+    std::vector<pkmn::e_item> get_item_list(
         pkmn::e_game game
     )
     {
         int game_id = pkmn::database::game_enum_to_id(game);
 
-        std::vector<std::string> ret;
-        pkmn::database::_get_item_list(
-            ret, -1, game_id
+        std::vector<pkmn::e_item> enum_list;
+        std::vector<std::string> name_list; // Unused
+
+        pkmn::database::_get_item_lists(
+            enum_list,
+            name_list,
+            -1, // list_id
+            game_id,
+            true, // should_populate_enum_list
+            false // should_populate_string_list
         );
 
-        return ret;
+        return enum_list;
+    }
+
+    std::vector<std::string> get_item_name_list(
+        pkmn::e_game game
+    )
+    {
+        int game_id = pkmn::database::game_enum_to_id(game);
+
+        std::vector<pkmn::e_item> enum_list; // Unused
+        std::vector<std::string> name_list;
+
+        pkmn::database::_get_item_lists(
+            enum_list,
+            name_list,
+            -1, // list_id
+            game_id,
+            false, // should_populate_enum_list
+            true   // should_populate_string_list
+        );
+
+        return name_list;
     }
 
     /*
@@ -257,7 +376,7 @@ namespace pkmn { namespace database {
             }
         }
 
-        if(not to_erase.empty())
+        if(!to_erase.empty())
         {
             for(size_t i = (to_erase.size()-1); i < to_erase.size(); --i)
             {
@@ -266,7 +385,7 @@ namespace pkmn { namespace database {
         }
     }
 
-    std::vector<std::string> get_location_list(
+    std::vector<std::string> get_location_name_list(
         pkmn::e_game game,
         bool whole_generation
     )
@@ -398,7 +517,61 @@ namespace pkmn { namespace database {
         return ret;
     }
 
-    std::vector<std::string> get_move_list(
+    std::vector<pkmn::e_move> get_move_list(pkmn::e_game game)
+    {
+        static const std::string main_query =
+            "SELECT id FROM moves WHERE generation_id<=? AND type_id<100";
+
+        int game_id = game_enum_to_id(game);
+        int generation = game_enum_to_generation(game);
+
+        std::vector<pkmn::e_move> moves;
+        pkmn::database::query_db_enum_list_bind1(
+            main_query,
+            moves,
+            generation
+        );
+
+        BOOST_STATIC_CONSTEXPR int COLOSSEUM = 19;
+        BOOST_STATIC_CONSTEXPR int XD        = 20;
+        BOOST_STATIC_CONSTEXPR int X         = 23;
+        BOOST_STATIC_CONSTEXPR int Y         = 24;
+
+        /*
+         * Shadow Pokémon in Colosseum only know Shadow Rush, and XD brings in
+         * other Shadow moves, so only bring in the relevant Shadow moves in
+         * these cases.
+         *
+         * There are also four Generation VI moves that are exclusive to Omega
+         * Ruby and Alpha Sapphire, so get rid of those for X/Y.
+         */
+        if(game_id == COLOSSEUM)
+        {
+            moves.emplace_back(pkmn::e_move::SHADOW_RUSH);
+        }
+        else if(game_id == XD)
+        {
+            static const std::string shadow_query =
+                "SELECT id FROM moves WHERE type_id=10002";
+
+            pkmn::database::query_db_enum_list(
+                shadow_query,
+                moves
+            );
+        }
+        else if((game_id == X) || (game_id == Y))
+        {
+            // DTODO: this is likely fragile.
+            for(size_t i = 0; i < 4; ++i)
+            {
+                moves.pop_back();
+            }
+        }
+
+        return moves;
+    }
+
+    std::vector<std::string> get_move_name_list(
         pkmn::e_game game
     )
     {
@@ -499,7 +672,7 @@ namespace pkmn { namespace database {
                 shadow_query, ret
             );
         }
-        else if((game_id == X) or (game_id == Y))
+        else if((game_id == X) || (game_id == Y))
         {
             // DTODO: this is likely fragile.
             for(size_t i = 0; i < 4; ++i)
@@ -511,7 +684,21 @@ namespace pkmn { namespace database {
         return ret;
     }
 
-    std::vector<std::string> get_nature_list()
+    std::vector<pkmn::e_nature> get_nature_list()
+    {
+        static const std::string query =
+            "SELECT id FROM natures ORDER BY game_index";
+
+        std::vector<pkmn::e_nature> natures;
+        pkmn::database::query_db_enum_list(
+            query,
+            natures
+        );
+
+        return natures;
+    }
+
+    std::vector<std::string> get_nature_name_list()
     {
         static BOOST_CONSTEXPR const char* query =
             "SELECT nature_names.name FROM nature_names INNER JOIN natures ON "
@@ -526,7 +713,30 @@ namespace pkmn { namespace database {
         return ret;
     }
 
-    std::vector<std::string> get_pokemon_list(
+    std::vector<pkmn::e_species> get_pokemon_list(
+        int generation,
+        bool include_previous
+    )
+    {
+        pkmn::enforce_bounds("generation", generation, 1, 6);
+
+        static const std::string with_previous_query =
+            "SELECT id FROM pokemon_species WHERE generation_id<=?";
+
+        static const std::string no_previous_query =
+            "SELECT id FROM pokemon_species WHERE generation_id=?";
+
+        std::vector<pkmn::e_species> species;
+        pkmn::database::query_db_enum_list_bind1(
+            (include_previous ? with_previous_query : no_previous_query),
+            species,
+            generation
+        );
+
+        return species;
+    }
+
+    std::vector<std::string> get_pokemon_name_list(
         int generation,
         bool include_previous
     )
@@ -552,7 +762,7 @@ namespace pkmn { namespace database {
         return ret;
     }
 
-    std::vector<std::string> get_region_list()
+    std::vector<std::string> get_region_name_list()
     {
         static BOOST_CONSTEXPR const char* query =
             "SELECT name FROM region_names WHERE local_language_id=9 "
@@ -567,7 +777,7 @@ namespace pkmn { namespace database {
         return ret;
     }
 
-    std::vector<std::string> get_ribbon_list(
+    std::vector<std::string> get_ribbon_name_list(
         int generation
     )
     {
@@ -575,7 +785,7 @@ namespace pkmn { namespace database {
         return std::vector<std::string>();
     }
 
-    std::vector<std::string> get_super_training_medal_list()
+    std::vector<std::string> get_super_training_medal_name_list()
     {
         static BOOST_CONSTEXPR const char* query =
             "SELECT name FROM ribbons_medals WHERE super_training_medal=1";
@@ -588,7 +798,27 @@ namespace pkmn { namespace database {
         return ret;
     }
 
-    std::vector<std::string> get_tm_move_list(
+    std::vector<pkmn::e_move> get_tm_move_list(
+        pkmn::e_game game
+    )
+    {
+        static const std::string query =
+            "SELECT move_names.move_id FROM move_names INNER JOIN machines ON (machines.move_id=move_names.move_id) "
+            "WHERE machines.version_group_id=? AND machines.machine_number<101 "
+            "AND move_names.local_language_id=9 ORDER BY machines.machine_number";
+
+        int version_group_id = game_enum_to_version_group(game);
+
+        std::vector<pkmn::e_move> tm_moves;
+        pkmn::database::query_db_enum_list_bind1(
+            query,
+            tm_moves,
+            version_group_id
+        );
+        return tm_moves;
+    }
+
+    std::vector<std::string> get_tm_move_name_list(
         pkmn::e_game game
     )
     {
@@ -619,10 +849,41 @@ namespace pkmn { namespace database {
         return ret;
     }
 
-    std::vector<std::string> get_type_list(
+    std::vector<pkmn::e_type> get_type_list(pkmn::e_game game)
+    {
+        int game_id = game_enum_to_id(game);
+        int generation = game_enum_to_generation(game);
+
+        static const std::string query =
+            "SELECT id FROM types WHERE generation_id<=? AND id<100";
+
+        std::vector<pkmn::e_type> types;
+        pkmn::database::query_db_enum_list_bind1(
+            query,
+            types,
+            generation
+        );
+
+        // The Shadow type only exists in the Gamecube games.
+        if(game_is_gamecube(game_id))
+        {
+            types.emplace_back(pkmn::e_type::SHADOW);
+        }
+
+        // The ??? type only exists in Generations II-IV.
+        if((generation >= 2) && (generation <= 4))
+        {
+            types.emplace_back(pkmn::e_type::QUESTION_MARK);
+        }
+
+        return types;
+    }
+
+    std::vector<std::string> get_type_name_list(
         pkmn::e_game game
     )
     {
+        int game_id = game_enum_to_id(game);
         int generation = game_enum_to_generation(game);
 
         static BOOST_CONSTEXPR const char* query =
@@ -635,19 +896,14 @@ namespace pkmn { namespace database {
             query, ret, generation
         );
 
-        BOOST_STATIC_CONSTEXPR int GOLD   = 4;
-        BOOST_STATIC_CONSTEXPR int SS     = 16;
-
-        int game_id = game_enum_to_id(game);
-
-        // The Shadow type only exists in the Gamecube games
+        // The Shadow type only exists in the Gamecube games.
         if(game_is_gamecube(game_id))
         {
             ret.emplace_back("Shadow");
         }
 
-        // The ??? type only exists in Generations II-IV
-        if((game_id >= GOLD and game_id <= SS) or game_is_gamecube(game_id))
+        // The ??? type only exists in Generations II-IV.
+        if((generation >= 2) && (generation <= 4))
         {
             ret.emplace_back("???");
         }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -10,6 +10,8 @@
 #include <pkmn/config.hpp>
 
 #include <pkmn/enums/gender.hpp>
+#include <pkmn/enums/nature.hpp>
+#include <pkmn/enums/species.hpp>
 
 #include <cstdint>
 #include <string>
@@ -31,12 +33,12 @@ namespace pkmn { namespace calculations {
      * \throws std::invalid_argument If the given nature is invalid
      */
     PKMN_API uint32_t generate_personality(
-        const std::string& species,
+        pkmn::e_species species,
         uint32_t trainer_id,
         bool shiny,
         const std::string& ability,
         pkmn::e_gender gender,
-        const std::string& nature
+        pkmn::e_nature nature
     );
 
 }}

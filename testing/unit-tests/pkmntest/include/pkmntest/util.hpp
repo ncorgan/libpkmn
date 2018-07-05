@@ -53,6 +53,31 @@ static const std::vector<pkmn::e_game> GCN_GAMES =
     pkmn::e_game::XD,
 };
 
+static const std::vector<pkmn::e_game> GEN4_GAMES =
+{
+    pkmn::e_game::DIAMOND,
+    pkmn::e_game::PEARL,
+    pkmn::e_game::PLATINUM,
+    pkmn::e_game::HEARTGOLD,
+    pkmn::e_game::SOULSILVER,
+};
+
+static const std::vector<pkmn::e_game> GEN5_GAMES =
+{
+    pkmn::e_game::BLACK,
+    pkmn::e_game::WHITE,
+    pkmn::e_game::BLACK2,
+    pkmn::e_game::WHITE2,
+};
+
+static const std::vector<pkmn::e_game> GEN6_GAMES =
+{
+    pkmn::e_game::X,
+    pkmn::e_game::Y,
+    pkmn::e_game::OMEGA_RUBY,
+    pkmn::e_game::ALPHA_SAPPHIRE,
+};
+
 static const std::vector<pkmn::e_game> ALL_GAMES =
 {
     pkmn::e_game::RED,

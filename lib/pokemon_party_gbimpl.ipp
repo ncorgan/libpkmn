@@ -84,7 +84,7 @@ namespace pkmn {
         {
             throw std::invalid_argument("Cannot set a Pokémon to itself.");
         }
-        else if(index < (num_pokemon-1) and new_pokemon->get_species() == "None")
+        else if((index < (num_pokemon-1)) && (new_pokemon->get_species() == pkmn::e_species::NONE))
         {
             throw std::invalid_argument("Parties store Pokémon contiguously.");
         }
@@ -159,12 +159,12 @@ namespace pkmn {
         }
 
         // Update the number of Pokémon in the party if needed.
-        std::string new_species = actual_new_pokemon->get_species();
-        if(index == num_pokemon and new_species != "None")
+        pkmn::e_species new_species = actual_new_pokemon->get_species();
+        if((index == num_pokemon) && (new_species != pkmn::e_species::NONE))
         {
             ++(NATIVE_LIST_RCAST->count);
         }
-        else if(index == (num_pokemon-1) and new_species == "None")
+        else if((index == (num_pokemon-1)) && (new_species == pkmn::e_species::NONE))
         {
             --(NATIVE_LIST_RCAST->count);
         }
@@ -208,9 +208,10 @@ namespace pkmn {
         // seen and caught the Pokémon.
         if(_pokedex.get())
         {
-            std::string species = new_pokemon->get_species();
+            // TODO: use new Pokémon function
+            pkmn::e_species species = pkmn::e_species(new_pokemon->get_database_entry().get_species_id());
 
-            if((species != "None") and (not new_pokemon->is_egg()))
+            if((species != pkmn::e_species::NONE) && !new_pokemon->is_egg())
             {
                 _pokedex->set_has_seen(species, true);
                 _pokedex->set_has_caught(species, true);

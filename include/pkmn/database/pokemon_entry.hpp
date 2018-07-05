@@ -77,7 +77,7 @@ namespace pkmn { namespace database {
              * \throws std::invalid_argument If the form is invalid for the given Pokémon and game
              */
             pokemon_entry(
-                const std::string& species_name,
+                pkmn::e_species species,
                 pkmn::e_game game,
                 const std::string& form_name
             );
@@ -90,6 +90,13 @@ namespace pkmn { namespace database {
             pokemon_entry& operator=(pokemon_entry&&) = default;
 #endif
 
+            // TODO: rename get_species
+            inline pkmn::e_species get_species_enum() const
+            {
+                return static_cast<pkmn::e_species>(_species_id);
+            }
+
+            // TODO: rename get_species_name
             /*!
              * @brief Returns the Pokémon's name.
              *
@@ -104,6 +111,7 @@ namespace pkmn { namespace database {
              */
             pkmn::e_game get_game() const;
 
+            // TODO: rename
             /*!
              * @brief Returns the Pokémon's species.
              *

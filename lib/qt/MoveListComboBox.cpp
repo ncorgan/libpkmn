@@ -16,7 +16,7 @@ namespace pkmn { namespace qt {
         QWidget* parent
     ): QComboBox(parent)
     {
-        std::vector<std::string> moves = pkmn::database::get_move_list(game);
+        std::vector<std::string> moves = pkmn::database::get_move_name_list(game);
         for(const std::string& move: moves)
         {
             addItem(QString::fromStdString(move));

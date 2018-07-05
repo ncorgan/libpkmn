@@ -334,11 +334,17 @@ namespace pkmntest {
             ASSERT_NE(nullptr, party_pokemon.get());
             if(i < num_party_pokemon)
             {
-                EXPECT_NE("None", party_pokemon->get_species());
+                EXPECT_NE(
+                    pkmn::e_species::NONE,
+                    party_pokemon->get_species()
+                );
             }
             else
             {
-                EXPECT_EQ("None", party_pokemon->get_species());
+                EXPECT_EQ(
+                    pkmn::e_species::NONE,
+                    party_pokemon->get_species()
+                );
             }
         }
 
@@ -371,11 +377,17 @@ namespace pkmntest {
                 {
                     if(j < num_box_pokemon)
                     {
-                        EXPECT_NE("None", box_pokemon->get_species());
+                        EXPECT_NE(
+                            pkmn::e_species::NONE,
+                            box_pokemon->get_species()
+                        );
                     }
                     else
                     {
-                        EXPECT_EQ("None", box_pokemon->get_species());
+                        EXPECT_EQ(
+                            pkmn::e_species::NONE,
+                            box_pokemon->get_species()
+                        );
                     }
                 }
             }
@@ -392,8 +404,8 @@ namespace pkmntest {
             const pkmn::pokemon_list_t& party_vector = save->get_pokemon_party()->as_vector();
             for(const auto& pokemon: party_vector)
             {
-                std::string species = pokemon->get_species();
-                if(species != "None")
+                pkmn::e_species species = pokemon->get_species();
+                if(species != pkmn::e_species::NONE)
                 {
                     EXPECT_TRUE(pokedex->has_seen(species));
                     EXPECT_TRUE(pokedex->has_caught(species));
@@ -406,8 +418,8 @@ namespace pkmntest {
                 const pkmn::pokemon_list_t& box_vector = box->as_vector();
                 for(const auto& pokemon: box_vector)
                 {
-                    std::string species = pokemon->get_species();
-                    if((species != "None") and (not pokemon->is_egg()))
+                    pkmn::e_species species = pokemon->get_species();
+                    if((species != pkmn::e_species::NONE) and (not pokemon->is_egg()))
                     {
                         EXPECT_TRUE(pokedex->has_seen(species));
                         EXPECT_TRUE(pokedex->has_caught(species));
@@ -419,8 +431,8 @@ namespace pkmntest {
             // added to the Pokédex. Manually remove the test species from the
             // Pokédex to confirm this behavior.
 
-            const std::string test_species1 = "Bulbasaur";
-            const std::string test_species2 = "Charmander";
+            const pkmn::e_species test_species1 = pkmn::e_species::BULBASAUR;
+            const pkmn::e_species test_species2 = pkmn::e_species::CHARMANDER;
 
             pokedex->set_has_seen(test_species1, false);
             ASSERT_FALSE(pokedex->has_seen(test_species1));
@@ -610,21 +622,28 @@ namespace pkmntest {
 
     static pkmn::pokemon::sptr get_random_pokemon(
         pkmn::e_game game,
-        const std::vector<std::string> &pokemon_list,
-        const std::vector<std::string> &move_list,
-        const std::vector<std::string> &item_list
-    ) {
+        const std::vector<pkmn::e_species>& pokemon_list,
+        const std::vector<std::string>& move_list,
+        const std::vector<std::string>& item_list
+    )
+    {
         int generation = pkmn::priv::game_enum_to_generation(game);
         pkmn::rng<uint32_t> rng;
         (void)move_list;
 
         // Don't deal with Deoxys or Unown issues here.
-        std::string species;
-        if(generation == 3) {
-            do {
+        pkmn::e_species species = pkmn::e_species::NONE;
+        if(generation == 3)
+        {
+            do
+            {
                 species = pokemon_list[rng.rand() % pokemon_list.size()];
-            } while(species == "Deoxys" || species == "Unown");
-        } else {
+            }
+            while((species == pkmn::e_species::UNOWN) ||
+                  (species == pkmn::e_species::DEOXYS));
+        }
+        else
+        {
             species = pokemon_list[rng.rand() % pokemon_list.size()];
         }
         pkmn::pokemon::sptr ret = pkmn::pokemon::make(
@@ -633,12 +652,14 @@ namespace pkmntest {
                                       "",
                                       ((rng.rand() % 99) + 2)
                                   );
-        for(int i = 0; i < 4; ++i) {
+        for(int i = 0; i < 4; ++i)
+        {
             std::string move = "";
             do
             {
                 move = move_list[rng.rand() % move_list.size()];
-            } while(move.find("Shadow") == 0);
+            }
+            while(move.find("Shadow") == 0);
             ret->set_move(move, i);
         }
 
@@ -677,7 +698,7 @@ namespace pkmntest {
 
     void randomize_items(
         const pkmn::game_save::sptr& save,
-        const std::vector<std::string> &item_list
+        const std::vector<std::string>& item_list
     ) {
         // Clear out what items the save happens to have to put it in a known state.
         // TODO: when clear() added to item_list
@@ -687,12 +708,12 @@ namespace pkmntest {
 
     void randomize_pokemon(
         const pkmn::game_save::sptr& save,
-        const std::vector<std::string> &item_list
+        const std::vector<std::string>& item_list
     )
     {
         int generation = pkmn::priv::game_enum_to_generation(save->get_game());
-        std::vector<std::string> pokemon_list = pkmn::database::get_pokemon_list(generation, true);
-        std::vector<std::string> move_list = pkmn::database::get_move_list(save->get_game());
+        std::vector<pkmn::e_species> pokemon_list = pkmn::database::get_pokemon_list(generation, true);
+        std::vector<std::string> move_list = pkmn::database::get_move_name_list(save->get_game());
 
         pkmn::pokemon_party::sptr party = save->get_pokemon_party();
         for(int i = 0; i < 6; ++i) {
@@ -1115,7 +1136,7 @@ namespace pkmntest {
     TEST_P(game_save_test, game_save_test) {
         const pkmn::game_save::sptr& save = get_game_save();
 
-        std::vector<std::string> item_list = pkmn::database::get_item_list(save->get_game());
+        std::vector<std::string> item_list = pkmn::database::get_item_name_list(save->get_game());
 
         pkmntest::game_save_test_common_fields(save);
         pkmntest::game_save_test_attributes(save);

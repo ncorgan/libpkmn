@@ -472,7 +472,7 @@ void gen2_item_pc_test(
     );
 
     const std::vector<std::string>& valid_items = item_pc->get_valid_items();
-    std::vector<std::string> full_item_list = pkmn::database::get_item_list(item_pc->get_game());
+    std::vector<std::string> full_item_list = pkmn::database::get_item_name_list(item_pc->get_game());
     EXPECT_EQ(full_item_list.size(), valid_items.size());
 
     /*

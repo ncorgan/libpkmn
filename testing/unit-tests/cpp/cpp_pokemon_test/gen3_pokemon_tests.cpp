@@ -580,7 +580,8 @@ TEST_P(gcn_pokemon_test, gcn_pokemon_test) {
 
     // Confirm setting the Shadow form works properly under the hood.
     bool colosseum = (get_game() == pkmn::e_game::COLOSSEUM);
-    std::string species = colosseum ? "Ledian" : "Ledyba";
+    pkmn::e_species species = colosseum ? pkmn::e_species::LEDIAN
+                                        : pkmn::e_species::LEDYBA;
     LibPkmGC::u16 shadow_pokemon_id = colosseum ? 22 : 83;
 
     pkmn::pokemon::sptr shadow_pokemon = pkmn::pokemon::make(
@@ -604,13 +605,13 @@ TEST_P(gcn_pokemon_test, gcn_pokemon_test) {
     EXPECT_EQ(0, native_shadow_pokemon->shadowPkmID);
 }
 
-static const std::vector<std::pair<pkmn::e_game, std::string>> gba_params =
+static const std::vector<std::pair<pkmn::e_game, pkmn::e_species>> gba_params =
 {
-    {pkmn::e_game::RUBY, "Torchic"},
-    {pkmn::e_game::SAPPHIRE, "Mudkip"},
-    {pkmn::e_game::EMERALD, "Treecko"},
-    {pkmn::e_game::FIRERED, "Charmander"},
-    {pkmn::e_game::LEAFGREEN, "Bulbasaur"},
+    {pkmn::e_game::RUBY,      pkmn::e_species::TORCHIC},
+    {pkmn::e_game::SAPPHIRE,  pkmn::e_species::MUDKIP},
+    {pkmn::e_game::EMERALD,   pkmn::e_species::TREECKO},
+    {pkmn::e_game::FIRERED,   pkmn::e_species::CHARMANDER},
+    {pkmn::e_game::LEAFGREEN, pkmn::e_species::BULBASAUR},
 };
 
 INSTANTIATE_TEST_CASE_P(
@@ -619,10 +620,10 @@ INSTANTIATE_TEST_CASE_P(
     ::testing::ValuesIn(gba_params)
 );
 
-static const std::vector<std::pair<pkmn::e_game, std::string>> gcn_params =
+static const std::vector<std::pair<pkmn::e_game, pkmn::e_species>> gcn_params =
 {
-    {pkmn::e_game::COLOSSEUM, "Espeon"},
-    {pkmn::e_game::XD, "Umbreon"}
+    {pkmn::e_game::COLOSSEUM, pkmn::e_species::ESPEON},
+    {pkmn::e_game::XD,        pkmn::e_species::UMBREON},
 };
 
 INSTANTIATE_TEST_CASE_P(

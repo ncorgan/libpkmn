@@ -101,12 +101,12 @@ def get_move_damage_classes(c):
     return move_damage_classes
 
 def get_natures(c):
-    c.execute("SELECT nature_id,name FROM nature_names WHERE local_language_id=9 ORDER BY nature_id")
+    c.execute("SELECT game_index,identifier FROM natures ORDER BY game_index")
     db_responses = c.fetchall()
     natures = ["NONE = 0"]
 
     for db_response in db_responses:
-        natures += ["{0} = {1}".format(str(db_response[1]).upper(), db_response[0])]
+        natures += ["{0} = {1}".format(str(db_response[1]).upper(), int(db_response[0])+1)]
 
     return natures
 

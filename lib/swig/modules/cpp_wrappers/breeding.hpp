@@ -31,7 +31,7 @@ namespace pkmn { namespace swig { namespace breeding {
     inline std::vector<std::string> get_child_moves(
         const pkmn::swig::pokemon& mother,
         const pkmn::swig::pokemon& father,
-        const std::string& child_species
+        pkmn::e_species child_species
     )
     {
         BOOST_ASSERT(mother.get_internal() != nullptr);

@@ -71,7 +71,7 @@ TEST(cpp_swig_wrapper_test, test_attribute_maps)
 
     // Test with a read-only attribute.
     pkmn::pokemon::sptr pokemon = pkmn::pokemon::make(
-                                      "Pikachu",
+                                      pkmn::e_species::PIKACHU,
                                       pkmn::e_game::RED,
                                       "",
                                       5
@@ -157,7 +157,7 @@ TEST(cpp_swig_wrapper_test, test_item_list)
     EXPECT_EQ(0, swig_item_list.get_num_items());
 
     const std::vector<std::string>& valid_items = swig_item_list.get_valid_items();
-    EXPECT_GT(valid_items.size(), 0);
+    EXPECT_FALSE(valid_items.empty());
 }
 
 TEST(cpp_swig_wrapper_test, test_item_bag)
@@ -177,6 +177,8 @@ TEST(cpp_swig_wrapper_test, test_item_bag)
         pkmn::swig::item_list pocket = swig_item_bag.get_pocket(*pocket_name_iter);
         EXPECT_EQ(*pocket_name_iter, pocket.get_name());
         EXPECT_EQ(pkmn::e_game::COLOSSEUM, pocket.get_game());
+
+        ASSERT_FALSE(pocket.get_valid_items().empty());
 
         std::string valid_item = pocket.get_valid_items().at(0);
 
@@ -206,19 +208,19 @@ TEST(cpp_swig_wrapper_test, test_pokedex)
     pkmn::swig::pokedex_has_caught_helper caught_helper = swig_pokedex.get_has_caught();
 
     // Set from the internal class and query from the SWIG wrapper.
-    cpp_pokedex->set_has_seen("Bulbasaur", true);
-    cpp_pokedex->set_has_caught("Mewtwo", true);
-    EXPECT_TRUE(seen_helper.get_has_seen("Bulbasaur"));
-    EXPECT_TRUE(caught_helper.get_has_caught("Mewtwo"));
+    cpp_pokedex->set_has_seen(pkmn::e_species::BULBASAUR, true);
+    cpp_pokedex->set_has_caught(pkmn::e_species::MEWTWO, true);
+    EXPECT_TRUE(seen_helper.get_has_seen(pkmn::e_species::BULBASAUR));
+    EXPECT_TRUE(caught_helper.get_has_caught(pkmn::e_species::MEWTWO));
     EXPECT_EQ(2, swig_pokedex.get_num_seen());
     EXPECT_EQ(1, swig_pokedex.get_num_caught());
     EXPECT_EQ(2ULL, swig_pokedex.get_all_seen().size());
     EXPECT_EQ(1ULL, swig_pokedex.get_all_caught().size());
 
     // Set from the SWIG wrapper and check from the internal class.
-    seen_helper.set_has_seen("Mewtwo", false);
-    EXPECT_FALSE(cpp_pokedex->has_seen("Mewtwo"));
-    EXPECT_FALSE(cpp_pokedex->has_caught("Mewtwo"));
+    seen_helper.set_has_seen(pkmn::e_species::MEWTWO, false);
+    EXPECT_FALSE(cpp_pokedex->has_seen(pkmn::e_species::MEWTWO));
+    EXPECT_FALSE(cpp_pokedex->has_caught(pkmn::e_species::MEWTWO));
     EXPECT_EQ(1, cpp_pokedex->get_num_seen());
     EXPECT_EQ(0, cpp_pokedex->get_num_caught());
     EXPECT_EQ(1ULL, cpp_pokedex->get_all_seen().size());
@@ -244,7 +246,7 @@ static void test_EV_IV_keys(
 TEST(cpp_swig_wrapper_test, test_pokemon_helpers)
 {
     pkmn::pokemon::sptr pokemon = pkmn::pokemon::make(
-                                      "Bulbasaur",
+                                      pkmn::e_species::BULBASAUR,
                                       pkmn::e_game::FIRERED,
                                       "",
                                       5
@@ -387,7 +389,7 @@ TEST(cpp_swig_wrapper_test, test_pokemon_helpers)
 TEST(cpp_swig_wrapper_test, test_pokemon)
 {
     pkmn::swig::pokemon swig_pokemon(
-                             "Bulbasaur",
+                             pkmn::e_species::BULBASAUR,
                              pkmn::e_game::FIRERED,
                              "",
                              5
@@ -396,7 +398,7 @@ TEST(cpp_swig_wrapper_test, test_pokemon)
     const std::map<pkmn::e_stat, int>& stats = swig_pokemon.get_stats();
     EXPECT_EQ(6, stats.size());
 
-    EXPECT_EQ("Bulbasaur", swig_pokemon.get_species());
+    EXPECT_EQ(pkmn::e_species::BULBASAUR, swig_pokemon.get_species());
     EXPECT_EQ(pkmn::e_game::FIRERED, swig_pokemon.get_game());
     EXPECT_EQ("Standard", swig_pokemon.get_form());
     EXPECT_EQ("Bulbasaur", swig_pokemon.get_database_entry().get_name());
@@ -509,13 +511,13 @@ TEST(cpp_swig_wrapper_test, test_pokemon_party)
 
     for(int i = 0; i < 6; ++i)
     {
-        EXPECT_EQ("None", swig_pokemon_party.get_pokemon(i).get_species());
+        EXPECT_EQ(pkmn::e_species::NONE, swig_pokemon_party.get_pokemon(i).get_species());
     }
 
-    pkmn::swig::pokemon new_pokemon("Charmander", pkmn::e_game::FIRERED, "", 10);
+    pkmn::swig::pokemon new_pokemon(pkmn::e_species::CHARMANDER, pkmn::e_game::FIRERED, "", 10);
     swig_pokemon_party.set_pokemon(0, new_pokemon);
 
-    EXPECT_EQ("Charmander", swig_pokemon_party.get_pokemon(0).get_species());
+    EXPECT_EQ(pkmn::e_species::CHARMANDER, swig_pokemon_party.get_pokemon(0).get_species());
 }
 
 TEST(cpp_swig_wrapper_test, test_pokemon_box)
@@ -529,13 +531,13 @@ TEST(cpp_swig_wrapper_test, test_pokemon_box)
 
     for(int i = 0; i < capacity; ++i)
     {
-        EXPECT_EQ("None", swig_pokemon_box.get_pokemon(i).get_species());
+        EXPECT_EQ(pkmn::e_species::NONE, swig_pokemon_box.get_pokemon(i).get_species());
     }
 
-    pkmn::swig::pokemon new_pokemon("Charmander", pkmn::e_game::FIRERED, "", 10);
+    pkmn::swig::pokemon new_pokemon(pkmn::e_species::CHARMANDER, pkmn::e_game::FIRERED, "", 10);
     swig_pokemon_box.set_pokemon(0, new_pokemon);
 
-    EXPECT_EQ("Charmander", swig_pokemon_box.get_pokemon(0).get_species());
+    EXPECT_EQ(pkmn::e_species::CHARMANDER, swig_pokemon_box.get_pokemon(0).get_species());
 }
 
 TEST(cpp_swig_wrapper_test, test_pokemon_pc)
@@ -555,8 +557,8 @@ TEST(cpp_swig_wrapper_test, test_pokemon_pc)
     swig_pokemon_pc.get_box(4).set_name("COOL BOX");
     EXPECT_EQ("COOL BOX", swig_pokemon_pc.get_box_names()[4]);
 
-    swig_pokemon_pc.get_box(4).set_pokemon(4, pkmn::swig::pokemon("Charizard", pkmn::e_game::FIRERED, "", 50));
-    EXPECT_EQ("Charizard", swig_pokemon_pc.get_box(4).get_pokemon(4).get_species());
+    swig_pokemon_pc.get_box(4).set_pokemon(4, pkmn::swig::pokemon(pkmn::e_species::CHARIZARD, pkmn::e_game::FIRERED, "", 50));
+    EXPECT_EQ(pkmn::e_species::CHARIZARD, swig_pokemon_pc.get_box(4).get_pokemon(4).get_species());
 }
 
 TEST(cpp_swig_wrapper_test, test_game_save)
@@ -607,11 +609,11 @@ TEST(cpp_swig_wrapper_test, test_game_save)
     swig_game_save.set_money(12345);
     EXPECT_EQ(12345, swig_game_save.get_money());
 
-    swig_game_save.get_pokedex().get_has_seen().set_has_seen("Bulbasaur", true);
-    EXPECT_TRUE(swig_game_save.get_pokedex().get_has_seen().get_has_seen("Bulbasaur"));
+    swig_game_save.get_pokedex().get_has_seen().set_has_seen(pkmn::e_species::BULBASAUR, true);
+    EXPECT_TRUE(swig_game_save.get_pokedex().get_has_seen().get_has_seen(pkmn::e_species::BULBASAUR));
 
-    swig_game_save.get_pokedex().get_has_caught().set_has_caught("Charmander", true);
-    EXPECT_TRUE(swig_game_save.get_pokedex().get_has_caught().get_has_caught("Charmander"));
+    swig_game_save.get_pokedex().get_has_caught().set_has_caught(pkmn::e_species::CHARMANDER, true);
+    EXPECT_TRUE(swig_game_save.get_pokedex().get_has_caught().get_has_caught(pkmn::e_species::CHARMANDER));
 
     /*
      * These are the underlying calls for a fairly representative use case. This is the
@@ -633,8 +635,8 @@ TEST(cpp_swig_wrapper_test, test_game_save)
 
 TEST(cpp_swig_wrapper_test, test_breeding)
 {
-    pkmn::pokemon::sptr mother = pkmn::pokemon::make("Illumise", pkmn::e_game::RUBY, "", 50);
-    pkmn::pokemon::sptr father = pkmn::pokemon::make("Volbeat", pkmn::e_game::RUBY, "", 50);
+    pkmn::pokemon::sptr mother = pkmn::pokemon::make(pkmn::e_species::ILLUMISE, pkmn::e_game::RUBY, "", 50);
+    pkmn::pokemon::sptr father = pkmn::pokemon::make(pkmn::e_species::VOLBEAT, pkmn::e_game::RUBY, "", 50);
 
     mother->set_move("Helping Hand", 0);
 
@@ -646,7 +648,7 @@ TEST(cpp_swig_wrapper_test, test_breeding)
 
     // get_child_moves
 
-    const std::string child_species = "Illumise";
+    const pkmn::e_species child_species = pkmn::e_species::ILLUMISE;
 
     std::vector<std::string> child_moves_cpp = pkmn::breeding::get_child_moves(
                                                    mother,
@@ -704,13 +706,13 @@ TEST(cpp_swig_wrapper_test, test_daycare)
     );
 
     pkmn::pokemon::sptr new_pokemon_cpp = pkmn::pokemon::make(
-                                              "Chikorita",
+                                              pkmn::e_species::CHIKORITA,
                                               pkmn::e_game::GOLD,
                                               "",
                                               10
                                           );
     pkmn::swig::pokemon new_pokemon_swig(
-                            "Cyndaquil",
+                            pkmn::e_species::CYNDAQUIL,
                             pkmn::e_game::GOLD,
                             "",
                             10

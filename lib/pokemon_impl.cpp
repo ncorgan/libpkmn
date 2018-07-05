@@ -47,7 +47,7 @@ namespace pkmn
     const std::string pkmn::pokemon::DEFAULT_TRAINER_NAME = "LibPKMN";
 
     pokemon::sptr pokemon::make(
-        const std::string& species,
+        pkmn::e_species species,
         pkmn::e_game game,
         const std::string& form,
         int level
@@ -174,11 +174,11 @@ namespace pkmn
        _native_party(nullptr)
     {}
 
-    std::string pokemon_impl::get_species()
+    pkmn::e_species pokemon_impl::get_species()
     {
         boost::lock_guard<pokemon_impl> lock(*this);
 
-        return _database_entry.get_name();
+        return _database_entry.get_species_enum();
     }
 
     std::string pokemon_impl::get_form()

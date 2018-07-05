@@ -9,55 +9,58 @@
 
 #include <pkmn/config.hpp>
 
+#include <pkmn/enums/ability.hpp>
 #include <pkmn/enums/game.hpp>
+#include <pkmn/enums/item.hpp>
+#include <pkmn/enums/move.hpp>
+#include <pkmn/enums/nature.hpp>
+#include <pkmn/enums/species.hpp>
+#include <pkmn/enums/type.hpp>
 
 #include <string>
 #include <vector>
 
 namespace pkmn { namespace database {
 
-    /*!
-     * @brief Returns an alphabetized list of abilities available in the given generation.
-     *
-     * \param generation which generation
-     * \throws std::out_of_range if generation is not [3-6]
-     */
-    PKMN_API std::vector<std::string> get_ability_list(
+    PKMN_API std::vector<pkmn::e_ability> get_ability_list(
         int generation
     );
 
-    /*!
-     * @brief Returns a list, sorted by version group, of games in (or up to) the given generation.
-     *
-     * \param generation which generation
-     * \param include_previous whether or not to include games in generations earlier than the given one
-     * \throws std::out_of_range if generation is not [1-6]
-     */
-    PKMN_API std::vector<std::string> get_game_list(
+    PKMN_API std::vector<std::string> get_ability_name_list(
+        int generation
+    );
+
+    PKMN_API std::vector<pkmn::e_game> get_game_list(
         int generation,
         bool include_previous
     );
 
-    /*!
-     * @brief Returns an alphabetized list of Shadow Pokémon available in the specified Gamecube game.
-     *
-     * \param colosseum return Pokémon from Colosseum, XD otherwise
-     */
-    PKMN_API std::vector<std::string> get_gamecube_shadow_pokemon_list(
+    PKMN_API std::vector<std::string> get_game_name_list(
+        int generation,
+        bool include_previous
+    );
+
+    PKMN_API std::vector<pkmn::e_species> get_gamecube_shadow_pokemon_list(
         bool colosseum
     );
 
-    PKMN_API std::vector<std::string> get_hm_move_list(
+    PKMN_API std::vector<std::string> get_gamecube_shadow_pokemon_name_list(
+        bool colosseum
+    );
+
+    PKMN_API std::vector<pkmn::e_move> get_hm_move_list(
         pkmn::e_game game
     );
 
-    /*!
-     * @brief Returns an alphabetized list of items available in the given game.
-     *
-     * \param game which game
-     * \throws std::invalid_argument if the given game is invalid
-     */
-    PKMN_API std::vector<std::string> get_item_list(
+    PKMN_API std::vector<std::string> get_hm_move_name_list(
+        pkmn::e_game game
+    );
+
+    PKMN_API std::vector<pkmn::e_item> get_item_list(
+        pkmn::e_game game
+    );
+
+    PKMN_API std::vector<std::string> get_item_name_list(
         pkmn::e_game game
     );
 
@@ -71,34 +74,27 @@ namespace pkmn { namespace database {
      * \param whole_generation include locations from all games in this generation
      * \throws std::invalid_argument if the given game is invalid
      */
-    PKMN_API std::vector<std::string> get_location_list(
+    PKMN_API std::vector<std::string> get_location_name_list(
         pkmn::e_game game,
         bool whole_generation
     );
 
-    /*!
-     * @brief Returns a list of moves (sorted by in-game index) of moves available in the given game.
-     *
-     * \param game which game
-     */
-    PKMN_API std::vector<std::string> get_move_list(
+    PKMN_API std::vector<pkmn::e_move> get_move_list(pkmn::e_game game);
+
+    PKMN_API std::vector<std::string> get_move_name_list(
         pkmn::e_game game
     );
 
-    /*!
-     * @brief Returns a list of natures sorted by in-game index.
-     */
-    PKMN_API std::vector<std::string> get_nature_list();
+    PKMN_API std::vector<pkmn::e_nature> get_nature_list();
 
-    /*!
-     * @brief Returns a list (sorted by National Pokédex number) of Pokémon introduced in
-     *        (or up to) the given generation.
-     *
-     * \param generation which generation
-     * \param include_previous include Pokémon from previous generations.
-     * \throws std::out_of_range if generation is not [1-6]
-     */
-    PKMN_API std::vector<std::string> get_pokemon_list(
+    PKMN_API std::vector<std::string> get_nature_name_list();
+
+    PKMN_API std::vector<pkmn::e_species> get_pokemon_list(
+        int generation,
+        bool include_previous
+    );
+
+    PKMN_API std::vector<std::string> get_pokemon_name_list(
         int generation,
         bool include_previous
     );
@@ -106,7 +102,7 @@ namespace pkmn { namespace database {
     /*!
      * @brief Returns a list (sorted by their first generation) of regions in the Pokémon world.
      */
-    PKMN_API std::vector<std::string> get_region_list();
+    PKMN_API std::vector<std::string> get_region_name_list();
 
     /*!
      * @brief Returns a list (ordered as in-game) of ribbons available in the given generation.
@@ -114,26 +110,28 @@ namespace pkmn { namespace database {
      * \param generation which generation
      * \throws std::out_of_range if generation is not [3-6]
      */
-    PKMN_API std::vector<std::string> get_ribbon_list(
+    PKMN_API std::vector<std::string> get_ribbon_name_list(
         int generation
     );
 
     /*!
      * @brief Returns a list (as presented in-game) of Super Training Medals in Generation VI.
      */
-    PKMN_API std::vector<std::string> get_super_training_medal_list();
+    PKMN_API std::vector<std::string> get_super_training_medal_name_list();
 
-    PKMN_API std::vector<std::string> get_tm_move_list(
+    PKMN_API std::vector<pkmn::e_move> get_tm_move_list(
         pkmn::e_game game
     );
 
-    /*!
-     * @brief Returns a list of types available in the given game.
-     *
-     * \param game which game
-     * \throws std::invalid_argument if the given game is invalid
-     */
-    PKMN_API std::vector<std::string> get_type_list(
+    PKMN_API std::vector<std::string> get_tm_move_name_list(
+        pkmn::e_game game
+    );
+
+    PKMN_API std::vector<pkmn::e_type> get_type_list(
+        pkmn::e_game game
+    );
+
+    PKMN_API std::vector<std::string> get_type_name_list(
         pkmn::e_game game
     );
 }}

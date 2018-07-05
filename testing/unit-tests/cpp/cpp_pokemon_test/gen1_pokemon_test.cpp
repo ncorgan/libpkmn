@@ -120,11 +120,11 @@ TEST_P(gen1_pokemon_test, gen1_pokemon_test) {
     EXPECT_EQ(pokemon->get_numeric_attribute("Catch rate"), int(native_pc->catch_rate));
 }
 
-static const std::vector<std::pair<pkmn::e_game, std::string>> params =
+static const std::vector<std::pair<pkmn::e_game, pkmn::e_species>> params =
 {
-    {pkmn::e_game::RED, "Charmander"},
-    {pkmn::e_game::BLUE, "Squirtle"},
-    {pkmn::e_game::YELLOW, "Bulbasaur"}
+    {pkmn::e_game::RED,    pkmn::e_species::CHARMANDER},
+    {pkmn::e_game::BLUE,   pkmn::e_species::SQUIRTLE},
+    {pkmn::e_game::YELLOW, pkmn::e_species::BULBASAUR},
 };
 
 INSTANTIATE_TEST_CASE_P(

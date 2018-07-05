@@ -20,6 +20,7 @@
 #include <pkmn/breeding/compatibility.hpp>
 #include <pkmn/database/lists.hpp>
 #include <pkmn/database/pokemon_entry.hpp>
+#include <pkmn/enums/enum_to_string.hpp>
 
 #include <pksav/common/stats.h>
 
@@ -28,20 +29,13 @@
 
 namespace pkmn { namespace breeding {
 
-    BOOST_STATIC_CONSTEXPR int NIDORAN_F_SPECIES_ID = 29;
-    BOOST_STATIC_CONSTEXPR int NIDORAN_M_SPECIES_ID = 32;
-    BOOST_STATIC_CONSTEXPR int DITTO_SPECIES_ID     = 132;
-    BOOST_STATIC_CONSTEXPR int VOLBEAT_SPECIES_ID   = 313;
-    BOOST_STATIC_CONSTEXPR int ILLUMISE_SPECIES_ID  = 314;
-    BOOST_STATIC_CONSTEXPR int MANAPHY_SPECIES_ID   = 490;
-
     struct incense_breeding_pokemon
     {
-        std::vector<std::string> species;
-        std::string evolution_to_add;
+        std::vector<pkmn::e_species> species;
+        pkmn::e_species evolution_to_add;
     };
 
-    std::string get_earliest_species_in_evolutionary_line(
+    pkmn::e_species get_earliest_species_in_evolutionary_line(
         int species_id,
         int generation
     )
@@ -68,12 +62,12 @@ namespace pkmn { namespace breeding {
             stmt.bind(2, query_species_id);
         }
 
-        return pkmn::database::species_id_to_name(query_species_id);
+        return static_cast<pkmn::e_species>(query_species_id);
     }
 
-    std::vector<std::string> get_possible_child_species(
-        const std::string& mother_species,
-        const std::string& father_species,
+    std::vector<pkmn::e_species> get_possible_child_species(
+        pkmn::e_species mother_species,
+        pkmn::e_species father_species,
         pkmn::e_game game
     )
     {
@@ -87,7 +81,7 @@ namespace pkmn { namespace breeding {
         pkmn::database::pokemon_entry mother_entry(mother_species, game, "");
         if(fp_compare_equal(mother_entry.get_chance_male(), 1.0f))
         {
-            std::string error_message(mother_species);
+            std::string error_message(pkmn::species_to_string(mother_species));
             error_message += " is male-only and cannot be a mother.";
             throw std::invalid_argument(error_message);
         }
@@ -95,65 +89,67 @@ namespace pkmn { namespace breeding {
         pkmn::database::pokemon_entry father_entry(father_species, game, "");
         if(fp_compare_equal(father_entry.get_chance_female(), 1.0f))
         {
-            std::string error_message(father_species);
+            std::string error_message(pkmn::species_to_string(father_species));
             error_message += " is female-only and cannot be a father.";
             throw std::invalid_argument(error_message);
         }
 
-        std::vector<std::string> possible_child_species;
+        std::vector<pkmn::e_species> possible_child_species;
 
-        bool is_mother_nidoran_f = (mother_entry.get_species_id() == NIDORAN_F_SPECIES_ID);
-        bool is_mother_ditto     = (mother_entry.get_species_id() == DITTO_SPECIES_ID);
-        bool is_mother_illumise  = (mother_entry.get_species_id() == ILLUMISE_SPECIES_ID);
-        bool is_mother_manaphy   = (mother_entry.get_species_id() == MANAPHY_SPECIES_ID);
+        bool is_mother_nidoran_f = (mother_species == pkmn::e_species::NIDORAN_F);
+        bool is_mother_ditto     = (mother_species == pkmn::e_species::DITTO);
+        bool is_mother_illumise  = (mother_species == pkmn::e_species::ILLUMISE);
+        bool is_mother_manaphy   = (mother_species == pkmn::e_species::MANAPHY);
 
-        bool is_father_nidoran_m = (father_entry.get_species_id() == NIDORAN_M_SPECIES_ID);
-        bool is_father_ditto     = (father_entry.get_species_id() == DITTO_SPECIES_ID);
-        bool is_father_volbeat   = (father_entry.get_species_id() == VOLBEAT_SPECIES_ID);
-        bool is_father_manaphy   = (father_entry.get_species_id() == MANAPHY_SPECIES_ID);
+        bool is_father_nidoran_m = (father_species == pkmn::e_species::NIDORAN_M);
+        bool is_father_ditto     = (father_species == pkmn::e_species::DITTO);
+        bool is_father_volbeat   = (father_species == pkmn::e_species::VOLBEAT);
+        bool is_father_manaphy   = (father_species == pkmn::e_species::MANAPHY);
 
         if(is_mother_nidoran_f)
         {
-            // Trust the library to properly return the symbols.
-            static const std::vector<std::string> NIDORAN_F_POSSIBLE_SPECIES =
+            possible_child_species =
             {
-                pkmn::database::species_id_to_name(NIDORAN_F_SPECIES_ID),
-                pkmn::database::species_id_to_name(NIDORAN_M_SPECIES_ID),
+                pkmn::e_species::NIDORAN_F,
+                pkmn::e_species::NIDORAN_M
             };
-
-            possible_child_species = NIDORAN_F_POSSIBLE_SPECIES;
         }
         else if(is_mother_ditto && is_father_nidoran_m)
         {
-            possible_child_species.emplace_back(
-                pkmn::database::species_id_to_name(NIDORAN_M_SPECIES_ID)
-            );
+            possible_child_species = {pkmn::e_species::NIDORAN_M};
 
             if(pkmn::database::game_enum_to_generation(game) >= 5)
             {
                 // Output should be sorted by species ID
                 possible_child_species.insert(
                     possible_child_species.begin(),
-                    pkmn::database::species_id_to_name(NIDORAN_F_SPECIES_ID)
+                    pkmn::e_species::NIDORAN_F
                 );
             }
         }
         else if(is_mother_ditto && is_father_volbeat)
         {
-            possible_child_species.emplace_back("Volbeat");
+            possible_child_species = {pkmn::e_species::VOLBEAT};
+
             if(pkmn::database::game_enum_to_generation(game) >= 5)
             {
-                possible_child_species.emplace_back("Illumise");
+                possible_child_species.emplace_back(
+                    pkmn::e_species::ILLUMISE
+                );
             }
         }
         else if(is_mother_illumise)
         {
-            possible_child_species = {"Volbeat", "Illumise"};
+            possible_child_species =
+            {
+                pkmn::e_species::VOLBEAT,
+                pkmn::e_species::ILLUMISE
+            };
         }
         else if((is_mother_manaphy && is_father_ditto) ||
                 (is_father_manaphy && is_mother_ditto))
         {
-            possible_child_species = {"Phione"};
+            possible_child_species = {pkmn::e_species::PHIONE};
         }
         else if(is_mother_ditto)
         {
@@ -183,15 +179,42 @@ namespace pkmn { namespace breeding {
         // do this automatically, so we have to automatically check.
         static const std::vector<incense_breeding_pokemon> INCENSE_BREEDING_POKEMON =
         {
-            {{"Marill", "Azumarill"}, "Marill"},
-            {{"Wobbuffet"}, "Wobbuffet"},
-            {{"Roselia", "Roserade"}, "Roselia"},
-            {{"Chimecho"}, "Chimecho"},
-            {{"Sudowoodo"}, "Sudowoodo"},
-            {{"Mr. Mime"}, "Mr. Mime"},
-            {{"Chansey", "Blissey"}, "Chansey"},
-            {{"Mantine"}, "Mantine"},
-            {{"Snorlax"}, "Snorlax"}
+            {
+                {pkmn::e_species::MARILL, pkmn::e_species::AZUMARILL},
+                pkmn::e_species::MARILL
+            },
+            {
+                {pkmn::e_species::WOBBUFFET},
+                pkmn::e_species::WOBBUFFET
+            },
+            {
+                {pkmn::e_species::ROSELIA, pkmn::e_species::ROSERADE},
+                pkmn::e_species::ROSELIA
+            },
+            {
+                {pkmn::e_species::CHIMECHO},
+                pkmn::e_species::CHIMECHO
+            },
+            {
+                {pkmn::e_species::SUDOWOODO},
+                pkmn::e_species::SUDOWOODO
+            },
+            {
+                {pkmn::e_species::MR_MIME},
+                pkmn::e_species::MR_MIME
+            },
+            {
+                {pkmn::e_species::CHANSEY, pkmn::e_species::BLISSEY},
+                pkmn::e_species::CHANSEY
+            },
+            {
+                {pkmn::e_species::MANTINE},
+                pkmn::e_species::MANTINE
+            },
+            {
+                {pkmn::e_species::SNORLAX},
+                pkmn::e_species::SNORLAX
+            },
         };
         auto incense_breeding_pokemon_iter =
             std::find_if(
@@ -202,7 +225,7 @@ namespace pkmn { namespace breeding {
                 )
                 {
                     return (does_vector_contain_value(breeding_pokemon.species, mother_species)) ||
-                           ((mother_species == "Ditto") && does_vector_contain_value(breeding_pokemon.species, father_species));
+                           ((mother_species == pkmn::e_species::DITTO) && does_vector_contain_value(breeding_pokemon.species, father_species));
                 });
         if((incense_breeding_pokemon_iter != INCENSE_BREEDING_POKEMON.end()) &&
            !does_vector_contain_value(
@@ -224,7 +247,7 @@ namespace pkmn { namespace breeding {
     std::vector<std::string> get_child_moves(
         const pkmn::pokemon::sptr& mother,
         const pkmn::pokemon::sptr& father,
-        const std::string& child_species
+        pkmn::e_species child_species
     )
     {
         if(mother->get_game() != father->get_game())
@@ -234,18 +257,18 @@ namespace pkmn { namespace breeding {
                   );
         }
 
-        std::vector<std::string> possible_child_species = get_possible_child_species(
-                                                              mother->get_species(),
-                                                              father->get_species(),
-                                                              mother->get_game()
-                                                          );
+        std::vector<pkmn::e_species> possible_child_species = get_possible_child_species(
+                                                                  mother->get_species(),
+                                                                  father->get_species(),
+                                                                  mother->get_game()
+                                                              );
         if(!does_vector_contain_value(possible_child_species, child_species))
         {
-            std::string error_message = child_species;
+            std::string error_message = pkmn::species_to_string(child_species);
             error_message += " is not a possible child for ";
-            error_message += mother->get_species();
+            error_message += pkmn::species_to_string(mother->get_species());
             error_message += " and ";
-            error_message += father->get_species();
+            error_message += pkmn::species_to_string(father->get_species());
             error_message += ".";
 
             throw std::invalid_argument(error_message);
@@ -269,7 +292,7 @@ namespace pkmn { namespace breeding {
          * child Pichu will know Volt Tackle. This takes priority over any
          * other policy.
          */
-        if(child_species == "Pichu")
+        if(child_species == pkmn::e_species::PICHU)
         {
             bool has_volt_tackle_policy = (generation >= 4) ||
                                           (game == pkmn::e_game::EMERALD);
@@ -462,7 +485,7 @@ namespace pkmn { namespace breeding {
     }
 
     static bool can_species_be_male(
-        const std::string& species
+        pkmn::e_species species
     )
     {
         static const pkmn::e_game ENTRY_GAME = pkmn::e_game::X;
@@ -474,7 +497,7 @@ namespace pkmn { namespace breeding {
     }
 
     static bool can_species_be_female(
-        const std::string& species
+        pkmn::e_species species
     )
     {
         static const pkmn::e_game ENTRY_GAME = pkmn::e_game::X;
@@ -486,7 +509,7 @@ namespace pkmn { namespace breeding {
     }
 
     static bool is_species_genderless(
-        const std::string& species
+        pkmn::e_species species
     )
     {
         static const pkmn::e_game ENTRY_GAME = pkmn::e_game::X;
@@ -509,8 +532,8 @@ namespace pkmn { namespace breeding {
         pkmn::e_gender child_gender
     )
     {
-        bool is_mother_ditto = (mother->get_database_entry().get_species_id() == DITTO_SPECIES_ID);
-        bool is_father_ditto = (father->get_database_entry().get_species_id() == DITTO_SPECIES_ID);
+        bool is_mother_ditto = (mother->get_species() == pkmn::e_species::DITTO);
+        bool is_father_ditto = (father->get_species() == pkmn::e_species::DITTO);
 
         std::map<pkmn::e_stat, int> parent_IVs;
         if(is_mother_ditto)
@@ -811,11 +834,11 @@ namespace pkmn { namespace breeding {
         }
 
         // Validate given child gender against possible child species.
-        std::vector<std::string> possible_child_species = get_possible_child_species(
-                                                              mother->get_species(),
-                                                              father->get_species(),
-                                                              mother->get_game()
-                                                          );
+        std::vector<pkmn::e_species> possible_child_species = get_possible_child_species(
+                                                                  mother->get_species(),
+                                                                  father->get_species(),
+                                                                  mother->get_game()
+                                                              );
 
         auto species_iter = possible_child_species.end();
         switch(child_gender)

@@ -104,7 +104,7 @@ static void gen1_item_list_test_common(
     ASSERT_EQ(6, list->get_num_items());
 
     const std::vector<std::string>& valid_items = list->get_valid_items();
-    std::vector<std::string> full_item_list = pkmn::database::get_item_list(list->get_game());
+    std::vector<std::string> full_item_list = pkmn::database::get_item_name_list(list->get_game());
     EXPECT_EQ(full_item_list.size(), valid_items.size());
 
     check_pksav_struct(

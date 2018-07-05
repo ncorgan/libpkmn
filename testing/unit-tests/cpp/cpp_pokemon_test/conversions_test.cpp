@@ -34,7 +34,7 @@ static std::string random_string(
     size_t len
 )
 {
-    std::string ret = "";
+    std::string ret;
     pkmn::rng<char> char_rng;
 
     for(size_t i = 0; i < len; ++i)
@@ -53,7 +53,7 @@ bool random_bool()
 
 typedef struct
 {
-    std::string species;
+    pkmn::e_species species;
     std::string form;
 
     pkmn::e_game origin_game;
@@ -86,8 +86,8 @@ TEST_P(conversions_test, conversions_test)
     pkmn::rng<uint32_t> uint32_rng;
     pkmn::rng<size_t> size_rng;
 
-    std::vector<std::string> items = pkmn::database::get_item_list(game_for_lists);
-    std::vector<std::string> moves = pkmn::database::get_move_list(game_for_lists);
+    std::vector<std::string> items = pkmn::database::get_item_name_list(game_for_lists);
+    std::vector<std::string> moves = pkmn::database::get_move_name_list(game_for_lists);
 
     for(int i = 0; i < 4; ++i)
     {
@@ -239,50 +239,50 @@ TEST_P(conversions_test, conversions_test)
 static const conversions_test_params_t TEST_PARAMS[] =
 {
     // Generation I -> Generation I
-    {"Bulbasaur", "", pkmn::e_game::RED, pkmn::e_game::YELLOW},
+    {pkmn::e_species::BULBASAUR, "", pkmn::e_game::RED, pkmn::e_game::YELLOW},
 
     // Generation I -> Generation II
-    {"Squirtle", "", pkmn::e_game::BLUE, pkmn::e_game::GOLD},
+    {pkmn::e_species::SQUIRTLE, "", pkmn::e_game::BLUE, pkmn::e_game::GOLD},
 
     // Generation II -> Generation II
-    {"Cyndaquil", "", pkmn::e_game::GOLD, pkmn::e_game::CRYSTAL},
-    {"Totodile", "", pkmn::e_game::CRYSTAL, pkmn::e_game::GOLD},
+    {pkmn::e_species::CYNDAQUIL, "", pkmn::e_game::GOLD, pkmn::e_game::CRYSTAL},
+    {pkmn::e_species::TOTODILE, "", pkmn::e_game::CRYSTAL, pkmn::e_game::GOLD},
 
     // Generation II -> Generation I
-    {"Charmander", "", pkmn::e_game::SILVER, pkmn::e_game::BLUE},
+    {pkmn::e_species::CHARMANDER, "", pkmn::e_game::SILVER, pkmn::e_game::BLUE},
 
     // GBA -> GBA
-    {"Torchic", "", pkmn::e_game::RUBY, pkmn::e_game::SAPPHIRE},
-    {"Mudkip", "", pkmn::e_game::RUBY, pkmn::e_game::EMERALD},
-    {"Treecko", "", pkmn::e_game::RUBY, pkmn::e_game::FIRERED},
-    {"Torchic", "", pkmn::e_game::EMERALD, pkmn::e_game::SAPPHIRE},
-    {"Mudkip", "", pkmn::e_game::EMERALD, pkmn::e_game::EMERALD},
-    {"Treecko", "", pkmn::e_game::EMERALD, pkmn::e_game::FIRERED},
-    {"Charmander", "", pkmn::e_game::FIRERED, pkmn::e_game::SAPPHIRE},
-    {"Squirtle", "", pkmn::e_game::FIRERED, pkmn::e_game::EMERALD},
-    {"Bulbasaur", "", pkmn::e_game::FIRERED, pkmn::e_game::FIRERED},
+    {pkmn::e_species::TORCHIC, "", pkmn::e_game::RUBY, pkmn::e_game::SAPPHIRE},
+    {pkmn::e_species::MUDKIP, "", pkmn::e_game::RUBY, pkmn::e_game::EMERALD},
+    {pkmn::e_species::TREECKO, "", pkmn::e_game::RUBY, pkmn::e_game::FIRERED},
+    {pkmn::e_species::TORCHIC, "", pkmn::e_game::EMERALD, pkmn::e_game::SAPPHIRE},
+    {pkmn::e_species::MUDKIP, "", pkmn::e_game::EMERALD, pkmn::e_game::EMERALD},
+    {pkmn::e_species::TREECKO, "", pkmn::e_game::EMERALD, pkmn::e_game::FIRERED},
+    {pkmn::e_species::CHARMANDER, "", pkmn::e_game::FIRERED, pkmn::e_game::SAPPHIRE},
+    {pkmn::e_species::SQUIRTLE, "", pkmn::e_game::FIRERED, pkmn::e_game::EMERALD},
+    {pkmn::e_species::BULBASAUR, "", pkmn::e_game::FIRERED, pkmn::e_game::FIRERED},
 
     // GBA -> GCN
-    {"Eevee", "", pkmn::e_game::RUBY, pkmn::e_game::COLOSSEUM},
-    {"Espeon", "", pkmn::e_game::EMERALD, pkmn::e_game::COLOSSEUM},
-    {"Umbreon", "", pkmn::e_game::FIRERED, pkmn::e_game::COLOSSEUM},
-    {"Eevee", "", pkmn::e_game::RUBY, pkmn::e_game::XD},
-    {"Espeon", "", pkmn::e_game::EMERALD, pkmn::e_game::XD},
-    {"Umbreon", "", pkmn::e_game::FIRERED, pkmn::e_game::XD},
+    {pkmn::e_species::EEVEE, "", pkmn::e_game::RUBY, pkmn::e_game::COLOSSEUM},
+    {pkmn::e_species::ESPEON, "", pkmn::e_game::EMERALD, pkmn::e_game::COLOSSEUM},
+    {pkmn::e_species::UMBREON, "", pkmn::e_game::FIRERED, pkmn::e_game::COLOSSEUM},
+    {pkmn::e_species::EEVEE, "", pkmn::e_game::RUBY, pkmn::e_game::XD},
+    {pkmn::e_species::ESPEON, "", pkmn::e_game::EMERALD, pkmn::e_game::XD},
+    {pkmn::e_species::UMBREON, "", pkmn::e_game::FIRERED, pkmn::e_game::XD},
 
     // GCN -> GBA
-    {"Eevee", "", pkmn::e_game::COLOSSEUM, pkmn::e_game::SAPPHIRE},
-    {"Espeon", "", pkmn::e_game::COLOSSEUM, pkmn::e_game::EMERALD},
-    {"Umbreon", "", pkmn::e_game::COLOSSEUM, pkmn::e_game::LEAFGREEN},
-    {"Eevee", "", pkmn::e_game::XD, pkmn::e_game::SAPPHIRE},
-    {"Espeon", "", pkmn::e_game::XD, pkmn::e_game::EMERALD},
-    {"Umbreon", "", pkmn::e_game::XD, pkmn::e_game::LEAFGREEN},
+    {pkmn::e_species::EEVEE, "", pkmn::e_game::COLOSSEUM, pkmn::e_game::SAPPHIRE},
+    {pkmn::e_species::ESPEON, "", pkmn::e_game::COLOSSEUM, pkmn::e_game::EMERALD},
+    {pkmn::e_species::UMBREON, "", pkmn::e_game::COLOSSEUM, pkmn::e_game::LEAFGREEN},
+    {pkmn::e_species::EEVEE, "", pkmn::e_game::XD, pkmn::e_game::SAPPHIRE},
+    {pkmn::e_species::ESPEON, "", pkmn::e_game::XD, pkmn::e_game::EMERALD},
+    {pkmn::e_species::UMBREON, "", pkmn::e_game::XD, pkmn::e_game::LEAFGREEN},
 
     // GCN -> GCN
-    {"Vaporeon", "", pkmn::e_game::COLOSSEUM, pkmn::e_game::COLOSSEUM},
-    {"Jolteon", "", pkmn::e_game::COLOSSEUM, pkmn::e_game::XD},
-    {"Vaporeon", "", pkmn::e_game::XD, pkmn::e_game::XD},
-    {"Jolteon", "", pkmn::e_game::XD, pkmn::e_game::COLOSSEUM}
+    {pkmn::e_species::VAPOREON, "", pkmn::e_game::COLOSSEUM, pkmn::e_game::COLOSSEUM},
+    {pkmn::e_species::JOLTEON, "", pkmn::e_game::COLOSSEUM, pkmn::e_game::XD},
+    {pkmn::e_species::VAPOREON, "", pkmn::e_game::XD, pkmn::e_game::XD},
+    {pkmn::e_species::JOLTEON, "", pkmn::e_game::XD, pkmn::e_game::COLOSSEUM}
 };
 
 INSTANTIATE_TEST_CASE_P(

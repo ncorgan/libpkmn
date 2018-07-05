@@ -51,44 +51,61 @@ class gen1_form_test: public ::testing::TestWithParam<pkmn::e_game> {};
 class gen2_form_test: public ::testing::TestWithParam<pkmn::e_game> {};
 class gen3_form_test: public ::testing::TestWithParam<pkmn::e_game> {};
 
-static const std::vector<std::string> gen1_pokemon_with_xy_mega_forms =
+static const std::vector<pkmn::e_species> gen1_pokemon_with_xy_mega_forms =
 {
-    "Venusaur",
-    "Blastoise",
-    "Alakazam",
-    "Gengar",
-    "Kangaskhan",
-    "Pinsir",
-    "Gyarados",
-    "Aerodactyl"
+    pkmn::e_species::VENUSAUR,
+    pkmn::e_species::BLASTOISE,
+    pkmn::e_species::ALAKAZAM,
+    pkmn::e_species::GENGAR,
+    pkmn::e_species::KANGASKHAN,
+    pkmn::e_species::PINSIR,
+    pkmn::e_species::GYARADOS,
+    pkmn::e_species::AERODACTYL,
 };
 
-static const std::vector<std::string> gen1_pokemon_with_oras_mega_forms =
+static const std::vector<pkmn::e_species> gen1_pokemon_with_oras_mega_forms =
 {
-    "Beedrill",
-    "Pidgeot",
-    "Slowbro"
+    pkmn::e_species::BEEDRILL,
+    pkmn::e_species::PIDGEOT,
+    pkmn::e_species::SLOWBRO,
 };
 
-static const std::vector<std::string> gen2_pokemon_with_xy_mega_forms =
+static const std::vector<pkmn::e_species> gen2_pokemon_with_xy_mega_forms =
 {
-    "Ampharos",
-    "Scizor",
-    "Heracross",
-    "Houndoom",
-    "Tyranitar"
+    pkmn::e_species::AMPHAROS,
+    pkmn::e_species::SCIZOR,
+    pkmn::e_species::HERACROSS,
+    pkmn::e_species::HOUNDOOM,
+    pkmn::e_species::TYRANITAR,
 };
 
-static const std::vector<std::string> gen3_pokemon_with_xy_mega_forms =
+static const std::vector<pkmn::e_species> gen3_pokemon_with_xy_mega_forms =
 {
-    "Blaziken","Gardevoir","Mawile","Aggron","Medicham"
-    "Manectric","Banette","Absol","Latias","Latios","Garchomp"
+    pkmn::e_species::BLAZIKEN,
+    pkmn::e_species::GARDEVOIR,
+    pkmn::e_species::MAWILE,
+    pkmn::e_species::AGGRON,
+    pkmn::e_species::MEDICHAM,
+    pkmn::e_species::MANECTRIC,
+    pkmn::e_species::BANETTE,
+    pkmn::e_species::ABSOL,
+    pkmn::e_species::LATIAS,
+    pkmn::e_species::LATIOS,
+    pkmn::e_species::GARCHOMP,
 };
 
-static const std::vector<std::string> gen3_pokemon_with_oras_mega_forms =
+static const std::vector<pkmn::e_species> gen3_pokemon_with_oras_mega_forms =
 {
-    "Sceptile","Swampert","Sableye","Sharpedo","Camerupt"
-    "Altaria","Glalie","Salamence","Metagross","Rayquaza"
+    pkmn::e_species::SCEPTILE,
+    pkmn::e_species::SWAMPERT,
+    pkmn::e_species::SABLEYE,
+    pkmn::e_species::SHARPEDO,
+    pkmn::e_species::CAMERUPT,
+    pkmn::e_species::ALTARIA,
+    pkmn::e_species::GLALIE,
+    pkmn::e_species::SALAMENCE,
+    pkmn::e_species::METAGROSS,
+    pkmn::e_species::RAYQUAZA,
 };
 
 TEST_P(gen1_form_test, test_gen1_pokemon_forms)
@@ -153,7 +170,7 @@ TEST_P(gen1_form_test, test_gen1_pokemon_forms)
 
     // Cosplay Pikachu should only work for OR/AS
     static const pkmn::database::pokemon_entry oras_pikachu(
-        "Pikachu",
+        pkmn::e_species::PIKACHU,
         pkmn::e_game::OMEGA_RUBY,
         ""
     );
@@ -165,7 +182,7 @@ TEST_P(gen1_form_test, test_gen1_pokemon_forms)
         if(is_oras)
         {
             (void)pkmn::pokemon::make(
-                      "Pikachu",
+                      pkmn::e_species::PIKACHU,
                       game,
                       *iter,
                       5
@@ -175,7 +192,7 @@ TEST_P(gen1_form_test, test_gen1_pokemon_forms)
         {
             EXPECT_THROW(
                 (void)pkmn::pokemon::make(
-                          "Pikachu",
+                          pkmn::e_species::PIKACHU,
                           game,
                           *iter,
                           5
@@ -188,25 +205,25 @@ TEST_P(gen1_form_test, test_gen1_pokemon_forms)
     if(generation >= 6)
     {
         (void)pkmn::pokemon::make(
-                  "Charizard",
+                  pkmn::e_species::CHARIZARD,
                   game,
                   "Mega X",
                   50
               );
         (void)pkmn::pokemon::make(
-                  "Charizard",
+                  pkmn::e_species::CHARIZARD,
                   game,
                   "Mega Y",
                   50
               );
         (void)pkmn::pokemon::make(
-                  "Mewtwo",
+                  pkmn::e_species::MEWTWO,
                   game,
                   "Mega X",
                   50
               );
         (void)pkmn::pokemon::make(
-                  "Mewtwo",
+                  pkmn::e_species::MEWTWO,
                   game,
                   "Mega Y",
                   50
@@ -216,7 +233,7 @@ TEST_P(gen1_form_test, test_gen1_pokemon_forms)
     {
         EXPECT_THROW(
             (void)pkmn::pokemon::make(
-                      "Charizard",
+                      pkmn::e_species::CHARIZARD,
                       game,
                       "Mega X",
                       50
@@ -224,7 +241,7 @@ TEST_P(gen1_form_test, test_gen1_pokemon_forms)
         , std::invalid_argument);
         EXPECT_THROW(
             (void)pkmn::pokemon::make(
-                      "Charizard",
+                      pkmn::e_species::CHARIZARD,
                       game,
                       "Mega Y",
                       50
@@ -232,7 +249,7 @@ TEST_P(gen1_form_test, test_gen1_pokemon_forms)
         , std::invalid_argument);
         EXPECT_THROW(
             (void)pkmn::pokemon::make(
-                      "Mewtwo",
+                      pkmn::e_species::MEWTWO,
                       game,
                       "Mega X",
                       50
@@ -240,7 +257,7 @@ TEST_P(gen1_form_test, test_gen1_pokemon_forms)
         , std::invalid_argument);
         EXPECT_THROW(
             (void)pkmn::pokemon::make(
-                      "Mewtwo",
+                      pkmn::e_species::MEWTWO,
                       game,
                       "Mega Y",
                       50
@@ -287,7 +304,7 @@ TEST_P(gen2_form_test, test_gen2_pokemon_forms)
     if(is_oras)
     {
         (void)pkmn::pokemon::make(
-                  "Steelix",
+                  pkmn::e_species::STEELIX,
                   game,
                   "Mega",
                   100
@@ -297,7 +314,7 @@ TEST_P(gen2_form_test, test_gen2_pokemon_forms)
     {
         EXPECT_THROW(
             (void)pkmn::pokemon::make(
-                      "Steelix",
+                      pkmn::e_species::STEELIX,
                       game,
                       "Mega",
                       100
@@ -309,7 +326,7 @@ TEST_P(gen2_form_test, test_gen2_pokemon_forms)
     if((game == pkmn::e_game::HEARTGOLD) || (game == pkmn::e_game::SOULSILVER))
     {
         pkmn::pokemon::sptr pichu = pkmn::pokemon::make(
-                                        "Pichu",
+                                        pkmn::e_species::PICHU,
                                         game,
                                         "Spiky-eared",
                                        100
@@ -321,7 +338,7 @@ TEST_P(gen2_form_test, test_gen2_pokemon_forms)
     {
         EXPECT_THROW(
             (void)pkmn::pokemon::make(
-                      "Pichu",
+                      pkmn::e_species::PICHU,
                       game,
                       "Spiky-eared",
                       100
@@ -330,12 +347,12 @@ TEST_P(gen2_form_test, test_gen2_pokemon_forms)
     }
 
     // Unown's "!" and "?" forms aren't in Generation II
-    static const pkmn::database::pokemon_entry oras_unown("Unown", pkmn::e_game::OMEGA_RUBY, "");
+    static const pkmn::database::pokemon_entry oras_unown(pkmn::e_species::UNOWN, pkmn::e_game::OMEGA_RUBY, "");
     const std::vector<std::string>& unown_forms = oras_unown.get_forms();
     for(size_t i = 0; i < 26; ++i)
     {
         pkmn::pokemon::sptr unown = pkmn::pokemon::make(
-                                        "Unown",
+                                        pkmn::e_species::UNOWN,
                                         game,
                                         unown_forms.at(i),
                                         10
@@ -347,7 +364,7 @@ TEST_P(gen2_form_test, test_gen2_pokemon_forms)
     {
         EXPECT_THROW(
             (void)pkmn::pokemon::make(
-                      "Unown",
+                      pkmn::e_species::UNOWN,
                       game,
                       "!",
                       10
@@ -355,7 +372,7 @@ TEST_P(gen2_form_test, test_gen2_pokemon_forms)
         , std::invalid_argument);
         EXPECT_THROW(
             (void)pkmn::pokemon::make(
-                      "Unown",
+                      pkmn::e_species::UNOWN,
                       game,
                       "?",
                       10
@@ -365,7 +382,7 @@ TEST_P(gen2_form_test, test_gen2_pokemon_forms)
     else
     {
         pkmn::pokemon::sptr unown = pkmn::pokemon::make(
-                                        "Unown",
+                                        pkmn::e_species::UNOWN,
                                         game,
                                         "!",
                                         10
@@ -374,7 +391,7 @@ TEST_P(gen2_form_test, test_gen2_pokemon_forms)
         EXPECT_TRUE(fs::exists(unown->get_sprite_filepath()));
 
         unown = pkmn::pokemon::make(
-                    "Unown",
+                    pkmn::e_species::UNOWN,
                     game,
                     "?",
                     10
@@ -444,14 +461,14 @@ TEST_P(gen3_form_test, test_gba_pokemon_forms)
 
     // Castform should always work.
     std::vector<std::string> castform_forms = pkmn::database::pokemon_entry(
-                                                  "Castform",
+                                                  pkmn::e_species::CASTFORM,
                                                   pkmn::e_game::OMEGA_RUBY,
                                                   ""
                                               ).get_forms();
     for(auto iter = castform_forms.begin(); iter != castform_forms.end(); ++iter)
     {
         pkmn::pokemon::sptr castform = pkmn::pokemon::make(
-                                           "Castform",
+                                           pkmn::e_species::CASTFORM,
                                            game,
                                            *iter,
                                            30
@@ -462,7 +479,7 @@ TEST_P(gen3_form_test, test_gba_pokemon_forms)
 
     // Primal Reversion forms should only work in OR/AS.
     pkmn::pokemon::sptr groudon = pkmn::pokemon::make(
-                                      "Groudon",
+                                      pkmn::e_species::GROUDON,
                                       game,
                                       "",
                                       70
@@ -471,7 +488,7 @@ TEST_P(gen3_form_test, test_gba_pokemon_forms)
     EXPECT_TRUE(fs::exists(groudon->get_sprite_filepath()));
 
     pkmn::pokemon::sptr kyogre = pkmn::pokemon::make(
-                                     "Kyogre",
+                                     pkmn::e_species::KYOGRE,
                                      game,
                                      "",
                                      70
@@ -482,13 +499,13 @@ TEST_P(gen3_form_test, test_gba_pokemon_forms)
     if(is_oras)
     {
         (void)pkmn::pokemon::make(
-                  "Groudon",
+                  pkmn::e_species::GROUDON,
                   game,
                   "Primal Reversion",
                   70
               );
         (void)pkmn::pokemon::make(
-                  "Kyogre",
+                  pkmn::e_species::KYOGRE,
                   game,
                   "Primal Reversion",
                   70
@@ -498,7 +515,7 @@ TEST_P(gen3_form_test, test_gba_pokemon_forms)
     {
         EXPECT_THROW(
             (void)pkmn::pokemon::make(
-                      "Groudon",
+                      pkmn::e_species::GROUDON,
                       game,
                       "Primal Reversion",
                       70
@@ -506,7 +523,7 @@ TEST_P(gen3_form_test, test_gba_pokemon_forms)
         , std::invalid_argument);
         EXPECT_THROW(
             (void)pkmn::pokemon::make(
-                      "Kyogre",
+                      pkmn::e_species::KYOGRE,
                       game,
                       "Primal Reversion",
                       70
@@ -522,7 +539,7 @@ TEST_P(gen3_form_test, test_gba_pokemon_forms)
            (game == pkmn::e_game::COLOSSEUM) || (game == pkmn::e_game::XD))
         {
             deoxys = pkmn::pokemon::make(
-                         "Deoxys",
+                         pkmn::e_species::DEOXYS,
                          game,
                          "Normal",
                          70
@@ -534,7 +551,7 @@ TEST_P(gen3_form_test, test_gba_pokemon_forms)
         {
             EXPECT_THROW(
                 (void)pkmn::pokemon::make(
-                          "Deoxys",
+                          pkmn::e_species::DEOXYS,
                           game,
                           "Normal",
                           70
@@ -545,7 +562,7 @@ TEST_P(gen3_form_test, test_gba_pokemon_forms)
         if(game == pkmn::e_game::FIRERED)
         {
             deoxys = pkmn::pokemon::make(
-                         "Deoxys",
+                         pkmn::e_species::DEOXYS,
                          game,
                          "Attack",
                          70
@@ -557,7 +574,7 @@ TEST_P(gen3_form_test, test_gba_pokemon_forms)
         {
             EXPECT_THROW(
                 (void)pkmn::pokemon::make(
-                          "Deoxys",
+                          pkmn::e_species::DEOXYS,
                           game,
                           "Attack",
                           70
@@ -568,7 +585,7 @@ TEST_P(gen3_form_test, test_gba_pokemon_forms)
         if(game == pkmn::e_game::LEAFGREEN)
         {
             deoxys = pkmn::pokemon::make(
-                         "Deoxys",
+                         pkmn::e_species::DEOXYS,
                          game,
                          "Defense",
                          70
@@ -580,7 +597,7 @@ TEST_P(gen3_form_test, test_gba_pokemon_forms)
         {
             EXPECT_THROW(
                 (void)pkmn::pokemon::make(
-                          "Deoxys",
+                          pkmn::e_species::DEOXYS,
                           game,
                           "Defense",
                           70
@@ -591,7 +608,7 @@ TEST_P(gen3_form_test, test_gba_pokemon_forms)
         if(game == pkmn::e_game::EMERALD)
         {
             deoxys = pkmn::pokemon::make(
-                         "Deoxys",
+                         pkmn::e_species::DEOXYS,
                          game,
                          "Speed",
                          70
@@ -603,7 +620,7 @@ TEST_P(gen3_form_test, test_gba_pokemon_forms)
         {
             EXPECT_THROW(
                 (void)pkmn::pokemon::make(
-                          "Deoxys",
+                          pkmn::e_species::DEOXYS,
                           game,
                           "Speed",
                           70
@@ -615,14 +632,14 @@ TEST_P(gen3_form_test, test_gba_pokemon_forms)
     {
         // Past Generation III, Deoxys's form can be switched.
         std::vector<std::string> deoxys_forms = pkmn::database::pokemon_entry(
-                                                    "Deoxys",
+                                                    pkmn::e_species::DEOXYS,
                                                     pkmn::e_game::OMEGA_RUBY,
                                                     ""
                                                 ).get_forms();
         for(auto iter = deoxys_forms.begin(); iter != deoxys_forms.end(); ++iter)
         {
             deoxys = pkmn::pokemon::make(
-                         "Deoxys",
+                         pkmn::e_species::DEOXYS,
                          game,
                          *iter,
                          30

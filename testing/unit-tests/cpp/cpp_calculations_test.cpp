@@ -1214,17 +1214,17 @@ TEST(cpp_calculations_test, gen2_gender_test)
      */
     EXPECT_THROW(
        (void)pkmn::calculations::gen2_pokemon_gender(
-                 "Not a species", 0
+                 pkmn::e_species::NONE, 0
              );
     , std::invalid_argument);
     EXPECT_THROW(
         pkmn::calculations::gen2_pokemon_gender(
-            "Bulbasaur", -1
+            pkmn::e_species::BULBASAUR, -1
         );
     , std::out_of_range);
     EXPECT_THROW(
         pkmn::calculations::gen2_pokemon_gender(
-            "Bulbasaur", 16
+            pkmn::e_species::BULBASAUR, 16
         );
     , std::out_of_range);
 
@@ -1236,11 +1236,11 @@ TEST(cpp_calculations_test, gen2_gender_test)
      * All male
      */
     pkmn::e_gender nidorino1_gender = pkmn::calculations::gen2_pokemon_gender(
-                                          "Nidorino", 0
+                                          pkmn::e_species::NIDORINO, 0
                                       );
     EXPECT_EQ(pkmn::e_gender::MALE, nidorino1_gender);
     pkmn::e_gender nidorino2_gender = pkmn::calculations::gen2_pokemon_gender(
-                                       "Nidorino", 15
+                                       pkmn::e_species::NIDORINO, 15
                                    );
     EXPECT_EQ(pkmn::e_gender::MALE, nidorino2_gender);
 
@@ -1248,11 +1248,11 @@ TEST(cpp_calculations_test, gen2_gender_test)
      * 87.5% male, 12.5% female
      */
     pkmn::e_gender charmander1_gender = pkmn::calculations::gen2_pokemon_gender(
-                                            "Charmander", 1
+                                            pkmn::e_species::CHARMANDER, 1
                                         );
     EXPECT_EQ(pkmn::e_gender::FEMALE, charmander1_gender);
     pkmn::e_gender charmander2_gender = pkmn::calculations::gen2_pokemon_gender(
-                                            "Charmander", 2
+                                            pkmn::e_species::CHARMANDER, 2
                                         );
     EXPECT_EQ(pkmn::e_gender::MALE, charmander2_gender);
 
@@ -1260,11 +1260,11 @@ TEST(cpp_calculations_test, gen2_gender_test)
      * 75% male, 25% female
      */
     pkmn::e_gender growlithe1_gender = pkmn::calculations::gen2_pokemon_gender(
-                                           "Growlithe", 3
+                                           pkmn::e_species::GROWLITHE, 3
                                        );
     EXPECT_EQ(pkmn::e_gender::FEMALE, growlithe1_gender);
     pkmn::e_gender growlithe2_gender = pkmn::calculations::gen2_pokemon_gender(
-                                           "Growlithe", 4
+                                           pkmn::e_species::GROWLITHE, 4
                                        );
     EXPECT_EQ(pkmn::e_gender::MALE, growlithe2_gender);
 
@@ -1272,11 +1272,11 @@ TEST(cpp_calculations_test, gen2_gender_test)
      * 50% male, 50% female
      */
     pkmn::e_gender pidgey1_gender = pkmn::calculations::gen2_pokemon_gender(
-                                        "Pidgey", 6
+                                        pkmn::e_species::PIDGEY, 6
                                     );
     EXPECT_EQ(pkmn::e_gender::FEMALE, pidgey1_gender);
     pkmn::e_gender pidgey2_gender = pkmn::calculations::gen2_pokemon_gender(
-                                        "Pidgey", 7
+                                        pkmn::e_species::PIDGEY, 7
                                     );
     EXPECT_EQ(pkmn::e_gender::MALE, pidgey2_gender);
 
@@ -1284,11 +1284,11 @@ TEST(cpp_calculations_test, gen2_gender_test)
      * 25% male, 75% female
      */
     pkmn::e_gender vulpix1_gender = pkmn::calculations::gen2_pokemon_gender(
-                                        "Vulpix", 11
+                                        pkmn::e_species::VULPIX, 11
                                     );
     EXPECT_EQ(pkmn::e_gender::FEMALE, vulpix1_gender);
     pkmn::e_gender vulpix2_gender = pkmn::calculations::gen2_pokemon_gender(
-                                        "Vulpix", 12
+                                        pkmn::e_species::VULPIX, 12
                                     );
     EXPECT_EQ(pkmn::e_gender::MALE, vulpix2_gender);
 
@@ -1296,11 +1296,11 @@ TEST(cpp_calculations_test, gen2_gender_test)
      * All female
      */
     pkmn::e_gender nidorina1_gender = pkmn::calculations::gen2_pokemon_gender(
-                                          "Nidorina", 0
+                                          pkmn::e_species::NIDORINA, 0
                                       );
     EXPECT_EQ(pkmn::e_gender::FEMALE, nidorina1_gender);
     pkmn::e_gender nidorina2_gender = pkmn::calculations::gen2_pokemon_gender(
-                                          "Nidorina", 15
+                                          pkmn::e_species::NIDORINA, 15
                                       );
     EXPECT_EQ(pkmn::e_gender::FEMALE, nidorina2_gender);
 
@@ -1308,11 +1308,11 @@ TEST(cpp_calculations_test, gen2_gender_test)
      * Genderless
      */
     pkmn::e_gender magnemite1_gender = pkmn::calculations::gen2_pokemon_gender(
-                                           "Magnemite", 0
+                                           pkmn::e_species::MAGNEMITE, 0
                                        );
     EXPECT_EQ(pkmn::e_gender::GENDERLESS, magnemite1_gender);
     pkmn::e_gender magnemite2_gender = pkmn::calculations::gen2_pokemon_gender(
-                                           "Magnemite", 15
+                                           pkmn::e_species::MAGNEMITE, 15
                                        );
     EXPECT_EQ(pkmn::e_gender::GENDERLESS, magnemite2_gender);
 }
@@ -1324,7 +1324,7 @@ TEST(cpp_calculations_test, modern_gender_test)
      */
     EXPECT_THROW(
         (void)pkmn::calculations::modern_pokemon_gender(
-                  "Not a species", 0
+                  pkmn::e_species::NONE, 0
               );
     , std::invalid_argument);
 
@@ -1336,11 +1336,11 @@ TEST(cpp_calculations_test, modern_gender_test)
      * All male
      */
     pkmn::e_gender nidorino1_gender = pkmn::calculations::modern_pokemon_gender(
-                                          "Nidorino", 0
+                                          pkmn::e_species::NIDORINO, 0
                                       );
     EXPECT_EQ(pkmn::e_gender::MALE, nidorino1_gender);
     pkmn::e_gender nidorino2_gender = pkmn::calculations::modern_pokemon_gender(
-                                          "Nidorino",
+                                          pkmn::e_species::NIDORINO,
                                           std::numeric_limits<uint32_t>::max()
                                       );
     EXPECT_EQ(pkmn::e_gender::MALE, nidorino2_gender);
@@ -1349,11 +1349,11 @@ TEST(cpp_calculations_test, modern_gender_test)
      * 87.5% male, 12.5% female
      */
     pkmn::e_gender charmander1_gender = pkmn::calculations::modern_pokemon_gender(
-                                            "Charmander", 30
+                                            pkmn::e_species::CHARMANDER, 30
                                         );
     EXPECT_EQ(pkmn::e_gender::FEMALE, charmander1_gender);
     pkmn::e_gender charmander2_gender = pkmn::calculations::modern_pokemon_gender(
-                                            "Charmander", 31
+                                            pkmn::e_species::CHARMANDER, 31
                                         );
     EXPECT_EQ(pkmn::e_gender::MALE, charmander2_gender);
 
@@ -1361,11 +1361,11 @@ TEST(cpp_calculations_test, modern_gender_test)
      * 75% male, 25% female
      */
     pkmn::e_gender growlithe1_gender = pkmn::calculations::modern_pokemon_gender(
-                                           "Growlithe", 63
+                                           pkmn::e_species::GROWLITHE, 63
                                        );
     EXPECT_EQ(pkmn::e_gender::FEMALE, growlithe1_gender);
     pkmn::e_gender growlithe2_gender = pkmn::calculations::modern_pokemon_gender(
-                                           "Growlithe", 64
+                                           pkmn::e_species::GROWLITHE, 64
                                        );
     EXPECT_EQ(pkmn::e_gender::MALE, growlithe2_gender);
 
@@ -1373,11 +1373,11 @@ TEST(cpp_calculations_test, modern_gender_test)
      * 50% male, 50% female
      */
     pkmn::e_gender pidgey1_gender = pkmn::calculations::modern_pokemon_gender(
-                                        "Pidgey", 126
+                                        pkmn::e_species::PIDGEY, 126
                                     );
     EXPECT_EQ(pkmn::e_gender::FEMALE, pidgey1_gender);
     pkmn::e_gender pidgey2_gender = pkmn::calculations::modern_pokemon_gender(
-                                        "Pidgey", 127
+                                        pkmn::e_species::PIDGEY, 127
                                     );
     EXPECT_EQ(pkmn::e_gender::MALE, pidgey2_gender);
 
@@ -1385,11 +1385,11 @@ TEST(cpp_calculations_test, modern_gender_test)
      * 25% male, 75% female
      */
     pkmn::e_gender vulpix1_gender = pkmn::calculations::modern_pokemon_gender(
-                                        "Vulpix", 190
+                                        pkmn::e_species::VULPIX, 190
                                     );
     EXPECT_EQ(pkmn::e_gender::FEMALE, vulpix1_gender);
     pkmn::e_gender vulpix2_gender = pkmn::calculations::modern_pokemon_gender(
-                                        "Vulpix", 191
+                                        pkmn::e_species::VULPIX, 191
                                     );
     EXPECT_EQ(pkmn::e_gender::MALE, vulpix2_gender);
 
@@ -1397,11 +1397,11 @@ TEST(cpp_calculations_test, modern_gender_test)
      * All female
      */
     pkmn::e_gender nidorina1_gender = pkmn::calculations::modern_pokemon_gender(
-                                          "Nidorina", 0
+                                          pkmn::e_species::NIDORINA, 0
                                       );
     EXPECT_EQ(pkmn::e_gender::FEMALE, nidorina1_gender);
     pkmn::e_gender nidorina2_gender = pkmn::calculations::modern_pokemon_gender(
-                                          "Nidorina",
+                                          pkmn::e_species::NIDORINA,
                                           std::numeric_limits<uint32_t>::max()
                                       );
     EXPECT_EQ(pkmn::e_gender::FEMALE, nidorina2_gender);
@@ -1410,11 +1410,11 @@ TEST(cpp_calculations_test, modern_gender_test)
      * Genderless
      */
     pkmn::e_gender magnemite1_gender = pkmn::calculations::modern_pokemon_gender(
-                                           "Magnemite", 0
+                                           pkmn::e_species::MAGNEMITE, 0
                                        );
     EXPECT_EQ(pkmn::e_gender::GENDERLESS, magnemite1_gender);
     pkmn::e_gender magnemite2_gender = pkmn::calculations::modern_pokemon_gender(
-                                           "Magnemite",
+                                           pkmn::e_species::MAGNEMITE,
                                           std::numeric_limits<uint32_t>::max()
                                        );
     EXPECT_EQ(pkmn::e_gender::GENDERLESS, magnemite2_gender);
@@ -1616,15 +1616,13 @@ TEST(cpp_calculations_test, natural_gift_test)
 
 TEST(cpp_calculations_test, nature_test)
 {
-    const std::vector<std::string> natures = pkmn::database::get_nature_list();
+    const std::vector<pkmn::e_nature> natures = pkmn::database::get_nature_list();
 
-    std::srand((unsigned int)std::time(NULL));
-    for(uint32_t i = 0; i < natures.size(); ++i)
+    for(pkmn::e_nature nature: natures)
     {
-        EXPECT_EQ(
-            pkmn::calculations::nature(uint32_t(((std::rand() % 50000) * 1000) + i)),
-            natures[i]
-        );
+        const uint32_t personality = ((std::rand() % 50000) * 1000) + static_cast<uint32_t>(nature) - 1;
+
+        EXPECT_EQ(nature, pkmn::calculations::nature(personality));
     }
 }
 
@@ -1633,7 +1631,7 @@ static const std::vector<bool> bools = {true, false};
 
 struct personality_test_data
 {
-    std::string species;
+    pkmn::e_species species;
     std::vector<pkmn::e_gender> genders;
     std::vector<std::string> abilities;
 };
@@ -1642,11 +1640,11 @@ static void personality_test(
     const std::vector<personality_test_data>& test_values
 )
 {
-    const std::vector<std::string> natures = pkmn::database::get_nature_list();
+    const std::vector<pkmn::e_nature> natures = pkmn::database::get_nature_list();
 
     for(const personality_test_data& test_params: test_values)
     {
-        for(const std::string& nature: natures)
+        for(pkmn::e_nature nature: natures)
         {
             for(const std::string& ability: test_params.abilities)
             {
@@ -1695,136 +1693,136 @@ TEST(cpp_calculations_test, personality_test)
     // Test invalid ability.
     EXPECT_THROW(
         (void)pkmn::calculations::generate_personality(
-                  "Charmander",
+                  pkmn::e_species::CHARMANDER,
                   pkmn::pokemon::DEFAULT_TRAINER_ID,
                   true,
                   "None",
                   pkmn::e_gender::MALE,
-                  "Quiet"
+                  pkmn::e_nature::QUIET
               );
     , std::invalid_argument);
     EXPECT_THROW(
         (void)pkmn::calculations::generate_personality(
-                  "Charmander",
+                  pkmn::e_species::CHARMANDER,
                   pkmn::pokemon::DEFAULT_TRAINER_ID,
                   true,
                   "Torrent",
                   pkmn::e_gender::MALE,
-                  "Quiet"
+                  pkmn::e_nature::QUIET
               );
     , std::invalid_argument);
 
     // Test invalid gender.
     EXPECT_THROW(
         (void)pkmn::calculations::generate_personality(
-                  "Charmander",
+                  pkmn::e_species::CHARMANDER,
                   pkmn::pokemon::DEFAULT_TRAINER_ID,
                   true,
                   "Blaze",
                   pkmn::e_gender::NONE,
-                  "Quiet"
+                  pkmn::e_nature::QUIET
               );
     , std::invalid_argument);
     EXPECT_THROW(
         (void)pkmn::calculations::generate_personality(
-                  "Nidorina",
+                  pkmn::e_species::NIDORINA,
                   pkmn::pokemon::DEFAULT_TRAINER_ID,
                   true,
                   "Poison Point",
                   pkmn::e_gender::NONE,
-                  "Quiet"
+                  pkmn::e_nature::QUIET
               );
     , std::invalid_argument);
     EXPECT_THROW(
         (void)pkmn::calculations::generate_personality(
-                  "Nidorina",
+                  pkmn::e_species::NIDORINA,
                   pkmn::pokemon::DEFAULT_TRAINER_ID,
                   true,
                   "Poison Point",
                   pkmn::e_gender::GENDERLESS,
-                  "Quiet"
+                  pkmn::e_nature::QUIET
               );
     , std::invalid_argument);
     EXPECT_THROW(
         (void)pkmn::calculations::generate_personality(
-                  "Nidorina",
+                  pkmn::e_species::NIDORINA,
                   pkmn::pokemon::DEFAULT_TRAINER_ID,
                   true,
                   "Poison Point",
                   pkmn::e_gender::MALE,
-                  "Quiet"
+                  pkmn::e_nature::QUIET
               );
     , std::invalid_argument);
     EXPECT_THROW(
         (void)pkmn::calculations::generate_personality(
-                  "Nidorino",
+                  pkmn::e_species::NIDORINO,
                   pkmn::pokemon::DEFAULT_TRAINER_ID,
                   true,
                   "Poison Point",
                   pkmn::e_gender::NONE,
-                  "Quiet"
+                  pkmn::e_nature::QUIET
               );
     , std::invalid_argument);
     EXPECT_THROW(
         (void)pkmn::calculations::generate_personality(
-                  "Nidorino",
+                  pkmn::e_species::NIDORINO,
                   pkmn::pokemon::DEFAULT_TRAINER_ID,
                   true,
                   "Poison Point",
                   pkmn::e_gender::GENDERLESS,
-                  "Quiet"
+                  pkmn::e_nature::QUIET
               );
     , std::invalid_argument);
     EXPECT_THROW(
         (void)pkmn::calculations::generate_personality(
-                  "Nidorino",
+                  pkmn::e_species::NIDORINO,
                   pkmn::pokemon::DEFAULT_TRAINER_ID,
                   true,
                   "Poison Point",
                   pkmn::e_gender::FEMALE,
-                  "Quiet"
+                  pkmn::e_nature::QUIET
               );
     , std::invalid_argument);
     EXPECT_THROW(
         (void)pkmn::calculations::generate_personality(
-                  "Magnemite",
+                  pkmn::e_species::MAGNEMITE,
                   pkmn::pokemon::DEFAULT_TRAINER_ID,
                   true,
                   "Magnet Pull",
                   pkmn::e_gender::NONE,
-                  "Quiet"
+                  pkmn::e_nature::QUIET
               );
     , std::invalid_argument);
     EXPECT_THROW(
         pkmn::calculations::generate_personality(
-            "Magnemite",
+            pkmn::e_species::MAGNEMITE,
             pkmn::pokemon::DEFAULT_TRAINER_ID,
             true,
             "Magnet Pull",
             pkmn::e_gender::FEMALE,
-            "Quiet"
+            pkmn::e_nature::QUIET
         );
     , std::invalid_argument);
     EXPECT_THROW(
         (void)pkmn::calculations::generate_personality(
-                  "Magnemite",
+                  pkmn::e_species::MAGNEMITE,
                   pkmn::pokemon::DEFAULT_TRAINER_ID,
                   true,
                   "Magnet Pull",
                   pkmn::e_gender::MALE,
-                  "Quiet"
+                  pkmn::e_nature::QUIET
               );
     , std::invalid_argument);
 
     // Test invalid nature.
     EXPECT_THROW(
         (void)pkmn::calculations::generate_personality(
-                  "Magnemite",
+                  pkmn::e_species::MAGNEMITE,
                   pkmn::pokemon::DEFAULT_TRAINER_ID,
                   true,
                   "Magnet Pull",
                   pkmn::e_gender::GENDERLESS,
-                  "Not a nature"
+                  pkmn::e_nature::NONE
               );
     , std::invalid_argument);
 
@@ -1832,15 +1830,15 @@ TEST(cpp_calculations_test, personality_test)
     static const std::vector<personality_test_data> test_values =
     {
         // Single-gender Pokémon
-        {"Magnemite", {pkmn::e_gender::GENDERLESS}, {"Magnet Pull", "Sturdy", "Analytic"}},
-        {"Nidorina",  {pkmn::e_gender::FEMALE},     {"Poison Point", "Rivalry", "Hustle"}},
-        {"Nidorino",  {pkmn::e_gender::MALE},       {"Poison Point", "Rivalry", "Hustle"}},
+        {pkmn::e_species::MAGNEMITE, {pkmn::e_gender::GENDERLESS}, {"Magnet Pull", "Sturdy", "Analytic"}},
+        {pkmn::e_species::NIDORINA,  {pkmn::e_gender::FEMALE},     {"Poison Point", "Rivalry", "Hustle"}},
+        {pkmn::e_species::NIDORINO,  {pkmn::e_gender::MALE},       {"Poison Point", "Rivalry", "Hustle"}},
 
         // Mixed-gender Pokémon
-        {"Charmander", genders, {"Blaze",      "None",         "Solar Power"}},
-        {"Growlithe",  genders, {"Intimidate", "Flash Fire",   "Justified"}},
-        {"Pidgey",     genders, {"Keen Eye",   "Tangled Feet", "Big Pecks"}},
-        {"Vulpix",     genders, {"Flash Fire", "None",         "Drought"}},
+        {pkmn::e_species::CHARMANDER, genders, {"Blaze",      "None",         "Solar Power"}},
+        {pkmn::e_species::GROWLITHE,  genders, {"Intimidate", "Flash Fire",   "Justified"}},
+        {pkmn::e_species::PIDGEY,     genders, {"Keen Eye",   "Tangled Feet", "Big Pecks"}},
+        {pkmn::e_species::VULPIX,     genders, {"Flash Fire", "None",         "Drought"}},
     };
     personality_test(test_values);
 }
@@ -1930,83 +1928,80 @@ TEST(cpp_calculations_test, pokemon_size_test) {
      * for each relevant Pokémon.
      */
     static const std::vector<pkmn::database::pokemon_entry> pokemon_with_size_checks = boost::assign::list_of
-        (pkmn::database::pokemon_entry("Barboach",  pkmn::e_game::RUBY, ""))
-        (pkmn::database::pokemon_entry("Shroomish", pkmn::e_game::RUBY, ""))
-        (pkmn::database::pokemon_entry("Seedot",    pkmn::e_game::EMERALD, ""))
-        (pkmn::database::pokemon_entry("Lotad",     pkmn::e_game::EMERALD, ""))
-        (pkmn::database::pokemon_entry("Magikarp",  pkmn::e_game::FIRERED, ""))
-        (pkmn::database::pokemon_entry("Heracross", pkmn::e_game::LEAFGREEN, ""))
+        (pkmn::database::pokemon_entry(pkmn::e_species::BARBOACH,  pkmn::e_game::RUBY, ""))
+        (pkmn::database::pokemon_entry(pkmn::e_species::SHROOMISH, pkmn::e_game::RUBY, ""))
+        (pkmn::database::pokemon_entry(pkmn::e_species::SEEDOT,    pkmn::e_game::EMERALD, ""))
+        (pkmn::database::pokemon_entry(pkmn::e_species::LOTAD,     pkmn::e_game::EMERALD, ""))
+        (pkmn::database::pokemon_entry(pkmn::e_species::MAGIKARP,  pkmn::e_game::FIRERED, ""))
+        (pkmn::database::pokemon_entry(pkmn::e_species::HERACROSS, pkmn::e_game::LEAFGREEN, ""))
     ;
 
     // Test input validation.
     EXPECT_THROW(
         (void)pkmn::calculations::pokemon_size(
-                  "Barboach", 0, -1, 0, 0, 0, 0, 0
+                  pkmn::e_species::BARBOACH, 0, -1, 0, 0, 0, 0, 0
               );
     , std::out_of_range);
     EXPECT_THROW(
         (void)pkmn::calculations::pokemon_size(
-                  "Barboach", 0, 32, 0, 0, 0, 0, 0
+                  pkmn::e_species::BARBOACH, 0, 32, 0, 0, 0, 0, 0
               );
     , std::out_of_range);
     EXPECT_THROW(
         (void)pkmn::calculations::pokemon_size(
-                  "Barboach", 0, 0, -1, 0, 0, 0, 0
+                  pkmn::e_species::BARBOACH, 0, 0, -1, 0, 0, 0, 0
               );
     , std::out_of_range);
     EXPECT_THROW(
         (void)pkmn::calculations::pokemon_size(
-                  "Barboach", 0, 0, 32, 0, 0, 0, 0
+                  pkmn::e_species::BARBOACH, 0, 0, 32, 0, 0, 0, 0
               );
     , std::out_of_range);
     EXPECT_THROW(
         (void)pkmn::calculations::pokemon_size(
-                  "Barboach", 0, 0, 0, -1, 0, 0, 0
+                  pkmn::e_species::BARBOACH, 0, 0, 0, -1, 0, 0, 0
               );
     , std::out_of_range);
     EXPECT_THROW(
         (void)pkmn::calculations::pokemon_size(
-                  "Barboach", 0, 0, 0, 32, 0, 0, 0
+                  pkmn::e_species::BARBOACH, 0, 0, 0, 32, 0, 0, 0
               );
     , std::out_of_range);
     EXPECT_THROW(
         (void)pkmn::calculations::pokemon_size(
-                  "Barboach", 0, 0, 0, 0, -1, 0, 0
+                  pkmn::e_species::BARBOACH, 0, 0, 0, 0, -1, 0, 0
               );
     , std::out_of_range);
     EXPECT_THROW(
         (void)pkmn::calculations::pokemon_size(
-                  "Barboach", 0, 0, 0, 0, 32, 0, 0
+                  pkmn::e_species::BARBOACH, 0, 0, 0, 0, 32, 0, 0
               );
     , std::out_of_range);
     EXPECT_THROW(
         (void)pkmn::calculations::pokemon_size(
-                  "Barboach", 0, 0, 0, 0, 0, -1, 0
+                  pkmn::e_species::BARBOACH, 0, 0, 0, 0, 0, -1, 0
               );
     , std::out_of_range);
     EXPECT_THROW(
         (void)pkmn::calculations::pokemon_size(
-                  "Barboach", 0, 0, 0, 0, 0, 32, 0
+                  pkmn::e_species::BARBOACH, 0, 0, 0, 0, 0, 32, 0
               );
     , std::out_of_range);
     EXPECT_THROW(
         (void)pkmn::calculations::pokemon_size(
-                  "Barboach", 0, 0, 0, 0, 0, 0, -1
+                  pkmn::e_species::BARBOACH, 0, 0, 0, 0, 0, 0, -1
               );
     , std::out_of_range);
     EXPECT_THROW(
         (void)pkmn::calculations::pokemon_size(
-                  "Barboach", 0, 0, 0, 0, 0, 0, 32
+                  pkmn::e_species::BARBOACH, 0, 0, 0, 0, 0, 0, 32
               );
     , std::out_of_range);
 
-    std::srand((unsigned int)std::time(NULL));
-    for(auto pokemon_iter = pokemon_with_size_checks.begin();
-        pokemon_iter != pokemon_with_size_checks.end();
-        ++pokemon_iter
-    ) {
-        float height = pokemon_iter->get_height();
-        std::string species = pokemon_iter->get_name();
+    for(const pkmn::database::pokemon_entry& pokemon: pokemon_with_size_checks)
+    {
+        float height = pokemon.get_height();
+        pkmn::e_species species = pokemon.get_species_enum();
 
         for(int i = 0; i < 10; ++i) {
             float size = pkmn::calculations::pokemon_size(

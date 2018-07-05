@@ -137,19 +137,19 @@ void pokemon_box_test_common(
      * have the same underlying Pokémon.
      */
     pkmn::pokemon::sptr bulbasaur = pkmn::pokemon::make(
-                                        "Bulbasaur",
+                                        pkmn::e_species::BULBASAUR,
                                         game,
                                         "",
                                         5
                                     );
     pkmn::pokemon::sptr charmander = pkmn::pokemon::make(
-                                         "Charmander",
+                                         pkmn::e_species::CHARMANDER,
                                          game,
                                          "",
                                          5
                                      );
     pkmn::pokemon::sptr squirtle = pkmn::pokemon::make(
-                                       "Squirtle",
+                                       pkmn::e_species::SQUIRTLE,
                                        game,
                                        "",
                                        5
@@ -185,7 +185,7 @@ void pokemon_box_test_common(
     // We should always be able to clear the last contiguous Pokémon.
     box->set_pokemon(2, original_first);
     EXPECT_EQ(2, box->get_num_pokemon());
-    EXPECT_EQ("None", box->get_pokemon(2)->get_species());
+    EXPECT_EQ(pkmn::e_species::NONE, box->get_pokemon(2)->get_species());
 
     // Put it back.
     box->set_pokemon(2, box->get_pokemon(1));
@@ -197,42 +197,42 @@ void pokemon_box_test_common(
             box->set_pokemon(1, original_first);
         , std::invalid_argument);
         EXPECT_EQ(3, box->get_num_pokemon());
-        EXPECT_EQ("Charmander", box->get_pokemon(1)->get_species());
+        EXPECT_EQ(pkmn::e_species::CHARMANDER, box->get_pokemon(1)->get_species());
 
         EXPECT_THROW(
             box->set_pokemon(4, bulbasaur);
         , std::out_of_range);
         EXPECT_EQ(3, box->get_num_pokemon());
-        EXPECT_EQ("None", box->get_pokemon(4)->get_species());
+        EXPECT_EQ(pkmn::e_species::NONE, box->get_pokemon(4)->get_species());
     } else {
         box->set_pokemon(1, original_first);
         EXPECT_EQ(2, box->get_num_pokemon());
-        EXPECT_EQ("None", box->get_pokemon(1)->get_species());
+        EXPECT_EQ(pkmn::e_species::NONE, box->get_pokemon(1)->get_species());
 
         box->set_pokemon(4, bulbasaur);
         EXPECT_EQ(3, box->get_num_pokemon());
-        EXPECT_EQ("Bulbasaur", box->get_pokemon(4)->get_species());
+        EXPECT_EQ(pkmn::e_species::BULBASAUR, box->get_pokemon(4)->get_species());
 
         // Restore it to how it was.
         box->set_pokemon(1, charmander);
         box->set_pokemon(4, original_first);
         EXPECT_EQ(3, box->get_num_pokemon());
-        EXPECT_EQ("Charmander", box->get_pokemon(1)->get_species());
-        EXPECT_EQ("None", box->get_pokemon(4)->get_species());
+        EXPECT_EQ(pkmn::e_species::CHARMANDER, box->get_pokemon(1)->get_species());
+        EXPECT_EQ(pkmn::e_species::NONE, box->get_pokemon(4)->get_species());
     }
 
     /*
      * Now check everything we've created. Each variable should have the
      * same Pokémon underneath, even if the pointer has changed.
      */
-    EXPECT_EQ("Squirtle", box->get_pokemon(0)->get_species());
-    EXPECT_EQ("Charmander", box->get_pokemon(1)->get_species());
-    EXPECT_EQ("Charmander", box->get_pokemon(2)->get_species());
-    EXPECT_EQ("None", original_first->get_species());
-    EXPECT_EQ("None", original_second->get_species());
-    EXPECT_EQ("Bulbasaur", bulbasaur->get_species());
-    EXPECT_EQ("Charmander", charmander->get_species());
-    EXPECT_EQ("Squirtle", squirtle->get_species());
+    EXPECT_EQ(pkmn::e_species::SQUIRTLE, box->get_pokemon(0)->get_species());
+    EXPECT_EQ(pkmn::e_species::CHARMANDER, box->get_pokemon(1)->get_species());
+    EXPECT_EQ(pkmn::e_species::CHARMANDER, box->get_pokemon(2)->get_species());
+    EXPECT_EQ(pkmn::e_species::NONE, original_first->get_species());
+    EXPECT_EQ(pkmn::e_species::NONE, original_second->get_species());
+    EXPECT_EQ(pkmn::e_species::BULBASAUR, bulbasaur->get_species());
+    EXPECT_EQ(pkmn::e_species::CHARMANDER, charmander->get_species());
+    EXPECT_EQ(pkmn::e_species::SQUIRTLE, squirtle->get_species());
 
     // On the C++ level, make sure the expected equal pointers are equal.
     EXPECT_NE(original_first->get_native_pc_data(), box->get_pokemon(0)->get_native_pc_data());
@@ -337,7 +337,7 @@ void pokemon_box_test_common(
     for(pkmn::e_game valid_game: test_params.valid_other_games)
     {
         pkmn::pokemon::sptr pikachu = pkmn::pokemon::make(
-                                          "Pikachu",
+                                          pkmn::e_species::PIKACHU,
                                           valid_game,
                                           "",
                                           50
@@ -345,13 +345,13 @@ void pokemon_box_test_common(
         box->set_pokemon(3, pikachu);
 
         pkmn::pokemon::sptr box_pokemon = box->get_pokemon(3);
-        EXPECT_EQ("Pikachu", box_pokemon->get_species());
+        EXPECT_EQ(pkmn::e_species::PIKACHU, box_pokemon->get_species());
         EXPECT_EQ(test_params.box_game, box_pokemon->get_game());
         EXPECT_EQ(50, box_pokemon->get_level());
     }
 
     pkmn::pokemon::sptr invalid_pikachu = pkmn::pokemon::make(
-                                              "Pikachu",
+                                              pkmn::e_species::PIKACHU,
                                               test_params.invalid_other_game,
                                               "",
                                               50
@@ -394,9 +394,9 @@ void pokemon_pc_test_common(
     }
 
     for(int i = 0; i < pc->get_num_boxes(); ++i) {
-        EXPECT_EQ("Squirtle", pc->get_box(i)->get_pokemon(0)->get_species());
-        EXPECT_EQ("Charmander", pc->get_box(i)->get_pokemon(1)->get_species());
-        EXPECT_EQ("Charmander", pc->get_box(i)->get_pokemon(2)->get_species());
+        EXPECT_EQ(pkmn::e_species::SQUIRTLE, pc->get_box(i)->get_pokemon(0)->get_species());
+        EXPECT_EQ(pkmn::e_species::CHARMANDER, pc->get_box(i)->get_pokemon(1)->get_species());
+        EXPECT_EQ(pkmn::e_species::CHARMANDER, pc->get_box(i)->get_pokemon(2)->get_species());
     }
 
     // On the C++ level, just check the values we've set to confirm the pointers worked.

@@ -515,7 +515,7 @@ namespace pkmn
         boost::lock_guard<pokemon_gcnimpl> lock(*this);
 
         return pkmn::calculations::modern_pokemon_gender(
-                   _database_entry.get_name(),
+                   get_species(),
                    GC_RCAST->PID
                );
     }
@@ -637,7 +637,7 @@ namespace pkmn
                 is_shiny(),
                 get_ability(),
                 get_gender(),
-                nature
+                pkmn::e_nature::NONE
             )
         );
     }

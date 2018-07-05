@@ -226,11 +226,11 @@ namespace pkmn { namespace database {
     }
 
     pokemon_entry::pokemon_entry(
-        const std::string& species_name,
+        pkmn::e_species species,
         pkmn::e_game game,
         const std::string& form_name
     ):
-        _none(species_name == "None"),
+        _none(species == pkmn::e_species::NONE),
         _invalid(false),
         _shadow(false)
     {
@@ -250,13 +250,14 @@ namespace pkmn { namespace database {
         /*
          * Pokémon-related info
          */
-        _species_id = pkmn::database::species_name_to_id(
-                          species_name
-                      );
+        _species_id = static_cast<int>(species);
 
-        if(_none) {
+        if(_none)
+        {
             _pokemon_index = _pokemon_id = _species_id;
-        } else {
+        }
+        else
+        {
             set_form(form_name);
         }
     }
@@ -1050,12 +1051,11 @@ namespace pkmn { namespace database {
     {
         pkmn::database::pokemon_entries_t ret;
 
-        if(not (_none or _invalid))
+        if(!_none && !_invalid)
         {
-            static BOOST_CONSTEXPR const char* query = \
-                "SELECT name FROM pokemon_species_names WHERE local_language_id=9 AND "
-                "pokemon_species_id IN (SELECT id FROM pokemon_species WHERE "
-                "evolves_from_species_id=? AND generation_id<=?)";
+            static const std::string query =
+                "SELECT id FROM pokemon_species WHERE evolves_from_species_id=? "
+                "AND generation_id<=?";
 
             const pkmn::e_game game = this->get_game();
 
@@ -1066,7 +1066,7 @@ namespace pkmn { namespace database {
             {
                 ret.emplace_back(
                     pokemon_entry(
-                        std::string(stmt.getColumn(0)),
+                        static_cast<pkmn::e_species>(int(stmt.getColumn(0))),
                         game, ""
                     )
                 );

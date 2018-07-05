@@ -201,24 +201,27 @@ namespace pkmn { namespace database {
         return ret;
     }
 
-    static void _get_gamecube_items(
-        std::vector<std::string>& ret,
+    static void _append_gamecube_item_lists(
+        std::vector<pkmn::e_item>& r_items,
+        std::vector<std::string>& r_item_names,
         int list_id,
-        bool colosseum
+        bool colosseum,
+        bool should_populate_enum_list,
+        bool should_populate_string_list
     )
     {
         int version_group_id = colosseum ? 12 : 13;
         bool all_pockets = (list_id == -1);
 
         static BOOST_CONSTEXPR const char* gcn_all_pockets_query =
-            "SELECT name FROM item_names WHERE local_language_id=9 "
+            "SELECT item_id,name FROM item_names WHERE local_language_id=9 "
             "AND item_id IN (SELECT DISTINCT items.id FROM items "
             "INNER JOIN gamecube_item_game_indices ON "
             "(items.id=gamecube_item_game_indices.item_id) WHERE "
             "gamecube_item_game_indices.colosseum=?)";
 
         static BOOST_CONSTEXPR const char* gcn_single_pocket_query =
-            "SELECT name FROM item_names WHERE local_language_id=9 "
+            "SELECT item_id,name FROM item_names WHERE local_language_id=9 "
             "AND item_id IN (SELECT DISTINCT items.id FROM items "
             "INNER JOIN gamecube_item_game_indices ON "
             "(items.id=gamecube_item_game_indices.item_id) WHERE "
@@ -243,13 +246,33 @@ namespace pkmn { namespace database {
 
         while(gcn_stmt.executeStep())
         {
-            ret.emplace_back(gcn_stmt.getColumn(0));
+            if(should_populate_enum_list)
+            {
+                r_items.emplace_back(
+                    static_cast<pkmn::e_item>(int(gcn_stmt.getColumn(0)))
+                );
+            }
+            if(should_populate_string_list)
+            {
+                r_item_names.emplace_back(gcn_stmt.getColumn(1));
+            }
         }
     }
 
-    void _get_item_list(
-        std::vector<std::string> &ret,
-        int list_id, int game_id
+    static inline bool is_item_enum_berry(pkmn::e_item item)
+    {
+        return ((item >= pkmn::e_item::CHERI_BERRY) && (item <= pkmn::e_item::ROWAP_BERRY)) ||
+               ((item >= pkmn::e_item::ROSELI_BERRY) && (item <= pkmn::e_item::MARANGA_BERRY)) ||
+               ((item >= pkmn::e_item::BERRY) && (item <= pkmn::e_item::MYSTERYBERRY));
+    }
+
+    void _get_item_lists(
+        std::vector<pkmn::e_item>& r_items,
+        std::vector<std::string>& r_item_names,
+        int list_id,
+        int game_id,
+        bool should_populate_enum_list,
+        bool should_populate_string_list
     )
     {
         int generation = pkmn::database::game_id_to_generation(game_id);
@@ -282,13 +305,13 @@ namespace pkmn { namespace database {
         const char* query = (all_pockets ? all_pockets_query : single_pocket_query);
         for(int i = 0; i < 4; ++i)
         {
-            if(not item_range_empty(version_group_id, i))
+            if(!item_range_empty(version_group_id, i))
             {
                 SQLite::Statement stmt(get_connection(), query);
                 stmt.bind(1, generation);
                 stmt.bind(2, version_group_item_index_bounds[version_group_id][i][0]);
                 stmt.bind(3, version_group_item_index_bounds[version_group_id][i][1]);
-                if(not all_pockets)
+                if(!all_pockets)
                 {
                     stmt.bind(4, version_group_id);
                     stmt.bind(5, list_id);
@@ -296,33 +319,42 @@ namespace pkmn { namespace database {
 
                 while(stmt.executeStep())
                 {
-                    /*
-                     * Some items' names changed in Generation IV (TODO: confirm this or V).
-                     * If the function is called for an older game, substitute in old names
-                     * as needed.
-                     */
-                    BOOST_STATIC_CONSTEXPR int XY = 25;
-                    if(game_id <= XY)
+                    if(should_populate_enum_list)
                     {
-                        std::string old_name;
-                        static BOOST_CONSTEXPR const char* old_name_query =
-                            "SELECT name FROM old_item_names WHERE local_language_id=9 AND "
-                            "item_id=? AND latest_version_group>=? ORDER BY latest_version_group";
-                        if(pkmn::database::maybe_query_db_bind2<std::string, int, int>(
-                               old_name_query, old_name,
-                               int(stmt.getColumn(0)), version_group_id
-                           ))
+                        r_items.emplace_back(
+                            static_cast<pkmn::e_item>(int(stmt.getColumn(0)))
+                        );
+                    }
+                    if(should_populate_string_list)
+                    {
+                        /*
+                         * Some items' names changed in Generation IV (TODO: confirm this or V).
+                         * If the function is called for an older game, substitute in old names
+                         * as needed.
+                         */
+                        BOOST_STATIC_CONSTEXPR int XY = 25;
+                        if(game_id <= XY)
                         {
-                            ret.emplace_back(old_name);
+                            std::string old_name;
+                            static BOOST_CONSTEXPR const char* old_name_query =
+                                "SELECT name FROM old_item_names WHERE local_language_id=9 AND "
+                                "item_id=? AND latest_version_group>=? ORDER BY latest_version_group";
+                            if(pkmn::database::maybe_query_db_bind2<std::string, int, int>(
+                                   old_name_query, old_name,
+                                   int(stmt.getColumn(0)), version_group_id
+                               ))
+                            {
+                                r_item_names.emplace_back(old_name);
+                            }
+                            else
+                            {
+                                r_item_names.emplace_back(stmt.getColumn(1));
+                            }
                         }
                         else
                         {
-                            ret.emplace_back(stmt.getColumn(1));
+                            r_item_names.emplace_back(stmt.getColumn(1));
                         }
-                    }
-                    else
-                    {
-                        ret.emplace_back(stmt.getColumn(1));
                     }
                 }
             }
@@ -330,14 +362,17 @@ namespace pkmn { namespace database {
 
         if(game_is_gamecube(game_id))
         {
-            _get_gamecube_items(
-                ret,
+            _append_gamecube_item_lists(
+                r_items,
+                r_item_names,
                 list_id,
-                (game_id == 19)
+                (game_id == 19),
+                should_populate_enum_list,
+                should_populate_string_list
             );
         }
 
-        static const int ITEM_POCKET_IDS[] =
+        static const std::vector<int> ITEM_POCKET_IDS =
         {
             5,  // Gold/Silver
             10, // Crystal
@@ -354,54 +389,75 @@ namespace pkmn { namespace database {
             81, // X/Y
             86  // Omega Ruby/Alpha Sapphire
         };
-        BOOST_STATIC_CONSTEXPR int KEY_ITEM_POCKET_IDS[] =
+        static const std::vector<int> KEY_ITEM_POCKET_IDS =
         {
             7,  // Gold/Silver
             12, // Crystal
         };
 
-        if(not all_pockets)
+        if(!all_pockets)
         {
-            if(std::find(ITEM_POCKET_IDS, ITEM_POCKET_IDS+14, list_id) != ITEM_POCKET_IDS+14)
+            if(pkmn::does_vector_contain_value(ITEM_POCKET_IDS, list_id))
             {
                 // Veekun's database places all Berries in the Items pocket, which isn't the case.
                 // Fix that here.
-                ret.erase(
+                r_items.erase(
                     std::remove_if(
-                        ret.begin(),
-                        ret.end(),
+                        r_items.begin(),
+                        r_items.end(),
+                        is_item_enum_berry
+                    ),
+                    r_items.end()
+                );
+                r_item_names.erase(
+                    std::remove_if(
+                        r_item_names.begin(),
+                        r_item_names.end(),
                         [](const std::string& item)
                         {
                             return item.find("Berry") != std::string::npos;
                         }
                     ),
-                    ret.end()
+                    r_item_names.end()
                 );
             }
             if(generation == 2)
             {
                 // In Generation II, Apricorns and RageCandyBars were placed in
                 // the "Items" pocket.
-                if(std::find(KEY_ITEM_POCKET_IDS, KEY_ITEM_POCKET_IDS+2, list_id) != KEY_ITEM_POCKET_IDS+2)
+                //
+                // TODO: this removes Apricorns from the KeyItems pocket, but where
+                // is it added to the Items pocket?
+                if(pkmn::does_vector_contain_value(KEY_ITEM_POCKET_IDS, list_id))
                 {
-                    ret.erase(
+                    r_items.erase(
                         std::remove_if(
-                            ret.begin(),
-                            ret.end(),
+                            r_items.begin(),
+                            r_items.end(),
+                            [](pkmn::e_item item)
+                            {
+                                return ((item >= pkmn::e_item::RED_APRICORN) &&
+                                        (item <= pkmn::e_item::BLACK_APRICORN)) ||
+                                       (item == pkmn::e_item::RAGE_CANDY_BAR);
+                            }
+                        ),
+                        r_items.end()
+                    );
+                    r_item_names.erase(
+                        std::remove_if(
+                            r_item_names.begin(),
+                            r_item_names.end(),
                             [](const std::string& item)
                             {
                                 return (item.find("Apricorn") != std::string::npos) ||
                                        (item == "RAGECANDYBAR");
                             }
                         ),
-                        ret.end()
+                        r_item_names.end()
                     );
                 }
             }
         }
-
-        // Sort alphabetically
-        std::sort(ret.begin(), ret.end(), boost::algorithm::is_less());
     }
 
 }}

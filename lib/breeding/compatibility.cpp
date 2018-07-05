@@ -148,8 +148,8 @@ namespace pkmn { namespace breeding {
     }
 
     bool are_pokemon_species_compatible(
-        const std::string& species1,
-        const std::string& species2
+        pkmn::e_species species1,
+        pkmn::e_species species2
     )
     {
         static const pkmn::e_game ENTRY_GAME = pkmn::e_game::X;

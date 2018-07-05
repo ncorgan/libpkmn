@@ -194,11 +194,11 @@ TEST_P(gen2_pokemon_test, gen2_pokemon_test) {
     EXPECT_EQ(pokemon->get_stats().at(pkmn::e_stat::SPECIAL_DEFENSE) , int(pksav_bigendian16(native_party_data->spdef)));
 }
 
-static const std::vector<std::pair<pkmn::e_game, std::string>> params =
+static const std::vector<std::pair<pkmn::e_game, pkmn::e_species>> params =
 {
-    {pkmn::e_game::GOLD, "Cyndaquil"},
-    {pkmn::e_game::SILVER, "Totodile"},
-    {pkmn::e_game::CRYSTAL, "Chikorita"}
+    {pkmn::e_game::GOLD,    pkmn::e_species::CYNDAQUIL},
+    {pkmn::e_game::SILVER,  pkmn::e_species::TOTODILE},
+    {pkmn::e_game::CRYSTAL, pkmn::e_species::CHIKORITA},
 };
 
 INSTANTIATE_TEST_CASE_P(

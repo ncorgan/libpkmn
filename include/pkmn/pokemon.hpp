@@ -42,7 +42,7 @@ namespace pkmn {
             typedef std::shared_ptr<pokemon> sptr;
 
             static sptr make(
-                const std::string& species,
+                pkmn::e_species species,
                 pkmn::e_game game,
                 const std::string& form,
                 int level
@@ -62,7 +62,7 @@ namespace pkmn {
                 const std::string& filepath
             ) = 0;
 
-            virtual std::string get_species() = 0;
+            virtual pkmn::e_species get_species() = 0;
 
             virtual pkmn::e_game get_game() = 0;
 

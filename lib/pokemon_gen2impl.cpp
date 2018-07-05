@@ -411,7 +411,7 @@ namespace pkmn
         boost::lock_guard<pokemon_gen2impl> lock(*this);
 
         return pkmn::calculations::gen2_pokemon_gender(
-                   _database_entry.get_name(),
+                   get_species(),
                    _IVs[pkmn::e_stat::ATTACK]
                );
     }

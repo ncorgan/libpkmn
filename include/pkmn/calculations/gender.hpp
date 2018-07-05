@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -10,6 +10,7 @@
 #include <pkmn/config.hpp>
 
 #include <pkmn/enums/gender.hpp>
+#include <pkmn/enums/species.hpp>
 
 #include <cstdint>
 #include <string>
@@ -31,7 +32,7 @@ namespace pkmn { namespace calculations {
      * \returns Pokémon gender (possible values: Male, Female, Genderless)
      */
     PKMN_API pkmn::e_gender gen2_pokemon_gender(
-        const std::string& species,
+        pkmn::e_species species,
         int IV_attack
     );
 
@@ -49,7 +50,7 @@ namespace pkmn { namespace calculations {
      * \returns Pokémon gender (possible values: Male, Female, Genderless)
      */
     PKMN_API pkmn::e_gender modern_pokemon_gender(
-        const std::string& species,
+        pkmn::e_species species,
         uint32_t personality
     );
 

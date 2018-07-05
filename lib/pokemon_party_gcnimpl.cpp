@@ -113,7 +113,7 @@ namespace pkmn {
         {
             throw std::invalid_argument("Cannot set a Pokémon to itself.");
         }
-        else if(index < (num_pokemon-1) and new_pokemon->get_species() == "None")
+        else if((index < (num_pokemon-1)) && (new_pokemon->get_species() == pkmn::e_species::NONE))
         {
             throw std::invalid_argument("Parties store Pokémon contiguously.");
         }
@@ -186,17 +186,20 @@ namespace pkmn {
                                );
 
         // Update the number of Pokémon in the party if needed.
-        std::string new_species = new_pokemon->get_species();
+        pkmn::e_species new_species = new_pokemon->get_species();
         if(index == num_pokemon)
         {
-            if(NATIVE_RCAST->pokemon[index]->species > LibPkmGC::NoSpecies and new_species != "None")
+            if((NATIVE_RCAST->pokemon[index]->species > LibPkmGC::NoSpecies) &&
+               (new_species != pkmn::e_species::NONE))
             {
                 ++_num_pokemon;
             }
         }
         else if(index == (num_pokemon-1))
         {
-            if(NATIVE_RCAST->pokemon[index]->species == LibPkmGC::NoSpecies and new_species == "None") {
+            if((NATIVE_RCAST->pokemon[index]->species == LibPkmGC::NoSpecies) &&
+               (new_species == pkmn::e_species::NONE))
+            {
                 --_num_pokemon;
             }
         }

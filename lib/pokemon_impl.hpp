@@ -44,7 +44,7 @@ namespace pkmn {
 
             virtual ~pokemon_impl() {}
 
-            std::string get_species() override final;
+            pkmn::e_species get_species() override final;
 
             std::string get_form() override final;
 

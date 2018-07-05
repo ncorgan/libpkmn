@@ -9,6 +9,8 @@
 
 #include <pkmn/item_list.hpp>
 
+#include <pkmn/enums/item.hpp>
+
 #include <boost/noncopyable.hpp>
 
 #include <boost/thread/lockable_adapter.hpp>
@@ -74,7 +76,10 @@ namespace pkmn {
             bool _pc;
 
             pkmn::item_slots_t _item_slots;
-            std::vector<std::string> _valid_items;
+
+            // To allow caching
+            mutable std::vector<pkmn::e_item> _valid_items;
+            mutable std::vector<std::string>  _valid_item_names;
 
             bool _is_our_mem;
             void* _p_native;

@@ -53,17 +53,23 @@ static pkmn::pokemon::sptr get_random_pokemon(
     int generation = pkmn::priv::game_enum_to_generation(game);
     pkmn::rng<uint32_t> rng;
 
-    std::vector<std::string> item_list = pkmn::database::get_item_list(game);
-    std::vector<std::string> move_list = pkmn::database::get_move_list(game);
-    std::vector<std::string> pokemon_list = pkmn::database::get_pokemon_list(generation, true);
+    std::vector<std::string> item_list = pkmn::database::get_item_name_list(game);
+    std::vector<std::string> move_list = pkmn::database::get_move_name_list(game);
+    std::vector<pkmn::e_species> pokemon_list = pkmn::database::get_pokemon_list(generation, true);
 
     // Don't deal with Deoxys or Unown issues here.
-    std::string species;
-    if(generation == 3) {
-        do {
+    pkmn::e_species species = pkmn::e_species::NONE;
+    if(generation == 3)
+    {
+        do
+        {
             species = pokemon_list[rng.rand() % pokemon_list.size()];
-        } while(species == "Deoxys" || species == "Unown");
-    } else {
+        }
+        while((species == pkmn::e_species::UNOWN) ||
+              (species == pkmn::e_species::DEOXYS));
+    }
+    else
+    {
         species = pokemon_list[rng.rand() % pokemon_list.size()];
     }
     pkmn::pokemon::sptr ret = pkmn::pokemon::make(
@@ -72,12 +78,14 @@ static pkmn::pokemon::sptr get_random_pokemon(
                                   "",
                                   ((rng.rand() % 99) + 2)
                               );
-    for(int i = 0; i < 4; ++i) {
+    for(int i = 0; i < 4; ++i)
+    {
         std::string move = "";
         do
         {
             move = move_list[rng.rand() % move_list.size()];
-        } while(move.find("Shadow") == 0);
+        }
+        while(move.find("Shadow") == 0);
         ret->set_move(move, i);
     }
 
@@ -319,7 +327,7 @@ TEST(pokemon_io_test, test_outside_3gpkm) {
     pkmn::pokemon::sptr mightyena = pkmn::pokemon::from_file(
                                         (_3GPKM_DIR / "MIGHTYENA.3gpkm").string()
                                     );
-    EXPECT_EQ("Mightyena", mightyena->get_species());
+    EXPECT_EQ(pkmn::e_species::MIGHTYENA, mightyena->get_species());
     EXPECT_EQ(pkmn::e_game::EMERALD, mightyena->get_game());
     EXPECT_EQ("Standard", mightyena->get_form());
     EXPECT_EQ("MIGHTYENA", mightyena->get_nickname());
@@ -404,7 +412,7 @@ TEST(pokemon_io_test, test_outside_3gpkm) {
 
 typedef struct
 {
-    std::string species;
+    pkmn::e_species species;
     std::string file_extension;
     std::vector<pkmn::e_game> games;
 } io_form_test_params_t;
@@ -489,7 +497,7 @@ TEST_P(io_form_test, test_form_is_preserved_after_io)
 static const std::vector<io_form_test_params_t> GEN2_IO_FORM_TEST_PARAMS =
 {
     {
-        "Unown",
+        pkmn::e_species::UNOWN,
         "pk2",
         {
             pkmn::e_game::GOLD,
@@ -510,7 +518,7 @@ INSTANTIATE_TEST_CASE_P(
 static const std::vector<io_form_test_params_t> GEN3_IO_FORM_TEST_PARAMS =
 {
     {
-        "Unown",
+        pkmn::e_species::UNOWN,
         "3gpkm",
         {
             pkmn::e_game::RUBY,

@@ -31,7 +31,7 @@ namespace pkmn { namespace swig {
                 _game(game),
                 _is_gamecube_game((game == pkmn::e_game::COLOSSEUM) || (game == pkmn::e_game::XD))
             {
-                if(not _is_gamecube_game)
+                if(!_is_gamecube_game)
                 {
                     _pokedex = pkmn::pokedex::make(game);
                 }
@@ -59,11 +59,11 @@ namespace pkmn { namespace swig {
             }
 
             // Copy, since SWIG will cast away the const in the reference.
-            inline std::vector<std::string> get_all_seen()
+            inline std::vector<pkmn::e_species> get_all_seen()
             {
-                std::vector<std::string> ret;
+                std::vector<pkmn::e_species> ret;
 
-                if(not _is_gamecube_game)
+                if(!_is_gamecube_game)
                 {
                     BOOST_ASSERT(_pokedex.get() != nullptr);
                     ret = _pokedex->get_all_seen();
@@ -76,7 +76,7 @@ namespace pkmn { namespace swig {
             {
                 int ret = 0;
 
-                if(not _is_gamecube_game)
+                if(!_is_gamecube_game)
                 {
                     BOOST_ASSERT(_pokedex.get() != nullptr);
                     ret = _pokedex->get_num_seen();
@@ -91,11 +91,11 @@ namespace pkmn { namespace swig {
             }
 
             // Copy, since SWIG will cast away the const in the reference.
-            std::vector<std::string> get_all_caught()
+            std::vector<pkmn::e_species> get_all_caught()
             {
-                std::vector<std::string> ret;
+                std::vector<pkmn::e_species> ret;
 
-                if(not _is_gamecube_game)
+                if(!_is_gamecube_game)
                 {
                     BOOST_ASSERT(_pokedex.get() != nullptr);
                     ret = _pokedex->get_all_caught();

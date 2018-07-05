@@ -29,20 +29,20 @@ namespace pkmn
             pkmn::e_game get_game() override final;
 
             void set_has_seen(
-                const std::string& species,
+                pkmn::e_species species,
                 bool has_seen_value
             ) override final;
 
-            const std::vector<std::string>& get_all_seen() override final;
+            const std::vector<pkmn::e_species>& get_all_seen() override final;
 
             int get_num_seen() override final;
 
             void set_has_caught(
-                const std::string& species,
+                pkmn::e_species species,
                 bool has_caught_value
             ) override final;
 
-            const std::vector<std::string>& get_all_caught() override final;
+            const std::vector<pkmn::e_species>& get_all_caught() override final;
 
             int get_num_caught() override final;
 
@@ -53,10 +53,10 @@ namespace pkmn
             int _generation;
             size_t _num_pokemon;
 
-            std::vector<std::string> _all_seen;
+            std::vector<pkmn::e_species> _all_seen;
             bool _dirty_seen;
 
-            std::vector<std::string> _all_caught;
+            std::vector<pkmn::e_species> _all_caught;
             bool _dirty_caught;
 
             void* _p_native;
@@ -64,7 +64,7 @@ namespace pkmn
 
             void _update_member_vector_with_pksav(
                 const uint8_t* native_list,
-                std::vector<std::string>& member_vector
+                std::vector<pkmn::e_species>& member_vector
             );
 
             virtual void _set_has_seen(

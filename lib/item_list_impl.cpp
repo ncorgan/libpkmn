@@ -475,11 +475,10 @@ namespace pkmn {
         89  // Omega Ruby/Alpha Sapphire
     };
 
-    /*
-     * TODO: if PC, all items valid except Berry Pouch, TM Case
-     */
     const std::vector<std::string>& item_list_impl::get_valid_items()
     {
+        boost::lock_guard<item_list_impl> lock(*this);
+
         if(_valid_items.size() == 0)
         {
             if(std::find(BERRY_LIST_IDS, BERRY_LIST_IDS+17, _item_list_id) != BERRY_LIST_IDS+17)
@@ -490,16 +489,19 @@ namespace pkmn {
                     "AND item_names.name LIKE '%Berry'";
 
                 pkmn::database::query_db_list_bind1<std::string, int>(
-                    berry_list_query, _valid_items,
+                    berry_list_query, _valid_item_names,
                     pkmn::database::game_id_to_generation(_game_id)
                 );
             }
             else
             {
-                pkmn::database::_get_item_list(
+                pkmn::database::_get_item_lists(
                     _valid_items,
+                    _valid_item_names,
                     ((get_name() == "PC") ? -1 : _item_list_id),
-                    _game_id
+                    _game_id,
+                    _valid_items.empty(),     // should_populate_enum_list
+                    _valid_item_names.empty() // should_populate_string_list
                 );
             }
 
@@ -512,10 +514,10 @@ namespace pkmn {
                     "Berry Pouch", "TM Case"
                 };
 
-                _valid_items.erase(
+                _valid_item_names.erase(
                     std::remove_if(
-                        _valid_items.begin(),
-                        _valid_items.end(),
+                        _valid_item_names.begin(),
+                        _valid_item_names.end(),
                         [](const std::string& item)
                         {
                             return pkmn::does_vector_contain_value(
@@ -523,12 +525,12 @@ namespace pkmn {
                                        item
                                    );
                         }),
-                    _valid_items.end()
+                    _valid_item_names.end()
                 );
             }
         }
 
-        return _valid_items;
+        return _valid_item_names;
     }
 
     void* item_list_impl::get_native()

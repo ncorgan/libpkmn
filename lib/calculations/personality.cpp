@@ -30,14 +30,6 @@
 #include <stdexcept>
 #include <vector>
 
-static const std::vector<std::string> natures = boost::assign::list_of
-    ("Hardy")("Lonely")("Brave")("Adamant")("Naughty")
-    ("Bold")("Docile")("Relaxed")("Impish")("Lax")
-    ("Timid")("Hasty")("Serious")("Jolly")("Naive")
-    ("Modest")("Mild")("Quiet")("Bashful")("Rash")
-    ("Calm")("Gentle")("Sassy")("Careful")("Quirky")
-;
-
 namespace pkmn { namespace calculations {
 
     static uint32_t get_gender_threshold(
@@ -67,12 +59,12 @@ namespace pkmn { namespace calculations {
     }
 
     uint32_t generate_personality(
-        const std::string& species,
+        pkmn::e_species species,
         uint32_t trainer_id,
         bool shiny,
         const std::string& ability,
         pkmn::e_gender gender,
-        const std::string& nature
+        pkmn::e_nature nature
     )
     {
         pkmn::enforce_value_in_vector(
@@ -80,6 +72,15 @@ namespace pkmn { namespace calculations {
             gender,
             {pkmn::e_gender::MALE, pkmn::e_gender::FEMALE, pkmn::e_gender::GENDERLESS}
         );
+
+        if((species == pkmn::e_species::NONE) || (species == pkmn::e_species::INVALID))
+        {
+            throw std::invalid_argument("Species cannot be None or Invalid.");
+        }
+        if(nature == pkmn::e_nature::NONE)
+        {
+            throw std::invalid_argument("Nature cannot be None.");
+        }
 
         uint32_t ret = 0;
 
@@ -134,13 +135,9 @@ namespace pkmn { namespace calculations {
             throw std::invalid_argument("Valid genders: Male, Female");
         }
 
-        // Validate nature input.
-        auto iter = std::find(natures.begin(), natures.end(), nature);
-        if(iter == natures.end())
-        {
-            throw std::invalid_argument("Invalid nature.");
-        }
-        uint32_t index = uint32_t(iter - natures.begin());
+        // TODO: validate
+        uint32_t nature_index = static_cast<uint32_t>(nature) - 1;
+        static const size_t NUM_NATURES = 25;
 
         // Start trying to find a valid value.
         uint32_t gender_threshold = get_gender_threshold(chance_male);
@@ -164,7 +161,7 @@ namespace pkmn { namespace calculations {
             }
 
             if(modern_shiny(ret, trainer_id) == shiny and
-               (ret % natures.size()) == index and
+               (ret % NUM_NATURES) == nature_index and
                (ret % 2) == ability_modulo
             )
             {

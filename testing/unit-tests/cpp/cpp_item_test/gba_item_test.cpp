@@ -492,7 +492,7 @@ void gba_item_pc_test(
     // get_valid_items() call.
     pkmn::e_game game = item_pc->get_game();
     const std::vector<std::string>& valid_items = item_pc->get_valid_items();
-    std::vector<std::string> all_items = pkmn::database::get_item_list(game);
+    std::vector<std::string> all_items = pkmn::database::get_item_name_list(game);
 
     if((game == pkmn::e_game::FIRERED) || (game == pkmn::e_game::LEAFGREEN))
     {

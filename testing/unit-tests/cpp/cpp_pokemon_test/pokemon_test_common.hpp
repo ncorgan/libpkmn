@@ -19,7 +19,7 @@
 #include <string>
 #include <utility>
 
-class pokemon_test: public ::testing::TestWithParam<std::pair<pkmn::e_game, std::string> >
+class pokemon_test: public ::testing::TestWithParam<std::pair<pkmn::e_game, pkmn::e_species> >
 {
     public:
         inline pkmn::pokemon::sptr get_pokemon()
@@ -32,7 +32,7 @@ class pokemon_test: public ::testing::TestWithParam<std::pair<pkmn::e_game, std:
             return _game;
         }
 
-        inline const std::string& get_species()
+        inline pkmn::e_species get_species()
         {
             return _species;
         }
@@ -42,7 +42,7 @@ class pokemon_test: public ::testing::TestWithParam<std::pair<pkmn::e_game, std:
              _pokemon = pkmn::pokemon::make(GetParam().second, _game, "", 30);
 
             ASSERT_NE(nullptr, _pokemon.get());
-            ASSERT_EQ(GetParam().second, _pokemon->get_species());
+            ASSERT_EQ(_species, _pokemon->get_species());
             ASSERT_EQ(_game, _pokemon->get_game());
         }
 
@@ -56,7 +56,7 @@ class pokemon_test: public ::testing::TestWithParam<std::pair<pkmn::e_game, std:
 
     private:
 
-        std::string _species;
+        pkmn::e_species _species;
         pkmn::e_game _game;
         pkmn::pokemon::sptr _pokemon;
 };
@@ -81,8 +81,8 @@ typedef struct
 } pkmn_test_values_t;
 
 void pokemon_test_common(
-    pkmn::pokemon::sptr pokemon,
-    const pkmn_test_values_t &test_values
+    const pkmn::pokemon::sptr& pokemon,
+    const pkmn_test_values_t& test_values
 );
 
 #endif /* POKEMON_TEST_HPP */

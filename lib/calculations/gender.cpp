@@ -17,7 +17,7 @@
 namespace pkmn { namespace calculations {
 
     pkmn::e_gender gen2_pokemon_gender(
-        const std::string& species,
+        pkmn::e_species species,
         int IV_attack
     )
     {
@@ -26,6 +26,10 @@ namespace pkmn { namespace calculations {
             IV_attack,
             false
         );
+        if((species == pkmn::e_species::NONE) || (species == pkmn::e_species::INVALID))
+        {
+            throw std::invalid_argument("Species cannot be none or invalid.");
+        }
 
         pkmn::database::pokemon_entry entry(species, pkmn::e_game::CRYSTAL, "");
         float chance_male = entry.get_chance_male();
@@ -74,10 +78,15 @@ namespace pkmn { namespace calculations {
     }
 
     pkmn::e_gender modern_pokemon_gender(
-        const std::string& species,
+        pkmn::e_species species,
         uint32_t personality
     )
     {
+        if((species == pkmn::e_species::NONE) || (species == pkmn::e_species::INVALID))
+        {
+            throw std::invalid_argument("Species cannot be none or invalid.");
+        }
+
         uint8_t truncated_pid = uint8_t(personality & 0xFF);
 
         pkmn::database::pokemon_entry entry(species, pkmn::e_game::OMEGA_RUBY, "");

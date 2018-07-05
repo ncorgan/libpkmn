@@ -129,7 +129,7 @@ TEST_P(pokedex_test, pokedex_test)
     EXPECT_EQ(0, pokedex->get_num_caught());
 
     // Set random Pokémon to be seen and caught.
-    std::vector<std::string> all_pokemon = pkmn::database::get_pokemon_list(generation, true);
+    std::vector<pkmn::e_species> all_pokemon = pkmn::database::get_pokemon_list(generation, true);
 
     std::vector<int> seen_pokemon_nums;
     size_t num_pokemon_seen = size_rng.rand(1, all_pokemon.size());
@@ -203,8 +203,8 @@ TEST_P(pokedex_test, pokedex_test)
     // Remove all entries. Do this in reverse because adding a Pokémon as
     // having been caught also makes it having been seen.
 
-    std::vector<std::string> all_seen = pokedex->get_all_seen();
-    for(const std::string& species: all_seen)
+    std::vector<pkmn::e_species> all_seen = pokedex->get_all_seen();
+    for(pkmn::e_species species: all_seen)
     {
         pokedex->set_has_seen(species, false);
         EXPECT_FALSE(pokedex->has_seen(species));
@@ -212,8 +212,8 @@ TEST_P(pokedex_test, pokedex_test)
     EXPECT_EQ(0, pokedex->get_num_seen());
     EXPECT_EQ(0ULL, pokedex->get_all_seen().size());
 
-    std::vector<std::string> all_caught = pokedex->get_all_caught();
-    for(const std::string& species: all_caught)
+    std::vector<pkmn::e_species> all_caught = pokedex->get_all_caught();
+    for(pkmn::e_species species: all_caught)
     {
         pokedex->set_has_caught(species, false);
         EXPECT_FALSE(pokedex->has_caught(species));

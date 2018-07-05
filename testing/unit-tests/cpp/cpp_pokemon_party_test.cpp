@@ -76,7 +76,7 @@ TEST_P(pokemon_party_test, empty_party_test) {
 
     for(auto party_iter = list.begin(); party_iter != list.end(); ++party_iter) {
         ASSERT_NE(nullptr, party_iter->get());
-        EXPECT_EQ("None", (*party_iter)->get_species());
+        EXPECT_EQ(pkmn::e_species::NONE, (*party_iter)->get_species());
         EXPECT_EQ(get_game(), (*party_iter)->get_game());
 
         const pkmn::move_slots_t& move_slots = (*party_iter)->get_moves();
@@ -103,19 +103,19 @@ TEST_P(pokemon_party_test, setting_pokemon_test) {
      * have the same underlying Pokémon.
      */
     pkmn::pokemon::sptr bulbasaur = pkmn::pokemon::make(
-                                        "Bulbasaur",
+                                        pkmn::e_species::BULBASAUR,
                                         game,
                                         "",
                                         5
                                     );
     pkmn::pokemon::sptr charmander = pkmn::pokemon::make(
-                                         "Charmander",
+                                         pkmn::e_species::CHARMANDER,
                                          game,
                                          "",
                                          5
                                      );
     pkmn::pokemon::sptr squirtle = pkmn::pokemon::make(
-                                       "Squirtle",
+                                       pkmn::e_species::SQUIRTLE,
                                        game,
                                        "",
                                        5
@@ -131,15 +131,15 @@ TEST_P(pokemon_party_test, setting_pokemon_test) {
 
     party->set_pokemon(0, bulbasaur);
     EXPECT_EQ(1, party->get_num_pokemon());
-    EXPECT_EQ("Bulbasaur", party->get_pokemon(0)->get_species());
+    EXPECT_EQ(pkmn::e_species::BULBASAUR, party->get_pokemon(0)->get_species());
     party->set_pokemon(1, charmander);
     EXPECT_EQ(2, party->get_num_pokemon());
-    EXPECT_EQ("Charmander", party->get_pokemon(1)->get_species());
+    EXPECT_EQ(pkmn::e_species::CHARMANDER, party->get_pokemon(1)->get_species());
 
     // Replace one of the new ones.
     party->set_pokemon(0, squirtle);
     EXPECT_EQ(2, party->get_num_pokemon());
-    EXPECT_EQ("Squirtle", party->get_pokemon(0)->get_species());
+    EXPECT_EQ(pkmn::e_species::SQUIRTLE, party->get_pokemon(0)->get_species());
 
     // Make sure we can't copy a Pokémon to itself.
     EXPECT_THROW(
@@ -154,7 +154,7 @@ TEST_P(pokemon_party_test, setting_pokemon_test) {
     // We should always be able to clear the last contiguous Pokémon.
     party->set_pokemon(2, original_first);
     EXPECT_EQ(2, party->get_num_pokemon());
-    EXPECT_EQ("None", party->get_pokemon(2)->get_species());
+    EXPECT_EQ(pkmn::e_species::NONE, party->get_pokemon(2)->get_species());
 
     // Put it back.
     party->set_pokemon(2, party->get_pokemon(1));
@@ -165,26 +165,26 @@ TEST_P(pokemon_party_test, setting_pokemon_test) {
         party->set_pokemon(1, original_first);
     , std::invalid_argument);
     EXPECT_EQ(3, party->get_num_pokemon());
-    EXPECT_EQ("Charmander", party->get_pokemon(1)->get_species());
+    EXPECT_EQ(pkmn::e_species::CHARMANDER, party->get_pokemon(1)->get_species());
 
     EXPECT_THROW(
         party->set_pokemon(4, bulbasaur);
     , std::out_of_range);
     EXPECT_EQ(3, party->get_num_pokemon());
-    EXPECT_EQ("None", party->get_pokemon(4)->get_species());
+    EXPECT_EQ(pkmn::e_species::NONE, party->get_pokemon(4)->get_species());
 
     /*
      * Now check everything we've created. Each variable should have the
      * same Pokémon underneath, even if the pointer has changed.
      */
-    EXPECT_EQ("Squirtle", party->get_pokemon(0)->get_species());
-    EXPECT_EQ("Charmander", party->get_pokemon(1)->get_species());
-    EXPECT_EQ("Charmander", party->get_pokemon(2)->get_species());
-    EXPECT_EQ("None", original_first->get_species());
-    EXPECT_EQ("None", original_second->get_species());
-    EXPECT_EQ("Bulbasaur", bulbasaur->get_species());
-    EXPECT_EQ("Charmander", charmander->get_species());
-    EXPECT_EQ("Squirtle", squirtle->get_species());
+    EXPECT_EQ(pkmn::e_species::SQUIRTLE, party->get_pokemon(0)->get_species());
+    EXPECT_EQ(pkmn::e_species::CHARMANDER, party->get_pokemon(1)->get_species());
+    EXPECT_EQ(pkmn::e_species::CHARMANDER, party->get_pokemon(2)->get_species());
+    EXPECT_EQ(pkmn::e_species::NONE, original_first->get_species());
+    EXPECT_EQ(pkmn::e_species::NONE, original_second->get_species());
+    EXPECT_EQ(pkmn::e_species::BULBASAUR, bulbasaur->get_species());
+    EXPECT_EQ(pkmn::e_species::CHARMANDER, charmander->get_species());
+    EXPECT_EQ(pkmn::e_species::SQUIRTLE, squirtle->get_species());
 
     // On the C++ level, make sure the expected equal pointers are equal.
     EXPECT_NE(original_first->get_native_pc_data(), party->get_pokemon(0)->get_native_pc_data());
@@ -322,7 +322,7 @@ TEST_P(pokemon_party_test, setting_pokemon_test) {
     for(pkmn::e_game valid_game: test_params.valid_other_games)
     {
         pkmn::pokemon::sptr pikachu = pkmn::pokemon::make(
-                                          "Pikachu",
+                                          pkmn::e_species::PIKACHU,
                                           valid_game,
                                           "",
                                           50
@@ -330,13 +330,13 @@ TEST_P(pokemon_party_test, setting_pokemon_test) {
         party->set_pokemon(3, pikachu);
 
         pkmn::pokemon::sptr party_pokemon = party->get_pokemon(3);
-        EXPECT_EQ("Pikachu", party_pokemon->get_species());
+        EXPECT_EQ(pkmn::e_species::PIKACHU, party_pokemon->get_species());
         EXPECT_EQ(test_params.party_game, party_pokemon->get_game());
         EXPECT_EQ(50, party_pokemon->get_level());
     }
 
     pkmn::pokemon::sptr invalid_pikachu = pkmn::pokemon::make(
-                                              "Pikachu",
+                                              pkmn::e_species::PIKACHU,
                                               test_params.invalid_other_game,
                                               "",
                                               50

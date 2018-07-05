@@ -5,6 +5,7 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
+#include "database/enum_conversions.hpp"
 #include "database/id_to_string.hpp"
 
 #include <pkmn/enums/enum_to_string.hpp>
@@ -152,9 +153,7 @@ namespace pkmn {
 
     std::string game_to_string(pkmn::e_game game)
     {
-        return pkmn::database::game_id_to_name(
-                   static_cast<int>(game)
-               );
+        return pkmn::database::game_enum_to_name(game);
     }
 
     std::string gender_to_string(pkmn::e_gender gender)

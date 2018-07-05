@@ -532,7 +532,7 @@ namespace pkmn
         boost::lock_guard<pokemon_gbaimpl> lock(*this);
 
         return pkmn::calculations::modern_pokemon_gender(
-                   _database_entry.get_name(),
+                   get_species(),
                    pksav_littleendian32(GBA_PC_RCAST->personality)
                );
     }
@@ -646,7 +646,7 @@ namespace pkmn
                 is_shiny(),
                 get_ability(),
                 get_gender(),
-                nature
+                pkmn::e_nature::NONE
             )
         );
     }
