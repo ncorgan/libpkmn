@@ -7,6 +7,7 @@
 
 #include "database/enum_conversions.hpp"
 #include "database/id_to_string.hpp"
+#include "database/index_to_string.hpp"
 
 #include <pkmn/enums/enum_to_string.hpp>
 
@@ -109,6 +110,13 @@ namespace pkmn {
                );
     }
 
+    pkmn::e_ability string_to_ability(const std::string& ability_name)
+    {
+        return static_cast<pkmn::e_ability>(
+                   pkmn::database::ability_name_to_id(ability_name)
+               );
+    }
+
     std::string ball_to_string(pkmn::e_ball ball)
     {
         std::string ball_name;
@@ -125,6 +133,13 @@ namespace pkmn {
         }
 
         return ball_name;
+    }
+
+    pkmn::e_ball string_to_ball(const std::string& ball_name)
+    {
+        return static_cast<pkmn::e_ball>(
+                   pkmn::database::ball_name_to_id(ball_name)
+               );
     }
 
     std::string condition_to_string(pkmn::e_condition condition)
@@ -144,6 +159,22 @@ namespace pkmn {
         }
     }
 
+    pkmn::e_condition string_to_condition(const std::string& condition_name)
+    {
+        static const condition_bimap_t& CONDITION_BIMAP = get_condition_bimap();
+
+        auto condition_name_iter = CONDITION_BIMAP.left.find(condition_name);
+        if(condition_name_iter != CONDITION_BIMAP.left.end())
+        {
+            return condition_name_iter->second;
+        }
+        else
+        {
+            const std::string error_message = "Invalid condition: " + condition_name;
+            throw std::invalid_argument(error_message);
+        }
+    }
+
     std::string egg_group_to_string(pkmn::e_egg_group egg_group)
     {
         return pkmn::database::egg_group_id_to_name(
@@ -151,9 +182,23 @@ namespace pkmn {
                );
     }
 
+    pkmn::e_egg_group string_to_egg_group(const std::string& egg_group_name)
+    {
+        return static_cast<pkmn::e_egg_group>(
+                   pkmn::database::egg_group_name_to_id(egg_group_name)
+               );
+    }
+
     std::string game_to_string(pkmn::e_game game)
     {
         return pkmn::database::game_enum_to_name(game);
+    }
+
+    pkmn::e_game string_to_game(const std::string& game_name)
+    {
+        return pkmn::database::game_id_to_enum(
+                   pkmn::database::game_name_to_id(game_name)
+               );
     }
 
     std::string gender_to_string(pkmn::e_gender gender)
@@ -169,6 +214,22 @@ namespace pkmn {
         {
             const std::string error_message = "Invalid gender: "
                                             + std::to_string(static_cast<int>(gender));
+            throw std::invalid_argument(error_message);
+        }
+    }
+
+    pkmn::e_gender string_to_gender(const std::string& gender_name)
+    {
+        static const gender_bimap_t& GENDER_BIMAP = get_gender_bimap();
+
+        auto gender_name_iter = GENDER_BIMAP.left.find(gender_name);
+        if(gender_name_iter != GENDER_BIMAP.left.end())
+        {
+            return gender_name_iter->second;
+        }
+        else
+        {
+            const std::string error_message = "Invalid gender: " + gender_name;
             throw std::invalid_argument(error_message);
         }
     }
@@ -195,6 +256,13 @@ namespace pkmn {
         return item_name;
     }
 
+    pkmn::e_item string_to_item(const std::string& item_name)
+    {
+        return static_cast<pkmn::e_item>(
+                   pkmn::database::item_name_to_id(item_name)
+               );
+    }
+
     std::string language_to_string(pkmn::e_language language)
     {
         static const language_bimap_t& LANGUAGE_BIMAP = get_language_bimap();
@@ -212,7 +280,25 @@ namespace pkmn {
         }
     }
 
-    std::string move_damage_class_to_string(pkmn::e_move_damage_class move_damage_class)
+    pkmn::e_language string_to_language(const std::string& language_name)
+    {
+        static const language_bimap_t& LANGUAGE_BIMAP = get_language_bimap();
+
+        auto language_name_iter = LANGUAGE_BIMAP.left.find(language_name);
+        if(language_name_iter != LANGUAGE_BIMAP.left.end())
+        {
+            return language_name_iter->second;
+        }
+        else
+        {
+            const std::string error_message = "Invalid language: " + language_name;
+            throw std::invalid_argument(error_message);
+        }
+    }
+
+    std::string move_damage_class_to_string(
+        pkmn::e_move_damage_class move_damage_class
+    )
     {
         static const move_damage_class_bimap_t& MOVE_DAMAGE_CLASS_BIMAP = get_move_damage_class_bimap();
 
@@ -229,6 +315,24 @@ namespace pkmn {
         }
     }
 
+    pkmn::e_move_damage_class string_to_move_damage_class(
+        const std::string& move_damage_class_name
+    )
+    {
+        static const move_damage_class_bimap_t& MOVE_DAMAGE_CLASS_BIMAP = get_move_damage_class_bimap();
+
+        auto move_damage_class_name_iter = MOVE_DAMAGE_CLASS_BIMAP.left.find(move_damage_class_name);
+        if(move_damage_class_name_iter != MOVE_DAMAGE_CLASS_BIMAP.left.end())
+        {
+            return move_damage_class_name_iter->second;
+        }
+        else
+        {
+            const std::string error_message = "Invalid move damage class: " + move_damage_class_name;
+            throw std::invalid_argument(error_message);
+        }
+    }
+
     std::string move_to_string(pkmn::e_move move)
     {
         // So we get the latest spelling.
@@ -240,10 +344,29 @@ namespace pkmn {
                );
     }
 
+    pkmn::e_move string_to_move(const std::string& move_name)
+    {
+        return static_cast<pkmn::e_move>(
+                   pkmn::database::move_name_to_id(move_name)
+               );
+    }
+
+    /*
+     * The nature enum is offset by 1 from the in-game index because we use
+     * 0 for a "None" nature.
+     */
+
     std::string nature_to_string(pkmn::e_nature nature)
     {
-        return pkmn::database::nature_id_to_name(
-                   static_cast<int>(nature)
+        return pkmn::database::nature_index_to_name(
+                   static_cast<int>(nature)-1
+               );
+    }
+
+    pkmn::e_nature string_to_nature(const std::string& nature_name)
+    {
+        return static_cast<pkmn::e_nature>(
+                   pkmn::database::nature_name_to_index(nature_name)+1
                );
     }
 
@@ -251,6 +374,13 @@ namespace pkmn {
     {
         return pkmn::database::species_id_to_name(
                    static_cast<int>(species)
+               );
+    }
+
+    pkmn::e_species string_to_species(const std::string& species_name)
+    {
+        return static_cast<pkmn::e_species>(
+                   pkmn::database::species_name_to_id(species_name)
                );
     }
 
@@ -271,10 +401,33 @@ namespace pkmn {
         }
     }
 
+    pkmn::e_stat string_to_stat(const std::string& stat_name)
+    {
+        static const stat_bimap_t& STAT_BIMAP = get_stat_bimap();
+
+        auto stat_name_iter = STAT_BIMAP.left.find(stat_name);
+        if(stat_name_iter != STAT_BIMAP.left.end())
+        {
+            return stat_name_iter->second;
+        }
+        else
+        {
+            const std::string error_message = "Invalid stat: " + stat_name;
+            throw std::invalid_argument(error_message);
+        }
+    }
+
     std::string type_to_string(pkmn::e_type type)
     {
         return pkmn::database::type_id_to_name(
                    static_cast<int>(type)
+               );
+    }
+
+    pkmn::e_type string_to_type(const std::string& type_name)
+    {
+        return static_cast<pkmn::e_type>(
+                   pkmn::database::type_name_to_id(type_name)
                );
     }
 

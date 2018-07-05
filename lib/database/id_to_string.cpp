@@ -388,7 +388,7 @@ namespace pkmn { namespace database {
         }
 
         static BOOST_CONSTEXPR const char* main_query =
-            "SELECT move_id FROM move_names WHERE name=?";
+            "SELECT move_id FROM move_names WHERE local_language_id=9 AND name=?";
 
         std::string error_message = "Invalid move: ";
         error_message += move_name;

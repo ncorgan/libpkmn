@@ -648,8 +648,14 @@ TEST(cpp_lists_test, item_lists_test)
             ASSERT_EQ(items.size(), item_names.size()) << int(game);
             for(size_t item_index = 0; item_index < items.size(); ++item_index)
             {
-                // TODO after creating string_to_item, since there can be multiple strings
-                //      for a given ID
+                // Ignore the DNA Sample issue for now.
+                if(item_names[item_index].find("DNA Sample") == std::string::npos)
+                {
+                    EXPECT_EQ(
+                        items[item_index],
+                        pkmn::string_to_item(item_names[item_index])
+                    ) << pkmn::game_to_string(game) << " " << item_names[item_index];
+                }
             }
         }
     }
@@ -1073,8 +1079,10 @@ TEST(cpp_lists_test, move_lists_test)
             ASSERT_EQ(moves.size(), move_names.size());
             for(size_t move_index = 0; move_index < moves.size(); ++move_index)
             {
-                // TODO: check with string -> move since an enum can correspond
-                //       to different spellings
+                EXPECT_EQ(
+                    moves[move_index],
+                    pkmn::string_to_move(move_names[move_index])
+                ) << pkmn::game_to_string(game) << " " << move_names[move_index];
             }
         }
     }
@@ -1360,6 +1368,8 @@ TEST(cpp_lists_test, move_lists_test)
         }
     }
 }
+
+// TODO: natures
 
 TEST(cpp_lists_test, region_lists_test)
 {
@@ -1666,8 +1676,10 @@ TEST_P(cpp_machine_move_lists_test, test_machine_move_lists)
         ASSERT_EQ(machine_moves.size(), machine_move_names.size());
         for(size_t move_index = 0; move_index < machine_moves.size(); ++move_index)
         {
-            // TODO: test with name to enum since an enum can correspond to multiple
-            // names
+            EXPECT_EQ(
+                machine_moves[move_index],
+                pkmn::string_to_move(machine_move_names[move_index])
+            ) << pkmn::game_to_string(game) << " " << machine_move_names[move_index];
         }
     }
 }
