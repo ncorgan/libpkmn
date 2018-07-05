@@ -12,6 +12,7 @@ IF(NOT PKMN_DONT_INSTALL_HEADERS)
         condition.h
         contest_stat.h
         egg_group.h
+        enum_to_string.h
         game.h
         gender.h
         item.h

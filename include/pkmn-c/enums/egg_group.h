@@ -8,6 +8,11 @@
 #ifndef PKMN_C_ENUMS_EGG_GROUP_H
 #define PKMN_C_ENUMS_EGG_GROUP_H
 
+#include <pkmn-c/config.h>
+#include <pkmn-c/error.h>
+
+#include <stdlib.h>
+
 enum pkmn_egg_group
 {
     PKMN_EGG_GROUP_NONE = 0,
@@ -27,5 +32,23 @@ enum pkmn_egg_group
     PKMN_EGG_GROUP_DRAGON = 14,
     PKMN_EGG_GROUP_UNDISCOVERED = 15,
 };
+
+struct pkmn_egg_group_enum_list
+{
+    enum pkmn_egg_group* p_enums;
+    size_t length;
+};
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+PKMN_C_API enum pkmn_error pkmn_egg_group_enum_list_free(
+    struct pkmn_egg_group_enum_list* p_egg_group_enum_list
+);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* PKMN_C_ENUMS_EGG_GROUP_H */

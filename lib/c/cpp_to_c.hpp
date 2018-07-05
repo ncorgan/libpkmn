@@ -198,29 +198,29 @@ namespace pkmn { namespace c {
         }
     }
 
-    // TODO: accept null buffer input, will just output necessary size
-    template <typename cpp_type, typename c_type>
-    void list_cpp_to_c(
-        const std::vector<cpp_type>& list_cpp,
-        c_type* p_list_c_out,
-        size_t buffer_len,
-        size_t* p_num_values_out
+    template <typename cpp_enum_type, typename c_enum_type, typename c_struct_type>
+    typename std::enable_if<std::is_enum<cpp_enum_type>::value && std::is_enum<c_enum_type>::value, void>::type
+    list_cpp_to_c(
+        const std::vector<cpp_enum_type>& cpp_enum_vector,
+        c_struct_type* p_c_struct_out
     )
     {
-        BOOST_ASSERT(p_list_c_out != nullptr);
+        BOOST_ASSERT(p_c_struct_out != nullptr);
 
-        const size_t num_elements_to_copy = std::min<size_t>(
-                                                list_cpp.size(),
-                                                buffer_len
-                                            );
-        for(size_t index = 0; index < num_elements_to_copy; ++index)
-        {
-            p_list_c_out[index] = static_cast<c_type>(list_cpp[index]);
-        }
+        static_assert(
+            sizeof(cpp_enum_type) == sizeof(c_enum_type),
+            "Enums aren't the same size."
+        );
 
-        if(p_num_values_out != nullptr)
+        if(!cpp_enum_vector.empty())
         {
-            *p_num_values_out = list_cpp.size();
+            p_c_struct_out->p_enums = static_cast<c_enum_type*>(
+                                          std::calloc(
+                                              cpp_enum_vector.size(),
+                                              sizeof(c_enum_type)
+                                          )
+                                      );
+            p_c_struct_out->length = cpp_enum_vector.size();
         }
     }
 

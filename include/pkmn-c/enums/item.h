@@ -8,6 +8,11 @@
 #ifndef PKMN_C_ENUMS_ITEM_H
 #define PKMN_C_ENUMS_ITEM_H
 
+#include <pkmn-c/config.h>
+#include <pkmn-c/error.h>
+
+#include <stdlib.h>
+
 enum pkmn_item
 {
     PKMN_ITEM_NONE = 0,
@@ -945,5 +950,23 @@ enum pkmn_item
     PKMN_ITEM_BATTLE_CD_60 = 10130,
     PKMN_ITEM_INVALID = 30000,
 };
+
+struct pkmn_item_enum_list
+{
+    enum pkmn_item* p_enums;
+    size_t length;
+};
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+PKMN_C_API enum pkmn_error pkmn_item_enum_list_free(
+    struct pkmn_item_enum_list* p_item_enum_list
+);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* PKMN_C_ENUMS_ITEM_H */

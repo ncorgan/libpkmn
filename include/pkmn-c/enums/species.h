@@ -8,6 +8,11 @@
 #ifndef PKMN_C_ENUMS_SPECIES_H
 #define PKMN_C_ENUMS_SPECIES_H
 
+#include <pkmn-c/config.h>
+#include <pkmn-c/error.h>
+
+#include <stdlib.h>
+
 enum pkmn_species
 {
     PKMN_SPECIES_NONE = 0,
@@ -734,5 +739,23 @@ enum pkmn_species
     PKMN_SPECIES_VOLCANION = 721,
     PKMN_SPECIES_INVALID = 30000,
 };
+
+struct pkmn_species_enum_list
+{
+    enum pkmn_species* p_enums;
+    size_t length;
+};
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+PKMN_C_API enum pkmn_error pkmn_species_enum_list_free(
+    struct pkmn_species_enum_list* p_species_enum_list
+);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* PKMN_C_ENUMS_SPECIES_H */

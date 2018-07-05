@@ -8,6 +8,11 @@
 #ifndef PKMN_C_ENUMS_TYPE_H
 #define PKMN_C_ENUMS_TYPE_H
 
+#include <pkmn-c/config.h>
+#include <pkmn-c/error.h>
+
+#include <stdlib.h>
+
 enum pkmn_type
 {
     PKMN_TYPE_NONE = 0,
@@ -33,5 +38,23 @@ enum pkmn_type
     PKMN_TYPE_SHADOW = 10002,
     PKMN_TYPE_INVALID = 30000,
 };
+
+struct pkmn_type_enum_list
+{
+    enum pkmn_type* p_enums;
+    size_t length;
+};
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+PKMN_C_API enum pkmn_error pkmn_type_enum_list_free(
+    struct pkmn_type_enum_list* p_type_enum_list
+);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* PKMN_C_ENUMS_TYPE_H */

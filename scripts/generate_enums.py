@@ -190,6 +190,11 @@ def generate_c_enum_file(enum_name, enum_values):
 #ifndef PKMN_C_ENUMS_{0}_H
 #define PKMN_C_ENUMS_{0}_H
 
+#include <pkmn-c/config.h>
+#include <pkmn-c/error.h>
+
+#include <stdlib.h>
+
 enum pkmn_{1}
 {{""".format(enum_name.upper(), enum_name)
 
@@ -200,8 +205,26 @@ enum pkmn_{1}
     file_contents += """
 }};
 
-#endif /* PKMN_C_ENUMS_{0}_H */
-""".format(enum_name.upper())
+struct pkmn_{0}_enum_list
+{{
+    enum pkmn_{0}* p_enums;
+    size_t length;
+}};
+
+#ifdef __cplusplus
+extern \"C\" {{
+#endif
+
+PKMN_C_API enum pkmn_error pkmn_{0}_enum_list_free(
+    struct pkmn_{0}_enum_list* p_{0}_enum_list
+);
+
+#ifdef __cplusplus
+}}
+#endif
+
+#endif /* PKMN_C_ENUMS_{1}_H */
+""".format(enum_name, enum_name.upper())
 
     with open("{0}.h".format(enum_name), "w") as output:
         output.write(file_contents)

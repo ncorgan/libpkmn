@@ -8,6 +8,11 @@
 #ifndef PKMN_C_ENUMS_ABILITY_H
 #define PKMN_C_ENUMS_ABILITY_H
 
+#include <pkmn-c/config.h>
+#include <pkmn-c/error.h>
+
+#include <stdlib.h>
+
 enum pkmn_ability
 {
     PKMN_ABILITY_NONE = 0,
@@ -203,5 +208,23 @@ enum pkmn_ability
     PKMN_ABILITY_DESOLATE_LAND = 190,
     PKMN_ABILITY_DELTA_STREAM = 191,
 };
+
+struct pkmn_ability_enum_list
+{
+    enum pkmn_ability* p_enums;
+    size_t length;
+};
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+PKMN_C_API enum pkmn_error pkmn_ability_enum_list_free(
+    struct pkmn_ability_enum_list* p_ability_enum_list
+);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* PKMN_C_ENUMS_ABILITY_H */

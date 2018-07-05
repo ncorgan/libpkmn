@@ -8,6 +8,11 @@
 #ifndef PKMN_C_ENUMS_NATURE_H
 #define PKMN_C_ENUMS_NATURE_H
 
+#include <pkmn-c/config.h>
+#include <pkmn-c/error.h>
+
+#include <stdlib.h>
+
 enum pkmn_nature
 {
     PKMN_NATURE_NONE = 0,
@@ -37,5 +42,23 @@ enum pkmn_nature
     PKMN_NATURE_CAREFUL = 24,
     PKMN_NATURE_QUIRKY = 25,
 };
+
+struct pkmn_nature_enum_list
+{
+    enum pkmn_nature* p_enums;
+    size_t length;
+};
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+PKMN_C_API enum pkmn_error pkmn_nature_enum_list_free(
+    struct pkmn_nature_enum_list* p_nature_enum_list
+);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* PKMN_C_ENUMS_NATURE_H */

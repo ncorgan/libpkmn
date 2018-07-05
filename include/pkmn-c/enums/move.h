@@ -8,6 +8,11 @@
 #ifndef PKMN_C_ENUMS_MOVE_H
 #define PKMN_C_ENUMS_MOVE_H
 
+#include <pkmn-c/config.h>
+#include <pkmn-c/error.h>
+
+#include <stdlib.h>
+
 enum pkmn_move
 {
     PKMN_MOVE_NONE = 0,
@@ -652,5 +657,23 @@ enum pkmn_move
     PKMN_MOVE_SHADOW_SKY = 10018,
     PKMN_MOVE_INVALID = 30000,
 };
+
+struct pkmn_move_enum_list
+{
+    enum pkmn_move* p_enums;
+    size_t length;
+};
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+PKMN_C_API enum pkmn_error pkmn_move_enum_list_free(
+    struct pkmn_move_enum_list* p_move_enum_list
+);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* PKMN_C_ENUMS_MOVE_H */

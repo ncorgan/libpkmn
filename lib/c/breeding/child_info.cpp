@@ -17,23 +17,19 @@ enum pkmn_error pkmn_breeding_get_possible_child_species(
     enum pkmn_species mother_species,
     enum pkmn_species father_species,
     enum pkmn_game game,
-    enum pkmn_species* p_possible_child_species_out,
-    size_t buffer_len,
-    size_t* p_num_possible_child_species_out
+    struct pkmn_species_enum_list* p_possible_child_species_out
 )
 {
     PKMN_CHECK_NULL_PARAM(p_possible_child_species_out);
 
     PKMN_CPP_TO_C(
-        pkmn::c::list_cpp_to_c(
+        pkmn::c::list_cpp_to_c<pkmn::e_species, enum pkmn_species, struct pkmn_species_enum_list>(
             pkmn::breeding::get_possible_child_species(
                 static_cast<pkmn::e_species>(mother_species),
                 static_cast<pkmn::e_species>(father_species),
                 static_cast<pkmn::e_game>(game)
             ),
-            p_possible_child_species_out,
-            buffer_len,
-            p_num_possible_child_species_out
+            p_possible_child_species_out
         );
     )
 }

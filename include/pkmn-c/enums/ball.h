@@ -8,6 +8,11 @@
 #ifndef PKMN_C_ENUMS_BALL_H
 #define PKMN_C_ENUMS_BALL_H
 
+#include <pkmn-c/config.h>
+#include <pkmn-c/error.h>
+
+#include <stdlib.h>
+
 enum pkmn_ball
 {
     PKMN_BALL_NONE = 0,
@@ -39,5 +44,23 @@ enum pkmn_ball
     PKMN_BALL_DREAM_BALL = 26,
     PKMN_BALL_INVALID = 30000,
 };
+
+struct pkmn_ball_enum_list
+{
+    enum pkmn_ball* p_enums;
+    size_t length;
+};
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+PKMN_C_API enum pkmn_error pkmn_ball_enum_list_free(
+    struct pkmn_ball_enum_list* p_ball_enum_list
+);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* PKMN_C_ENUMS_BALL_H */

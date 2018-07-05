@@ -27,9 +27,7 @@ PKMN_C_API enum pkmn_error pkmn_breeding_get_possible_child_species(
     enum pkmn_species mother_species,
     enum pkmn_species father_species,
     enum pkmn_game game,
-    enum pkmn_species* p_possible_child_species_out,
-    size_t buffer_len,
-    size_t* p_num_possible_child_species_out
+    struct pkmn_species_enum_list* p_possible_child_species_out
 );
 
 PKMN_C_API enum pkmn_error pkmn_breeding_get_child_moves(
