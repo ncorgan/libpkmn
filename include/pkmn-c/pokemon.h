@@ -30,7 +30,7 @@
 
 struct pkmn_pokemon
 {
-    char* p_species;
+    enum pkmn_species species;
     enum pkmn_game game;
 
     void* p_internal;
@@ -45,7 +45,7 @@ PKMN_C_API union pkmn_trainer_id pkmn_pokemon_default_trainer_id();
 PKMN_C_API const char* pkmn_pokemon_default_trainer_name();
 
 PKMN_C_API enum pkmn_error pkmn_pokemon_init(
-    const char* p_species,
+    enum pkmn_species species,
     enum pkmn_game game,
     const char* p_form,
     int level,

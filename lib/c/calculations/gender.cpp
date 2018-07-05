@@ -15,36 +15,36 @@
 #include <boost/assign.hpp>
 
 enum pkmn_error pkmn_calculations_gen2_pokemon_gender(
-    const char* p_species,
+    enum pkmn_species species,
     int IV_attack,
     enum pkmn_gender* p_gender_out
 )
 {
-    PKMN_CHECK_NULL_PARAM(p_species);
     PKMN_CHECK_NULL_PARAM(p_gender_out);
 
     PKMN_CPP_TO_C(
         *p_gender_out = static_cast<enum pkmn_gender>(
                             pkmn::calculations::gen2_pokemon_gender(
-                                p_species, IV_attack
+                                static_cast<pkmn::e_species>(species),
+                                IV_attack
                             )
                         );
     )
 }
 
 enum pkmn_error pkmn_calculations_modern_pokemon_gender(
-    const char* p_species,
+    enum pkmn_species species,
     uint32_t personality,
     enum pkmn_gender* p_gender_out
 )
 {
-    PKMN_CHECK_NULL_PARAM(p_species);
     PKMN_CHECK_NULL_PARAM(p_gender_out);
 
     PKMN_CPP_TO_C(
         *p_gender_out = static_cast<enum pkmn_gender>(
                             pkmn::calculations::modern_pokemon_gender(
-                                p_species, personality
+                                static_cast<pkmn::e_species>(species),
+                                personality
                             )
                         );
     )

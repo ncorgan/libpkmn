@@ -14,19 +14,14 @@
 
 enum pkmn_error pkmn_calculations_nature(
     uint32_t personality,
-    char* p_nature_out,
-    size_t buffer_len,
-    size_t* p_nature_length_out
+    enum pkmn_nature* p_nature_out
 )
 {
     PKMN_CHECK_NULL_PARAM(p_nature_out);
 
     PKMN_CPP_TO_C(
-        pkmn::c::string_cpp_to_c(
-            pkmn::calculations::nature(personality),
-            p_nature_out,
-            buffer_len,
-            p_nature_length_out
-        );
+        *p_nature_out = static_cast<enum pkmn_nature>(
+                            pkmn::calculations::nature(personality)
+                        );
     )
 }

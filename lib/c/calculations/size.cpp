@@ -12,7 +12,7 @@
 #include <pkmn/calculations/size.hpp>
 
 enum pkmn_error pkmn_calculations_pokemon_size(
-    const char* p_species,
+    enum pkmn_species species,
     uint32_t personality,
     int IV_HP,
     int IV_attack,
@@ -23,12 +23,11 @@ enum pkmn_error pkmn_calculations_pokemon_size(
     float* p_size_out
 )
 {
-    PKMN_CHECK_NULL_PARAM(p_species);
     PKMN_CHECK_NULL_PARAM(p_size_out);
 
     PKMN_CPP_TO_C(
         *p_size_out = pkmn::calculations::pokemon_size(
-                          p_species,
+                          static_cast<pkmn::e_species>(species),
                           personality,
                           IV_HP,
                           IV_attack,

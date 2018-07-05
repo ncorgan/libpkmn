@@ -201,7 +201,7 @@ namespace pkmn { namespace c {
         // a concern.
         struct pkmn_pokemon temp_pokemon_c =
         {
-            nullptr, // p_species
+            PKMN_SPECIES_NONE, // species
             PKMN_GAME_NONE, // game
             nullptr  // p_internal
         };
@@ -210,10 +210,10 @@ namespace pkmn { namespace c {
             pokemon_cpp,
             &temp_pokemon_c
         );
-        string_cpp_to_c_alloc(
-            pokemon_cpp->get_species(),
-            &temp_pokemon_c.p_species
-        );
+
+        temp_pokemon_c.species = static_cast<enum pkmn_species>(
+                                     pokemon_cpp->get_species()
+                                 );
 
         // Everything succeeded, so move it into the pointer the caller
         // provided.
@@ -749,7 +749,7 @@ namespace pkmn { namespace c {
 
         struct pkmn_database_pokemon_entry temp_pokemon_entry_c =
         {
-            nullptr, // p_name
+            PKMN_SPECIES_NONE, // name
             PKMN_GAME_NONE, // game
             nullptr, // p_species
             nullptr, // p_form
@@ -812,10 +812,6 @@ namespace pkmn { namespace c {
         };
 
         string_cpp_to_c_alloc(
-            pokemon_entry_cpp.get_name(),
-            &temp_pokemon_entry_c.p_name
-        );
-        string_cpp_to_c_alloc(
             pokemon_entry_cpp.get_form(),
             &temp_pokemon_entry_c.p_form
         );
@@ -845,6 +841,7 @@ namespace pkmn { namespace c {
             &temp_pokemon_entry_c.egg_groups
         );
 
+        temp_pokemon_entry_c.name = static_cast<enum pkmn_species>(pokemon_entry_cpp.get_species_enum());
         temp_pokemon_entry_c.game = static_cast<enum pkmn_game>(pokemon_entry_cpp.get_game());
 
         temp_pokemon_entry_c.height = pokemon_entry_cpp.get_height();

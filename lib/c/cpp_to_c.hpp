@@ -172,6 +172,7 @@ namespace pkmn { namespace c {
         *p_pointer = nullptr;
     }
 
+    // TODO: accept null buffer input, will just output necessary size
     template <typename T>
     void list_cpp_to_c(
         const std::vector<T>& list_cpp,
@@ -191,7 +192,33 @@ namespace pkmn { namespace c {
             );
         }
 
-        if(p_num_values_out)
+        if(p_num_values_out != nullptr)
+        {
+            *p_num_values_out = list_cpp.size();
+        }
+    }
+
+    // TODO: accept null buffer input, will just output necessary size
+    template <typename cpp_type, typename c_type>
+    void list_cpp_to_c(
+        const std::vector<cpp_type>& list_cpp,
+        c_type* p_list_c_out,
+        size_t buffer_len,
+        size_t* p_num_values_out
+    )
+    {
+        BOOST_ASSERT(p_list_c_out != nullptr);
+
+        const size_t num_elements_to_copy = std::min<size_t>(
+                                                list_cpp.size(),
+                                                buffer_len
+                                            );
+        for(size_t index = 0; index < num_elements_to_copy; ++index)
+        {
+            p_list_c_out[index] = static_cast<c_type>(list_cpp[index]);
+        }
+
+        if(p_num_values_out != nullptr)
         {
             *p_num_values_out = list_cpp.size();
         }

@@ -43,13 +43,13 @@ PKMN_C_API const char* pkmn_pokedex_strerror(
 
 PKMN_C_API enum pkmn_error pkmn_pokedex_has_seen(
     const struct pkmn_pokedex* p_pokedex,
-    const char* p_species,
+    enum pkmn_species species,
     bool* p_has_seen_out
 );
 
 PKMN_C_API enum pkmn_error pkmn_pokedex_set_has_seen_species(
     const struct pkmn_pokedex* p_pokedex,
-    const char* p_species,
+    enum pkmn_species species,
     bool has_seen
 );
 
@@ -65,13 +65,13 @@ PKMN_C_API enum pkmn_error pkmn_pokedex_get_num_seen(
 
 PKMN_C_API enum pkmn_error pkmn_pokedex_has_caught(
     const struct pkmn_pokedex* p_pokedex,
-    const char* p_species,
+    enum pkmn_species species,
     bool* p_has_caught_out
 );
 
 PKMN_C_API enum pkmn_error pkmn_pokedex_set_has_caught_species(
     const struct pkmn_pokedex* p_pokedex,
-    const char* p_species,
+    enum pkmn_species species,
     bool has_caught
 );
 

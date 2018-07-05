@@ -24,7 +24,7 @@
 
 struct pkmn_database_pokemon_entry
 {
-    char* p_name;
+    enum pkmn_species name;
     enum pkmn_game game;
     char* p_species;
     char* p_form;
@@ -55,7 +55,7 @@ extern "C" {
 #endif
 
 PKMN_C_API enum pkmn_error pkmn_database_get_pokemon_entry(
-    const char* p_species,
+    enum pkmn_species species,
     enum pkmn_game game,
     const char* p_form,
     struct pkmn_database_pokemon_entry* p_pokemon_entry_out

@@ -10,6 +10,8 @@
 #include <pkmn-c/config.h>
 #include <pkmn-c/error.h>
 
+#include <pkmn-c/enums/nature.h>
+
 #include <stdint.h>
 
 #ifdef __cplusplus
@@ -20,16 +22,12 @@ extern "C" {
 /*!
  * \param personality Personality
  * \param p_nature_out Where to return the nature
- * \param buffer_len The length of the buffer passed into p_nature_out
- * \param p_nature_length_out The length of the actual string (can be NULL)
  * \returns ::PKMN_ERROR_NONE upon successful completion
  * \returns ::PKMN_ERROR_NULL_POINTER if p_nature_out is NULL
  */
 PKMN_C_API enum pkmn_error pkmn_calculations_nature(
     uint32_t personality,
-    char* p_nature_out,
-    size_t buffer_len,
-    size_t* p_nature_length_out
+    enum pkmn_nature* p_nature_out
 );
 
 #ifdef __cplusplus

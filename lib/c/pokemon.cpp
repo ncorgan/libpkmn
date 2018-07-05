@@ -33,20 +33,19 @@ const char* pkmn_pokemon_default_trainer_name()
 }
 
 enum pkmn_error pkmn_pokemon_init(
-    const char* p_species,
+    enum pkmn_species species,
     enum pkmn_game game,
     const char* p_form,
     int level,
     struct pkmn_pokemon* p_pokemon_out
 )
 {
-    PKMN_CHECK_NULL_PARAM(p_species);
     PKMN_CHECK_NULL_PARAM(p_form);
     PKMN_CHECK_NULL_PARAM(p_pokemon_out);
 
     PKMN_CPP_TO_C(
         pkmn::pokemon::sptr cpp = pkmn::pokemon::make(
-                                      p_species,
+                                      static_cast<pkmn::e_species>(species),
                                       static_cast<pkmn::e_game>(game),
                                       p_form,
                                       level
@@ -83,7 +82,7 @@ enum pkmn_error pkmn_pokemon_free(
 {
     PKMN_CHECK_NULL_PARAM(p_pokemon);
 
-    pkmn::c::free_pointer_and_set_to_null(&p_pokemon->p_species);
+    p_pokemon->species = PKMN_SPECIES_NONE;
     p_pokemon->game = PKMN_GAME_NONE;
 
     PKMN_CPP_TO_C(

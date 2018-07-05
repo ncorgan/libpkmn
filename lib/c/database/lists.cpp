@@ -12,7 +12,7 @@
 
 #include <pkmn/database/lists.hpp>
 
-enum pkmn_error pkmn_database_ability_list(
+enum pkmn_error pkmn_database_ability_name_list(
     int generation,
     struct pkmn_string_list* p_ability_list_out
 )
@@ -21,7 +21,7 @@ enum pkmn_error pkmn_database_ability_list(
 
     PKMN_CPP_TO_C(
         pkmn::c::string_list_cpp_to_c(
-            pkmn::database::get_ability_list(
+            pkmn::database::get_ability_name_list(
                 generation
             ),
             p_ability_list_out
@@ -29,7 +29,7 @@ enum pkmn_error pkmn_database_ability_list(
     )
 }
 
-enum pkmn_error pkmn_database_game_list(
+enum pkmn_error pkmn_database_game_name_list(
     int generation,
     bool include_previous,
     struct pkmn_string_list* p_game_list_out
@@ -39,7 +39,7 @@ enum pkmn_error pkmn_database_game_list(
 
     PKMN_CPP_TO_C(
         pkmn::c::string_list_cpp_to_c(
-            pkmn::database::get_game_list(
+            pkmn::database::get_game_name_list(
                 generation, include_previous
             ),
             p_game_list_out
@@ -47,7 +47,7 @@ enum pkmn_error pkmn_database_game_list(
     )
 }
 
-enum pkmn_error pkmn_database_gamecube_shadow_pokemon_list(
+enum pkmn_error pkmn_database_gamecube_shadow_pokemon_name_list(
     bool colosseum,
     struct pkmn_string_list* p_gamecube_shadow_pokemon_list_out
 )
@@ -56,13 +56,13 @@ enum pkmn_error pkmn_database_gamecube_shadow_pokemon_list(
 
     PKMN_CPP_TO_C(
         pkmn::c::string_list_cpp_to_c(
-            pkmn::database::get_gamecube_shadow_pokemon_list(colosseum),
+            pkmn::database::get_gamecube_shadow_pokemon_name_list(colosseum),
             p_gamecube_shadow_pokemon_list_out
         );
     )
 }
 
-enum pkmn_error pkmn_database_hm_move_list(
+enum pkmn_error pkmn_database_hm_move_name_list(
     enum pkmn_game game,
     struct pkmn_string_list* p_hm_move_list_out
 )
@@ -71,13 +71,13 @@ enum pkmn_error pkmn_database_hm_move_list(
 
     PKMN_CPP_TO_C(
         pkmn::c::string_list_cpp_to_c(
-            pkmn::database::get_hm_move_list(static_cast<pkmn::e_game>(game)),
+            pkmn::database::get_hm_move_name_list(static_cast<pkmn::e_game>(game)),
             p_hm_move_list_out
         )
     )
 }
 
-enum pkmn_error pkmn_database_item_list(
+enum pkmn_error pkmn_database_item_name_list(
     enum pkmn_game game,
     struct pkmn_string_list* p_item_list_out
 )
@@ -86,13 +86,13 @@ enum pkmn_error pkmn_database_item_list(
 
     PKMN_CPP_TO_C(
         pkmn::c::string_list_cpp_to_c(
-            pkmn::database::get_item_list(static_cast<pkmn::e_game>(game)),
+            pkmn::database::get_item_name_list(static_cast<pkmn::e_game>(game)),
             p_item_list_out
         )
     )
 }
 
-enum pkmn_error pkmn_database_location_list(
+enum pkmn_error pkmn_database_location_name_list(
     enum pkmn_game game,
     bool whole_generation,
     struct pkmn_string_list* p_location_list_out
@@ -102,7 +102,7 @@ enum pkmn_error pkmn_database_location_list(
 
     PKMN_CPP_TO_C(
         pkmn::c::string_list_cpp_to_c(
-            pkmn::database::get_location_list(
+            pkmn::database::get_location_name_list(
                 static_cast<pkmn::e_game>(game),
                 whole_generation
             ),
@@ -111,7 +111,7 @@ enum pkmn_error pkmn_database_location_list(
     )
 }
 
-enum pkmn_error pkmn_database_move_list(
+enum pkmn_error pkmn_database_move_name_list(
     enum pkmn_game game,
     struct pkmn_string_list* p_move_list_out
 )
@@ -120,13 +120,13 @@ enum pkmn_error pkmn_database_move_list(
 
     PKMN_CPP_TO_C(
         pkmn::c::string_list_cpp_to_c(
-            pkmn::database::get_move_list(static_cast<pkmn::e_game>(game)),
+            pkmn::database::get_move_name_list(static_cast<pkmn::e_game>(game)),
             p_move_list_out
         )
     )
 }
 
-enum pkmn_error pkmn_database_nature_list(
+enum pkmn_error pkmn_database_nature_name_list(
     struct pkmn_string_list* p_nature_list_out
 )
 {
@@ -134,13 +134,13 @@ enum pkmn_error pkmn_database_nature_list(
 
     PKMN_CPP_TO_C(
         pkmn::c::string_list_cpp_to_c(
-            pkmn::database::get_nature_list(),
+            pkmn::database::get_nature_name_list(),
             p_nature_list_out
         )
     )
 }
 
-enum pkmn_error pkmn_database_pokemon_list(
+enum pkmn_error pkmn_database_pokemon_name_list(
     int generation,
     bool include_previous,
     struct pkmn_string_list* p_pokemon_list_out
@@ -150,7 +150,7 @@ enum pkmn_error pkmn_database_pokemon_list(
 
     PKMN_CPP_TO_C(
         pkmn::c::string_list_cpp_to_c(
-            pkmn::database::get_pokemon_list(
+            pkmn::database::get_pokemon_name_list(
                 generation, include_previous
             ),
             p_pokemon_list_out
@@ -158,7 +158,7 @@ enum pkmn_error pkmn_database_pokemon_list(
     )
 }
 
-enum pkmn_error pkmn_database_region_list(
+enum pkmn_error pkmn_database_region_name_list(
     struct pkmn_string_list* p_region_list_out
 )
 {
@@ -166,13 +166,13 @@ enum pkmn_error pkmn_database_region_list(
 
     PKMN_CPP_TO_C(
         pkmn::c::string_list_cpp_to_c(
-            pkmn::database::get_region_list(),
+            pkmn::database::get_region_name_list(),
             p_region_list_out
         )
     )
 }
 
-enum pkmn_error pkmn_database_ribbon_list(
+enum pkmn_error pkmn_database_ribbon_name_list(
     int generation,
     struct pkmn_string_list* p_ribbon_list_out
 )
@@ -181,7 +181,7 @@ enum pkmn_error pkmn_database_ribbon_list(
 
     PKMN_CPP_TO_C(
         pkmn::c::string_list_cpp_to_c(
-            pkmn::database::get_ribbon_list(
+            pkmn::database::get_ribbon_name_list(
                 generation
             ),
             p_ribbon_list_out
@@ -189,7 +189,7 @@ enum pkmn_error pkmn_database_ribbon_list(
     )
 }
 
-enum pkmn_error pkmn_database_super_training_medal_list(
+enum pkmn_error pkmn_database_super_training_medal_name_list(
     struct pkmn_string_list* p_super_training_medal_list_out
 )
 {
@@ -197,13 +197,13 @@ enum pkmn_error pkmn_database_super_training_medal_list(
 
     PKMN_CPP_TO_C(
         pkmn::c::string_list_cpp_to_c(
-            pkmn::database::get_super_training_medal_list(),
+            pkmn::database::get_super_training_medal_name_list(),
             p_super_training_medal_list_out
         )
     )
 }
 
-enum pkmn_error pkmn_database_tm_move_list(
+enum pkmn_error pkmn_database_tm_move_name_list(
     enum pkmn_game game,
     struct pkmn_string_list* p_tm_move_list_out
 )
@@ -212,13 +212,13 @@ enum pkmn_error pkmn_database_tm_move_list(
 
     PKMN_CPP_TO_C(
         pkmn::c::string_list_cpp_to_c(
-            pkmn::database::get_tm_move_list(static_cast<pkmn::e_game>(game)),
+            pkmn::database::get_tm_move_name_list(static_cast<pkmn::e_game>(game)),
             p_tm_move_list_out
         )
     )
 }
 
-enum pkmn_error pkmn_database_type_list(
+enum pkmn_error pkmn_database_type_name_list(
     enum pkmn_game game,
     struct pkmn_string_list* p_type_list_out
 )
@@ -227,7 +227,7 @@ enum pkmn_error pkmn_database_type_list(
 
     PKMN_CPP_TO_C(
         pkmn::c::string_list_cpp_to_c(
-            pkmn::database::get_type_list(static_cast<pkmn::e_game>(game)),
+            pkmn::database::get_type_name_list(static_cast<pkmn::e_game>(game)),
             p_type_list_out
         )
     )

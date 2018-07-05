@@ -11,6 +11,7 @@
 #include <pkmn-c/error.h>
 
 #include <pkmn-c/enums/gender.h>
+#include <pkmn-c/enums/species.h>
 
 #include <stdint.h>
 #include <stdlib.h>
@@ -36,7 +37,7 @@ extern "C" {
  * \returns ::PKMN_ERROR_OUT_OF_RANGE If IV_attack is out of range [0,15]
  */
 PKMN_C_API enum pkmn_error pkmn_calculations_gen2_pokemon_gender(
-    const char* p_species,
+    enum pkmn_species species,
     int IV_attack,
     enum pkmn_gender* p_gender_out
 );
@@ -57,7 +58,7 @@ PKMN_C_API enum pkmn_error pkmn_calculations_gen2_pokemon_gender(
  * \returns ::PKMN_ERROR_RUNTIME_ERROR If Pokémon species is invalid
  */
 PKMN_C_API enum pkmn_error pkmn_calculations_modern_pokemon_gender(
-    const char* p_species,
+    enum pkmn_species species,
     uint32_t personality,
     enum pkmn_gender* p_gender_out
 );
