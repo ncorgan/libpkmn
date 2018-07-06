@@ -12,16 +12,14 @@
 #include <pkmn-c.h>
 
 static void gen1_pokemon_test(
-    const char* species,
+    enum pkmn_species species,
     enum pkmn_game game
 )
 {
-    TEST_ASSERT_NOT_NULL(species);
-
     enum pkmn_error error = PKMN_ERROR_NONE;
     struct pkmn_pokemon pokemon =
     {
-        .p_species = NULL,
+        .species = PKMN_SPECIES_NONE,
         .game = PKMN_GAME_NONE,
         .p_internal = NULL
     };
@@ -75,15 +73,15 @@ static void gen1_pokemon_test(
 
 void red_pokemon_test()
 {
-    gen1_pokemon_test("Charmander", PKMN_GAME_RED);
+    gen1_pokemon_test(PKMN_SPECIES_CHARMANDER, PKMN_GAME_RED);
 }
 
 void blue_pokemon_test()
 {
-    gen1_pokemon_test("Squirtle", PKMN_GAME_BLUE);
+    gen1_pokemon_test(PKMN_SPECIES_SQUIRTLE, PKMN_GAME_BLUE);
 }
 
 void yellow_pokemon_test()
 {
-    gen1_pokemon_test("Bulbasaur", PKMN_GAME_YELLOW);
+    gen1_pokemon_test(PKMN_SPECIES_BULBASAUR, PKMN_GAME_YELLOW);
 }

@@ -687,12 +687,22 @@ namespace pkmn { namespace database {
     std::vector<pkmn::e_nature> get_nature_list()
     {
         static const std::string query =
-            "SELECT id FROM natures ORDER BY game_index";
+            "SELECT game_index FROM natures ORDER BY game_index";
 
         std::vector<pkmn::e_nature> natures;
         pkmn::database::query_db_enum_list(
             query,
             natures
+        );
+
+        std::transform(
+            natures.begin(),
+            natures.end(),
+            natures.begin(),
+            [](pkmn::e_nature nature)
+            {
+                return static_cast<pkmn::e_nature>(static_cast<int>(nature)+1);
+            }
         );
 
         return natures;

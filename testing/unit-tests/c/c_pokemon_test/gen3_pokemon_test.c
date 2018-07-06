@@ -184,16 +184,14 @@ static void test_ribbons(
 }
 
 static void gba_pokemon_test(
-    const char* species,
+    enum pkmn_species species,
     enum pkmn_game game
 )
 {
-    TEST_ASSERT_NOT_NULL(species);
-
     enum pkmn_error error = PKMN_ERROR_NONE;
     struct pkmn_pokemon pokemon =
     {
-        .p_species = NULL,
+        .species = PKMN_SPECIES_NONE,
         .game = PKMN_GAME_NONE,
         .p_internal = NULL
     };
@@ -250,16 +248,14 @@ static void gba_pokemon_test(
 }
 
 static void gcn_pokemon_test(
-    const char* species,
+    enum pkmn_species species,
     enum pkmn_game game
 )
 {
-    TEST_ASSERT_NOT_NULL(species);
-
     enum pkmn_error error = PKMN_ERROR_NONE;
     struct pkmn_pokemon pokemon =
     {
-        .p_species = NULL,
+        .species = PKMN_SPECIES_NONE,
         .game = PKMN_GAME_NONE,
         .p_internal = NULL
     };
@@ -317,35 +313,35 @@ static void gcn_pokemon_test(
 
 void ruby_pokemon_test()
 {
-    gba_pokemon_test("Torchic", PKMN_GAME_RUBY);
+    gba_pokemon_test(PKMN_SPECIES_TORCHIC, PKMN_GAME_RUBY);
 }
 
 void sapphire_pokemon_test()
 {
-    gba_pokemon_test("Mudkip", PKMN_GAME_SAPPHIRE);
+    gba_pokemon_test(PKMN_SPECIES_MUDKIP, PKMN_GAME_SAPPHIRE);
 }
 
 void emerald_pokemon_test()
 {
-    gba_pokemon_test("Treecko", PKMN_GAME_EMERALD);
+    gba_pokemon_test(PKMN_SPECIES_TREECKO, PKMN_GAME_EMERALD);
 }
 
 void firered_pokemon_test()
 {
-    gba_pokemon_test("Charmander", PKMN_GAME_FIRERED);
+    gba_pokemon_test(PKMN_SPECIES_CHARMANDER, PKMN_GAME_FIRERED);
 }
 
 void leafgreen_pokemon_test()
 {
-    gba_pokemon_test("Bulbasaur", PKMN_GAME_LEAFGREEN);
+    gba_pokemon_test(PKMN_SPECIES_BULBASAUR, PKMN_GAME_LEAFGREEN);
 }
 
 void colosseum_pokemon_test()
 {
-    gcn_pokemon_test("Espeon", PKMN_GAME_COLOSSEUM);
+    gcn_pokemon_test(PKMN_SPECIES_ESPEON, PKMN_GAME_COLOSSEUM);
 }
 
 void xd_pokemon_test()
 {
-    gcn_pokemon_test("Umbreon", PKMN_GAME_XD);
+    gcn_pokemon_test(PKMN_SPECIES_UMBREON, PKMN_GAME_XD);
 }

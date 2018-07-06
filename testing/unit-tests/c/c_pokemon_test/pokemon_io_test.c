@@ -46,7 +46,7 @@ static const struct pkmn_move_slots empty_move_slots =
 };
 static const struct pkmn_pokemon empty_pokemon =
 {
-    .p_species = NULL,
+    .species = PKMN_SPECIES_NONE,
     .game = PKMN_GAME_NONE,
     .p_internal = NULL
 };
@@ -230,7 +230,12 @@ static void pk1_test(enum pkmn_game game)
     );
 
     struct pkmn_pokemon random_pokemon = empty_pokemon;
-    get_random_pokemon(&random_pokemon, NULL, NULL, game);
+    get_random_pokemon(
+        &random_pokemon,
+        NULL,
+        PKMN_SPECIES_NONE, // Can be any
+        game
+    );
 
     error = pkmn_pokemon_export_to_file(
                 &random_pokemon,
@@ -305,7 +310,12 @@ static void pk2_test(enum pkmn_game game)
     );
 
     struct pkmn_pokemon random_pokemon = empty_pokemon;
-    get_random_pokemon(&random_pokemon, NULL, NULL, game);
+    get_random_pokemon(
+        &random_pokemon,
+        NULL,
+        PKMN_SPECIES_NONE, // Can be any
+        game
+    );
 
     error = pkmn_pokemon_export_to_file(
                 &random_pokemon,
@@ -380,7 +390,12 @@ static void _3gpkm_test(enum pkmn_game game)
     );
 
     struct pkmn_pokemon random_pokemon = empty_pokemon;
-    get_random_pokemon(&random_pokemon, NULL, NULL, game);
+    get_random_pokemon(
+        &random_pokemon,
+        NULL,
+        PKMN_SPECIES_NONE, // Can be any
+        game
+    );
 
     error = pkmn_pokemon_export_to_file(
                 &random_pokemon,
@@ -464,7 +479,7 @@ void test_outside_3gpkm()
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
 
-    TEST_ASSERT_EQUAL_STRING("Mightyena", pokemon.p_species);
+    TEST_ASSERT_EQUAL(PKMN_SPECIES_MIGHTYENA, pokemon.species);
     TEST_ASSERT_EQUAL(PKMN_GAME_EMERALD, pokemon.game);
 
     test_pokemon_string(

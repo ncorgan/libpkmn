@@ -8,12 +8,11 @@
 #include "pokemon_test.h"
 #include "unity.h"
 
-#include <pkmn-c/pokemon.h>
-
 #include <pkmntest-c/util.h>
 
 #include <pkmn-c/pokemon.h>
 #include <pkmn-c/database/move_entry.h>
+#include <pkmn-c/enums/enum_to_string.h>
 
 #include <ctype.h>
 #include <stdio.h>
@@ -54,7 +53,7 @@ static const struct pkmn_database_move_entry empty_move_entry =
 
 static const struct pkmn_database_pokemon_entry empty_pokemon_entry =
 {
-    .p_name = NULL,
+    .name = PKMN_SPECIES_NONE,
     .game = PKMN_GAME_NONE,
     .p_species = NULL,
     .p_form = NULL,
@@ -147,9 +146,9 @@ static void check_initial_values(
                 &pokemon_entry
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
-    TEST_ASSERT_EQUAL_STRING(
-        p_pokemon->p_species,
-        pokemon_entry.p_name
+    TEST_ASSERT_EQUAL(
+        p_pokemon->species,
+        pokemon_entry.name
     );
     TEST_ASSERT_EQUAL(
         p_pokemon->game,
@@ -175,19 +174,31 @@ static void check_initial_values(
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
 
+    // Pre-Generation V, Pokémon's nicknames were default to their species
+    // in all-caps. Generation V and later, the default nickname was simply
+    // the species.
+    char pokemon_species[STRBUFFER_LEN] = {0};
+    error = pkmn_species_to_string(
+                p_pokemon->species,
+                pokemon_species,
+                sizeof(pokemon_species),
+                NULL
+            );
+    PKMN_TEST_ASSERT_SUCCESS(error);
+
     if(generation >= 5)
     {
         TEST_ASSERT_EQUAL_STRING(
-            p_pokemon->p_species,
+            pokemon_species,
             strbuffer
         );
     }
     else
     {
         char species_upper[STRBUFFER_LEN] = {0};
-        for(size_t index = 0; index < strlen(p_pokemon->p_species); ++index)
+        for(size_t index = 0; index < strlen(pokemon_species); ++index)
         {
-            species_upper[index] = toupper(p_pokemon->p_species[index]);
+            species_upper[index] = toupper(pokemon_species[index]);
         }
         TEST_ASSERT_EQUAL_STRING(
             species_upper,

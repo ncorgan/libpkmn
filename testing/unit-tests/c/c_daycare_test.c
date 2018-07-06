@@ -11,7 +11,7 @@
 
 static const struct pkmn_pokemon empty_pokemon =
 {
-    .p_species = NULL,
+    .species = PKMN_SPECIES_NONE,
     .game = PKMN_GAME_NONE,
     .p_internal = NULL
 };
@@ -54,7 +54,7 @@ static void test_empty_daycare(
         PKMN_TEST_ASSERT_SUCCESS(error);
         TEST_ASSERT_NOT_NULL(pokemon.p_internal);
 
-        TEST_ASSERT_EQUAL_STRING("None", pokemon.p_species);
+        TEST_ASSERT_EQUAL(PKMN_SPECIES_NONE, pokemon.species);
         TEST_ASSERT_EQUAL(p_daycare->game, pokemon.game);
 
         error = pkmn_pokemon_free(&pokemon);
@@ -77,9 +77,9 @@ static void test_empty_daycare(
         levelup_pokemon_index < pokemon_list.length;
         ++levelup_pokemon_index)
     {
-        TEST_ASSERT_EQUAL_STRING(
-            "None",
-            pokemon_list.p_pokemon[levelup_pokemon_index].p_species
+        TEST_ASSERT_EQUAL(
+            PKMN_SPECIES_NONE,
+            pokemon_list.p_pokemon[levelup_pokemon_index].species
         );
         TEST_ASSERT_EQUAL(
             p_daycare->game,
@@ -138,7 +138,7 @@ static void test_empty_daycare(
             PKMN_TEST_ASSERT_SUCCESS(error);
             TEST_ASSERT_NOT_NULL(pokemon.p_internal);
 
-            TEST_ASSERT_EQUAL_STRING("None", pokemon.p_species);
+            TEST_ASSERT_EQUAL(PKMN_SPECIES_NONE, pokemon.species);
             TEST_ASSERT_EQUAL(p_daycare->game, pokemon.game);
 
             error = pkmn_pokemon_free(&pokemon);
@@ -161,9 +161,9 @@ static void test_empty_daycare(
             breeding_pokemon_index < pokemon_list.length;
             ++breeding_pokemon_index)
         {
-            TEST_ASSERT_EQUAL_STRING(
-                "None",
-                pokemon_list.p_pokemon[breeding_pokemon_index].p_species
+            TEST_ASSERT_EQUAL(
+                PKMN_SPECIES_NONE,
+                pokemon_list.p_pokemon[breeding_pokemon_index].species
             );
             TEST_ASSERT_EQUAL(
                 p_daycare->game,
@@ -194,7 +194,7 @@ static void test_setting_pokemon_in_daycare(
 
     struct pkmn_pokemon venusaur = empty_pokemon;
     error = pkmn_pokemon_init(
-                "Venusaur",
+                PKMN_SPECIES_VENUSAUR,
                 p_daycare->game,
                 "",
                 50,
@@ -202,7 +202,7 @@ static void test_setting_pokemon_in_daycare(
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_NOT_NULL(p_daycare->p_internal);
-    TEST_ASSERT_EQUAL_STRING("Venusaur", venusaur.p_species);
+    TEST_ASSERT_EQUAL(PKMN_SPECIES_VENUSAUR, venusaur.species);
 
     error = pkmn_daycare_set_levelup_pokemon(
                 p_daycare,
@@ -218,7 +218,7 @@ static void test_setting_pokemon_in_daycare(
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_NOT_NULL(p_daycare->p_internal);
-    TEST_ASSERT_EQUAL_STRING("Venusaur", daycare_pokemon.p_species);
+    TEST_ASSERT_EQUAL(PKMN_SPECIES_VENUSAUR, daycare_pokemon.species);
 
     error = pkmn_pokemon_free(&daycare_pokemon);
     PKMN_TEST_ASSERT_SUCCESS(error);
@@ -237,7 +237,7 @@ static void test_setting_pokemon_in_daycare(
         enum pkmn_gender pokemon_gender = PKMN_GENDER_GENDERLESS;
 
         error = pkmn_pokemon_init(
-                    "Blastoise",
+                    PKMN_SPECIES_BLASTOISE,
                     p_daycare->game,
                     "",
                     50,
@@ -245,7 +245,7 @@ static void test_setting_pokemon_in_daycare(
                 );
         PKMN_TEST_ASSERT_SUCCESS(error);
         TEST_ASSERT_NOT_NULL(blastoise.p_internal);
-        TEST_ASSERT_EQUAL_STRING("Blastoise", blastoise.p_species);
+        TEST_ASSERT_EQUAL(PKMN_SPECIES_BLASTOISE, blastoise.species);
 
         error = pkmn_pokemon_set_gender(
                     &blastoise,
@@ -254,7 +254,7 @@ static void test_setting_pokemon_in_daycare(
         PKMN_TEST_ASSERT_SUCCESS(error);
 
         error = pkmn_pokemon_init(
-                    "Marowak",
+                    PKMN_SPECIES_MAROWAK,
                     p_daycare->game,
                     "",
                     50,
@@ -262,7 +262,7 @@ static void test_setting_pokemon_in_daycare(
                 );
         PKMN_TEST_ASSERT_SUCCESS(error);
         TEST_ASSERT_NOT_NULL(marowak.p_internal);
-        TEST_ASSERT_EQUAL_STRING("Marowak", marowak.p_species);
+        TEST_ASSERT_EQUAL(PKMN_SPECIES_MAROWAK, marowak.species);
 
         error = pkmn_pokemon_set_gender(
                     &marowak,
@@ -300,7 +300,7 @@ static void test_setting_pokemon_in_daycare(
                 );
         PKMN_TEST_ASSERT_SUCCESS(error);
         TEST_ASSERT_NOT_NULL(daycare_pokemon.p_internal);
-        TEST_ASSERT_EQUAL_STRING("Blastoise", daycare_pokemon.p_species);
+        TEST_ASSERT_EQUAL(PKMN_SPECIES_BLASTOISE, daycare_pokemon.species);
 
         error = pkmn_pokemon_get_gender(
                     &daycare_pokemon,
@@ -322,7 +322,7 @@ static void test_setting_pokemon_in_daycare(
                 );
         PKMN_TEST_ASSERT_SUCCESS(error);
         TEST_ASSERT_NOT_NULL(daycare_pokemon.p_internal);
-        TEST_ASSERT_EQUAL_STRING("Marowak", daycare_pokemon.p_species);
+        TEST_ASSERT_EQUAL(PKMN_SPECIES_MAROWAK, daycare_pokemon.species);
 
         error = pkmn_pokemon_get_gender(
                     &daycare_pokemon,

@@ -38,8 +38,9 @@ static enum pkmn_game dummy_game = PKMN_GAME_NONE;
 static struct pkmn_string_list dummy_string_list = { NULL, 0 };
 static struct pkmn_trainer_info dummy_trainer_info = { NULL, {0}, PKMN_GENDER_GENDERLESS};
 static struct pkmn_attribute_names dummy_attribute_names = {{NULL, 0}, {NULL, 0}, {NULL, 0}};
-static struct pkmn_pokemon dummy_pokemon = {NULL, PKMN_GAME_NONE, NULL};
+static struct pkmn_pokemon dummy_pokemon = {PKMN_SPECIES_NONE, PKMN_GAME_NONE, NULL};
 static struct pkmn_pokemon_list dummy_pokemon_list = { NULL, 0 };
+static struct pkmn_species_enum_list dummy_species_enum_list = { NULL, 0 };
 
 static const char* null_pointer_error_format = "Null pointer passed into parameter \"%s\"";
 
@@ -772,21 +773,14 @@ static void pokedex_error_test()
 
     error = pkmn_pokedex_has_seen(
                 NULL,
-                "",
+                PKMN_SPECIES_NONE,
                 &dummy_bool
             );
     TEST_NULL_POINTER_RETURN("p_pokedex");
 
     error = pkmn_pokedex_has_seen(
                 &pokedex,
-                NULL,
-                &dummy_bool
-            );
-    TEST_POKEDEX_NULL_POINTER_RETURN(pokedex, "p_species");
-
-    error = pkmn_pokedex_has_seen(
-                &pokedex,
-                "",
+                PKMN_SPECIES_NONE,
                 NULL
             );
     TEST_POKEDEX_NULL_POINTER_RETURN(pokedex, "p_has_seen_out");
@@ -797,17 +791,10 @@ static void pokedex_error_test()
 
     error = pkmn_pokedex_set_has_seen_species(
                 NULL,
-                "",
+                PKMN_SPECIES_NONE,
                 true
             );
     TEST_NULL_POINTER_RETURN("p_pokedex");
-
-    error = pkmn_pokedex_set_has_seen_species(
-                &pokedex,
-                NULL,
-                true
-            );
-    TEST_POKEDEX_NULL_POINTER_RETURN(pokedex, "p_species");
 
     /*
      * pkmn_pokedex_get_all_seen
@@ -815,7 +802,7 @@ static void pokedex_error_test()
 
     error = pkmn_pokedex_get_all_seen(
                 NULL,
-                &dummy_string_list
+                &dummy_species_enum_list
             );
     TEST_NULL_POINTER_RETURN("p_pokedex");
 
@@ -847,21 +834,14 @@ static void pokedex_error_test()
 
     error = pkmn_pokedex_has_caught(
                 NULL,
-                "",
+                PKMN_SPECIES_NONE,
                 &dummy_bool
             );
     TEST_NULL_POINTER_RETURN("p_pokedex");
 
     error = pkmn_pokedex_has_caught(
                 &pokedex,
-                NULL,
-                &dummy_bool
-            );
-    TEST_POKEDEX_NULL_POINTER_RETURN(pokedex, "p_species");
-
-    error = pkmn_pokedex_has_caught(
-                &pokedex,
-                "",
+                PKMN_SPECIES_NONE,
                 NULL
             );
     TEST_POKEDEX_NULL_POINTER_RETURN(pokedex, "p_has_caught_out");
@@ -872,17 +852,10 @@ static void pokedex_error_test()
 
     error = pkmn_pokedex_set_has_caught_species(
                 NULL,
-                "",
+                PKMN_SPECIES_NONE,
                 true
             );
     TEST_NULL_POINTER_RETURN("p_pokedex");
-
-    error = pkmn_pokedex_set_has_caught_species(
-                &pokedex,
-                NULL,
-                true
-            );
-    TEST_POKEDEX_NULL_POINTER_RETURN(pokedex, "p_species");
 
     /*
      * pkmn_pokedex_get_all_caught
@@ -890,7 +863,7 @@ static void pokedex_error_test()
 
     error = pkmn_pokedex_get_all_caught(
                 NULL,
-                &dummy_string_list
+                &dummy_species_enum_list
             );
     TEST_NULL_POINTER_RETURN("p_pokedex");
 
@@ -924,7 +897,7 @@ static void pokemon_error_test()
 {
     struct pkmn_pokemon pokemon =
     {
-        .p_species = NULL,
+        .species = PKMN_SPECIES_NONE,
         .game = PKMN_GAME_NONE,
         .p_internal = NULL
     };
@@ -934,7 +907,7 @@ static void pokemon_error_test()
     struct pkmn_move_slots dummy_move_slots = { NULL, 0 };
 
     error = pkmn_pokemon_init(
-                "Bulbasaur",
+                PKMN_SPECIES_BULBASAUR,
                 PKMN_GAME_RED,
                 "",
                 5,
@@ -947,16 +920,7 @@ static void pokemon_error_test()
      */
 
     error = pkmn_pokemon_init(
-                NULL,
-                PKMN_GAME_RED,
-                strbuffer,
-                0,
-                &pokemon
-            );
-    TEST_NULL_POINTER_RETURN("p_species");
-
-    error = pkmn_pokemon_init(
-                strbuffer,
+                PKMN_SPECIES_NONE,
                 PKMN_GAME_RED,
                 NULL,
                 0,
@@ -965,7 +929,7 @@ static void pokemon_error_test()
     TEST_NULL_POINTER_RETURN("p_form");
 
     error = pkmn_pokemon_init(
-                strbuffer,
+                PKMN_SPECIES_NONE,
                 PKMN_GAME_RED,
                 strbuffer,
                 0,
@@ -2460,22 +2424,14 @@ static void calculations_form_error_test() {
 /*
  * <pkmn-c/calculations/gender.h>
  */
-static void calculations_gender_error_test() {
-    enum pkmn_gender dummy_pkmn_gender = PKMN_GENDER_MALE;
-
+static void calculations_gender_error_test()
+{
     /*
      * pkmn_calculations_gen2_pokemon_gender
      */
 
     error = pkmn_calculations_gen2_pokemon_gender(
-                NULL,
-                0,
-                &dummy_pkmn_gender
-            );
-    TEST_NULL_POINTER_RETURN("p_species");
-
-    error = pkmn_calculations_gen2_pokemon_gender(
-                strbuffer,
+                PKMN_SPECIES_NONE,
                 0,
                 NULL
             );
@@ -2486,14 +2442,7 @@ static void calculations_gender_error_test() {
      */
 
     error = pkmn_calculations_modern_pokemon_gender(
-                NULL,
-                0,
-                &dummy_pkmn_gender
-            );
-    TEST_NULL_POINTER_RETURN("p_species");
-
-    error = pkmn_calculations_modern_pokemon_gender(
-                strbuffer,
+                PKMN_SPECIES_NONE,
                 0,
                 NULL
             );
@@ -2503,13 +2452,12 @@ static void calculations_gender_error_test() {
 /*
  * <pkmn-c/calculations/nature.h>
  */
-static void calculations_nature_error_test() {
+static void calculations_nature_error_test()
+{
     /*
-     * pkmn_calculations__nature
+     * pkmn_calculations_nature
      */
     error = pkmn_calculations_nature(
-                0,
-                NULL,
                 0,
                 NULL
             );
@@ -2519,51 +2467,30 @@ static void calculations_nature_error_test() {
 /*
  * <pkmn-c/calculations/personality.h>
  */
-static void calculations_personality_error_test() {
+static void calculations_personality_error_test()
+{
     /*
      * pkmn_calculations_generate_personality
      */
 
     error = pkmn_calculations_generate_personality(
-                NULL,
-                0,
-                false,
-                strbuffer,
-                PKMN_GENDER_GENDERLESS,
-                strbuffer,
-                &dummy_uint32
-            );
-    TEST_NULL_POINTER_RETURN("p_species");
-
-    error = pkmn_calculations_generate_personality(
-                strbuffer,
+                PKMN_SPECIES_BULBASAUR,
                 0,
                 false,
                 NULL,
                 PKMN_GENDER_GENDERLESS,
-                strbuffer,
+                PKMN_NATURE_QUIET,
                 &dummy_uint32
             );
     TEST_NULL_POINTER_RETURN("p_ability");
 
     error = pkmn_calculations_generate_personality(
-                strbuffer,
+                PKMN_SPECIES_BULBASAUR,
                 0,
                 false,
                 strbuffer,
                 PKMN_GENDER_GENDERLESS,
-                NULL,
-                &dummy_uint32
-            );
-    TEST_NULL_POINTER_RETURN("p_nature");
-
-    error = pkmn_calculations_generate_personality(
-                strbuffer,
-                0,
-                false,
-                strbuffer,
-                PKMN_GENDER_GENDERLESS,
-                strbuffer,
+                PKMN_NATURE_QUIET,
                 NULL
             );
     TEST_NULL_POINTER_RETURN("p_personality_out");
@@ -2601,26 +2528,14 @@ static void calculations_shininess_error_test() {
 /*
  * <pkmn-c/calculations/size.h>
  */
-static void calculations_size_error_test() {
+static void calculations_size_error_test()
+{
     /*
      * pkmn_calculations_pokemon_size
      */
 
     error = pkmn_calculations_pokemon_size(
-                NULL,
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-                &dummy_float
-            );
-    TEST_NULL_POINTER_RETURN("p_species");
-
-    error = pkmn_calculations_pokemon_size(
-                strbuffer,
+                PKMN_SPECIES_MAGIKARP,
                 0,
                 0,
                 0,
@@ -3305,7 +3220,17 @@ static void database_lists_error_test()
                 1,
                 NULL
             );
-    TEST_NULL_POINTER_RETURN("p_ability_list_out");
+    TEST_NULL_POINTER_RETURN("p_ability_enum_list_out");
+
+    /*
+     * pkmn_database_ability_name_list
+     */
+
+    error = pkmn_database_ability_name_list(
+                1,
+                NULL
+            );
+    TEST_NULL_POINTER_RETURN("p_ability_name_list_out");
 
     /*
      * pkmn_database_game_list
@@ -3316,7 +3241,18 @@ static void database_lists_error_test()
                 false,
                 NULL
             );
-    TEST_NULL_POINTER_RETURN("p_game_list_out");
+    TEST_NULL_POINTER_RETURN("p_game_enum_list_out");
+
+    /*
+     * pkmn_database_game_name_list
+     */
+
+    error = pkmn_database_game_name_list(
+                1,
+                false,
+                NULL
+            );
+    TEST_NULL_POINTER_RETURN("p_game_name_list_out");
 
     /*
      * pkmn_database_gamecube_shadow_pokemon_list
@@ -3326,7 +3262,37 @@ static void database_lists_error_test()
                 false,
                 NULL
             );
-    TEST_NULL_POINTER_RETURN("p_gamecube_shadow_pokemon_list_out");
+    TEST_NULL_POINTER_RETURN("p_gamecube_shadow_pokemon_enum_list_out");
+
+    /*
+     * pkmn_database_gamecube_shadow_pokemon_name_list
+     */
+
+    error = pkmn_database_gamecube_shadow_pokemon_name_list(
+                false,
+                NULL
+            );
+    TEST_NULL_POINTER_RETURN("p_gamecube_shadow_pokemon_name_list_out");
+
+    /*
+     * pkmn_database_hm_move_list
+     */
+
+    error = pkmn_database_hm_move_list(
+                PKMN_GAME_RED,
+                NULL
+            );
+    TEST_NULL_POINTER_RETURN("p_hm_move_enum_list_out");
+
+    /*
+     * pkmn_database_hm_move_name_list
+     */
+
+    error = pkmn_database_hm_move_name_list(
+                PKMN_GAME_RED,
+                NULL
+            );
+    TEST_NULL_POINTER_RETURN("p_hm_move_name_list_out");
 
     /*
      * pkmn_database_item_list
@@ -3336,18 +3302,28 @@ static void database_lists_error_test()
                 PKMN_GAME_RED,
                 NULL
             );
-    TEST_NULL_POINTER_RETURN("p_item_list_out");
+    TEST_NULL_POINTER_RETURN("p_item_enum_list_out");
 
     /*
-     * pkmn_database_location_list
+     * pkmn_database_item_name_list
      */
 
-    error = pkmn_database_location_list(
+    error = pkmn_database_item_name_list(
+                PKMN_GAME_RED,
+                NULL
+            );
+    TEST_NULL_POINTER_RETURN("p_item_name_list_out");
+
+    /*
+     * pkmn_database_location_name_list
+     */
+
+    error = pkmn_database_location_name_list(
                 PKMN_GAME_RED,
                 false,
                 NULL
             );
-    TEST_NULL_POINTER_RETURN("p_location_list_out");
+    TEST_NULL_POINTER_RETURN("p_location_name_list_out");
 
     /*
      * pkmn_database_move_list
@@ -3357,7 +3333,17 @@ static void database_lists_error_test()
                 PKMN_GAME_RED,
                 NULL
             );
-    TEST_NULL_POINTER_RETURN("p_move_list_out");
+    TEST_NULL_POINTER_RETURN("p_move_enum_list_out");
+
+    /*
+     * pkmn_database_move_name_list
+     */
+
+    error = pkmn_database_move_name_list(
+                PKMN_GAME_RED,
+                NULL
+            );
+    TEST_NULL_POINTER_RETURN("p_move_name_list_out");
 
     /*
      * pkmn_database_nature_list
@@ -3366,7 +3352,16 @@ static void database_lists_error_test()
     error = pkmn_database_nature_list(
                 NULL
             );
-    TEST_NULL_POINTER_RETURN("p_nature_list_out");
+    TEST_NULL_POINTER_RETURN("p_nature_enum_list_out");
+
+    /*
+     * pkmn_database_nature_name_list
+     */
+
+    error = pkmn_database_nature_name_list(
+                NULL
+            );
+    TEST_NULL_POINTER_RETURN("p_nature_name_list_out");
 
     /*
      * pkmn_database_pokemon_list
@@ -3377,35 +3372,66 @@ static void database_lists_error_test()
                 false,
                 NULL
             );
-    TEST_NULL_POINTER_RETURN("p_pokemon_list_out");
+    TEST_NULL_POINTER_RETURN("p_pokemon_enum_list_out");
 
     /*
-     * pkmn_database_region_list
+     * pkmn_database_pokemon_name_list
      */
 
-    error = pkmn_database_region_list(
+    error = pkmn_database_pokemon_name_list(
+                1,
+                false,
                 NULL
             );
-    TEST_NULL_POINTER_RETURN("p_region_list_out");
+    TEST_NULL_POINTER_RETURN("p_pokemon_name_list_out");
 
     /*
-     * pkmn_database_ribbon_list
+     * pkmn_database_region_name_list
      */
 
-    error = pkmn_database_ribbon_list(
+    error = pkmn_database_region_name_list(
+                NULL
+            );
+    TEST_NULL_POINTER_RETURN("p_region_name_list_out");
+
+    /*
+     * pkmn_database_ribbon_name_list
+     */
+
+    error = pkmn_database_ribbon_name_list(
                 1,
                 NULL
             );
-    TEST_NULL_POINTER_RETURN("p_ribbon_list_out");
+    TEST_NULL_POINTER_RETURN("p_ribbon_name_list_out");
 
     /*
-     * pkmn_database_super_training_medal_list
+     * pkmn_database_super_training_medal_name_list
      */
 
-    error = pkmn_database_super_training_medal_list(
+    error = pkmn_database_super_training_medal_name_list(
                 NULL
             );
-    TEST_NULL_POINTER_RETURN("p_super_training_medal_list_out");
+    TEST_NULL_POINTER_RETURN("p_super_training_medal_name_list_out");
+
+    /*
+     * pkmn_database_tm_move_list
+     */
+
+    error = pkmn_database_tm_move_list(
+                PKMN_GAME_RED,
+                NULL
+            );
+    TEST_NULL_POINTER_RETURN("p_tm_move_enum_list_out");
+
+    /*
+     * pkmn_database_tm_move_name_list
+     */
+
+    error = pkmn_database_tm_move_name_list(
+                PKMN_GAME_RED,
+                NULL
+            );
+    TEST_NULL_POINTER_RETURN("p_tm_move_name_list_out");
 
     /*
      * pkmn_database_type_list
@@ -3415,7 +3441,17 @@ static void database_lists_error_test()
                 PKMN_GAME_NONE,
                 NULL
             );
-    TEST_NULL_POINTER_RETURN("p_type_list_out");
+    TEST_NULL_POINTER_RETURN("p_type_enum_list_out");
+
+    /*
+     * pkmn_database_type_name_list
+     */
+
+    error = pkmn_database_type_name_list(
+                PKMN_GAME_NONE,
+                NULL
+            );
+    TEST_NULL_POINTER_RETURN("p_type_name_list_out");
 }
 
 /*
@@ -3460,7 +3496,7 @@ static void database_pokemon_entry_error_test()
 {
     struct pkmn_database_pokemon_entry entry;
     error = pkmn_database_get_pokemon_entry(
-                "Charmander",
+                PKMN_SPECIES_CHARMANDER,
                 PKMN_GAME_DIAMOND,
                 "",
                 &entry
@@ -3472,15 +3508,7 @@ static void database_pokemon_entry_error_test()
      */
 
     error = pkmn_database_get_pokemon_entry(
-                NULL,
-                PKMN_GAME_DIAMOND,
-                strbuffer,
-                &entry
-            );
-    TEST_NULL_POINTER_RETURN("p_species");
-
-    error = pkmn_database_get_pokemon_entry(
-                strbuffer,
+                PKMN_SPECIES_CHARMANDER,
                 PKMN_GAME_DIAMOND,
                 NULL,
                 &entry
@@ -3488,7 +3516,7 @@ static void database_pokemon_entry_error_test()
     TEST_NULL_POINTER_RETURN("p_form");
 
     error = pkmn_database_get_pokemon_entry(
-                strbuffer,
+                PKMN_SPECIES_CHARMANDER,
                 PKMN_GAME_DIAMOND,
                 strbuffer,
                 NULL

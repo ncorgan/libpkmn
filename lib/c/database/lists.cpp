@@ -12,7 +12,7 @@
 
 #include <pkmn/database/lists.hpp>
 
-enum pkmn_error pkmn_database_ability_name_list(
+enum pkmn_error pkmn_database_ability_list(
     int generation,
     struct pkmn_ability_enum_list* p_ability_enum_list_out
 )

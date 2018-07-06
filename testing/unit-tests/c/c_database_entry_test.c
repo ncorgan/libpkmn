@@ -226,7 +226,7 @@ static void assert_pokemon_entry_uninitialized(
     struct pkmn_database_pokemon_entry* p_pokemon_entry
 )
 {
-    TEST_ASSERT_NULL(p_pokemon_entry->p_name);
+    TEST_ASSERT_EQUAL(PKMN_SPECIES_NONE, p_pokemon_entry->name);
     TEST_ASSERT_EQUAL(PKMN_GAME_NONE, p_pokemon_entry->game);
     TEST_ASSERT_NULL(p_pokemon_entry->p_species);
     TEST_ASSERT_NULL(p_pokemon_entry->p_pokedex_entry);
@@ -277,7 +277,7 @@ static bool file_exists(
 
 static void pokemon_entry_test() {
     struct pkmn_database_pokemon_entry pokemon_entry = {
-        .p_name = NULL,
+        .name = PKMN_SPECIES_NONE,
         .game = PKMN_GAME_NONE,
         .p_species = NULL,
         .p_pokedex_entry = NULL,
@@ -335,7 +335,7 @@ static void pokemon_entry_test() {
      */
     TEST_ASSERT_EQUAL(
         pkmn_database_get_pokemon_entry(
-            "Invalid",
+            PKMN_SPECIES_INVALID,
             PKMN_GAME_BLACK2,
             "Sunny",
             &pokemon_entry
@@ -347,7 +347,7 @@ static void pokemon_entry_test() {
     );
     TEST_ASSERT_EQUAL(
         pkmn_database_get_pokemon_entry(
-            "Castform",
+            PKMN_SPECIES_CASTFORM,
             PKMN_GAME_NONE,
             "Sunny",
             &pokemon_entry
@@ -359,7 +359,7 @@ static void pokemon_entry_test() {
     );
     TEST_ASSERT_EQUAL(
         pkmn_database_get_pokemon_entry(
-            "Invalid",
+            PKMN_SPECIES_INVALID,
             PKMN_GAME_BLACK2,
             "Sunny",
             &pokemon_entry
@@ -371,7 +371,7 @@ static void pokemon_entry_test() {
     );
     TEST_ASSERT_EQUAL(
         pkmn_database_get_pokemon_entry(
-            "Castform",
+            PKMN_SPECIES_CASTFORM,
             PKMN_GAME_BLACK2,
             "Not a form",
             &pokemon_entry
@@ -384,7 +384,7 @@ static void pokemon_entry_test() {
 
     TEST_ASSERT_EQUAL(
         pkmn_database_get_pokemon_entry(
-            "Stunfisk",
+            PKMN_SPECIES_STUNFISK,
             PKMN_GAME_BLACK2,
             "",
             &pokemon_entry
@@ -392,39 +392,39 @@ static void pokemon_entry_test() {
         PKMN_ERROR_NONE
     );
 
-    TEST_ASSERT_EQUAL_STRING(pokemon_entry.p_name, "Stunfisk");
-    TEST_ASSERT_EQUAL(pokemon_entry.game, PKMN_GAME_BLACK2);
-    TEST_ASSERT_EQUAL_STRING(pokemon_entry.p_form, "Standard");
-    TEST_ASSERT_EQUAL_STRING(pokemon_entry.p_species, "Trap");
+    TEST_ASSERT_EQUAL(PKMN_SPECIES_STUNFISK, pokemon_entry.name);
+    TEST_ASSERT_EQUAL(PKMN_GAME_BLACK2, pokemon_entry.game);
+    TEST_ASSERT_EQUAL_STRING("Standard", pokemon_entry.p_form);
+    TEST_ASSERT_EQUAL_STRING("Trap", pokemon_entry.p_species);
     TEST_ASSERT_NOT_NULL(pokemon_entry.p_pokedex_entry);
-    TEST_ASSERT_EQUAL_FLOAT(pokemon_entry.height, 0.7f);
-    TEST_ASSERT_EQUAL_FLOAT(pokemon_entry.weight, 11.0f);
-    TEST_ASSERT_EQUAL_FLOAT(pokemon_entry.chance_male, 0.5f);
-    TEST_ASSERT_EQUAL_FLOAT(pokemon_entry.chance_female, 0.5f);
+    TEST_ASSERT_EQUAL_FLOAT(0.7f, pokemon_entry.height);
+    TEST_ASSERT_EQUAL_FLOAT(11.0f, pokemon_entry.weight);
+    TEST_ASSERT_EQUAL_FLOAT(0.5f, pokemon_entry.chance_male);
+    TEST_ASSERT_EQUAL_FLOAT(0.5f, pokemon_entry.chance_female);
     TEST_ASSERT_FALSE(pokemon_entry.has_gender_differences);
-    TEST_ASSERT_EQUAL(pokemon_entry.base_friendship, 70);
-    TEST_ASSERT_EQUAL_STRING(pokemon_entry.types.p_first, "Ground");
-    TEST_ASSERT_EQUAL_STRING(pokemon_entry.types.p_second, "Electric");
-    TEST_ASSERT_EQUAL_STRING(pokemon_entry.abilities.p_first, "Static");
-    TEST_ASSERT_EQUAL_STRING(pokemon_entry.abilities.p_second, "Limber");
-    TEST_ASSERT_EQUAL_STRING(pokemon_entry.p_hidden_ability, "Sand Veil");
-    TEST_ASSERT_EQUAL_STRING(pokemon_entry.egg_groups.p_first, "Water 1");
-    TEST_ASSERT_EQUAL_STRING(pokemon_entry.egg_groups.p_second, "Amorphous");
-    TEST_ASSERT_EQUAL(pokemon_entry.base_stats[PKMN_STAT_HP], 109);
-    TEST_ASSERT_EQUAL(pokemon_entry.base_stats[PKMN_STAT_ATTACK], 66);
-    TEST_ASSERT_EQUAL(pokemon_entry.base_stats[PKMN_STAT_DEFENSE], 84);
-    TEST_ASSERT_EQUAL(pokemon_entry.base_stats[PKMN_STAT_SPEED], 32);
-    TEST_ASSERT_EQUAL(pokemon_entry.base_stats[PKMN_STAT_SPECIAL], -1);
-    TEST_ASSERT_EQUAL(pokemon_entry.base_stats[PKMN_STAT_SPATK], 81);
-    TEST_ASSERT_EQUAL(pokemon_entry.base_stats[PKMN_STAT_SPDEF], 99);
-    TEST_ASSERT_EQUAL(pokemon_entry.EV_yields[PKMN_STAT_HP], 2);
-    TEST_ASSERT_EQUAL(pokemon_entry.EV_yields[PKMN_STAT_ATTACK], 0);
-    TEST_ASSERT_EQUAL(pokemon_entry.EV_yields[PKMN_STAT_DEFENSE], 0);
-    TEST_ASSERT_EQUAL(pokemon_entry.EV_yields[PKMN_STAT_SPEED], 0);
-    TEST_ASSERT_EQUAL(pokemon_entry.EV_yields[PKMN_STAT_SPECIAL], -1);
-    TEST_ASSERT_EQUAL(pokemon_entry.EV_yields[PKMN_STAT_SPATK], 0);
-    TEST_ASSERT_EQUAL(pokemon_entry.EV_yields[PKMN_STAT_SPDEF], 0);
-    TEST_ASSERT_EQUAL(pokemon_entry.experience_yield, 165);
+    TEST_ASSERT_EQUAL(70, pokemon_entry.base_friendship);
+    TEST_ASSERT_EQUAL_STRING("Ground", pokemon_entry.types.p_first);
+    TEST_ASSERT_EQUAL_STRING("Electric", pokemon_entry.types.p_second);
+    TEST_ASSERT_EQUAL_STRING("Static", pokemon_entry.abilities.p_first);
+    TEST_ASSERT_EQUAL_STRING("Limber", pokemon_entry.abilities.p_second);
+    TEST_ASSERT_EQUAL_STRING("Sand Veil", pokemon_entry.p_hidden_ability);
+    TEST_ASSERT_EQUAL_STRING("Water 1", pokemon_entry.egg_groups.p_first);
+    TEST_ASSERT_EQUAL_STRING("Amorphous", pokemon_entry.egg_groups.p_second);
+    TEST_ASSERT_EQUAL(109, pokemon_entry.base_stats[PKMN_STAT_HP]);
+    TEST_ASSERT_EQUAL(66, pokemon_entry.base_stats[PKMN_STAT_ATTACK]);
+    TEST_ASSERT_EQUAL(84, pokemon_entry.base_stats[PKMN_STAT_DEFENSE]);
+    TEST_ASSERT_EQUAL(32, pokemon_entry.base_stats[PKMN_STAT_SPEED]);
+    TEST_ASSERT_EQUAL(-1, pokemon_entry.base_stats[PKMN_STAT_SPECIAL]);
+    TEST_ASSERT_EQUAL(81, pokemon_entry.base_stats[PKMN_STAT_SPATK]);
+    TEST_ASSERT_EQUAL(99, pokemon_entry.base_stats[PKMN_STAT_SPDEF]);
+    TEST_ASSERT_EQUAL(2, pokemon_entry.EV_yields[PKMN_STAT_HP]);
+    TEST_ASSERT_EQUAL(0, pokemon_entry.EV_yields[PKMN_STAT_ATTACK]);
+    TEST_ASSERT_EQUAL(0, pokemon_entry.EV_yields[PKMN_STAT_DEFENSE]);
+    TEST_ASSERT_EQUAL(0, pokemon_entry.EV_yields[PKMN_STAT_SPEED]);
+    TEST_ASSERT_EQUAL(-1, pokemon_entry.EV_yields[PKMN_STAT_SPECIAL]);
+    TEST_ASSERT_EQUAL(0, pokemon_entry.EV_yields[PKMN_STAT_SPATK]);
+    TEST_ASSERT_EQUAL(0, pokemon_entry.EV_yields[PKMN_STAT_SPDEF]);
+    TEST_ASSERT_EQUAL(165, pokemon_entry.experience_yield);
 
     int experience = 0;
     TEST_ASSERT_EQUAL(
@@ -502,7 +502,7 @@ static void pokemon_entry_test() {
     // Test failing to set form
     TEST_ASSERT_EQUAL(
         pkmn_database_get_pokemon_entry(
-            "Venusaur",
+            PKMN_SPECIES_VENUSAUR,
             PKMN_GAME_RUBY,
             "",
             &pokemon_entry
@@ -531,7 +531,7 @@ static void pokemon_entry_test() {
     // Test setting form
     TEST_ASSERT_EQUAL(
         pkmn_database_get_pokemon_entry(
-            "Venusaur",
+            PKMN_SPECIES_VENUSAUR,
             PKMN_GAME_OMEGA_RUBY,
             "",
             &pokemon_entry

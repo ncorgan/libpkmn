@@ -59,7 +59,7 @@ static inline bool random_bool()
 void get_random_pokemon(
     struct pkmn_pokemon* p_pokemon,
     struct pkmn_string_list* p_item_list,
-    const char* species,
+    enum pkmn_species species,
     enum pkmn_game game
 )
 {
@@ -77,15 +77,20 @@ void get_random_pokemon(
     }
     else
     {
-        error = pkmn_database_item_list(game, &internal_item_list);
+        error = pkmn_database_item_name_list(game, &internal_item_list);
         PKMN_TEST_ASSERT_SUCCESS(error);
         p_internal_item_list = &internal_item_list;
     }
 
     struct pkmn_string_list move_list = empty_string_list;
-    struct pkmn_string_list pokemon_list = empty_string_list;
 
-    error = pkmn_database_move_list(game, &move_list);
+    struct pkmn_species_enum_list pokemon_list =
+    {
+        .p_enums = NULL,
+        .length = 0
+    };
+
+    error = pkmn_database_move_name_list(game, &move_list);
     PKMN_TEST_ASSERT_SUCCESS(error);
 
     if(!species)
@@ -95,8 +100,8 @@ void get_random_pokemon(
     }
 
     // Don't deal with Deoxys or Unown issues here.
-    const char* actual_species = NULL;
-    if(species)
+    enum pkmn_species actual_species = PKMN_SPECIES_NONE;
+    if(species != PKMN_SPECIES_NONE)
     {
         actual_species = species;
     }
@@ -106,15 +111,15 @@ void get_random_pokemon(
         {
             do
             {
-                actual_species = pokemon_list.pp_strings[rand() % pokemon_list.length];
-            } while(!strcmp(actual_species, "Deoxys") || !strcmp(actual_species, "Unown"));
+                actual_species = pokemon_list.p_enums[rand() % pokemon_list.length];
+            }
+            while((actual_species == PKMN_SPECIES_UNOWN) || (actual_species == PKMN_SPECIES_DEOXYS));
         }
         else
         {
-            actual_species = pokemon_list.pp_strings[rand() % pokemon_list.length];
+            actual_species = pokemon_list.p_enums[rand() % pokemon_list.length];
         }
     }
-    TEST_ASSERT_NOT_NULL(actual_species);
 
     error = pkmn_pokemon_init(
                 actual_species,
@@ -244,7 +249,7 @@ void get_random_pokemon(
 
     if(!species)
     {
-        error = pkmn_string_list_free(&pokemon_list);
+        error = pkmn_species_enum_list_free(&pokemon_list);
         PKMN_TEST_ASSERT_SUCCESS(error);
     }
 
@@ -631,9 +636,9 @@ void compare_pokemon(
 
     int generation = game_to_generation(p_pokemon1->game);
 
-    TEST_ASSERT_EQUAL_STRING(
-        p_pokemon1->p_species,
-        p_pokemon2->p_species
+    TEST_ASSERT_EQUAL(
+        p_pokemon1->species,
+        p_pokemon2->species
     );
 
     // There is no way to determine what game an imported Generation I-II

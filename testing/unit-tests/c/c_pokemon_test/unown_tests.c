@@ -16,7 +16,7 @@
 
 static const struct pkmn_pokemon empty_pokemon =
 {
-    .p_species = NULL,
+    .species = PKMN_SPECIES_NONE,
     .game = PKMN_GAME_NONE,
     .p_internal = NULL
 };
@@ -31,7 +31,7 @@ static void gen2_unown_test(enum pkmn_game game)
 
     struct pkmn_database_pokemon_entry unown_entry;
     error = pkmn_database_get_pokemon_entry(
-                "Unown",
+                PKMN_SPECIES_UNOWN,
                 game,
                 "",
                 &unown_entry
@@ -44,7 +44,7 @@ static void gen2_unown_test(enum pkmn_game game)
     for(size_t form_index = 0; form_index < unown_entry.forms.length; ++form_index)
     {
         error = pkmn_pokemon_init(
-                    "Unown",
+                    PKMN_SPECIES_UNOWN,
                     game,
                     unown_entry.forms.pp_strings[form_index],
                     5,
@@ -114,7 +114,7 @@ static void gen2_unown_test(enum pkmn_game game)
 
     // Make sure setting IVs properly changes the form.
     error = pkmn_pokemon_init(
-                "Unown",
+                PKMN_SPECIES_UNOWN,
                 game,
                 "A",
                 5,
@@ -221,7 +221,7 @@ static void gen3_unown_test(enum pkmn_game game)
 
     struct pkmn_database_pokemon_entry unown_entry;
     error = pkmn_database_get_pokemon_entry(
-                "Unown",
+                PKMN_SPECIES_UNOWN,
                 game,
                 "",
                 &unown_entry
@@ -234,7 +234,7 @@ static void gen3_unown_test(enum pkmn_game game)
         ++form_index)
     {
         error = pkmn_pokemon_init(
-                    "Unown",
+                    PKMN_SPECIES_UNOWN,
                     game,
                     unown_entry.forms.pp_strings[form_index],
                     5,
@@ -301,7 +301,7 @@ static void gen3_unown_test(enum pkmn_game game)
 
     // Make sure setting the personality properly sets the form.
     error = pkmn_pokemon_init(
-                "Unown",
+                PKMN_SPECIES_UNOWN,
                 game,
                 "A",
                 5,

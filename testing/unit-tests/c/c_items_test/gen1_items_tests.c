@@ -81,7 +81,7 @@ static void gen1_item_list_test_common(
         .pp_strings = NULL,
         .length = 0
     };
-    error = pkmn_database_item_list(
+    error = pkmn_database_item_name_list(
                 p_item_list->game,
                 &full_item_list
             );

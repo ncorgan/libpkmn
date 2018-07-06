@@ -221,6 +221,12 @@ namespace pkmn { namespace c {
                                           )
                                       );
             p_c_struct_out->length = cpp_enum_vector.size();
+
+            std::memcpy(
+                p_c_struct_out->p_enums,
+                cpp_enum_vector.data(),
+                cpp_enum_vector.size() * sizeof(cpp_enum_type)
+            );
         }
     }
 

@@ -16,19 +16,17 @@
 
 static const struct pkmn_pokemon empty_pokemon =
 {
-    .p_species = NULL,
+    .species = PKMN_SPECIES_NONE,
     .game = PKMN_GAME_NONE,
     .p_internal = NULL
 };
 
 static void conversions_test(
-    const char* species,
+    enum pkmn_species species,
     enum pkmn_game origin_game,
     enum pkmn_game dest_game
 )
 {
-    TEST_ASSERT_NOT_NULL(species);
-
     enum pkmn_error error = PKMN_ERROR_NONE;
 
     int origin_generation = game_to_generation(origin_game);
@@ -62,7 +60,7 @@ static void conversions_test(
 
     // Comparison
 
-    TEST_ASSERT_EQUAL_STRING(first_pokemon.p_species, second_pokemon.p_species);
+    TEST_ASSERT_EQUAL(first_pokemon.species, second_pokemon.species);
     TEST_ASSERT_EQUAL(dest_game, second_pokemon.game);
 
     // TODO: condition
@@ -199,57 +197,57 @@ static void conversions_test(
 void gen1_conversions_test()
 {
     // Generation I -> Generation I
-    conversions_test("Bulbasaur", PKMN_GAME_RED, PKMN_GAME_YELLOW);
+    conversions_test(PKMN_SPECIES_BULBASAUR, PKMN_GAME_RED, PKMN_GAME_YELLOW);
 
     // Generation I -> Generation II
-    conversions_test("Squirtle", PKMN_GAME_BLUE, PKMN_GAME_GOLD);
+    conversions_test(PKMN_SPECIES_SQUIRTLE, PKMN_GAME_BLUE, PKMN_GAME_GOLD);
 }
 
 void gen2_conversions_test()
 {
     // Generation II -> Generation II
-    conversions_test("Cyndaquil", PKMN_GAME_GOLD, PKMN_GAME_CRYSTAL);
-    conversions_test("Totodile", PKMN_GAME_CRYSTAL, PKMN_GAME_GOLD);
+    conversions_test(PKMN_SPECIES_CYNDAQUIL, PKMN_GAME_GOLD, PKMN_GAME_CRYSTAL);
+    conversions_test(PKMN_SPECIES_TOTODILE, PKMN_GAME_CRYSTAL, PKMN_GAME_GOLD);
 
     // Generation II -> Generation I
-    conversions_test("Charmander", PKMN_GAME_SILVER, PKMN_GAME_BLUE);
+    conversions_test(PKMN_SPECIES_CHARMANDER, PKMN_GAME_SILVER, PKMN_GAME_BLUE);
 }
 
 void gba_conversions_test()
 {
     // GBA -> GBA
-    conversions_test("Torchic", PKMN_GAME_RUBY, PKMN_GAME_SAPPHIRE);
-    conversions_test("Mudkip", PKMN_GAME_RUBY, PKMN_GAME_EMERALD);
-    conversions_test("Treecko", PKMN_GAME_RUBY, PKMN_GAME_FIRERED);
-    conversions_test("Torchic", PKMN_GAME_EMERALD, PKMN_GAME_SAPPHIRE);
-    conversions_test("Mudkip", PKMN_GAME_EMERALD, PKMN_GAME_EMERALD);
-    conversions_test("Treecko", PKMN_GAME_EMERALD, PKMN_GAME_FIRERED);
-    conversions_test("Charmander", PKMN_GAME_FIRERED, PKMN_GAME_SAPPHIRE);
-    conversions_test("Squirtle", PKMN_GAME_FIRERED, PKMN_GAME_EMERALD);
-    conversions_test("Bulbasaur", PKMN_GAME_FIRERED, PKMN_GAME_FIRERED);
+    conversions_test(PKMN_SPECIES_TORCHIC, PKMN_GAME_RUBY, PKMN_GAME_SAPPHIRE);
+    conversions_test(PKMN_SPECIES_MUDKIP, PKMN_GAME_RUBY, PKMN_GAME_EMERALD);
+    conversions_test(PKMN_SPECIES_TREECKO, PKMN_GAME_RUBY, PKMN_GAME_FIRERED);
+    conversions_test(PKMN_SPECIES_TORCHIC, PKMN_GAME_EMERALD, PKMN_GAME_SAPPHIRE);
+    conversions_test(PKMN_SPECIES_MUDKIP, PKMN_GAME_EMERALD, PKMN_GAME_EMERALD);
+    conversions_test(PKMN_SPECIES_TREECKO, PKMN_GAME_EMERALD, PKMN_GAME_FIRERED);
+    conversions_test(PKMN_SPECIES_CHARMANDER, PKMN_GAME_FIRERED, PKMN_GAME_SAPPHIRE);
+    conversions_test(PKMN_SPECIES_SQUIRTLE, PKMN_GAME_FIRERED, PKMN_GAME_EMERALD);
+    conversions_test(PKMN_SPECIES_BULBASAUR, PKMN_GAME_FIRERED, PKMN_GAME_FIRERED);
 
     // GBA -> GCN
-    conversions_test("Eevee", PKMN_GAME_RUBY, PKMN_GAME_COLOSSEUM);
-    conversions_test("Espeon", PKMN_GAME_EMERALD, PKMN_GAME_COLOSSEUM);
-    conversions_test("Umbreon", PKMN_GAME_FIRERED, PKMN_GAME_COLOSSEUM);
-    conversions_test("Eevee", PKMN_GAME_RUBY, PKMN_GAME_XD);
-    conversions_test("Espeon", PKMN_GAME_EMERALD, PKMN_GAME_XD);
-    conversions_test("Umbreon", PKMN_GAME_FIRERED, PKMN_GAME_XD);
+    conversions_test(PKMN_SPECIES_EEVEE, PKMN_GAME_RUBY, PKMN_GAME_COLOSSEUM);
+    conversions_test(PKMN_SPECIES_ESPEON, PKMN_GAME_EMERALD, PKMN_GAME_COLOSSEUM);
+    conversions_test(PKMN_SPECIES_UMBREON, PKMN_GAME_FIRERED, PKMN_GAME_COLOSSEUM);
+    conversions_test(PKMN_SPECIES_EEVEE, PKMN_GAME_RUBY, PKMN_GAME_XD);
+    conversions_test(PKMN_SPECIES_ESPEON, PKMN_GAME_EMERALD, PKMN_GAME_XD);
+    conversions_test(PKMN_SPECIES_UMBREON, PKMN_GAME_FIRERED, PKMN_GAME_XD);
 }
 
 void gcn_conversions_test()
 {
     // GCN -> GBA
-    conversions_test("Eevee", PKMN_GAME_COLOSSEUM, PKMN_GAME_SAPPHIRE);
-    conversions_test("Espeon", PKMN_GAME_COLOSSEUM, PKMN_GAME_EMERALD);
-    conversions_test("Umbreon", PKMN_GAME_COLOSSEUM, PKMN_GAME_LEAFGREEN);
-    conversions_test("Eevee", PKMN_GAME_XD, PKMN_GAME_SAPPHIRE);
-    conversions_test("Espeon", PKMN_GAME_XD, PKMN_GAME_EMERALD);
-    conversions_test("Umbreon", PKMN_GAME_XD, PKMN_GAME_LEAFGREEN);
+    conversions_test(PKMN_SPECIES_EEVEE, PKMN_GAME_COLOSSEUM, PKMN_GAME_SAPPHIRE);
+    conversions_test(PKMN_SPECIES_ESPEON, PKMN_GAME_COLOSSEUM, PKMN_GAME_EMERALD);
+    conversions_test(PKMN_SPECIES_UMBREON, PKMN_GAME_COLOSSEUM, PKMN_GAME_LEAFGREEN);
+    conversions_test(PKMN_SPECIES_EEVEE, PKMN_GAME_XD, PKMN_GAME_SAPPHIRE);
+    conversions_test(PKMN_SPECIES_ESPEON, PKMN_GAME_XD, PKMN_GAME_EMERALD);
+    conversions_test(PKMN_SPECIES_UMBREON, PKMN_GAME_XD, PKMN_GAME_LEAFGREEN);
 
     // GCN -> GCN
-    conversions_test("Vaporeon", PKMN_GAME_COLOSSEUM, PKMN_GAME_COLOSSEUM);
-    conversions_test("Jolteon", PKMN_GAME_COLOSSEUM, PKMN_GAME_XD);
-    conversions_test("Vaporeon", PKMN_GAME_XD, PKMN_GAME_XD);
-    conversions_test("Jolteon", PKMN_GAME_XD, PKMN_GAME_COLOSSEUM);
+    conversions_test(PKMN_SPECIES_VAPOREON, PKMN_GAME_COLOSSEUM, PKMN_GAME_COLOSSEUM);
+    conversions_test(PKMN_SPECIES_JOLTEON, PKMN_GAME_COLOSSEUM, PKMN_GAME_XD);
+    conversions_test(PKMN_SPECIES_VAPOREON, PKMN_GAME_XD, PKMN_GAME_XD);
+    conversions_test(PKMN_SPECIES_JOLTEON, PKMN_GAME_XD, PKMN_GAME_COLOSSEUM);
 }

@@ -11,7 +11,7 @@
 
 static const struct pkmn_pokemon empty_pokemon =
 {
-    .p_species = NULL,
+    .species = PKMN_SPECIES_NONE,
     .game = PKMN_GAME_NONE,
     .p_internal = NULL
 };
@@ -24,7 +24,7 @@ static void gender_test(enum pkmn_game game)
     // Single-gender
     struct pkmn_pokemon nidorina = empty_pokemon;
     error = pkmn_pokemon_init(
-                "Nidorina",
+                PKMN_SPECIES_NIDORINA,
                 game,
                 "",
                 50,
@@ -62,7 +62,7 @@ static void gender_test(enum pkmn_game game)
 
     struct pkmn_pokemon nidorino = empty_pokemon;
     error = pkmn_pokemon_init(
-                "Nidorino",
+                PKMN_SPECIES_NIDORINO,
                 game,
                 "",
                 50,
@@ -100,7 +100,7 @@ static void gender_test(enum pkmn_game game)
 
     struct pkmn_pokemon magnemite = empty_pokemon;
     error = pkmn_pokemon_init(
-                "Magnemite",
+                PKMN_SPECIES_MAGNEMITE,
                 game,
                 "",
                 50,
@@ -136,17 +136,17 @@ static void gender_test(enum pkmn_game game)
     PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_NULL(magnemite.p_internal);
 
-    static const char* mixed_pokemon[] =
+    static const enum pkmn_species mixed_pokemon[] =
     {
-        "Charmander", // 87.% male
-        "Growlithe",  // 75% male
-        "Pidgey",     // 50% male
-        "Vulpix",     // 25% male
-        NULL
+        PKMN_SPECIES_CHARMANDER, // 87.% male
+        PKMN_SPECIES_GROWLITHE,  // 75% male
+        PKMN_SPECIES_PIDGEY,     // 50% male
+        PKMN_SPECIES_VULPIX,     // 25% male
+        PKMN_SPECIES_NONE
     };
 
     for(size_t pokemon_index = 0;
-        mixed_pokemon[pokemon_index];
+        mixed_pokemon[pokemon_index] != PKMN_SPECIES_NONE;
         ++pokemon_index)
     {
         struct pkmn_pokemon pokemon = empty_pokemon;

@@ -684,9 +684,9 @@ TEST(cpp_to_c_test, pokemon_entries_cpp_to_c_test)
 {
     pkmn::database::pokemon_entries_t pokemon_entries_cpp =
     {
-        pkmn::database::pokemon_entry("Charmander", pkmn::e_game::RED, ""),
-        pkmn::database::pokemon_entry("Totodile", pkmn::e_game::GOLD, ""),
-        pkmn::database::pokemon_entry("Treecko", pkmn::e_game::RUBY, "")
+        pkmn::database::pokemon_entry(pkmn::e_species::CHARMANDER, pkmn::e_game::RED, ""),
+        pkmn::database::pokemon_entry(pkmn::e_species::TOTODILE, pkmn::e_game::GOLD, ""),
+        pkmn::database::pokemon_entry(pkmn::e_species::TREECKO, pkmn::e_game::RUBY, "")
     };
 
     struct pkmn_string_list string_list_c = { NULL, 0 };
@@ -712,13 +712,13 @@ TEST(cpp_to_c_test, pokemon_list_cpp_to_c)
     pkmn::pokemon_list_t pokemon_list_cpp =
     {
         pkmn::pokemon::make(
-            "Charmander", pkmn::e_game::RED, "", 5
+            pkmn::e_species::CHARMANDER, pkmn::e_game::RED, "", 5
         ),
         pkmn::pokemon::make(
-            "Squirtle", pkmn::e_game::BLUE, "", 10
+            pkmn::e_species::SQUIRTLE, pkmn::e_game::BLUE, "", 10
         ),
         pkmn::pokemon::make(
-            "Bulbasaur", pkmn::e_game::YELLOW, "", 15
+            pkmn::e_species::BULBASAUR, pkmn::e_game::YELLOW, "", 15
         )
     };
 
@@ -734,13 +734,13 @@ TEST(cpp_to_c_test, pokemon_list_cpp_to_c)
     {
         int level_c = 0;
 
-        EXPECT_STREQ(
-            pokemon_list_cpp[i]->get_species().c_str(),
-            pokemon_list_c.p_pokemon[i].p_species
+        EXPECT_EQ(
+            int(pokemon_list_cpp[i]->get_species()),
+            pokemon_list_c.p_pokemon[i].species
         );
         EXPECT_EQ(
             int(pokemon_list_cpp[i]->get_game()),
-            (pokemon_list_c.p_pokemon[i].game)
+            pokemon_list_c.p_pokemon[i].game
         );
 
         error = pkmn_pokemon_get_level(

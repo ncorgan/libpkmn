@@ -38,7 +38,7 @@ ADD_SUBDIRECTORY(cpp)
 # C tests
 #
 IF(PKMN_ENABLE_C)
-    #    ADD_SUBDIRECTORY(c)
+    ADD_SUBDIRECTORY(c)
 ENDIF()
 
 #
