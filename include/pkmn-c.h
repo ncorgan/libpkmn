@@ -25,6 +25,8 @@
 
 #include <pkmn-c/database.h>
 
+#include <pkmn-c/enums.h>
+
 #include <pkmn-c/gui/spinda.h>
 
 #include <pkmn-c/types.h>

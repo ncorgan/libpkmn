@@ -24,6 +24,7 @@ IF(NOT PKMN_DONT_INSTALL_HEADERS)
         config.h
         database.h
         daycare.h
+        enums.h
         error.h
         game_save.h
         item_bag.h

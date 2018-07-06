@@ -59,10 +59,6 @@ static void ability_list_test()
         abilities.p_enums[abilities.length-1]
     );
 
-    pkmn_ability_enum_list_free(&abilities);
-    TEST_ASSERT_NULL(abilities.p_enums);
-    TEST_ASSERT_EQUAL(0, abilities.length);
-
     // Strings
 
     error = pkmn_database_ability_name_list(
@@ -85,9 +81,36 @@ static void ability_list_test()
         ability_names.pp_strings[ability_names.length-1]
     );
 
+    // Make sure lists match.
+
+    TEST_ASSERT_EQUAL(abilities.length, ability_names.length);
+    for(size_t ability_index = 0;
+        ability_index < abilities.length;
+        ++ability_index)
+    {
+        enum pkmn_ability converted_ability = PKMN_ABILITY_NONE;
+
+        error = pkmn_string_to_ability(
+                    ability_names.pp_strings[ability_index],
+                    &converted_ability
+                );
+        PKMN_TEST_ASSERT_SUCCESS(error);
+        TEST_ASSERT_EQUAL_MESSAGE(
+            abilities.p_enums[ability_index],
+            converted_ability,
+            ability_names.pp_strings[ability_index]
+        );
+    }
+
+    // Clean up.
+
     pkmn_string_list_free(&ability_names);
     TEST_ASSERT_NULL(ability_names.pp_strings);
     TEST_ASSERT_EQUAL(0, ability_names.length);
+
+    pkmn_ability_enum_list_free(&abilities);
+    TEST_ASSERT_NULL(abilities.p_enums);
+    TEST_ASSERT_EQUAL(0, abilities.length);
 }
 
 static void game_list_test()
@@ -139,10 +162,6 @@ static void game_list_test()
         games.p_enums[games.length-1]
     );
 
-    pkmn_game_enum_list_free(&games);
-    TEST_ASSERT_NULL(games.p_enums);
-    TEST_ASSERT_EQUAL(0, games.length);
-
     // Strings
 
     error = pkmn_database_game_name_list(
@@ -162,9 +181,36 @@ static void game_list_test()
         game_names.pp_strings[game_names.length-1]
     );
 
+    // Make sure lists match.
+
+    TEST_ASSERT_EQUAL(games.length, game_names.length);
+    for(size_t game_index = 0;
+        game_index < games.length;
+        ++game_index)
+    {
+        enum pkmn_game converted_game = PKMN_GAME_NONE;
+
+        error = pkmn_string_to_game(
+                    game_names.pp_strings[game_index],
+                    &converted_game
+                );
+        PKMN_TEST_ASSERT_SUCCESS(error);
+        TEST_ASSERT_EQUAL_MESSAGE(
+            games.p_enums[game_index],
+            converted_game,
+            game_names.pp_strings[game_index]
+        );
+    }
+
+    // Clean up.
+
     pkmn_string_list_free(&game_names);
     TEST_ASSERT_NULL(game_names.pp_strings);
     TEST_ASSERT_EQUAL(0, game_names.length);
+
+    pkmn_game_enum_list_free(&games);
+    TEST_ASSERT_NULL(games.p_enums);
+    TEST_ASSERT_EQUAL(0, games.length);
 }
 
 static void gamecube_shadow_pokemon_list_test()
@@ -212,10 +258,6 @@ static void gamecube_shadow_pokemon_list_test()
         gamecube_shadow_pokemon.length
     );
 
-    pkmn_species_enum_list_free(&gamecube_shadow_pokemon);
-    TEST_ASSERT_NULL(gamecube_shadow_pokemon.p_enums);
-    TEST_ASSERT_EQUAL(0, gamecube_shadow_pokemon.length);
-
     // Strings
 
     error = pkmn_database_gamecube_shadow_pokemon_name_list(
@@ -244,9 +286,39 @@ static void gamecube_shadow_pokemon_list_test()
         gamecube_shadow_pokemon_names.length
     );
 
+    // Make sure lists match.
+
+    TEST_ASSERT_EQUAL(
+        gamecube_shadow_pokemon.length,
+        gamecube_shadow_pokemon_names.length
+    );
+    for(size_t gamecube_shadow_pokemon_index = 0;
+        gamecube_shadow_pokemon_index < gamecube_shadow_pokemon.length;
+        ++gamecube_shadow_pokemon_index)
+    {
+        enum pkmn_species converted_species = PKMN_SPECIES_NONE;
+
+        error = pkmn_string_to_species(
+                    gamecube_shadow_pokemon_names.pp_strings[gamecube_shadow_pokemon_index],
+                    &converted_species
+                );
+        PKMN_TEST_ASSERT_SUCCESS(error);
+        TEST_ASSERT_EQUAL_MESSAGE(
+            gamecube_shadow_pokemon.p_enums[gamecube_shadow_pokemon_index],
+            converted_species,
+            gamecube_shadow_pokemon_names.pp_strings[gamecube_shadow_pokemon_index]
+        );
+    }
+
+    // Clean up.
+
     pkmn_string_list_free(&gamecube_shadow_pokemon_names);
     TEST_ASSERT_NULL(gamecube_shadow_pokemon_names.pp_strings);
     TEST_ASSERT_EQUAL(0, gamecube_shadow_pokemon_names.length);
+
+    pkmn_species_enum_list_free(&gamecube_shadow_pokemon);
+    TEST_ASSERT_NULL(gamecube_shadow_pokemon.p_enums);
+    TEST_ASSERT_EQUAL(0, gamecube_shadow_pokemon.length);
 }
 
 static void hm_move_list_test()
