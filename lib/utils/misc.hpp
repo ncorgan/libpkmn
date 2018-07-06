@@ -33,11 +33,11 @@ namespace pkmn {
 
     template <typename ptr_type>
     static void inline rcast_equal(
-        void* src_ptr,
+        const void* src_ptr,
         void* dst_ptr
     )
     {
-        *reinterpret_cast<ptr_type*>(dst_ptr) = *reinterpret_cast<ptr_type*>(src_ptr);
+        *reinterpret_cast<ptr_type*>(dst_ptr) = *reinterpret_cast<const ptr_type*>(src_ptr);
     }
 
     template <typename map_type, typename key_type = std::string>

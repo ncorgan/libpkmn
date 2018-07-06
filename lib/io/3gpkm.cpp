@@ -87,7 +87,7 @@ namespace pkmn { namespace io {
         }
 
         return std::make_shared<pokemon_gbaimpl>(
-                   *reinterpret_cast<const struct pksav_gba_pc_pokemon*>(buffer.data()),
+                   reinterpret_cast<const struct pksav_gba_pc_pokemon*>(buffer.data()),
                    game_id
                );
     }

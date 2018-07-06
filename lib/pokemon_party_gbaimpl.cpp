@@ -20,47 +20,34 @@
 #include <cstring>
 #include <stdexcept>
 
-#define NATIVE_LIST_RCAST (reinterpret_cast<struct pksav_gba_pokemon_party*>(_native))
-
 namespace pkmn {
 
     pokemon_party_gbaimpl::pokemon_party_gbaimpl(
-        int game_id
-    ): pokemon_party_impl(game_id)
-    {
-        _native = reinterpret_cast<void*>(new struct pksav_gba_pokemon_party);
-        std::memset(_native, 0, sizeof(struct pksav_gba_pokemon_party));
-        _our_mem = true;
-
-        _from_native();
-    }
-
-    pokemon_party_gbaimpl::pokemon_party_gbaimpl(
         int game_id,
-        struct pksav_gba_pokemon_party* native
+        struct pksav_gba_pokemon_party* p_native
     ): pokemon_party_impl(game_id)
     {
-        _native = reinterpret_cast<void*>(native);
-        _our_mem = false;
+        if(p_native != nullptr)
+        {
+            _pksav_party = *p_native;
+        }
+        else
+        {
+            std::memset(
+                &_pksav_party,
+                0,
+                sizeof(_pksav_party)
+            );
+        }
 
         _from_native();
-    }
-
-    pokemon_party_gbaimpl::~pokemon_party_gbaimpl()
-    {
-        boost::lock_guard<pokemon_party_gbaimpl> lock(*this);
-
-        if(_our_mem)
-        {
-            delete NATIVE_LIST_RCAST;
-        }
     }
 
     int pokemon_party_gbaimpl::get_num_pokemon()
     {
         boost::lock_guard<pokemon_party_gbaimpl> lock(*this);
 
-        return int(pksav_littleendian32(NATIVE_LIST_RCAST->count));
+        return int(pksav_littleendian32(_pksav_party.count));
     }
 
     void pokemon_party_gbaimpl::set_pokemon(
@@ -69,15 +56,11 @@ namespace pkmn {
     )
     {
         int num_pokemon = get_num_pokemon();
-        int max_index = std::min<int>(PARTY_SIZE-1, num_pokemon);
+        int max_index = std::min<int>(PKSAV_GBA_PARTY_NUM_POKEMON-1, num_pokemon);
 
         pkmn::enforce_bounds("Party index", index, 0, max_index);
 
-        if(_pokemon_list.at(index)->get_native_pc_data() == new_pokemon->get_native_pc_data())
-        {
-            throw std::invalid_argument("Cannot set a Pokémon to itself.");
-        }
-        else if(index < (num_pokemon-1) and new_pokemon->get_species() == "None")
+        if(index < (num_pokemon-1) and new_pokemon->get_species() == "None")
         {
             throw std::invalid_argument("Parties store Pokémon contiguously.");
         }
@@ -95,49 +78,47 @@ namespace pkmn {
             actual_new_pokemon = new_pokemon->to_game(get_game());
         }
 
-        pokemon_impl* new_pokemon_impl_ptr = dynamic_cast<pokemon_impl*>(actual_new_pokemon.get());
-        pokemon_impl* old_party_pokemon_impl_ptr = dynamic_cast<pokemon_impl*>(_pokemon_list[index].get());
+        pokemon_gbaimpl* p_new_pokemon = dynamic_cast<pokemon_gbaimpl*>(
+                                                  actual_new_pokemon.get()
+                                              );
+        pokemon_gbaimpl* p_old_pokemon = dynamic_cast<pokemon_gbaimpl*>(
+                                                  _pokemon_list[index].get()
+                                              );
+        BOOST_ASSERT(p_new_pokemon != nullptr);
+        BOOST_ASSERT(p_old_pokemon != nullptr);
 
         // Make sure no one else is using the Pokémon variables.
-        boost::lock_guard<pokemon_impl> new_pokemon_lock(*new_pokemon_impl_ptr);
-        old_party_pokemon_impl_ptr->lock();
+        boost::lock_guard<pokemon_gbaimpl> new_pokemon_lock(*p_new_pokemon);
+        p_old_pokemon->lock();
 
         // Copy the underlying memory to the party. At the end of this process,
         // all existing variables will correspond to the same Pokémon, even if
         // their underlying memory has changed.
-
-        // Make a copy of the current Pokémon in the given party slot so it can be preserved in an sptr
-        // that owns its own memory.
-        copy_party_pokemon<struct pksav_gba_pc_pokemon, struct pksav_gba_pokemon_party_data>(index);
-
-        // Copy the new Pokémon's internals into the party's internals and create a new sptr.
-        void* new_pokemon_native_pc_ptr = new_pokemon_impl_ptr->_native_pc;
-        void* new_pokemon_native_party_ptr = new_pokemon_impl_ptr->_native_party;
-
-        // Unlock the old Pokémon's mutex is unlocked before it's destructor is called.
-        old_party_pokemon_impl_ptr->unlock();
-
-        NATIVE_LIST_RCAST->party[index].pc_data = *reinterpret_cast<struct pksav_gba_pc_pokemon*>(new_pokemon_native_pc_ptr);
-        NATIVE_LIST_RCAST->party[index].party_data = *reinterpret_cast<struct pksav_gba_pokemon_party_data*>(new_pokemon_native_party_ptr);
+        //
+        // Note: as we control the implementation, we know the PC data points
+        // to the whole Pokémon data structure.
+        rcast_equal<struct pksav_gba_party_pokemon>(
+            actual_new_pokemon->get_native_pc_data(),
+            &_pksav_party.party[index]
+        );
         _pokemon_list[index] = std::make_shared<pokemon_gbaimpl>(
-                                   &NATIVE_LIST_RCAST->party[index],
+                                   &_pksav_party.party[index],
                                    _game_id
                                );
-
         // Update the number of Pokémon in the party if needed.
         std::string new_species = new_pokemon->get_species();
         if(index == num_pokemon)
         {
-            if(pksav_littleendian16(NATIVE_LIST_RCAST->party[index].pc_data.blocks.growth.species) > 0 and new_species != "None")
+            if((pksav_littleendian16(_pksav_party.party[index].pc_data.blocks.growth.species) > 0) && (new_species != "None"))
             {
-                NATIVE_LIST_RCAST->count = pksav_littleendian32(pksav_littleendian32(NATIVE_LIST_RCAST->count)+1);
+                _pksav_party.count = pksav_littleendian32(_pksav_party.count)+1;
             }
         }
         else if(index == (num_pokemon-1))
         {
-            if(pksav_littleendian16(NATIVE_LIST_RCAST->party[index].pc_data.blocks.growth.species) == 0 and new_species == "None")
+            if((pksav_littleendian16(_pksav_party.party[index].pc_data.blocks.growth.species) == 0) && (new_species == "None"))
             {
-                NATIVE_LIST_RCAST->count = pksav_littleendian32(pksav_littleendian32(NATIVE_LIST_RCAST->count)-1);
+                _pksav_party.count = pksav_littleendian32(_pksav_party.count)-1;
             }
         }
 
@@ -147,7 +128,7 @@ namespace pkmn {
         {
             std::string species = new_pokemon->get_species();
 
-            if((species != "None") and (not new_pokemon->is_egg()))
+            if((species != "None") && !new_pokemon->is_egg())
             {
                 _pokedex->set_has_seen(species, true);
                 _pokedex->set_has_caught(species, true);
@@ -158,23 +139,23 @@ namespace pkmn {
     void pokemon_party_gbaimpl::_from_native()
     {
         // This shouldn't resize if the vector is populated.
-        _pokemon_list.resize(PARTY_SIZE);
+        _pokemon_list.resize(PKSAV_GBA_PARTY_NUM_POKEMON);
 
         int num_pokemon = get_num_pokemon();
 
-        for(int i = 0; i < PARTY_SIZE; ++i)
+        for(int i = 0; i < PKSAV_GBA_PARTY_NUM_POKEMON; ++i)
         {
             /*
              * Memory is not necessarily zeroed-out past the num_pokemon point,
              * so we'll do it ourselves.
              */
-            if(i >= num_pokemon and pksav_littleendian16(NATIVE_LIST_RCAST->party[i].pc_data.blocks.growth.species) > 0)
+            if(i >= num_pokemon and pksav_littleendian16(_pksav_party.party[i].pc_data.blocks.growth.species) > 0)
             {
-                std::memset(&NATIVE_LIST_RCAST->party[i], 0, sizeof(struct pksav_gba_party_pokemon));
+                std::memset(&_pksav_party.party[i], 0, sizeof(struct pksav_gba_party_pokemon));
             }
 
             _pokemon_list[i] = std::make_shared<pokemon_gbaimpl>(
-                                   &NATIVE_LIST_RCAST->party[i],
+                                   &_pksav_party.party[i],
                                    _game_id
                                );
         }

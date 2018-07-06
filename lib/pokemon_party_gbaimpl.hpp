@@ -13,18 +13,14 @@
 
 namespace pkmn {
 
-    class pokemon_party_gbaimpl: public pokemon_party_impl {
+    class pokemon_party_gbaimpl: public pokemon_party_impl
+    {
         public:
-            pokemon_party_gbaimpl() {}
-            explicit pokemon_party_gbaimpl(
-                int game_id
-            );
             pokemon_party_gbaimpl(
                 int game_id,
-                struct pksav_gba_pokemon_party* native
+                struct pksav_gba_pokemon_party* p_native = nullptr
             );
-
-            ~pokemon_party_gbaimpl();
+            ~pokemon_party_gbaimpl() = default;
 
             int get_num_pokemon() final;
 
@@ -34,6 +30,8 @@ namespace pkmn {
             ) final;
 
         private:
+
+            struct pksav_gba_pokemon_party _pksav_party;
 
             void _from_native() final;
     };

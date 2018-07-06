@@ -25,23 +25,22 @@ namespace pkmn {
                 int level
             );
             pokemon_gen2impl(
-                struct pksav_gen2_pc_pokemon* pc,
+                const struct pksav_gen2_pc_pokemon* p_pc_pokemon,
                 int game_id
             );
             pokemon_gen2impl(
-                struct pksav_gen2_party_pokemon* party,
-                int game_id
-            );
-            pokemon_gen2impl(
-                const struct pksav_gen2_pc_pokemon& pc,
-                int game_id
-            );
-            pokemon_gen2impl(
-                const struct pksav_gen2_party_pokemon& party,
+                const struct pksav_gen2_party_pokemon* p_party_pokemon,
                 int game_id
             );
 
-            ~pokemon_gen2impl();
+            // TODO
+            pokemon_gen2impl(const pokemon_gen2impl&) = delete;
+            pokemon_gen2impl(pokemon_gen2impl&&) = delete;
+
+            pokemon_gen2impl& operator=(const pokemon_gen2impl&) = delete;
+            pokemon_gen2impl& operator=(pokemon_gen2impl&&) = delete;
+
+            ~pokemon_gen2impl() = default;
 
             pokemon::sptr to_game(
                 const std::string& game
@@ -251,6 +250,8 @@ namespace pkmn {
             void _set_unown_IVs_from_form(
                 const std::string& form
             );
+
+            struct pksav_gen2_party_pokemon _pksav_pokemon;
 
             std::string _nickname, _trainer_name;
 

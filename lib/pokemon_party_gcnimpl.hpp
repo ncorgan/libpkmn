@@ -11,24 +11,18 @@
 
 #include "libpkmgc_includes.hpp"
 
+#include <vector>
+
 namespace pkmn {
 
-    typedef struct {
-        LibPkmGC::GC::Pokemon* pokemon[PARTY_SIZE];
-    } gcn_pokemon_party_t;
-
-    class pokemon_party_gcnimpl: public pokemon_party_impl {
+    class pokemon_party_gcnimpl: public pokemon_party_impl
+    {
         public:
-            pokemon_party_gcnimpl() {}
-            explicit pokemon_party_gcnimpl(
-                int game_id
-            );
             pokemon_party_gcnimpl(
                 int game_id,
-                LibPkmGC::GC::Pokemon** native
+                LibPkmGC::GC::Pokemon** pp_libpkmgc_native = nullptr
             );
-
-            ~pokemon_party_gcnimpl();
+            ~pokemon_party_gcnimpl() = default;
 
             int get_num_pokemon() final;
 
@@ -40,6 +34,7 @@ namespace pkmn {
         private:
 
             int _num_pokemon;
+            std::vector<std::unique_ptr<LibPkmGC::GC::Pokemon>> _libpkmgc_pokemon_uptrs;
 
             void _from_native() final;
     };

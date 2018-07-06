@@ -52,9 +52,6 @@
 #include <fstream>
 #include <stdexcept>
 
-#define GBA_PC_RCAST    (reinterpret_cast<struct pksav_gba_pc_pokemon*>(_native_pc))
-#define GBA_PARTY_RCAST (reinterpret_cast<struct pksav_gba_pokemon_party_data*>(_native_party))
-
 namespace fs = boost::filesystem;
 
 namespace pkmn
@@ -68,30 +65,27 @@ namespace pkmn
         int level
     ): pokemon_impl(std::move(database_entry))
     {
-        _native_pc  = reinterpret_cast<void*>(new struct pksav_gba_pc_pokemon);
-        std::memset(_native_pc, 0, sizeof(struct pksav_gba_pc_pokemon));
-        _our_pc_mem = true;
-
-        _native_party = reinterpret_cast<void*>(new struct pksav_gba_pokemon_party_data);
-        std::memset(_native_party, 0, sizeof(struct pksav_gba_pokemon_party_data));
-        _our_party_mem = true;
+        std::memset(&_pksav_pokemon, 0, sizeof(_pksav_pokemon));
 
         // Set block pointers
-        _growth  = &GBA_PC_RCAST->blocks.growth;
-        _attacks = &GBA_PC_RCAST->blocks.attacks;
-        _effort  = &GBA_PC_RCAST->blocks.effort;
-        _misc    = &GBA_PC_RCAST->blocks.misc;
+        _p_growth_block  = &_pksav_pokemon.pc_data.blocks.growth;
+        _p_attacks_block = &_pksav_pokemon.pc_data.blocks.attacks;
+        _p_effort_block  = &_pksav_pokemon.pc_data.blocks.effort;
+        _p_misc_block    = &_pksav_pokemon.pc_data.blocks.misc;
+
+        _native_pc    = &_pksav_pokemon.pc_data;
+        _native_party = &_pksav_pokemon.party_data;
 
         pkmn::rng<uint32_t> rng;
-        GBA_PC_RCAST->personality = rng.rand();
-        GBA_PC_RCAST->ot_id.id = pksav_littleendian32(DEFAULT_TRAINER_ID);
+        _pksav_pokemon.pc_data.personality = rng.rand();
+        _pksav_pokemon.pc_data.ot_id.id = pksav_littleendian32(DEFAULT_TRAINER_ID);
 
         PKSAV_CALL(
             pksav_gba_export_text(
                 boost::algorithm::to_upper_copy(
                     _database_entry.get_name()
                 ).c_str(),
-                GBA_PC_RCAST->nickname,
+                _pksav_pokemon.pc_data.nickname,
                 PKSAV_GBA_POKEMON_NICKNAME_LENGTH
             );
         )
@@ -101,31 +95,31 @@ namespace pkmn
         PKSAV_CALL(
             pksav_gba_export_text(
                 DEFAULT_TRAINER_NAME.c_str(),
-                GBA_PC_RCAST->otname,
+                _pksav_pokemon.pc_data.otname,
                 PKSAV_GBA_POKEMON_OTNAME_LENGTH
             );
         )
 
-        _growth->species = pksav_littleendian16(uint16_t(_database_entry.get_pokemon_index()));
-        _growth->exp = pksav_littleendian32(uint32_t(
+        _p_growth_block->species = pksav_littleendian16(uint16_t(_database_entry.get_pokemon_index()));
+        _p_growth_block->exp = pksav_littleendian32(uint32_t(
                            _database_entry.get_experience_at_level(level)
                        ));
-        _growth->friendship = uint8_t(_database_entry.get_base_friendship());
+        _p_growth_block->friendship = uint8_t(_database_entry.get_base_friendship());
 
         set_location_met("Fateful encounter", false);
         set_level_met(level);
         set_original_game(get_game());
         set_ball("Premier Ball");
 
-        _misc->iv_egg_ability = rng.rand();
-        _misc->iv_egg_ability &= ~PKSAV_GBA_POKEMON_EGG_MASK;
-        if(GBA_PC_RCAST->personality % 2)
+        _p_misc_block->iv_egg_ability = rng.rand();
+        _p_misc_block->iv_egg_ability &= ~PKSAV_GBA_POKEMON_EGG_MASK;
+        if(_pksav_pokemon.pc_data.personality % 2)
         {
-            _misc->iv_egg_ability |= PKSAV_GBA_POKEMON_ABILITY_MASK;
+            _p_misc_block->iv_egg_ability |= PKSAV_GBA_POKEMON_ABILITY_MASK;
         }
         else
         {
-            _misc->iv_egg_ability &= ~PKSAV_GBA_POKEMON_ABILITY_MASK;
+            _p_misc_block->iv_egg_ability &= ~PKSAV_GBA_POKEMON_ABILITY_MASK;
         }
 
         // Only do this by default for Mew or Deoxys, who won't obey without
@@ -134,21 +128,21 @@ namespace pkmn
         if((_database_entry.get_species_id() == MEW_ID) or
            (_database_entry.get_species_id() == DEOXYS_ID))
         {
-            _misc->ribbons_obedience |= PKSAV_GBA_POKEMON_OBEDIENCE_MASK;
+            _p_misc_block->ribbons_obedience |= PKSAV_GBA_POKEMON_OBEDIENCE_MASK;
         }
 
         // Populate abstractions
         _update_ribbons_map();
         _update_EV_map();
-        _init_modern_IV_map(&_misc->iv_egg_ability);
-        _init_contest_stat_map(&_effort->contest_stats);
-        _init_markings_map(&GBA_PC_RCAST->markings);
+        _init_modern_IV_map(&_p_misc_block->iv_egg_ability);
+        _init_contest_stat_map(&_p_effort_block->contest_stats);
+        _init_markings_map(&_pksav_pokemon.pc_data.markings);
         set_level(level);
         _init_default_moves_for_level();
 
         if(_database_entry.get_species_id() == UNOWN_ID)
         {
-            _growth->species = pksav_littleendian16(uint16_t(
+            _p_growth_block->species = pksav_littleendian16(uint16_t(
                                    _database_entry.get_pokemon_index()
                                ));
 
@@ -159,32 +153,33 @@ namespace pkmn
     }
 
     pokemon_gbaimpl::pokemon_gbaimpl(
-        struct pksav_gba_pc_pokemon* pc,
+        const struct pksav_gba_pc_pokemon* p_pc_pokemon,
         int game_id
     ): pokemon_impl(
-           pksav_littleendian16(pc->blocks.growth.species),
+           pksav_littleendian16(p_pc_pokemon->blocks.growth.species),
            game_id
        )
     {
-        _native_pc = reinterpret_cast<void*>(pc);
-        _our_pc_mem = false;
+        BOOST_ASSERT(p_pc_pokemon != nullptr);
 
-        _native_party = reinterpret_cast<void*>(new struct pksav_gba_pokemon_party_data);
+        _pksav_pokemon.pc_data = *p_pc_pokemon;
         _populate_party_data();
-        _our_party_mem = true;
 
         // Set block pointers
-        _growth  = &GBA_PC_RCAST->blocks.growth;
-        _attacks = &GBA_PC_RCAST->blocks.attacks;
-        _effort  = &GBA_PC_RCAST->blocks.effort;
-        _misc    = &GBA_PC_RCAST->blocks.misc;
+        _p_growth_block  = &_pksav_pokemon.pc_data.blocks.growth;
+        _p_attacks_block = &_pksav_pokemon.pc_data.blocks.attacks;
+        _p_effort_block  = &_pksav_pokemon.pc_data.blocks.effort;
+        _p_misc_block    = &_pksav_pokemon.pc_data.blocks.misc;
+
+        _native_pc    = &_pksav_pokemon.pc_data;
+        _native_party = &_pksav_pokemon.party_data;
 
         // Populate abstractions
         _update_ribbons_map();
         _update_EV_map();
-        _init_modern_IV_map(&_misc->iv_egg_ability);
-        _init_contest_stat_map(&_effort->contest_stats);
-        _init_markings_map(&GBA_PC_RCAST->markings);
+        _init_modern_IV_map(&_p_misc_block->iv_egg_ability);
+        _init_contest_stat_map(&_p_effort_block->contest_stats);
+        _init_markings_map(&_pksav_pokemon.pc_data.markings);
         _update_stat_map();
         _update_moves(-1);
 
@@ -197,31 +192,32 @@ namespace pkmn
     }
 
     pokemon_gbaimpl::pokemon_gbaimpl(
-        struct pksav_gba_party_pokemon* party,
+        const struct pksav_gba_party_pokemon* p_party_pokemon,
         int game_id
     ): pokemon_impl(
-           pksav_littleendian16(party->pc_data.blocks.growth.species),
+           pksav_littleendian16(p_party_pokemon->pc_data.blocks.growth.species),
            game_id
        )
     {
-        _native_pc = reinterpret_cast<void*>(&party->pc_data);
-        _our_pc_mem = false;
+        BOOST_ASSERT(p_party_pokemon != nullptr);
 
-        _native_party = reinterpret_cast<void*>(&party->party_data);
-        _our_party_mem = false;
+        _pksav_pokemon = *p_party_pokemon;
 
         // Set block pointers
-        _growth  = &GBA_PC_RCAST->blocks.growth;
-        _attacks = &GBA_PC_RCAST->blocks.attacks;
-        _effort  = &GBA_PC_RCAST->blocks.effort;
-        _misc    = &GBA_PC_RCAST->blocks.misc;
+        _p_growth_block  = &_pksav_pokemon.pc_data.blocks.growth;
+        _p_attacks_block = &_pksav_pokemon.pc_data.blocks.attacks;
+        _p_effort_block  = &_pksav_pokemon.pc_data.blocks.effort;
+        _p_misc_block    = &_pksav_pokemon.pc_data.blocks.misc;
+
+        _native_pc    = &_pksav_pokemon.pc_data;
+        _native_party = &_pksav_pokemon.party_data;
 
         // Populate abstractions
         _update_ribbons_map();
         _update_EV_map();
-        _init_modern_IV_map(&_misc->iv_egg_ability);
-        _init_contest_stat_map(&_effort->contest_stats);
-        _init_markings_map(&GBA_PC_RCAST->markings);
+        _init_modern_IV_map(&_p_misc_block->iv_egg_ability);
+        _init_contest_stat_map(&_p_effort_block->contest_stats);
+        _init_markings_map(&_pksav_pokemon.pc_data.markings);
         _update_stat_map();
         _update_moves(-1);
 
@@ -231,96 +227,6 @@ namespace pkmn
         }
 
         _register_attributes();
-    }
-
-    pokemon_gbaimpl::pokemon_gbaimpl(
-        const struct pksav_gba_pc_pokemon &pc,
-        int game_id
-    ): pokemon_impl(
-           pksav_littleendian16(pc.blocks.growth.species),
-           game_id
-       )
-    {
-        _native_pc = reinterpret_cast<void*>(new struct pksav_gba_pc_pokemon);
-        *GBA_PC_RCAST = pc;
-        _our_pc_mem = true;
-
-        _native_party = reinterpret_cast<void*>(new struct pksav_gba_pokemon_party_data);
-        _populate_party_data();
-        _our_party_mem = true;
-
-        // Set block pointers
-        _growth  = &GBA_PC_RCAST->blocks.growth;
-        _attacks = &GBA_PC_RCAST->blocks.attacks;
-        _effort  = &GBA_PC_RCAST->blocks.effort;
-        _misc    = &GBA_PC_RCAST->blocks.misc;
-
-        // Populate abstractions
-        _update_ribbons_map();
-        _update_EV_map();
-        _init_modern_IV_map(&_misc->iv_egg_ability);
-        _init_contest_stat_map(&_effort->contest_stats);
-        _init_markings_map(&GBA_PC_RCAST->markings);
-        _update_stat_map();
-        _update_moves(-1);
-
-        if(_database_entry.get_species_id() == UNOWN_ID)
-        {
-            _set_unown_personality_from_form();
-        }
-
-        _register_attributes();
-    }
-
-    pokemon_gbaimpl::pokemon_gbaimpl(
-        const struct pksav_gba_party_pokemon &party,
-        int game_id
-    ): pokemon_impl(
-           pksav_littleendian16(party.pc_data.blocks.growth.species),
-           game_id
-       )
-    {
-        _native_pc = reinterpret_cast<void*>(new struct pksav_gba_pc_pokemon);
-        *GBA_PC_RCAST = party.pc_data;
-        _our_pc_mem = true;
-
-        _native_party = reinterpret_cast<void*>(new struct pksav_gba_pokemon_party_data);
-        *GBA_PARTY_RCAST = party.party_data;
-        _our_party_mem = true;
-
-        // Set block pointers
-        _growth  = &GBA_PC_RCAST->blocks.growth;
-        _attacks = &GBA_PC_RCAST->blocks.attacks;
-        _effort  = &GBA_PC_RCAST->blocks.effort;
-        _misc    = &GBA_PC_RCAST->blocks.misc;
-
-        // Populate abstractions
-        _update_ribbons_map();
-        _update_EV_map();
-        _init_modern_IV_map(&_misc->iv_egg_ability);
-        _init_contest_stat_map(&_effort->contest_stats);
-        _init_markings_map(&GBA_PC_RCAST->markings);
-        _update_stat_map();
-        _update_moves(-1);
-
-        if(_database_entry.get_species_id() == UNOWN_ID)
-        {
-            _set_unown_personality_from_form();
-        }
-
-        _register_attributes();
-    }
-
-    pokemon_gbaimpl::~pokemon_gbaimpl()
-    {
-        if(_our_pc_mem)
-        {
-            delete GBA_PC_RCAST;
-        }
-        if(_our_party_mem)
-        {
-            delete GBA_PARTY_RCAST;
-        }
     }
 
     pokemon::sptr pokemon_gbaimpl::to_game(
@@ -330,10 +236,6 @@ namespace pkmn
         boost::lock_guard<pokemon_gbaimpl> lock(*this);
 
         pkmn::pokemon::sptr ret;
-
-        struct pksav_gba_party_pokemon pksav_pokemon;
-        pksav_pokemon.pc_data = *GBA_PC_RCAST;
-        pksav_pokemon.party_data = *GBA_PARTY_RCAST;
 
         int game_id = pkmn::database::game_name_to_id(game);
         int generation = pkmn::database::game_id_to_generation(game_id);
@@ -346,24 +248,30 @@ namespace pkmn
                     {
                         LibPkmGC::Colosseum::Pokemon colosseum_pokemon;
                         pkmn::conversions::gba_party_pokemon_to_gcn(
-                            &pksav_pokemon,
+                            &_pksav_pokemon,
                             &colosseum_pokemon
                         );
-                        ret = std::make_shared<pokemon_gcnimpl>(colosseum_pokemon);
+                        ret = std::make_shared<pokemon_gcnimpl>(
+                                  &colosseum_pokemon,
+                                  game_id
+                              );
                     }
                     else
                     {
                         LibPkmGC::XD::Pokemon xd_pokemon;
                         pkmn::conversions::gba_party_pokemon_to_gcn(
-                            &pksav_pokemon,
+                            &_pksav_pokemon,
                             &xd_pokemon
                         );
-                        ret = std::make_shared<pokemon_gcnimpl>(xd_pokemon);
+                        ret = std::make_shared<pokemon_gcnimpl>(
+                                  &xd_pokemon,
+                                  game_id
+                              );
                     }
                 }
                 else
                 {
-                    ret = std::make_shared<pokemon_gbaimpl>(pksav_pokemon, game_id);
+                    ret = std::make_shared<pokemon_gbaimpl>(&_pksav_pokemon, game_id);
                     ret->set_level_met(get_level());
                     ret->set_original_game(get_game());
                 }
@@ -408,7 +316,7 @@ namespace pkmn
 
         _database_entry.set_form(form);
 
-        _growth->species = pksav_littleendian16(uint16_t(_database_entry.get_pokemon_index()));
+        _p_growth_block->species = pksav_littleendian16(uint16_t(_database_entry.get_pokemon_index()));
 
         if(_database_entry.get_species_id() == UNOWN_ID)
         {
@@ -420,7 +328,7 @@ namespace pkmn
     {
         boost::lock_guard<pokemon_gbaimpl> lock(*this);
 
-        return bool(_misc->iv_egg_ability & PKSAV_GBA_POKEMON_EGG_MASK);
+        return bool(_p_misc_block->iv_egg_ability & PKSAV_GBA_POKEMON_EGG_MASK);
     }
 
     void pokemon_gbaimpl::set_is_egg(
@@ -431,11 +339,11 @@ namespace pkmn
 
         if(is_egg)
         {
-            _misc->iv_egg_ability |= PKSAV_GBA_POKEMON_EGG_MASK;
+            _p_misc_block->iv_egg_ability |= PKSAV_GBA_POKEMON_EGG_MASK;
         }
         else
         {
-            _misc->iv_egg_ability &= ~PKSAV_GBA_POKEMON_EGG_MASK;
+            _p_misc_block->iv_egg_ability &= ~PKSAV_GBA_POKEMON_EGG_MASK;
         }
     }
 
@@ -451,7 +359,7 @@ namespace pkmn
         const pksav::condition_mask_bimap_t& condition_mask_bimap = pksav::get_condition_mask_bimap();
         for(const auto& condition_mask_iter: condition_mask_bimap.right)
         {
-            if(GBA_PARTY_RCAST->condition & condition_mask_iter.first)
+            if(_pksav_pokemon.party_data.condition & condition_mask_iter.first)
             {
                 ret = condition_mask_iter.second;
                 break;
@@ -474,16 +382,16 @@ namespace pkmn
 
         boost::lock_guard<pokemon_gbaimpl> lock(*this);
 
-        GBA_PARTY_RCAST->condition = 0;
+        _pksav_pokemon.party_data.condition = 0;
 
         if(condition == "Asleep")
         {
             // Sleep is stored as the number of turns asleep, so set a random value.
-            GBA_PARTY_RCAST->condition = pksav_littleendian32(pkmn::rng<uint32_t>().rand(1, 7));
+            _pksav_pokemon.party_data.condition = pksav_littleendian32(pkmn::rng<uint32_t>().rand(1, 7));
         }
         else
         {
-            GBA_PARTY_RCAST->condition = pksav_littleendian32(condition_mask_bimap.left.at(condition));
+            _pksav_pokemon.party_data.condition = pksav_littleendian32(condition_mask_bimap.left.at(condition));
         }
     }
 
@@ -495,7 +403,7 @@ namespace pkmn
         char nickname[PKSAV_GBA_POKEMON_NICKNAME_LENGTH + 1] = {0};
         PKSAV_CALL(
             pksav_gba_import_text(
-                GBA_PC_RCAST->nickname,
+                _pksav_pokemon.pc_data.nickname,
                 nickname,
                 PKSAV_GBA_POKEMON_NICKNAME_LENGTH
             );
@@ -520,7 +428,7 @@ namespace pkmn
         PKSAV_CALL(
             pksav_gba_export_text(
                 nickname.c_str(),
-                GBA_PC_RCAST->nickname,
+                _pksav_pokemon.pc_data.nickname,
                 PKSAV_GBA_POKEMON_NICKNAME_LENGTH
             );
         )
@@ -532,7 +440,7 @@ namespace pkmn
 
         return pkmn::calculations::modern_pokemon_gender(
                    _database_entry.get_name(),
-                   pksav_littleendian32(GBA_PC_RCAST->personality)
+                   pksav_littleendian32(_pksav_pokemon.pc_data.personality)
                );
     }
 
@@ -543,7 +451,7 @@ namespace pkmn
         boost::lock_guard<pokemon_gbaimpl> lock(*this);
 
         _set_modern_gender(
-            &GBA_PC_RCAST->personality,
+            &_pksav_pokemon.pc_data.personality,
             gender
         );
 
@@ -555,8 +463,8 @@ namespace pkmn
         boost::lock_guard<pokemon_gbaimpl> lock(*this);
 
         return pkmn::calculations::modern_shiny(
-                   pksav_littleendian32(GBA_PC_RCAST->personality),
-                   pksav_littleendian32(GBA_PC_RCAST->ot_id.id)
+                   pksav_littleendian32(_pksav_pokemon.pc_data.personality),
+                   pksav_littleendian32(_pksav_pokemon.pc_data.ot_id.id)
                );
     }
 
@@ -567,8 +475,8 @@ namespace pkmn
         boost::lock_guard<pokemon_gbaimpl> lock(*this);
 
         _set_modern_shininess(
-            &GBA_PC_RCAST->personality,
-            &GBA_PC_RCAST->ot_id.id,
+            &_pksav_pokemon.pc_data.personality,
+            &_pksav_pokemon.pc_data.ot_id.id,
             value
         );
 
@@ -583,7 +491,7 @@ namespace pkmn
         boost::lock_guard<pokemon_gbaimpl> lock(*this);
 
         return pkmn::database::item_index_to_name(
-                   pksav_littleendian16(_growth->held_item),
+                   pksav_littleendian16(_p_growth_block->held_item),
                    _database_entry.get_game_id()
                );
     }
@@ -605,7 +513,7 @@ namespace pkmn
             throw std::invalid_argument("This item is not holdable.");
         }
 
-        _growth->held_item = pksav_littleendian16(uint16_t(item.get_item_index()));
+        _p_growth_block->held_item = pksav_littleendian16(uint16_t(item.get_item_index()));
     }
 
     std::string pokemon_gbaimpl::get_nature()
@@ -654,7 +562,7 @@ namespace pkmn
     {
         boost::lock_guard<pokemon_gbaimpl> lock(*this);
 
-        return _get_pokerus_duration(&_misc->pokerus);
+        return _get_pokerus_duration(&_p_misc_block->pokerus);
     }
 
     void pokemon_gbaimpl::set_pokerus_duration(
@@ -666,7 +574,7 @@ namespace pkmn
         boost::lock_guard<pokemon_gbaimpl> lock(*this);
 
         _set_pokerus_duration(
-            &_misc->pokerus,
+            &_p_misc_block->pokerus,
             duration
         );
     }
@@ -679,7 +587,7 @@ namespace pkmn
         char otname[PKSAV_GBA_POKEMON_OTNAME_LENGTH + 1] = {0};
         PKSAV_CALL(
             pksav_gba_import_text(
-                GBA_PC_RCAST->otname,
+                _pksav_pokemon.pc_data.otname,
                 otname,
                 PKSAV_GBA_POKEMON_OTNAME_LENGTH
             );
@@ -704,7 +612,7 @@ namespace pkmn
         PKSAV_CALL(
             pksav_gba_export_text(
                 trainer_name.c_str(),
-                GBA_PC_RCAST->otname,
+                _pksav_pokemon.pc_data.otname,
                 PKSAV_GBA_POKEMON_OTNAME_LENGTH
             );
         )
@@ -714,21 +622,21 @@ namespace pkmn
     {
         boost::lock_guard<pokemon_gbaimpl> lock(*this);
 
-        return pksav_littleendian16(GBA_PC_RCAST->ot_id.pid);
+        return pksav_littleendian16(_pksav_pokemon.pc_data.ot_id.pid);
     }
 
     uint16_t pokemon_gbaimpl::get_original_trainer_secret_id()
     {
         boost::lock_guard<pokemon_gbaimpl> lock(*this);
 
-        return pksav_littleendian16(GBA_PC_RCAST->ot_id.sid);
+        return pksav_littleendian16(_pksav_pokemon.pc_data.ot_id.sid);
     }
 
     uint32_t pokemon_gbaimpl::get_original_trainer_id()
     {
         boost::lock_guard<pokemon_gbaimpl> lock(*this);
 
-        return pksav_littleendian32(GBA_PC_RCAST->ot_id.id);
+        return pksav_littleendian32(_pksav_pokemon.pc_data.ot_id.id);
     }
 
     void pokemon_gbaimpl::set_original_trainer_public_id(
@@ -737,7 +645,7 @@ namespace pkmn
     {
         boost::lock_guard<pokemon_gbaimpl> lock(*this);
 
-        GBA_PC_RCAST->ot_id.pid = pksav_littleendian16(public_id);
+        _pksav_pokemon.pc_data.ot_id.pid = pksav_littleendian16(public_id);
     }
 
     void pokemon_gbaimpl::set_original_trainer_secret_id(
@@ -746,21 +654,21 @@ namespace pkmn
     {
         boost::lock_guard<pokemon_gbaimpl> lock(*this);
 
-        GBA_PC_RCAST->ot_id.sid = pksav_littleendian16(secret_id);
+        _pksav_pokemon.pc_data.ot_id.sid = pksav_littleendian16(secret_id);
     }
 
     void pokemon_gbaimpl::set_original_trainer_id(
         uint32_t id
     )
     {
-        GBA_PC_RCAST->ot_id.id = pksav_littleendian32(id);
+        _pksav_pokemon.pc_data.ot_id.id = pksav_littleendian32(id);
     }
 
     std::string pokemon_gbaimpl::get_original_trainer_gender()
     {
         boost::lock_guard<pokemon_gbaimpl> lock(*this);
 
-        return (_misc->origin_info & PKSAV_GBA_POKEMON_OTGENDER_MASK) ? "Female"
+        return (_p_misc_block->origin_info & PKSAV_GBA_POKEMON_OTGENDER_MASK) ? "Female"
                                                               : "Male";
     }
 
@@ -771,9 +679,9 @@ namespace pkmn
         boost::lock_guard<pokemon_gbaimpl> lock(*this);
 
         if(gender == "Male") {
-            _misc->origin_info &= ~PKSAV_GBA_POKEMON_OTGENDER_MASK;
+            _p_misc_block->origin_info &= ~PKSAV_GBA_POKEMON_OTGENDER_MASK;
         } else if(gender == "Female") {
-            _misc->origin_info |= PKSAV_GBA_POKEMON_OTGENDER_MASK;
+            _p_misc_block->origin_info |= PKSAV_GBA_POKEMON_OTGENDER_MASK;
         } else {
             throw std::invalid_argument("gender: valid values \"Male\", \"Female\"");
         }
@@ -787,7 +695,7 @@ namespace pkmn
 
         pksav_gba_language language_as_enum = static_cast<enum pksav_gba_language>(
                                                   pksav_littleendian16(
-                                                      GBA_PC_RCAST->language
+                                                      _pksav_pokemon.pc_data.language
                                                   )
                                               );
 
@@ -821,7 +729,7 @@ namespace pkmn
 
         boost::lock_guard<pokemon_gbaimpl> lock(*this);
 
-        GBA_PC_RCAST->language = pksav_littleendian16(static_cast<uint16_t>(
+        _pksav_pokemon.pc_data.language = pksav_littleendian16(static_cast<uint16_t>(
                                      gba_language_bimap.left.at(language)
                                  ));
     }
@@ -830,7 +738,7 @@ namespace pkmn
     {
         boost::lock_guard<pokemon_gbaimpl> lock(*this);
 
-        return _growth->friendship;
+        return _p_growth_block->friendship;
     }
 
     void pokemon_gbaimpl::set_current_trainer_friendship(
@@ -841,7 +749,7 @@ namespace pkmn
 
         boost::lock_guard<pokemon_gbaimpl> lock(*this);
 
-        _growth->friendship = uint8_t(friendship);
+        _p_growth_block->friendship = uint8_t(friendship);
     }
 
     std::string pokemon_gbaimpl::get_ability()
@@ -854,7 +762,7 @@ namespace pkmn
         if(abilities.second == "None") {
             ret = abilities.first;
         } else {
-            ret = (_misc->iv_egg_ability & PKSAV_GBA_POKEMON_ABILITY_MASK) ? abilities.second
+            ret = (_p_misc_block->iv_egg_ability & PKSAV_GBA_POKEMON_ABILITY_MASK) ? abilities.second
                                                                     : abilities.first;
         }
 
@@ -874,11 +782,11 @@ namespace pkmn
         }
         else if(ability == abilities.first)
         {
-            _misc->iv_egg_ability &= ~PKSAV_GBA_POKEMON_ABILITY_MASK;
+            _p_misc_block->iv_egg_ability &= ~PKSAV_GBA_POKEMON_ABILITY_MASK;
         }
         else if(ability == abilities.second)
         {
-            _misc->iv_egg_ability |= PKSAV_GBA_POKEMON_ABILITY_MASK;
+            _p_misc_block->iv_egg_ability |= PKSAV_GBA_POKEMON_ABILITY_MASK;
         }
         else
         {
@@ -904,7 +812,7 @@ namespace pkmn
         boost::lock_guard<pokemon_gbaimpl> lock(*this);
 
         return pkmn::database::ball_id_to_name(
-                   PKSAV_GBA_POKEMON_BALL(_misc->origin_info)
+                   PKSAV_GBA_POKEMON_BALL(_p_misc_block->origin_info)
                );
     }
 
@@ -917,11 +825,11 @@ namespace pkmn
         // Try and instantiate an item_entry to validate the ball.
         (void)pkmn::database::item_entry(ball, get_game());
 
-        _misc->origin_info &= ~PKSAV_GBA_POKEMON_BALL_MASK;
+        _p_misc_block->origin_info &= ~PKSAV_GBA_POKEMON_BALL_MASK;
         uint16_t ball_id = uint16_t(pkmn::database::ball_name_to_id(
                                         ball
                                     ));
-        _misc->origin_info |= (ball_id << PKSAV_GBA_POKEMON_BALL_OFFSET);
+        _p_misc_block->origin_info |= (ball_id << PKSAV_GBA_POKEMON_BALL_OFFSET);
     }
 
 
@@ -929,7 +837,7 @@ namespace pkmn
     {
         boost::lock_guard<pokemon_gbaimpl> lock(*this);
 
-        return (_misc->origin_info & PKSAV_GBA_POKEMON_LEVEL_MET_MASK);
+        return (_p_misc_block->origin_info & PKSAV_GBA_POKEMON_LEVEL_MET_MASK);
     }
 
     void pokemon_gbaimpl::set_level_met(
@@ -940,8 +848,8 @@ namespace pkmn
 
         boost::lock_guard<pokemon_gbaimpl> lock(*this);
 
-        _misc->origin_info &= ~PKSAV_GBA_POKEMON_LEVEL_MET_MASK;
-        _misc->origin_info |= uint16_t(level);
+        _p_misc_block->origin_info &= ~PKSAV_GBA_POKEMON_LEVEL_MET_MASK;
+        _p_misc_block->origin_info |= uint16_t(level);
     }
 
     std::string pokemon_gbaimpl::get_location_met(
@@ -957,7 +865,7 @@ namespace pkmn
             boost::lock_guard<pokemon_gbaimpl> lock(*this);
 
             return pkmn::database::location_index_to_name(
-                       _misc->met_location,
+                       _p_misc_block->met_location,
                        _database_entry.get_game_id()
                    );
         }
@@ -976,7 +884,7 @@ namespace pkmn
         {
             boost::lock_guard<pokemon_gbaimpl> lock(*this);
 
-            _misc->met_location = uint8_t(pkmn::database::location_name_to_index(
+            _p_misc_block->met_location = uint8_t(pkmn::database::location_name_to_index(
                                               location,
                                               _database_entry.get_game_id()
                                           ));
@@ -989,7 +897,7 @@ namespace pkmn
 
         std::string ret;
 
-        uint16_t original_game = PKSAV_GBA_POKEMON_ORIGIN_GAME(_misc->origin_info);
+        uint16_t original_game = PKSAV_GBA_POKEMON_ORIGIN_GAME(_p_misc_block->origin_info);
 
         if(original_game == 15)
         {
@@ -1024,19 +932,19 @@ namespace pkmn
 
         boost::lock_guard<pokemon_gbaimpl> lock(*this);
 
-        _misc->origin_info &= ~PKSAV_GBA_POKEMON_ORIGIN_GAME_MASK;
+        _p_misc_block->origin_info &= ~PKSAV_GBA_POKEMON_ORIGIN_GAME_MASK;
         uint16_t game_index = uint16_t(pkmn::database::game_name_to_index(
                                            game_to_test
                                        ));
 
-        _misc->origin_info |= (game_index << PKSAV_GBA_POKEMON_ORIGIN_GAME_OFFSET);
+        _p_misc_block->origin_info |= (game_index << PKSAV_GBA_POKEMON_ORIGIN_GAME_OFFSET);
     }
 
     uint32_t pokemon_gbaimpl::get_personality()
     {
         boost::lock_guard<pokemon_gbaimpl> lock(*this);
 
-        return pksav_littleendian32(GBA_PC_RCAST->personality);
+        return pksav_littleendian32(_pksav_pokemon.pc_data.personality);
     }
 
     void pokemon_gbaimpl::set_personality(
@@ -1046,7 +954,7 @@ namespace pkmn
         boost::lock_guard<pokemon_gbaimpl> lock(*this);
 
         // TODO: personality determines ability
-        GBA_PC_RCAST->personality = pksav_littleendian32(personality);
+        _pksav_pokemon.pc_data.personality = pksav_littleendian32(personality);
 
         if(_database_entry.get_species_id() == UNOWN_ID)
         {
@@ -1058,7 +966,7 @@ namespace pkmn
     {
         boost::lock_guard<pokemon_gbaimpl> lock(*this);
 
-        return int(pksav_littleendian32(_growth->exp));
+        return int(pksav_littleendian32(_p_growth_block->exp));
     }
 
     void pokemon_gbaimpl::set_experience(
@@ -1070,8 +978,8 @@ namespace pkmn
         int max_experience = _database_entry.get_experience_at_level(100);
         pkmn::enforce_bounds("Experience", experience, 0, max_experience);
 
-        _growth->exp = pksav_littleendian32(uint32_t(experience));
-        GBA_PARTY_RCAST->level = uint8_t(_database_entry.get_level_at_experience(experience));
+        _p_growth_block->exp = pksav_littleendian32(uint32_t(experience));
+        _pksav_pokemon.party_data.level = uint8_t(_database_entry.get_level_at_experience(experience));
 
         _populate_party_data();
         _update_stat_map();
@@ -1081,7 +989,7 @@ namespace pkmn
     {
         boost::lock_guard<pokemon_gbaimpl> lock(*this);
 
-        return int(GBA_PARTY_RCAST->level);
+        return int(_pksav_pokemon.party_data.level);
     }
 
     void pokemon_gbaimpl::set_level(
@@ -1092,8 +1000,8 @@ namespace pkmn
 
         boost::lock_guard<pokemon_gbaimpl> lock(*this);
 
-        GBA_PARTY_RCAST->level = uint8_t(level);
-        _growth->exp = pksav_littleendian32(uint32_t(_database_entry.get_experience_at_level(level)));
+        _pksav_pokemon.party_data.level = uint8_t(level);
+        _p_growth_block->exp = pksav_littleendian32(uint32_t(_database_entry.get_experience_at_level(level)));
 
         _populate_party_data();
         _update_stat_map();
@@ -1109,7 +1017,7 @@ namespace pkmn
         _set_modern_IV(
             stat,
             value,
-            &_misc->iv_egg_ability
+            &_p_misc_block->iv_egg_ability
         );
     }
 
@@ -1123,7 +1031,7 @@ namespace pkmn
         _set_marking(
             marking,
             value,
-            &GBA_PC_RCAST->markings
+            &_pksav_pokemon.pc_data.markings
         );
     }
 
@@ -1186,7 +1094,7 @@ namespace pkmn
             _set_ribbon<uint32_t, enum pksav_gba_ribbon_mask>(
                 ribbon,
                 value,
-                &_misc->ribbons_obedience,
+                &_p_misc_block->ribbons_obedience,
                 gba_ribbons
             );
         }
@@ -1209,7 +1117,7 @@ namespace pkmn
         _set_contest_stat(
             stat,
             value,
-            &_effort->contest_stats
+            &_p_effort_block->contest_stats
         );
     }
 
@@ -1230,8 +1138,8 @@ namespace pkmn
         _moves[index].move = entry.get_name();
         _moves[index].pp   = entry.get_pp(0);
 
-        _attacks->moves[index] = pksav_littleendian16(uint16_t(entry.get_move_id()));
-        _attacks->move_pps[index] = uint8_t(_moves[index].pp);
+        _p_attacks_block->moves[index] = pksav_littleendian16(uint16_t(entry.get_move_id()));
+        _p_attacks_block->move_pps[index] = uint8_t(_moves[index].pp);
     }
 
     void pokemon_gbaimpl::set_move_pp(
@@ -1253,15 +1161,15 @@ namespace pkmn
         pkmn::enforce_bounds("PP", pp, 0, PPs.back());
 
         _moves[index].pp = pp;
-        _attacks->move_pps[index] = uint8_t(pp);
+        _p_attacks_block->move_pps[index] = uint8_t(pp);
 
         // Set the PP Up mask to the minimum value that will accommodate the given PP.
-        _growth->pp_up &= ~uint8_t(3 << (index*2));
+        _p_growth_block->pp_up &= ~uint8_t(3 << (index*2));
         for(uint8_t num_PP_ups = 0; num_PP_ups < 4; ++num_PP_ups)
         {
             if(pp <= PPs[num_PP_ups])
             {
-                _growth->pp_up |= uint8_t(num_PP_ups << (index*2));
+                _p_growth_block->pp_up |= uint8_t(num_PP_ups << (index*2));
                 break;
             }
         }
@@ -1283,27 +1191,27 @@ namespace pkmn
 
         if(stat == "HP")
         {
-            _effort->ev_hp = uint8_t(value);
+            _p_effort_block->ev_hp = uint8_t(value);
         }
         else if(stat == "Attack")
         {
-            _effort->ev_atk = uint8_t(value);
+            _p_effort_block->ev_atk = uint8_t(value);
         }
         else if(stat == "Defense")
         {
-            _effort->ev_def = uint8_t(value);
+            _p_effort_block->ev_def = uint8_t(value);
         }
         else if(stat == "Speed")
         {
-            _effort->ev_spd = uint8_t(value);
+            _p_effort_block->ev_spd = uint8_t(value);
         }
         else if(stat == "Special Attack")
         {
-            _effort->ev_spatk = uint8_t(value);
+            _p_effort_block->ev_spatk = uint8_t(value);
         }
         else
         {
-            _effort->ev_spdef = uint8_t(value);
+            _p_effort_block->ev_spdef = uint8_t(value);
         }
 
         _update_EV_map();
@@ -1314,7 +1222,7 @@ namespace pkmn
     {
         boost::lock_guard<pokemon_gbaimpl> lock(*this);
 
-        return pksav_littleendian16(GBA_PARTY_RCAST->current_hp);
+        return pksav_littleendian16(_pksav_pokemon.party_data.current_hp);
     }
 
     void pokemon_gbaimpl::set_current_hp(
@@ -1330,7 +1238,7 @@ namespace pkmn
 
         boost::lock_guard<pokemon_gbaimpl> lock(*this);
 
-        GBA_PARTY_RCAST->current_hp = pksav_littleendian16(static_cast<uint16_t>(hp));
+        _pksav_pokemon.party_data.current_hp = pksav_littleendian16(static_cast<uint16_t>(hp));
     }
 
     std::string pokemon_gbaimpl::get_sprite_filepath()
@@ -1348,11 +1256,11 @@ namespace pkmn
             spinda_sprite_filepath /= str(boost::format("spinda_%d_%d_%u.png")
                                           % _generation
                                           % (shiny ? 1 : 0)
-                                          % pksav_littleendian32(GBA_PC_RCAST->personality));
+                                          % pksav_littleendian32(_pksav_pokemon.pc_data.personality));
 
             pkmn::qt::GenerateSpindaSpriteAtFilepath(
                 3,
-                pksav_littleendian32(GBA_PC_RCAST->personality),
+                pksav_littleendian32(_pksav_pokemon.pc_data.personality),
                 shiny,
                 spinda_sprite_filepath.string()
             );
@@ -1371,7 +1279,7 @@ namespace pkmn
     {
         boost::lock_guard<pokemon_gbaimpl> lock(*this);
 
-        return bool(_misc->ribbons_obedience & PKSAV_GBA_POKEMON_OBEDIENCE_MASK);
+        return bool(_p_misc_block->ribbons_obedience & PKSAV_GBA_POKEMON_OBEDIENCE_MASK);
     }
 
     void pokemon_gbaimpl::set_is_obedient(bool is_obedient)
@@ -1380,11 +1288,11 @@ namespace pkmn
 
         if(is_obedient)
         {
-            _misc->ribbons_obedience |= PKSAV_GBA_POKEMON_OBEDIENCE_MASK;
+            _p_misc_block->ribbons_obedience |= PKSAV_GBA_POKEMON_OBEDIENCE_MASK;
         }
         else
         {
-            _misc->ribbons_obedience &= ~PKSAV_GBA_POKEMON_OBEDIENCE_MASK;
+            _p_misc_block->ribbons_obedience &= ~PKSAV_GBA_POKEMON_OBEDIENCE_MASK;
         }
     }
 
@@ -1412,7 +1320,7 @@ namespace pkmn
             level = uint16_t(gba_contest_ribbon_levels.at(ribbon_parts.at(1)));
         }
 
-        uint16_t current_level = (_misc->ribbons_obedience & mask) >> offset;
+        uint16_t current_level = (_p_misc_block->ribbons_obedience & mask) >> offset;
         if(value) {
             if(level == 0) {
                 ++level;
@@ -1425,8 +1333,8 @@ namespace pkmn
             level = std::min<uint16_t>(level, current_level);
         }
 
-        _misc->ribbons_obedience &= ~mask;
-        _misc->ribbons_obedience |= (level << offset);
+        _p_misc_block->ribbons_obedience &= ~mask;
+        _p_misc_block->ribbons_obedience |= (level << offset);
 
         _update_ribbons_map();
     }
@@ -1454,10 +1362,10 @@ namespace pkmn
             case 3:
                 _moves[index] = pkmn::move_slot(
                     pkmn::database::move_id_to_name(
-                        pksav_littleendian16(_attacks->moves[index]),
+                        pksav_littleendian16(_p_attacks_block->moves[index]),
                         3
                     ),
-                    _attacks->move_pps[index]
+                    _p_attacks_block->move_pps[index]
                 );
                 break;
 
@@ -1470,84 +1378,84 @@ namespace pkmn
     }
 
     void pokemon_gbaimpl::_update_markings_map() {
-        _markings["Circle"]   = bool(GBA_PC_RCAST->markings & PKSAV_MARKING_CIRCLE);
-        _markings["Triangle"] = bool(GBA_PC_RCAST->markings & PKSAV_MARKING_TRIANGLE);
-        _markings["Square"]   = bool(GBA_PC_RCAST->markings & PKSAV_MARKING_SQUARE);
-        _markings["Heart"]    = bool(GBA_PC_RCAST->markings & PKSAV_MARKING_HEART);
+        _markings["Circle"]   = bool(_pksav_pokemon.pc_data.markings & PKSAV_MARKING_CIRCLE);
+        _markings["Triangle"] = bool(_pksav_pokemon.pc_data.markings & PKSAV_MARKING_TRIANGLE);
+        _markings["Square"]   = bool(_pksav_pokemon.pc_data.markings & PKSAV_MARKING_SQUARE);
+        _markings["Heart"]    = bool(_pksav_pokemon.pc_data.markings & PKSAV_MARKING_HEART);
     }
 
     void pokemon_gbaimpl::_update_ribbons_map() {
-        uint32_t cool_ribbons = _misc->ribbons_obedience & PKSAV_GBA_COOL_RIBBONS_MASK;
+        uint32_t cool_ribbons = _p_misc_block->ribbons_obedience & PKSAV_GBA_COOL_RIBBONS_MASK;
         _ribbons["Cool"]        = bool(cool_ribbons >= PKSAV_GBA_CONTEST_RIBBON_NORMAL);
         _ribbons["Cool Super"]  = bool(cool_ribbons >= PKSAV_GBA_CONTEST_RIBBON_SUPER);
         _ribbons["Cool Hyper"]  = bool(cool_ribbons >= PKSAV_GBA_CONTEST_RIBBON_HYPER);
         _ribbons["Cool Master"] = bool(cool_ribbons >= PKSAV_GBA_CONTEST_RIBBON_MASTER);
 
-        uint32_t beauty_ribbons = _misc->ribbons_obedience & PKSAV_GBA_BEAUTY_RIBBONS_MASK;
+        uint32_t beauty_ribbons = _p_misc_block->ribbons_obedience & PKSAV_GBA_BEAUTY_RIBBONS_MASK;
         beauty_ribbons >>= PKSAV_GBA_BEAUTY_RIBBONS_OFFSET;
         _ribbons["Beauty"]        = bool(beauty_ribbons >= PKSAV_GBA_CONTEST_RIBBON_NORMAL);
         _ribbons["Beauty Super"]  = bool(beauty_ribbons >= PKSAV_GBA_CONTEST_RIBBON_SUPER);
         _ribbons["Beauty Hyper"]  = bool(beauty_ribbons >= PKSAV_GBA_CONTEST_RIBBON_HYPER);
         _ribbons["Beauty Master"] = bool(beauty_ribbons >= PKSAV_GBA_CONTEST_RIBBON_MASTER);
 
-        uint32_t cute_ribbons = _misc->ribbons_obedience & PKSAV_GBA_CUTE_RIBBONS_MASK;
+        uint32_t cute_ribbons = _p_misc_block->ribbons_obedience & PKSAV_GBA_CUTE_RIBBONS_MASK;
         cute_ribbons >>= PKSAV_GBA_CUTE_RIBBONS_OFFSET;
         _ribbons["Cute"]        = bool(cute_ribbons >= PKSAV_GBA_CONTEST_RIBBON_NORMAL);
         _ribbons["Cute Super"]  = bool(cute_ribbons >= PKSAV_GBA_CONTEST_RIBBON_SUPER);
         _ribbons["Cute Hyper"]  = bool(cute_ribbons >= PKSAV_GBA_CONTEST_RIBBON_HYPER);
         _ribbons["Cute Master"] = bool(cute_ribbons >= PKSAV_GBA_CONTEST_RIBBON_MASTER);
 
-        uint32_t smart_ribbons = _misc->ribbons_obedience & PKSAV_GBA_SMART_RIBBONS_MASK;
+        uint32_t smart_ribbons = _p_misc_block->ribbons_obedience & PKSAV_GBA_SMART_RIBBONS_MASK;
         smart_ribbons >>= PKSAV_GBA_SMART_RIBBONS_OFFSET;
         _ribbons["Smart"]        = bool(smart_ribbons >= PKSAV_GBA_CONTEST_RIBBON_NORMAL);
         _ribbons["Smart Super"]  = bool(smart_ribbons >= PKSAV_GBA_CONTEST_RIBBON_SUPER);
         _ribbons["Smart Hyper"]  = bool(smart_ribbons >= PKSAV_GBA_CONTEST_RIBBON_HYPER);
         _ribbons["Smart Master"] = bool(smart_ribbons >= PKSAV_GBA_CONTEST_RIBBON_MASTER);
 
-        uint32_t tough_ribbons = _misc->ribbons_obedience & PKSAV_GBA_TOUGH_RIBBONS_MASK;
+        uint32_t tough_ribbons = _p_misc_block->ribbons_obedience & PKSAV_GBA_TOUGH_RIBBONS_MASK;
         tough_ribbons >>= PKSAV_GBA_TOUGH_RIBBONS_OFFSET;
         _ribbons["Tough"]        = bool(tough_ribbons >= PKSAV_GBA_CONTEST_RIBBON_NORMAL);
         _ribbons["Tough Super"]  = bool(tough_ribbons >= PKSAV_GBA_CONTEST_RIBBON_SUPER);
         _ribbons["Tough Hyper"]  = bool(tough_ribbons >= PKSAV_GBA_CONTEST_RIBBON_HYPER);
         _ribbons["Tough Master"] = bool(tough_ribbons >= PKSAV_GBA_CONTEST_RIBBON_MASTER);
 
-        _ribbons["Champion"] = bool(_misc->ribbons_obedience & PKSAV_GBA_CHAMPION_RIBBON_MASK);
-        _ribbons["Winning"]  = bool(_misc->ribbons_obedience & PKSAV_GBA_WINNING_RIBBON_MASK);
-        _ribbons["Victory"]  = bool(_misc->ribbons_obedience & PKSAV_GBA_VICTORY_RIBBON_MASK);
-        _ribbons["Artist"]   = bool(_misc->ribbons_obedience & PKSAV_GBA_ARTIST_RIBBON_MASK);
-        _ribbons["Effort"]   = bool(_misc->ribbons_obedience & PKSAV_GBA_EFFORT_RIBBON_MASK);
-        _ribbons["Marine"]   = bool(_misc->ribbons_obedience & PKSAV_GBA_MARINE_RIBBON_MASK);
-        _ribbons["Land"]     = bool(_misc->ribbons_obedience & PKSAV_GBA_LAND_RIBBON_MASK);
-        _ribbons["Sky"]      = bool(_misc->ribbons_obedience & PKSAV_GBA_SKY_RIBBON_MASK);
-        _ribbons["Country"]  = bool(_misc->ribbons_obedience & PKSAV_GBA_COUNTRY_RIBBON_MASK);
-        _ribbons["National"] = bool(_misc->ribbons_obedience & PKSAV_GBA_NATIONAL_RIBBON_MASK);
-        _ribbons["Earth"]    = bool(_misc->ribbons_obedience & PKSAV_GBA_EARTH_RIBBON_MASK);
-        _ribbons["World"]    = bool(_misc->ribbons_obedience & PKSAV_GBA_WORLD_RIBBON_MASK);
+        _ribbons["Champion"] = bool(_p_misc_block->ribbons_obedience & PKSAV_GBA_CHAMPION_RIBBON_MASK);
+        _ribbons["Winning"]  = bool(_p_misc_block->ribbons_obedience & PKSAV_GBA_WINNING_RIBBON_MASK);
+        _ribbons["Victory"]  = bool(_p_misc_block->ribbons_obedience & PKSAV_GBA_VICTORY_RIBBON_MASK);
+        _ribbons["Artist"]   = bool(_p_misc_block->ribbons_obedience & PKSAV_GBA_ARTIST_RIBBON_MASK);
+        _ribbons["Effort"]   = bool(_p_misc_block->ribbons_obedience & PKSAV_GBA_EFFORT_RIBBON_MASK);
+        _ribbons["Marine"]   = bool(_p_misc_block->ribbons_obedience & PKSAV_GBA_MARINE_RIBBON_MASK);
+        _ribbons["Land"]     = bool(_p_misc_block->ribbons_obedience & PKSAV_GBA_LAND_RIBBON_MASK);
+        _ribbons["Sky"]      = bool(_p_misc_block->ribbons_obedience & PKSAV_GBA_SKY_RIBBON_MASK);
+        _ribbons["Country"]  = bool(_p_misc_block->ribbons_obedience & PKSAV_GBA_COUNTRY_RIBBON_MASK);
+        _ribbons["National"] = bool(_p_misc_block->ribbons_obedience & PKSAV_GBA_NATIONAL_RIBBON_MASK);
+        _ribbons["Earth"]    = bool(_p_misc_block->ribbons_obedience & PKSAV_GBA_EARTH_RIBBON_MASK);
+        _ribbons["World"]    = bool(_p_misc_block->ribbons_obedience & PKSAV_GBA_WORLD_RIBBON_MASK);
     }
 
     void pokemon_gbaimpl::_update_EV_map() {
-        _EVs["HP"]              = int(_effort->ev_hp);
-        _EVs["Attack"]          = int(_effort->ev_atk);
-        _EVs["Defense"]         = int(_effort->ev_def);
-        _EVs["Speed"]           = int(_effort->ev_spd);
-        _EVs["Special Attack"]  = int(_effort->ev_spatk);
-        _EVs["Special Defense"] = int(_effort->ev_spdef);
+        _EVs["HP"]              = int(_p_effort_block->ev_hp);
+        _EVs["Attack"]          = int(_p_effort_block->ev_atk);
+        _EVs["Defense"]         = int(_p_effort_block->ev_def);
+        _EVs["Speed"]           = int(_p_effort_block->ev_spd);
+        _EVs["Special Attack"]  = int(_p_effort_block->ev_spatk);
+        _EVs["Special Defense"] = int(_p_effort_block->ev_spdef);
     }
 
     void pokemon_gbaimpl::_update_stat_map() {
-        _stats["HP"]              = int(pksav_littleendian16(GBA_PARTY_RCAST->max_hp));
-        _stats["Attack"]          = int(pksav_littleendian16(GBA_PARTY_RCAST->atk));
-        _stats["Defense"]         = int(pksav_littleendian16(GBA_PARTY_RCAST->def));
-        _stats["Speed"]           = int(pksav_littleendian16(GBA_PARTY_RCAST->spd));
-        _stats["Special Attack"]  = int(pksav_littleendian16(GBA_PARTY_RCAST->spatk));
-        _stats["Special Defense"] = int(pksav_littleendian16(GBA_PARTY_RCAST->spdef));
+        _stats["HP"]              = int(pksav_littleendian16(_pksav_pokemon.party_data.max_hp));
+        _stats["Attack"]          = int(pksav_littleendian16(_pksav_pokemon.party_data.atk));
+        _stats["Defense"]         = int(pksav_littleendian16(_pksav_pokemon.party_data.def));
+        _stats["Speed"]           = int(pksav_littleendian16(_pksav_pokemon.party_data.spd));
+        _stats["Special Attack"]  = int(pksav_littleendian16(_pksav_pokemon.party_data.spatk));
+        _stats["Special Defense"] = int(pksav_littleendian16(_pksav_pokemon.party_data.spdef));
     }
 
     void pokemon_gbaimpl::_set_unown_form_from_personality() {
         _database_entry.set_form(
             pkmn::calculations::gen3_unown_form(
                 pksav_littleendian32(
-                    GBA_PC_RCAST->personality
+                    _pksav_pokemon.pc_data.personality
                 )
             )
         );
@@ -1572,7 +1480,7 @@ namespace pkmn
                 break;
         }
 
-        uint8_t* pid_as_bytes = reinterpret_cast<uint8_t*>(&GBA_PC_RCAST->personality);
+        uint8_t* pid_as_bytes = reinterpret_cast<uint8_t*>(&_pksav_pokemon.pc_data.personality);
         for(size_t i = 0; i < 4; ++i) {
             pid_as_bytes[i] &= ~0x3;
             pid_as_bytes[i] |= ((num & (0x3 << (2*i))) >> (2*i));

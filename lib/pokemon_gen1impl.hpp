@@ -21,23 +21,22 @@ namespace pkmn {
                 int level
             );
             pokemon_gen1impl(
-                struct pksav_gen1_pc_pokemon* pc,
+                const struct pksav_gen1_pc_pokemon* p_pc_pokemon,
                 int game_id
             );
             pokemon_gen1impl(
-                struct pksav_gen1_party_pokemon* party,
-                int game_id
-            );
-            pokemon_gen1impl(
-                const struct pksav_gen1_pc_pokemon& pc,
-                int game_id
-            );
-            pokemon_gen1impl(
-                const struct pksav_gen1_party_pokemon& party,
+                const struct pksav_gen1_party_pokemon* p_party_pokemon,
                 int game_id
             );
 
-            ~pokemon_gen1impl();
+            // TODO
+            pokemon_gen1impl(const pokemon_gen1impl&) = delete;
+            pokemon_gen1impl(pokemon_gen1impl&&) = delete;
+
+            pokemon_gen1impl& operator=(const pokemon_gen1impl&) = delete;
+            pokemon_gen1impl& operator=(pokemon_gen1impl&&) = delete;
+
+            ~pokemon_gen1impl() = default;
 
             pokemon::sptr to_game(
                 const std::string& game
@@ -252,6 +251,8 @@ namespace pkmn {
             void _update_stat_map() final;
 
             void _register_attributes();
+
+            struct pksav_gen1_party_pokemon _pksav_pokemon;
 
             std::string _nickname, _trainer_name;
     };

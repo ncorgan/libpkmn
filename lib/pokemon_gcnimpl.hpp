@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -11,9 +11,12 @@
 
 #include "libpkmgc_includes.hpp"
 
+#include <memory>
+
 namespace pkmn {
 
-    class pokemon_gcnimpl: public pokemon_impl {
+    class pokemon_gcnimpl: public pokemon_impl
+    {
         public:
             pokemon_gcnimpl() {}
             pokemon_gcnimpl(
@@ -21,17 +24,18 @@ namespace pkmn {
                 int level
             );
             pokemon_gcnimpl(
-                LibPkmGC::GC::Pokemon* native,
+                const LibPkmGC::GC::Pokemon* p_libpkmgc_pokemon,
                 int game_id
             );
-            explicit pokemon_gcnimpl(
-                const LibPkmGC::Colosseum::Pokemon &native
-            );
-            explicit pokemon_gcnimpl(
-                const LibPkmGC::XD::Pokemon &native
-            );
 
-            ~pokemon_gcnimpl();
+            // TODO
+            pokemon_gcnimpl(const pokemon_gcnimpl&) = delete;
+            pokemon_gcnimpl(pokemon_gcnimpl&&) = delete;
+
+            pokemon_gcnimpl& operator=(const pokemon_gcnimpl&) = delete;
+            pokemon_gcnimpl& operator=(pokemon_gcnimpl&&) = delete;
+
+            ~pokemon_gcnimpl() = default;
 
             pokemon::sptr to_game(
                 const std::string& game
@@ -234,6 +238,8 @@ namespace pkmn {
             void set_is_obedient(bool is_obedient);
 
         private:
+
+            std::unique_ptr<LibPkmGC::GC::Pokemon> _libpkmgc_pokemon_uptr;
 
             void _populate_party_data() final;
 

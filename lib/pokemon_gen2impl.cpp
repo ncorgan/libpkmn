@@ -43,9 +43,6 @@
 #include <fstream>
 #include <stdexcept>
 
-#define GEN2_PC_RCAST    (reinterpret_cast<struct pksav_gen2_pc_pokemon*>(_native_pc))
-#define GEN2_PARTY_RCAST (reinterpret_cast<struct pksav_gen2_pokemon_party_data*>(_native_party))
-
 namespace fs = boost::filesystem;
 
 namespace pkmn
@@ -66,13 +63,7 @@ namespace pkmn
     ): pokemon_impl(std::move(database_entry)),
        _is_egg(false)
     {
-        _native_pc  = reinterpret_cast<void*>(new struct pksav_gen2_pc_pokemon);
-        std::memset(_native_pc, 0, sizeof(struct pksav_gen2_pc_pokemon));
-        _our_pc_mem = true;
-
-        _native_party = reinterpret_cast<void*>(new struct pksav_gen2_pokemon_party_data);
-        std::memset(_native_party, 0, sizeof(struct pksav_gen2_pokemon_party_data));
-        _our_party_mem = true;
+        std::memset(&_pksav_pokemon, 0, sizeof(_pksav_pokemon));
 
         _nickname = boost::algorithm::to_upper_copy(
                         _database_entry.get_name()
@@ -80,9 +71,9 @@ namespace pkmn
         _trainer_name = DEFAULT_TRAINER_NAME;
 
         // Set internal members
-        GEN2_PC_RCAST->species = uint8_t(_database_entry.get_pokemon_index());
+        _pksav_pokemon.pc_data.species = uint8_t(_database_entry.get_pokemon_index());
 
-        GEN2_PC_RCAST->ot_id = pksav_bigendian16(uint16_t(DEFAULT_TRAINER_ID & 0xFFFF));
+        _pksav_pokemon.pc_data.ot_id = pksav_bigendian16(uint16_t(DEFAULT_TRAINER_ID & 0xFFFF));
 
         if(_database_entry.get_species_id() == UNOWN_ID)
         {
@@ -93,10 +84,10 @@ namespace pkmn
         else
         {
             pkmn::rng<uint16_t> rng;
-            GEN2_PC_RCAST->iv_data = rng.rand();
+            _pksav_pokemon.pc_data.iv_data = rng.rand();
         }
 
-        GEN2_PC_RCAST->friendship = uint8_t(_database_entry.get_base_friendship());
+        _pksav_pokemon.pc_data.friendship = uint8_t(_database_entry.get_base_friendship());
 
         // Don't restrict the level at which we can instantiate a Pokémon, but
         // we can't always set the level met to this value.
@@ -108,33 +99,37 @@ namespace pkmn
         PKSAV_CALL(
             pksav_gen2_set_caught_data_time_field(
                 &now,
-                &GEN2_PC_RCAST->caught_data
+                &_pksav_pokemon.pc_data.caught_data
             );
         )
 
         // Populate abstractions
         _update_EV_map();
-        _init_gb_IV_map(&GEN2_PC_RCAST->iv_data);
+        _init_gb_IV_map(&_pksav_pokemon.pc_data.iv_data);
         set_level(level);
         _init_default_moves_for_level();
+
+        _native_pc = &_pksav_pokemon.pc_data;
+        _native_party = &_pksav_pokemon.party_data;
     }
 
     pokemon_gen2impl::pokemon_gen2impl(
-        struct pksav_gen2_pc_pokemon* pc,
+        const struct pksav_gen2_pc_pokemon* p_pc_pokemon,
         int game_id
-    ): pokemon_impl(pc->species, game_id),
+    ): pokemon_impl(p_pc_pokemon->species, game_id),
        _is_egg(false)
     {
-        _native_pc = reinterpret_cast<void*>(pc);
-        _our_pc_mem = false;
+        BOOST_ASSERT(p_pc_pokemon != nullptr);
 
-        _native_party = reinterpret_cast<void*>(new struct pksav_gen2_pokemon_party_data);
+        _pksav_pokemon.pc_data = *p_pc_pokemon;
         _populate_party_data();
-        _our_party_mem = true;
+
+        _native_pc = &_pksav_pokemon.pc_data;
+        _native_party = &_pksav_pokemon.party_data;
 
         // Populate abstractions
         _update_EV_map();
-        _init_gb_IV_map(&GEN2_PC_RCAST->iv_data);
+        _init_gb_IV_map(&_pksav_pokemon.pc_data.iv_data);
         _update_stat_map();
         _update_moves(-1);
 
@@ -152,20 +147,21 @@ namespace pkmn
     }
 
     pokemon_gen2impl::pokemon_gen2impl(
-        struct pksav_gen2_party_pokemon* party,
+        const struct pksav_gen2_party_pokemon* p_party_pokemon,
         int game_id
-    ): pokemon_impl(party->pc_data.species, game_id),
+    ): pokemon_impl(p_party_pokemon->pc_data.species, game_id),
        _is_egg(false)
     {
-        _native_pc = reinterpret_cast<void*>(&party->pc_data);
-        _our_pc_mem = false;
+        BOOST_ASSERT(p_party_pokemon != nullptr);
 
-        _native_party = reinterpret_cast<void*>(&party->party_data);
-        _our_party_mem = false;
+        _pksav_pokemon = *p_party_pokemon;
+
+        _native_pc = &_pksav_pokemon.pc_data;
+        _native_party = &_pksav_pokemon.party_data;
 
         // Populate abstractions
         _update_EV_map();
-        _init_gb_IV_map(&GEN2_PC_RCAST->iv_data);
+        _init_gb_IV_map(&_pksav_pokemon.pc_data.iv_data);
         _update_stat_map();
         _update_moves(-1);
 
@@ -180,81 +176,6 @@ namespace pkmn
                         _database_entry.get_name()
                     );
         _trainer_name = DEFAULT_TRAINER_NAME;
-    }
-
-    pokemon_gen2impl::pokemon_gen2impl(
-        const struct pksav_gen2_pc_pokemon& pc,
-        int game_id
-    ): pokemon_impl(pc.species, game_id),
-       _is_egg(false)
-    {
-        _native_pc = reinterpret_cast<void*>(new struct pksav_gen2_pc_pokemon);
-        *GEN2_PC_RCAST = pc;
-        _our_pc_mem = true;
-
-        _native_party = reinterpret_cast<void*>(new struct pksav_gen2_pokemon_party_data);
-        _populate_party_data();
-        _our_party_mem = true;
-
-        // Populate abstractions
-        _update_EV_map();
-        _init_gb_IV_map(&GEN2_PC_RCAST->iv_data);
-        _update_stat_map();
-        _update_moves(-1);
-
-        if(_database_entry.get_species_id() == UNOWN_ID)
-        {
-            _set_unown_form_from_IVs();
-        }
-
-        // Nickname and trainer name aren't stored with the binary,
-        // so use LibPKMN's defaults.
-        _nickname = boost::algorithm::to_upper_copy(
-                        _database_entry.get_name()
-                    );
-        _trainer_name = DEFAULT_TRAINER_NAME;
-    }
-
-    pokemon_gen2impl::pokemon_gen2impl(
-        const struct pksav_gen2_party_pokemon& party,
-        int game_id
-    ): pokemon_impl(party.pc_data.species, game_id),
-       _is_egg(false)
-    {
-        _native_pc = reinterpret_cast<void*>(new struct pksav_gen2_pc_pokemon);
-        *GEN2_PC_RCAST = party.pc_data;
-        _our_pc_mem = true;
-
-        _native_party = reinterpret_cast<void*>(new struct pksav_gen2_pokemon_party_data);
-        *GEN2_PARTY_RCAST = party.party_data;
-        _our_party_mem = true;
-
-        // Populate abstractions
-        _update_EV_map();
-        _init_gb_IV_map(&GEN2_PC_RCAST->iv_data);
-        _update_stat_map();
-        _update_moves(-1);
-
-        if(_database_entry.get_species_id() == UNOWN_ID)
-        {
-            _set_unown_form_from_IVs();
-        }
-
-        // Nickname and trainer name aren't stored with the binary,
-        // so use LibPKMN's defaults.
-        _nickname = boost::algorithm::to_upper_copy(
-                        _database_entry.get_name()
-                    );
-        _trainer_name = DEFAULT_TRAINER_NAME;
-    }
-
-    pokemon_gen2impl::~pokemon_gen2impl() {
-        if(_our_pc_mem) {
-            delete GEN2_PC_RCAST;
-        }
-        if(_our_party_mem) {
-            delete GEN2_PARTY_RCAST;
-        }
     }
 
     pokemon::sptr pokemon_gen2impl::to_game(
@@ -265,10 +186,6 @@ namespace pkmn
 
         pkmn::pokemon::sptr ret;
 
-        struct pksav_gen2_party_pokemon pksav_pokemon;
-        pksav_pokemon.pc_data = *GEN2_PC_RCAST;
-        pksav_pokemon.party_data = *GEN2_PARTY_RCAST;
-
         int game_id = pkmn::database::game_name_to_id(game);
         int generation = pkmn::database::game_id_to_generation(game_id);
         switch(generation)
@@ -277,19 +194,17 @@ namespace pkmn
             {
                 struct pksav_gen1_party_pokemon gen1_pksav_pokemon;
                 pkmn::conversions::gen2_party_pokemon_to_gen1(
-                    &pksav_pokemon,
+                    &_pksav_pokemon,
                     &gen1_pksav_pokemon
                 );
-                ret = std::make_shared<pokemon_gen1impl>(gen1_pksav_pokemon, game_id);
+                ret = std::make_shared<pokemon_gen1impl>(&gen1_pksav_pokemon, game_id);
                 break;
             }
 
             case 2:
-            {
-                ret = std::make_shared<pokemon_gen2impl>(pksav_pokemon, game_id);
+                ret = std::make_shared<pokemon_gen2impl>(&_pksav_pokemon, game_id);
                 ret->set_level_met(std::min<int>(MAX_LEVEL_MET, get_level()));
                 break;
-            }
 
             default:
                 throw std::invalid_argument("Generation II Pokémon can only be converted to Generation I-II.");
@@ -354,7 +269,7 @@ namespace pkmn
         boost::lock_guard<pokemon_gen2impl> lock(*this);
 
         std::string ret = "None";
-        enum pksav_gb_condition gb_condition = static_cast<enum pksav_gb_condition>(GEN2_PARTY_RCAST->condition);
+        enum pksav_gb_condition gb_condition = static_cast<enum pksav_gb_condition>(_pksav_pokemon.party_data.condition);
 
         const pksav::gb_condition_bimap_t& gb_condition_bimap = pksav::get_gb_condition_bimap();
 
@@ -381,7 +296,7 @@ namespace pkmn
             gb_condition_bimap.left
         );
 
-        GEN2_PARTY_RCAST->condition =
+        _pksav_pokemon.party_data.condition =
             static_cast<uint8_t>(gb_condition_bimap.left.at(condition));
     }
 
@@ -503,8 +418,8 @@ namespace pkmn
              * a shiny Pokémon.
              */
             static const uint16_t shiny_iv_data = pksav_littleendian16(0xFAAA);
-            GEN2_PC_RCAST->iv_data = shiny_iv_data;
-            _init_gb_IV_map(&GEN2_PC_RCAST->iv_data);
+            _pksav_pokemon.pc_data.iv_data = shiny_iv_data;
+            _init_gb_IV_map(&_pksav_pokemon.pc_data.iv_data);
             _populate_party_data();
         }
         else
@@ -523,7 +438,7 @@ namespace pkmn
         boost::lock_guard<pokemon_gen2impl> lock(*this);
 
         return pkmn::database::item_index_to_name(
-                   GEN2_PC_RCAST->held_item,
+                   _pksav_pokemon.pc_data.held_item,
                    _database_entry.get_game_id()
                );
     }
@@ -545,7 +460,7 @@ namespace pkmn
             throw std::invalid_argument("This item is not holdable.");
         }
 
-        GEN2_PC_RCAST->held_item = uint8_t(item.get_item_index());
+        _pksav_pokemon.pc_data.held_item = uint8_t(item.get_item_index());
     }
 
     std::string pokemon_gen2impl::get_nature()
@@ -553,9 +468,7 @@ namespace pkmn
         throw pkmn::feature_not_in_game_error("Natures", "Generation II");
     }
 
-    void pokemon_gen2impl::set_nature(
-        PKMN_UNUSED(const std::string& nature)
-    )
+    void pokemon_gen2impl::set_nature(const std::string&)
     {
         throw pkmn::feature_not_in_game_error("Natures", "Generation II");
     }
@@ -564,7 +477,7 @@ namespace pkmn
     {
         boost::lock_guard<pokemon_gen2impl> lock(*this);
 
-        return _get_pokerus_duration(&GEN2_PC_RCAST->pokerus);
+        return _get_pokerus_duration(&_pksav_pokemon.pc_data.pokerus);
     }
 
     void pokemon_gen2impl::set_pokerus_duration(
@@ -576,7 +489,7 @@ namespace pkmn
         boost::lock_guard<pokemon_gen2impl> lock(*this);
 
         _set_pokerus_duration(
-            &GEN2_PC_RCAST->pokerus,
+            &_pksav_pokemon.pc_data.pokerus,
             duration
         );
     }
@@ -608,7 +521,7 @@ namespace pkmn
     {
         boost::lock_guard<pokemon_gen2impl> lock(*this);
 
-        return pksav_bigendian16(GEN2_PC_RCAST->ot_id);
+        return pksav_bigendian16(_pksav_pokemon.pc_data.ot_id);
     }
 
     uint16_t pokemon_gen2impl::get_original_trainer_secret_id()
@@ -622,7 +535,7 @@ namespace pkmn
     {
         boost::lock_guard<pokemon_gen2impl> lock(*this);
 
-        return uint32_t(pksav_bigendian16(GEN2_PC_RCAST->ot_id));
+        return uint32_t(pksav_bigendian16(_pksav_pokemon.pc_data.ot_id));
     }
 
     void pokemon_gen2impl::set_original_trainer_public_id(
@@ -631,12 +544,10 @@ namespace pkmn
     {
         boost::lock_guard<pokemon_gen2impl> lock(*this);
 
-        GEN2_PC_RCAST->ot_id = pksav_bigendian16(public_id);
+        _pksav_pokemon.pc_data.ot_id = pksav_bigendian16(public_id);
     }
 
-    void pokemon_gen2impl::set_original_trainer_secret_id(
-        PKMN_UNUSED(uint16_t secret_id)
-    )
+    void pokemon_gen2impl::set_original_trainer_secret_id(uint16_t)
     {
         throw pkmn::feature_not_in_game_error("Secret trainer ID", "Generation II");
     }
@@ -649,14 +560,14 @@ namespace pkmn
 
         boost::lock_guard<pokemon_gen2impl> lock(*this);
 
-        GEN2_PC_RCAST->ot_id = pksav_bigendian16(uint16_t(id));
+        _pksav_pokemon.pc_data.ot_id = pksav_bigendian16(uint16_t(id));
     }
 
     std::string pokemon_gen2impl::get_original_trainer_gender()
     {
         boost::lock_guard<pokemon_gen2impl> lock(*this);
 
-        return (GEN2_PC_RCAST->caught_data & PKSAV_GEN2_POKEMON_OT_GENDER_MASK) ? "Female"
+        return (_pksav_pokemon.pc_data.caught_data & PKSAV_GEN2_POKEMON_OT_GENDER_MASK) ? "Female"
                                                                         : "Male";
     }
 
@@ -674,11 +585,11 @@ namespace pkmn
 
         if(gender == "Male")
         {
-            GEN2_PC_RCAST->caught_data &= ~PKSAV_GEN2_POKEMON_OT_GENDER_MASK;
+            _pksav_pokemon.pc_data.caught_data &= ~PKSAV_GEN2_POKEMON_OT_GENDER_MASK;
         }
         else
         {
-            GEN2_PC_RCAST->caught_data |= PKSAV_GEN2_POKEMON_OT_GENDER_MASK;
+            _pksav_pokemon.pc_data.caught_data |= PKSAV_GEN2_POKEMON_OT_GENDER_MASK;
         }
     }
 
@@ -696,7 +607,7 @@ namespace pkmn
     {
         boost::lock_guard<pokemon_gen2impl> lock(*this);
 
-        return GEN2_PC_RCAST->friendship;
+        return _pksav_pokemon.pc_data.friendship;
     }
 
     void pokemon_gen2impl::set_current_trainer_friendship(
@@ -707,7 +618,7 @@ namespace pkmn
 
         boost::lock_guard<pokemon_gen2impl> lock(*this);
 
-        GEN2_PC_RCAST->friendship = uint8_t(friendship);
+        _pksav_pokemon.pc_data.friendship = uint8_t(friendship);
     }
 
     std::string pokemon_gen2impl::get_ability()
@@ -715,9 +626,7 @@ namespace pkmn
         throw pkmn::feature_not_in_game_error("Abilities", "Generation II");
     }
 
-    void pokemon_gen2impl::set_ability(
-        PKMN_UNUSED(const std::string& ability)
-    )
+    void pokemon_gen2impl::set_ability(const std::string&)
     {
         throw pkmn::feature_not_in_game_error("Abilities", "Generation II");
     }
@@ -727,9 +636,7 @@ namespace pkmn
         throw pkmn::feature_not_in_game_error("A Pokémon's ball is not recorded in Generation II.");
     }
 
-    void pokemon_gen2impl::set_ball(
-        PKMN_UNUSED(const std::string& ball)
-    )
+    void pokemon_gen2impl::set_ball(const std::string&)
     {
         throw pkmn::feature_not_in_game_error("A Pokémon's ball is not recorded in Generation II.");
     }
@@ -738,7 +645,7 @@ namespace pkmn
     {
         boost::lock_guard<pokemon_gen2impl> lock(*this);
 
-        return int(PKSAV_GEN2_POKEMON_LEVEL_CAUGHT(GEN2_PC_RCAST->caught_data));
+        return int(PKSAV_GEN2_POKEMON_LEVEL_CAUGHT(_pksav_pokemon.pc_data.caught_data));
     }
 
     void pokemon_gen2impl::set_level_met(
@@ -752,8 +659,8 @@ namespace pkmn
         uint16_t caught_data = uint16_t(level);
         caught_data <<= PKSAV_GEN2_POKEMON_LEVEL_CAUGHT_OFFSET;
 
-        GEN2_PC_RCAST->caught_data &= ~PKSAV_GEN2_POKEMON_LEVEL_CAUGHT_MASK;
-        GEN2_PC_RCAST->caught_data |= caught_data;
+        _pksav_pokemon.pc_data.caught_data &= ~PKSAV_GEN2_POKEMON_LEVEL_CAUGHT_MASK;
+        _pksav_pokemon.pc_data.caught_data |= caught_data;
     }
 
     std::string pokemon_gen2impl::get_location_met(
@@ -769,7 +676,7 @@ namespace pkmn
             boost::lock_guard<pokemon_gen2impl> lock(*this);
 
             return pkmn::database::location_index_to_name(
-                       (GEN2_PC_RCAST->caught_data & PKSAV_GEN2_POKEMON_LOCATION_MASK),
+                       (_pksav_pokemon.pc_data.caught_data & PKSAV_GEN2_POKEMON_LOCATION_MASK),
                        _database_entry.get_game_id()
                    );
         }
@@ -792,8 +699,8 @@ namespace pkmn
                                                    location,
                                                    _database_entry.get_game_id()
                                                ));
-            GEN2_PC_RCAST->caught_data &= ~PKSAV_GEN2_POKEMON_LOCATION_MASK;
-            GEN2_PC_RCAST->caught_data |= location_index;
+            _pksav_pokemon.pc_data.caught_data &= ~PKSAV_GEN2_POKEMON_LOCATION_MASK;
+            _pksav_pokemon.pc_data.caught_data |= location_index;
         }
     }
 
@@ -802,9 +709,7 @@ namespace pkmn
         throw pkmn::feature_not_in_game_error("Original game is not recorded in Generation II.");
     }
 
-    void pokemon_gen2impl::set_original_game(
-        PKMN_UNUSED(const std::string& game)
-    )
+    void pokemon_gen2impl::set_original_game(const std::string&)
     {
         throw pkmn::feature_not_in_game_error("Original game is not recorded in Generation II.");
     }
@@ -814,9 +719,7 @@ namespace pkmn
         throw pkmn::feature_not_in_game_error("Personality", "Generation II");
     }
 
-    void pokemon_gen2impl::set_personality(
-        PKMN_UNUSED(uint32_t personality)
-    )
+    void pokemon_gen2impl::set_personality(uint32_t)
     {
         throw pkmn::feature_not_in_game_error("Personality", "Generation II");
     }
@@ -828,7 +731,7 @@ namespace pkmn
         size_t ret = 0;
         PKSAV_CALL(
             pksav_import_base256(
-                GEN2_PC_RCAST->exp,
+                _pksav_pokemon.pc_data.exp,
                 PKSAV_GEN2_POKEMON_EXPERIENCE_BUFFER_SIZE,
                 &ret
             );
@@ -849,12 +752,12 @@ namespace pkmn
         PKSAV_CALL(
             pksav_export_base256(
                 experience,
-                GEN2_PC_RCAST->exp,
+                _pksav_pokemon.pc_data.exp,
                 PKSAV_GEN2_POKEMON_EXPERIENCE_BUFFER_SIZE
             );
         )
 
-        GEN2_PC_RCAST->level = uint8_t(_database_entry.get_level_at_experience(experience));
+        _pksav_pokemon.pc_data.level = uint8_t(_database_entry.get_level_at_experience(experience));
 
         _populate_party_data();
         _update_stat_map();
@@ -864,7 +767,7 @@ namespace pkmn
     {
         boost::lock_guard<pokemon_gen2impl> lock(*this);
 
-        return int(GEN2_PC_RCAST->level);
+        return int(_pksav_pokemon.pc_data.level);
     }
 
     void pokemon_gen2impl::set_level(
@@ -875,12 +778,12 @@ namespace pkmn
 
         boost::lock_guard<pokemon_gen2impl> lock(*this);
 
-        GEN2_PC_RCAST->level = uint8_t(level);
+        _pksav_pokemon.pc_data.level = uint8_t(level);
 
         PKSAV_CALL(
             pksav_export_base256(
                 uint32_t(_database_entry.get_experience_at_level(level)),
-                GEN2_PC_RCAST->exp,
+                _pksav_pokemon.pc_data.exp,
                 PKSAV_GEN2_POKEMON_EXPERIENCE_BUFFER_SIZE
             );
         )
@@ -899,7 +802,7 @@ namespace pkmn
         _set_gb_IV(
             stat,
             value,
-            &GEN2_PC_RCAST->iv_data
+            &_pksav_pokemon.pc_data.iv_data
         );
 
         if(_database_entry.get_species_id() == UNOWN_ID)
@@ -908,26 +811,17 @@ namespace pkmn
         }
     }
 
-    void pokemon_gen2impl::set_marking(
-        PKMN_UNUSED(const std::string& marking),
-        PKMN_UNUSED(bool value)
-    )
+    void pokemon_gen2impl::set_marking(const std::string&, bool)
     {
         throw pkmn::feature_not_in_game_error("Markings", "Generation II");
     }
 
-    void pokemon_gen2impl::set_ribbon(
-        PKMN_UNUSED(const std::string& ribbon),
-        PKMN_UNUSED(bool value)
-    )
+    void pokemon_gen2impl::set_ribbon(const std::string&, bool)
     {
         throw pkmn::feature_not_in_game_error("Ribbons", "Generation II");
     }
 
-    void pokemon_gen2impl::set_contest_stat(
-        PKMN_UNUSED(const std::string& stat),
-        PKMN_UNUSED(int value)
-    )
+    void pokemon_gen2impl::set_contest_stat(const std::string&, int)
     {
         throw pkmn::feature_not_in_game_error("Contests", "Generation II");
     }
@@ -949,8 +843,8 @@ namespace pkmn
         _moves[index].move = entry.get_name();
         _moves[index].pp   = entry.get_pp(0);
 
-        GEN2_PC_RCAST->moves[index] = uint8_t(entry.get_move_id());
-        GEN2_PC_RCAST->move_pps[index] = uint8_t(_moves[index].pp);
+        _pksav_pokemon.pc_data.moves[index] = uint8_t(entry.get_move_id());
+        _pksav_pokemon.pc_data.move_pps[index] = uint8_t(_moves[index].pp);
     }
 
     void pokemon_gen2impl::set_move_pp(
@@ -972,14 +866,14 @@ namespace pkmn
         pkmn::enforce_bounds("PP", pp, 0, PPs.back());
 
         _moves[index].pp = pp;
-        GEN2_PC_RCAST->move_pps[index] = uint8_t(pp);
+        _pksav_pokemon.pc_data.move_pps[index] = uint8_t(pp);
 
         // Set the PP Up mask to the minimum value that will accommodate the given PP.
         for(uint8_t num_PP_ups = 0; num_PP_ups < PPs.size(); ++num_PP_ups)
         {
             if(pp <= PPs[num_PP_ups])
             {
-                GEN2_PC_RCAST->move_pps[index] |= (num_PP_ups << 6);
+                _pksav_pokemon.pc_data.move_pps[index] |= (num_PP_ups << 6);
                 break;
             }
         }
@@ -1002,23 +896,23 @@ namespace pkmn
 
         if(stat == "HP")
         {
-            GEN2_PC_RCAST->ev_hp = pksav_bigendian16(uint16_t(value));
+            _pksav_pokemon.pc_data.ev_hp = pksav_bigendian16(uint16_t(value));
         }
         else if(stat == "Attack")
         {
-            GEN2_PC_RCAST->ev_atk = pksav_bigendian16(uint16_t(value));
+            _pksav_pokemon.pc_data.ev_atk = pksav_bigendian16(uint16_t(value));
         }
         else if(stat == "Defense")
         {
-            GEN2_PC_RCAST->ev_def = pksav_bigendian16(uint16_t(value));
+            _pksav_pokemon.pc_data.ev_def = pksav_bigendian16(uint16_t(value));
         }
         else if(stat == "Speed")
         {
-            GEN2_PC_RCAST->ev_spd = pksav_bigendian16(uint16_t(value));
+            _pksav_pokemon.pc_data.ev_spd = pksav_bigendian16(uint16_t(value));
         }
         else
         {
-            GEN2_PC_RCAST->ev_spcl = pksav_bigendian16(uint16_t(value));
+            _pksav_pokemon.pc_data.ev_spcl = pksav_bigendian16(uint16_t(value));
         }
 
         _update_EV_map();
@@ -1029,7 +923,7 @@ namespace pkmn
     {
         boost::lock_guard<pokemon_gen2impl> lock(*this);
 
-        return pksav_bigendian16(GEN2_PARTY_RCAST->current_hp);
+        return pksav_bigendian16(_pksav_pokemon.party_data.current_hp);
     }
 
     void pokemon_gen2impl::set_current_hp(
@@ -1045,7 +939,7 @@ namespace pkmn
 
         boost::lock_guard<pokemon_gen2impl> lock(*this);
 
-        GEN2_PARTY_RCAST->current_hp = pksav_bigendian16(static_cast<uint16_t>(hp));
+        _pksav_pokemon.party_data.current_hp = pksav_bigendian16(static_cast<uint16_t>(hp));
     }
 
     void pokemon_gen2impl::_populate_party_data()
@@ -1072,10 +966,10 @@ namespace pkmn
             case 3:
                 _moves[index] = pkmn::move_slot(
                     pkmn::database::move_id_to_name(
-                        GEN2_PC_RCAST->moves[index],
+                        _pksav_pokemon.pc_data.moves[index],
                         1
                     ),
-                    (GEN2_PC_RCAST->move_pps[index] & PKSAV_GEN2_POKEMON_MOVE_PP_MASK)
+                    (_pksav_pokemon.pc_data.move_pps[index] & PKSAV_GEN2_POKEMON_MOVE_PP_MASK)
                 );
                 break;
 
@@ -1089,21 +983,21 @@ namespace pkmn
 
     void pokemon_gen2impl::_update_EV_map()
     {
-        _EVs["HP"]      = int(pksav_bigendian16(GEN2_PC_RCAST->ev_hp));
-        _EVs["Attack"]  = int(pksav_bigendian16(GEN2_PC_RCAST->ev_atk));
-        _EVs["Defense"] = int(pksav_bigendian16(GEN2_PC_RCAST->ev_def));
-        _EVs["Speed"]   = int(pksav_bigendian16(GEN2_PC_RCAST->ev_spd));
-        _EVs["Special"] = int(pksav_bigendian16(GEN2_PC_RCAST->ev_spcl));
+        _EVs["HP"]      = int(pksav_bigendian16(_pksav_pokemon.pc_data.ev_hp));
+        _EVs["Attack"]  = int(pksav_bigendian16(_pksav_pokemon.pc_data.ev_atk));
+        _EVs["Defense"] = int(pksav_bigendian16(_pksav_pokemon.pc_data.ev_def));
+        _EVs["Speed"]   = int(pksav_bigendian16(_pksav_pokemon.pc_data.ev_spd));
+        _EVs["Special"] = int(pksav_bigendian16(_pksav_pokemon.pc_data.ev_spcl));
     }
 
     void pokemon_gen2impl::_update_stat_map()
     {
-        _stats["HP"]              = int(pksav_bigendian16(GEN2_PARTY_RCAST->max_hp));
-        _stats["Attack"]          = int(pksav_bigendian16(GEN2_PARTY_RCAST->atk));
-        _stats["Defense"]         = int(pksav_bigendian16(GEN2_PARTY_RCAST->def));
-        _stats["Speed"]           = int(pksav_bigendian16(GEN2_PARTY_RCAST->spd));
-        _stats["Special Attack"]  = int(pksav_bigendian16(GEN2_PARTY_RCAST->spatk));
-        _stats["Special Defense"] = int(pksav_bigendian16(GEN2_PARTY_RCAST->spdef));
+        _stats["HP"]              = int(pksav_bigendian16(_pksav_pokemon.party_data.max_hp));
+        _stats["Attack"]          = int(pksav_bigendian16(_pksav_pokemon.party_data.atk));
+        _stats["Defense"]         = int(pksav_bigendian16(_pksav_pokemon.party_data.def));
+        _stats["Speed"]           = int(pksav_bigendian16(_pksav_pokemon.party_data.spd));
+        _stats["Special Attack"]  = int(pksav_bigendian16(_pksav_pokemon.party_data.spatk));
+        _stats["Special Defense"] = int(pksav_bigendian16(_pksav_pokemon.party_data.spdef));
     }
 
     void pokemon_gen2impl::_set_unown_form_from_IVs()
@@ -1144,25 +1038,25 @@ namespace pkmn
         _set_gb_IV(
             "Attack",
             IV_attack,
-            &GEN2_PC_RCAST->iv_data
+            &_pksav_pokemon.pc_data.iv_data
         );
 
         _set_gb_IV(
             "Defense",
             IV_defense,
-            &GEN2_PC_RCAST->iv_data
+            &_pksav_pokemon.pc_data.iv_data
         );
 
         _set_gb_IV(
             "Speed",
             IV_speed,
-            &GEN2_PC_RCAST->iv_data
+            &_pksav_pokemon.pc_data.iv_data
         );
 
         _set_gb_IV(
             "Special",
             IV_special,
-            &GEN2_PC_RCAST->iv_data
+            &_pksav_pokemon.pc_data.iv_data
         );
     }
 }

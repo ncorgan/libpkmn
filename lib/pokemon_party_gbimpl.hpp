@@ -31,18 +31,14 @@
 namespace pkmn {
 
     POKEMON_PARTY_GBIMPL_TEMPLATE
-    class pokemon_party_gbimpl: public pokemon_party_impl {
+    class pokemon_party_gbimpl: public pokemon_party_impl
+    {
         public:
-            pokemon_party_gbimpl() {}
-            explicit pokemon_party_gbimpl(
-                int game_id
-            );
             pokemon_party_gbimpl(
                 int game_id,
-                list_type* native
+                list_type* p_native = nullptr
             );
-
-            ~pokemon_party_gbimpl();
+            ~pokemon_party_gbimpl() = default;
 
             int get_num_pokemon() final;
 
@@ -52,6 +48,8 @@ namespace pkmn {
             ) final;
 
         private:
+
+            list_type _pksav_party;
 
             void _from_native() final;
     };

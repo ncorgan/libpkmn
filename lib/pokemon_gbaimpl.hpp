@@ -21,23 +21,22 @@ namespace pkmn {
                 int level
             );
             pokemon_gbaimpl(
-                struct pksav_gba_pc_pokemon* pc,
+                const struct pksav_gba_pc_pokemon* p_pc_pokemon,
                 int game_id
             );
             pokemon_gbaimpl(
-                struct pksav_gba_party_pokemon* party,
-                int game_id
-            );
-            pokemon_gbaimpl(
-                const struct pksav_gba_pc_pokemon &pc,
-                int game_id
-            );
-            pokemon_gbaimpl(
-                const struct pksav_gba_party_pokemon &party,
+                const struct pksav_gba_party_pokemon* p_party_pokemon,
                 int game_id
             );
 
-            ~pokemon_gbaimpl();
+            // TODO
+            pokemon_gbaimpl(const pokemon_gbaimpl&) = delete;
+            pokemon_gbaimpl(pokemon_gbaimpl&&) = delete;
+
+            pokemon_gbaimpl& operator=(const pokemon_gbaimpl&) = delete;
+            pokemon_gbaimpl& operator=(pokemon_gbaimpl&&) = delete;
+
+            ~pokemon_gbaimpl() = default;
 
             pokemon::sptr to_game(
                 const std::string& game
@@ -264,10 +263,11 @@ namespace pkmn {
 
             void _register_attributes();
 
-            struct pksav_gba_pokemon_growth_block*  _growth;
-            struct pksav_gba_pokemon_attacks_block* _attacks;
-            struct pksav_gba_pokemon_effort_block*  _effort;
-            struct pksav_gba_pokemon_misc_block*    _misc;
+            struct pksav_gba_party_pokemon          _pksav_pokemon;
+            struct pksav_gba_pokemon_growth_block*  _p_growth_block;
+            struct pksav_gba_pokemon_attacks_block* _p_attacks_block;
+            struct pksav_gba_pokemon_effort_block*  _p_effort_block;
+            struct pksav_gba_pokemon_misc_block*    _p_misc_block;
     };
 
 }

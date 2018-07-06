@@ -15,7 +15,7 @@
 
 #include <stdexcept>
 
-#define GC_RCAST   (reinterpret_cast<LibPkmGC::GC::PokemonBox*>(_native))
+#define _libpkmgc_box_uptr   (reinterpret_cast<LibPkmGC::GC::PokemonBox*>(_native))
 #define COLO_RCAST (reinterpret_cast<LibPkmGC::Colosseum::PokemonBox*>(_native))
 #define XD_RCAST   (reinterpret_cast<LibPkmGC::XD::PokemonBox*>(_native))
 
@@ -40,37 +40,33 @@ namespace pkmn {
 
     pokemon_box_gcnimpl::pokemon_box_gcnimpl(
         int game_id,
-        LibPkmGC::GC::PokemonBox* native
+        LibPkmGC::GC::PokemonBox* p_libpkmgc_native
     ): pokemon_box_impl(game_id)
     {
-        _native = reinterpret_cast<void*>(native);
-        _our_mem = false;
-
-        _from_native();
-    }
-
-    pokemon_box_gcnimpl::~pokemon_box_gcnimpl()
-    {
-        boost::lock_guard<pokemon_box_gcnimpl> lock(*this);
-
-        if(_our_mem)
+        if(p_libpkmgc_native != nullptr)
+        {
+            _libpkmgc_box_uptr.reset(p_libpkmgc_native->clone());
+        }
+        else
         {
             if(_game_id == COLOSSEUM_ID)
             {
-                delete COLO_RCAST;
+                _libpkmgc_box_uptr.reset(new LibPkmGC::Colosseum::PokemonBox);
             }
             else
             {
-                delete XD_RCAST;
+                _libpkmgc_box_uptr.reset(new LibPkmGC::XD::PokemonBox);
             }
         }
+
+        _from_native();
     }
 
     std::string pokemon_box_gcnimpl::get_name()
     {
         boost::lock_guard<pokemon_box_gcnimpl> lock(*this);
 
-        return GC_RCAST->name->toUTF8();
+        return _libpkmgc_box_uptr->name->toUTF8();
     }
 
     void pokemon_box_gcnimpl::set_name(
@@ -86,7 +82,7 @@ namespace pkmn {
 
         boost::lock_guard<pokemon_box_gcnimpl> lock(*this);
 
-        GC_RCAST->name->fromUTF8(name.c_str());
+        _libpkmgc_box_uptr->name->fromUTF8(name.c_str());
     }
 
     int pokemon_box_gcnimpl::get_num_pokemon()
@@ -96,7 +92,7 @@ namespace pkmn {
         int num_pokemon = 0;
         for(int i = 0; i < get_capacity(); ++i)
         {
-            if(GC_RCAST->pkm[i]->species > LibPkmGC::NoSpecies)
+            if(_libpkmgc_box_uptr->pkm[i]->species > LibPkmGC::NoSpecies)
             {
                 ++num_pokemon;
             }
@@ -186,7 +182,7 @@ namespace pkmn {
         old_box_pokemon_impl_ptr->unlock();
 
         _pokemon_list[index] = std::make_shared<pokemon_gcnimpl>(
-                                   dynamic_cast<LibPkmGC::GC::Pokemon*>(GC_RCAST->pkm[index]),
+                                   _libpkmgc_box_uptr->pkm[index],
                                    _game_id
                                );
     }
@@ -196,24 +192,24 @@ namespace pkmn {
         throw pkmn::feature_not_in_game_error("Box wallpaper", get_game());
     }
 
-    void pokemon_box_gcnimpl::set_wallpaper(
-        PKMN_UNUSED(const std::string& wallpaper)
-    )
+    void pokemon_box_gcnimpl::set_wallpaper(const std::string&)
     {
         throw pkmn::feature_not_in_game_error("Box wallpaper", get_game());
     }
 
-    void pokemon_box_gcnimpl::_from_native() {
+    void pokemon_box_gcnimpl::_from_native()
+    {
         int capacity = get_capacity();
 
         // This shouldn't resize if the vector is populated.
         _pokemon_list.resize(capacity);
 
-        for(int i = 0; i < capacity; ++i) {
-            _pokemon_list[i] = std::make_shared<pokemon_gcnimpl>(
-                                   dynamic_cast<LibPkmGC::GC::Pokemon*>(GC_RCAST->pkm[i]),
-                                   _game_id
-                               );
+        for(int party_index = 0; party_index < capacity; ++party_index)
+        {
+            _pokemon_list[party_index] = std::make_shared<pokemon_gcnimpl>(
+                                             _libpkmgc_box_uptr->pkm[party_index],
+                                             _game_id
+                                         );
         }
     }
 }
