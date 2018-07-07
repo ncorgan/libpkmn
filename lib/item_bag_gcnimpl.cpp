@@ -5,10 +5,6 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-#define GC_CAST(ptr)   (static_cast<LibPkmGC::GC::BagData*>(ptr))
-#define COLO_CAST(ptr) (static_cast<LibPkmGC::Colosseum::BagData*>(ptr))
-#define XD_CAST(ptr)   (static_cast<LibPkmGC::XD::BagData*>(ptr))
-
 #include "item_bag_gcnimpl.hpp"
 #include "item_list_gcnimpl.hpp"
 
@@ -43,6 +39,8 @@ namespace pkmn {
         }
 
         BOOST_ASSERT(_libpkmgc_bag_uptr.get() != nullptr);
+
+        _p_native = _libpkmgc_bag_uptr.get();
 
         const int item_pocket_id     = is_colosseum ? 62 : 69;
         const int key_item_pocket_id = is_colosseum ? 63 : 70;

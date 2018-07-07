@@ -40,6 +40,8 @@ namespace pkmn {
             );
         }
 
+        _p_native = &_pksav_party;
+
         _from_native();
     }
 
@@ -79,11 +81,11 @@ namespace pkmn {
         }
 
         pokemon_gbaimpl* p_new_pokemon = dynamic_cast<pokemon_gbaimpl*>(
-                                                  actual_new_pokemon.get()
-                                              );
+                                             actual_new_pokemon.get()
+                                         );
         pokemon_gbaimpl* p_old_pokemon = dynamic_cast<pokemon_gbaimpl*>(
-                                                  _pokemon_list[index].get()
-                                              );
+                                             _pokemon_list[index].get()
+                                         );
         BOOST_ASSERT(p_new_pokemon != nullptr);
         BOOST_ASSERT(p_old_pokemon != nullptr);
 

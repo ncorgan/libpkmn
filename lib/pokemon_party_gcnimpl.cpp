@@ -20,7 +20,7 @@ namespace pkmn {
 
     pokemon_party_gcnimpl::pokemon_party_gcnimpl(
         int game_id,
-        LibPkmGC::GC::Pokemon** pp_libpkmgc_native
+        LibPkmGC::GC::Pokemon* const* pp_libpkmgc_native
     ): pokemon_party_impl(game_id),
        _num_pokemon(0)
     {
@@ -75,7 +75,7 @@ namespace pkmn {
 
         pkmn::enforce_bounds("Party index", index, 0, max_index);
 
-        if(index < (num_pokemon-1) and new_pokemon->get_species() == "None")
+        if((index < (num_pokemon-1)) && (new_pokemon->get_species() == "None"))
         {
             throw std::invalid_argument("Parties store Pokémon contiguously.");
         }
@@ -93,54 +93,33 @@ namespace pkmn {
             actual_new_pokemon = new_pokemon->to_game(get_game());
         }
 
-        pokemon_impl* new_pokemon_impl_ptr = dynamic_cast<pokemon_impl*>(actual_new_pokemon.get());
-        pokemon_impl* old_party_pokemon_impl_ptr = dynamic_cast<pokemon_impl*>(_pokemon_list[index].get());
+        pokemon_gcnimpl* p_new_pokemon = dynamic_cast<pokemon_gcnimpl*>(
+                                             actual_new_pokemon.get()
+                                         );
+        pokemon_gcnimpl* p_old_pokemon = dynamic_cast<pokemon_gcnimpl*>(
+                                             _pokemon_list[index].get()
+                                         );
+        BOOST_ASSERT(p_new_pokemon != nullptr);
+        BOOST_ASSERT(p_old_pokemon != nullptr);
 
         // Make sure no one else is using the Pokémon variables.
-        boost::lock_guard<pokemon_impl> new_pokemon_lock(*new_pokemon_impl_ptr);
-        old_party_pokemon_impl_ptr->lock();
+        boost::lock_guard<pokemon_gcnimpl> new_pokemon_lock(*p_new_pokemon);
+        p_old_pokemon->lock();
 
         // Copy the underlying memory to the party. At the end of this process,
         // all existing variables will correspond to the same Pokémon, even if
         // their underlying memory has changed.
-
-        void* old_party_pokemon_native_ptr = old_party_pokemon_impl_ptr->_native_pc;
-        void* new_pokemon_native_ptr = new_pokemon_impl_ptr->_native_pc;
-
-        // Make a copy of the current Pokémon in the given party slot so it can be preserved in an sptr
-        // that owns its own memory.
-        LibPkmGC::GC::Pokemon* party_pokemon_copy_ptr = reinterpret_cast<LibPkmGC::GC::Pokemon*>(
-                                                            old_party_pokemon_impl_ptr->_native_pc
-                                                        )->clone();
-
-        if(_game_id == COLOSSEUM_ID)
-        {
-            rcast_equal<LibPkmGC::Colosseum::Pokemon>(
-                old_party_pokemon_native_ptr,
-                dynamic_cast<LibPkmGC::Colosseum::Pokemon*>(party_pokemon_copy_ptr)
-            );
-            rcast_equal<LibPkmGC::Colosseum::Pokemon>(
-                new_pokemon_native_ptr,
-                old_party_pokemon_native_ptr
-            );
-        }
-        else
-        {
-            rcast_equal<LibPkmGC::XD::Pokemon>(
-                old_party_pokemon_native_ptr,
-                dynamic_cast<LibPkmGC::XD::Pokemon*>(party_pokemon_copy_ptr)
-            );
-            rcast_equal<LibPkmGC::XD::Pokemon>(
-                new_pokemon_native_ptr,
-                old_party_pokemon_native_ptr
-            );
-        }
-
-        old_party_pokemon_impl_ptr->_native_pc = reinterpret_cast<void*>(party_pokemon_copy_ptr);
-        old_party_pokemon_impl_ptr->_our_pc_mem = true;
+        //
+        // Note: as we control the implementation, we know the PC data points
+        // to the whole Pokémon data structure.
+        _libpkmgc_pokemon_uptrs[index].reset(
+            static_cast<LibPkmGC::GC::Pokemon*>(
+                actual_new_pokemon->get_native_pc_data()
+            )->clone()
+        );
 
         // Unlock the old Pokémon's mutex is unlocked before it's destructor is called.
-        old_party_pokemon_impl_ptr->unlock();
+        p_old_pokemon->unlock();
 
         _pokemon_list[index] = std::make_shared<pokemon_gcnimpl>(
                                    _libpkmgc_pokemon_uptrs[index].get(),

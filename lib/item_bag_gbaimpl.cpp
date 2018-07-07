@@ -5,11 +5,6 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-#define GBA_CAST(ptr)    (static_cast<union pksav_gba_item_bag*>(ptr))
-#define RS_BAG(ptr)      (GBA_CAST(ptr)->rs)
-#define EMERALD_BAG(ptr) (GBA_CAST(ptr)->emerald)
-#define FRLG_BAG(ptr)    (GBA_CAST(ptr)->frlg)
-
 #include "item_bag_gbaimpl.hpp"
 #include "item_list_modernimpl.hpp"
 

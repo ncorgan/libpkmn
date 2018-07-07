@@ -61,8 +61,7 @@ namespace pkmn {
 
     pokemon_party_impl::pokemon_party_impl(
         int game_id
-    ): _native(nullptr),
-       _our_mem(false),
+    ): _p_native(nullptr),
        _game_id(game_id),
        _generation(pkmn::database::game_id_to_generation(game_id))
     {}
@@ -96,6 +95,6 @@ namespace pkmn {
     {
         boost::lock_guard<pokemon_party_impl> lock(*this);
 
-        return _native;
+        return _p_native;
     }
 }

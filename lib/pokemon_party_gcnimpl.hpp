@@ -20,7 +20,7 @@ namespace pkmn {
         public:
             pokemon_party_gcnimpl(
                 int game_id,
-                LibPkmGC::GC::Pokemon** pp_libpkmgc_native = nullptr
+                LibPkmGC::GC::Pokemon* const* pp_libpkmgc_native = nullptr
             );
             ~pokemon_party_gcnimpl() = default;
 

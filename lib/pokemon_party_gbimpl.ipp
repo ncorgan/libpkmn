@@ -50,6 +50,8 @@ namespace pkmn {
             );
         }
 
+        _p_native = &_pksav_party;
+
         _from_native();
     }
 

@@ -35,6 +35,8 @@ namespace pkmn {
             _pksav_bag.ball_pocket.terminator = 0xFF;
         }
 
+        _p_native = &_pksav_bag;
+
         bool is_crystal = (_game_id == 6);
 
         int item_pocket_id     = is_crystal ? 10 : 5;

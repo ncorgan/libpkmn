@@ -31,6 +31,8 @@ namespace pkmn {
             _pksav_bag.terminator = 0xFF;
         }
 
+        _p_native = &_pksav_bag;
+
         BOOST_STATIC_CONSTEXPR int YELLOW_GAME_ID = 3;
         BOOST_STATIC_CONSTEXPR int RB_ITEM_POCKET_ID = 1;
         BOOST_STATIC_CONSTEXPR int YELLOW_ITEM_POCKET_ID = 3;
@@ -41,7 +43,5 @@ namespace pkmn {
                                          : RB_ITEM_POCKET_ID,
                                      _game_id, &_pksav_bag
                                  );
-
-        _p_native = &_pksav_bag;
     }
 }
