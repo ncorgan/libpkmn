@@ -22,53 +22,32 @@
 
 #define NATIVE_RCAST (reinterpret_cast<struct pksav_gba_pokemon_box*>(_native))
 
+static const std::string DEFAULT_WALLPAPER = "Forest";
+
 namespace pkmn {
 
     pokemon_box_gbaimpl::pokemon_box_gbaimpl(
-        int game_id
-    ): pokemon_box_impl(game_id),
-       _wallpaper("Forest") // Some sensible default
-    {
-        _native = reinterpret_cast<void*>(new struct pksav_gba_pokemon_box);
-        std::memset(_native, 0, sizeof(struct pksav_gba_pokemon_box));
-        _our_mem = true;
-
-        _from_native();
-    }
-
-    pokemon_box_gbaimpl::pokemon_box_gbaimpl(
         int game_id,
-        struct pksav_gba_pokemon_box* native
+        const struct pksav_gba_pokemon_box* p_native
     ): pokemon_box_impl(game_id),
-       _wallpaper("Forest") // Some sensible default
+       _wallpaper(DEFAULT_WALLPAPER)
     {
-        _native = reinterpret_cast<void*>(native);
-        _our_mem = false;
-
-        _from_native();
-    }
-
-    pokemon_box_gbaimpl::pokemon_box_gbaimpl(
-        int game_id,
-        const struct pksav_gba_pokemon_box &native
-    ): pokemon_box_impl(game_id),
-       _wallpaper("Forest") // Some sensible default
-    {
-        _native = reinterpret_cast<void*>(new struct pksav_gba_pokemon_box);
-        *NATIVE_RCAST = native;
-        _our_mem = true;
-
-        _from_native();
-    }
-
-    pokemon_box_gbaimpl::~pokemon_box_gbaimpl()
-    {
-        boost::lock_guard<pokemon_box_gbaimpl> lock(*this);
-
-        if(_our_mem)
+        if(p_native != nullptr)
         {
-            delete NATIVE_RCAST;
+            _pksav_box = *p_native;
         }
+        else
+        {
+            std::memset(
+                &_pksav_box,
+                0,
+                sizeof(_pksav_box)
+            );
+        }
+
+        _p_native = &_pksav_box;
+
+        _from_native();
     }
 
     std::string pokemon_box_gbaimpl::get_name()
@@ -101,7 +80,7 @@ namespace pkmn {
         int num_pokemon = 0;
         for(int i = 0; i < get_capacity(); ++i)
         {
-            if(pksav_littleendian16(NATIVE_RCAST->entries[i].blocks.growth.species) > 0)
+            if(pksav_littleendian16(_pksav_box.entries[i].blocks.growth.species) > 0)
             {
                 ++num_pokemon;
             }
@@ -112,7 +91,7 @@ namespace pkmn {
 
     int pokemon_box_gbaimpl::get_capacity()
     {
-        return int(sizeof(NATIVE_RCAST->entries)/sizeof(NATIVE_RCAST->entries[0]));
+        return int(sizeof(_pksav_box.entries)/sizeof(_pksav_box.entries[0]));
     }
 
     void pokemon_box_gbaimpl::set_pokemon(
@@ -141,31 +120,25 @@ namespace pkmn {
             actual_new_pokemon = new_pokemon->to_game(get_game());
         }
 
-        pokemon_impl* new_pokemon_impl_ptr = dynamic_cast<pokemon_impl*>(actual_new_pokemon.get());
-        pokemon_impl* old_box_pokemon_impl_ptr = dynamic_cast<pokemon_impl*>(_pokemon_list[index].get());
-
-        // Make sure no one else is using the Pokémon variables.
-        boost::lock_guard<pokemon_impl> new_pokemon_lock(*new_pokemon_impl_ptr);
-        old_box_pokemon_impl_ptr->lock();
+        // Make sure no one else is using the new Pokémon variable.
+        pokemon_gbaimpl* p_new_pokemon = dynamic_cast<pokemon_gbaimpl*>(
+                                             actual_new_pokemon.get()
+                                         );
+        BOOST_ASSERT(p_new_pokemon != nullptr);
+        boost::lock_guard<pokemon_gbaimpl> new_pokemon_lock(*p_new_pokemon);
 
         // Copy the underlying memory to the party. At the end of this process,
         // all existing variables will correspond to the same Pokémon, even if
         // their underlying memory has changed.
-
-        // Make a copy of the current Pokémon in the given party slot so it can be preserved in an sptr
-        // that owns its own memory.
-        copy_box_pokemon<struct pksav_gba_pc_pokemon, struct pksav_gba_pokemon_party_data>(index);
-
-        // Copy the new Pokémon's internals into the party's internals and create a new sptr.
-        void* new_pokemon_native_pc_ptr = new_pokemon_impl_ptr->_native_pc;
-
-        // Unlock the old Pokémon's mutex is unlocked before it's destructor is called.
-        old_box_pokemon_impl_ptr->unlock();
-
-        NATIVE_RCAST->entries[index] = *reinterpret_cast<struct pksav_gba_pc_pokemon*>(new_pokemon_native_pc_ptr);
-
+        //
+        // Note: as we control the implementation, we know the PC data points
+        // to the whole Pokémon data structure.
+        rcast_equal<struct pksav_gba_pc_pokemon>(
+            actual_new_pokemon->get_native_pc_data(),
+            &_pksav_box.entries[index]
+        );
         _pokemon_list[index] = std::make_shared<pokemon_gbaimpl>(
-                                   &NATIVE_RCAST->entries[index],
+                                   &_pksav_box.entries[index],
                                    _game_id
                                );
 
@@ -175,7 +148,7 @@ namespace pkmn {
         {
             std::string species = new_pokemon->get_species();
 
-            if((species != "None") and (not new_pokemon->is_egg()))
+            if((species != "None") && !new_pokemon->is_egg())
             {
                 _pokedex->set_has_seen(species, true);
                 _pokedex->set_has_caught(species, true);
@@ -192,7 +165,7 @@ namespace pkmn {
 
         std::vector<std::string> game_specific_wallpaper_names;
 
-        if((game == "FireRed") or (game == "LeafGreen"))
+        if((game == "FireRed") || (game == "LeafGreen"))
         {
             game_specific_wallpaper_names =
                 pkmn::map_keys_to_vector(pksav::get_gba_frlg_box_wallpaper_bimap().left);
@@ -250,7 +223,7 @@ namespace pkmn {
 
         for(int i = 0; i < capacity; ++i) {
             _pokemon_list[i] = std::make_shared<pokemon_gbaimpl>(
-                                   &NATIVE_RCAST->entries[i],
+                                   &_pksav_box.entries[i],
                                    _game_id
                                );
         }

@@ -57,8 +57,7 @@ namespace pkmn {
 
             pkmn::pokedex::sptr _pokedex;
 
-            void* _native;
-            bool _our_mem;
+            void* _p_native;
 
             int _game_id, _generation;
 

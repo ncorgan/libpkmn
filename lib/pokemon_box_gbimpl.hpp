@@ -29,18 +29,15 @@
 namespace pkmn {
 
     POKEMON_BOX_GBIMPL_TEMPLATE
-    class pokemon_box_gbimpl: public pokemon_box_impl {
+    class pokemon_box_gbimpl: public pokemon_box_impl
+    {
         public:
-            pokemon_box_gbimpl() {}
-            explicit pokemon_box_gbimpl(
-                int game_id
-            );
             pokemon_box_gbimpl(
                 int game_id,
-                list_type* native
+                const list_type* p_native = nullptr
             );
 
-            ~pokemon_box_gbimpl();
+            ~pokemon_box_gbimpl() = default;
 
             std::string get_name() final;
 
@@ -64,6 +61,8 @@ namespace pkmn {
             ) final;
 
         private:
+
+            list_type _pksav_box;
 
             void _from_native() final;
     };

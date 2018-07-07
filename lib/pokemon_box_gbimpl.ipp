@@ -24,47 +24,42 @@
 #include <stdexcept>
 #include <type_traits>
 
-#define NATIVE_LIST_RCAST (reinterpret_cast<list_type*>(_native))
-#define NUM_LIST_SPECIES ((sizeof(NATIVE_LIST_RCAST->species)/sizeof(NATIVE_LIST_RCAST->species[0]))-1)
-
 namespace pkmn {
 
     POKEMON_BOX_GBIMPL_TEMPLATE
     POKEMON_BOX_GBIMPL_CLASS::pokemon_box_gbimpl(
-        int game_id
-    ): pokemon_box_impl(game_id)
-    {
-        _native = reinterpret_cast<void*>(new list_type);
-        std::memset(_native, 0, sizeof(list_type));
-        std::memset(NATIVE_LIST_RCAST->nicknames, 0x50, sizeof(NATIVE_LIST_RCAST->nicknames));
-        std::memset(NATIVE_LIST_RCAST->otnames, 0x50, sizeof(NATIVE_LIST_RCAST->otnames));
-        NATIVE_LIST_RCAST->species[NUM_LIST_SPECIES] = 0xFF;
-        _our_mem = true;
-
-        _from_native();
-    }
-
-    POKEMON_BOX_GBIMPL_TEMPLATE
-    POKEMON_BOX_GBIMPL_CLASS::pokemon_box_gbimpl(
         int game_id,
-        list_type* native
+        const list_type* p_native
     ): pokemon_box_impl(game_id)
     {
-        _native = reinterpret_cast<void*>(native);
-        _our_mem = false;
+        if(p_native != nullptr)
+        {
+            _pksav_box = *p_native;
+        }
+        else
+        {
+            std::memset(
+                &_pksav_box,
+                0,
+                sizeof(_pksav_box)
+            );
+            std::memset(
+                _pksav_box.nicknames,
+                0x50,
+                sizeof(_pksav_box.nicknames)
+            );
+            std::memset(
+                _pksav_box.otnames,
+                0x50,
+                sizeof(_pksav_box.otnames)
+            );
+
+            _pksav_box.species[get_capacity()-1] = 0xFF;
+        }
+
+        _p_native = &_pksav_box;
 
         _from_native();
-    }
-
-    POKEMON_BOX_GBIMPL_TEMPLATE
-    POKEMON_BOX_GBIMPL_CLASS::~pokemon_box_gbimpl()
-    {
-        boost::lock_guard<POKEMON_BOX_GBIMPL_CLASS> lock(*this);
-
-        if(_our_mem)
-        {
-            delete NATIVE_LIST_RCAST;
-        }
     }
 
     POKEMON_BOX_GBIMPL_TEMPLATE
@@ -111,13 +106,13 @@ namespace pkmn {
     {
         boost::lock_guard<POKEMON_BOX_GBIMPL_CLASS> lock(*this);
 
-        return int(NATIVE_LIST_RCAST->count);
+        return int(_pksav_box.count);
     }
 
     POKEMON_BOX_GBIMPL_TEMPLATE
     int POKEMON_BOX_GBIMPL_CLASS::get_capacity()
     {
-        return int(sizeof(NATIVE_LIST_RCAST->entries)/sizeof(NATIVE_LIST_RCAST->entries[0]));
+        return int(sizeof(_pksav_box.entries)/sizeof(_pksav_box.entries[0]));
     }
 
     POKEMON_BOX_GBIMPL_TEMPLATE
@@ -154,27 +149,25 @@ namespace pkmn {
             actual_new_pokemon = new_pokemon->to_game(get_game());
         }
 
-        pokemon_impl* new_pokemon_impl_ptr = dynamic_cast<pokemon_impl*>(actual_new_pokemon.get());
-        pokemon_impl* old_box_pokemon_impl_ptr = dynamic_cast<pokemon_impl*>(_pokemon_list[index].get());
-
-        // Make sure no one else is using the Pokémon variables.
-        boost::lock_guard<pokemon_impl> new_pokemon_lock(*new_pokemon_impl_ptr);
-        old_box_pokemon_impl_ptr->lock();
+        // Make sure no one else is using the new Pokémon variable.
+        libpkmn_pokemon_type* p_new_pokemon = dynamic_cast<libpkmn_pokemon_type*>(
+                                                  actual_new_pokemon.get()
+                                              );
+        BOOST_ASSERT(p_new_pokemon != nullptr);
+        boost::lock_guard<libpkmn_pokemon_type> new_pokemon_lock(*p_new_pokemon);
 
         // Copy the underlying memory to the box. At the end of this process,
         // all existing variables will correspond to the same Pokémon, even if
         // their underlying memory has changed.
-
-        // Copy the new Pokémon's internals into the box's internals and create a new sptr.
-        void* new_pokemon_native_pc_ptr = new_pokemon_impl_ptr->_native_pc;
-
-        // Unlock the old Pokémon's mutex is unlocked before it's destructor is called.
-        old_box_pokemon_impl_ptr->unlock();
-
-        // Set the entry in the species list.
-        NATIVE_LIST_RCAST->entries[index] = *reinterpret_cast<pksav_pc_pokemon_type*>(new_pokemon_native_pc_ptr);
+        //
+        // Note: as we control the implementation, we know the PC data points
+        // to the whole Pokémon data structure.
+        rcast_equal<pksav_pc_pokemon_type>(
+            actual_new_pokemon->get_native_pc_data(),
+            &_pksav_box.entries[index]
+        );
         _pokemon_list[index] = std::make_shared<libpkmn_pokemon_type>(
-                                   &NATIVE_LIST_RCAST->entries[index],
+                                   &_pksav_box.entries[index],
                                    _game_id
                                );
 
@@ -197,22 +190,22 @@ namespace pkmn {
         std::string new_species = actual_new_pokemon->get_species();
         if(index == num_pokemon and new_species != "None")
         {
-            ++(NATIVE_LIST_RCAST->count);
+            ++(_pksav_box.count);
         }
         else if(index == (num_pokemon-1) and new_species == "None")
         {
-            --(NATIVE_LIST_RCAST->count);
+            --(_pksav_box.count);
         }
 
         // In Generation II, whether or not a Pokémon is in an egg is
         // stored in the list that stores it, not the Pokémon struct itself.
         if(std::is_same<list_type, struct pksav_gen2_pokemon_box>::value and actual_new_pokemon->is_egg())
         {
-            NATIVE_LIST_RCAST->species[index] = GEN2_EGG_ID;
+            _pksav_box.species[index] = GEN2_EGG_ID;
         }
         else
         {
-            NATIVE_LIST_RCAST->species[index] = uint8_t(actual_new_pokemon->get_database_entry().get_pokemon_index());
+            _pksav_box.species[index] = uint8_t(actual_new_pokemon->get_database_entry().get_pokemon_index());
         }
 
         if(_generation == 1)
@@ -220,14 +213,14 @@ namespace pkmn {
             PKSAV_CALL(
                 pksav_gen1_export_text(
                     actual_new_pokemon->get_nickname().c_str(),
-                    NATIVE_LIST_RCAST->nicknames[index],
+                    _pksav_box.nicknames[index],
                     10
                 );
             )
             PKSAV_CALL(
                 pksav_gen1_export_text(
                     actual_new_pokemon->get_original_trainer_name().c_str(),
-                    NATIVE_LIST_RCAST->otnames[index],
+                    _pksav_box.otnames[index],
                     7
                 );
             )
@@ -237,14 +230,14 @@ namespace pkmn {
             PKSAV_CALL(
                 pksav_gen2_export_text(
                     actual_new_pokemon->get_nickname().c_str(),
-                    NATIVE_LIST_RCAST->nicknames[index],
+                    _pksav_box.nicknames[index],
                     10
                 );
             )
             PKSAV_CALL(
                 pksav_gen2_export_text(
                     actual_new_pokemon->get_original_trainer_name().c_str(),
-                    NATIVE_LIST_RCAST->otnames[index],
+                    _pksav_box.otnames[index],
                     7
                 );
             )
@@ -271,9 +264,7 @@ namespace pkmn {
     }
 
     POKEMON_BOX_GBIMPL_TEMPLATE
-    void POKEMON_BOX_GBIMPL_CLASS::set_wallpaper(
-        PKMN_UNUSED(const std::string& wallpaper)
-    )
+    void POKEMON_BOX_GBIMPL_CLASS::set_wallpaper(const std::string&)
     {
         throw pkmn::feature_not_in_game_error("Box wallpaper", "Generation I-II");
     }
@@ -297,13 +288,13 @@ namespace pkmn {
          * Unfortuately, the count field may not be reliable, so we need to check
          * ourselves and fix it if it's wrong.
          */
-        if(num_pokemon > 0 and NATIVE_LIST_RCAST->entries[num_pokemon-1].species == 0)
+        if((num_pokemon > 0) && (_pksav_box.entries[num_pokemon-1].species == 0))
         {
             for(int i = 0; i < num_pokemon; ++i)
             {
-                if(NATIVE_LIST_RCAST->entries[i].species == 0)
+                if(_pksav_box.entries[i].species == 0)
                 {
-                    NATIVE_LIST_RCAST->count = i;
+                    _pksav_box.count = i;
                     break;
                 }
             }
@@ -315,16 +306,16 @@ namespace pkmn {
              * Memory is not necessarily zeroed-out past the num_pokemon point,
              * so we'll do it ourselves.
              */
-            if(i >= num_pokemon and NATIVE_LIST_RCAST->entries[i].species > 0)
+            if((i >= num_pokemon) && (_pksav_box.entries[i].species > 0))
             {
-                NATIVE_LIST_RCAST->species[i] = 0;
-                std::memset(&NATIVE_LIST_RCAST->entries[i], 0, sizeof(pksav_pc_pokemon_type));
-                std::memset(NATIVE_LIST_RCAST->nicknames[i], 0x50, sizeof(NATIVE_LIST_RCAST->nicknames[i]));
-                std::memset(NATIVE_LIST_RCAST->otnames[i], 0x50, sizeof(NATIVE_LIST_RCAST->otnames[i]));
+                _pksav_box.species[i] = 0;
+                std::memset(&_pksav_box.entries[i], 0, sizeof(pksav_pc_pokemon_type));
+                std::memset(_pksav_box.nicknames[i], 0x50, sizeof(_pksav_box.nicknames[i]));
+                std::memset(_pksav_box.otnames[i], 0x50, sizeof(_pksav_box.otnames[i]));
             }
 
             _pokemon_list[i] = std::make_shared<libpkmn_pokemon_type>(
-                                   &NATIVE_LIST_RCAST->entries[i],
+                                   &_pksav_box.entries[i],
                                    _game_id
                                );
 
@@ -333,13 +324,13 @@ namespace pkmn {
             if(std::is_same<list_type, struct pksav_gen2_pokemon_box>::value)
             {
                 _pokemon_list[i]->set_is_egg(
-                    (NATIVE_LIST_RCAST->species[i] == GEN2_EGG_ID)
+                    (_pksav_box.species[i] == GEN2_EGG_ID)
                 );
             }
 
             PKSAV_CALL(
                 pksav_gen1_import_text(
-                    NATIVE_LIST_RCAST->nicknames[i],
+                    _pksav_box.nicknames[i],
                     nickname,
                     10
                 );
@@ -351,7 +342,7 @@ namespace pkmn {
 
             PKSAV_CALL(
                 pksav_gen1_import_text(
-                    NATIVE_LIST_RCAST->otnames[i],
+                    _pksav_box.otnames[i],
                     otname,
                     7
                 );

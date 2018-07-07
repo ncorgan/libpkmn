@@ -92,18 +92,12 @@ namespace pkmn {
             actual_new_pokemon = new_pokemon->to_game(get_game());
         }
 
+        // Make sure no one else is using the new Pokémon variable.
         libpkmn_pokemon_type* p_new_pokemon = dynamic_cast<libpkmn_pokemon_type*>(
                                                   actual_new_pokemon.get()
                                               );
-        libpkmn_pokemon_type* p_old_pokemon = dynamic_cast<libpkmn_pokemon_type*>(
-                                                  _pokemon_list[index].get()
-                                              );
         BOOST_ASSERT(p_new_pokemon != nullptr);
-        BOOST_ASSERT(p_old_pokemon != nullptr);
-
-        // Make sure no one else is using the Pokémon variables.
         boost::lock_guard<libpkmn_pokemon_type> new_pokemon_lock(*p_new_pokemon);
-        p_old_pokemon->lock();
 
         // Copy the underlying memory to the party. At the end of this process,
         // all existing variables will correspond to the same Pokémon, even if

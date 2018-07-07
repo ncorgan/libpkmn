@@ -80,18 +80,12 @@ namespace pkmn {
             actual_new_pokemon = new_pokemon->to_game(get_game());
         }
 
+        // Make sure no one else is using the new Pokémon variable.
         pokemon_gbaimpl* p_new_pokemon = dynamic_cast<pokemon_gbaimpl*>(
                                              actual_new_pokemon.get()
                                          );
-        pokemon_gbaimpl* p_old_pokemon = dynamic_cast<pokemon_gbaimpl*>(
-                                             _pokemon_list[index].get()
-                                         );
         BOOST_ASSERT(p_new_pokemon != nullptr);
-        BOOST_ASSERT(p_old_pokemon != nullptr);
-
-        // Make sure no one else is using the Pokémon variables.
         boost::lock_guard<pokemon_gbaimpl> new_pokemon_lock(*p_new_pokemon);
-        p_old_pokemon->lock();
 
         // Copy the underlying memory to the party. At the end of this process,
         // all existing variables will correspond to the same Pokémon, even if
@@ -99,7 +93,7 @@ namespace pkmn {
         //
         // Note: as we control the implementation, we know the PC data points
         // to the whole Pokémon data structure.
-        rcast_equal<struct pksav_gba_party_pokemon>(
+        rcast_equal<struct pksav_gba_pc_pokemon>(
             actual_new_pokemon->get_native_pc_data(),
             &_pksav_party.party[index]
         );
@@ -107,6 +101,7 @@ namespace pkmn {
                                    &_pksav_party.party[index],
                                    _game_id
                                );
+
         // Update the number of Pokémon in the party if needed.
         std::string new_species = new_pokemon->get_species();
         if(index == num_pokemon)
