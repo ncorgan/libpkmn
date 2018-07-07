@@ -117,7 +117,7 @@ namespace pkmn {
         _item_pockets["Key Items"] = std::make_shared<item_list_modernimpl>(
                                          BERRY_POCKET_IDS[index],
                                          _game_id,
-                                         p_berry_pocket
+                                         p_key_item_pocket
                                      );
     }
 }

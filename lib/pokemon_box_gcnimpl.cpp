@@ -15,29 +15,8 @@
 
 #include <stdexcept>
 
-#define _libpkmgc_box_uptr   (reinterpret_cast<LibPkmGC::GC::PokemonBox*>(_native))
-#define COLO_RCAST (reinterpret_cast<LibPkmGC::Colosseum::PokemonBox*>(_native))
-#define XD_RCAST   (reinterpret_cast<LibPkmGC::XD::PokemonBox*>(_native))
-
-namespace pkmn {
-
-    pokemon_box_gcnimpl::pokemon_box_gcnimpl(
-        int game_id
-    ): pokemon_box_impl(game_id)
-    {
-        if(_game_id == COLOSSEUM_ID)
-        {
-            _native = reinterpret_cast<void*>(new LibPkmGC::Colosseum::PokemonBox);
-        }
-        else
-        {
-            _native = reinterpret_cast<void*>(new LibPkmGC::XD::PokemonBox);
-        }
-        _our_mem = true;
-
-        _from_native();
-    }
-
+namespace pkmn
+{
     pokemon_box_gcnimpl::pokemon_box_gcnimpl(
         int game_id,
         LibPkmGC::GC::PokemonBox* p_libpkmgc_native
@@ -182,7 +161,9 @@ namespace pkmn {
         old_box_pokemon_impl_ptr->unlock();
 
         _pokemon_list[index] = std::make_shared<pokemon_gcnimpl>(
-                                   _libpkmgc_box_uptr->pkm[index],
+                                   dynamic_cast<LibPkmGC::GC::Pokemon*>(
+                                       _libpkmgc_box_uptr->pkm[index]
+                                   ),
                                    _game_id
                                );
     }
@@ -207,7 +188,9 @@ namespace pkmn {
         for(int party_index = 0; party_index < capacity; ++party_index)
         {
             _pokemon_list[party_index] = std::make_shared<pokemon_gcnimpl>(
-                                             _libpkmgc_box_uptr->pkm[party_index],
+                                             dynamic_cast<LibPkmGC::GC::Pokemon*>(
+                                                 _libpkmgc_box_uptr->pkm[party_index]
+                                             ),
                                              _game_id
                                          );
         }

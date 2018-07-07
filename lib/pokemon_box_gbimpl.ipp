@@ -165,10 +165,6 @@ namespace pkmn {
         // all existing variables will correspond to the same Pokémon, even if
         // their underlying memory has changed.
 
-        // Make a copy of the current Pokémon in the given box slot so it can be preserved in an sptr
-        // that owns its own memory.
-        copy_box_pokemon<pksav_pc_pokemon_type, pksav_pokemon_party_data_type>(index);
-
         // Copy the new Pokémon's internals into the box's internals and create a new sptr.
         void* new_pokemon_native_pc_ptr = new_pokemon_impl_ptr->_native_pc;
 

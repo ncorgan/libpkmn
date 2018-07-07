@@ -36,26 +36,18 @@ namespace pkmn {
         int game_id = pkmn::database::game_name_to_id(game);
         int generation = pkmn::database::game_id_to_generation(game_id);
         int item_list_id = 0;
-        int capacity = 0;
 
-        static BOOST_CONSTEXPR const char* id_capacity_query = \
-            "SELECT id,capacity FROM libpkmn_item_lists WHERE name=? AND "
+        static const std::string query =
+            "SELECT id FROM libpkmn_item_lists WHERE name=? AND "
             "version_group_id=(SELECT version_group_id FROM versions "
             "WHERE id=?)";
 
-        SQLite::Statement stmt(
-            pkmn::database::get_connection(),
-            id_capacity_query
-        );
-        stmt.bind(1, name);
-        stmt.bind(2, game_id);
-        if(stmt.executeStep())
-        {
-            item_list_id = stmt.getColumn(0);
-            capacity = stmt.getColumn(1);
-        } else {
-            throw std::invalid_argument("Invalid list.");
-        }
+        item_list_id = pkmn::database::query_db_bind2<int, std::string, int>(
+                           query.c_str(),
+                           name,
+                           game_id,
+                           "Invalid item list."
+                        );
 
         switch(generation)
         {
