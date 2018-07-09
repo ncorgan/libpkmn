@@ -31,6 +31,8 @@ namespace pkmn {
             ~item_bag_gen1impl() = default;
 
         private:
+            void _to_native() override;
+
             struct pksav_gen1_item_bag _pksav_bag;
     };
 

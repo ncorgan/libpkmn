@@ -57,8 +57,7 @@ namespace pkmn {
 
     pokemon_pc_impl::pokemon_pc_impl(
         int game_id
-    ): _native(nullptr),
-       _our_mem(false),
+    ): _p_native(nullptr),
        _game_id(game_id),
        _generation(pkmn::database::game_id_to_generation(game_id))
     {}
@@ -89,12 +88,12 @@ namespace pkmn {
 
     const std::vector<std::string>& pokemon_pc_impl::get_box_names()
     {
-        boost::lock_guard<pokemon_pc_impl> lock(*this);
-
         if(_generation == 1)
         {
             throw pkmn::feature_not_in_game_error("Box names", "Generation I");
         }
+
+        boost::lock_guard<pokemon_pc_impl> lock(*this);
 
         _update_box_names();
         return _box_names;
@@ -104,15 +103,8 @@ namespace pkmn {
     {
         boost::lock_guard<pokemon_pc_impl> lock(*this);
 
-        if(_generation > 1)
-        {
-            _update_box_names();
-        }
-        if((_generation > 3) and not game_is_gamecube(_game_id))
-        {
-            _update_native_box_wallpapers();
-        }
+        _to_native();
 
-        return _native;
+        return _p_native;
     }
 }

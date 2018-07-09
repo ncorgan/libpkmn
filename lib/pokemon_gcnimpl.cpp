@@ -39,9 +39,6 @@
 #include <cstring>
 #include <stdexcept>
 
-#define COLO_RCAST (reinterpret_cast<LibPkmGC::Colosseum::Pokemon*>(_native_pc))
-#define XD_RCAST   (reinterpret_cast<LibPkmGC::XD::Pokemon*>(_native_pc))
-
 namespace pkmn
 {
     BOOST_STATIC_CONSTEXPR int MEW_ID    = 151;
@@ -191,8 +188,8 @@ namespace pkmn
 
         _register_attributes();
 
-        _native_party = nullptr;
-        _our_party_mem = false;
+        _p_native_pc = _libpkmgc_pokemon_uptr.get();
+        _p_native_party = nullptr;
     }
 
     pokemon_gcnimpl::pokemon_gcnimpl(
@@ -221,8 +218,8 @@ namespace pkmn
 
         _register_attributes();
 
-        _native_party = nullptr;
-        _our_party_mem = false;
+        _p_native_pc = _libpkmgc_pokemon_uptr.get();
+        _p_native_party = nullptr;
     }
 
     pokemon::sptr pokemon_gcnimpl::to_game(

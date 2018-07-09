@@ -109,8 +109,8 @@ namespace pkmn
         set_level(level);
         _init_default_moves_for_level();
 
-        _native_pc = &_pksav_pokemon.pc_data;
-        _native_party = &_pksav_pokemon.party_data;
+        _p_native_pc = &_pksav_pokemon.pc_data;
+        _p_native_party = &_pksav_pokemon.party_data;
     }
 
     pokemon_gen2impl::pokemon_gen2impl(
@@ -124,8 +124,8 @@ namespace pkmn
         _pksav_pokemon.pc_data = *p_pc_pokemon;
         _populate_party_data();
 
-        _native_pc = &_pksav_pokemon.pc_data;
-        _native_party = &_pksav_pokemon.party_data;
+        _p_native_pc = &_pksav_pokemon.pc_data;
+        _p_native_party = &_pksav_pokemon.party_data;
 
         // Populate abstractions
         _update_EV_map();
@@ -156,8 +156,8 @@ namespace pkmn
 
         _pksav_pokemon = *p_party_pokemon;
 
-        _native_pc = &_pksav_pokemon.pc_data;
-        _native_party = &_pksav_pokemon.party_data;
+        _p_native_pc = &_pksav_pokemon.pc_data;
+        _p_native_party = &_pksav_pokemon.party_data;
 
         // Populate abstractions
         _update_EV_map();
@@ -946,8 +946,8 @@ namespace pkmn
     {
         pksav::gen2_pc_pokemon_to_party_data(
             _database_entry,
-            reinterpret_cast<const struct pksav_gen2_pc_pokemon*>(_native_pc),
-            reinterpret_cast<struct pksav_gen2_pokemon_party_data*>(_native_party)
+            &_pksav_pokemon.pc_data,
+            &_pksav_pokemon.party_data
         );
 
         _update_stat_map();

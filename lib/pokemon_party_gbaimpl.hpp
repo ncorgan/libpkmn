@@ -34,6 +34,7 @@ namespace pkmn {
             struct pksav_gba_pokemon_party _pksav_party;
 
             void _from_native() final;
+            void _to_native() final;
     };
 }
 

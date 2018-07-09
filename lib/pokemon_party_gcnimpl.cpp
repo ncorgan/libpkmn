@@ -55,6 +55,8 @@ namespace pkmn {
             }
         }
 
+        _p_native = _libpkmgc_pokemon_uptrs.data();
+
         _from_native();
     }
 
@@ -145,6 +147,22 @@ namespace pkmn {
                                             _libpkmgc_pokemon_uptrs[party_index].get(),
                                             _game_id
                                         );
+        }
+    }
+
+    void pokemon_party_gcnimpl::_to_native()
+    {
+        BOOST_ASSERT(_pokemon_list.size() == PARTY_SIZE);
+
+        for(int party_index = 0;
+            party_index < PARTY_SIZE;
+            ++party_index)
+        {
+            _libpkmgc_pokemon_uptrs[party_index].reset(
+                static_cast<LibPkmGC::GC::Pokemon*>(
+                    _pokemon_list[party_index]->get_native_pc_data()
+                )->clone()
+            );
         }
     }
 }

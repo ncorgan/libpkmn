@@ -272,8 +272,6 @@ namespace pkmn {
     POKEMON_BOX_GBIMPL_TEMPLATE
     void POKEMON_BOX_GBIMPL_CLASS::_from_native()
     {
-        boost::lock_guard<POKEMON_BOX_GBIMPL_CLASS> lock(*this);
-
         int capacity = get_capacity();
 
         // This shouldn't resize if the vector is populated.
@@ -350,6 +348,88 @@ namespace pkmn {
             if(std::strlen(otname) > 0)
             {
                 _pokemon_list[i]->set_original_trainer_name(otname);
+            }
+        }
+    }
+
+    POKEMON_BOX_GBIMPL_TEMPLATE
+    void POKEMON_BOX_GBIMPL_CLASS::_to_native()
+    {
+        BOOST_ASSERT(static_cast<size_t>(get_capacity()) == _pokemon_list.size());
+
+        std::memset(
+            _pksav_box.otnames,
+            0x50,
+            sizeof(_pksav_box.otnames)
+        );
+        std::memset(
+            _pksav_box.nicknames,
+            0x50,
+            sizeof(_pksav_box.nicknames)
+        );
+
+        for(size_t pokemon_index = 0;
+            pokemon_index < _pokemon_list.size();
+            ++pokemon_index)
+        {
+            pkmn::rcast_equal<pksav_pc_pokemon_type>(
+                _pokemon_list[pokemon_index]->get_native_pc_data(),
+                &_pksav_box.entries[pokemon_index]
+            );
+
+            // In Generation II, whether or not a Pokémon is in an egg is
+            // stored in the list that stores it, not the Pokémon struct itself.
+            if(std::is_same<list_type, struct pksav_gen2_pokemon_box>::value &&
+               _pokemon_list[pokemon_index]->is_egg())
+            {
+                _pksav_box.species[pokemon_index] = GEN2_EGG_ID;
+            }
+            else
+            {
+                _pksav_box.species[pokemon_index] =
+                    static_cast<uint8_t>(
+                        _pokemon_list[pokemon_index]->get_database_entry().get_pokemon_index()
+                    );
+            }
+
+            // Even though this function is meant to update the native representation,
+            // the native count should have been updated along the way.
+            if(pokemon_index < _pksav_box.count)
+            {
+                if(std::is_same<list_type, struct pksav_gen1_pokemon_box>::value)
+                {
+                    PKSAV_CALL(
+                        pksav_gen1_export_text(
+                            _pokemon_list[pokemon_index]->get_original_trainer_name().c_str(),
+                            _pksav_box.otnames[pokemon_index],
+                            PKSAV_GEN1_POKEMON_OTNAME_LENGTH
+                        );
+                    )
+                    PKSAV_CALL(
+                        pksav_gen1_export_text(
+                            _pokemon_list[pokemon_index]->get_nickname().c_str(),
+                            _pksav_box.nicknames[pokemon_index],
+                            PKSAV_GEN1_POKEMON_NICKNAME_LENGTH
+                        );
+                    )
+                }
+                else
+                {
+                    PKSAV_CALL(
+                        pksav_gen2_export_text(
+                            _pokemon_list[pokemon_index]->get_original_trainer_name().c_str(),
+                            _pksav_box.otnames[pokemon_index],
+                            PKSAV_GEN2_POKEMON_OTNAME_LENGTH
+                        );
+                    )
+                    PKSAV_CALL(
+                        pksav_gen2_export_text(
+                            _pokemon_list[pokemon_index]->get_nickname().c_str(),
+                            _pksav_box.nicknames[pokemon_index],
+                            PKSAV_GEN2_POKEMON_NICKNAME_LENGTH
+                        );
+                    )
+                }
             }
         }
     }

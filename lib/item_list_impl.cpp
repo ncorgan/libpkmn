@@ -180,11 +180,6 @@ namespace pkmn {
                     );
 
         _item_slots.resize(_capacity);
-        for(pkmn::item_slot& r_item_slot: _item_slots)
-        {
-            r_item_slot.item = "None";
-            r_item_slot.amount = 0;
-        }
     }
 
     std::string item_list_impl::get_name()

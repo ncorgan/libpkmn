@@ -34,8 +34,6 @@ static PKMN_CONSTEXPR_OR_INLINE bool ITEM_ID_IS_HM(int num)
     return (num >= HM01_ID) && (num <= HM07_ID);
 }
 
-#define NATIVE_RCAST (reinterpret_cast<struct pksav_gen2_tmhm_pocket*>(_p_native))
-
 namespace pkmn {
 
     item_list_gen2_tmhmimpl::item_list_gen2_tmhmimpl(
@@ -66,6 +64,8 @@ namespace pkmn {
         {
             std::memset(&_pksav_list, 0, sizeof(_pksav_list));
         }
+
+        _p_native = &_pksav_list;
     }
 
     int item_list_gen2_tmhmimpl::get_num_items()
@@ -75,14 +75,14 @@ namespace pkmn {
         int ret = 0;
         for(int tm_index = 0; tm_index < PKSAV_GEN2_TM_COUNT; ++tm_index)
         {
-            if(NATIVE_RCAST->tm_count[tm_index] > 0)
+            if(_pksav_list.tm_count[tm_index] > 0)
             {
                 ++ret;
             }
         }
         for(int hm_index = 0; hm_index < PKSAV_GEN2_HM_COUNT; ++hm_index)
         {
-            if(NATIVE_RCAST->hm_count[hm_index] > 0)
+            if(_pksav_list.hm_count[hm_index] > 0)
             {
                 ++ret;
             }
@@ -199,11 +199,11 @@ namespace pkmn {
     {
         for(size_t tm_index = 0; tm_index < PKSAV_GEN2_TM_COUNT; ++tm_index)
         {
-            _item_slots[tm_index].amount = NATIVE_RCAST->tm_count[tm_index];
+            _item_slots[tm_index].amount = _pksav_list.tm_count[tm_index];
         }
         for(size_t hm_index = 0; hm_index < PKSAV_GEN2_HM_COUNT; ++hm_index)
         {
-            _item_slots[PKSAV_GEN2_TM_COUNT+hm_index].amount = NATIVE_RCAST->hm_count[hm_index];
+            _item_slots[PKSAV_GEN2_TM_COUNT+hm_index].amount = _pksav_list.hm_count[hm_index];
         }
     }
 
@@ -211,11 +211,11 @@ namespace pkmn {
     {
         for(size_t tm_index = 0; tm_index < PKSAV_GEN2_TM_COUNT; ++tm_index)
         {
-            NATIVE_RCAST->tm_count[tm_index] = uint8_t(_item_slots[tm_index].amount);
+            _pksav_list.tm_count[tm_index] = uint8_t(_item_slots[tm_index].amount);
         }
         for(size_t hm_index = 0; hm_index < PKSAV_GEN2_HM_COUNT; ++hm_index)
         {
-            NATIVE_RCAST->hm_count[hm_index] = uint8_t(_item_slots[PKSAV_GEN2_TM_COUNT+hm_index].amount);
+            _pksav_list.hm_count[hm_index] = uint8_t(_item_slots[PKSAV_GEN2_TM_COUNT+hm_index].amount);
         }
     }
 }

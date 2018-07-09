@@ -60,12 +60,13 @@ namespace pkmn {
             pkmn::pokemon_box_list_t _box_list;
             std::vector<std::string> _box_names;
 
-            void* _native;
-            bool _our_mem;
+            void* _p_native;
 
             int _game_id, _generation;
 
             virtual void _from_native() = 0;
+            virtual void _to_native() = 0;
+
             virtual void _update_box_names() = 0;
             virtual void _update_native_box_wallpapers() = 0;
     };

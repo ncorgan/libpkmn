@@ -5,12 +5,12 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-#define GEN2_CAST(ptr) (static_cast<struct pksav_gen2_item_bag*>(ptr))
-
 #include "item_bag_gen2impl.hpp"
 #include "item_list_gbimpl.hpp"
 #include "item_list_gen2_keyitemimpl.hpp"
 #include "item_list_gen2_tmhmimpl.hpp"
+
+#include "utils/misc.hpp"
 
 #include <boost/thread/lock_guard.hpp>
 
@@ -64,5 +64,25 @@ namespace pkmn {
                                         _game_id,
                                         &_pksav_bag.tmhm_pocket
                                     );
+    }
+
+    void item_bag_gen2impl::_to_native()
+    {
+        pkmn::rcast_equal<decltype(_pksav_bag.item_pocket)>(
+            _item_pockets["Items"]->get_native(),
+            &_pksav_bag.item_pocket
+        );
+        pkmn::rcast_equal<decltype(_pksav_bag.key_item_pocket)>(
+            _item_pockets["KeyItems"]->get_native(),
+            &_pksav_bag.key_item_pocket
+        );
+        pkmn::rcast_equal<decltype(_pksav_bag.ball_pocket)>(
+            _item_pockets["Balls"]->get_native(),
+            &_pksav_bag.ball_pocket
+        );
+        pkmn::rcast_equal<decltype(_pksav_bag.tmhm_pocket)>(
+            _item_pockets["TM/HM"]->get_native(),
+            &_pksav_bag.tmhm_pocket
+        );
     }
 }

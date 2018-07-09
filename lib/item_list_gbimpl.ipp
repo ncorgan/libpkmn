@@ -89,7 +89,6 @@ namespace pkmn {
     template<typename pksav_type>
     void item_list_gbimpl<pksav_type>::_to_native(int index)
     {
-        bool count_set = false;
         if(index == -1)
         {
             for(int item_index = 0; item_index < _capacity; ++item_index)
@@ -98,12 +97,6 @@ namespace pkmn {
                     _item_slots[item_index],
                     _pksav_list.items[item_index]
                 );
-
-                if(!count_set && (_pksav_list.items[item_index].index == 0))
-                {
-                    _pksav_list.count = uint8_t(item_index);
-                    count_set = true;
-                }
             }
         }
         else
@@ -112,16 +105,9 @@ namespace pkmn {
                 _item_slots[index],
                 _pksav_list.items[index]
             );
-
-            for(int item_index = 0; (item_index < _capacity) && !count_set; ++item_index)
-            {
-                if(_pksav_list.items[index].index == 0)
-                {
-                    _pksav_list.count = uint8_t(index);
-                    count_set = true;
-                }
-            }
         }
+
+        _pksav_list.count = uint8_t(_num_items);
     }
 
 }

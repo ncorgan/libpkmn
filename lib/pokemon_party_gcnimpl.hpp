@@ -11,6 +11,7 @@
 
 #include "libpkmgc_includes.hpp"
 
+#include <memory>
 #include <vector>
 
 namespace pkmn {
@@ -37,6 +38,7 @@ namespace pkmn {
             std::vector<std::unique_ptr<LibPkmGC::GC::Pokemon>> _libpkmgc_pokemon_uptrs;
 
             void _from_native() final;
+            void _to_native() final;
     };
 }
 

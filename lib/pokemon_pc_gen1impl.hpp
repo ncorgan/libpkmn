@@ -12,23 +12,34 @@
 #include <pksav/gen1/pokemon.h>
 #include <pksav/gen1/save.h>
 
+#include <vector>
+
 namespace pkmn {
 
     class pokemon_pc_gen1impl: public pokemon_pc_impl
     {
         public:
-            pokemon_pc_gen1impl() {}
             pokemon_pc_gen1impl(
                 int game_id,
-                struct pksav_gen1_pokemon_storage* p_native = nullptr
+                const struct pksav_gen1_pokemon_storage* p_native = nullptr
             );
 
-            ~pokemon_pc_gen1impl();
+            ~pokemon_pc_gen1impl() = default;
 
             int get_num_boxes() final;
 
         private:
+            struct pksav_gen1_pokemon_storage _pksav_storage;
+
+            // The PKSav storage struct contains pointers, so they need
+            // to point to something.
+            uint8_t _current_box_num;
+            struct pksav_gen1_pokemon_box _current_box;
+            std::vector<struct pksav_gen1_pokemon_box> _native_boxes;
+
             void _from_native() final;
+            void _to_native() final;
+
             void _update_box_names() final;
             void _update_native_box_wallpapers() final;
     };

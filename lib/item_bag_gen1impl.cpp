@@ -5,10 +5,10 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-#define GEN1_CAST(ptr) (static_cast<struct pksav_gen1_item_bag*>(ptr))
-
 #include "item_bag_gen1impl.hpp"
 #include "item_list_gbimpl.hpp"
+
+#include "utils/misc.hpp"
 
 #include <boost/thread/lock_guard.hpp>
 
@@ -43,5 +43,13 @@ namespace pkmn {
                                          : RB_ITEM_POCKET_ID,
                                      _game_id, &_pksav_bag
                                  );
+    }
+
+    void item_bag_gen1impl::_to_native()
+    {
+        pkmn::rcast_equal<struct pksav_gen1_item_bag>(
+            _item_pockets["Items"]->get_native(),
+            &_pksav_bag
+        );
     }
 }

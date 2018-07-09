@@ -51,6 +51,7 @@ namespace pkmn {
 
         private:
             void _from_native() final;
+            void _to_native() final;
 
             struct pksav_gba_pokemon_box _pksav_box;
 

@@ -725,7 +725,7 @@ namespace pkmntest {
         sizeof(struct pksav_gba_pokemon_party_data)
     };
 
-    static void compare_item_lists(
+    /*static void compare_item_lists(
         pkmn::item_list::sptr list1,
         pkmn::item_list::sptr list2
     ) {
@@ -740,20 +740,20 @@ namespace pkmntest {
             EXPECT_EQ(item_slots1[i].item, item_slots2[i].item);
             EXPECT_EQ(item_slots1[i].amount, item_slots2[i].amount);
         }
-    }
+    }*/
 
-    static void compare_pokedexes(
+    /*static void compare_pokedexes(
         pkmn::pokedex::sptr pokedex1,
         pkmn::pokedex::sptr pokedex2
     )
     {
         EXPECT_EQ(pokedex1->get_all_seen(), pokedex2->get_all_seen());
         EXPECT_EQ(pokedex1->get_all_caught(), pokedex2->get_all_caught());
-    }
+    }*/
 
     static void compare_pokemon(
-        pkmn::pokemon::sptr pokemon1,
-        pkmn::pokemon::sptr pokemon2
+        const pkmn::pokemon::sptr& pokemon1,
+        const pkmn::pokemon::sptr& pokemon2
     ) {
         std::string game = pokemon1->get_game();
         int generation = game_generations.at(game);
@@ -765,9 +765,10 @@ namespace pkmntest {
         }
 
         // On the C++ level, check the underlying representation.
-        if(game == "Colosseum" or game == "XD")
+        if((game == "Colosseum") || (game == "XD"))
         {
-            const LibPkmGC::GC::Pokemon* native1 = reinterpret_cast<const LibPkmGC::GC::Pokemon*>(pokemon1->get_native_pc_data());
+            std::cout << pokemon1->get_species() << " " << pokemon2->get_species() << std::endl;
+            /*const LibPkmGC::GC::Pokemon* native1 = reinterpret_cast<const LibPkmGC::GC::Pokemon*>(pokemon1->get_native_pc_data());
             const LibPkmGC::GC::Pokemon* native2 = reinterpret_cast<const LibPkmGC::GC::Pokemon*>(pokemon2->get_native_pc_data());
 
             EXPECT_EQ(native1->species, native2->species);
@@ -792,7 +793,7 @@ namespace pkmntest {
                 EXPECT_EQ(native1->EVs[i], native2->EVs[i]);
                 EXPECT_EQ(native1->IVs[i], native2->IVs[i]);
                 EXPECT_EQ(native1->partyData.stats[i], native2->partyData.stats[i]);
-            }
+            }*/
         }
         else
         {
@@ -815,7 +816,7 @@ namespace pkmntest {
         }
     }
 
-    static void compare_libpkmgc_items(
+    /*static void compare_libpkmgc_items(
         const LibPkmGC::Item* items1,
         const LibPkmGC::Item* items2,
         size_t length
@@ -826,7 +827,7 @@ namespace pkmntest {
             EXPECT_EQ(items1[i].index, items2[i].index);
             EXPECT_EQ(items1[i].quantity, items2[i].quantity);
         }
-    }
+    }*/
 
     static void compare_game_saves(
         const pkmn::game_save::sptr& save1,
@@ -834,9 +835,9 @@ namespace pkmntest {
     ) {
         ASSERT_EQ(save1->get_game(), save2->get_game());
         std::string game = save1->get_game();
-        int generation = game_generations.at(game);
+        //int generation = game_generations.at(game);
 
-        EXPECT_EQ(save1->get_trainer_name(), save2->get_trainer_name());
+        /*EXPECT_EQ(save1->get_trainer_name(), save2->get_trainer_name());
         EXPECT_EQ(save1->get_trainer_id(), save2->get_trainer_id());
         EXPECT_EQ(save1->get_trainer_public_id(), save2->get_trainer_public_id());
 
@@ -975,7 +976,7 @@ namespace pkmntest {
                     )
                 );
             }
-        }
+        }*/
 
         pkmn::pokemon_party::sptr party1 = save1->get_pokemon_party();
         pkmn::pokemon_party::sptr party2 = save2->get_pokemon_party();
@@ -987,7 +988,7 @@ namespace pkmntest {
             );
         }
 
-        if(generation >= 2) {
+        /*if(generation >= 2) {
             const std::vector<std::string> box_names1 = save1->get_pokemon_pc()->get_box_names();
             const std::vector<std::string> box_names2 = save2->get_pokemon_pc()->get_box_names();
             ASSERT_GT(box_names1.size(), 0);
@@ -1001,44 +1002,50 @@ namespace pkmntest {
         const pkmn::pokemon_box_list_t& boxes1 = save1->get_pokemon_pc()->as_vector();
         const pkmn::pokemon_box_list_t& boxes2 = save2->get_pokemon_pc()->as_vector();
         EXPECT_EQ(boxes1.size(), boxes2.size());
-        for(size_t i = 0; i < boxes1.size(); ++i) {
-            pkmn::pokemon_box::sptr box1 = boxes1[i];
-            pkmn::pokemon_box::sptr box2 = boxes2[i];
-            if(generation >= 2) {
+        for(size_t box_index = 0; box_index < 1; ++box_index)
+        //for(size_t box_index = 0; box_index < boxes1.size(); ++box_index)
+        {
+            const pkmn::pokemon_box::sptr& box1 = boxes1[box_index];
+            const pkmn::pokemon_box::sptr& box2 = boxes2[box_index];
+            if(generation >= 2)
+            {
                 EXPECT_EQ(box1->get_name(), box2->get_name());
             }
 
             EXPECT_EQ(box1->get_capacity(), box2->get_capacity());
             EXPECT_EQ(box1->get_num_pokemon(), box2->get_num_pokemon());
-            for(int i = 0; i < box1->get_capacity(); ++i) {
+            for(size_t pokemon_index = 0;
+                pokemon_index < box1->get_capacity();
+                ++pokemon_index)
+            {
                 compare_pokemon(
-                    box1->get_pokemon(i),
-                    box2->get_pokemon(i)
+                    box1->get_pokemon(pokemon_index),
+                    box2->get_pokemon(pokemon_index)
                 );
             }
-        }
+        }*/
 
-        if((game != "Colosseum") and (game != "XD"))
+        /*if((game != "Colosseum") and (game != "XD"))
         {
             compare_pokedexes(
                 save1->get_pokedex(),
                 save2->get_pokedex()
             );
-        }
+        }*/
     }
 
     static const fs::path TMP_DIR(pkmn::get_tmp_dir());
 
     static const game_save_test_params_t params[] = {
-        game_save_test_params_t("Red/Blue", "Red", "red_blue/pokemon_red.sav"),
+        /*game_save_test_params_t("Red/Blue", "Red", "red_blue/pokemon_red.sav"),
         game_save_test_params_t("Yellow", "Yellow", "yellow/pokemon_yellow.sav"),
         game_save_test_params_t("Gold/Silver", "Gold", "gold_silver/pokemon_gold.sav"),
         game_save_test_params_t("Crystal", "Crystal", "crystal/pokemon_crystal.sav"),
         game_save_test_params_t("Ruby/Sapphire", "Ruby", "ruby_sapphire/pokemon_ruby.sav"),
         game_save_test_params_t("Emerald", "Emerald", "emerald/pokemon_emerald.sav"),
-        game_save_test_params_t("FireRed/LeafGreen", "FireRed", "firered_leafgreen/pokemon_firered.sav"),
+        game_save_test_params_t("FireRed/LeafGreen", "FireRed", "firered_leafgreen/pokemon_firered.sav"),*/
         game_save_test_params_t("Colosseum/XD", "Colosseum", "gamecube_saves/pokemon_colosseum.gci"),
-        game_save_test_params_t("Colosseum/XD", "XD", "gamecube_saves/pokemon_xd.gci")
+        //game_save_test_params_t("Colosseum/XD", "XD", "gamecube_saves/pokemon_xd.gci")
     };
 
     TEST_P(game_save_test, game_save_test) {

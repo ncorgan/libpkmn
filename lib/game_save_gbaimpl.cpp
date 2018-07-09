@@ -185,9 +185,24 @@ namespace pkmn {
     {
         boost::lock_guard<game_save_gbaimpl> lock(*this);
 
-        // Make sure any updating is performed.
-        (void)_pokemon_party->get_native();
-        (void)_pokemon_pc->get_native();
+        // These get_native() calls will call the mutex for every subclass
+        // it copies, so we don't need to worry about that here.
+        pkmn::rcast_equal<union pksav_gba_item_bag>(
+            _item_bag->get_native(),
+            _pksav_save.item_storage.p_bag
+        );
+        pkmn::rcast_equal<struct pksav_gba_item_pc>(
+            _item_pc->get_native(),
+            _pksav_save.item_storage.p_pc
+        );
+        pkmn::rcast_equal<struct pksav_gba_pokemon_party>(
+            _pokemon_party->get_native(),
+            _pksav_save.pokemon_storage.p_party
+        );
+        pkmn::rcast_equal<struct pksav_gba_pokemon_pc>(
+            _pokemon_pc->get_native(),
+            _pksav_save.pokemon_storage.p_pc
+        );
 
         PKSAV_CALL(
             pksav_gba_save_save(

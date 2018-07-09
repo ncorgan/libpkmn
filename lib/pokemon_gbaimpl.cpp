@@ -20,6 +20,8 @@
 #include "pksav/party_data.hpp"
 #include "pksav/pksav_call.hpp"
 
+#include "pksav/lib/gba/checksum.h"
+
 #include "types/rng.hpp"
 
 #include <pkmn/exception.hpp>
@@ -73,8 +75,8 @@ namespace pkmn
         _p_effort_block  = &_pksav_pokemon.pc_data.blocks.effort;
         _p_misc_block    = &_pksav_pokemon.pc_data.blocks.misc;
 
-        _native_pc    = &_pksav_pokemon.pc_data;
-        _native_party = &_pksav_pokemon.party_data;
+        _p_native_pc    = &_pksav_pokemon.pc_data;
+        _p_native_party = &_pksav_pokemon.party_data;
 
         pkmn::rng<uint32_t> rng;
         _pksav_pokemon.pc_data.personality = rng.rand();
@@ -171,8 +173,8 @@ namespace pkmn
         _p_effort_block  = &_pksav_pokemon.pc_data.blocks.effort;
         _p_misc_block    = &_pksav_pokemon.pc_data.blocks.misc;
 
-        _native_pc    = &_pksav_pokemon.pc_data;
-        _native_party = &_pksav_pokemon.party_data;
+        _p_native_pc    = &_pksav_pokemon.pc_data;
+        _p_native_party = &_pksav_pokemon.party_data;
 
         // Populate abstractions
         _update_ribbons_map();
@@ -209,8 +211,8 @@ namespace pkmn
         _p_effort_block  = &_pksav_pokemon.pc_data.blocks.effort;
         _p_misc_block    = &_pksav_pokemon.pc_data.blocks.misc;
 
-        _native_pc    = &_pksav_pokemon.pc_data;
-        _native_party = &_pksav_pokemon.party_data;
+        _p_native_pc    = &_pksav_pokemon.pc_data;
+        _p_native_party = &_pksav_pokemon.party_data;
 
         // Populate abstractions
         _update_ribbons_map();
@@ -1275,6 +1277,17 @@ namespace pkmn
         return ret;
     }
 
+    void* pokemon_gbaimpl::get_native_pc_data()
+    {
+        boost::lock_guard<pokemon_gbaimpl> lock(*this);
+
+        pksav_gba_set_pokemon_checksum(
+            &_pksav_pokemon.pc_data
+        );
+
+        return _p_native_pc;
+    }
+
     bool pokemon_gbaimpl::get_is_obedient()
     {
         boost::lock_guard<pokemon_gbaimpl> lock(*this);
@@ -1342,8 +1355,8 @@ namespace pkmn
     void pokemon_gbaimpl::_populate_party_data() {
         pksav::gba_pc_pokemon_to_party_data(
             _database_entry,
-            reinterpret_cast<const struct pksav_gba_pc_pokemon*>(_native_pc),
-            reinterpret_cast<struct pksav_gba_pokemon_party_data*>(_native_party)
+            &_pksav_pokemon.pc_data,
+            &_pksav_pokemon.party_data
         );
 
         _update_stat_map();

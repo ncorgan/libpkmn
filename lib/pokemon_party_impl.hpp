@@ -63,6 +63,7 @@ namespace pkmn {
             int _game_id, _generation;
 
             virtual void _from_native() = 0;
+            virtual void _to_native() = 0;
     };
 
 }

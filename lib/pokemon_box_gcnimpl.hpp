@@ -51,6 +51,7 @@ namespace pkmn {
             std::unique_ptr<LibPkmGC::GC::PokemonBox> _libpkmgc_box_uptr;
 
             void _from_native() final;
+            void _to_native() final;
     };
 }
 

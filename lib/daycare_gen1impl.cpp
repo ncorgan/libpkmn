@@ -83,34 +83,23 @@ namespace pkmn {
             actual_new_pokemon = new_pokemon->to_game(get_game());
         }
 
-        pokemon_impl* new_pokemon_impl_ptr = dynamic_cast<pokemon_impl*>(actual_new_pokemon.get());
-        pokemon_impl* old_box_pokemon_impl_ptr = dynamic_cast<pokemon_impl*>(r_levelup_pokemon[position].get());
-
-        // Make sure no one else is using the Pokémon variables.
-        boost::lock_guard<pokemon_impl> new_pokemon_lock(*new_pokemon_impl_ptr);
-        old_box_pokemon_impl_ptr->lock();
+        // Make sure no one else is using the new Pokémon variable.
+        pokemon_gen1impl* p_new_pokemon = dynamic_cast<pokemon_gen1impl*>(
+                                              actual_new_pokemon.get()
+                                          );
+        BOOST_ASSERT(p_new_pokemon != nullptr);
+        boost::lock_guard<pokemon_gen1impl> new_pokemon_lock(*p_new_pokemon);
 
         // Copy the underlying memory to the box. At the end of this process,
         // all existing variables will correspond to the same Pokémon, even if
         // their underlying memory has changed.
-
-        // Make a copy of the current Pokémon in the given box slot so it can be preserved in an sptr
-        // that owns its own memory.
-        copy_box_pokemon<struct pksav_gen1_pc_pokemon, struct pksav_gen1_pokemon_party_data>(
-            r_levelup_pokemon,
-            position
+        //
+        // Note: as we control the implementation, we know the PC data points
+        // to the whole Pokémon data structure.
+        rcast_equal<struct pksav_gen1_pc_pokemon>(
+            actual_new_pokemon->get_native_pc_data(),
+            &NATIVE_RCAST(_p_native)->stored_pokemon
         );
-
-        // Copy the new Pokémon's internals into the box's internals and create a new sptr.
-        void* new_pokemon_native_pc_ptr = new_pokemon_impl_ptr->_native_pc;
-
-        // Unlock the old Pokémon's mutex is unlocked before it's destructor is called.
-        old_box_pokemon_impl_ptr->unlock();
-
-        // Set the entry in the native struct.
-        NATIVE_RCAST(_p_native)->stored_pokemon = *reinterpret_cast<struct pksav_gen1_pc_pokemon*>(
-                                                       new_pokemon_native_pc_ptr
-                                                   );
         r_levelup_pokemon[position] = std::make_shared<pokemon_gen1impl>(
                                           &NATIVE_RCAST(_p_native)->stored_pokemon,
                                           _game_id

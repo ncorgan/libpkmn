@@ -20,8 +20,6 @@
 #include <cstring>
 #include <stdexcept>
 
-#define NATIVE_RCAST (reinterpret_cast<struct pksav_gba_pokemon_box*>(_native))
-
 static const std::string DEFAULT_WALLPAPER = "Forest";
 
 namespace pkmn {
@@ -214,18 +212,32 @@ namespace pkmn {
 
     void pokemon_box_gbaimpl::_from_native()
     {
-        boost::lock_guard<pokemon_box_gbaimpl> lock(*this);
-
         int capacity = get_capacity();
 
         // This shouldn't resize if the vector is populated.
         _pokemon_list.resize(capacity);
 
-        for(int i = 0; i < capacity; ++i) {
-            _pokemon_list[i] = std::make_shared<pokemon_gbaimpl>(
-                                   &_pksav_box.entries[i],
-                                   _game_id
-                               );
+        for(int pokemon_index = 0; pokemon_index < capacity; ++pokemon_index)
+        {
+            _pokemon_list[pokemon_index] = std::make_shared<pokemon_gbaimpl>(
+                                                &_pksav_box.entries[pokemon_index],
+                                                _game_id
+                                            );
+        }
+    }
+
+    void pokemon_box_gbaimpl::_to_native()
+    {
+        BOOST_ASSERT(static_cast<size_t>(get_capacity()) == _pokemon_list.size());
+
+        for(size_t pokemon_index = 0;
+            pokemon_index < _pokemon_list.size();
+            ++pokemon_index)
+        {
+            pkmn::rcast_equal<struct pksav_gba_pc_pokemon>(
+                _pokemon_list[pokemon_index]->get_native_pc_data(),
+                &_pksav_box.entries[pokemon_index]
+            );
         }
     }
 }

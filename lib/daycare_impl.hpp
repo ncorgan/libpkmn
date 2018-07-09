@@ -63,40 +63,6 @@ namespace pkmn {
 
             virtual void _from_native_breeding() = 0;
             virtual void _to_native_breeding() = 0;
-
-            template
-            <typename native_pc_type, typename native_party_data_type>
-            void copy_box_pokemon(
-                pkmn::pokemon_list_t& r_pokemon_list,
-                size_t index
-            )
-            {
-                pokemon_impl* old_box_pokemon_impl_ptr = dynamic_cast<pokemon_impl*>(r_pokemon_list[index].get());
-
-                // Create a copy of the Pokémon. Set the old sptr to use this so it owns the memory.
-                native_pc_type* box_pokemon_pc_copy_ptr = new native_pc_type;
-                native_party_data_type* box_pokemon_party_data_copy_ptr = new native_party_data_type;
-
-                rcast_equal<native_pc_type>(
-                    old_box_pokemon_impl_ptr->_native_pc,
-                    box_pokemon_pc_copy_ptr
-                );
-                rcast_equal<native_party_data_type>(
-                    old_box_pokemon_impl_ptr->_native_party,
-                    box_pokemon_party_data_copy_ptr
-                );
-
-                // The old Pokémon's party data may have been allocated.
-                if(old_box_pokemon_impl_ptr->_our_party_mem)
-                {
-                    delete reinterpret_cast<native_party_data_type*>(old_box_pokemon_impl_ptr->_native_party);
-                }
-
-                old_box_pokemon_impl_ptr->_native_pc = reinterpret_cast<void*>(box_pokemon_pc_copy_ptr);
-                old_box_pokemon_impl_ptr->_native_party = reinterpret_cast<void*>(box_pokemon_party_data_copy_ptr);
-                old_box_pokemon_impl_ptr->_our_pc_mem = true;
-                old_box_pokemon_impl_ptr->_our_party_mem = true;
-            }
     };
 }
 

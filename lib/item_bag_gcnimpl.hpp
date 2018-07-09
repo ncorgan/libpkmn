@@ -33,6 +33,8 @@ namespace pkmn {
             ~item_bag_gcnimpl() = default;
 
         private:
+            void _to_native();
+
             std::unique_ptr<LibPkmGC::GC::BagData> _libpkmgc_bag_uptr;
     };
 

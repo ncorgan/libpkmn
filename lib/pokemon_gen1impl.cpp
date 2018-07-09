@@ -37,9 +37,6 @@
 #include <stdexcept>
 #include <unordered_map>
 
-#define GEN1_PC_RCAST    (reinterpret_cast<struct pksav_gen1_pc_pokemon*>(_native_pc))
-#define GEN1_PARTY_RCAST (reinterpret_cast<struct pksav_gen1_pokemon_party_data*>(_native_party))
-
 /*
  * Catch rates
  * http://bulbapedia.bulbagarden.net/wiki/List_of_Pok%C3%A9mon_by_catch_rate
@@ -80,7 +77,7 @@ namespace pkmn
         _pksav_pokemon.pc_data.species = uint8_t(_database_entry.get_pokemon_index());
 
         std::pair<std::string, std::string> types = _database_entry.get_types();
-        const pksav::gen1_type_bimap_t& gen1_type_bimap = pksav::get_gen1_type_bimap();
+        static const pksav::gen1_type_bimap_t& gen1_type_bimap = pksav::get_gen1_type_bimap();
 
         BOOST_ASSERT(gen1_type_bimap.left.find(types.first) != gen1_type_bimap.left.end());
         _pksav_pokemon.pc_data.types[0] = uint8_t(gen1_type_bimap.left.at(types.first));
@@ -103,8 +100,8 @@ namespace pkmn
         pkmn::rng<uint16_t> rng;
         _pksav_pokemon.pc_data.iv_data = rng.rand();
 
-        _native_pc = &_pksav_pokemon.pc_data;
-        _native_party = &_pksav_pokemon.party_data;
+        _p_native_pc = &_pksav_pokemon.pc_data;
+        _p_native_party = &_pksav_pokemon.party_data;
 
         // Populate abstractions
         _update_EV_map();
@@ -125,8 +122,8 @@ namespace pkmn
         _pksav_pokemon.pc_data = *p_pc_pokemon;
         _populate_party_data();
 
-        _native_pc = &_pksav_pokemon.pc_data;
-        _native_party = &_pksav_pokemon.party_data;
+        _p_native_pc = &_pksav_pokemon.pc_data;
+        _p_native_party = &_pksav_pokemon.party_data;
 
         // Populate abstractions
         _update_EV_map();
@@ -153,8 +150,8 @@ namespace pkmn
 
         _pksav_pokemon = *p_party_pokemon;
 
-        _native_pc = &_pksav_pokemon.pc_data;
-        _native_party = &_pksav_pokemon.party_data;
+        _p_native_pc = &_pksav_pokemon.pc_data;
+        _p_native_party = &_pksav_pokemon.party_data;
 
         // Populate abstractions
         _update_EV_map();
@@ -763,8 +760,8 @@ namespace pkmn
     {
         pksav::gen1_pc_pokemon_to_party_data(
             _database_entry,
-            reinterpret_cast<const struct pksav_gen1_pc_pokemon*>(_native_pc),
-            reinterpret_cast<struct pksav_gen1_pokemon_party_data*>(_native_party)
+            &_pksav_pokemon.pc_data,
+            &_pksav_pokemon.party_data
         );
 
         _pksav_pokemon.pc_data.current_hp = _pksav_pokemon.party_data.max_hp;

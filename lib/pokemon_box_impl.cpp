@@ -96,6 +96,8 @@ namespace pkmn {
     {
         boost::lock_guard<pokemon_box_impl> lock(*this);
 
+        _to_native();
+
         return _p_native;
     }
 }

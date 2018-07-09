@@ -149,9 +149,37 @@ namespace pkmn {
     {
         boost::lock_guard<game_save_gen2impl> lock(*this);
 
-        // Make sure any updating is performed.
-        (void)_pokemon_party->get_native();
-        (void)_pokemon_pc->get_native();
+        // These get_native() calls will call the mutex for every subclass
+        // it copies, so we don't need to worry about that here.
+        pkmn::rcast_equal<struct pksav_gen2_item_bag>(
+            _item_bag->get_native(),
+            _pksav_save.item_storage.p_item_bag
+        );
+        pkmn::rcast_equal<struct pksav_gen2_item_pc>(
+            _item_pc->get_native(),
+            _pksav_save.item_storage.p_item_pc
+        );
+        pkmn::rcast_equal<struct pksav_gen2_pokemon_party>(
+            _pokemon_party->get_native(),
+            _pksav_save.pokemon_storage.p_party
+        );
+
+        // The PC is stored in multiple pointers, so this is more manual.
+        const struct pksav_gen2_pokemon_storage* p_pokemon_storage =
+            static_cast<const struct pksav_gen2_pokemon_storage*>(
+                _pokemon_pc->get_native()
+            );
+        for(size_t box_index = 0;
+            box_index < PKSAV_GEN2_NUM_POKEMON_BOXES;
+            ++box_index)
+        {
+            *(_pksav_save.pokemon_storage.pp_boxes[box_index]) =
+                *(p_pokemon_storage->pp_boxes[box_index]);
+        }
+        *(_pksav_save.pokemon_storage.p_current_box_num) =
+            *(p_pokemon_storage->p_current_box_num);
+        *(_pksav_save.pokemon_storage.p_current_box) =
+            *(p_pokemon_storage->p_current_box);
 
         PKSAV_CALL(
             pksav_gen2_save_save(

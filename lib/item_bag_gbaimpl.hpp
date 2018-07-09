@@ -31,6 +31,8 @@ namespace pkmn {
             ~item_bag_gbaimpl() = default;
 
         private:
+            void _to_native() override;
+
             union pksav_gba_item_bag _pksav_bag;
     };
 

@@ -13,6 +13,9 @@
 #include <boost/assert.hpp>
 #include <boost/thread/lock_guard.hpp>
 
+// To avoid copy+pasting the é
+static const std::string BALL_POCKET_NAME = "Poké Balls";
+
 namespace pkmn {
 
     item_bag_gcnimpl::item_bag_gcnimpl(
@@ -59,11 +62,11 @@ namespace pkmn {
                                          _game_id,
                                          _libpkmgc_bag_uptr->keyItems
                                      );
-        _item_pockets["Poké Balls"] = std::make_shared<item_list_gcnimpl>(
-                                          ball_pocket_id,
-                                          _game_id,
-                                          _libpkmgc_bag_uptr->pokeballs
-                                      );
+        _item_pockets[BALL_POCKET_NAME] = std::make_shared<item_list_gcnimpl>(
+                                              ball_pocket_id,
+                                              _game_id,
+                                              _libpkmgc_bag_uptr->pokeballs
+                                          );
         _item_pockets["TMs"] = std::make_shared<item_list_gcnimpl>(
                                    tm_pocket_id,
                                    _game_id,
@@ -93,6 +96,69 @@ namespace pkmn {
                                               _game_id,
                                               p_xd_bag->battleCDs
                                           );
+        }
+    }
+
+    void item_bag_gcnimpl::_to_native()
+    {
+        std::memcpy(
+            _libpkmgc_bag_uptr->regularItems,
+            static_cast<LibPkmGC::Item*>(
+                _item_pockets["Items"]->get_native()
+            ),
+            (sizeof(LibPkmGC::Item) * _libpkmgc_bag_uptr->nbRegularItems)
+        );
+        std::memcpy(
+            _libpkmgc_bag_uptr->keyItems,
+            static_cast<LibPkmGC::Item*>(
+                _item_pockets["Key Items"]->get_native()
+            ),
+            sizeof(_libpkmgc_bag_uptr->keyItems)
+        );
+        std::memcpy(
+            _libpkmgc_bag_uptr->pokeballs,
+            static_cast<LibPkmGC::Item*>(
+                _item_pockets[BALL_POCKET_NAME]->get_native()
+            ),
+            sizeof(_libpkmgc_bag_uptr->pokeballs)
+        );
+        std::memcpy(
+            _libpkmgc_bag_uptr->TMs,
+            static_cast<LibPkmGC::Item*>(
+                _item_pockets["TMs"]->get_native()
+            ),
+            sizeof(_libpkmgc_bag_uptr->TMs)
+        );
+        std::memcpy(
+            _libpkmgc_bag_uptr->berries,
+            static_cast<LibPkmGC::Item*>(
+                _item_pockets["Berries"]->get_native()
+            ),
+            sizeof(_libpkmgc_bag_uptr->berries)
+        );
+        std::memcpy(
+            _libpkmgc_bag_uptr->colognes,
+            static_cast<LibPkmGC::Item*>(
+                _item_pockets["Colognes"]->get_native()
+            ),
+            sizeof(_libpkmgc_bag_uptr->colognes)
+        );
+
+        if(_game_id == pkmn::XD_ID)
+        {
+            LibPkmGC::XD::BagData* p_xd_bagdata = dynamic_cast<LibPkmGC::XD::BagData*>(
+                                                      _libpkmgc_bag_uptr.get()
+                                                  );
+            BOOST_ASSERT(p_xd_bagdata != nullptr);
+            BOOST_ASSERT(_item_pockets.count("Battle CDs") > 0);
+
+            std::memcpy(
+                p_xd_bagdata->battleCDs,
+                static_cast<LibPkmGC::Item*>(
+                    _item_pockets["Battle CDs"]->get_native()
+                ),
+                sizeof(p_xd_bagdata->battleCDs)
+            );
         }
     }
 }

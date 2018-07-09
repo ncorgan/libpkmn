@@ -93,7 +93,7 @@ namespace pkmn {
         //
         // Note: as we control the implementation, we know the PC data points
         // to the whole Pokémon data structure.
-        rcast_equal<struct pksav_gba_pc_pokemon>(
+        rcast_equal<struct pksav_gba_party_pokemon>(
             actual_new_pokemon->get_native_pc_data(),
             &_pksav_party.party[index]
         );
@@ -155,6 +155,23 @@ namespace pkmn {
                                    &_pksav_party.party[i],
                                    _game_id
                                );
+        }
+    }
+
+    void pokemon_party_gbaimpl::_to_native()
+    {
+        BOOST_ASSERT(_pokemon_list.size() == PKSAV_GBA_PARTY_NUM_POKEMON);
+
+        for(size_t party_index = 0;
+            party_index < _pokemon_list.size();
+            ++party_index)
+        {
+            // As we control the implementation, we know the PC data pointer
+            // points to the whole structure.
+            pkmn::rcast_equal<struct pksav_gba_party_pokemon>(
+                _pokemon_list[party_index]->get_native_pc_data(),
+                &_pksav_party.party[party_index]
+            );
         }
     }
 }

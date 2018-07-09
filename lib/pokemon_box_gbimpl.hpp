@@ -65,6 +65,7 @@ namespace pkmn {
             list_type _pksav_box;
 
             void _from_native() final;
+            void _to_native() final;
     };
 
     // Generation I

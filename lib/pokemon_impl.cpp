@@ -175,10 +175,8 @@ namespace pkmn
     ): pokemon(),
        _database_entry(pkmn::database::pokemon_entry(pokemon_index, game_id)),
        _generation(pkmn::database::game_id_to_generation(game_id)),
-       _our_pc_mem(false),
-       _our_party_mem(false),
-       _native_pc(nullptr),
-       _native_party(nullptr)
+       _p_native_pc(nullptr),
+       _p_native_party(nullptr)
     {}
 
     pokemon_impl::pokemon_impl(
@@ -186,10 +184,8 @@ namespace pkmn
     ): pokemon(),
        _database_entry(std::move(database_entry)),
        _generation(pkmn::database::game_id_to_generation(_database_entry.get_game_id())),
-       _our_pc_mem(false),
-       _our_party_mem(false),
-       _native_pc(nullptr),
-       _native_party(nullptr)
+       _p_native_pc(nullptr),
+       _p_native_party(nullptr)
     {}
 
     std::string pokemon_impl::get_species()
@@ -307,14 +303,14 @@ namespace pkmn
     {
         boost::lock_guard<pokemon_impl> lock(*this);
 
-        return _native_pc;
+        return _p_native_pc;
     }
 
     void* pokemon_impl::get_native_party_data()
     {
         boost::lock_guard<pokemon_impl> lock(*this);
 
-        return _native_party;
+        return _p_native_party;
     }
 
     // Shared abstraction initializers

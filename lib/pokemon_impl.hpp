@@ -66,7 +66,7 @@ namespace pkmn {
 
             virtual std::string get_sprite_filepath() override;
 
-            void* get_native_pc_data() final;
+            virtual void* get_native_pc_data() override;
 
             void* get_native_party_data() final;
 
@@ -110,11 +110,8 @@ namespace pkmn {
 
             int _generation;
 
-            bool _our_pc_mem;
-            bool _our_party_mem;
-
-            void* _native_pc;
-            void* _native_party;
+            void* _p_native_pc;
+            void* _p_native_party;
 
             boost::recursive_mutex _mem_mutex;
 

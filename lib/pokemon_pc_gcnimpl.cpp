@@ -12,62 +12,48 @@
 
 #include <boost/thread/lock_guard.hpp>
 
-#define NATIVE_RCAST (reinterpret_cast<LibPkmGC::GC::PokemonBox**>(_native))
 #define GCN_NUM_BOXES (_game_id == COLOSSEUM_ID ? COLOSSEUM_NUM_BOXES : XD_NUM_BOXES)
 
 namespace pkmn {
 
     pokemon_pc_gcnimpl::pokemon_pc_gcnimpl(
-        int game_id
+        int game_id,
+        LibPkmGC::GC::PokemonBox* const* pp_native
     ): pokemon_pc_impl(game_id)
     {
-        _native = reinterpret_cast<void*>(new LibPkmGC::GC::PokemonBox*[GCN_NUM_BOXES]);
-        for(int i = 0; i < GCN_NUM_BOXES; ++i)
+        _libpkmgc_box_uptrs.resize(GCN_NUM_BOXES);
+
+        if(pp_native != nullptr)
         {
-            if(_game_id == COLOSSEUM_ID)
+            for(size_t box_index = 0; box_index < GCN_NUM_BOXES; ++box_index)
             {
-                NATIVE_RCAST[i] = new LibPkmGC::Colosseum::PokemonBox;
-            }
-            else
-            {
-                NATIVE_RCAST[i] = new LibPkmGC::XD::PokemonBox;
+                _libpkmgc_box_uptrs[box_index].reset(
+                    pp_native[box_index]->clone()
+                );
             }
         }
-        _our_mem = true;
-
-        _from_native();
-    }
-
-    pokemon_pc_gcnimpl::pokemon_pc_gcnimpl(
-        int game_id,
-        LibPkmGC::GC::PokemonBox** native
-    ): pokemon_pc_impl(game_id)
-    {
-        _native = reinterpret_cast<void*>(native);
-        _our_mem = false;
-
-        _from_native();
-    }
-
-    pokemon_pc_gcnimpl::~pokemon_pc_gcnimpl()
-    {
-        boost::lock_guard<pokemon_pc_gcnimpl> lock(*this);
-
-        if(_our_mem)
+        else
         {
-            for(int i = 0; i < GCN_NUM_BOXES; ++i)
+            for(size_t box_index = 0; box_index < GCN_NUM_BOXES; ++box_index)
             {
                 if(_game_id == COLOSSEUM_ID)
                 {
-                    delete reinterpret_cast<LibPkmGC::Colosseum::PokemonBox*>(NATIVE_RCAST[i]);
+                    _libpkmgc_box_uptrs[box_index].reset(
+                        new LibPkmGC::Colosseum::PokemonBox
+                    );
                 }
                 else
                 {
-                    delete reinterpret_cast<LibPkmGC::XD::PokemonBox*>(NATIVE_RCAST[i]);
+                    _libpkmgc_box_uptrs[box_index].reset(
+                        new LibPkmGC::XD::PokemonBox
+                    );
                 }
             }
-            delete[] NATIVE_RCAST;
         }
+
+        _p_native = _libpkmgc_box_uptrs.data();
+
+        _from_native();
     }
 
     int pokemon_pc_gcnimpl::get_num_boxes()
@@ -78,13 +64,29 @@ namespace pkmn {
     void pokemon_pc_gcnimpl::_from_native()
     {
         _box_list.resize(GCN_NUM_BOXES);
+        BOOST_ASSERT(_box_list.size() == _libpkmgc_box_uptrs.size());
 
-        for(int i = 0; i < GCN_NUM_BOXES; ++i)
+        for(size_t box_index = 0; box_index < GCN_NUM_BOXES; ++box_index)
         {
-            _box_list[i] = std::make_shared<pokemon_box_gcnimpl>(
-                               _game_id,
-                               NATIVE_RCAST[i]
-                           );
+            _box_list[box_index] = std::make_shared<pokemon_box_gcnimpl>(
+                                       _game_id,
+                                       _libpkmgc_box_uptrs[box_index].get()
+                                   );
+        }
+        _update_box_names();
+    }
+
+    void pokemon_pc_gcnimpl::_to_native()
+    {
+        BOOST_ASSERT(_box_list.size() == _libpkmgc_box_uptrs.size());
+
+        for(size_t box_index = 0; box_index < GCN_NUM_BOXES; ++box_index)
+        {
+            _libpkmgc_box_uptrs[box_index].reset(
+                static_cast<LibPkmGC::GC::PokemonBox*>(
+                    _box_list[box_index]->get_native()
+                )->clone()
+            );
         }
         _update_box_names();
     }
@@ -93,9 +95,9 @@ namespace pkmn {
     {
         _box_names.resize(GCN_NUM_BOXES);
 
-        for(int i = 0; i < GCN_NUM_BOXES; ++i)
+        for(size_t box_index = 0; box_index < GCN_NUM_BOXES; ++box_index)
         {
-            _box_names[i] = _box_list[i]->get_name();
+            _box_names[box_index] = _box_list[box_index]->get_name();
         }
     }
 

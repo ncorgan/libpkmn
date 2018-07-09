@@ -81,7 +81,7 @@ namespace pkmn {
             const pkmn::pokedex::sptr& get_pokedex() final;
 
         private:
-            std::unique_ptr<LibPkmGC::GC::SaveEditing::Save> _libpkmgc_save;
+            std::unique_ptr<LibPkmGC::GC::SaveEditing::Save> _libpkmgc_save_uptr;
             LibPkmGC::GC::SaveEditing::SaveSlot* _current_slot;
 
             bool _colosseum, _has_gci_data;

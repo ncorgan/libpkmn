@@ -165,19 +165,46 @@ namespace pkmn
 
     void pokemon_box_gcnimpl::_from_native()
     {
-        int capacity = get_capacity();
+        size_t capacity = get_capacity();
 
         // This shouldn't resize if the vector is populated.
         _pokemon_list.resize(capacity);
 
-        for(int party_index = 0; party_index < capacity; ++party_index)
+        for(size_t pokemon_index = 0;
+            pokemon_index < capacity;
+            ++pokemon_index)
         {
-            _pokemon_list[party_index] = std::make_shared<pokemon_gcnimpl>(
-                                             dynamic_cast<LibPkmGC::GC::Pokemon*>(
-                                                 _libpkmgc_box_uptr->pkm[party_index]
-                                             ),
-                                             _game_id
-                                         );
+            _pokemon_list[pokemon_index] = std::make_shared<pokemon_gcnimpl>(
+                                               dynamic_cast<LibPkmGC::GC::Pokemon*>(
+                                                   _libpkmgc_box_uptr->pkm[pokemon_index]
+                                               ),
+                                               _game_id
+                                           );
+        }
+    }
+
+    void pokemon_box_gcnimpl::_to_native()
+    {
+        BOOST_ASSERT(static_cast<size_t>(get_capacity()) == _pokemon_list.size());
+
+        for(size_t pokemon_index = 0;
+            pokemon_index < _pokemon_list.size();
+            ++pokemon_index)
+        {
+            if(_game_id == COLOSSEUM_ID)
+            {
+                pkmn::rcast_equal<LibPkmGC::Colosseum::Pokemon>(
+                    _pokemon_list[pokemon_index]->get_native_pc_data(),
+                    _libpkmgc_box_uptr->pkm[pokemon_index]
+                );
+            }
+            else
+            {
+                pkmn::rcast_equal<LibPkmGC::XD::Pokemon>(
+                    _pokemon_list[pokemon_index]->get_native_pc_data(),
+                    _libpkmgc_box_uptr->pkm[pokemon_index]
+                );
+            }
         }
     }
 }

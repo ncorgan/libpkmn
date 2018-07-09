@@ -53,6 +53,8 @@ namespace pkmn {
             pkmn::item_pockets_t _item_pockets;
             std::vector<std::string> _item_pocket_names;
 
+            virtual void _to_native() = 0;
+
             void* _p_native;
     };
 

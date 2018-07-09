@@ -234,6 +234,8 @@ namespace pkmn {
 
             std::string get_sprite_filepath() final;
 
+            void* get_native_pc_data() final;
+
             // Functions for attributes
 
             bool get_is_obedient();
