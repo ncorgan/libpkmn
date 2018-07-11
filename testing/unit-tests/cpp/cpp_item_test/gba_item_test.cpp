@@ -138,8 +138,11 @@ void gba_item_pocket_test(
         item_names
     );
 
-    const std::vector<std::string>& valid_items = item_pocket->get_valid_items();
-    EXPECT_GT(valid_items.size(), 0);
+    const std::vector<pkmn::e_item>& valid_items = item_pocket->get_valid_items();
+    const std::vector<std::string>& valid_item_names = item_pocket->get_valid_item_names();
+
+    ASSERT_EQ(valid_items.size(), valid_item_names.size());
+    EXPECT_GT(valid_item_names.size(), 0);
 
     check_pksav_struct(
         item_pocket->as_vector(),
@@ -234,8 +237,11 @@ void gba_key_item_pocket_test(
         item_names
     );
 
-    const std::vector<std::string>& valid_items = key_item_pocket->get_valid_items();
-    EXPECT_GT(valid_items.size(), 0);
+    const std::vector<pkmn::e_item>& valid_items = key_item_pocket->get_valid_items();
+    const std::vector<std::string>& valid_item_names = key_item_pocket->get_valid_item_names();
+
+    ASSERT_EQ(valid_items.size(), valid_item_names.size());
+    EXPECT_GT(valid_item_names.size(), 0);
 
     check_pksav_struct(
         key_item_pocket->as_vector(),
@@ -302,8 +308,11 @@ void gba_ball_pocket_test(
         item_names
     );
 
-    const std::vector<std::string>& valid_items = ball_pocket->get_valid_items();
-    EXPECT_GT(valid_items.size(), 0);
+    const std::vector<pkmn::e_item>& valid_items = ball_pocket->get_valid_items();
+    const std::vector<std::string>& valid_item_names = ball_pocket->get_valid_item_names();
+
+    ASSERT_EQ(valid_items.size(), valid_item_names.size());
+    EXPECT_GT(valid_item_names.size(), 0);
 
     check_pksav_struct(
         ball_pocket->as_vector(),
@@ -371,8 +380,11 @@ void gba_tmhm_pocket_test(
         item_names
     );
 
-    const std::vector<std::string>& valid_items = tmhm_pocket->get_valid_items();
-    EXPECT_GT(valid_items.size(), 0);
+    const std::vector<pkmn::e_item>& valid_items = tmhm_pocket->get_valid_items();
+    const std::vector<std::string>& valid_item_names = tmhm_pocket->get_valid_item_names();
+
+    ASSERT_EQ(valid_items.size(), valid_item_names.size());
+    EXPECT_GT(valid_item_names.size(), 0);
 
     check_pksav_struct(
         tmhm_pocket->as_vector(),
@@ -440,8 +452,11 @@ void gba_berry_pocket_test(
         item_names
     );
 
-    const std::vector<std::string>& valid_items = berry_pocket->get_valid_items();
-    EXPECT_GT(valid_items.size(), 0);
+    const std::vector<pkmn::e_item>& valid_items = berry_pocket->get_valid_items();
+    const std::vector<std::string>& valid_item_names = berry_pocket->get_valid_item_names();
+
+    ASSERT_EQ(valid_items.size(), valid_item_names.size());
+    EXPECT_GT(valid_item_names.size(), 0);
 
     check_pksav_struct(
         berry_pocket->as_vector(),
@@ -489,21 +504,30 @@ void gba_item_pc_test(
 
     // For FR/LG, the Berry Pouch and TM Case cannot be added to the PC, as
     // they are also bag pockets, so make sure this is reflects in the
-    // get_valid_items() call.
+    // get_valid_item_names() call.
     pkmn::e_game game = item_pc->get_game();
-    const std::vector<std::string>& valid_items = item_pc->get_valid_items();
-    std::vector<std::string> all_items = pkmn::database::get_item_name_list(game);
+
+    const std::vector<pkmn::e_item>& valid_items = item_pc->get_valid_items();
+    const std::vector<std::string>& valid_item_names = item_pc->get_valid_item_names();
+    ASSERT_EQ(valid_items.size(), valid_item_names.size());
+
+    std::vector<pkmn::e_item> all_items = pkmn::database::get_item_list(game);
+    std::vector<std::string> all_item_names = pkmn::database::get_item_name_list(game);
 
     if((game == pkmn::e_game::FIRERED) || (game == pkmn::e_game::LEAFGREEN))
     {
-        EXPECT_EQ(all_items.size()-2, valid_items.size());
+        EXPECT_EQ(all_item_names.size()-2, valid_item_names.size());
 
-        EXPECT_FALSE(pkmn::does_vector_contain_value<std::string>(valid_items, "Berry Pouch"));
-        EXPECT_FALSE(pkmn::does_vector_contain_value<std::string>(valid_items, "TM Case"));
+        EXPECT_FALSE(pkmn::does_vector_contain_value(valid_items, pkmn::e_item::BERRY_POUCH));
+        EXPECT_FALSE(pkmn::does_vector_contain_value(valid_items, pkmn::e_item::TM_CASE));
+
+        EXPECT_FALSE(pkmn::does_vector_contain_value<std::string>(valid_item_names, "Berry Pouch"));
+        EXPECT_FALSE(pkmn::does_vector_contain_value<std::string>(valid_item_names, "TM Case"));
     }
     else
     {
         EXPECT_EQ(all_items, valid_items);
+        EXPECT_EQ(all_item_names, valid_item_names);
     }
 }
 

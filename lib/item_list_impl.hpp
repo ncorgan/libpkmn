@@ -66,7 +66,9 @@ namespace pkmn {
 
             const pkmn::item_slots_t& as_vector() override final;
 
-            const std::vector<std::string>& get_valid_items() override final;
+            const std::vector<pkmn::e_item>& get_valid_items() override final;
+
+            const std::vector<std::string>& get_valid_item_names() override final;
 
             void* get_native() override final;
 
@@ -83,6 +85,8 @@ namespace pkmn {
 
             bool _is_our_mem;
             void* _p_native;
+
+            void _get_valid_item_lists();
 
             virtual void _from_p_native(
                 int index = -1

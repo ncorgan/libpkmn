@@ -11,6 +11,7 @@
 #include <pkmn/item_slot.hpp>
 
 #include <pkmn/enums/game.hpp>
+#include <pkmn/enums/item.hpp>
 
 #include <map>
 #include <memory>
@@ -151,13 +152,15 @@ namespace pkmn {
                 int amount
             ) = 0;
 
+            virtual const std::vector<pkmn::e_item>& get_valid_items() = 0;
+
             /*!
              * @brief Returns a list of the items that can be added to this list.
              *
              * If this item list corresponds to an item PC, this list of names will include almost
              * every item in the given game, minus certain Key Items.
              */
-            virtual const std::vector<std::string>& get_valid_items() = 0;
+            virtual const std::vector<std::string>& get_valid_item_names() = 0;
 
             /*!
              * @brief Returns a vector representation of the given item list.

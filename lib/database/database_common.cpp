@@ -415,7 +415,8 @@ namespace pkmn { namespace database {
                         r_item_names.end(),
                         [](const std::string& item)
                         {
-                            return item.find("Berry") != std::string::npos;
+                            return (item.find("Berry") != std::string::npos) &&
+                                   (item != "Berry Juice");
                         }
                     ),
                     r_item_names.end()

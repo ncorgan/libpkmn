@@ -140,11 +140,20 @@ namespace pkmn { namespace swig {
 
             // Copy the vector, since the const in the reference
             // is casted away.
-            inline std::vector<std::string> get_valid_items()
+            inline std::vector<pkmn::e_item> get_valid_items()
             {
                 BOOST_ASSERT(_item_list.get() != nullptr);
 
                 return _item_list->get_valid_items();
+            }
+
+            // Copy the vector, since the const in the reference
+            // is casted away.
+            inline std::vector<std::string> get_valid_item_names()
+            {
+                BOOST_ASSERT(_item_list.get() != nullptr);
+
+                return _item_list->get_valid_item_names();
             }
 
 #ifdef SWIGCSHARP

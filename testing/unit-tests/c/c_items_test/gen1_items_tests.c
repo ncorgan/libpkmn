@@ -63,37 +63,78 @@ static void gen1_item_list_test_common(
         8
     );
 
-    struct pkmn_string_list valid_items =
+    struct pkmn_item_enum_list valid_items =
+    {
+        .p_enums = NULL,
+        .length = 0
+    };
+    error = pkmn_item_list_get_valid_items(
+        p_item_list,
+        &valid_items
+    );
+    PKMN_TEST_ASSERT_SUCCESS(error);
+    TEST_ASSERT_NOT_NULL(valid_items.p_enums);
+    TEST_ASSERT_TRUE(valid_items.length > 0);
+
+    struct pkmn_string_list valid_item_names =
     {
         .pp_strings = NULL,
         .length = 0
     };
-    error = pkmn_item_list_get_valid_items(
+    error = pkmn_item_list_get_valid_item_names(
                 p_item_list,
-                &valid_items
+                &valid_item_names
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
-    TEST_ASSERT_NOT_NULL(valid_items.pp_strings);
-    TEST_ASSERT_TRUE(valid_items.length > 0);
+    TEST_ASSERT_NOT_NULL(valid_item_names.pp_strings);
+    TEST_ASSERT_EQUAL(
+        valid_items.length,
+        valid_item_names.length
+    );
 
-    struct pkmn_string_list full_item_list =
+    struct pkmn_item_enum_list full_item_list =
+    {
+        .p_enums = NULL,
+        .length = 0
+    };
+    error = pkmn_database_item_list(
+                p_item_list->game,
+                &full_item_list
+            );
+    PKMN_TEST_ASSERT_SUCCESS(error);
+    TEST_ASSERT_NOT_NULL(full_item_list.p_enums);
+    TEST_ASSERT_TRUE(full_item_list.length > 0);
+
+    struct pkmn_string_list full_item_name_list =
     {
         .pp_strings = NULL,
         .length = 0
     };
     error = pkmn_database_item_name_list(
                 p_item_list->game,
-                &full_item_list
+                &full_item_name_list
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
-    TEST_ASSERT_NOT_NULL(full_item_list.pp_strings);
-    TEST_ASSERT_TRUE(full_item_list.length > 0);
+    TEST_ASSERT_NOT_NULL(full_item_name_list.pp_strings);
+    TEST_ASSERT_TRUE(full_item_name_list.length > 0);
 
-    TEST_ASSERT_EQUAL(full_item_list.length, valid_items.length);
+    TEST_ASSERT_EQUAL(
+        full_item_list.length,
+        valid_items.length
+    );
+    TEST_ASSERT_EQUAL(
+        full_item_name_list.length,
+        valid_item_names.length
+    );
 
-    error = pkmn_string_list_free(&valid_items);
+    error = pkmn_item_enum_list_free(&valid_items);
     PKMN_TEST_ASSERT_SUCCESS(error);
-    error = pkmn_string_list_free(&full_item_list);
+    error = pkmn_string_list_free(&valid_item_names);
+    PKMN_TEST_ASSERT_SUCCESS(error);
+
+    error = pkmn_item_enum_list_free(&full_item_list);
+    PKMN_TEST_ASSERT_SUCCESS(error);
+    error = pkmn_string_list_free(&full_item_name_list);
     PKMN_TEST_ASSERT_SUCCESS(error);
 }
 

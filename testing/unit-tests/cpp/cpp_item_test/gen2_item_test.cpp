@@ -83,8 +83,11 @@ void gen2_item_pocket_test(
         item_names
     );
 
-    const std::vector<std::string>& valid_items = item_pocket->get_valid_items();
-    EXPECT_GT(valid_items.size(), 0);
+    const std::vector<pkmn::e_item>& valid_items = item_pocket->get_valid_items();
+    const std::vector<std::string>& valid_item_names = item_pocket->get_valid_item_names();
+
+    ASSERT_EQ(valid_items.size(), valid_item_names.size());
+    EXPECT_GT(valid_item_names.size(), 0);
 
     /*
      * On the C++ level, make sure the LibPKMN abstraction matches the underlying
@@ -206,8 +209,11 @@ void gen2_key_item_pocket_test(
     key_item_pocket->set_item(2, "None", 0);
     EXPECT_EQ(6, key_item_pocket->get_num_items());
 
-    const std::vector<std::string>& valid_items = key_item_pocket->get_valid_items();
-    EXPECT_LE(valid_items.size(), PKSAV_GEN2_KEY_ITEM_POCKET_SIZE);
+    const std::vector<pkmn::e_item>& valid_items = key_item_pocket->get_valid_items();
+    const std::vector<std::string>& valid_item_names = key_item_pocket->get_valid_item_names();
+
+    ASSERT_EQ(valid_items.size(), valid_item_names.size());
+    EXPECT_LE(valid_item_names.size(), PKSAV_GEN2_KEY_ITEM_POCKET_SIZE);
 
     /*
      * On the C++ level, make sure the LibPKMN abstraction matches the underlying
@@ -277,8 +283,11 @@ void gen2_ball_pocket_test(
         item_names
     );
 
-    const std::vector<std::string>& valid_items = ball_pocket->get_valid_items();
-    EXPECT_GT(valid_items.size(), 0);
+    const std::vector<pkmn::e_item>& valid_items = ball_pocket->get_valid_items();
+    const std::vector<std::string>& valid_item_names = ball_pocket->get_valid_item_names();
+
+    ASSERT_EQ(valid_items.size(), valid_item_names.size());
+    EXPECT_GT(valid_item_names.size(), 0);
 
     /*
      * On the C++ level, make sure the LibPKMN abstraction matches the underlying
@@ -419,8 +428,11 @@ void gen2_tmhm_pocket_test(
         EXPECT_EQ(0, item_slots[50+hm_index-1].amount);
     }
 
-    const std::vector<std::string>& valid_items = tmhm_pocket->get_valid_items();
-    EXPECT_EQ(TMHM_POCKET_SIZE, valid_items.size());
+    const std::vector<pkmn::e_item>& valid_items = tmhm_pocket->get_valid_items();
+    const std::vector<std::string>& valid_item_names = tmhm_pocket->get_valid_item_names();
+
+    ASSERT_EQ(valid_items.size(), valid_item_names.size());
+    EXPECT_EQ(TMHM_POCKET_SIZE, valid_item_names.size());
 }
 
 void gen2_item_pc_test(
@@ -471,9 +483,15 @@ void gen2_item_pc_test(
         all_pocket_item_names
     );
 
-    const std::vector<std::string>& valid_items = item_pc->get_valid_items();
-    std::vector<std::string> full_item_list = pkmn::database::get_item_name_list(item_pc->get_game());
-    EXPECT_EQ(full_item_list.size(), valid_items.size());
+    const std::vector<pkmn::e_item>& valid_items = item_pc->get_valid_items();
+    const std::vector<std::string>& valid_item_names = item_pc->get_valid_item_names();
+
+    std::vector<pkmn::e_item> full_item_list = pkmn::database::get_item_list(item_pc->get_game());
+    std::vector<std::string> full_item_name_list = pkmn::database::get_item_name_list(item_pc->get_game());
+
+    ASSERT_EQ(valid_items.size(), valid_item_names.size());
+    ASSERT_EQ(full_item_list.size(), full_item_name_list.size());
+    ASSERT_EQ(valid_items.size(), full_item_list.size());
 
     /*
      * On the C++ level, make sure the LibPKMN abstraction matches the underlying

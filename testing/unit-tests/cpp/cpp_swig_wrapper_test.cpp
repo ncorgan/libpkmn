@@ -156,8 +156,11 @@ TEST(cpp_swig_wrapper_test, test_item_list)
     EXPECT_EQ(0, swig_item_list.at(0).get_amount());
     EXPECT_EQ(0, swig_item_list.get_num_items());
 
-    const std::vector<std::string>& valid_items = swig_item_list.get_valid_items();
+    std::vector<pkmn::e_item> valid_items = swig_item_list.get_valid_items();
     EXPECT_FALSE(valid_items.empty());
+
+    std::vector<std::string> valid_item_names = swig_item_list.get_valid_item_names();
+    EXPECT_FALSE(valid_item_names.empty());
 }
 
 TEST(cpp_swig_wrapper_test, test_item_bag)
@@ -180,7 +183,7 @@ TEST(cpp_swig_wrapper_test, test_item_bag)
 
         ASSERT_FALSE(pocket.get_valid_items().empty());
 
-        std::string valid_item = pocket.get_valid_items().at(0);
+        std::string valid_item = pocket.get_valid_item_names().at(0);
 
         swig_item_bag.add(valid_item, 5);
         EXPECT_EQ(1, pocket.get_num_items());

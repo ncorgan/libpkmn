@@ -197,7 +197,7 @@ enum pkmn_error pkmn_item_list_set_item(
 
 enum pkmn_error pkmn_item_list_get_valid_items(
     const struct pkmn_item_list* p_item_list,
-    struct pkmn_string_list* p_valid_items_out
+    struct pkmn_item_enum_list* p_valid_items_out
 )
 {
     PKMN_CHECK_NULL_WRAPPER_PARAM(p_item_list);
@@ -207,9 +207,28 @@ enum pkmn_error pkmn_item_list_get_valid_items(
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
         pkmn::item_list::sptr cpp = p_internal->cpp;
 
-        pkmn::c::string_list_cpp_to_c(
+        pkmn::c::list_cpp_to_c<pkmn::e_item, enum pkmn_item, struct pkmn_item_enum_list>(
             cpp->get_valid_items(),
             p_valid_items_out
+        );
+    )
+}
+
+enum pkmn_error pkmn_item_list_get_valid_item_names(
+    const struct pkmn_item_list* p_item_list,
+    struct pkmn_string_list* p_valid_item_names_out
+)
+{
+    PKMN_CHECK_NULL_WRAPPER_PARAM(p_item_list);
+    pkmn_item_list_internal_t* p_internal = ITEM_LIST_INTERNAL_RCAST(p_item_list->p_internal);
+    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_valid_item_names_out, p_internal);
+
+    PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
+        pkmn::item_list::sptr cpp = p_internal->cpp;
+
+        pkmn::c::string_list_cpp_to_c(
+            cpp->get_valid_item_names(),
+            p_valid_item_names_out
         );
     )
 }

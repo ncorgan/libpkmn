@@ -213,23 +213,28 @@ PKMN_C_API enum pkmn_error pkmn_item_list_set_item(
     size_t amount
 );
 
+PKMN_C_API enum pkmn_error pkmn_item_list_get_valid_items(
+    const struct pkmn_item_list* p_item_list,
+    struct pkmn_item_enum_list* p_valid_items_out
+);
+
 /*!
  * @brief Returns a list of the items that can be added to this list.
  *
- * The pkmn_string_list_t returned in valid_items_out will need to be freed by
+ * The pkmn_string_list_t returned in valid_item_names_out will need to be freed by
  * ::pkmn_string_list_free.
  *
  * If this item list corresponds to an item PC, this list of names will include almost
  * every item in the given game, minus certain Key Items.
  *
  * \param item_list_ptr A pointer to the item list struct to use
- * \param valid_items_out Where to return the list of valid items
+ * \param valid_item_names_out Where to return the list of valid items
  * \returns ::PKMN_ERROR_NONE upon successful completion
  * \returns ::PKMN_ERROR_NULL_POINTER if either parameter is NULL
 */
-PKMN_C_API enum pkmn_error pkmn_item_list_get_valid_items(
+PKMN_C_API enum pkmn_error pkmn_item_list_get_valid_item_names(
     const struct pkmn_item_list* p_item_list,
-    struct pkmn_string_list* p_valid_items_out
+    struct pkmn_string_list* p_valid_item_names_out
 );
 
 /*!

@@ -130,11 +130,22 @@ void gcn_item_pocket_test(
     );
 
     // Also make sure the pocket can hold both GBA and GCN items.
-    std::string gcn_item = colosseum ? "Time Flute" : "Poké Snack";
-    const std::vector<std::string>& valid_items = item_pocket->get_valid_items();
-    EXPECT_GT(valid_items.size(), 0);
-    EXPECT_TRUE(std::find(valid_items.begin(), valid_items.end(), "Potion") != valid_items.end());
-    EXPECT_TRUE(std::find(valid_items.begin(), valid_items.end(), gcn_item) != valid_items.end());
+    pkmn::e_item gcn_item = colosseum ? pkmn::e_item::TIME_FLUTE
+                                      : pkmn::e_item::POKE_SNACK;
+    std::string gcn_item_name = colosseum ? "Time Flute"
+                                          : "Poké Snack";
+
+    const std::vector<pkmn::e_item>& valid_items = item_pocket->get_valid_items();
+    const std::vector<std::string>& valid_item_names = item_pocket->get_valid_item_names();
+
+    ASSERT_EQ(valid_items.size(), valid_item_names.size());
+    EXPECT_FALSE(valid_item_names.empty());
+
+    EXPECT_TRUE(pkmn::does_vector_contain_value(valid_items, pkmn::e_item::POTION));
+    EXPECT_TRUE(pkmn::does_vector_contain_value(valid_items, gcn_item));
+
+    EXPECT_TRUE(pkmn::does_vector_contain_value<std::string>(valid_item_names, "Potion"));
+    EXPECT_TRUE(pkmn::does_vector_contain_value(valid_item_names, gcn_item_name));
 
     check_libpkmgc_class(
         item_pocket->as_vector(),
@@ -151,7 +162,11 @@ void gcn_key_item_pocket_test(
     ASSERT_EQ("Key Items", key_item_pocket->get_name());
 
     bool colosseum = (key_item_pocket->get_game() == pkmn::e_game::COLOSSEUM);
-    std::string gcn_item = colosseum ? "Ein File S" : "Miror Radar";
+
+    pkmn::e_item gcn_item = colosseum ? pkmn::e_item::EIN_FILE_S
+                                      : pkmn::e_item::MIROR_RADAR;
+    std::string gcn_item_name = colosseum ? "Ein File S"
+                                          : "Miror Radar";
 
     int capacity = 43;
     ASSERT_EQ(capacity, key_item_pocket->get_capacity());
@@ -163,7 +178,7 @@ void gcn_key_item_pocket_test(
     // Confirm exceptions are thrown when expected.
     test_item_list_out_of_range_error(
         key_item_pocket,
-        gcn_item
+        gcn_item_name
     );
 
     // Make sure we can't add items from other pockets.
@@ -217,9 +232,14 @@ void gcn_key_item_pocket_test(
         (colosseum ? colosseum_item_names : xd_item_names)
     );
 
-    const std::vector<std::string>& valid_items = key_item_pocket->get_valid_items();
-    EXPECT_GT(valid_items.size(), 0);
-    EXPECT_TRUE(std::find(valid_items.begin(), valid_items.end(), gcn_item) != valid_items.end());
+    const std::vector<pkmn::e_item>& valid_items = key_item_pocket->get_valid_items();
+    const std::vector<std::string>& valid_item_names = key_item_pocket->get_valid_item_names();
+
+    ASSERT_EQ(valid_items.size(), valid_item_names.size());
+    EXPECT_FALSE(valid_item_names.empty());
+
+    EXPECT_TRUE(pkmn::does_vector_contain_value(valid_items, gcn_item));
+    EXPECT_TRUE(pkmn::does_vector_contain_value(valid_item_names, gcn_item_name));
 
     check_libpkmgc_class(
         key_item_pocket->as_vector(),
@@ -280,8 +300,11 @@ void gcn_ball_pocket_test(
         item_names
     );
 
-    const std::vector<std::string>& valid_items = ball_pocket->get_valid_items();
-    EXPECT_GT(valid_items.size(), 0);
+    const std::vector<pkmn::e_item>& valid_items = ball_pocket->get_valid_items();
+    const std::vector<std::string>& valid_item_names = ball_pocket->get_valid_item_names();
+
+    ASSERT_EQ(valid_items.size(), valid_item_names.size());
+    EXPECT_FALSE(valid_item_names.empty());
 
     check_libpkmgc_class(
         ball_pocket->as_vector(),
@@ -343,10 +366,17 @@ void gcn_tm_pocket_test(
     );
 
     // Gamecube games have no HMs.
-    const std::vector<std::string>& valid_items = tm_pocket->get_valid_items();
-    EXPECT_EQ(50, valid_items.size());
-    EXPECT_TRUE(std::find(valid_items.begin(), valid_items.end(), "TM01") != valid_items.end());
-    EXPECT_TRUE(std::find(valid_items.begin(), valid_items.end(), "HM01") == valid_items.end());
+    const std::vector<pkmn::e_item>& valid_items = tm_pocket->get_valid_items();
+    const std::vector<std::string>& valid_item_names = tm_pocket->get_valid_item_names();
+
+    ASSERT_EQ(valid_items.size(), valid_item_names.size());
+    EXPECT_EQ(50, valid_item_names.size());
+
+    EXPECT_TRUE(pkmn::does_vector_contain_value(valid_items, pkmn::e_item::TM01));
+    EXPECT_FALSE(pkmn::does_vector_contain_value(valid_items, pkmn::e_item::HM01));
+
+    EXPECT_TRUE(pkmn::does_vector_contain_value<std::string>(valid_item_names, "TM01"));
+    EXPECT_FALSE(pkmn::does_vector_contain_value<std::string>(valid_item_names, "HM01"));
 
     check_libpkmgc_class(
         tm_pocket->as_vector(),
@@ -406,9 +436,14 @@ void gcn_berry_pocket_test(
         item_names
     );
 
-    const std::vector<std::string>& valid_items = berry_pocket->get_valid_items();
-    EXPECT_GE(valid_items.size(), 0);
-    EXPECT_TRUE(std::find(valid_items.begin(), valid_items.end(), "Oran Berry") != valid_items.end());
+    const std::vector<pkmn::e_item>& valid_items = berry_pocket->get_valid_items();
+    const std::vector<std::string>& valid_item_names = berry_pocket->get_valid_item_names();
+
+    ASSERT_EQ(valid_items.size(), valid_item_names.size());
+    EXPECT_FALSE(valid_item_names.empty());
+
+    EXPECT_TRUE(pkmn::does_vector_contain_value(valid_items, pkmn::e_item::ORAN_BERRY));
+    EXPECT_TRUE(pkmn::does_vector_contain_value<std::string>(valid_item_names, "Oran Berry"));
 
     check_libpkmgc_class(
         berry_pocket->as_vector(),
@@ -467,9 +502,14 @@ void gcn_cologne_pocket_test(
     EXPECT_EQ("None", item_slots.at(2).item);
     EXPECT_EQ(0, item_slots.at(2).amount);
 
-    const std::vector<std::string>& valid_items = cologne_pocket->get_valid_items();
-    EXPECT_EQ(3, valid_items.size());
-    EXPECT_TRUE(std::find(valid_items.begin(), valid_items.end(), "Joy Scent") != valid_items.end());
+    const std::vector<pkmn::e_item>& valid_items = cologne_pocket->get_valid_items();
+    const std::vector<std::string>& valid_item_names = cologne_pocket->get_valid_item_names();
+
+    ASSERT_EQ(valid_items.size(), valid_item_names.size());
+    EXPECT_EQ(3, valid_item_names.size());
+
+    EXPECT_TRUE(pkmn::does_vector_contain_value(valid_items, pkmn::e_item::JOY_SCENT));
+    EXPECT_TRUE(pkmn::does_vector_contain_value<std::string>(valid_item_names, "Joy Scent"));
 
     check_libpkmgc_class(
         cologne_pocket->as_vector(),
@@ -517,9 +557,14 @@ void gcn_battle_cd_pocket_test(
         item_names
     );
 
-    const std::vector<std::string>& valid_items = battle_cd_pocket->get_valid_items();
-    EXPECT_EQ(60, valid_items.size());
-    EXPECT_TRUE(std::find(valid_items.begin(), valid_items.end(), "Battle CD 01") != valid_items.end());
+    const std::vector<pkmn::e_item>& valid_items = battle_cd_pocket->get_valid_items();
+    const std::vector<std::string>& valid_item_names = battle_cd_pocket->get_valid_item_names();
+
+    ASSERT_EQ(valid_items.size(), valid_item_names.size());
+    EXPECT_EQ(60, valid_item_names.size());
+
+    EXPECT_TRUE(pkmn::does_vector_contain_value(valid_items, pkmn::e_item::BATTLE_CD_01));
+    EXPECT_TRUE(pkmn::does_vector_contain_value<std::string>(valid_item_names, "Battle CD 01"));
 
     check_libpkmgc_class(
         battle_cd_pocket->as_vector(),

@@ -40,6 +40,7 @@ static struct pkmn_trainer_info dummy_trainer_info = { NULL, {0}, PKMN_GENDER_GE
 static struct pkmn_attribute_names dummy_attribute_names = {{NULL, 0}, {NULL, 0}, {NULL, 0}};
 static struct pkmn_pokemon dummy_pokemon = {PKMN_SPECIES_NONE, PKMN_GAME_NONE, NULL};
 static struct pkmn_pokemon_list dummy_pokemon_list = { NULL, 0 };
+static struct pkmn_item_enum_list dummy_item_enum_list = { NULL, 0 };
 static struct pkmn_species_enum_list dummy_species_enum_list = { NULL, 0 };
 
 static const char* null_pointer_error_format = "Null pointer passed into parameter \"%s\"";
@@ -717,7 +718,7 @@ static void item_list_error_test()
 
     error = pkmn_item_list_get_valid_items(
                 NULL,
-                &dummy_string_list
+                &dummy_item_enum_list
             );
     TEST_NULL_POINTER_RETURN("p_item_list");
 
@@ -726,6 +727,22 @@ static void item_list_error_test()
                 NULL
             );
     TEST_ITEM_LIST_NULL_POINTER_RETURN(item_list, "p_valid_items_out");
+
+    /*
+     * pkmn_item_list_get_valid_item_names
+     */
+
+    error = pkmn_item_list_get_valid_item_names(
+                NULL,
+                &dummy_string_list
+            );
+    TEST_NULL_POINTER_RETURN("p_item_list");
+
+    error = pkmn_item_list_get_valid_item_names(
+                &item_list,
+                NULL
+            );
+    TEST_ITEM_LIST_NULL_POINTER_RETURN(item_list, "p_valid_item_names_out");
 }
 
 /*

@@ -454,7 +454,7 @@ namespace pkmn {
      * but they go in separate pockets in every game past Generation II, so this
      * overrides the database query.
      */
-    BOOST_STATIC_CONSTEXPR int BERRY_LIST_IDS[] =
+    static const std::vector<int> BERRY_LIST_IDS =
     {
         -1, // None
         -1, // Red/Blue
@@ -475,60 +475,16 @@ namespace pkmn {
         89  // Omega Ruby/Alpha Sapphire
     };
 
-    const std::vector<std::string>& item_list_impl::get_valid_items()
+    const std::vector<pkmn::e_item>& item_list_impl::get_valid_items()
     {
-        boost::lock_guard<item_list_impl> lock(*this);
+        _get_valid_item_lists();
 
-        if(_valid_items.size() == 0)
-        {
-            if(std::find(BERRY_LIST_IDS, BERRY_LIST_IDS+17, _item_list_id) != BERRY_LIST_IDS+17)
-            {
-                static BOOST_CONSTEXPR const char* berry_list_query = \
-                    "SELECT DISTINCT item_names.name FROM item_names JOIN item_game_indices ON "
-                    "(item_names.item_id=item_game_indices.item_id) WHERE item_game_indices.generation_id=? "
-                    "AND item_names.name LIKE '%Berry'";
+        return _valid_items;
+    }
 
-                pkmn::database::query_db_list_bind1<std::string, int>(
-                    berry_list_query, _valid_item_names,
-                    pkmn::database::game_id_to_generation(_game_id)
-                );
-            }
-            else
-            {
-                pkmn::database::_get_item_lists(
-                    _valid_items,
-                    _valid_item_names,
-                    ((get_name() == "PC") ? -1 : _item_list_id),
-                    _game_id,
-                    _valid_items.empty(),     // should_populate_enum_list
-                    _valid_item_names.empty() // should_populate_string_list
-                );
-            }
-
-            BOOST_STATIC_CONSTEXPR int FRLG_VERSION_GROUP_ID = 7;
-
-            if(_pc && (_version_group_id == FRLG_VERSION_GROUP_ID))
-            {
-                static const std::vector<std::string> INVALID_GBA_PC_ITEMS =
-                {
-                    "Berry Pouch", "TM Case"
-                };
-
-                _valid_item_names.erase(
-                    std::remove_if(
-                        _valid_item_names.begin(),
-                        _valid_item_names.end(),
-                        [](const std::string& item)
-                        {
-                            return pkmn::does_vector_contain_value(
-                                       INVALID_GBA_PC_ITEMS,
-                                       item
-                                   );
-                        }),
-                    _valid_item_names.end()
-                );
-            }
-        }
+    const std::vector<std::string>& item_list_impl::get_valid_item_names()
+    {
+        _get_valid_item_lists();
 
         return _valid_item_names;
     }
@@ -538,5 +494,93 @@ namespace pkmn {
         boost::lock_guard<item_list_impl> lock(*this);
 
         return _p_native;
+    }
+
+    void item_list_impl::_get_valid_item_lists()
+    {
+        boost::lock_guard<item_list_impl> lock(*this);
+
+        BOOST_ASSERT(_valid_items.empty() == _valid_item_names.empty());
+
+        if(_valid_items.empty())
+        {
+            if(pkmn::does_vector_contain_value(BERRY_LIST_IDS, _item_list_id))
+            {
+                static const std::string berry_list_query =
+                    "SELECT DISTINCT item_names.item_id,item_names.name FROM item_names JOIN item_game_indices ON "
+                    "(item_names.item_id=item_game_indices.item_id) WHERE item_game_indices.generation_id=? "
+                    "AND item_names.name LIKE '%Berry'";
+
+                SQLite::Statement stmt(
+                    pkmn::database::get_connection(),
+                    berry_list_query.c_str()
+                );
+                stmt.bind(1, pkmn::database::game_id_to_generation(_game_id));
+
+                while(stmt.executeStep())
+                {
+                    _valid_items.emplace_back(
+                        static_cast<pkmn::e_item>(int(stmt.getColumn(0)))
+                    );
+                    _valid_item_names.emplace_back(stmt.getColumn(1));
+                }
+            }
+            else
+            {
+                pkmn::database::_get_item_lists(
+                    _valid_items,
+                    _valid_item_names,
+                    ((get_name() == "PC") ? -1 : _item_list_id),
+                    _game_id,
+                    true, // should_populate_enum_list
+                    true // should_populate_string_list
+                );
+            }
+
+            BOOST_STATIC_CONSTEXPR int FRLG_VERSION_GROUP_ID = 7;
+
+            if(_pc && (_version_group_id == FRLG_VERSION_GROUP_ID))
+            {
+                static const std::vector<pkmn::e_item> INVALID_GBA_PC_ITEMS =
+                {
+                    pkmn::e_item::BERRY_POUCH,
+                    pkmn::e_item::TM_CASE
+                };
+                static const std::vector<std::string> INVALID_GBA_PC_ITEM_NAMES =
+                {
+                    "Berry Pouch",
+                    "TM Case"
+                };
+
+                _valid_items.erase(
+                    std::remove_if(
+                        _valid_items.begin(),
+                        _valid_items.end(),
+                        [](pkmn::e_item item)
+                        {
+                            return pkmn::does_vector_contain_value(
+                                       INVALID_GBA_PC_ITEMS,
+                                       item
+                                   );
+                        }),
+                    _valid_items.end()
+                );
+                _valid_item_names.erase(
+                    std::remove_if(
+                        _valid_item_names.begin(),
+                        _valid_item_names.end(),
+                        [](const std::string& item)
+                        {
+                            return pkmn::does_vector_contain_value(
+                                       INVALID_GBA_PC_ITEM_NAMES,
+                                       item
+                                   );
+                        }),
+                    _valid_item_names.end()
+                );
+            }
+
+            BOOST_ASSERT(_valid_items.size() == _valid_item_names.size());
+        }
     }
 }
