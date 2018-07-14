@@ -18,13 +18,11 @@ namespace pkmn {
 
     class game_save_gcnimpl: public game_save_impl {
         public:
-            game_save_gcnimpl() {};
             game_save_gcnimpl(
                 const std::string& filepath,
                 std::vector<uint8_t>&& raw
             );
-
-            ~game_save_gcnimpl();
+            ~game_save_gcnimpl() = default;
 
             void save_as(
                 const std::string& filepath
@@ -85,6 +83,26 @@ namespace pkmn {
             LibPkmGC::GC::SaveEditing::SaveSlot* _current_slot;
 
             bool _colosseum, _has_gci_data;
+
+            // For some reason, attempting to set the value of one PokemonBox
+            // pointer to another crashes, so we need to make an extra copy,
+            // but LibPkmGC::GC::PokemonBox is an abstract type, so we need
+            // to do it per-type.
+            template <typename libpkmgc_box_type>
+            void save_native_pokemon_boxes()
+            {
+                const std::unique_ptr<libpkmgc_box_type>* p_libpkmgc_box_uptrs =
+                    static_cast<const std::unique_ptr<libpkmgc_box_type>*>(
+                        _pokemon_pc->get_native()
+                    );
+                for(size_t box_index = 0;
+                    box_index < _current_slot->PC->nbBoxes;
+                    ++box_index)
+                {
+                    libpkmgc_box_type box_copy(*p_libpkmgc_box_uptrs[box_index].get());
+                    _current_slot->PC->boxes[box_index]->swap(box_copy);
+                }
+            }
     };
 
 }

@@ -141,12 +141,18 @@ namespace pkmn {
         // This shouldn't resize if the vector is populated.
         _pokemon_list.resize(PARTY_SIZE);
 
+        _num_pokemon = 0;
+
         for(int party_index = 0; party_index < PARTY_SIZE; ++party_index)
         {
             _pokemon_list[party_index] = std::make_shared<pokemon_gcnimpl>(
                                             _libpkmgc_pokemon_uptrs[party_index].get(),
                                             _game_id
                                         );
+            if(_pokemon_list[party_index]->get_species() != "None")
+            {
+                ++_num_pokemon;
+            }
         }
     }
 

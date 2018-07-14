@@ -90,80 +90,22 @@ namespace pkmn {
                    );
     }
 
-    game_save_gcnimpl::~game_save_gcnimpl()
-    {
-        boost::lock_guard<game_save_gcnimpl> lock(*this);
-    }
-
     void game_save_gcnimpl::save_as(
         const std::string& filepath
     )
     {
         boost::lock_guard<game_save_gcnimpl> lock(*this);
 
-        if(_game_id == COLOSSEUM_ID)
+        const std::unique_ptr<LibPkmGC::GC::Pokemon>* p_libpkmgc_party_uptrs =
+            static_cast<const std::unique_ptr<LibPkmGC::GC::Pokemon>*>(
+                _pokemon_party->get_native()
+            );
+        for(int party_index = 0; party_index < PARTY_SIZE; ++party_index)
         {
-            const std::unique_ptr<LibPkmGC::Colosseum::Pokemon>* p_libpkmgc_party_uptrs =
-                static_cast<const std::unique_ptr<LibPkmGC::Colosseum::Pokemon>*>(
-                    _pokemon_party->get_native()
-                );
-            for(int party_index = 0;
-                party_index < PARTY_SIZE;
-                ++party_index)
-            {
-                LibPkmGC::Colosseum::Pokemon* p_libpkmgc_pokemon =
-                    dynamic_cast<LibPkmGC::Colosseum::Pokemon*>(
-                        _current_slot->player->trainer->party[party_index]
-                    );
-                BOOST_ASSERT(p_libpkmgc_pokemon != nullptr);
-
-                LibPkmGC::Colosseum::Pokemon* p_party_pokemon =
-                    dynamic_cast<LibPkmGC::Colosseum::Pokemon*>(
-                        p_libpkmgc_party_uptrs[party_index].get()
-                    );
-                BOOST_ASSERT(p_party_pokemon != nullptr);
-
-                *p_libpkmgc_pokemon = *p_party_pokemon;
-            }
-
-            const std::unique_ptr<LibPkmGC::Colosseum::PokemonBox>* p_libpkmgc_box_uptrs =
-                static_cast<const std::unique_ptr<LibPkmGC::Colosseum::PokemonBox>*>(
-                    _pokemon_pc->get_native()
-                );
-            for(size_t box_index = 0;
-                box_index < _current_slot->PC->nbBoxes;
-                ++box_index)
-            {
-                LibPkmGC::Colosseum::PokemonBox* p_libpkmgc_pokemon_box =
-                    dynamic_cast<LibPkmGC::Colosseum::PokemonBox*>(
-                        _current_slot->PC->boxes[box_index]
-                    );
-                BOOST_ASSERT(p_libpkmgc_pokemon_box != nullptr);
-
-                LibPkmGC::Colosseum::PokemonBox* p_pc_box =
-                    dynamic_cast<LibPkmGC::Colosseum::PokemonBox*>(
-                        p_libpkmgc_box_uptrs[box_index].get()
-                    );
-                BOOST_ASSERT(p_pc_box != nullptr);
-
-                *p_libpkmgc_pokemon_box = *p_pc_box;
-            }
-
-            LibPkmGC::Colosseum::BagData* p_libpkmgc_bagdata =
-                dynamic_cast<LibPkmGC::Colosseum::BagData*>(
-                    _current_slot->player->bag
-                );
-            BOOST_ASSERT(p_libpkmgc_bagdata != nullptr);
-
-            LibPkmGC::Colosseum::BagData* p_bag =
-                static_cast<LibPkmGC::Colosseum::BagData*>(
-                    _item_bag->get_native()
-                );
-
-            *p_libpkmgc_bagdata = *p_bag;
-        }
-        else
-        {
+            pkmn::rcast_equal<LibPkmGC::GC::Pokemon>(
+                p_libpkmgc_party_uptrs[party_index].get(),
+                _current_slot->player->trainer->party[party_index]
+            );
         }
 
         std::memcpy(
@@ -171,6 +113,25 @@ namespace pkmn {
             _item_pc->get_native(),
             sizeof(_current_slot->PC->items)
         );
+
+        if(_game_id == COLOSSEUM_ID)
+        {
+            save_native_pokemon_boxes<LibPkmGC::Colosseum::PokemonBox>();
+
+            pkmn::rcast_equal<LibPkmGC::Colosseum::BagData>(
+                _item_bag->get_native(),
+                _current_slot->player->bag
+            );
+        }
+        else
+        {
+            save_native_pokemon_boxes<LibPkmGC::XD::PokemonBox>();
+
+            pkmn::rcast_equal<LibPkmGC::XD::BagData>(
+                _item_bag->get_native(),
+                _current_slot->player->bag
+            );
+        }
 
         _libpkmgc_save_uptr->saveEncrypted(_raw.data(), _has_gci_data);
 

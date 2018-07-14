@@ -128,18 +128,7 @@ namespace pkmn
         //
         // Note: as we control the implementation, we know the PC data points
         // to the whole Pokémon data structure.
-        if(_game_id == COLOSSEUM_ID)
-        {
-            delete dynamic_cast<LibPkmGC::Colosseum::Pokemon*>(
-                       _libpkmgc_box_uptr->pkm[index]
-                   );
-        }
-        else
-        {
-            delete dynamic_cast<LibPkmGC::XD::Pokemon*>(
-                       _libpkmgc_box_uptr->pkm[index]
-                   );
-        }
+        delete _libpkmgc_box_uptr->pkm[index];
 
         _libpkmgc_box_uptr->pkm[index] =
             static_cast<LibPkmGC::GC::Pokemon*>(
