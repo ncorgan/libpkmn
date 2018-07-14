@@ -59,7 +59,6 @@ namespace pkmn
             bool _dirty_caught;
 
             void* _p_native;
-            bool _our_mem;
 
             void _update_member_vector_with_pksav(
                 const uint8_t* native_list,

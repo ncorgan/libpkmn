@@ -9,10 +9,12 @@
 
 #include <pkmn/game_save.hpp>
 
+#include <boost/assert.hpp>
 #include <boost/noncopyable.hpp>
 #include <boost/thread/lockable_adapter.hpp>
 #include <boost/thread/recursive_mutex.hpp>
 
+#include <cstring>
 #include <vector>
 
 BOOST_STATIC_CONSTEXPR int MONEY_MAX_VALUE = 999999;
@@ -60,6 +62,31 @@ namespace pkmn {
             int _game_id;
 
             std::vector<uint8_t> _raw;
+
+            template <typename gb_pokedex_type>
+            void save_gb_pokedex(
+                gb_pokedex_type* p_save_pokedex,
+                size_t num_bytes
+            )
+            {
+                BOOST_ASSERT(p_save_pokedex != nullptr);
+
+                const gb_pokedex_type* p_pokedex_copy =
+                    static_cast<gb_pokedex_type*>(
+                        _pokedex->get_native()
+                    );
+
+                std::memcpy(
+                    p_save_pokedex->p_seen,
+                    p_pokedex_copy->p_seen,
+                    num_bytes
+                );
+                std::memcpy(
+                    p_save_pokedex->p_owned,
+                    p_pokedex_copy->p_owned,
+                    num_bytes
+                );
+            }
     };
 
 }

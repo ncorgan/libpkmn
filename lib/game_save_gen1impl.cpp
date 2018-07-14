@@ -171,6 +171,11 @@ namespace pkmn {
         *(_pksav_save.pokemon_storage.p_current_box) =
             *(p_pokemon_storage->p_current_box);
 
+        save_gb_pokedex(
+            &_pksav_save.pokedex_lists,
+            PKSAV_GEN1_POKEDEX_BUFFER_SIZE_BYTES
+        );
+
         PKSAV_CALL(
             pksav_gen1_save_save(
                 filepath.c_str(),

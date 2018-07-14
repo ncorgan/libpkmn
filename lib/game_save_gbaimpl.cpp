@@ -204,6 +204,34 @@ namespace pkmn {
             _pksav_save.pokemon_storage.p_pc
         );
 
+        // TODO: put this in PKSav header
+        static const size_t num_pokedex_bytes = ((386 / 8) + 1);
+
+        struct pksav_gba_pokedex* p_pokedex_copy =
+            static_cast<struct pksav_gba_pokedex*>(
+                _pokedex->get_native()
+            );
+        std::memcpy(
+            _pksav_save.pokedex.p_seenA,
+            p_pokedex_copy->p_seenA,
+            num_pokedex_bytes
+        );
+        std::memcpy(
+            _pksav_save.pokedex.p_seenB,
+            p_pokedex_copy->p_seenB,
+            num_pokedex_bytes
+        );
+        std::memcpy(
+            _pksav_save.pokedex.p_seenB,
+            p_pokedex_copy->p_seenB,
+            num_pokedex_bytes
+        );
+        std::memcpy(
+            _pksav_save.pokedex.p_owned,
+            p_pokedex_copy->p_owned,
+            num_pokedex_bytes
+        );
+
         PKSAV_CALL(
             pksav_gba_save_save(
                 filepath.c_str(),
