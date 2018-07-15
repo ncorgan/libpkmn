@@ -1024,7 +1024,7 @@ namespace pkmntest {
 
             EXPECT_EQ(box1->get_capacity(), box2->get_capacity());
             EXPECT_EQ(box1->get_num_pokemon(), box2->get_num_pokemon());
-            for(size_t pokemon_index = 0;
+            for(int pokemon_index = 0;
                 pokemon_index < box1->get_capacity();
                 ++pokemon_index)
             {
@@ -1047,13 +1047,13 @@ namespace pkmntest {
     static const fs::path TMP_DIR(pkmn::get_tmp_dir());
 
     static const game_save_test_params_t params[] = {
-        /*game_save_test_params_t("Red/Blue", "Red", "red_blue/pokemon_red.sav"),
+        game_save_test_params_t("Red/Blue", "Red", "red_blue/pokemon_red.sav"),
         game_save_test_params_t("Yellow", "Yellow", "yellow/pokemon_yellow.sav"),
         game_save_test_params_t("Gold/Silver", "Gold", "gold_silver/pokemon_gold.sav"),
         game_save_test_params_t("Crystal", "Crystal", "crystal/pokemon_crystal.sav"),
         game_save_test_params_t("Ruby/Sapphire", "Ruby", "ruby_sapphire/pokemon_ruby.sav"),
         game_save_test_params_t("Emerald", "Emerald", "emerald/pokemon_emerald.sav"),
-        game_save_test_params_t("FireRed/LeafGreen", "FireRed", "firered_leafgreen/pokemon_firered.sav"),*/
+        game_save_test_params_t("FireRed/LeafGreen", "FireRed", "firered_leafgreen/pokemon_firered.sav"),
         game_save_test_params_t("Colosseum/XD", "Colosseum", "gamecube_saves/pokemon_colosseum.gci"),
         game_save_test_params_t("Colosseum/XD", "XD", "gamecube_saves/pokemon_xd.gci")
     };
