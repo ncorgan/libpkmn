@@ -128,8 +128,9 @@ namespace pkmn
         _libpkmgc_pokemon_uptr->experience = LibPkmGC::u32(_database_entry.get_experience_at_level(level));
         _libpkmgc_pokemon_uptr->SID = LibPkmGC::u16(pkmn::pokemon::DEFAULT_TRAINER_ID >> 16);
         _libpkmgc_pokemon_uptr->TID = LibPkmGC::u16(pkmn::pokemon::DEFAULT_TRAINER_ID & 0xFFFF);
+
         _libpkmgc_pokemon_uptr->PID = rng32.rand();
-        _libpkmgc_pokemon_uptr->setSecondAbilityFlag(bool(_libpkmgc_pokemon_uptr->PID & 2));
+        _set_ability_from_personality();
 
         _libpkmgc_pokemon_uptr->version.game = LibPkmGC::Colosseum_XD;
         _libpkmgc_pokemon_uptr->version.currentRegion = LibPkmGC::NTSC_U;

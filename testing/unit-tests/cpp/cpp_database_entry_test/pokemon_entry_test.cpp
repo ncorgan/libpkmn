@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -325,6 +325,62 @@ TEST_F(pokemon_entry_test, changing_type_test) {
     EXPECT_EQ("Fairy", jigglypuff_types6.second);
 }
 
+/*
+ * Make sure that if a second ability was added in a later generation,
+ * that it does not appear in a too-early generation.
+ */
+TEST_F(pokemon_entry_test, changing_abilities_test)
+{
+    struct changing_abilities_test_params
+    {
+        std::string species;
+        std::string first_game;
+        std::string second_game;
+
+        std::string first_ability;
+        std::string second_ability;
+    };
+
+    static const std::vector<changing_abilities_test_params> all_test_params =
+    {
+        {"Pidgey", "Ruby", "Diamond", "Keen Eye", "Tangled Feet"},
+        {"Shroomish", "Ruby", "Diamond", "Effect Spore", "Poison Heal"}
+    };
+    for(const changing_abilities_test_params& test_params: all_test_params)
+    {
+        pkmn::database::pokemon_entry first_game_entry(
+            test_params.species,
+            test_params.first_game,
+            ""
+        );
+        pkmn::database::pokemon_entry second_game_entry(
+            test_params.species,
+            test_params.second_game,
+            ""
+        );
+
+        std::pair<std::string, std::string> first_game_abilities = first_game_entry.get_abilities();
+        EXPECT_EQ(
+            test_params.first_ability,
+            first_game_abilities.first
+        ) << test_params.species << " " << test_params.first_game;
+        EXPECT_EQ(
+            "None",
+            first_game_abilities.second
+        ) << test_params.species << " " << test_params.first_game;
+
+        std::pair<std::string, std::string> second_game_abilities = second_game_entry.get_abilities();
+        EXPECT_EQ(
+            test_params.first_ability,
+            second_game_abilities.first
+        ) << test_params.species << " " << test_params.second_game;
+        EXPECT_EQ(
+            test_params.second_ability,
+            second_game_abilities.second
+        ) << test_params.species << " " << test_params.second_game;
+    }
+}
+
 TEST_F(pokemon_entry_test, equality_test) {
     EXPECT_TRUE(byindex_gen1 == byname_gen1);
     EXPECT_TRUE(byindex_gen2 == byname_gen2);
@@ -559,7 +615,7 @@ static void _pokemon_entry_test(
 
     std::pair<std::string, std::string> abilities_gcn = pokemon_entry_gcn.get_abilities();
     EXPECT_EQ("Effect Spore", abilities_gcn.first);
-    EXPECT_EQ("Poison Heal", abilities_gcn.second);
+    EXPECT_EQ("None", abilities_gcn.second);
 
     EXPECT_EQ("None", pokemon_entry_gcn.get_hidden_ability());
 

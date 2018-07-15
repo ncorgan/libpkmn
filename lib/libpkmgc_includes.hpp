@@ -20,6 +20,8 @@
 #pragma GCC diagnostic ignored "-Woverloaded-virtual"
 #endif
 
+#include <LibPkmGC/Core/Localization.h>
+
 #include <LibPkmGC/GC/SaveEditing/Save.h>
 #include <LibPkmGC/Colosseum/SaveEditing/Save.h>
 #include <LibPkmGC/XD/SaveEditing/Save.h>

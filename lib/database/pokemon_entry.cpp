@@ -565,30 +565,40 @@ namespace pkmn { namespace database {
         return ret;
     }
 
-    std::pair<std::string, std::string> pokemon_entry::get_abilities() const {
+    std::pair<std::string, std::string> pokemon_entry::get_abilities() const
+    {
         std::pair<std::string, std::string> ret;
 
         // Abilities were introduced in Generation III
-        if(_none or _generation < 3) {
+        if(_none or _generation < 3)
+        {
             ret = {"None", "None"};
-        } else if(_invalid) {
+        }
+        else if(_invalid)
+        {
             ret = {"Unknown", "Unknown"};
-        } else {
-            static BOOST_CONSTEXPR const char* query1 = \
+        }
+        else
+        {
+            static BOOST_CONSTEXPR const char* query1 =
                 "SELECT name FROM ability_names WHERE local_language_id=9 AND ability_id="
                 "(SELECT ability_id FROM pokemon_abilities WHERE pokemon_id=? AND "
                 "is_hidden=0 AND slot=1)";
-            static BOOST_CONSTEXPR const char* query2 = \
+
+            static BOOST_CONSTEXPR const char* query2 =
                 "SELECT name FROM ability_names WHERE local_language_id=9 AND ability_id="
-                "(SELECT ability_id FROM pokemon_abilities WHERE pokemon_id=? AND "
-                "is_hidden=0 AND slot=2)";
+                "(SELECT abilities.id FROM abilities INNER JOIN pokemon_abilities ON "
+                "(abilities.id=pokemon_abilities.ability_id) WHERE pokemon_abilities.pokemon_id=? "
+                "AND pokemon_abilities.is_hidden=0 AND pokemon_abilities.slot=2 AND "
+                "abilities.generation_id<=?)";
 
             ret.first = pkmn::database::query_db_bind1<std::string, int>(
                             query1, _pokemon_id
                         );
-            if(not pkmn::database::maybe_query_db_bind1<std::string, int>(
-                   query2, ret.second, _pokemon_id
-               )) {
+            if(not pkmn::database::maybe_query_db_bind2<std::string, int>(
+                   query2, ret.second, _pokemon_id, _generation
+               ))
+            {
                 ret.second = "None";
             }
         }
