@@ -73,20 +73,20 @@ namespace pkmn {
         boost::lock_guard<item_list_gen2_tmhmimpl> lock(*this);
 
         int ret = 0;
-        ret += std::count_if(
-                   _pksav_list.tm_count,
-                   _pksav_list.tm_count + PKSAV_GEN2_TM_COUNT,
-                   [](uint8_t tm_count)
-                   {
-                       return tm_count > 0;
-                   });
-        ret += std::count_if(
-                   _pksav_list.hm_count,
-                   _pksav_list.hm_count + PKSAV_GEN2_HM_COUNT,
-                   [](uint8_t hm_count)
-                   {
-                       return hm_count > 0;
-                   });
+        ret += int(std::count_if(
+                       _pksav_list.tm_count,
+                       _pksav_list.tm_count + PKSAV_GEN2_TM_COUNT,
+                       [](uint8_t tm_count)
+                       {
+                           return tm_count > 0;
+                       }));
+        ret += int(std::count_if(
+                       _pksav_list.hm_count,
+                       _pksav_list.hm_count + PKSAV_GEN2_HM_COUNT,
+                       [](uint8_t hm_count)
+                       {
+                           return hm_count > 0;
+                       }));
 
         return ret;
     }
