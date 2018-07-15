@@ -145,17 +145,17 @@ namespace pkmn
         {
             _libpkmgc_pokemon_uptr->obedient = true;
         }
-        for(size_t i = 0; i < 12; ++i)
+        for(bool& r_has_special_ribbon: _libpkmgc_pokemon_uptr->specialRibbons)
         {
-            _libpkmgc_pokemon_uptr->specialRibbons[i] = false;
+            r_has_special_ribbon = false;
         }
         _libpkmgc_pokemon_uptr->unimplementedRibbons = 0;
 
-        for(size_t i = 0; i < 4; ++i)
+        for(LibPkmGC::PokemonMove& r_move: _libpkmgc_pokemon_uptr->moves)
         {
-            _libpkmgc_pokemon_uptr->moves[i].move = LibPkmGC::NoMove;
-            _libpkmgc_pokemon_uptr->moves[i].currentPPs = 0;
-            _libpkmgc_pokemon_uptr->moves[i].nbPPUpsUsed = 0;
+            r_move.move = LibPkmGC::NoMove;
+            r_move.currentPPs = 0;
+            r_move.nbPPUpsUsed = 0;
         }
 
         for(size_t i = 0; i < 6; ++i)
