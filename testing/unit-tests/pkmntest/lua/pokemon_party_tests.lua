@@ -1,5 +1,5 @@
 --
--- Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+-- Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
 --
 -- Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
 -- or copy at http://opensource.org/licenses/MIT)
@@ -90,16 +90,7 @@ function pokemon_party_tests.test_setting_pokemon(party)
     luaunit.assertEquals(party.num_pokemon, 2)
     luaunit.assertEquals(party[1].species, "Squirtle")
 
-    -- Make sure we can't copy a Pokémon to itself.
-    luaunit.assertError(
-        pokemon_party_tests.pokemon_party.set_pokemon,
-        party,
-        2,
-        party[2]
-    )
-    luaunit.assertEquals(party.num_pokemon, 2)
-
-    -- Copy a Pokémon whose memory is already part of the party.
+    -- Copy a Pokémon already part of the party.
     party[3] = party[2]
     luaunit.assertEquals(party.num_pokemon, 3)
     luaunit.assertEquals(party[3].species, "Charmander")

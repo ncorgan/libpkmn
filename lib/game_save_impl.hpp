@@ -9,10 +9,12 @@
 
 #include <pkmn/game_save.hpp>
 
+#include <boost/assert.hpp>
 #include <boost/noncopyable.hpp>
 #include <boost/thread/lockable_adapter.hpp>
 #include <boost/thread/recursive_mutex.hpp>
 
+#include <cstring>
 #include <vector>
 
 BOOST_STATIC_CONSTEXPR int MONEY_MAX_VALUE = 999999;
@@ -32,21 +34,21 @@ namespace pkmn {
 
             virtual ~game_save_impl() {};
 
-            std::string get_filepath() override final;
+            std::string get_filepath() final;
 
-            void save() override final;
+            void save() final;
 
-            pkmn::e_game get_game() override final;
+            pkmn::e_game get_game() final;
 
             virtual const pkmn::pokedex::sptr& get_pokedex() override;
 
-            const pkmn::pokemon_party::sptr& get_pokemon_party() override final;
+            const pkmn::pokemon_party::sptr& get_pokemon_party() final;
 
-            const pkmn::pokemon_pc::sptr& get_pokemon_pc() override final;
+            const pkmn::pokemon_pc::sptr& get_pokemon_pc() final;
 
-            const pkmn::item_bag::sptr& get_item_bag() override final;
+            const pkmn::item_bag::sptr& get_item_bag() final;
 
-            const pkmn::item_list::sptr& get_item_pc() override final;
+            const pkmn::item_list::sptr& get_item_pc() final;
 
         protected:
             std::string _filepath;
@@ -60,6 +62,31 @@ namespace pkmn {
             int _game_id;
 
             std::vector<uint8_t> _raw;
+
+            template <typename gb_pokedex_type>
+            void save_gb_pokedex(
+                gb_pokedex_type* p_save_pokedex,
+                size_t num_bytes
+            )
+            {
+                BOOST_ASSERT(p_save_pokedex != nullptr);
+
+                const gb_pokedex_type* p_pokedex_copy =
+                    static_cast<gb_pokedex_type*>(
+                        _pokedex->get_native()
+                    );
+
+                std::memcpy(
+                    p_save_pokedex->p_seen,
+                    p_pokedex_copy->p_seen,
+                    num_bytes
+                );
+                std::memcpy(
+                    p_save_pokedex->p_owned,
+                    p_pokedex_copy->p_owned,
+                    num_bytes
+                );
+            }
     };
 
 }

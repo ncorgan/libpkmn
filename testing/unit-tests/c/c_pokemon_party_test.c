@@ -202,9 +202,6 @@ static void test_setting_pokemon_in_party(
     PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_EQUAL(2, num_pokemon);
 
-    // Copy a Pokémon whose memory is already part of the party. Make sure we
-    // can't copy it to itself.
-
     struct pkmn_pokemon second_in_party = empty_pokemon;
     error = pkmn_pokemon_party_get_pokemon(
                 p_party,
@@ -214,12 +211,6 @@ static void test_setting_pokemon_in_party(
     PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_NOT_NULL(second_in_party.p_internal);
 
-    error = pkmn_pokemon_party_set_pokemon(
-                p_party,
-                1,
-                &second_in_party
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_INVALID_ARGUMENT, error);
     error = pkmn_pokemon_party_set_pokemon(
                 p_party,
                 2,

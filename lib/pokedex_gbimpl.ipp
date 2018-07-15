@@ -21,8 +21,6 @@
 #ifndef PKMN_POKEDEX_GBIMPL_IPP
 #define PKMN_POKEDEX_GBIMPL_IPP
 
-#define GBIMPL_RCAST(ptr) (reinterpret_cast<pksav_type*>(ptr))
-
 namespace pkmn
 {
     template <typename pksav_type>
@@ -31,35 +29,32 @@ namespace pkmn
         pksav_type* p_native
     ): pokedex_impl(game_id)
     {
-        if(p_native)
+        const size_t num_bytes = (_generation == 1) ? PKSAV_GEN1_POKEDEX_BUFFER_SIZE_BYTES
+                                                    : PKSAV_GEN2_POKEDEX_BUFFER_SIZE_BYTES;
+        _seen_buffer.resize(num_bytes, 0);
+        _owned_buffer.resize(num_bytes, 0);
+
+        if(p_native != nullptr)
         {
-            _p_native = p_native;
-            _our_mem = false;
+            BOOST_ASSERT(p_native->p_seen != nullptr);
+            BOOST_ASSERT(p_native->p_owned != nullptr);
+
+            std::memcpy(
+                _seen_buffer.data(),
+                p_native->p_seen,
+                num_bytes
+            );
+            std::memcpy(
+                _owned_buffer.data(),
+                p_native->p_owned,
+                num_bytes
+            );
         }
-        else
-        {
-            size_t num_bytes = static_cast<size_t>(std::ceil(float(_num_pokemon) / 8.0f));
-            _p_native = new pksav_type;
 
-            GBIMPL_RCAST(_p_native)->p_seen = new uint8_t[num_bytes];
-            GBIMPL_RCAST(_p_native)->p_owned = new uint8_t[num_bytes];
+        _pksav_pokedex.p_seen  = _seen_buffer.data();
+        _pksav_pokedex.p_owned = _owned_buffer.data();
 
-            std::memset(GBIMPL_RCAST(_p_native)->p_seen,  0, num_bytes);
-            std::memset(GBIMPL_RCAST(_p_native)->p_owned, 0, num_bytes);
-
-            _our_mem = true;
-        }
-    }
-
-    template <typename pksav_type>
-    pokedex_gbimpl<pksav_type>::~pokedex_gbimpl()
-    {
-        if(_our_mem)
-        {
-            delete[] GBIMPL_RCAST(_p_native)->p_seen;
-            delete[] GBIMPL_RCAST(_p_native)->p_owned;
-            delete GBIMPL_RCAST(_p_native);
-        }
+        _p_native = &_pksav_pokedex;
     }
 
     template <typename pksav_type>
@@ -73,7 +68,7 @@ namespace pkmn
 
         PKSAV_CALL(
             pksav_get_pokedex_bit(
-                GBIMPL_RCAST(_p_native)->p_seen,
+                _pksav_pokedex.p_seen,
                 uint16_t(species),
                 &has_seen
             );
@@ -93,7 +88,7 @@ namespace pkmn
 
         PKSAV_CALL(
             pksav_get_pokedex_bit(
-                GBIMPL_RCAST(_p_native)->p_owned,
+                _pksav_pokedex.p_owned,
                 uint16_t(species),
                 &has_caught
             );
@@ -110,7 +105,7 @@ namespace pkmn
     {
         PKSAV_CALL(
             pksav_set_pokedex_bit(
-                GBIMPL_RCAST(_p_native)->p_seen,
+                _pksav_pokedex.p_seen,
                 uint16_t(species_id),
                 has_seen_value
             );
@@ -125,7 +120,7 @@ namespace pkmn
     {
         PKSAV_CALL(
             pksav_set_pokedex_bit(
-                GBIMPL_RCAST(_p_native)->p_owned,
+                _pksav_pokedex.p_owned,
                 uint16_t(species_id),
                 has_caught_value
             );
@@ -136,7 +131,7 @@ namespace pkmn
     void pokedex_gbimpl<pksav_type>::_update_all_seen()
     {
         _update_member_vector_with_pksav(
-            GBIMPL_RCAST(_p_native)->p_seen,
+            _pksav_pokedex.p_seen,
             _all_seen
         );
     }
@@ -145,7 +140,7 @@ namespace pkmn
     void pokedex_gbimpl<pksav_type>::_update_all_caught()
     {
         _update_member_vector_with_pksav(
-            GBIMPL_RCAST(_p_native)->p_owned,
+            _pksav_pokedex.p_owned,
             _all_caught
         );
     }

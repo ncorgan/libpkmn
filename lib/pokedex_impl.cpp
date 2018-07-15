@@ -83,8 +83,7 @@ namespace pkmn
        _dirty_seen(true),
        _all_caught(),
        _dirty_caught(true),
-       _p_native(nullptr),
-       _our_mem(false)
+       _p_native(nullptr)
     {}
 
     pkmn::e_game pokedex_impl::get_game()

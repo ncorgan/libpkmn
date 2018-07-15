@@ -15,7 +15,7 @@ namespace pkmn { namespace qt {
         QWidget* parent
     ): QComboBox(parent)
     {
-        std::vector<std::string> regions = pkmn::database::get_region_list();
+        std::vector<std::string> regions = pkmn::database::get_region_name_list();
         for(const std::string& region: regions)
         {
             addItem(QString::fromStdString(region));

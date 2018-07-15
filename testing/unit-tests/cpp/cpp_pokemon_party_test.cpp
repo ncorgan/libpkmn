@@ -12,6 +12,7 @@
 
 #include <pkmn/exception.hpp>
 #include <pkmn/pokemon_party.hpp>
+#include <pkmn/enums/enum_to_string.hpp>
 
 #include <pksav/gen1.h>
 #include <pksav/gen2.h>
@@ -25,11 +26,6 @@
 
 #include <cstring>
 #include <string>
-
-// From pokemon_party_gcnimpl.hpp
-typedef struct {
-    LibPkmGC::GC::Pokemon* pokemon[6];
-} gcn_pokemon_party_t;
 
 struct test_params_t
 {
@@ -141,12 +137,6 @@ TEST_P(pokemon_party_test, setting_pokemon_test) {
     EXPECT_EQ(2, party->get_num_pokemon());
     EXPECT_EQ(pkmn::e_species::SQUIRTLE, party->get_pokemon(0)->get_species());
 
-    // Make sure we can't copy a Pokémon to itself.
-    EXPECT_THROW(
-        party->set_pokemon(1, party->get_pokemon(1));
-    , std::invalid_argument);
-    EXPECT_EQ(2, party->get_num_pokemon());
-
     // Copy a Pokémon whose memory is already part of the party.
     party->set_pokemon(2, party->get_pokemon(1));
     EXPECT_EQ(3, party->get_num_pokemon());
@@ -202,7 +192,6 @@ TEST_P(pokemon_party_test, setting_pokemon_test) {
             EXPECT_EQ(0, native->species[4]);
             EXPECT_EQ(0, native->species[5]);
             for(int i = 0; i < 3; ++i) {
-                EXPECT_EQ(party->get_pokemon(i)->get_native_pc_data(), &native->party[i]);
                 EXPECT_EQ(party->get_pokemon(i)->get_database_entry().get_pokemon_index(), int(native->species[i]));
                 EXPECT_EQ(party->get_pokemon(i)->get_database_entry().get_pokemon_index(), int(native->party[i].pc_data.species));
 
@@ -247,7 +236,6 @@ TEST_P(pokemon_party_test, setting_pokemon_test) {
             EXPECT_EQ(0, native->species[4]);
             EXPECT_EQ(0, native->species[5]);
             for(int i = 0; i < 3; ++i) {
-                EXPECT_EQ(party->get_pokemon(i)->get_native_pc_data(), &native->party[i]);
                 EXPECT_EQ(party->get_pokemon(i)->get_database_entry().get_pokemon_index(), int(native->species[i]));
                 EXPECT_EQ(party->get_pokemon(i)->get_database_entry().get_pokemon_index(), int(native->party[i].pc_data.species));
 
@@ -285,17 +273,14 @@ TEST_P(pokemon_party_test, setting_pokemon_test) {
         case 3:
             if((game == pkmn::e_game::COLOSSEUM) || (game == pkmn::e_game::XD))
             {
-                gcn_pokemon_party_t* native = reinterpret_cast<gcn_pokemon_party_t*>(party->get_native());
-                EXPECT_EQ(squirtle->get_database_entry().get_pokemon_index(), int(native->pokemon[0]->species));
-                EXPECT_EQ(charmander->get_database_entry().get_pokemon_index(), int(native->pokemon[1]->species));
-                EXPECT_EQ(charmander->get_database_entry().get_pokemon_index(), int(native->pokemon[2]->species));
-                EXPECT_EQ(0, int(native->pokemon[3]->species));
-                EXPECT_EQ(0, int(native->pokemon[4]->species));
-                EXPECT_EQ(0, int(native->pokemon[5]->species));
-                for(int i = 0; i < 6; ++i)
-                {
-                    EXPECT_EQ(party->get_pokemon(i)->get_native_pc_data(), native->pokemon[i]);
-                }
+                std::unique_ptr<LibPkmGC::GC::Pokemon>* p_native_uptrs =
+                    reinterpret_cast<std::unique_ptr<LibPkmGC::GC::Pokemon>*>(party->get_native());
+                EXPECT_EQ(squirtle->get_database_entry().get_pokemon_index(), int(p_native_uptrs[0]->species));
+                EXPECT_EQ(charmander->get_database_entry().get_pokemon_index(), int(p_native_uptrs[1]->species));
+                EXPECT_EQ(charmander->get_database_entry().get_pokemon_index(), int(p_native_uptrs[2]->species));
+                EXPECT_EQ(0, int(p_native_uptrs[3]->species));
+                EXPECT_EQ(0, int(p_native_uptrs[4]->species));
+                EXPECT_EQ(0, int(p_native_uptrs[5]->species));
             }
             else
             {
@@ -307,10 +292,6 @@ TEST_P(pokemon_party_test, setting_pokemon_test) {
                 EXPECT_EQ(0, native->party[3].pc_data.blocks.growth.species);
                 EXPECT_EQ(0, native->party[4].pc_data.blocks.growth.species);
                 EXPECT_EQ(0, native->party[5].pc_data.blocks.growth.species);
-                for(int i = 0; i < 6; ++i)
-                {
-                    EXPECT_EQ(party->get_pokemon(i)->get_native_pc_data(), &native->party[i]);
-                }
             }
 
         default:
@@ -327,12 +308,15 @@ TEST_P(pokemon_party_test, setting_pokemon_test) {
                                           "",
                                           50
                                       );
+        ASSERT_EQ(valid_game, pikachu->get_game());
+        ASSERT_EQ(50, pikachu->get_level()) << pkmn::game_to_string(valid_game);
+
         party->set_pokemon(3, pikachu);
 
         pkmn::pokemon::sptr party_pokemon = party->get_pokemon(3);
-        EXPECT_EQ(pkmn::e_species::PIKACHU, party_pokemon->get_species());
-        EXPECT_EQ(test_params.party_game, party_pokemon->get_game());
-        EXPECT_EQ(50, party_pokemon->get_level());
+        EXPECT_EQ(pkmn::e_species::PIKACHU, party_pokemon->get_species()) << pkmn::game_to_string(valid_game);
+        EXPECT_EQ(test_params.party_game, party_pokemon->get_game()) << pkmn::game_to_string(valid_game);
+        EXPECT_EQ(50, party_pokemon->get_level()) << pkmn::game_to_string(valid_game);
     }
 
     pkmn::pokemon::sptr invalid_pikachu = pkmn::pokemon::make(

@@ -59,9 +59,8 @@ namespace pkmn {
     pokemon_box_impl::pokemon_box_impl(
         int game_id
     ): _pokemon_list(),
-        _box_name(""),
-        _native(nullptr),
-        _our_mem(false),
+       _box_name(""),
+       _p_native(nullptr),
        _game_id(game_id),
        _generation(pkmn::database::game_id_to_generation(game_id))
     {}
@@ -94,6 +93,8 @@ namespace pkmn {
     {
         boost::lock_guard<pokemon_box_impl> lock(*this);
 
-        return _native;
+        _to_native();
+
+        return _p_native;
     }
 }

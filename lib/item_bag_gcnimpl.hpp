@@ -9,6 +9,10 @@
 
 #include "item_bag_impl.hpp"
 
+#include "libpkmgc_includes.hpp"
+
+#include <memory>
+
 namespace pkmn {
 
     class item_bag_gcnimpl: public item_bag_impl
@@ -16,13 +20,22 @@ namespace pkmn {
         public:
             item_bag_gcnimpl(
                 int game_id,
-                void* p_native
+                const LibPkmGC::GC::BagData* p_libpkmgc_bag
             );
 
-            ~item_bag_gcnimpl();
+            // TODO
+            item_bag_gcnimpl(const item_bag_gcnimpl&) = delete;
+            item_bag_gcnimpl(item_bag_gcnimpl&&) = delete;
+
+            item_bag_gcnimpl& operator=(const item_bag_gcnimpl&) = delete;
+            item_bag_gcnimpl& operator=(item_bag_gcnimpl&&) = delete;
+
+            ~item_bag_gcnimpl() = default;
 
         private:
-            void _set_ptrs() override final;
+            void _to_native();
+
+            std::unique_ptr<LibPkmGC::GC::BagData> _libpkmgc_bag_uptr;
     };
 
 }

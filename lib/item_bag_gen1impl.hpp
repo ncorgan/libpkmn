@@ -18,13 +18,22 @@ namespace pkmn {
         public:
             item_bag_gen1impl(
                 int game_id,
-                void* p_native
+                const struct pksav_gen1_item_bag* p_pksav_bag = nullptr
             );
 
-            ~item_bag_gen1impl();
+            // TODO
+            item_bag_gen1impl(const item_bag_gen1impl&) = delete;
+            item_bag_gen1impl(item_bag_gen1impl&&) = delete;
+
+            item_bag_gen1impl& operator=(const item_bag_gen1impl&) = delete;
+            item_bag_gen1impl& operator=(item_bag_gen1impl&&) = delete;
+
+            ~item_bag_gen1impl() = default;
 
         private:
-            void _set_ptrs() override final;
+            void _to_native() override;
+
+            struct pksav_gen1_item_bag _pksav_bag;
     };
 
 }

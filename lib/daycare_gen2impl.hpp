@@ -22,24 +22,24 @@ namespace pkmn {
             void set_levelup_pokemon(
                 int position,
                 const pkmn::pokemon::sptr& new_pokemon
-            ) override final;
+            ) final;
 
-            int get_levelup_pokemon_capacity() override final;
+            int get_levelup_pokemon_capacity() final;
 
-            bool can_breed_pokemon() override final;
+            bool can_breed_pokemon() final;
 
             void set_breeding_pokemon(
                 int position,
                 const pkmn::pokemon::sptr& new_pokemon
-            ) override final;
+            ) final;
 
-            int get_breeding_pokemon_capacity() override final;
+            int get_breeding_pokemon_capacity() final;
 
-            void _from_native_levelup() override final;
-            void _to_native_levelup() override final;
+            void _from_native_levelup() final;
+            void _to_native_levelup() final;
 
-            void _from_native_breeding() override final;
-            void _to_native_breeding() override final;
+            void _from_native_breeding() final;
+            void _to_native_breeding() final;
 
             BOOST_STATIC_CONSTEXPR int  LEVELUP_CAPACITY = 2;
             BOOST_STATIC_CONSTEXPR int  BREEDING_CAPACITY = 2;

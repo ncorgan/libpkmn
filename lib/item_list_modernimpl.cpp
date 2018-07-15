@@ -11,74 +11,75 @@
 
 #include <pksav/math/endian.h>
 
-#include <boost/thread/lock_guard.hpp>
-
-#include <algorithm>
 #include <cstring>
-
-#define NATIVE_RCAST (reinterpret_cast<struct pksav_item*>(_p_native))
 
 namespace pkmn {
 
     item_list_modernimpl::item_list_modernimpl(
         int item_list_id,
         int game_id,
-        struct pksav_item* ptr,
-        size_t capacity,
-        bool copy
+        const struct pksav_item* p_pksav_list
     ): item_list_impl(item_list_id, game_id)
     {
-        if(ptr) {
-            if(copy) {
-                _p_native = reinterpret_cast<void*>(new struct pksav_item[capacity]);
-                std::memcpy(_p_native, ptr, sizeof(struct pksav_item)*capacity);
-                _is_our_mem = true;
-            } else {
-                _p_native = ptr;
-                _is_our_mem = false;
-            }
+       _pksav_list.resize(_capacity, {0,0});
 
-            _from_p_native();
-        } else {
-            _p_native = reinterpret_cast<void*>(new struct pksav_item[capacity]);
-            std::memset(_p_native, 0, sizeof(struct pksav_item)*capacity);
-            _is_our_mem = true;
+       if(p_pksav_list != nullptr)
+       {
+           std::memcpy(
+               _pksav_list.data(),
+               p_pksav_list,
+               sizeof(struct pksav_item)*_capacity
+           );
+       }
 
-        }
+       _from_native();
+
+       _p_native = _pksav_list.data();
     }
 
-    item_list_modernimpl::~item_list_modernimpl()
-    {
-        if(_is_our_mem)
-        {
-            delete[] NATIVE_RCAST;
-        }
-    }
-
-    void item_list_modernimpl::_from_p_native(
-        int index
+    void item_list_modernimpl::_pksav_item_to_libpkmn_item_slot(
+        const struct pksav_item& pksav_item,
+        pkmn::item_slot& r_item_slot
     )
     {
-        boost::lock_guard<item_list_modernimpl> lock(*this);
+        r_item_slot.item = pkmn::database::item_entry(
+                               pksav_littleendian16(pksav_item.index),
+                               _game_id
+                           ).get_name();
+        r_item_slot.amount = pksav_littleendian16(pksav_item.count);
+    }
 
+    void item_list_modernimpl::_libpkmn_item_slot_to_pksav_item(
+        const pkmn::item_slot& item_slot,
+        struct pksav_item& r_pksav_item
+    )
+    {
+        r_pksav_item.index = pksav_littleendian16(uint16_t(
+                                 pkmn::database::item_entry(
+                                     item_slot.item,
+                                     get_game()
+                                 ).get_item_index()));
+        r_pksav_item.count = pksav_littleendian16(uint16_t(item_slot.amount));
+    }
+
+    void item_list_modernimpl::_from_native(int index)
+    {
         if(index == -1)
         {
-            for(int i = 0; i < _capacity; ++i)
+            for(int item_index = 0; item_index < _capacity; ++item_index)
             {
-                _item_slots[i].item = pkmn::database::item_entry(
-                                          pksav_littleendian16(NATIVE_RCAST[i].index),
-                                          _game_id
-                                      ).get_name();
-                _item_slots[i].amount = pksav_littleendian16(NATIVE_RCAST[i].count);
+                _pksav_item_to_libpkmn_item_slot(
+                    _pksav_list[item_index],
+                    _item_slots[item_index]
+                );
             }
         }
         else
         {
-            _item_slots[index].item = pkmn::database::item_entry(
-                                          pksav_littleendian16(NATIVE_RCAST[index].index),
-                                          _game_id
-                                      ).get_name();
-            _item_slots[index].amount = pksav_littleendian16(NATIVE_RCAST[index].count);
+            _pksav_item_to_libpkmn_item_slot(
+                _pksav_list[index],
+                _item_slots[index]
+            );
         }
     }
 
@@ -86,34 +87,22 @@ namespace pkmn {
         int index
     )
     {
-        boost::lock_guard<item_list_modernimpl> lock(*this);
-
         if(index == -1)
         {
-            for(int i = 0; i < _capacity; ++i)
+            for(int item_index = 0; item_index < _capacity; ++item_index)
             {
-                NATIVE_RCAST[i].index = pksav_littleendian16(uint16_t(
-                                            pkmn::database::item_entry(
-                                                _item_slots[i].item,
-                                                get_game()
-                                            ).get_item_index()
-                                        ));
-                NATIVE_RCAST[i].count = pksav_littleendian16(uint16_t(
-                                            _item_slots[i].amount
-                                        ));
+                _libpkmn_item_slot_to_pksav_item(
+                    _item_slots[item_index],
+                    _pksav_list[item_index]
+                );
             }
         }
         else
         {
-            NATIVE_RCAST[index].index = pksav_littleendian16(uint16_t(
-                                            pkmn::database::item_entry(
-                                                _item_slots[index].item,
-                                                get_game()
-                                            ).get_item_index()
-                                        ));
-            NATIVE_RCAST[index].count = pksav_littleendian16(uint16_t(
-                                            _item_slots[index].amount
-                                        ));
+            _libpkmn_item_slot_to_pksav_item(
+                _item_slots[index],
+                _pksav_list[index]
+            );
         }
     }
 }

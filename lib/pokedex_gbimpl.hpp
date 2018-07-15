@@ -12,40 +12,48 @@
 #include <pksav/gen1/save.h>
 #include <pksav/gen2/save.h>
 
+#include <vector>
+
 namespace pkmn
 {
     template <typename pksav_type>
     class pokedex_gbimpl: public pokedex_impl
     {
         public:
-            pokedex_gbimpl() {}
             pokedex_gbimpl(
                 int game_id,
                 pksav_type* p_native = nullptr
             );
-
-            ~pokedex_gbimpl();
+            ~pokedex_gbimpl() = default;
 
             bool has_seen(
                 pkmn::e_species species
-            ) override final;
+            ) final;
 
             bool has_caught(
                 pkmn::e_species species
-            ) override final;
+            ) final;
+
+        private:
+            pksav_type _pksav_pokedex;
+
+            // Local storage of buffer so we don't depend on someone else's
+            // pointer.
+            std::vector<uint8_t> _seen_buffer;
+            std::vector<uint8_t> _owned_buffer;
 
             void _set_has_seen(
                 int species_id,
                 bool has_seen_value
-            ) override final;
+            ) final;
 
             void _set_has_caught(
                 int species_id,
                 bool has_caught_value
-            ) override final;
+            ) final;
 
-            void _update_all_seen() override final;
-            void _update_all_caught() override final;
+            void _update_all_seen() final;
+            void _update_all_caught() final;
     };
 
     typedef pokedex_gbimpl<struct pksav_gen1_pokedex_lists> pokedex_gen1impl;

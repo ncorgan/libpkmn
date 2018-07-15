@@ -156,9 +156,7 @@ namespace pkmn {
         BOOST_ASSERT(_pksav_save.item_storage.p_pc != nullptr);
         _item_pc = std::make_shared<item_list_modernimpl>(
                         item_pc_id, _game_id,
-                        _pksav_save.item_storage.p_pc->items,
-                        PKSAV_GBA_ITEM_PC_NUM_ITEMS,
-                        false
+                        _pksav_save.item_storage.p_pc->items
                    );
 
         // When a Pokémon is added to the PC or party, it should be
@@ -187,9 +185,52 @@ namespace pkmn {
     {
         boost::lock_guard<game_save_gbaimpl> lock(*this);
 
-        // Make sure any updating is performed.
-        (void)_pokemon_party->get_native();
-        (void)_pokemon_pc->get_native();
+        // These get_native() calls will call the mutex for every subclass
+        // it copies, so we don't need to worry about that here.
+        pkmn::rcast_equal<union pksav_gba_item_bag>(
+            _item_bag->get_native(),
+            _pksav_save.item_storage.p_bag
+        );
+        pkmn::rcast_equal<struct pksav_gba_item_pc>(
+            _item_pc->get_native(),
+            _pksav_save.item_storage.p_pc
+        );
+        pkmn::rcast_equal<struct pksav_gba_pokemon_party>(
+            _pokemon_party->get_native(),
+            _pksav_save.pokemon_storage.p_party
+        );
+        pkmn::rcast_equal<struct pksav_gba_pokemon_pc>(
+            _pokemon_pc->get_native(),
+            _pksav_save.pokemon_storage.p_pc
+        );
+
+        // TODO: put this in PKSav header
+        static const size_t num_pokedex_bytes = ((386 / 8) + 1);
+
+        struct pksav_gba_pokedex* p_pokedex_copy =
+            static_cast<struct pksav_gba_pokedex*>(
+                _pokedex->get_native()
+            );
+        std::memcpy(
+            _pksav_save.pokedex.p_seenA,
+            p_pokedex_copy->p_seenA,
+            num_pokedex_bytes
+        );
+        std::memcpy(
+            _pksav_save.pokedex.p_seenB,
+            p_pokedex_copy->p_seenB,
+            num_pokedex_bytes
+        );
+        std::memcpy(
+            _pksav_save.pokedex.p_seenB,
+            p_pokedex_copy->p_seenB,
+            num_pokedex_bytes
+        );
+        std::memcpy(
+            _pksav_save.pokedex.p_owned,
+            p_pokedex_copy->p_owned,
+            num_pokedex_bytes
+        );
 
         PKSAV_CALL(
             pksav_gba_save_save(

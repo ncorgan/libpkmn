@@ -13,31 +13,26 @@
 
 namespace pkmn {
 
-    BOOST_STATIC_CONSTEXPR int GBA_NUM_BOXES = 14;
-
-    class pokemon_pc_gbaimpl: public pokemon_pc_impl {
+    class pokemon_pc_gbaimpl: public pokemon_pc_impl
+    {
         public:
-            pokemon_pc_gbaimpl() {}
-            explicit pokemon_pc_gbaimpl(
-                int game_id
-            );
             pokemon_pc_gbaimpl(
                 int game_id,
-                struct pksav_gba_pokemon_pc* native
-            );
-            pokemon_pc_gbaimpl(
-                int game_id,
-                const struct pksav_gba_pokemon_pc& native
+                const struct pksav_gba_pokemon_pc* p_native = nullptr
             );
 
-            ~pokemon_pc_gbaimpl();
+            ~pokemon_pc_gbaimpl() = default;
 
-            int get_num_boxes() override final;
+            int get_num_boxes() final;
 
         private:
-            void _from_native() override final;
-            void _update_box_names() override final;
-            void _update_native_box_wallpapers() override final;
+            struct pksav_gba_pokemon_pc _pksav_pc;
+
+            void _from_native() final;
+            void _to_native() final;
+
+            void _update_box_names() final;
+            void _update_native_box_wallpapers() final;
     };
 }
 

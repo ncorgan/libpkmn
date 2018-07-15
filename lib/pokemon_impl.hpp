@@ -12,9 +12,6 @@
 #include <pksav/common/contest_stats.h>
 #include <pksav/common/stats.h>
 
-#include <boost/assign.hpp>
-#include <boost/noncopyable.hpp>
-
 #include <boost/thread/lockable_adapter.hpp>
 #include <boost/thread/recursive_mutex.hpp>
 
@@ -29,7 +26,6 @@ namespace pkmn {
     class pokemon_party_impl;
 
     class pokemon_impl: public pokemon,
-                        private boost::noncopyable,
                         public boost::basic_lockable_adapter<boost::recursive_mutex>
     {
         public:
@@ -44,35 +40,35 @@ namespace pkmn {
 
             virtual ~pokemon_impl() {}
 
-            pkmn::e_species get_species() override final;
+            pkmn::e_species get_species() final;
 
-            std::string get_form() override final;
+            std::string get_form() final;
 
-            pkmn::e_game get_game() override final;
+            pkmn::e_game get_game() final;
 
-            const pkmn::database::pokemon_entry& get_database_entry() override final;
+            const pkmn::database::pokemon_entry& get_database_entry() final;
 
-            const std::map<std::string, bool>& get_markings() override final;
+            const std::map<std::string, bool>& get_markings() final;
 
-            const std::map<std::string, bool>& get_ribbons() override final;
+            const std::map<std::string, bool>& get_ribbons() final;
 
-            const std::map<std::string, int>& get_contest_stats() override final;
+            const std::map<std::string, int>& get_contest_stats() final;
 
-            const pkmn::move_slots_t& get_moves() override final;
+            const pkmn::move_slots_t& get_moves() final;
 
-            const std::map<pkmn::e_stat, int>& get_EVs() override final;
+            const std::map<pkmn::e_stat, int>& get_EVs() final;
 
-            const std::map<pkmn::e_stat, int>& get_IVs() override final;
+            const std::map<pkmn::e_stat, int>& get_IVs() final;
 
-            const std::map<pkmn::e_stat, int>& get_stats() override final;
+            const std::map<pkmn::e_stat, int>& get_stats() final;
 
             virtual std::string get_icon_filepath() override;
 
             virtual std::string get_sprite_filepath() override;
 
-            void* get_native_pc_data() override final;
+            virtual void* get_native_pc_data() override;
 
-            void* get_native_party_data() override final;
+            void* get_native_party_data() final;
 
             // Make the box implementations friend classes so they can access the internals.
             friend class pokemon_box_impl;
@@ -116,11 +112,8 @@ namespace pkmn {
 
             int _generation;
 
-            bool _our_pc_mem;
-            bool _our_party_mem;
-
-            void* _native_pc;
-            void* _native_party;
+            void* _p_native_pc;
+            void* _p_native_party;
 
             boost::recursive_mutex _mem_mutex;
 
@@ -215,6 +208,10 @@ namespace pkmn {
 
                 _update_ribbons_map();
             }
+
+            // Set without applying policy
+            virtual void _set_ability(const std::string&) {}
+            void _set_ability_from_personality();
 
             virtual void _update_held_item() {}
             virtual void _update_markings_map() {}

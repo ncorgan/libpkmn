@@ -70,7 +70,6 @@ namespace pkmn {
         int game_id
     ): item_bag(),
        _game_id(game_id),
-       _is_our_mem(false),
        _p_native(nullptr)
     {
         // Populate pocket name vector
@@ -104,6 +103,8 @@ namespace pkmn {
 
     const pkmn::item_pockets_t& item_bag_impl::get_pockets()
     {
+        _to_native();
+
         return _item_pockets;
     }
 
@@ -191,6 +192,8 @@ namespace pkmn {
         }
 
         _item_pockets.at(pocket_name)->add(item_name, amount);
+
+        _to_native();
     }
 
     void item_bag_impl::remove(
@@ -231,11 +234,15 @@ namespace pkmn {
         }
 
         _item_pockets.at(pocket_name)->remove(item_name, amount);
+
+        _to_native();
     }
 
     void* item_bag_impl::get_native()
     {
         boost::lock_guard<item_bag_impl> lock(*this);
+
+        _to_native();
 
         return _p_native;
     }

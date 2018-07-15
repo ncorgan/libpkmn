@@ -40,73 +40,66 @@ namespace pkmn {
 
     pokemon_pc_gen2impl::pokemon_pc_gen2impl(
         int game_id,
-        struct pksav_gen2_pokemon_storage* p_native
+        const struct pksav_gen2_pokemon_storage* p_native
     ): pokemon_pc_impl(game_id)
     {
-        _our_mem = (p_native == nullptr);
+        std::memset(
+            &_pksav_storage,
+            0,
+            sizeof(_pksav_storage)
+        );
+        _native_boxes.resize(PKSAV_GEN2_NUM_POKEMON_BOXES);
 
-        if(_our_mem)
+        if(p_native != nullptr)
         {
-            _native = new struct pksav_gen2_pokemon_storage;
+            BOOST_ASSERT(p_native->p_box_names != nullptr);
+            BOOST_ASSERT(p_native->p_current_box_num != nullptr);
+            BOOST_ASSERT(p_native->p_current_box != nullptr);
 
             for(size_t box_index = 0;
                 box_index < PKSAV_GEN2_NUM_POKEMON_BOXES;
                 ++box_index)
             {
-                NATIVE_RCAST->pp_boxes[box_index] = new struct pksav_gen2_pokemon_box;
-                _set_initial_pokemon_box_mem(NATIVE_RCAST->pp_boxes[box_index]);
+                BOOST_ASSERT(p_native->pp_boxes[box_index] != nullptr);
+
+                _native_boxes[box_index] = *(p_native->pp_boxes[box_index]);
             }
 
-            NATIVE_RCAST->p_box_names = new struct pksav_gen2_pokemon_box_names;
-            std::memset(
-                NATIVE_RCAST->p_box_names,
-                PKSAV_GEN2_TEXT_TERMINATOR,
-                sizeof(*NATIVE_RCAST->p_box_names)
-            );
-
-            NATIVE_RCAST->p_current_box = new struct pksav_gen2_pokemon_box;
-            _set_initial_pokemon_box_mem(NATIVE_RCAST->p_current_box);
-
-            NATIVE_RCAST->p_current_box_num = new uint8_t(0);
+            _native_box_names = *(p_native->p_box_names);
+            _current_box_num = *(p_native->p_current_box_num);
+            _current_box = *(p_native->p_current_box);
         }
         else
         {
-            _native = p_native;
-
-#ifndef NDEBUG
             for(size_t box_index = 0;
                 box_index < PKSAV_GEN2_NUM_POKEMON_BOXES;
                 ++box_index)
             {
-                BOOST_ASSERT(NATIVE_RCAST->pp_boxes[box_index] != nullptr);
+                _set_initial_pokemon_box_mem(&_native_boxes[box_index]);
             }
 
-            BOOST_ASSERT(NATIVE_RCAST->p_box_names != nullptr);
-            BOOST_ASSERT(NATIVE_RCAST->p_current_box != nullptr);
-            BOOST_ASSERT(NATIVE_RCAST->p_current_box_num != nullptr);
-#endif
+            std::memset(
+                &_native_box_names,
+                PKSAV_GEN2_TEXT_TERMINATOR,
+                sizeof(_native_box_names)
+            );
+            _current_box_num = 0;
+            _set_initial_pokemon_box_mem(&_current_box);
         }
+
+        _pksav_storage.p_box_names = &_native_box_names;
+        _pksav_storage.p_current_box_num = &_current_box_num;
+        _pksav_storage.p_current_box = &_current_box;
+        for(size_t box_index = 0;
+            box_index < PKSAV_GEN2_NUM_POKEMON_BOXES;
+            ++box_index)
+        {
+            _pksav_storage.pp_boxes[box_index] = &_native_boxes[box_index];
+        }
+
+        _p_native = &_pksav_storage;
 
         _from_native();
-    }
-
-    pokemon_pc_gen2impl::~pokemon_pc_gen2impl()
-    {
-        if(_our_mem)
-        {
-            for(size_t box_index = 0;
-                box_index < PKSAV_GEN2_NUM_POKEMON_BOXES;
-                ++box_index)
-            {
-                delete NATIVE_RCAST->pp_boxes[box_index];
-            }
-
-            delete NATIVE_RCAST->p_box_names;
-            delete NATIVE_RCAST->p_current_box;
-            delete NATIVE_RCAST->p_current_box_num;
-
-            delete NATIVE_RCAST;
-        }
     }
 
     int pokemon_pc_gen2impl::get_num_boxes()
@@ -118,7 +111,7 @@ namespace pkmn {
     {
         _box_list.resize(PKSAV_GEN2_NUM_POKEMON_BOXES);
 
-        bool is_current_box_num_valid = (*NATIVE_RCAST->p_current_box_num < PKSAV_GEN2_NUM_POKEMON_BOXES);
+        bool is_current_box_num_valid = (*_pksav_storage.p_current_box_num < PKSAV_GEN2_NUM_POKEMON_BOXES);
 
         // In Generation II, the current box is stored in a specific memory
         // location, so for that number box, use that pointer instead of
@@ -127,31 +120,61 @@ namespace pkmn {
             box_index < PKSAV_GEN2_NUM_POKEMON_BOXES;
             ++box_index)
         {
-            if(is_current_box_num_valid && (box_index == *NATIVE_RCAST->p_current_box_num))
+            if(is_current_box_num_valid && (box_index == *_pksav_storage.p_current_box_num))
             {
                 _box_list[box_index] = std::make_shared<pokemon_box_gen2impl>(
                                            _game_id,
-                                           NATIVE_RCAST->p_current_box
+                                           _pksav_storage.p_current_box
                                        );
             }
             else
             {
                 _box_list[box_index] = std::make_shared<pokemon_box_gen2impl>(
                                            _game_id,
-                                           NATIVE_RCAST->pp_boxes[box_index]
+                                           _pksav_storage.pp_boxes[box_index]
                                        );
             }
 
             char box_name[PKSAV_GEN2_POKEMON_BOX_NAME_LENGTH + 1] = {0};
             PKSAV_CALL(
                 pksav_gen2_import_text(
-                    NATIVE_RCAST->p_box_names->names[box_index],
+                    _pksav_storage.p_box_names->names[box_index],
                     box_name,
                     PKSAV_GEN2_POKEMON_BOX_NAME_LENGTH
                 );
             )
             _box_list[box_index]->set_name(box_name);
         }
+    }
+
+    void pokemon_pc_gen2impl::_to_native()
+    {
+        bool is_current_box_num_valid = (*_pksav_storage.p_current_box_num < PKSAV_GEN2_NUM_POKEMON_BOXES);
+
+        // In Generation II, the current box is stored in a specific memory
+        // location, so for that number box, use that pointer instead of
+        // what's in the array.
+        for(size_t box_index = 0;
+            box_index < PKSAV_GEN2_NUM_POKEMON_BOXES;
+            ++box_index)
+        {
+            if(is_current_box_num_valid && (box_index == *_pksav_storage.p_current_box_num))
+            {
+                pkmn::rcast_equal<struct pksav_gen2_pokemon_box>(
+                    _box_list[box_index]->get_native(),
+                    _pksav_storage.p_current_box
+                );
+            }
+            else
+            {
+                pkmn::rcast_equal<struct pksav_gen2_pokemon_box>(
+                    _box_list[box_index]->get_native(),
+                    _pksav_storage.pp_boxes[box_index]
+                );
+            }
+        }
+
+        _update_box_names();
     }
 
     void pokemon_pc_gen2impl::_update_box_names()
@@ -168,7 +191,7 @@ namespace pkmn {
             PKSAV_CALL(
                 pksav_gen2_export_text(
                     _box_names[box_index].c_str(),
-                    NATIVE_RCAST->p_box_names->names[box_index],
+                    _pksav_storage.p_box_names->names[box_index],
                     PKSAV_GEN2_POKEMON_BOX_NAME_LENGTH
                 );
             )
@@ -177,6 +200,6 @@ namespace pkmn {
 
     void pokemon_pc_gen2impl::_update_native_box_wallpapers()
     {
-        BOOST_ASSERT_MSG(false, "No box wallpapers in Generation I, so this should never be called");
+        BOOST_ASSERT_MSG(false, "No box wallpapers in Generation II, so this should never be called");
     }
 }

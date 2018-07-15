@@ -50,11 +50,6 @@ void QtTest::testAbilityListComboBox()
     {
         pkmn::qt::AbilityListComboBox abilities(6, nullptr);
         QCOMPARE(abilities.count(), 191);
-
-        abilities.setCurrentIndex(0);
-        QCOMPARE(abilities.currentText(), QString("Adaptability"));
-        abilities.setCurrentIndex(190);
-        QCOMPARE(abilities.currentText(), QString("Zen Mode"));
     }
     catch(const std::exception& e)
     {
@@ -101,11 +96,6 @@ void QtTest::testItemListComboBox()
     {
         pkmn::qt::ItemListComboBox items(pkmn::e_game::HEARTGOLD, nullptr);
         QCOMPARE(items.count(), 513);
-
-        items.setCurrentIndex(0);
-        QCOMPARE(items.currentText(), QString("Adamant Orb"));
-        items.setCurrentIndex(512);
-        QCOMPARE(items.currentText(), QString("Zoom Lens"));
     }
     catch(const std::exception& e)
     {

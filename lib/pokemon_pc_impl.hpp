@@ -13,7 +13,6 @@
 #include <pkmn/pokemon_pc.hpp>
 
 #include <boost/assert.hpp>
-#include <boost/noncopyable.hpp>
 #include <boost/thread/lockable_adapter.hpp>
 #include <boost/thread/recursive_mutex.hpp>
 
@@ -22,7 +21,6 @@
 namespace pkmn {
 
     class pokemon_pc_impl: public pokemon_pc,
-                           private boost::noncopyable,
                            public boost::basic_lockable_adapter<boost::recursive_mutex>
     {
         public:
@@ -37,13 +35,13 @@ namespace pkmn {
 
             const pkmn::pokemon_box::sptr& get_box(
                 int index
-            ) override final;
+            ) final;
 
-            const pkmn::pokemon_box_list_t& as_vector() override final;
+            const pkmn::pokemon_box_list_t& as_vector() final;
 
-            const std::vector<std::string>& get_box_names() override final;
+            const std::vector<std::string>& get_box_names() final;
 
-            void* get_native() override final;
+            void* get_native() final;
 
             // For internal use
 
@@ -62,12 +60,13 @@ namespace pkmn {
             pkmn::pokemon_box_list_t _box_list;
             std::vector<std::string> _box_names;
 
-            void* _native;
-            bool _our_mem;
+            void* _p_native;
 
             int _game_id, _generation;
 
             virtual void _from_native() = 0;
+            virtual void _to_native() = 0;
+
             virtual void _update_box_names() = 0;
             virtual void _update_native_box_wallpapers() = 0;
     };

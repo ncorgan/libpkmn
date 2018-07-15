@@ -8,8 +8,6 @@
 #include "exception_internal.hpp"
 #include "item_list_gen2_keyitemimpl.hpp"
 
-#include <pksav/gen2/items.h>
-
 #include <pkmn/database/item_entry.hpp>
 #include <pkmn/exception.hpp>
 
@@ -19,39 +17,27 @@
 #include <cstring>
 #include <stdexcept>
 
-#define NATIVE_RCAST (reinterpret_cast<struct pksav_gen2_key_item_pocket*>(_p_native))
-
 namespace pkmn {
 
     item_list_gen2_keyitemimpl::item_list_gen2_keyitemimpl(
         int item_list_id,
         int game_id,
-        void* ptr
+        const struct pksav_gen2_key_item_pocket* p_pksav_list
     ): item_list_impl(item_list_id, game_id)
     {
-        if(ptr)
+        if(p_pksav_list != nullptr)
         {
-            _p_native = ptr;
-            _is_our_mem = false;
-
-            _from_p_native();
+            _pksav_list = *p_pksav_list;
         }
         else
         {
-            _p_native = reinterpret_cast<void*>(new struct pksav_gen2_key_item_pocket);
-            std::memset(_p_native, 0, sizeof(struct pksav_gen2_key_item_pocket));
-            NATIVE_RCAST->terminator = 0xFF;
-
-            _is_our_mem = true;
+            std::memset(&_pksav_list, 0, sizeof(_pksav_list));
+            _pksav_list.terminator = 0xFF;
         }
-    }
 
-    item_list_gen2_keyitemimpl::~item_list_gen2_keyitemimpl()
-    {
-        if(_is_our_mem)
-        {
-            delete NATIVE_RCAST;
-        }
+        _from_native();
+
+        _p_native = &_pksav_list;
     }
 
     void item_list_gen2_keyitemimpl::add(
@@ -200,7 +186,7 @@ namespace pkmn {
         _to_native();
     }
 
-    void item_list_gen2_keyitemimpl::_from_p_native(
+    void item_list_gen2_keyitemimpl::_from_native(
         int index
     )
     {
@@ -209,24 +195,24 @@ namespace pkmn {
         if(index >= 0)
         {
             _item_slots[index].item = pkmn::database::item_entry(
-                                          NATIVE_RCAST->item_indices[index],
+                                          _pksav_list.item_indices[index],
                                           _game_id
                                       ).get_name();
-            _item_slots[index].amount = (NATIVE_RCAST->item_indices[index] > 0) ? 1 : 0;
+            _item_slots[index].amount = (_pksav_list.item_indices[index] > 0) ? 1 : 0;
         }
         else
         {
             for(int item_index = 0; item_index < _capacity; ++item_index)
             {
                 _item_slots[item_index].item = pkmn::database::item_entry(
-                                                   NATIVE_RCAST->item_indices[item_index],
+                                                   _pksav_list.item_indices[item_index],
                                                    _game_id
                                                ).get_name();
-                _item_slots[item_index].amount = (NATIVE_RCAST->item_indices[item_index] > 0) ? 1 : 0;
+                _item_slots[item_index].amount = (_pksav_list.item_indices[item_index] > 0) ? 1 : 0;
             }
         }
 
-        _num_items = NATIVE_RCAST->count;
+        _num_items = _pksav_list.count;
     }
 
     void item_list_gen2_keyitemimpl::_to_native(
@@ -237,22 +223,22 @@ namespace pkmn {
 
         if(index >= 0)
         {
-            NATIVE_RCAST->item_indices[index] = uint8_t(pkmn::database::item_entry(
-                                                            _item_slots[index].item,
-                                                            get_game()
-                                                        ).get_item_index());
+            _pksav_list.item_indices[index] = uint8_t(pkmn::database::item_entry(
+                                                          _item_slots[index].item,
+                                                          get_game()
+                                                      ).get_item_index());
         }
         else
         {
             for(int item_index = 0; item_index < _capacity; ++item_index)
             {
-                NATIVE_RCAST->item_indices[item_index] = uint8_t(pkmn::database::item_entry(
-                                                                     _item_slots[item_index].item,
-                                                                     get_game()
-                                                                 ).get_item_index());
+                _pksav_list.item_indices[item_index] = uint8_t(pkmn::database::item_entry(
+                                                                   _item_slots[item_index].item,
+                                                                   get_game()
+                                                               ).get_item_index());
             }
         }
 
-        NATIVE_RCAST->count = uint8_t(_num_items);
+        _pksav_list.count = uint8_t(_num_items);
     }
 }

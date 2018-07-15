@@ -11,44 +11,47 @@
 
 #include "libpkmgc_includes.hpp"
 
+#include <memory>
+
 namespace pkmn {
 
-    class pokemon_box_gcnimpl: public pokemon_box_impl {
+    class pokemon_box_gcnimpl: public pokemon_box_impl
+    {
         public:
-            pokemon_box_gcnimpl() {}
-            explicit pokemon_box_gcnimpl(
-                int game_id
-            );
             pokemon_box_gcnimpl(
                 int game_id,
-                LibPkmGC::GC::PokemonBox* native
+                LibPkmGC::GC::PokemonBox* p_libpkmgc_native = nullptr
             );
 
-            ~pokemon_box_gcnimpl();
+            ~pokemon_box_gcnimpl() = default;
 
-            std::string get_name() override final;
+            std::string get_name() final;
 
             void set_name(
                 const std::string& name
-            ) override final;
+            ) final;
 
-            int get_num_pokemon() override final;
+            int get_num_pokemon() final;
 
-            int get_capacity() override final;
+            int get_capacity() final;
 
             void set_pokemon(
                 int index,
                 const pkmn::pokemon::sptr& new_pokemon
-            ) override final;
+            ) final;
 
-            std::string get_wallpaper() override final;
+            std::string get_wallpaper() final;
 
             void set_wallpaper(
                 const std::string& wallpaper
-            ) override final;
+            ) final;
 
         private:
-            void _from_native() override final;
+
+            std::unique_ptr<LibPkmGC::GC::PokemonBox> _libpkmgc_box_uptr;
+
+            void _from_native() final;
+            void _to_native() final;
     };
 }
 

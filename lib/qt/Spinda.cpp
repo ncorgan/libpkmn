@@ -44,16 +44,16 @@ typedef struct
 } spinda_colors_t;
 
 // Avoid compilation issues from different sizes.
-BOOST_STATIC_CONSTEXPR size_t MAX_SPOT_HEIGHT = 13;
+static const size_t MAX_SPOT_HEIGHT = 13;
 
 // Game Boy Advance
-BOOST_STATIC_CONSTEXPR spinda_coords GBA_ORIGIN(8,6);
-BOOST_STATIC_CONSTEXPR spinda_spots GBA_COORDS(
-                                        spinda_coords(0,0),
-                                        spinda_coords(24,1),
-                                        spinda_coords(6,18),
-                                        spinda_coords(18,19)
-                                    );
+static const spinda_coords GBA_ORIGIN(8,6);
+static const spinda_spots GBA_COORDS(
+                              spinda_coords(0,0),
+                              spinda_coords(24,1),
+                              spinda_coords(6,18),
+                              spinda_coords(18,19)
+                          );
 
 static const spinda_colors_t GBA_SPINDA_FACE_COLORS =
 {
@@ -75,14 +75,14 @@ static const spinda_colors_t GBA_SPINDA_SPOT_COLORS_SHINY =
 };
 
 // Generation IV-V
-BOOST_STATIC_CONSTEXPR spinda_coords GEN4_ORIGIN(17, 7);
-BOOST_STATIC_CONSTEXPR spinda_coords GEN5_ORIGIN(23, 15);
-BOOST_STATIC_CONSTEXPR spinda_spots NDS_COORDS(
-                                        spinda_coords(0,0),
-                                        spinda_coords(24,2),
-                                        spinda_coords(3,18),
-                                        spinda_coords(15,18)
-                                    );
+static const spinda_coords GEN4_ORIGIN(17, 7);
+static const spinda_coords GEN5_ORIGIN(23, 15);
+static const spinda_spots NDS_COORDS(
+                              spinda_coords(0,0),
+                              spinda_coords(24,2),
+                              spinda_coords(3,18),
+                              spinda_coords(15,18)
+                          );
 
 static const spinda_colors_t NDS_SPINDA_FACE_COLORS =
 {
@@ -176,15 +176,27 @@ namespace pkmn { namespace qt {
         switch(generation)
         {
             case 3:
-                spinda_entry = pkmn::database::pokemon_entry("Spinda", pkmn::e_game::RUBY, "");
+                spinda_entry = pkmn::database::pokemon_entry(
+                                   pkmn::e_species::SPINDA,
+                                   pkmn::e_game::RUBY,
+                                   ""
+                               );
                 break;
 
             case 4:
-                spinda_entry = pkmn::database::pokemon_entry("Spinda", pkmn::e_game::DIAMOND, "");
+                spinda_entry = pkmn::database::pokemon_entry(
+                                   pkmn::e_species::SPINDA,
+                                   pkmn::e_game::DIAMOND,
+                                   ""
+                               );
                 break;
 
             case 5:
-                spinda_entry = pkmn::database::pokemon_entry("Spinda", pkmn::e_game::BLACK, "");
+                spinda_entry = pkmn::database::pokemon_entry(
+                                   pkmn::e_species::SPINDA,
+                                   pkmn::e_game::BLACK,
+                                   ""
+                               );
                 break;
         }
         input_path = fs::path(spinda_entry.get_sprite_filepath(false, shiny));

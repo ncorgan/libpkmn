@@ -21,44 +21,39 @@ namespace pkmn {
 
     class pokemon_box_gbaimpl: public pokemon_box_impl {
         public:
-            pokemon_box_gbaimpl() {}
-            explicit pokemon_box_gbaimpl(
-                int game_id
-            );
             pokemon_box_gbaimpl(
                 int game_id,
-                struct pksav_gba_pokemon_box* native
-            );
-            pokemon_box_gbaimpl(
-                int game_id,
-                const struct pksav_gba_pokemon_box &native
+                const struct pksav_gba_pokemon_box* p_native = nullptr
             );
 
-            ~pokemon_box_gbaimpl();
+            ~pokemon_box_gbaimpl() = default;
 
-            std::string get_name() override final;
+            std::string get_name() final;
 
             void set_name(
                 const std::string& name
-            ) override final;
+            ) final;
 
-            int get_num_pokemon() override final;
+            int get_num_pokemon() final;
 
-            int get_capacity() override final;
+            int get_capacity() final;
 
             void set_pokemon(
                 int index,
                 const pkmn::pokemon::sptr& new_pokemon
-            ) override final;
+            ) final;
 
-            std::string get_wallpaper() override final;
+            std::string get_wallpaper() final;
 
             void set_wallpaper(
                 const std::string& wallpaper
-            ) override final;
+            ) final;
 
         private:
-            void _from_native() override final;
+            void _from_native() final;
+            void _to_native() final;
+
+            struct pksav_gba_pokemon_box _pksav_box;
 
             std::string _wallpaper;
     };

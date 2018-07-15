@@ -11,6 +11,8 @@
 
 #include "libpkmgc_includes.hpp"
 
+#include <memory>
+
 namespace pkmn {
 
     class pokemon_gcnimpl: public pokemon_impl
@@ -22,207 +24,208 @@ namespace pkmn {
                 int level
             );
             pokemon_gcnimpl(
-                LibPkmGC::GC::Pokemon* native,
+                const LibPkmGC::GC::Pokemon* p_libpkmgc_pokemon,
                 int game_id
             );
-            explicit pokemon_gcnimpl(
-                const LibPkmGC::Colosseum::Pokemon &native
-            );
-            explicit pokemon_gcnimpl(
-                const LibPkmGC::XD::Pokemon &native
-            );
 
-            ~pokemon_gcnimpl();
+            // TODO
+            pokemon_gcnimpl(const pokemon_gcnimpl&) = delete;
+            pokemon_gcnimpl(pokemon_gcnimpl&&) = delete;
+
+            pokemon_gcnimpl& operator=(const pokemon_gcnimpl&) = delete;
+            pokemon_gcnimpl& operator=(pokemon_gcnimpl&&) = delete;
+
+            ~pokemon_gcnimpl() = default;
 
             pokemon::sptr to_game(pkmn::e_game game) final;
 
             void export_to_file(
                 const std::string& filepath
-            ) override final;
+            ) final;
 
             void set_form(
                 const std::string& form
-            ) override final;
+            ) final;
 
-            bool is_egg() override final;
+            bool is_egg() final;
 
             void set_is_egg(
                 bool is_egg
-            ) override final;
+            ) final;
 
-            std::string get_condition() override final;
+            std::string get_condition() final;
 
             void set_condition(
                 const std::string& condition
-            ) override final;
+            ) final;
 
-            std::string get_nickname() override final;
+            std::string get_nickname() final;
 
             void set_nickname(
                 const std::string& nickname
-            ) override final;
+            ) final;
 
-            pkmn::e_gender get_gender() override final;
+            pkmn::e_gender get_gender() final;
 
             void set_gender(
                 pkmn::e_gender gender
-            ) override final;
+            ) final;
 
-            bool is_shiny() override final;
+            bool is_shiny() final;
 
             void set_shininess(
                 bool value
-            ) override final;
+            ) final;
 
-            std::string get_held_item() override final;
+            std::string get_held_item() final;
 
             void set_held_item(
                 const std::string& held_item
-            ) override final;
+            ) final;
 
-            std::string get_nature() override final;
+            std::string get_nature() final;
 
             void set_nature(
                 const std::string& nature
-            ) override final;
+            ) final;
 
-            int get_pokerus_duration() override final;
+            int get_pokerus_duration() final;
 
             void set_pokerus_duration(
                 int duration
-            ) override final;
+            ) final;
 
-            std::string get_original_trainer_name() override final;
+            std::string get_original_trainer_name() final;
 
             void set_original_trainer_name(
                 const std::string& trainer_name
-            ) override final;
+            ) final;
 
-            uint16_t get_original_trainer_public_id() override final;
+            uint16_t get_original_trainer_public_id() final;
 
-            uint16_t get_original_trainer_secret_id() override final;
+            uint16_t get_original_trainer_secret_id() final;
 
-            uint32_t get_original_trainer_id() override final;
+            uint32_t get_original_trainer_id() final;
 
             void set_original_trainer_public_id(
                 uint16_t public_id
-            ) override final;
+            ) final;
 
             void set_original_trainer_secret_id(
                 uint16_t secret_id
-            ) override final;
+            ) final;
 
             void set_original_trainer_id(
                 uint32_t id
-            ) override final;
+            ) final;
 
-            pkmn::e_gender get_original_trainer_gender() override final;
+            pkmn::e_gender get_original_trainer_gender() final;
 
             void set_original_trainer_gender(
                 pkmn::e_gender gender
-            ) override final;
+            ) final;
 
-            pkmn::e_language get_language() override final;
+            pkmn::e_language get_language() final;
 
             void set_language(
                 pkmn::e_language language
-            ) override final;
+            ) final;
 
-            int get_current_trainer_friendship() override final;
+            int get_current_trainer_friendship() final;
 
             void set_current_trainer_friendship(
                 int friendship
-            ) override final;
+            ) final;
 
-            std::string get_ability() override final;
+            std::string get_ability() final;
 
             void set_ability(
                 const std::string& ability
-            ) override final;
+            ) final;
 
-            std::string get_ball() override final;
+            std::string get_ball() final;
 
             void set_ball(
                 const std::string& ball
-            ) override final;
+            ) final;
 
-            int get_level_met() override final;
+            int get_level_met() final;
 
             void set_level_met(
                 int level
-            ) override final;
+            ) final;
 
             std::string get_location_met(
                 bool as_egg
-            ) override final;
+            ) final;
 
             void set_location_met(
                 const std::string& location,
                 bool as_egg
-            ) override final;
+            ) final;
 
             pkmn::e_game get_original_game() final;
 
             void set_original_game(pkmn::e_game) final;
 
-            uint32_t get_personality() override final;
+            uint32_t get_personality() final;
 
             void set_personality(
                 uint32_t personality
-            ) override final;
+            ) final;
 
-            int get_experience() override final;
+            int get_experience() final;
 
             void set_experience(
                 int experience
-            ) override final;
+            ) final;
 
-            int get_level() override final;
+            int get_level() final;
 
             void set_level(
                 int level
-            ) override final;
+            ) final;
 
             void set_IV(
                 pkmn::e_stat stat,
                 int value
-            ) override final;
+            ) final;
 
             void set_marking(
                 const std::string& marking,
                 bool value
-            ) override final;
+            ) final;
 
             void set_ribbon(
                 const std::string& ribbon,
                 bool value
-            ) override final;
+            ) final;
 
             void set_contest_stat(
                 const std::string& stat,
                 int value
-            ) override final;
+            ) final;
 
             void set_move(
                 const std::string& move,
                 int index
-            ) override final;
+            ) final;
 
             void set_move_pp(
                 int index,
                 int pp
-            ) override final;
+            ) final;
 
             void set_EV(
                 pkmn::e_stat stat,
                 int value
-            ) override final;
+            ) final;
 
-            int get_current_hp() override final;
+            int get_current_hp() final;
 
             void set_current_hp(
                 int hp
-            ) override final;
+            ) final;
 
             // Functions for attributes
 
@@ -232,11 +235,13 @@ namespace pkmn {
 
         private:
 
-            void _populate_party_data() override final;
+            std::unique_ptr<LibPkmGC::GC::Pokemon> _libpkmgc_pokemon_uptr;
 
-            void _update_moves(
-                int index
-            ) override final;
+            void _populate_party_data() final;
+
+            void _update_moves(int index) final;
+
+            void _set_ability(const std::string& ability) final;
 
             void _set_unown_form_from_personality();
             void _set_unown_personality_from_form();
@@ -245,9 +250,9 @@ namespace pkmn {
             void _init_gcn_contest_stats_map();
             void _init_markings_map();
 
-            void _update_ribbons_map() override final;
-            void _update_EV_map() override final;
-            void _update_stat_map() override final;
+            void _update_ribbons_map() final;
+            void _update_EV_map() final;
+            void _update_stat_map() final;
 
             void _register_attributes();
     };

@@ -66,11 +66,7 @@ class pokemon_party_tests(base_test):
         self.assertEqual(party.num_pokemon, 2)
         self.assertEqual(party[0].species, "Squirtle")
 
-        # Make sure we can't copy a Pokemon to itself.
-        with self.assertRaises(ValueError):
-            party[1] = party[1]
-
-        # Copy a Pokemon whose memory is already part of the party.
+        # Copy a Pokemon already part of the party.
         party[2] = party[1]
         self.assertEqual(party.num_pokemon, 3)
         self.assertEqual(party[2].species, "Charmander")

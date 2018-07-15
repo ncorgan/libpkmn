@@ -24,61 +24,48 @@ BOOST_STATIC_CONSTEXPR int TM50_ID = 354;
 BOOST_STATIC_CONSTEXPR int HM01_ID = 397;
 BOOST_STATIC_CONSTEXPR int HM07_ID = 403;
 
-static PKMN_CONSTEXPR_OR_INLINE bool ITEM_ID_IS_TM(int num) {
-    return (num >= TM01_ID and num <= TM50_ID);
+static PKMN_CONSTEXPR_OR_INLINE bool ITEM_ID_IS_TM(int num)
+{
+    return (num >= TM01_ID) && (num <= TM50_ID);
 }
 
-static PKMN_CONSTEXPR_OR_INLINE bool ITEM_ID_IS_HM(int num) {
-    return (num >= HM01_ID and num <= HM07_ID);
+static PKMN_CONSTEXPR_OR_INLINE bool ITEM_ID_IS_HM(int num)
+{
+    return (num >= HM01_ID) && (num <= HM07_ID);
 }
-
-#define NATIVE_RCAST (reinterpret_cast<struct pksav_gen2_tmhm_pocket*>(_p_native))
 
 namespace pkmn {
 
     item_list_gen2_tmhmimpl::item_list_gen2_tmhmimpl(
         int item_list_id,
         int game_id,
-        void* ptr
+        const struct pksav_gen2_tmhm_pocket* p_pksav_list
     ): item_list_impl(item_list_id, game_id)
     {
         static const char* TM_FORMAT = "TM%02d";
         static const char* HM_FORMAT = "HM%02d";
         char name[5] = {0};
-        for(int i = 1; i <= 50; ++i)
+        for(int tm_index = 1; tm_index <= PKSAV_GEN2_TM_COUNT; ++tm_index)
         {
-            std::snprintf(name, sizeof(name), TM_FORMAT, i);
-            _item_slots[i-1].item = name;
+            std::snprintf(name, sizeof(name), TM_FORMAT, tm_index);
+            _item_slots[tm_index-1].item = name;
         }
-        for(int i = 1; i <= 7; ++i)
+        for(int hm_index = 1; hm_index <= PKSAV_GEN2_HM_COUNT; ++hm_index)
         {
-            std::snprintf(name, sizeof(name), HM_FORMAT, i);
-            _item_slots[50+i-1].item = name;
+            std::snprintf(name, sizeof(name), HM_FORMAT, hm_index);
+            _item_slots[PKSAV_GEN2_TM_COUNT+hm_index-1].item = name;
         }
 
-        if(ptr)
+        if(p_pksav_list != nullptr)
         {
-            _p_native = ptr;
-            _is_our_mem = false;
-
-            _from_p_native();
+            _pksav_list = *p_pksav_list;
         }
         else
         {
-            _p_native = reinterpret_cast<void*>(new struct pksav_gen2_tmhm_pocket);
-            std::memset(_p_native, 0, sizeof(struct pksav_gen2_tmhm_pocket));
-            _is_our_mem = true;
+            std::memset(&_pksav_list, 0, sizeof(_pksav_list));
         }
-    }
 
-    item_list_gen2_tmhmimpl::~item_list_gen2_tmhmimpl()
-    {
-        boost::lock_guard<item_list_gen2_tmhmimpl> lock(*this);
-
-        if(_is_our_mem)
-        {
-            delete NATIVE_RCAST;
-        }
+        _p_native = &_pksav_list;
     }
 
     int item_list_gen2_tmhmimpl::get_num_items()
@@ -86,20 +73,20 @@ namespace pkmn {
         boost::lock_guard<item_list_gen2_tmhmimpl> lock(*this);
 
         int ret = 0;
-        for(int i = 0; i < 50; i++)
-        {
-            if(NATIVE_RCAST->tm_count[i] > 0)
-            {
-                ++ret;
-            }
-        }
-        for(int i = 0; i < 7; i++)
-        {
-            if(NATIVE_RCAST->hm_count[i] > 0)
-            {
-                ++ret;
-            }
-        }
+        ret += int(std::count_if(
+                       _pksav_list.tm_count,
+                       _pksav_list.tm_count + PKSAV_GEN2_TM_COUNT,
+                       [](uint8_t tm_count)
+                       {
+                           return tm_count > 0;
+                       }));
+        ret += int(std::count_if(
+                       _pksav_list.hm_count,
+                       _pksav_list.hm_count + PKSAV_GEN2_HM_COUNT,
+                       [](uint8_t hm_count)
+                       {
+                           return hm_count > 0;
+                       }));
 
         return ret;
     }
@@ -174,10 +161,8 @@ namespace pkmn {
         _to_native(position);
     }
 
-    void item_list_gen2_tmhmimpl::move(
-        PKMN_UNUSED(int position1),
-        PKMN_UNUSED(int position2)
-    ) {
+    void item_list_gen2_tmhmimpl::move(int, int)
+    {
         throw pkmn::feature_not_in_game_error("Cannot move items in this pocket.");
     }
 
@@ -210,35 +195,27 @@ namespace pkmn {
         _item_slots[position].amount = amount;
     }
 
-    void item_list_gen2_tmhmimpl::_from_p_native(
-        PKMN_UNUSED(int index)
-    )
+    void item_list_gen2_tmhmimpl::_from_native(int)
     {
-        boost::lock_guard<item_list_gen2_tmhmimpl> lock(*this);
-
-        for(size_t i = 0; i < 50; ++i)
+        for(size_t tm_index = 0; tm_index < PKSAV_GEN2_TM_COUNT; ++tm_index)
         {
-            _item_slots[i].amount = NATIVE_RCAST->tm_count[i];
+            _item_slots[tm_index].amount = _pksav_list.tm_count[tm_index];
         }
-        for(size_t i = 0; i < 7; ++i)
+        for(size_t hm_index = 0; hm_index < PKSAV_GEN2_HM_COUNT; ++hm_index)
         {
-            _item_slots[50+i].amount = NATIVE_RCAST->hm_count[i];
+            _item_slots[PKSAV_GEN2_TM_COUNT+hm_index].amount = _pksav_list.hm_count[hm_index];
         }
     }
 
-    void item_list_gen2_tmhmimpl::_to_native(
-        PKMN_UNUSED(int index)
-    )
+    void item_list_gen2_tmhmimpl::_to_native(int)
     {
-        boost::lock_guard<item_list_gen2_tmhmimpl> lock(*this);
-
-        for(size_t i = 0; i < 50; ++i)
+        for(size_t tm_index = 0; tm_index < PKSAV_GEN2_TM_COUNT; ++tm_index)
         {
-            NATIVE_RCAST->tm_count[i] = uint8_t(_item_slots[i].amount);
+            _pksav_list.tm_count[tm_index] = uint8_t(_item_slots[tm_index].amount);
         }
-        for(size_t i = 0; i < 7; ++i)
+        for(size_t hm_index = 0; hm_index < PKSAV_GEN2_HM_COUNT; ++hm_index)
         {
-            NATIVE_RCAST->hm_count[i] = uint8_t(_item_slots[50+i].amount);
+            _pksav_list.hm_count[hm_index] = uint8_t(_item_slots[PKSAV_GEN2_TM_COUNT+hm_index].amount);
         }
     }
 }

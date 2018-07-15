@@ -96,55 +96,36 @@ namespace pkmn {
             actual_new_pokemon = new_pokemon->to_game(get_game());
         }
 
-        pokemon_impl* new_pokemon_impl_ptr = dynamic_cast<pokemon_impl*>(actual_new_pokemon.get());
-        pokemon_impl* old_box_pokemon_impl_ptr = dynamic_cast<pokemon_impl*>(r_levelup_pokemon[0].get());
-
-        // Make sure no one else is using the Pokémon variables.
-        boost::lock_guard<pokemon_impl> new_pokemon_lock(*new_pokemon_impl_ptr);
-        old_box_pokemon_impl_ptr->lock();
+        // Make sure no one else is using the new Pokémon variable.
+        pokemon_gcnimpl* p_new_pokemon = dynamic_cast<pokemon_gcnimpl*>(
+                                             actual_new_pokemon.get()
+                                         );
+        BOOST_ASSERT(p_new_pokemon != nullptr);
+        boost::lock_guard<pokemon_gcnimpl> new_pokemon_lock(*p_new_pokemon);
 
         // Copy the underlying memory to the party. At the end of this process,
         // all existing variables will correspond to the same Pokémon, even if
         // their underlying memory has changed.
-
-        void* old_box_pokemon_native_ptr = old_box_pokemon_impl_ptr->_native_pc;
-        void* new_pokemon_native_ptr = new_pokemon_impl_ptr->_native_pc;
-
-        // Make a copy of the current Pokémon in the given party slot so it can be preserved in an sptr
-        // that owns its own memory.
-        LibPkmGC::GC::Pokemon* box_pokemon_copy_ptr = reinterpret_cast<LibPkmGC::GC::Pokemon*>(
-                                                          old_box_pokemon_impl_ptr->_native_pc
-                                                      )->clone();
-
+        //
+        // Note: as we control the implementation, we know the PC data points
+        // to the whole Pokémon data structure.
         if(_game_id == COLOSSEUM_ID)
         {
-            rcast_equal<LibPkmGC::Colosseum::Pokemon>(
-                old_box_pokemon_native_ptr,
-                dynamic_cast<LibPkmGC::Colosseum::Pokemon*>(box_pokemon_copy_ptr)
-            );
-            rcast_equal<LibPkmGC::Colosseum::Pokemon>(
-                new_pokemon_native_ptr,
-                old_box_pokemon_native_ptr
-            );
+            delete dynamic_cast<LibPkmGC::Colosseum::Pokemon*>(
+                       GC_RCAST(_p_native)->pkm
+                   );
         }
         else
         {
-            rcast_equal<LibPkmGC::XD::Pokemon>(
-                old_box_pokemon_native_ptr,
-                dynamic_cast<LibPkmGC::XD::Pokemon*>(box_pokemon_copy_ptr)
-            );
-            rcast_equal<LibPkmGC::XD::Pokemon>(
-                new_pokemon_native_ptr,
-                old_box_pokemon_native_ptr
-            );
+            delete dynamic_cast<LibPkmGC::XD::Pokemon*>(
+                       GC_RCAST(_p_native)->pkm
+                   );
         }
 
-        old_box_pokemon_impl_ptr->_native_pc = reinterpret_cast<void*>(box_pokemon_copy_ptr);
-        old_box_pokemon_impl_ptr->_our_pc_mem = true;
-
-        // Unlock the old Pokémon's mutex is unlocked before it's destructor is called.
-        old_box_pokemon_impl_ptr->unlock();
-
+        GC_RCAST(_p_native)->pkm =
+            static_cast<LibPkmGC::GC::Pokemon*>(
+                actual_new_pokemon->get_native_pc_data()
+            )->clone();
         r_levelup_pokemon[0] = std::make_shared<pokemon_gcnimpl>(
                                    dynamic_cast<LibPkmGC::GC::Pokemon*>(
                                        GC_RCAST(_p_native)->pkm

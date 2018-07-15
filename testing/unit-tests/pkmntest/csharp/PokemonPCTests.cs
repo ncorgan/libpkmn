@@ -116,15 +116,7 @@ public class PokemonPCTests
         box[0] = squirtle;
         Assert.AreEqual(box.NumPokemon, 2);
 
-        // Make sure we can't copy a Pokémon to itself.
-        Assert.Throws<ArgumentOutOfRangeException>(
-            delegate
-            {
-                box[1] = box[1];
-            }
-        );
-
-        // Copy a Pokémon whose memory is already part of the box.
+        // Copy a Pokémon already part of the box.
         box[2] = box[1];
         Assert.AreEqual(box.NumPokemon, 3);
 

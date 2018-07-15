@@ -47,6 +47,8 @@ static void check_pksav_struct(
     bool is_pc
 )
 {
+    // This is safe because it has the same layout as the bag, but for the bag,
+    // we won't index as far.
     const struct pksav_gen1_item_pc* p_native_pc = static_cast<const struct pksav_gen1_item_pc*>(p_native);
     ASSERT_EQ(expected_num_items, int(p_native_pc->count));
     for(int item_index = 0; item_index < expected_num_items; ++item_index)

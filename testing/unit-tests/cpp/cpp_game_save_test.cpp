@@ -17,6 +17,7 @@
 #include <pkmn/database/lists.hpp>
 #include <pkmn/exception.hpp>
 #include <pkmn/game_save.hpp>
+#include <pkmn/enums/enum_to_string.hpp>
 #include <pkmn/utils/paths.hpp>
 
 #include <pksav/gen1.h>
@@ -768,9 +769,10 @@ namespace pkmntest {
     };
 
     static void compare_item_lists(
-        pkmn::item_list::sptr list1,
-        pkmn::item_list::sptr list2
-    ) {
+        const pkmn::item_list::sptr& list1,
+        const pkmn::item_list::sptr& list2
+    )
+    {
         EXPECT_EQ(list1->get_name(), list2->get_name());
         EXPECT_EQ(list1->get_capacity(), list2->get_capacity());
         EXPECT_EQ(list1->get_num_items(), list2->get_num_items());
@@ -778,9 +780,10 @@ namespace pkmntest {
         const pkmn::item_slots_t& item_slots1 = list1->as_vector();
         const pkmn::item_slots_t& item_slots2 = list2->as_vector();
         ASSERT_EQ(item_slots1.size(), item_slots2.size());
-        for(size_t i = 0; i < item_slots1.size(); ++i) {
-            EXPECT_EQ(item_slots1[i].item, item_slots2[i].item);
-            EXPECT_EQ(item_slots1[i].amount, item_slots2[i].amount);
+        for(size_t i = 0; i < item_slots1.size(); ++i)
+        {
+            EXPECT_EQ(item_slots1[i].item, item_slots2[i].item) << list1->get_name();
+            EXPECT_EQ(item_slots1[i].amount, item_slots2[i].amount) << list1->get_name();
         }
     }
 
@@ -794,8 +797,8 @@ namespace pkmntest {
     }
 
     static void compare_pokemon(
-        pkmn::pokemon::sptr pokemon1,
-        pkmn::pokemon::sptr pokemon2
+        const pkmn::pokemon::sptr& pokemon1,
+        const pkmn::pokemon::sptr& pokemon2
     )
     {
         pkmn::e_game game = pokemon1->get_game();
@@ -822,6 +825,16 @@ namespace pkmntest {
             EXPECT_EQ(native1->shadowPkmID, native2->shadowPkmID);
             EXPECT_STREQ(native1->name->toUTF8(), native2->name->toUTF8());
             EXPECT_STREQ(native1->OTName->toUTF8(), native2->OTName->toUTF8());
+
+            std::pair<std::string, std::string> abilities = pokemon1->get_database_entry().get_abilities();
+
+            EXPECT_EQ(
+                native1->getAbility(),
+                native2->getAbility()
+            ) << pkmn::species_to_string(pokemon1->get_species()) << " "
+              << LibPkmGC::Localization::getPokemonAbilityName(LibPkmGC::English, native1->getAbility()) << " "
+              << LibPkmGC::Localization::getPokemonAbilityName(LibPkmGC::English, native2->getAbility()) << " "
+              << "(" << abilities.first << ", " << abilities.second << ")";
 
             const pkmn::move_slots_t& moves1 = pokemon1->get_moves();
             const pkmn::move_slots_t& moves2 = pokemon2->get_moves();
@@ -868,8 +881,8 @@ namespace pkmntest {
     {
         for(size_t i = 0; i < length; ++i)
         {
-            EXPECT_EQ(items1[i].index, items2[i].index);
-            EXPECT_EQ(items1[i].quantity, items2[i].quantity);
+            EXPECT_EQ(items1[i].index, items2[i].index) << i;
+            EXPECT_EQ(items1[i].quantity, items2[i].quantity) << i;
         }
     }
 
@@ -1056,19 +1069,24 @@ namespace pkmntest {
         const pkmn::pokemon_box_list_t& boxes1 = save1->get_pokemon_pc()->as_vector();
         const pkmn::pokemon_box_list_t& boxes2 = save2->get_pokemon_pc()->as_vector();
         EXPECT_EQ(boxes1.size(), boxes2.size());
-        for(size_t i = 0; i < boxes1.size(); ++i) {
-            pkmn::pokemon_box::sptr box1 = boxes1[i];
-            pkmn::pokemon_box::sptr box2 = boxes2[i];
-            if(generation >= 2) {
+        for(size_t box_index = 0; box_index < boxes1.size(); ++box_index)
+        {
+            const pkmn::pokemon_box::sptr& box1 = boxes1[box_index];
+            const pkmn::pokemon_box::sptr& box2 = boxes2[box_index];
+            if(generation >= 2)
+            {
                 EXPECT_EQ(box1->get_name(), box2->get_name());
             }
 
             EXPECT_EQ(box1->get_capacity(), box2->get_capacity());
             EXPECT_EQ(box1->get_num_pokemon(), box2->get_num_pokemon());
-            for(int i = 0; i < box1->get_capacity(); ++i) {
+            for(int pokemon_index = 0;
+                pokemon_index < box1->get_capacity();
+                ++pokemon_index)
+            {
                 compare_pokemon(
-                    box1->get_pokemon(i),
-                    box2->get_pokemon(i)
+                    box1->get_pokemon(pokemon_index),
+                    box2->get_pokemon(pokemon_index)
                 );
             }
         }

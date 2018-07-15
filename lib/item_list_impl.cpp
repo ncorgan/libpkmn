@@ -36,29 +36,18 @@ namespace pkmn {
     {
         int game_id = pkmn::database::game_enum_to_id(game);
         int generation = pkmn::database::game_id_to_generation(game_id);
-        int item_list_id = 0;
-        int capacity = 0;
 
-        static BOOST_CONSTEXPR const char* id_capacity_query = \
-            "SELECT id,capacity FROM libpkmn_item_lists WHERE name=? AND "
+        static const std::string query =
+            "SELECT id FROM libpkmn_item_lists WHERE name=? AND "
             "version_group_id=(SELECT version_group_id FROM versions "
             "WHERE id=?)";
 
-        SQLite::Statement stmt(
-            pkmn::database::get_connection(),
-            id_capacity_query
-        );
-        stmt.bind(1, name);
-        stmt.bind(2, game_id);
-        if(stmt.executeStep())
-        {
-            item_list_id = stmt.getColumn(0);
-            capacity = stmt.getColumn(1);
-        }
-        else
-        {
-            throw std::invalid_argument("Invalid list.");
-        }
+        int item_list_id = pkmn::database::query_db_bind2<int, const std::string&, int>(
+                               query.c_str(),
+                               name,
+                               game_id,
+                               "Invalid list."
+                           );
 
         switch(generation)
         {
@@ -122,13 +111,13 @@ namespace pkmn {
                 if(game_is_gamecube(game_id))
                 {
                     return std::make_shared<item_list_gcnimpl>(
-                               item_list_id, game_id, nullptr, capacity, false
+                               item_list_id, game_id, nullptr
                            );
                 }
                 else
                 {
                     return std::make_shared<item_list_modernimpl>(
-                               item_list_id, game_id, nullptr, capacity, false
+                               item_list_id, game_id, nullptr
                            );
                 }
 
@@ -179,7 +168,6 @@ namespace pkmn {
        _version_group_id(pkmn::database::game_id_to_version_group(game_id)),
        _num_items(0),
        _pc(ITEM_LIST_ID_IS_PC(item_list_id)),
-       _is_our_mem(false),
        _p_native(nullptr)
     {
         static BOOST_CONSTEXPR const char* capacity_query = \
@@ -192,11 +180,6 @@ namespace pkmn {
                     );
 
         _item_slots.resize(_capacity);
-        for(pkmn::item_slot& r_item_slot: _item_slots)
-        {
-            r_item_slot.item = "None";
-            r_item_slot.amount = 0;
-        }
     }
 
     std::string item_list_impl::get_name()

@@ -9,109 +9,97 @@
 
 #include <pkmn/database/item_entry.hpp>
 
-#include <boost/thread/lock_guard.hpp>
-
 #include <cstring>
-
-#define NATIVE_RCAST (reinterpret_cast<LibPkmGC::Item*>(_p_native))
 
 namespace pkmn {
 
     item_list_gcnimpl::item_list_gcnimpl(
         int item_list_id,
         int game_id,
-        LibPkmGC::Item* ptr,
-        size_t capacity,
-        bool copy
+        const LibPkmGC::Item* p_libpkmgc_list
     ): item_list_impl(item_list_id, game_id)
     {
-        if(ptr) {
-            if(copy) {
-                _p_native = reinterpret_cast<void*>(new LibPkmGC::Item[capacity]);
-                std::memcpy(_p_native, ptr, sizeof(LibPkmGC::Item)*capacity);
-                _is_our_mem = true;
-            } else {
-                _p_native = ptr;
-                _is_our_mem = false;
-            }
+        _libpkmgc_list.resize(_capacity, {LibPkmGC::NoItem,0});
 
-            _from_p_native();
-        } else {
-            _p_native = reinterpret_cast<void*>(new LibPkmGC::Item[capacity]);
-            std::memset(_p_native, 0, sizeof(LibPkmGC::Item)*capacity);
-            _is_our_mem = true;
-        }
-    }
-
-    item_list_gcnimpl::~item_list_gcnimpl()
-    {
-        boost::lock_guard<item_list_gcnimpl> lock(*this);
-
-        if(_is_our_mem)
+        if(p_libpkmgc_list != nullptr)
         {
-            delete[] NATIVE_RCAST;
+            std::memcpy(
+                _libpkmgc_list.data(),
+                p_libpkmgc_list,
+                sizeof(LibPkmGC::Item)*_capacity
+            );
         }
+
+        _from_native();
+
+        _p_native = _libpkmgc_list.data();
     }
 
-    void item_list_gcnimpl::_from_p_native(
-        int index
+    void item_list_gcnimpl::_libpkmgc_item_to_libpkmn_item_slot(
+        const LibPkmGC::Item& libpkmgc_item,
+        pkmn::item_slot& r_item_slot
     )
     {
-        boost::lock_guard<item_list_gcnimpl> lock(*this);
+        r_item_slot.item = pkmn::database::item_entry(
+                               libpkmgc_item.index,
+                               _game_id
+                           ).get_name();
+        r_item_slot.amount = libpkmgc_item.quantity;
+    }
 
+    void item_list_gcnimpl::_libpkmn_item_slot_to_libpkmgc_item(
+        const pkmn::item_slot& item_slot,
+        LibPkmGC::Item& r_libpkmgc_item
+    )
+    {
+        r_libpkmgc_item.index = LibPkmGC::ItemIndex(
+                                    pkmn::database::item_entry(
+                                        item_slot.item,
+                                        get_game()
+                                    ).get_item_index()
+                                );
+        r_libpkmgc_item.quantity = LibPkmGC::u16(item_slot.amount);
+    }
+
+    void item_list_gcnimpl::_from_native(int index)
+    {
         if(index == -1)
         {
-            for(int i = 0; i < _capacity; ++i)
+            for(int item_index = 0; item_index < _capacity; ++item_index)
             {
-                _item_slots[i].item = pkmn::database::item_entry(
-                                          int(NATIVE_RCAST[i].index),
-                                          _game_id
-                                      ).get_name();
-                _item_slots[i].amount = int(NATIVE_RCAST[i].quantity);
+                _libpkmgc_item_to_libpkmn_item_slot(
+                    _libpkmgc_list[item_index],
+                    _item_slots[item_index]
+                );
             }
         }
         else
         {
-            _item_slots[index].item = pkmn::database::item_entry(
-                                          int(NATIVE_RCAST[index].index),
-                                          _game_id
-                                      ).get_name();
-            _item_slots[index].amount = int(NATIVE_RCAST[index].quantity);
+            _libpkmgc_item_to_libpkmn_item_slot(
+                _libpkmgc_list[index],
+                _item_slots[index]
+            );
         }
     }
 
-    void item_list_gcnimpl::_to_native(
-        int index
-    )
+    void item_list_gcnimpl::_to_native(int index)
     {
-        boost::lock_guard<item_list_gcnimpl> lock(*this);
-
         if(index == -1)
         {
-            for(int i = 0; i < _capacity; ++i)
+            for(int item_index = 0; item_index < _capacity; ++item_index)
             {
-                NATIVE_RCAST[i].index = LibPkmGC::ItemIndex(
-                                            pkmn::database::item_entry(
-                                                _item_slots[i].item,
-                                                get_game()
-                                            ).get_item_index()
-                                        );
-                NATIVE_RCAST[i].quantity = LibPkmGC::u16(
-                                               _item_slots[i].amount
-                                           );
+                _libpkmn_item_slot_to_libpkmgc_item(
+                    _item_slots[item_index],
+                    _libpkmgc_list[item_index]
+                );
             }
         }
         else
         {
-            NATIVE_RCAST[index].index = LibPkmGC::ItemIndex(
-                                            pkmn::database::item_entry(
-                                                _item_slots[index].item,
-                                                get_game()
-                                            ).get_item_index()
-                                        );
-            NATIVE_RCAST[index].quantity = LibPkmGC::u16(
-                                               _item_slots[index].amount
-                                           );
+            _libpkmn_item_slot_to_libpkmgc_item(
+                _item_slots[index],
+                _libpkmgc_list[index]
+            );
         }
     }
 }

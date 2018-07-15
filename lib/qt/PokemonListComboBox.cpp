@@ -17,7 +17,7 @@ namespace pkmn { namespace qt {
         QWidget* parent
     ): QComboBox(parent)
     {
-        std::vector<std::string> pokemon_list = pkmn::database::get_pokemon_list(
+        std::vector<std::string> pokemon_list = pkmn::database::get_pokemon_name_list(
                                                     generation,
                                                     includePrevious
                                                 );

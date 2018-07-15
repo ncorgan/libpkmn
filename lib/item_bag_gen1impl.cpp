@@ -5,10 +5,10 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-#define GEN1_CAST(ptr) (static_cast<struct pksav_gen1_item_bag*>(ptr))
-
 #include "item_bag_gen1impl.hpp"
 #include "item_list_gbimpl.hpp"
+
+#include "utils/misc.hpp"
 
 #include <boost/thread/lock_guard.hpp>
 
@@ -18,35 +18,21 @@ namespace pkmn {
 
     item_bag_gen1impl::item_bag_gen1impl(
         int game_id,
-        void* p_native
+        const struct pksav_gen1_item_bag* p_pksav_bag
     ): item_bag_impl(game_id)
     {
-        if(p_native)
+        if(p_pksav_bag != nullptr)
         {
-            _p_native = p_native;
-            _is_our_mem = false;
+            _pksav_bag = *p_pksav_bag;
         }
         else
         {
-            _p_native = new struct pksav_gen1_item_bag;
-            std::memset(_p_native, 0, sizeof(struct pksav_gen1_item_bag));
-            GEN1_CAST(_p_native)->terminator = 0xFF;
-            _is_our_mem = true;
+            std::memset(&_pksav_bag, 0, sizeof(_pksav_bag));
+            _pksav_bag.terminator = 0xFF;
         }
 
-        _set_ptrs();
-    }
+        _p_native = &_pksav_bag;
 
-    item_bag_gen1impl::~item_bag_gen1impl()
-    {
-        if(_is_our_mem)
-        {
-            delete GEN1_CAST(_p_native);
-        }
-    }
-
-    void item_bag_gen1impl::_set_ptrs()
-    {
         BOOST_STATIC_CONSTEXPR int YELLOW_GAME_ID = 3;
         BOOST_STATIC_CONSTEXPR int RB_ITEM_POCKET_ID = 1;
         BOOST_STATIC_CONSTEXPR int YELLOW_ITEM_POCKET_ID = 3;
@@ -55,7 +41,15 @@ namespace pkmn {
                                      (_game_id == YELLOW_GAME_ID)
                                          ? YELLOW_ITEM_POCKET_ID
                                          : RB_ITEM_POCKET_ID,
-                                     _game_id, _p_native
+                                     _game_id, &_pksav_bag
                                  );
+    }
+
+    void item_bag_gen1impl::_to_native()
+    {
+        pkmn::rcast_equal<struct pksav_gen1_item_bag>(
+            _item_pockets["Items"]->get_native(),
+            &_pksav_bag
+        );
     }
 }

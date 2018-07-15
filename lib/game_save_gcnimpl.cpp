@@ -49,7 +49,7 @@ namespace pkmn {
             _game_id = COLOSSEUM_ID;
 
             _has_gci_data = (save_size == GCN_COLOSSEUM_GCI_SIZE);
-            _libpkmgc_save.reset(new LibPkmGC::Colosseum::SaveEditing::Save(_raw.data(), _has_gci_data));
+            _libpkmgc_save_uptr.reset(new LibPkmGC::Colosseum::SaveEditing::Save(_raw.data(), _has_gci_data));
         }
         else if(save_size == GCN_XD_BIN_SIZE or save_size == GCN_XD_GCI_SIZE)
         {
@@ -57,7 +57,7 @@ namespace pkmn {
             _game_id = XD_ID;
 
             _has_gci_data = (save_size == GCN_XD_GCI_SIZE);
-            _libpkmgc_save.reset(new LibPkmGC::XD::SaveEditing::Save(_raw.data(), _has_gci_data));
+            _libpkmgc_save_uptr.reset(new LibPkmGC::XD::SaveEditing::Save(_raw.data(), _has_gci_data));
         }
         else
         {
@@ -65,7 +65,7 @@ namespace pkmn {
         }
 
         size_t index = 0;
-        _current_slot = _libpkmgc_save->getMostRecentValidSlot(0, &index);
+        _current_slot = _libpkmgc_save_uptr->getMostRecentValidSlot(0, &index);
         if(!_current_slot)
         {
             throw std::invalid_argument("Could not find a save slot.");
@@ -86,14 +86,8 @@ namespace pkmn {
                     );
         _item_pc = std::make_shared<item_list_gcnimpl>(
                        GCN_PC_ID, _game_id,
-                       _current_slot->PC->items,
-                       235, false
+                       _current_slot->PC->items
                    );
-    }
-
-    game_save_gcnimpl::~game_save_gcnimpl()
-    {
-        boost::lock_guard<game_save_gcnimpl> lock(*this);
     }
 
     void game_save_gcnimpl::save_as(
@@ -102,11 +96,44 @@ namespace pkmn {
     {
         boost::lock_guard<game_save_gcnimpl> lock(*this);
 
-        // Make sure any updating is performed.
-        (void)_pokemon_party->get_native();
-        (void)_pokemon_pc->get_native();
+        const std::unique_ptr<LibPkmGC::GC::Pokemon>* p_libpkmgc_party_uptrs =
+            static_cast<const std::unique_ptr<LibPkmGC::GC::Pokemon>*>(
+                _pokemon_party->get_native()
+            );
+        for(int party_index = 0; party_index < PARTY_SIZE; ++party_index)
+        {
+            pkmn::rcast_equal<LibPkmGC::GC::Pokemon>(
+                p_libpkmgc_party_uptrs[party_index].get(),
+                _current_slot->player->trainer->party[party_index]
+            );
+        }
 
-        _libpkmgc_save->saveEncrypted(_raw.data(), _has_gci_data);
+        std::memcpy(
+            _current_slot->PC->items,
+            _item_pc->get_native(),
+            sizeof(_current_slot->PC->items)
+        );
+
+        if(_game_id == COLOSSEUM_ID)
+        {
+            save_native_pokemon_boxes<LibPkmGC::Colosseum::PokemonBox>();
+
+            pkmn::rcast_equal<LibPkmGC::Colosseum::BagData>(
+                _item_bag->get_native(),
+                _current_slot->player->bag
+            );
+        }
+        else
+        {
+            save_native_pokemon_boxes<LibPkmGC::XD::PokemonBox>();
+
+            pkmn::rcast_equal<LibPkmGC::XD::BagData>(
+                _item_bag->get_native(),
+                _current_slot->player->bag
+            );
+        }
+
+        _libpkmgc_save_uptr->saveEncrypted(_raw.data(), _has_gci_data);
 
         std::ofstream ofile(filepath, std::ios::binary);
         ofile.write(reinterpret_cast<const char*>(_raw.data()), _raw.size());

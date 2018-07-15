@@ -16,7 +16,7 @@ namespace pkmn { namespace qt {
         QWidget* parent
     ): QComboBox(parent)
     {
-        std::vector<std::string> types = pkmn::database::get_type_list(game);
+        std::vector<std::string> types = pkmn::database::get_type_name_list(game);
         for(const std::string& type: types)
         {
             addItem(QString::fromStdString(type));
