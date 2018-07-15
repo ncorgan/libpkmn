@@ -1,6 +1,6 @@
 #!/usr/bin/ruby
 #
-# Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+# Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
 #
 # Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
 # or copy at http://opensource.org/licenses/MIT)
@@ -57,12 +57,7 @@ class PokemonPartyTest < MiniTest::Test
         assert_equal(2, party.num_pokemon)
         assert_equal("Squirtle", party[0].species)
 
-        # Make sure we can't copy a Pokémon to itself.
-        assert_raises ArgumentError do
-            party[1] = party[1]
-        end
-
-        # Copy a Pokémon whose memory is already part of the party.
+        # Copy a Pokémon already part of the party.
         party[2] = party[1]
         assert_equal(3, party.num_pokemon)
 

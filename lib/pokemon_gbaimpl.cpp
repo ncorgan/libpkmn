@@ -777,36 +777,19 @@ namespace pkmn
     {
         boost::lock_guard<pokemon_gbaimpl> lock(*this);
 
-        std::pair<std::string, std::string> abilities = _database_entry.get_abilities();
-        if(ability == "None")
-        {
-            throw std::invalid_argument("The ability cannot be set to None.");
-        }
-        else if(ability == abilities.first)
-        {
-            _p_misc_block->iv_egg_ability &= ~PKSAV_GBA_POKEMON_ABILITY_MASK;
-        }
-        else if(ability == abilities.second)
-        {
-            _p_misc_block->iv_egg_ability |= PKSAV_GBA_POKEMON_ABILITY_MASK;
-        }
-        else
-        {
-            std::string error_message;
-            if(abilities.second == "None")
-            {
-                error_message = str(boost::format("ability: valid values \"%s\"")
-                                    % abilities.first.c_str());
-            }
-            else
-            {
-                error_message = str(boost::format("ability: valid values \"%s\", \"%s\"")
-                                    % abilities.first.c_str()
-                                    % abilities.second.c_str());
-            }
+        _set_ability(ability);
 
-            throw std::invalid_argument(error_message.c_str());
-        }
+        // Ability is derived from personality, so we need to find a new
+        // one that preserves all other values.
+        _pksav_pokemon.pc_data.personality = pksav_littleendian32(
+            pkmn::calculations::generate_personality(
+                get_species(),
+                get_original_trainer_id(),
+                is_shiny(),
+                ability,
+                get_gender(),
+                get_nature()
+            ));
     }
 
     std::string pokemon_gbaimpl::get_ball()
@@ -955,8 +938,8 @@ namespace pkmn
     {
         boost::lock_guard<pokemon_gbaimpl> lock(*this);
 
-        // TODO: personality determines ability
         _pksav_pokemon.pc_data.personality = pksav_littleendian32(personality);
+        _set_ability_from_personality();
 
         if(_database_entry.get_species_id() == UNOWN_ID)
         {
@@ -1464,7 +1447,42 @@ namespace pkmn
         _stats["Special Defense"] = int(pksav_littleendian16(_pksav_pokemon.party_data.spdef));
     }
 
-    void pokemon_gbaimpl::_set_unown_form_from_personality() {
+    void pokemon_gbaimpl::_set_ability(const std::string& ability)
+    {
+        std::pair<std::string, std::string> abilities = _database_entry.get_abilities();
+        if(ability == "None")
+        {
+            throw std::invalid_argument("The ability cannot be set to None.");
+        }
+        else if(ability == abilities.first)
+        {
+            _p_misc_block->iv_egg_ability &= ~PKSAV_GBA_POKEMON_ABILITY_MASK;
+        }
+        else if(ability == abilities.second)
+        {
+            _p_misc_block->iv_egg_ability |= PKSAV_GBA_POKEMON_ABILITY_MASK;
+        }
+        else
+        {
+            std::string error_message;
+            if(abilities.second == "None")
+            {
+                error_message = str(boost::format("ability: valid values \"%s\"")
+                                    % abilities.first.c_str());
+            }
+            else
+            {
+                error_message = str(boost::format("ability: valid values \"%s\", \"%s\"")
+                                    % abilities.first.c_str()
+                                    % abilities.second.c_str());
+            }
+
+            throw std::invalid_argument(error_message.c_str());
+        }
+    }
+
+    void pokemon_gbaimpl::_set_unown_form_from_personality()
+    {
         _database_entry.set_form(
             pkmn::calculations::gen3_unown_form(
                 pksav_littleendian32(

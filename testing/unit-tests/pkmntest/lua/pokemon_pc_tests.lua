@@ -53,10 +53,7 @@ function pokemon_pc_tests.test_empty_pokemon_box(box, game)
     local generation = pokemon_pc_tests.GAME_TO_GENERATION[game]
 
     luaunit.assertEquals(box.game, game)
-    if generation > 1
-    then
-        luaunit.assertEquals(box.name, "")
-    end
+    luaunit.assertEquals(box.name, "")
 
     for box_index = 1, #box
     do

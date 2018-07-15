@@ -80,7 +80,7 @@ namespace pkmn {
 
             std::memset(
                 &_native_box_names,
-                0xFF,
+                PKSAV_GEN2_TEXT_TERMINATOR,
                 sizeof(_native_box_names)
             );
             _current_box_num = 0;

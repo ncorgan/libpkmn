@@ -88,7 +88,6 @@ namespace pkmn {
                 )->clone()
             );
         }
-        _update_box_names();
     }
 
     void pokemon_pc_gcnimpl::_update_box_names()

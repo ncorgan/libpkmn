@@ -207,6 +207,10 @@ namespace pkmn {
                 _update_ribbons_map();
             }
 
+            // Set without applying policy
+            virtual void _set_ability(const std::string&) {}
+            void _set_ability_from_personality();
+
             virtual void _update_held_item() {}
             virtual void _update_markings_map() {}
             virtual void _update_ribbons_map() {}

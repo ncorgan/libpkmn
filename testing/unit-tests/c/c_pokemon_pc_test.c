@@ -292,9 +292,6 @@ static void test_setting_pokemon_in_box(
     PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_EQUAL(2, num_pokemon);
 
-    // Copy a Pokémon whose memory is already part of the box. Make sure we
-    // can't copy it to itself.
-
     struct pkmn_pokemon second_in_box = empty_pokemon;
     error = pkmn_pokemon_box_get_pokemon(
                 p_box,

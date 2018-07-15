@@ -87,15 +87,7 @@ public class PokemonPartyTests
         Assert.AreEqual(2, party.NumPokemon);
         Assert.AreEqual("Squirtle", party[0].Species);
 
-        // Make sure we can't copy a Pokémon to itself.
-        Assert.Throws<ArgumentOutOfRangeException>(
-            delegate
-            {
-                party[1] = party[1];
-            }
-        );
-
-        // Copy a Pokémon whose memory is already part of the party.
+        // Copy a Pokémon already part of the party.
         party[2] = party[1];
         Assert.AreEqual(3, party.NumPokemon);
         Assert.AreEqual("Charmander", party[2].Species);

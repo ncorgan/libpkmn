@@ -251,9 +251,9 @@ namespace pkmn {
 
             void _populate_party_data() final;
 
-            void _update_moves(
-                int index
-            ) final;
+            void _update_moves(int index) final;
+
+            void _set_ability(const std::string& ability) final;
 
             void _set_unown_form_from_personality();
             void _set_unown_personality_from_form();

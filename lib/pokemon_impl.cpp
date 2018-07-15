@@ -685,4 +685,17 @@ namespace pkmn
             SET_MARKING("Diamond", PKSAV_MARKING_DIAMOND);
         }
     }
+
+    void pokemon_impl::_set_ability_from_personality()
+    {
+        const std::pair<std::string, std::string> abilities = _database_entry.get_abilities();
+        if((abilities.second != "None") && ((get_personality() % 2) == 1))
+        {
+            _set_ability(abilities.second);
+        }
+        else
+        {
+            _set_ability(abilities.first);
+        }
+    }
 }

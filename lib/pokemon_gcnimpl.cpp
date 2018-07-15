@@ -763,36 +763,16 @@ namespace pkmn
     {
         boost::lock_guard<pokemon_gcnimpl> lock(*this);
 
-        std::pair<std::string, std::string> abilities = _database_entry.get_abilities();
-        if(ability == "None")
-        {
-            throw std::invalid_argument("The ability cannot be set to None.");
-        }
-        else if(ability == abilities.first)
-        {
-            _libpkmgc_pokemon_uptr->setSecondAbilityFlag(false);
-        }
-        else if(ability == abilities.second)
-        {
-            _libpkmgc_pokemon_uptr->setSecondAbilityFlag(true);
-        }
-        else
-        {
-            std::string error_message;
-            if(abilities.second == "None")
-            {
-                error_message = str(boost::format("ability: valid values \"%s\"")
-                                    % abilities.first.c_str());
-            }
-            else
-            {
-                error_message = str(boost::format("ability: valid values \"%s\", \"%s\"")
-                                    % abilities.first.c_str()
-                                    % abilities.second.c_str());
-            }
+        _set_ability(ability);
 
-            throw std::invalid_argument(error_message.c_str());
-        }
+        _libpkmgc_pokemon_uptr->PID = pkmn::calculations::generate_personality(
+                                          get_species(),
+                                          get_original_trainer_id(),
+                                          is_shiny(),
+                                          ability,
+                                          get_gender(),
+                                          get_nature()
+                                      );
     }
 
     std::string pokemon_gcnimpl::get_ball()
@@ -936,8 +916,8 @@ namespace pkmn
     {
         boost::lock_guard<pokemon_gcnimpl> lock(*this);
 
-        // TODO: personality determines ability
         _libpkmgc_pokemon_uptr->PID = personality;
+        _set_ability_from_personality();
 
         if(_database_entry.get_species_id() == UNOWN_ID)
         {
@@ -1356,7 +1336,42 @@ namespace pkmn
         _stats["Special Defense"] = int(_libpkmgc_pokemon_uptr->partyData.stats[LIBPKMGC_STAT_SPDEF]);
     }
 
-    void pokemon_gcnimpl::_set_unown_form_from_personality() {
+    void pokemon_gcnimpl::_set_ability(const std::string& ability)
+    {
+        std::pair<std::string, std::string> abilities = _database_entry.get_abilities();
+        if(ability == "None")
+        {
+            throw std::invalid_argument("The ability cannot be set to None.");
+        }
+        else if(ability == abilities.first)
+        {
+            _libpkmgc_pokemon_uptr->setSecondAbilityFlag(false);
+        }
+        else if(ability == abilities.second)
+        {
+            _libpkmgc_pokemon_uptr->setSecondAbilityFlag(true);
+        }
+        else
+        {
+            std::string error_message;
+            if(abilities.second == "None")
+            {
+                error_message = str(boost::format("ability: valid values \"%s\"")
+                                    % abilities.first.c_str());
+            }
+            else
+            {
+                error_message = str(boost::format("ability: valid values \"%s\", \"%s\"")
+                                    % abilities.first.c_str()
+                                    % abilities.second.c_str());
+            }
+
+            throw std::invalid_argument(error_message.c_str());
+        }
+    }
+
+    void pokemon_gcnimpl::_set_unown_form_from_personality()
+    {
         _database_entry.set_form(
             pkmn::calculations::gen3_unown_form(
                 _libpkmgc_pokemon_uptr->PID
