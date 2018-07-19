@@ -95,13 +95,13 @@ namespace pkmn {
              * increased by the given amount. If not, the next empty slot will be used,
              * assuming one is available.
              *
-             * \param item_name Name of the item to add
+             * \param item The item to add
              * \param amount How many of the item to add
              * \throws std::invalid_argument If the item cannot be included in the given list
              * \throws std::out_of_range If amount is outside the range [1,99]
              */
             virtual void add(
-                const std::string& item_name,
+                pkmn::e_item item,
                 int amount
             ) = 0;
 
@@ -112,13 +112,13 @@ namespace pkmn {
              * decreased by the given amount. If all of this item is removed, the slot will
              * be cleared, and all later slots are shifted back.
              *
-             * \param item_name Name of the item to remove
+             * \param item The item to remove
              * \param amount How many of the item to remove
              * \throws std::invalid_argument If the item cannot be included in the given list
              * \throws std::out_of_range If amount is outside the range [1,99]
              */
             virtual void remove(
-                const std::string& item_name,
+                pkmn::e_item item,
                 int amount
             ) = 0;
 
@@ -148,7 +148,7 @@ namespace pkmn {
              */
             virtual void set_item(
                 int position,
-                const std::string& item_name,
+                pkmn::e_item item,
                 int amount
             ) = 0;
 

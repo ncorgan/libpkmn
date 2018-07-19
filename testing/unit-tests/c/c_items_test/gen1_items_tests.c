@@ -13,20 +13,28 @@
 
 #include <string.h>
 
-static const char* ITEM_NAMES[] =
+static const enum pkmn_item ITEMS[] =
 {
-    "Potion", "Great Ball", "Ether", "PP Up",
-    "TM34", "Moon Stone", "Bicycle", "Full Heal"
+    PKMN_ITEM_POTION,
+    PKMN_ITEM_GREAT_BALL,
+    PKMN_ITEM_ETHER,
+    PKMN_ITEM_PP_UP,
+    PKMN_ITEM_TM34,
+    PKMN_ITEM_MOON_STONE,
+    PKMN_ITEM_BICYCLE,
+    PKMN_ITEM_FULL_HEAL
 };
-
-static const char* WRONG_GENERATION_ITEM_NAMES[] =
+static const enum pkmn_item WRONG_GENERATION_ITEMS[] =
 {
-    "Amulet Coin", "Apicot Berry", "Air Mail",
-    "Air Balloon", "Aqua Suit"
+    PKMN_ITEM_AMULET_COIN,
+    PKMN_ITEM_APICOT_BERRY,
+    PKMN_ITEM_AIR_MAIL,
+    PKMN_ITEM_AIR_BALLOON,
+    PKMN_ITEM_AQUA_SUIT
 };
 
 static void gen1_item_list_test_common(
-    struct pkmn_item_list* p_item_list
+    const struct pkmn_item_list* p_item_list
 )
 {
     TEST_ASSERT_NOT_NULL(p_item_list);
@@ -39,27 +47,27 @@ static void gen1_item_list_test_common(
     // Confirm errors are returned when expected.
     test_item_list_out_of_range_error(
         p_item_list,
-        "Potion"
+        PKMN_ITEM_POTION
     );
 
     // Confirm items from later generations can't be added.
     test_item_list_invalid_items(
         p_item_list,
-        WRONG_GENERATION_ITEM_NAMES,
-        sizeof(WRONG_GENERATION_ITEM_NAMES)/sizeof(WRONG_GENERATION_ITEM_NAMES[0])
+        WRONG_GENERATION_ITEMS,
+        sizeof(WRONG_GENERATION_ITEMS)/sizeof(WRONG_GENERATION_ITEMS[0])
     );
 
     // Test setting items by index.
     test_item_list_set_item(
         p_item_list,
-        ITEM_NAMES,
+        ITEMS,
         3
     );
 
     // Start adding and removing items, and make sure the numbers are accurate.
     test_item_list_add_remove(
         p_item_list,
-        ITEM_NAMES,
+        ITEMS,
         8
     );
 
@@ -139,7 +147,7 @@ static void gen1_item_list_test_common(
 }
 
 static void gen1_item_pocket_test(
-    struct pkmn_item_list* p_item_pocket,
+    const struct pkmn_item_list* p_item_pocket,
     enum pkmn_game game
 )
 {
@@ -237,7 +245,7 @@ static void gen1_item_bag_test(enum pkmn_game game)
     {
         error = pkmn_item_bag_add(
                     &item_bag,
-                    ITEM_NAMES[item_index],
+                    ITEMS[item_index],
                     (item_index+1)
                 );
         PKMN_TEST_ASSERT_SUCCESS(error);
@@ -249,18 +257,18 @@ static void gen1_item_bag_test(enum pkmn_game game)
         check_item_at_index(
             &item_pocket,
             item_index,
-            ITEM_NAMES[item_index],
+            ITEMS[item_index],
             (item_index+1)
         );
     }
-    check_item_at_index(&item_pocket, 8, "None", 0);
+    check_item_at_index(&item_pocket, 8, PKMN_ITEM_NONE, 0);
 
     // Make sure removing items through the bag removes from the pocket.
     for(size_t item_index = 0; item_index < 8; ++item_index)
     {
         error = pkmn_item_bag_remove(
                     &item_bag,
-                    ITEM_NAMES[item_index],
+                    ITEMS[item_index],
                     (item_index+1)
                 );
         PKMN_TEST_ASSERT_SUCCESS(error);
@@ -272,7 +280,7 @@ static void gen1_item_bag_test(enum pkmn_game game)
         check_item_at_index(
             &item_pocket,
             item_index,
-            "None",
+            PKMN_ITEM_NONE,
             0
         );
     }

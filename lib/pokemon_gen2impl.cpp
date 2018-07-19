@@ -434,18 +434,20 @@ namespace pkmn
         }
     }
 
-    std::string pokemon_gen2impl::get_held_item()
+    pkmn::e_item pokemon_gen2impl::get_held_item()
     {
         boost::lock_guard<pokemon_gen2impl> lock(*this);
 
-        return pkmn::database::item_index_to_name(
-                   _pksav_pokemon.pc_data.held_item,
-                   _database_entry.get_game_id()
+        return pkmn::e_item(
+                   pkmn::database::item_index_to_id(
+                       _pksav_pokemon.pc_data.held_item,
+                       _database_entry.get_game_id()
+                   )
                );
     }
 
     void pokemon_gen2impl::set_held_item(
-        const std::string& held_item
+        pkmn::e_item held_item
     )
     {
         boost::lock_guard<pokemon_gen2impl> lock(*this);
@@ -456,7 +458,7 @@ namespace pkmn
             get_game()
         );
 
-        if(not item.holdable() and (held_item != "None"))
+        if(!item.holdable() && (held_item != pkmn::e_item::NONE))
         {
             throw std::invalid_argument("This item is not holdable.");
         }
@@ -633,12 +635,12 @@ namespace pkmn
         throw pkmn::feature_not_in_game_error("Abilities", "Generation II");
     }
 
-    std::string pokemon_gen2impl::get_ball()
+    pkmn::e_ball pokemon_gen2impl::get_ball()
     {
         throw pkmn::feature_not_in_game_error("A Pokémon's ball is not recorded in Generation II.");
     }
 
-    void pokemon_gen2impl::set_ball(const std::string&)
+    void pokemon_gen2impl::set_ball(pkmn::e_ball)
     {
         throw pkmn::feature_not_in_game_error("A Pokémon's ball is not recorded in Generation II.");
     }

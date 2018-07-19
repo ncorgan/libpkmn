@@ -24,16 +24,9 @@
 struct pkmn_database_item_entry
 {
     /*!
-     * @brief The item's name in the given game.
-     *
-     * If this entry corresponds to a "None" item or an empty item slot,
-     * this field will be "None".
-     *
-     * If this entry corresponds to an invalid item, this field will be
-     * "Invalid (0xXX)", where XX corresponds to the hex value of the
-     * item's in-game index.
+     * @brief The item.
      */
-    char* p_name;
+    enum pkmn_item item;
     /*!
      * @brief The game associated with this entry.
      */
@@ -112,16 +105,16 @@ extern "C" {
 /*!
  * @brief Returns an item entry based on its name and game.
  *
- * \param item_name Item's name (does not need to match name in given game)
- * \param item_game Which game this item is from
+ * \param item The item
+ * \param game Which game this item is from
  * \param item_entry_out Where to return the item entry
  * \return ::PKMN_ERROR_NONE upon success
- * \return ::PKMN_ERROR_NULL_POINTER if any parameter is NULL
+ * \return ::PKMN_ERROR_NULL_POINTER if p_item_entry_out is NULL
  * \return ::PKMN_ERROR_INVALID_ARGUMENT if the item or game name is invalid
  * \return ::PKMN_ERROR_INVALID_ARGUMENT if the given item was not in the given game
  */
 PKMN_C_API enum pkmn_error pkmn_database_get_item_entry(
-    const char* p_item_name,
+    enum pkmn_item item,
     enum pkmn_game game,
     struct pkmn_database_item_entry* p_item_entry_out
 );

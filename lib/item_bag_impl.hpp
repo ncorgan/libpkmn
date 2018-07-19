@@ -35,13 +35,13 @@ namespace pkmn {
 
             const std::vector<std::string>& get_pocket_names() final;
 
-            virtual void add(
-                const std::string& item_name,
+            void add(
+                pkmn::e_item item,
                 int amount
             ) final;
 
-            virtual void remove(
-                const std::string& item_name,
+            void remove(
+                pkmn::e_item item,
                 int amount
             ) final;
 
@@ -49,9 +49,13 @@ namespace pkmn {
 
         protected:
             int _game_id;
+            int _generation;
+            int _version_group_id;
 
             pkmn::item_pockets_t _item_pockets;
             std::vector<std::string> _item_pocket_names;
+
+            virtual std::string _get_pocket_name(pkmn::e_item item);
 
             virtual void _to_native() = 0;
 

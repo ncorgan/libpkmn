@@ -36,11 +36,11 @@ static void gen1_pokemon_test(
 
     pkmn_test_values_t test_values =
     {
-        .valid_ball = "Great Ball",
-        .invalid_balls = (char*[]){"Great Ball", NULL},
+        .valid_ball = PKMN_BALL_GREAT_BALL,
+        .p_invalid_balls = (enum pkmn_ball[]){PKMN_BALL_GREAT_BALL, PKMN_BALL_NONE},
 
-        .valid_item = "Potion",
-        .invalid_items = (char*[]){"Potion", NULL},
+        .valid_item = PKMN_ITEM_POTION,
+        .p_invalid_items = (enum pkmn_item[]){PKMN_ITEM_POTION, PKMN_ITEM_NONE},
 
         .expected_original_location = "Special",
         .valid_locations = (char*[]){"Route 1", NULL},

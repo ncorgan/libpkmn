@@ -115,7 +115,7 @@ namespace pkmn
         set_location_met("Fateful encounter", false);
         set_level_met(level);
         set_original_game(get_game());
-        set_ball("Premier Ball");
+        set_ball(pkmn::e_ball::POKE_BALL);
 
         _p_misc_block->iv_egg_ability = rng.rand();
         _p_misc_block->iv_egg_ability &= ~PKSAV_GBA_POKEMON_EGG_MASK;
@@ -490,18 +490,20 @@ namespace pkmn
         }
     }
 
-    std::string pokemon_gbaimpl::get_held_item()
+    pkmn::e_item pokemon_gbaimpl::get_held_item()
     {
         boost::lock_guard<pokemon_gbaimpl> lock(*this);
 
-        return pkmn::database::item_index_to_name(
-                   pksav_littleendian16(_p_growth_block->held_item),
-                   _database_entry.get_game_id()
+        return pkmn::e_item(
+                   pkmn::database::item_index_to_id(
+                       pksav_littleendian16(_p_growth_block->held_item),
+                       _database_entry.get_game_id()
+                   )
                );
     }
 
     void pokemon_gbaimpl::set_held_item(
-        const std::string& held_item
+        pkmn::e_item held_item
     )
     {
         boost::lock_guard<pokemon_gbaimpl> lock(*this);
@@ -512,7 +514,7 @@ namespace pkmn
             get_game()
         );
 
-        if(not item.holdable() and (held_item != "None"))
+        if(!item.holdable() && (held_item != pkmn::e_item::NONE))
         {
             throw std::invalid_argument("This item is not holdable.");
         }
@@ -795,29 +797,34 @@ namespace pkmn
             ));
     }
 
-    std::string pokemon_gbaimpl::get_ball()
+    pkmn::e_ball pokemon_gbaimpl::get_ball()
     {
         boost::lock_guard<pokemon_gbaimpl> lock(*this);
 
-        return pkmn::database::ball_id_to_name(
-                   PKSAV_GBA_POKEMON_BALL(_p_misc_block->origin_info)
-               );
+        // Account for corrupted data.
+        pkmn::e_ball ball = pkmn::e_ball(PKSAV_GBA_POKEMON_BALL(_p_misc_block->origin_info));
+        if((ball < pkmn::e_ball::NONE) || (ball > pkmn::e_ball::PREMIER_BALL))
+        {
+            ball = pkmn::e_ball::INVALID;
+        }
+
+        return ball;
     }
 
     void pokemon_gbaimpl::set_ball(
-        const std::string& ball
+        pkmn::e_ball ball
     )
     {
         boost::lock_guard<pokemon_gbaimpl> lock(*this);
 
         // Try and instantiate an item_entry to validate the ball.
-        (void)pkmn::database::item_entry(ball, get_game());
+        (void)pkmn::database::item_entry(
+                  pkmn::database::ball_to_item(ball),
+                  get_game()
+              );
 
         _p_misc_block->origin_info &= ~PKSAV_GBA_POKEMON_BALL_MASK;
-        uint16_t ball_id = uint16_t(pkmn::database::ball_name_to_id(
-                                        ball
-                                    ));
-        _p_misc_block->origin_info |= (ball_id << PKSAV_GBA_POKEMON_BALL_OFFSET);
+        _p_misc_block->origin_info |= (uint16_t(ball) << PKSAV_GBA_POKEMON_BALL_OFFSET);
     }
 
 

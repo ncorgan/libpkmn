@@ -91,19 +91,19 @@ TEST(cpp_swig_wrapper_test, test_item_slot)
     // Set the item name through the native class.
     item_pocket->set_item(
         0,
-        "Potion",
+        pkmn::e_item::POTION,
         50
     );
-    EXPECT_EQ("Potion", first_slot.get_item());
+    EXPECT_EQ(pkmn::e_item::POTION, first_slot.get_item());
 
     // Set the item through the wrapper class.
-    first_slot.set_item("Master Ball");
-    EXPECT_EQ("Master Ball", item_pocket->at(0).item);
+    first_slot.set_item(pkmn::e_item::MASTER_BALL);
+    EXPECT_EQ(pkmn::e_item::MASTER_BALL, item_pocket->at(0).item);
 
     // Set the item amount through the native class.
     item_pocket->set_item(
         0,
-        "Potion",
+        pkmn::e_item::POTION,
         20
     );
     EXPECT_EQ(20, first_slot.get_amount());
@@ -115,25 +115,25 @@ TEST(cpp_swig_wrapper_test, test_item_slot)
     // Add a second item so we can test both methods of deletion.
     item_pocket->set_item(
         1,
-        "Repel",
+        pkmn::e_item::REPEL,
         10
     );
     pkmn::swig::item_slot second_slot(item_pocket, 1);
-    ASSERT_EQ("Repel", second_slot.get_item());
+    ASSERT_EQ(pkmn::e_item::REPEL, second_slot.get_item());
     ASSERT_EQ(10, second_slot.get_amount());
 
-    // Delete an item by setting the item to "None".
-    first_slot.set_item("None");
-    EXPECT_EQ("Repel", first_slot.get_item());
+    // Delete an item by setting the item to pkmn::e_item::NONE.
+    first_slot.set_item(pkmn::e_item::NONE);
+    EXPECT_EQ(pkmn::e_item::REPEL, first_slot.get_item());
     EXPECT_EQ(10, first_slot.get_amount());
-    EXPECT_EQ("None", second_slot.get_item());
+    EXPECT_EQ(pkmn::e_item::NONE, second_slot.get_item());
     EXPECT_EQ(0, second_slot.get_amount());
 
     // Delete an item by setting the amount to 0;
     first_slot.set_amount(0);
-    EXPECT_EQ("None", first_slot.get_item());
+    EXPECT_EQ(pkmn::e_item::NONE, first_slot.get_item());
     EXPECT_EQ(0, first_slot.get_amount());
-    EXPECT_EQ("None", second_slot.get_item());
+    EXPECT_EQ(pkmn::e_item::NONE, second_slot.get_item());
     EXPECT_EQ(0, second_slot.get_amount());
 }
 
@@ -146,13 +146,13 @@ TEST(cpp_swig_wrapper_test, test_item_list)
     EXPECT_EQ(20, swig_item_list.get_capacity());
     EXPECT_EQ(0, swig_item_list.get_num_items());
 
-    swig_item_list.add("Potion", 1);
-    EXPECT_EQ("Potion", swig_item_list.at(0).get_item());
+    swig_item_list.add(pkmn::e_item::POTION, 1);
+    EXPECT_EQ(pkmn::e_item::POTION, swig_item_list.at(0).get_item());
     EXPECT_EQ(1, swig_item_list.at(0).get_amount());
     EXPECT_EQ(1, swig_item_list.get_num_items());
 
     swig_item_list.at(0).set_amount(0);
-    EXPECT_EQ("None", swig_item_list.at(0).get_item());
+    EXPECT_EQ(pkmn::e_item::NONE, swig_item_list.at(0).get_item());
     EXPECT_EQ(0, swig_item_list.at(0).get_amount());
     EXPECT_EQ(0, swig_item_list.get_num_items());
 
@@ -172,18 +172,15 @@ TEST(cpp_swig_wrapper_test, test_item_bag)
     const std::vector<std::string>& pocket_names = swig_item_bag.get_pocket_names();
     EXPECT_GT(pocket_names.size(), 0);
 
-    std::vector<std::string>::const_iterator pocket_names_end = pocket_names.end();
-    for(std::vector<std::string>::const_iterator pocket_name_iter = pocket_names.begin();
-        pocket_name_iter != pocket_names_end;
-        ++pocket_name_iter)
+    for(const std::string& pocket_name: pocket_names)
     {
-        pkmn::swig::item_list pocket = swig_item_bag.get_pocket(*pocket_name_iter);
-        EXPECT_EQ(*pocket_name_iter, pocket.get_name());
+        pkmn::swig::item_list pocket = swig_item_bag.get_pocket(pocket_name);
+        EXPECT_EQ(pocket_name, pocket.get_name());
         EXPECT_EQ(pkmn::e_game::COLOSSEUM, pocket.get_game());
 
         ASSERT_FALSE(pocket.get_valid_items().empty());
 
-        std::string valid_item = pocket.get_valid_item_names().at(0);
+        pkmn::e_item valid_item = pocket.get_valid_items().at(0);
 
         swig_item_bag.add(valid_item, 5);
         EXPECT_EQ(1, pocket.get_num_items());
@@ -192,12 +189,12 @@ TEST(cpp_swig_wrapper_test, test_item_bag)
 
         // Set through the pocket and check through another copy from the bag.
         pocket.at(0).set_amount(50);
-        EXPECT_EQ(valid_item, swig_item_bag.get_pocket(*pocket_name_iter).at(0).get_item());
-        EXPECT_EQ(50, swig_item_bag.get_pocket(*pocket_name_iter).at(0).get_amount());
+        EXPECT_EQ(valid_item, swig_item_bag.get_pocket(pocket_name).at(0).get_item());
+        EXPECT_EQ(50, swig_item_bag.get_pocket(pocket_name).at(0).get_amount());
 
         //Set through another copy from the bag and check through the existing pocket.
-        swig_item_bag.get_pocket(*pocket_name_iter).at(0).set_amount(0);
-        EXPECT_EQ("None", pocket.at(0).get_item());
+        swig_item_bag.get_pocket(pocket_name).at(0).set_amount(0);
+        EXPECT_EQ(pkmn::e_item::NONE, pocket.at(0).get_item());
         EXPECT_EQ(0, pocket.at(0).get_amount());
     }
 }
@@ -421,8 +418,8 @@ TEST(cpp_swig_wrapper_test, test_pokemon)
     swig_pokemon.set_shininess(true);
     EXPECT_TRUE(swig_pokemon.is_shiny());
 
-    swig_pokemon.set_held_item("Oran Berry");
-    EXPECT_EQ("Oran Berry", swig_pokemon.get_held_item());
+    swig_pokemon.set_held_item(pkmn::e_item::ORAN_BERRY);
+    EXPECT_EQ(pkmn::e_item::ORAN_BERRY, swig_pokemon.get_held_item());
 
     swig_pokemon.set_pokerus_duration(9);
     EXPECT_EQ(9, swig_pokemon.get_pokerus_duration());
@@ -451,8 +448,8 @@ TEST(cpp_swig_wrapper_test, test_pokemon)
     swig_pokemon.set_ability("Overgrow");
     EXPECT_EQ("Overgrow", swig_pokemon.get_ability());
 
-    swig_pokemon.set_ball("Ultra Ball");
-    EXPECT_EQ("Ultra Ball", swig_pokemon.get_ball());
+    swig_pokemon.set_ball(pkmn::e_ball::ULTRA_BALL);
+    EXPECT_EQ(pkmn::e_ball::ULTRA_BALL, swig_pokemon.get_ball());
 
     swig_pokemon.set_level_met(2);
     EXPECT_EQ(2, swig_pokemon.get_level_met());
@@ -623,17 +620,17 @@ TEST(cpp_swig_wrapper_test, test_game_save)
      * equivalent C# code.
      *
      * PKMN.GameSave gameSave = new PKMN.GameSave(filepath);
-     * gameSave.PokemonParty[1].EVs[pkmn::e_stat::ATTACK] = 20;
-     * gameSave.PokemonPC[5][20].IVs[pkmn::e_stat::ATTACK] = 5;
-     * gameSave.ItemBag["Items"][0].Item = "Repel";
+     * gameSave.PokemonParty[1].EVs[PKMN.Stat.ATTACK] = 20;
+     * gameSave.PokemonPC[5][20].IVs[PKMN.Stat.ATTACK] = 5;
+     * gameSave.ItemBag["Items"][0].Item = PKMN.Item.REPEL;
      */
     swig_game_save.get_pokemon_party().get_pokemon(1).get_EVs().set_EV(pkmn::e_stat::ATTACK, 20);
     swig_game_save.get_pokemon_pc().get_box(5).get_pokemon(20).get_IVs().set_IV(pkmn::e_stat::HP, 5);
-    swig_game_save.get_item_bag().get_pocket("Items").at(0).set_item("Repel");
+    swig_game_save.get_item_bag().get_pocket("Items").at(0).set_item(pkmn::e_item::REPEL);
 
     EXPECT_EQ(20, swig_game_save.get_pokemon_party().get_pokemon(1).get_EVs().get_EV(pkmn::e_stat::ATTACK));
     EXPECT_EQ(5, swig_game_save.get_pokemon_pc().get_box(5).get_pokemon(20).get_IVs().get_IV(pkmn::e_stat::HP));
-    EXPECT_EQ("Repel", swig_game_save.get_item_bag().get_pocket("Items").at(0).get_item());
+    EXPECT_EQ(pkmn::e_item::REPEL, swig_game_save.get_item_bag().get_pocket("Items").at(0).get_item());
 }
 
 TEST(cpp_swig_wrapper_test, test_breeding)

@@ -334,12 +334,12 @@ namespace pkmn
         throw pkmn::feature_not_in_game_error("Shininess", "Generation I");
     }
 
-    std::string pokemon_gen1impl::get_held_item()
+    pkmn::e_item pokemon_gen1impl::get_held_item()
     {
         throw pkmn::feature_not_in_game_error("Held items", "Generation I");
     }
 
-    void pokemon_gen1impl::set_held_item(const std::string&)
+    void pokemon_gen1impl::set_held_item(pkmn::e_item)
     {
         throw pkmn::feature_not_in_game_error("Held items", "Generation I");
     }
@@ -471,12 +471,12 @@ namespace pkmn
         throw pkmn::feature_not_in_game_error("Abilities", "Generation I");
     }
 
-    std::string pokemon_gen1impl::get_ball()
+    pkmn::e_ball pokemon_gen1impl::get_ball()
     {
         throw pkmn::feature_not_in_game_error("A Pokémon's ball is not recorded in Generation I.");
     }
 
-    void pokemon_gen1impl::set_ball(const std::string&)
+    void pokemon_gen1impl::set_ball(pkmn::e_ball)
     {
         throw pkmn::feature_not_in_game_error("A Pokémon's ball is not recorded in Generation I.");
     }

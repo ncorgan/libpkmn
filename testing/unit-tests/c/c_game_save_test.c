@@ -91,11 +91,6 @@ static const struct pkmn_trainer_info empty_trainer_info =
     .id = {0},
     .gender = PKMN_GENDER_GENDERLESS
 };
-static const struct pkmn_string_list empty_string_list =
-{
-    .pp_strings = NULL,
-    .length = 0
-};
 static const struct pkmn_item_list empty_item_list =
 {
     .p_name = NULL,
@@ -800,8 +795,12 @@ static void randomize_pokemon(
 
     enum pkmn_error error = PKMN_ERROR_NONE;
 
-    struct pkmn_string_list item_list = empty_string_list;
-    error = pkmn_database_item_name_list(p_game_save->game, &item_list);
+    struct pkmn_item_enum_list item_list =
+    {
+        .p_enums = NULL,
+        .length = 0
+    };
+    error = pkmn_database_item_list(p_game_save->game, &item_list);
     PKMN_TEST_ASSERT_SUCCESS(error);
 
     struct pkmn_pokemon_party pokemon_party = empty_pokemon_party;
@@ -880,7 +879,7 @@ static void randomize_pokemon(
     error = pkmn_pokemon_pc_free(&pokemon_pc);
     PKMN_TEST_ASSERT_SUCCESS(error);
 
-    error = pkmn_string_list_free(&item_list);
+    error = pkmn_item_enum_list_free(&item_list);
     PKMN_TEST_ASSERT_SUCCESS(error);
 }
 
@@ -930,9 +929,9 @@ static void compare_item_lists(
     TEST_ASSERT_EQUAL(item_slots1.length, item_slots2.length);
     for(size_t item_index = 0; item_index < item_slots1.length; ++item_index)
     {
-        TEST_ASSERT_EQUAL_STRING(
-            item_slots1.p_item_slots[item_index].p_item,
-            item_slots2.p_item_slots[item_index].p_item
+        TEST_ASSERT_EQUAL(
+            item_slots1.p_item_slots[item_index].item,
+            item_slots2.p_item_slots[item_index].item
         );
         TEST_ASSERT_EQUAL(
             item_slots1.p_item_slots[item_index].amount,

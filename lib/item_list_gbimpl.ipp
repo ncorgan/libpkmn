@@ -45,7 +45,7 @@ namespace pkmn {
         r_item_slot.item = pkmn::database::item_entry(
                                pksav_item.index,
                                _game_id
-                           ).get_name();
+                           ).get_item();
         r_item_slot.amount = pksav_item.count;
     }
 

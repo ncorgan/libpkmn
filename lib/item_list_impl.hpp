@@ -41,12 +41,12 @@ namespace pkmn {
             ) override;
 
             virtual void add(
-                const std::string& item_name,
+                pkmn::e_item item,
                 int amount
             ) override;
 
             virtual void remove(
-                const std::string& item_name,
+                pkmn::e_item item,
                 int amount
             ) override;
 
@@ -57,7 +57,7 @@ namespace pkmn {
 
             virtual void set_item(
                 int position,
-                const std::string& item_name,
+                pkmn::e_item item,
                 int amount
             ) override;
 

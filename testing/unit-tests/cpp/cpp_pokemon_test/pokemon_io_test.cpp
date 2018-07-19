@@ -53,7 +53,7 @@ static pkmn::pokemon::sptr get_random_pokemon(
     int generation = pkmn::priv::game_enum_to_generation(game);
     pkmn::rng<uint32_t> rng;
 
-    std::vector<std::string> item_list = pkmn::database::get_item_name_list(game);
+    std::vector<pkmn::e_item> item_list = pkmn::database::get_item_list(game);
     std::vector<std::string> move_list = pkmn::database::get_move_name_list(game);
     std::vector<pkmn::e_species> pokemon_list = pkmn::database::get_pokemon_list(generation, true);
 
@@ -101,9 +101,11 @@ static pkmn::pokemon::sptr get_random_pokemon(
         ret->set_IV(iter->first, (rand() % 16));
     }
 
-    if(generation >= 2) {
+    if(generation >= 2)
+    {
         // Keep going until one is holdable
-        while(ret->get_held_item() == "None") {
+        while(ret->get_held_item() == pkmn::e_item::NONE)
+        {
             try {
                 ret->set_held_item(
                     item_list[rng.rand() % item_list.size()]
@@ -332,7 +334,7 @@ TEST(pokemon_io_test, test_outside_3gpkm) {
     EXPECT_EQ("Standard", mightyena->get_form());
     EXPECT_EQ("MIGHTYENA", mightyena->get_nickname());
     EXPECT_FALSE(mightyena->is_shiny());
-    EXPECT_EQ("Heart Scale", mightyena->get_held_item());
+    EXPECT_EQ(pkmn::e_item::HEART_SCALE, mightyena->get_held_item());
     EXPECT_EQ("A", mightyena->get_original_trainer_name());
     EXPECT_EQ(61415, mightyena->get_original_trainer_public_id());
     EXPECT_EQ(3417, mightyena->get_original_trainer_secret_id());
@@ -340,7 +342,7 @@ TEST(pokemon_io_test, test_outside_3gpkm) {
     EXPECT_EQ(pkmn::e_gender::FEMALE, mightyena->get_original_trainer_gender());
     EXPECT_EQ(254, mightyena->get_current_trainer_friendship());
     EXPECT_EQ("Intimidate" , mightyena->get_ability());
-    EXPECT_EQ("Great Ball", mightyena->get_ball());
+    EXPECT_EQ(pkmn::e_ball::GREAT_BALL, mightyena->get_ball());
     EXPECT_EQ(25, mightyena->get_level_met());
     EXPECT_EQ("Route 120", mightyena->get_location_met(false));
     EXPECT_EQ(pkmn::e_game::EMERALD, mightyena->get_original_game());

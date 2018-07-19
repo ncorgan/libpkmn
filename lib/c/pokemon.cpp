@@ -369,9 +369,7 @@ enum pkmn_error pkmn_pokemon_set_is_shiny(
 
 enum pkmn_error pkmn_pokemon_get_held_item(
     const struct pkmn_pokemon* p_pokemon,
-    char* p_held_item_out,
-    size_t held_item_buffer_len,
-    size_t* p_actual_held_item_len_out
+    enum pkmn_item* p_held_item_out
 )
 {
     PKMN_CHECK_NULL_PARAM(p_pokemon);
@@ -379,26 +377,24 @@ enum pkmn_error pkmn_pokemon_get_held_item(
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_held_item_out, p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
-        pkmn::c::string_cpp_to_c(
-            p_internal->cpp->get_held_item(),
-            p_held_item_out,
-            held_item_buffer_len,
-            p_actual_held_item_len_out
-        );
+        *p_held_item_out = static_cast<enum pkmn_item>(
+                               p_internal->cpp->get_held_item()
+                           );
     )
 }
 
 enum pkmn_error pkmn_pokemon_set_held_item(
     const struct pkmn_pokemon* p_pokemon,
-    const char* p_held_item
+    enum pkmn_item item
 )
 {
     PKMN_CHECK_NULL_PARAM(p_pokemon);
     pkmn_pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
-    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_held_item, p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
-        p_internal->cpp->set_held_item(p_held_item);
+        p_internal->cpp->set_held_item(
+            static_cast<pkmn::e_item>(item)
+        );
     )
 }
 
@@ -627,9 +623,7 @@ enum pkmn_error pkmn_pokemon_set_ability(
 
 enum pkmn_error pkmn_pokemon_get_ball(
     const struct pkmn_pokemon* p_pokemon,
-    char* p_ball_out,
-    size_t ball_buffer_len,
-    size_t* p_actual_ball_len_out
+    enum pkmn_ball* p_ball_out
 )
 {
     PKMN_CHECK_NULL_PARAM(p_pokemon);
@@ -637,26 +631,20 @@ enum pkmn_error pkmn_pokemon_get_ball(
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_ball_out, p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
-        pkmn::c::string_cpp_to_c(
-            p_internal->cpp->get_ball(),
-            p_ball_out,
-            ball_buffer_len,
-            p_actual_ball_len_out
-        );
+        *p_ball_out = static_cast<enum pkmn_ball>(p_internal->cpp->get_ball());
     )
 }
 
 enum pkmn_error pkmn_pokemon_set_ball(
     const struct pkmn_pokemon* p_pokemon,
-    const char* p_ball
+    enum pkmn_ball ball
 )
 {
     PKMN_CHECK_NULL_PARAM(p_pokemon);
     pkmn_pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
-    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_ball, p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
-        p_internal->cpp->set_ball(p_ball);
+        p_internal->cpp->set_ball(static_cast<pkmn::e_ball>(ball));
     )
 }
 

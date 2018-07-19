@@ -26,7 +26,7 @@ namespace pkmn { namespace swig {
                 BOOST_ASSERT(_item_list.get() != nullptr);
             }
 
-            inline const std::string& get_item()
+            inline pkmn::e_item get_item()
             {
                 BOOST_ASSERT(_item_list.get() != nullptr);
 
@@ -34,7 +34,7 @@ namespace pkmn { namespace swig {
             }
 
             inline void set_item(
-                const std::string& item
+                pkmn::e_item item
             )
             {
                 BOOST_ASSERT(_item_list.get() != nullptr);
@@ -42,9 +42,9 @@ namespace pkmn { namespace swig {
                 _item_list->set_item(
                     _index,
                     item,
-                    (item == "None") ? 0
-                                     : (get_amount() == 0) ? 1
-                                                           : get_amount()
+                    (item == pkmn::e_item::NONE) ? 0
+                                                 : (get_amount() == 0) ? 1
+                                                                       : get_amount()
                 );
             }
 
@@ -63,7 +63,7 @@ namespace pkmn { namespace swig {
 
                 _item_list->set_item(
                     _index,
-                    (amount == 0) ? "None" : get_item(),
+                    (amount == 0) ? pkmn::e_item::NONE : get_item(),
                     amount
                 );
             }

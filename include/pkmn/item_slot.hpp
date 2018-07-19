@@ -8,8 +8,8 @@
 #define PKMN_ITEM_SLOT_HPP
 
 #include <pkmn/config.hpp>
+#include <pkmn/enums/item.hpp>
 
-#include <string>
 #include <vector>
 
 namespace pkmn {
@@ -29,19 +29,17 @@ namespace pkmn {
          * The item entry represents an invalid item.
          */
         item_slot():
-            item("None"),
+            item(pkmn::e_item::NONE),
             amount(0) {}
 
         /*!
-         * @brief Constructor that takes in copies of each member.
-         *
-         * This calls the copy constructor for the item entry.
+         * @brief Constructor that takes in each member.
          *
          * \param slot_item item entry
          * \param slot_amount how many of the item
          */
         item_slot(
-            const std::string& slot_item,
+            pkmn::e_item slot_item,
             int slot_amount
         ): item(slot_item),
            amount(slot_amount) {}
@@ -50,20 +48,6 @@ namespace pkmn {
         item_slot& operator=(const item_slot&) = default;
 
 #ifndef SWIG
-        /*!
-         * @brief Constructor that takes in references to each member.
-         *
-         * This calls the move constructor for the item entry.
-         *
-         * \param slot_item item entry
-         * \param slot_amount how many of the item
-         */
-        item_slot(
-            std::string&& slot_item,
-            int slot_amount
-        ): item(std::move(slot_item)),
-           amount(slot_amount) {}
-
         item_slot(item_slot&&) = default;
         item_slot& operator=(item_slot&&) = default;
 #endif
@@ -73,7 +57,8 @@ namespace pkmn {
          */
         inline bool operator==(const item_slot& rhs) const
         {
-            return (this->item == rhs.item) and (this->amount == rhs.amount);
+            return (this->item == rhs.item) &&
+                   (this->amount == rhs.amount);
         }
 
         /*!
@@ -87,7 +72,7 @@ namespace pkmn {
         /*!
          * @brief The item in the given slot.
          */
-        std::string item;
+        pkmn::e_item item;
         /*!
          * @brief How many of the item is in the given slot.
          */

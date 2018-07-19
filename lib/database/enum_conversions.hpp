@@ -11,7 +11,9 @@
 #include "id_to_string.hpp"
 #include "id_to_index.hpp"
 
+#include <pkmn/enums/ball.hpp>
 #include <pkmn/enums/game.hpp>
+#include <pkmn/enums/item.hpp>
 
 namespace pkmn { namespace database {
 
@@ -45,6 +47,12 @@ namespace pkmn { namespace database {
         return (index == 15) ? pkmn::e_game::COLOSSEUM
                              : game_id_to_enum(game_index_to_id(index));
     }
+
+    // TODO: these are both enums, should this move into the enums directory?
+
+    pkmn::e_item ball_to_item(pkmn::e_ball ball);
+
+    pkmn::e_ball item_to_ball(pkmn::e_item item);
 
 }}
 

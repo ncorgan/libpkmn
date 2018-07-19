@@ -625,7 +625,7 @@ namespace pkmntest {
         pkmn::e_game game,
         const std::vector<pkmn::e_species>& pokemon_list,
         const std::vector<std::string>& move_list,
-        const std::vector<std::string>& item_list
+        const std::vector<pkmn::e_item>& item_list
     )
     {
         int generation = pkmn::priv::game_enum_to_generation(game);
@@ -664,10 +664,13 @@ namespace pkmntest {
             ret->set_move(move, i);
         }
 
-        if(generation >= 2) {
+        if(generation >= 2)
+        {
             // Keep going until one is holdable
-            while(ret->get_held_item() == "None") {
-                try {
+            while(ret->get_held_item() == pkmn::e_item::NONE)
+            {
+                try
+                {
                     ret->set_held_item(
                         item_list[rng.rand() % item_list.size()]
                     );
@@ -699,7 +702,7 @@ namespace pkmntest {
 
     void randomize_items(
         const pkmn::game_save::sptr& save,
-        const std::vector<std::string>& item_list
+        const std::vector<pkmn::e_item>& item_list
     ) {
         // Clear out what items the save happens to have to put it in a known state.
         // TODO: when clear() added to item_list
@@ -709,7 +712,7 @@ namespace pkmntest {
 
     void randomize_pokemon(
         const pkmn::game_save::sptr& save,
-        const std::vector<std::string>& item_list
+        const std::vector<pkmn::e_item>& item_list
     )
     {
         int generation = pkmn::priv::game_enum_to_generation(save->get_game());
@@ -1154,7 +1157,7 @@ namespace pkmntest {
     TEST_P(game_save_test, game_save_test) {
         const pkmn::game_save::sptr& save = get_game_save();
 
-        std::vector<std::string> item_list = pkmn::database::get_item_name_list(save->get_game());
+        std::vector<pkmn::e_item> item_list = pkmn::database::get_item_list(save->get_game());
 
         pkmntest::game_save_test_common_fields(save);
         pkmntest::game_save_test_attributes(save);

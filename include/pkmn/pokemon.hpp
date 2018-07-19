@@ -104,10 +104,10 @@ namespace pkmn {
                 bool value
             ) = 0;
 
-            virtual std::string get_held_item() = 0;
+            virtual pkmn::e_item get_held_item() = 0;
 
             virtual void set_held_item(
-                const std::string& held_item
+                pkmn::e_item held_item
             ) = 0;
 
             virtual std::string get_nature() = 0;
@@ -170,10 +170,10 @@ namespace pkmn {
                 const std::string& ability
             ) = 0;
 
-            virtual std::string get_ball() = 0;
+            virtual pkmn::e_ball get_ball() = 0;
 
             virtual void set_ball(
-                const std::string& ball
+                pkmn::e_ball ball
             ) = 0;
 
             virtual int get_level_met() = 0;

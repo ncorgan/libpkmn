@@ -525,12 +525,6 @@ void test_outside_3gpkm()
         "Intimidate",
         pkmn_pokemon_get_ability
     );
-    test_pokemon_string(
-        &pokemon,
-        "Ball",
-        "Great Ball",
-        pkmn_pokemon_get_ball
-    );
     test_pokemon_int(
         &pokemon,
         "Level met",
@@ -561,11 +555,19 @@ void test_outside_3gpkm()
         pkmn_pokemon_get_level
     );
 
+    enum pkmn_ball ball = PKMN_BALL_NONE;
+    error = pkmn_pokemon_get_ball(
+                &pokemon,
+                &ball
+            );
+    PKMN_TEST_ASSERT_SUCCESS(error);
+    TEST_ASSERT_EQUAL(PKMN_BALL_GREAT_BALL, ball);
+
     enum pkmn_game original_game = PKMN_GAME_NONE;
     error = pkmn_pokemon_get_original_game(
-        &pokemon,
-        &original_game
-    );
+                &pokemon,
+                &original_game
+            );
     PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_EQUAL(PKMN_GAME_EMERALD, original_game);
 

@@ -92,7 +92,7 @@ namespace pkmn { namespace swig {
             }
 
             inline void add(
-                const std::string& item,
+                pkmn::e_item item,
                 int amount
             )
             {
@@ -102,7 +102,7 @@ namespace pkmn { namespace swig {
             }
 
             inline void remove(
-                const std::string& item,
+                pkmn::e_item item,
                 int amount
             )
             {

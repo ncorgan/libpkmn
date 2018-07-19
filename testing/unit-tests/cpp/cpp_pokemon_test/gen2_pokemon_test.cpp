@@ -30,11 +30,11 @@ TEST_P(gen2_pokemon_test, gen2_pokemon_test) {
     pokemon_test_common(
         pokemon,
         {
-            "Great Ball",
-            {"Great Ball"},
+            pkmn::e_ball::GREAT_BALL,
+            {pkmn::e_ball::GREAT_BALL},
 
-            "Berry",
-            {"Razz Berry", "Bicycle"},
+            pkmn::e_item::BERRY,
+            {pkmn::e_item::RAZZ_BERRY, pkmn::e_item::BICYCLE},
 
             "Special",
             {"Sprout Tower", "Tohjo Falls"},

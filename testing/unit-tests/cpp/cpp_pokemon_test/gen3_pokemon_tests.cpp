@@ -12,6 +12,7 @@
 #include <pkmn/calculations/shininess.hpp>
 #include <pkmn/database/item_entry.hpp>
 
+#include "private_exports.hpp"
 #include "pksav/pksav_call.hpp"
 
 #include <pksav/common/markings.h>
@@ -126,11 +127,11 @@ TEST_P(gba_pokemon_test, gba_pokemon_test) {
     pokemon_test_common(
         pokemon,
         {
-            "Great Ball",
-            {"Friend Ball", "Heal Ball"},
+            pkmn::e_ball::GREAT_BALL,
+            {pkmn::e_ball::FRIEND_BALL, pkmn::e_ball::HEAL_BALL},
 
-            "Razz Berry",
-            {"Berry", "Mach Bike"},
+            pkmn::e_item::RAZZ_BERRY,
+            {pkmn::e_item::BERRY, pkmn::e_item::MACH_BIKE},
 
             "Fateful encounter",
             {"Petalburg Woods", "Viridian Forest"},
@@ -389,11 +390,11 @@ TEST_P(gcn_pokemon_test, gcn_pokemon_test) {
     pokemon_test_common(
         pokemon,
         {
-            "Great Ball",
-            {"Friend Ball", "Heal Ball"},
+            pkmn::e_ball::GREAT_BALL,
+            {pkmn::e_ball::FRIEND_BALL, pkmn::e_ball::HEAL_BALL},
 
-            "Razz Berry",
-            {"Berry", "Mach Bike"},
+            pkmn::e_item::RAZZ_BERRY,
+            {pkmn::e_item::BERRY, pkmn::e_item::MACH_BIKE},
 
             "Distant land",
             {"Phenac City", "Orre Colosseum"},
@@ -470,7 +471,12 @@ TEST_P(gcn_pokemon_test, gcn_pokemon_test) {
         int(native->heldItem)
     );
     EXPECT_EQ(pokemon->get_current_trainer_friendship(), int(native->friendship));
-    EXPECT_EQ(pkmn::database::item_entry(pokemon->get_ball(), get_game()).get_item_index(), int(native->ballCaughtWith));
+    EXPECT_EQ(
+        pkmn::database::item_entry(
+            pkmn::priv::ball_to_item(pokemon->get_ball()), get_game()
+        ).get_item_index(),
+        int(native->ballCaughtWith)
+    );
     EXPECT_EQ(pokemon->get_level_met(), int(native->levelMet));
     // TODO: OTGender, probably bring in bimaps
     EXPECT_STREQ(pokemon->get_original_trainer_name().c_str(), native->OTName->toUTF8());

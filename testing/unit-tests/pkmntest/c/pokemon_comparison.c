@@ -16,6 +16,11 @@
 #include <string.h>
 
 #define STRBUFFER_LEN 1024
+static const struct pkmn_item_enum_list empty_item_enum_list =
+{
+    .p_enums = NULL,
+    .length = 0
+};
 static const struct pkmn_string_list empty_string_list =
 {
     .pp_strings = NULL,
@@ -58,7 +63,7 @@ static inline bool random_bool()
 
 void get_random_pokemon(
     struct pkmn_pokemon* p_pokemon,
-    struct pkmn_string_list* p_item_list,
+    struct pkmn_item_enum_list* p_item_list,
     enum pkmn_species species,
     enum pkmn_game game
 )
@@ -68,8 +73,8 @@ void get_random_pokemon(
     enum pkmn_error error = PKMN_ERROR_NONE;
     int generation = game_to_generation(game);
 
-    struct pkmn_string_list internal_item_list = empty_string_list;
-    struct pkmn_string_list* p_internal_item_list = NULL;
+    struct pkmn_item_enum_list internal_item_list = empty_item_enum_list;
+    struct pkmn_item_enum_list* p_internal_item_list = NULL;
 
     if(p_item_list)
     {
@@ -77,7 +82,7 @@ void get_random_pokemon(
     }
     else
     {
-        error = pkmn_database_item_name_list(game, &internal_item_list);
+        error = pkmn_database_item_list(game, &internal_item_list);
         PKMN_TEST_ASSERT_SUCCESS(error);
         p_internal_item_list = &internal_item_list;
     }
@@ -181,14 +186,14 @@ void get_random_pokemon(
         // Keep going until one is holdable.
         do
         {
-            const char* p_item =
-                p_internal_item_list->pp_strings[rand() % p_internal_item_list->length];
+            enum pkmn_item item =
+                p_internal_item_list->p_enums[rand() % p_internal_item_list->length];
 
-            if(strstr(p_item, "Scent") == NULL)
+            if((item < PKMN_ITEM_JOY_SCENT) || (item > PKMN_ITEM_VIVID_SCENT))
             {
                 error = pkmn_pokemon_set_held_item(
                             p_pokemon,
-                            p_item
+                            item
                         );
             }
             else
@@ -258,7 +263,7 @@ void get_random_pokemon(
 
     if(!p_item_list)
     {
-        error = pkmn_string_list_free(&internal_item_list);
+        error = pkmn_item_enum_list_free(&internal_item_list);
         PKMN_TEST_ASSERT_SUCCESS(error);
     }
 }
@@ -383,7 +388,7 @@ void compare_pokemon_bools(
     char error_message[STRBUFFER_LEN] = {0};
     snprintf(error_message, sizeof(error_message), "Mismatched %s", field);
 
-    PKMN_TEST_ASSERT_SUCCESS(error);
+    TEST_ASSERT_EQUAL_MESSAGE(bool1, bool2, error_message);
 }
 
 void compare_pokemon_int_buffers(
@@ -500,6 +505,60 @@ void compare_pokemon_original_trainer_info(
     PKMN_TEST_ASSERT_SUCCESS(error);
     error = pkmn_trainer_info_free(&original_trainer_info1);
     PKMN_TEST_ASSERT_SUCCESS(error);
+}
+
+void compare_pokemon_balls(
+    const struct pkmn_pokemon* p_pokemon1,
+    const struct pkmn_pokemon* p_pokemon2
+)
+{
+    TEST_ASSERT_NOT_NULL(p_pokemon1);
+    TEST_ASSERT_NOT_NULL(p_pokemon2);
+
+    enum pkmn_error error = PKMN_ERROR_NONE;
+
+    enum pkmn_ball pokemon1_ball = PKMN_BALL_NONE;
+    enum pkmn_ball pokemon2_ball = PKMN_BALL_NONE;
+
+    error = pkmn_pokemon_get_ball(
+                p_pokemon1,
+                &pokemon1_ball
+            );
+    PKMN_TEST_ASSERT_SUCCESS(error);
+    error = pkmn_pokemon_get_ball(
+                p_pokemon2,
+                &pokemon2_ball
+            );
+    PKMN_TEST_ASSERT_SUCCESS(error);
+
+    TEST_ASSERT_EQUAL(pokemon1_ball, pokemon2_ball);
+}
+
+void compare_pokemon_held_items(
+    const struct pkmn_pokemon* p_pokemon1,
+    const struct pkmn_pokemon* p_pokemon2
+)
+{
+    TEST_ASSERT_NOT_NULL(p_pokemon1);
+    TEST_ASSERT_NOT_NULL(p_pokemon2);
+
+    enum pkmn_error error = PKMN_ERROR_NONE;
+
+    enum pkmn_item pokemon1_held_item = PKMN_ITEM_NONE;
+    enum pkmn_item pokemon2_held_item = PKMN_ITEM_NONE;
+
+    error = pkmn_pokemon_get_held_item(
+                p_pokemon1,
+                &pokemon1_held_item
+            );
+    PKMN_TEST_ASSERT_SUCCESS(error);
+    error = pkmn_pokemon_get_held_item(
+                p_pokemon2,
+                &pokemon2_held_item
+            );
+    PKMN_TEST_ASSERT_SUCCESS(error);
+
+    TEST_ASSERT_EQUAL(pokemon1_held_item, pokemon2_held_item);
 }
 
 void compare_pokemon_moves(
@@ -732,18 +791,13 @@ void compare_pokemon(
             "Is shiny",
             pkmn_pokemon_is_shiny
         );
-        compare_pokemon_strings(
-            p_pokemon1,
-            p_pokemon2,
-            "Held item",
-            pkmn_pokemon_get_held_item
-        );
         compare_pokemon_ints(
             p_pokemon1,
             p_pokemon2,
             "Level met",
             pkmn_pokemon_get_level_met
         );
+        compare_pokemon_held_items(p_pokemon1, p_pokemon2);
         compare_pokemon_locations_met(p_pokemon1, p_pokemon2, false);
     }
     if(generation >= 3)
@@ -760,12 +814,6 @@ void compare_pokemon(
             "Personality",
             pkmn_pokemon_get_personality
         );
-        compare_pokemon_strings(
-            p_pokemon1,
-            p_pokemon2,
-            "Ball",
-            pkmn_pokemon_get_ball
-        );
         compare_pokemon_bool_buffers(
             p_pokemon1,
             p_pokemon2,
@@ -780,6 +828,7 @@ void compare_pokemon(
             "Contest stats",
             pkmn_pokemon_get_contest_stats
         );
+        compare_pokemon_balls(p_pokemon1, p_pokemon2);
         compare_pokemon_ribbons(p_pokemon1, p_pokemon2);
     }
     if(generation >= 4)

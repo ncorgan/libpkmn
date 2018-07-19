@@ -29,7 +29,7 @@ typedef enum pkmn_error (*pokemon_bool_buffer_getter_fcn_t)(const struct pkmn_po
 
 PKMNTEST_C_API void get_random_pokemon(
     struct pkmn_pokemon* p_pokemon,
-    struct pkmn_string_list* p_item_list, // Can be NULL
+    struct pkmn_item_enum_list* p_item_list, // Can be NULL
     enum pkmn_species species, // PKMN_SPECIES_NONE means function will choose one
     enum pkmn_game game
 );

@@ -76,4 +76,14 @@ namespace pkmn { namespace priv {
         return filepath;
 #endif
     }
+
+    pkmn::e_item ball_to_item(pkmn::e_ball ball)
+    {
+        return pkmn::database::ball_to_item(ball);
+    }
+
+    pkmn::e_ball item_to_ball(pkmn::e_item item)
+    {
+        return pkmn::database::item_to_ball(item);
+    }
 }}

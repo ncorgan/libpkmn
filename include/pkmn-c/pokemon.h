@@ -12,6 +12,7 @@
 
 #include <pkmn-c/database/pokemon_entry.h>
 
+#include <pkmn-c/enums/ball.h>
 #include <pkmn-c/enums/condition.h>
 #include <pkmn-c/enums/contest_stat.h>
 #include <pkmn-c/enums/game.h>
@@ -147,14 +148,12 @@ PKMN_C_API enum pkmn_error pkmn_pokemon_set_is_shiny(
 
 PKMN_C_API enum pkmn_error pkmn_pokemon_get_held_item(
     const struct pkmn_pokemon* p_pokemon,
-    char* p_held_item_out,
-    size_t held_item_buffer_len,
-    size_t* p_actual_held_item_len_out
+    enum pkmn_item* p_held_item_out
 );
 
 PKMN_C_API enum pkmn_error pkmn_pokemon_set_held_item(
     const struct pkmn_pokemon* p_pokemon,
-    const char* p_held_item
+    enum pkmn_item held_item
 );
 
 PKMN_C_API enum pkmn_error pkmn_pokemon_get_pokerus_duration(
@@ -231,14 +230,12 @@ PKMN_C_API enum pkmn_error pkmn_pokemon_set_ability(
 
 PKMN_C_API enum pkmn_error pkmn_pokemon_get_ball(
     const struct pkmn_pokemon* p_pokemon,
-    char* p_ball_out,
-    size_t ball_buffer_len,
-    size_t* p_actual_ball_len_out
+    enum pkmn_ball* p_ball_out
 );
 
 PKMN_C_API enum pkmn_error pkmn_pokemon_set_ball(
     const struct pkmn_pokemon* p_pokemon,
-    const char* p_ball
+    enum pkmn_ball ball
 );
 
 PKMN_C_API enum pkmn_error pkmn_pokemon_get_level_met(

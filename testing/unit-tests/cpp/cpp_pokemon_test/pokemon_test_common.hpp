@@ -12,6 +12,9 @@
 
 #include <pkmn/pokemon.hpp>
 
+#include <pkmn/enums/ball.hpp>
+#include <pkmn/enums/item.hpp>
+
 #include <gtest/gtest.h>
 
 #include <ctime>
@@ -63,11 +66,11 @@ class pokemon_test: public ::testing::TestWithParam<std::pair<pkmn::e_game, pkmn
 
 typedef struct
 {
-    std::string valid_ball;
-    std::vector<std::string> invalid_balls;
+    pkmn::e_ball valid_ball;
+    std::vector<pkmn::e_ball> invalid_balls;
 
-    std::string valid_item;
-    std::vector<std::string> invalid_items;
+    pkmn::e_item valid_item;
+    std::vector<pkmn::e_item> invalid_items;
 
     std::string expected_original_location;
     std::vector<std::string> valid_locations;

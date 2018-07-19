@@ -109,18 +109,14 @@ static void conversions_test(
             "Is shiny",
             pkmn_pokemon_is_shiny
         );
-        compare_pokemon_strings(
-            &first_pokemon,
-            &second_pokemon,
-            "Held item",
-            pkmn_pokemon_get_held_item
-        );
         compare_pokemon_ints(
             &first_pokemon,
             &second_pokemon,
             "Current trainer friendship",
             pkmn_pokemon_get_current_trainer_friendship
         );
+
+        // Level/level met
 
         int first_pokemon_level = 0;
         int second_pokemon_level_met = 0;
@@ -136,6 +132,23 @@ static void conversions_test(
                 );
         PKMN_TEST_ASSERT_SUCCESS(error);
         TEST_ASSERT_EQUAL(first_pokemon_level, second_pokemon_level_met);
+
+        // Held item
+
+        enum pkmn_item first_pokemon_item = PKMN_ITEM_NONE;
+        enum pkmn_item second_pokemon_item = PKMN_ITEM_NONE;
+
+        error = pkmn_pokemon_get_held_item(
+                    &first_pokemon,
+                    &first_pokemon_item
+                );
+        PKMN_TEST_ASSERT_SUCCESS(error);
+        error = pkmn_pokemon_get_held_item(
+                    &second_pokemon,
+                    &second_pokemon_item
+                );
+        PKMN_TEST_ASSERT_SUCCESS(error);
+        TEST_ASSERT_EQUAL(first_pokemon_item, second_pokemon_item);
     }
     if(min_generation >= 3)
     {
@@ -144,12 +157,6 @@ static void conversions_test(
             &second_pokemon,
             "Ability",
             pkmn_pokemon_get_ability
-        );
-        compare_pokemon_strings(
-            &first_pokemon,
-            &second_pokemon,
-            "Ball",
-            pkmn_pokemon_get_ball
         );
         compare_pokemon_uint32s(
             &first_pokemon,
@@ -163,6 +170,23 @@ static void conversions_test(
             "Pokérus duration",
             pkmn_pokemon_get_pokerus_duration
         );
+
+        // Ball
+
+        enum pkmn_ball first_pokemon_ball = PKMN_BALL_NONE;
+        enum pkmn_ball second_pokemon_ball = PKMN_BALL_NONE;
+
+        error = pkmn_pokemon_get_ball(
+                    &first_pokemon,
+                    &first_pokemon_ball
+                );
+        PKMN_TEST_ASSERT_SUCCESS(error);
+        error = pkmn_pokemon_get_ball(
+                    &second_pokemon,
+                    &second_pokemon_ball
+                );
+        PKMN_TEST_ASSERT_SUCCESS(error);
+        TEST_ASSERT_EQUAL(first_pokemon_ball, second_pokemon_ball);
 
         if(origin_generation == dest_generation)
         {

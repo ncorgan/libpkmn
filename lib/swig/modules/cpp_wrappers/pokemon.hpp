@@ -212,7 +212,7 @@ namespace pkmn { namespace swig {
                 _pokemon->set_shininess(value);
             }
 
-            inline std::string get_held_item()
+            inline pkmn::e_item get_held_item()
             {
                 BOOST_ASSERT(_pokemon.get() != nullptr);
 
@@ -222,12 +222,12 @@ namespace pkmn { namespace swig {
                 }
                 else
                 {
-                    return "";
+                    return pkmn::e_item::NONE;
                 }
             }
 
             inline void set_held_item(
-                const std::string& held_item
+                pkmn::e_item held_item
             )
             {
                 BOOST_ASSERT(_pokemon.get() != nullptr);
@@ -417,7 +417,7 @@ namespace pkmn { namespace swig {
                 _pokemon->set_ability(ability);
             }
 
-            inline std::string get_ball()
+            inline pkmn::e_ball get_ball()
             {
                 BOOST_ASSERT(_pokemon.get() != nullptr);
 
@@ -427,12 +427,12 @@ namespace pkmn { namespace swig {
                 }
                 else
                 {
-                    return "";
+                    return pkmn::e_ball::NONE;
                 }
             }
 
             inline void set_ball(
-                const std::string& ball
+                pkmn::e_ball ball
             )
             {
                 BOOST_ASSERT(_pokemon.get() != nullptr);

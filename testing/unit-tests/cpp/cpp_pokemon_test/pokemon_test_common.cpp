@@ -58,8 +58,9 @@ static void check_initial_values(
     }
     EXPECT_EQ(pkmn::pokemon::DEFAULT_TRAINER_NAME, pokemon->get_original_trainer_name());
 
-    if(generation >= 2) {
-        EXPECT_EQ("None", pokemon->get_held_item());
+    if(generation >= 2)
+    {
+        EXPECT_EQ(pkmn::e_item::NONE, pokemon->get_held_item());
     }
 
     EXPECT_EQ(pkmn::e_gender::MALE, pokemon->get_original_trainer_gender());
@@ -76,8 +77,9 @@ static void check_initial_values(
         EXPECT_EQ(pokemon->get_database_entry().get_base_friendship(), pokemon->get_current_trainer_friendship());
     }
 
-    if(generation >= 3) {
-        EXPECT_EQ("Premier Ball", pokemon->get_ball());
+    if(generation >= 3)
+    {
+        EXPECT_EQ(pkmn::e_ball::POKE_BALL, pokemon->get_ball());
 
         // There is no distinction between Colosseum and XD in the game storage.
         if((game == pkmn::e_game::COLOSSEUM) || (game == pkmn::e_game::XD))
@@ -276,26 +278,31 @@ static void test_setting_ability(
 
 static void test_setting_ball(
     const pkmn::pokemon::sptr& pokemon,
-    const std::string& ball_name,
-    const std::vector<std::string> &invalid_ball_names
-) {
+    pkmn::e_ball ball,
+    const std::vector<pkmn::e_ball>& invalid_balls
+)
+{
     int generation = pkmn::priv::game_enum_to_generation(pokemon->get_game());
 
-    if(generation >= 3) {
-        pokemon->set_ball(ball_name);
-        EXPECT_EQ(ball_name, pokemon->get_ball());
+    if(generation >= 3)
+    {
+        pokemon->set_ball(ball);
+        EXPECT_EQ(ball, pokemon->get_ball());
 
-        for(int i = 0; i < int(invalid_ball_names.size()); ++i) {
+        for(pkmn::e_ball invalid_ball: invalid_balls)
+        {
             EXPECT_THROW(
-                pokemon->set_ball(invalid_ball_names[i]);
+                pokemon->set_ball(invalid_ball);
             , std::invalid_argument);
         }
-    } else {
+    }
+    else
+    {
         EXPECT_THROW(
             pokemon->get_ball();
         , pkmn::feature_not_in_game_error);
         EXPECT_THROW(
-            pokemon->set_ball("Great Ball");
+            pokemon->set_ball(pkmn::e_ball::GREAT_BALL);
         , pkmn::feature_not_in_game_error);
     }
 }
@@ -354,29 +361,34 @@ static void test_setting_friendship(
 
 static void test_setting_item(
     const pkmn::pokemon::sptr& pokemon,
-    const std::string& item_name,
-    const std::vector<std::string> &invalid_item_names
-) {
+    pkmn::e_item item,
+    const std::vector<pkmn::e_item>& invalid_items
+)
+{
     int generation = pkmn::priv::game_enum_to_generation(pokemon->get_game());
 
-    if(generation >= 2) {
-        pokemon->set_held_item(item_name);
-        EXPECT_EQ(item_name, pokemon->get_held_item());
+    if(generation >= 2)
+    {
+        pokemon->set_held_item(item);
+        EXPECT_EQ(item, pokemon->get_held_item());
 
         EXPECT_THROW(
-            pokemon->set_held_item("Not an item");
+            pokemon->set_held_item(pkmn::e_item::INVALID);
         , std::invalid_argument);
-        for(int i = 0; i < int(invalid_item_names.size()); ++i) {
+        for(pkmn::e_item invalid_item: invalid_items)
+        {
             EXPECT_THROW(
-                pokemon->set_held_item(invalid_item_names[i]);
+                pokemon->set_held_item(invalid_item)
             , std::invalid_argument);
         }
-    } else {
+    }
+    else
+    {
         EXPECT_THROW(
             pokemon->get_held_item();
         , pkmn::feature_not_in_game_error);
         EXPECT_THROW(
-            pokemon->set_held_item("Potion");
+            pokemon->set_held_item(pkmn::e_item::POTION)
         , pkmn::feature_not_in_game_error);
     }
 }

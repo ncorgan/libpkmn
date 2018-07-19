@@ -208,11 +208,19 @@ static void gba_pokemon_test(
 
     pkmn_test_values_t test_values =
     {
-        .valid_ball = "Great Ball",
-        .invalid_balls = (char*[]){"Friend Ball", "Heal Ball", NULL},
+        .valid_ball = PKMN_BALL_GREAT_BALL,
+        .p_invalid_balls = (enum pkmn_ball[]){
+            PKMN_BALL_FRIEND_BALL,
+            PKMN_BALL_HEAL_BALL,
+            PKMN_BALL_NONE
+        },
 
-        .valid_item = "Razz Berry",
-        .invalid_items = (char*[]){"Berry", "Mach Bike", NULL},
+        .valid_item = PKMN_ITEM_RAZZ_BERRY,
+        .p_invalid_items = (enum pkmn_item[]){
+            PKMN_ITEM_BERRY,
+            PKMN_ITEM_MACH_BIKE,
+            PKMN_ITEM_NONE
+        },
 
         .expected_original_location = "Fateful encounter",
         .valid_locations = (char*[]){"Petalburg Woods", "Viridian Forest", NULL},
@@ -272,11 +280,19 @@ static void gcn_pokemon_test(
 
     pkmn_test_values_t test_values =
     {
-        .valid_ball = "Great Ball",
-        .invalid_balls = (char*[]){"Friend Ball", "Heal Ball", NULL},
+        .valid_ball = PKMN_BALL_GREAT_BALL,
+        .p_invalid_balls = (enum pkmn_ball[]){
+            PKMN_BALL_FRIEND_BALL,
+            PKMN_BALL_HEAL_BALL,
+            PKMN_BALL_NONE
+        },
 
-        .valid_item = "Razz Berry",
-        .invalid_items = (char*[]){"Berry", "Mach Bike", NULL},
+        .valid_item = PKMN_ITEM_RAZZ_BERRY,
+        .p_invalid_items = (enum pkmn_item[]){
+            PKMN_ITEM_BERRY,
+            PKMN_ITEM_MACH_BIKE,
+            PKMN_ITEM_NONE
+        },
 
         .expected_original_location = "Distant land",
         .valid_locations = (char*[]){"Phenac City", "Orre Colosseum", NULL},

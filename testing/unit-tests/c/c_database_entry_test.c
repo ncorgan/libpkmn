@@ -17,7 +17,7 @@ static void assert_item_entry_uninitialized(
     struct pkmn_database_item_entry* p_item_entry
 )
 {
-    TEST_ASSERT_NULL(p_item_entry->p_name);
+    TEST_ASSERT_EQUAL(PKMN_ITEM_NONE, p_item_entry->item);
     TEST_ASSERT_EQUAL(PKMN_GAME_NONE, p_item_entry->game);
     TEST_ASSERT_NULL(p_item_entry->p_category);
     TEST_ASSERT_NULL(p_item_entry->p_pocket);
@@ -32,7 +32,7 @@ static void item_entry_test()
 {
     struct pkmn_database_item_entry item_entry =
     {
-        .p_name = NULL,
+        .item = PKMN_ITEM_NONE,
         .game = PKMN_GAME_NONE,
         .p_category = NULL,
         .p_pocket = NULL,
@@ -49,7 +49,7 @@ static void item_entry_test()
      */
     TEST_ASSERT_EQUAL(
         pkmn_database_get_item_entry(
-            "Not an item",
+            PKMN_ITEM_INVALID,
             PKMN_GAME_SOULSILVER,
             &item_entry
         ),
@@ -60,7 +60,7 @@ static void item_entry_test()
     );
     TEST_ASSERT_EQUAL(
         pkmn_database_get_item_entry(
-            "Fast Ball",
+            PKMN_ITEM_FAST_BALL,
             PKMN_GAME_NONE,
             &item_entry
         ),
@@ -71,7 +71,7 @@ static void item_entry_test()
     );
     TEST_ASSERT_EQUAL(
         pkmn_database_get_item_entry(
-            "Fast Ball",
+            PKMN_ITEM_FAST_BALL,
             PKMN_GAME_RED,
             &item_entry
         ),
@@ -83,22 +83,22 @@ static void item_entry_test()
 
     PKMN_TEST_ASSERT_SUCCESS(
         pkmn_database_get_item_entry(
-            "Fast Ball",
+            PKMN_ITEM_FAST_BALL,
             PKMN_GAME_SOULSILVER,
             &item_entry
         )
     );
 
     // Make sure fields are properly populated
-    TEST_ASSERT_EQUAL_STRING(item_entry.p_name, "Fast Ball");
-    TEST_ASSERT_EQUAL(item_entry.game, PKMN_GAME_SOULSILVER);
-    TEST_ASSERT_EQUAL_STRING(item_entry.p_category, "Apricorn balls");
-    TEST_ASSERT_EQUAL_STRING(item_entry.p_pocket, "Poké Balls");
+    TEST_ASSERT_EQUAL(PKMN_ITEM_FAST_BALL, item_entry.item);
+    TEST_ASSERT_EQUAL(PKMN_GAME_SOULSILVER, item_entry.game);
+    TEST_ASSERT_EQUAL_STRING("Apricorn balls", item_entry.p_category);
+    TEST_ASSERT_EQUAL_STRING("Poké Balls", item_entry.p_pocket);
     TEST_ASSERT_NOT_NULL(item_entry.p_description);
-    TEST_ASSERT_EQUAL(item_entry.cost, 300);
+    TEST_ASSERT_EQUAL(300, item_entry.cost);
     TEST_ASSERT(item_entry.holdable);
-    TEST_ASSERT_EQUAL(item_entry.fling_power, 0);
-    TEST_ASSERT_EQUAL_STRING(item_entry.p_fling_effect, "None");
+    TEST_ASSERT_EQUAL(0, item_entry.fling_power);
+    TEST_ASSERT_EQUAL_STRING("None", item_entry.p_fling_effect);
 
     // Make sure freeing properly works
     TEST_ASSERT_EQUAL(

@@ -228,7 +228,7 @@ namespace pkmn {
     }
 
     void item_list_impl::add(
-        const std::string& item_name,
+        pkmn::e_item item,
         int amount
     )
     {
@@ -244,7 +244,7 @@ namespace pkmn {
          */
         for(int item_index = 0; item_index < _num_items; ++item_index)
         {
-            if(_item_slots[item_index].item == item_name)
+            if(_item_slots[item_index].item == item)
             {
                 if(_item_slots[item_index].amount == 99)
                 {
@@ -275,9 +275,9 @@ namespace pkmn {
         {
             // Confirm the item can be placed in this pocket
             pkmn::database::item_entry entry(
-                item_name, get_game()
+                item, get_game()
             );
-            if(not _pc and entry.get_item_list_id() != _item_list_id)
+            if(!_pc && (entry.get_item_list_id() != _item_list_id))
             {
                 throw std::invalid_argument(
                           str(boost::format("This item belongs in the \"%s\" pocket.") %
@@ -285,14 +285,14 @@ namespace pkmn {
                       );
             }
 
-            _item_slots[_num_items].item = item_name;
+            _item_slots[_num_items].item = item;
             _item_slots[_num_items].amount = amount;
             _to_native(_num_items++);
         }
     }
 
     void item_list_impl::remove(
-        const std::string& item_name,
+        pkmn::e_item item,
         int amount
     )
     {
@@ -308,7 +308,7 @@ namespace pkmn {
          */
         for(int item_index = 0; item_index < _num_items; ++item_index)
         {
-            if(_item_slots[item_index].item == item_name)
+            if(_item_slots[item_index].item == item)
             {
                 if(_item_slots[item_index].amount < amount)
                 {
@@ -365,7 +365,7 @@ namespace pkmn {
 
     void item_list_impl::set_item(
         int position,
-        const std::string& item_name,
+        pkmn::e_item item,
         int amount
     )
     {
@@ -375,7 +375,7 @@ namespace pkmn {
 
         boost::lock_guard<item_list_impl> lock(*this);
 
-        if(item_name == "None")
+        if(item == pkmn::e_item::NONE)
         {
             if(amount != 0)
             {
@@ -388,8 +388,8 @@ namespace pkmn {
         }
         else
         {
-            pkmn::database::item_entry entry(item_name, get_game());
-            if(get_name() != "PC" and item_name != "None" and entry.get_pocket() != get_name())
+            pkmn::database::item_entry entry(item, get_game());
+            if(get_name() != "PC" and item != pkmn::e_item::NONE and entry.get_pocket() != get_name())
             {
                 throw std::invalid_argument("This item does not belong in this pocket.");
             }
@@ -397,7 +397,7 @@ namespace pkmn {
             pkmn::enforce_bounds("Amount", amount, 1, 99);
             for(int item_index = 0; item_index < _num_items; ++item_index)
             {
-                if((_item_slots[item_index].item == item_name) &&
+                if((_item_slots[item_index].item == item) &&
                    (item_index != position))
                 {
                     std::string err_msg = "This item is already present in slot ";
@@ -409,12 +409,12 @@ namespace pkmn {
             }
         }
 
-        _item_slots[position].item = item_name;
+        _item_slots[position].item = item;
         _item_slots[position].amount = amount;
-        if(item_name == "None" and position < end_boundary)
+        if(item == pkmn::e_item::NONE and position < end_boundary)
         {
             _item_slots.erase(_item_slots.begin()+position);
-            _item_slots.emplace_back(pkmn::item_slot("None", 0));
+            _item_slots.emplace_back(pkmn::item_slot(pkmn::e_item::NONE, 0));
             --_num_items;
         }
         else if(position == end_boundary)
@@ -483,7 +483,7 @@ namespace pkmn {
     {
         boost::lock_guard<item_list_impl> lock(*this);
 
-        BOOST_ASSERT(_valid_items.empty() == _valid_item_names.empty());
+        BOOST_ASSERT(_valid_items.empty() == _valid_items.empty());
 
         if(_valid_items.empty())
         {

@@ -14,6 +14,7 @@
 #include <pkmn/exception.hpp>
 #include <pkmn/database/item_entry.hpp>
 #include <pkmn/database/lists.hpp>
+#include <pkmn/enums/enum_to_string.hpp>
 #include "pksav/pksav_call.hpp"
 
 #include <pksav/common/stats.h>
@@ -23,17 +24,25 @@
 #include <boost/assign.hpp>
 #include <boost/algorithm/string.hpp>
 
-static const std::vector<std::string> all_pocket_item_names = boost::assign::list_of
-    ("Potion")("Mach Bike")("Great Ball")("TM01")
-    ("Aspear Berry")("Wailmer Pail")("Master Ball")("HM04")
-;
-static const std::vector<std::string> wrong_game_all_pocket_items = boost::assign::list_of
-    ("Pink Bow")("Black Sludge")
-    ("Ein File S")("Gonzap's Key")
-    ("GS Ball")("Poffin Items")
-    ("TM51")
-    ("Berry")("Occa Berry")
-;
+static const std::vector<pkmn::e_item> ALL_POCKET_ITEMS =
+{
+    pkmn::e_item::POTION,
+    pkmn::e_item::MACH_BIKE,
+    pkmn::e_item::GREAT_BALL,
+    pkmn::e_item::TM01,
+    pkmn::e_item::ASPEAR_BERRY,
+    pkmn::e_item::WAILMER_PAIL,
+    pkmn::e_item::MASTER_BALL,
+    pkmn::e_item::HM04
+};
+static const std::vector<pkmn::e_item> WRONG_GAME_ALL_POCKET_ITEMS =
+{
+    pkmn::e_item::PINK_BOW, pkmn::e_item::BLACK_SLUDGE,
+    pkmn::e_item::EIN_FILE_S, pkmn::e_item::GONZAPS_KEY,
+    pkmn::e_item::GS_BALL, pkmn::e_item::POFFIN_CASE,
+    pkmn::e_item::TM51,
+    pkmn::e_item::BERRY, pkmn::e_item::OCCA_BERRY
+};
 
 class gba_item_list_test: public item_list_test {};
 
@@ -97,45 +106,61 @@ void gba_item_pocket_test(
     // Confirm exceptions are thrown when expected.
     test_item_list_out_of_range_error(
         item_pocket,
-        "Potion"
+        pkmn::e_item::POTION
     );
 
     // Make sure we can't add items from other pockets.
-    static const std::vector<std::string> wrong_pocket_items = boost::assign::list_of
-        ("Bicycle")("Master Ball")("HM01")("Razz Berry")
-    ;
+    static const std::vector<pkmn::e_item> wrong_pocket_items =
+    {
+        pkmn::e_item::BICYCLE,
+        pkmn::e_item::MASTER_BALL,
+        pkmn::e_item::HM01,
+        pkmn::e_item::RAZZ_BERRY
+    };
     test_item_list_invalid_items(
         item_pocket,
         wrong_pocket_items
     );
 
     // Make sure we can't add items from other generations.
-    static const std::vector<std::string> wrong_generation_items = boost::assign::list_of
-        ("Pink Bow")("Black Sludge")("Binding Band")("Beedrillite")
-    ;
+    static const std::vector<pkmn::e_item> wrong_generation_items =
+    {
+        pkmn::e_item::PINK_BOW,
+        pkmn::e_item::BLACK_SLUDGE,
+        pkmn::e_item::BINDING_BAND,
+        pkmn::e_item::BEEDRILLITE
+    };
     test_item_list_invalid_items(
         item_pocket,
         wrong_generation_items
     );
 
     // Make sure we can't add items from Gamecube games.
-    static const std::vector<std::string> gcn_items = boost::assign::list_of
-        ("Time Flute")
-        ("Poké Snack")
-    ;
+    static const std::vector<pkmn::e_item> gcn_items =
+    {
+        pkmn::e_item::TIME_FLUTE,
+        pkmn::e_item::POKE_SNACK
+    };
     test_item_list_invalid_items(
         item_pocket,
         gcn_items
     );
 
     // Start adding and removing stuff, and make sure the numbers are accurate.
-    static const std::vector<std::string> item_names = boost::assign::list_of
-        ("Potion")("Orange Mail")("Lava Cookie")("Stardust")
-        ("Shadow Mail")("Pink Scarf")("Antidote")("Green Shard")
-    ;
+    static const std::vector<pkmn::e_item> items =
+    {
+        pkmn::e_item::POTION,
+        pkmn::e_item::ORANGE_MAIL,
+        pkmn::e_item::LAVA_COOKIE,
+        pkmn::e_item::STARDUST,
+        pkmn::e_item::SHADOW_MAIL,
+        pkmn::e_item::PINK_SCARF,
+        pkmn::e_item::ANTIDOTE,
+        pkmn::e_item::GREEN_SHARD
+    };
     test_item_list_add_remove(
         item_pocket,
-        item_names
+        items
     );
 
     const std::vector<pkmn::e_item>& valid_items = item_pocket->get_valid_items();
@@ -178,38 +203,54 @@ void gba_key_item_pocket_test(
     // Confirm exceptions are thrown when expected.
     test_item_list_out_of_range_error(
         key_item_pocket,
-        "Basement Key"
+        pkmn::e_item::BASEMENT_KEY
     );
 
     // Make sure we can't add items from other pockets.
-    static const std::vector<std::string> wrong_pocket_items = boost::assign::list_of
-        ("Potion")("Master Ball")("HM01")("Razz Berry")
-    ;
+    static const std::vector<pkmn::e_item> wrong_pocket_items =
+    {
+        pkmn::e_item::POTION,
+        pkmn::e_item::MASTER_BALL,
+        pkmn::e_item::HM01,
+        pkmn::e_item::RAZZ_BERRY
+    };
     test_item_list_invalid_items(
         key_item_pocket,
         wrong_pocket_items
     );
 
     // Make sure we can't add items from other generations.
-    static const std::vector<std::string> wrong_generation_items = boost::assign::list_of
-        ("GS Ball")("Poffin Items")("DNA Splicers")("Aqua Suit")
-    ;
+    static const std::vector<pkmn::e_item> wrong_generation_items =
+    {
+        pkmn::e_item::GS_BALL,
+        pkmn::e_item::POFFIN_CASE,
+        pkmn::e_item::DNA_SPLICERS,
+        pkmn::e_item::AQUA_SUIT
+    };
     test_item_list_invalid_items(
         key_item_pocket,
         wrong_generation_items
     );
 
     // Make sure we can't add items from incompatible Generation III games.
-    static const std::vector<std::string> gcn_items = boost::assign::list_of
-        ("Ein File S")("Powerup Part")
-        ("Gonzap's Key")("Krane Memo 1")
-    ;
-    static const std::vector<std::string> frlg_items = boost::assign::list_of
-        ("Helix Fossil")("Tea")("Ruby")
-    ;
-    static const std::vector<std::string> emerald_items = boost::assign::list_of
-        ("Magma Emblem")("Old Sea Map")
-    ;
+    static const std::vector<pkmn::e_item> gcn_items =
+    {
+        pkmn::e_item::EIN_FILE_S,
+        pkmn::e_item::POWERUP_PART,
+        pkmn::e_item::GONZAPS_KEY,
+        pkmn::e_item::KRANE_MEMO_1
+    };
+    static const std::vector<pkmn::e_item> frlg_items =
+    {
+        pkmn::e_item::HELIX_FOSSIL,
+        pkmn::e_item::TEA,
+        pkmn::e_item::RUBY
+    };
+    static const std::vector<pkmn::e_item> emerald_items =
+    {
+        pkmn::e_item::MAGMA_EMBLEM,
+        pkmn::e_item::OLD_SEA_MAP
+    };
     test_item_list_invalid_items(
         key_item_pocket,
         gcn_items
@@ -228,13 +269,20 @@ void gba_key_item_pocket_test(
     }
 
     // Start adding and removing stuff, and make sure the numbers are accurate.
-    static const std::vector<std::string> item_names = boost::assign::list_of
-        ("Wailmer Pail")("Basement Key")("Meteorite")("Old Rod")
-        ("Red Orb")("Root Fossil")("Contest Pass")("Eon Ticket")
-    ;
+    static const std::vector<pkmn::e_item> items =
+    {
+        pkmn::e_item::WAILMER_PAIL,
+        pkmn::e_item::BASEMENT_KEY,
+        pkmn::e_item::METEORITE,
+        pkmn::e_item::OLD_ROD,
+        pkmn::e_item::RED_ORB,
+        pkmn::e_item::ROOT_FOSSIL,
+        pkmn::e_item::CONTEST_PASS,
+        pkmn::e_item::EON_TICKET
+    };
     test_item_list_add_remove(
         key_item_pocket,
-        item_names
+        items
     );
 
     const std::vector<pkmn::e_item>& valid_items = key_item_pocket->get_valid_items();
@@ -277,35 +325,49 @@ void gba_ball_pocket_test(
     // Confirm exceptions are thrown when expected.
     test_item_list_out_of_range_error(
         ball_pocket,
-        "Master Ball"
+        pkmn::e_item::MASTER_BALL
     );
 
     // Make sure we can't add items from other pockets.
-    static const std::vector<std::string> wrong_pocket_items = boost::assign::list_of
-        ("Potion")("Bicycle")("HM01")("Razz Berry")
-    ;
+    static const std::vector<pkmn::e_item> wrong_pocket_items =
+    {
+        pkmn::e_item::POTION,
+        pkmn::e_item::BICYCLE,
+        pkmn::e_item::HM01,
+        pkmn::e_item::RAZZ_BERRY
+    };
     test_item_list_invalid_items(
         ball_pocket,
         wrong_pocket_items
     );
 
     // Make sure we can't add items from other generations.
-    static const std::vector<std::string> wrong_generation_items = boost::assign::list_of
-        ("Moon Ball")("Heal Ball")("Dream Ball")
-    ;
+    static const std::vector<pkmn::e_item> wrong_generation_items =
+    {
+        pkmn::e_item::MOON_BALL,
+        pkmn::e_item::HEAL_BALL,
+        pkmn::e_item::DREAM_BALL
+    };
     test_item_list_invalid_items(
         ball_pocket,
         wrong_generation_items
     );
 
     // Start adding and removing stuff, and make sure the numbers are accurate.
-    static const std::vector<std::string> item_names = boost::assign::list_of
-        ("Master Ball")("Ultra Ball")("Great Ball")("Poké Ball")
-        ("Safari Ball")("Net Ball")("Dive Ball")("Nest Ball")
-    ;
+    static const std::vector<pkmn::e_item> items =
+    {
+        pkmn::e_item::MASTER_BALL,
+        pkmn::e_item::ULTRA_BALL,
+        pkmn::e_item::GREAT_BALL,
+        pkmn::e_item::POKE_BALL,
+        pkmn::e_item::SAFARI_BALL,
+        pkmn::e_item::NET_BALL,
+        pkmn::e_item::DIVE_BALL,
+        pkmn::e_item::NEST_BALL
+    };
     test_item_list_add_remove(
         ball_pocket,
-        item_names
+        items
     );
 
     const std::vector<pkmn::e_item>& valid_items = ball_pocket->get_valid_items();
@@ -349,35 +411,47 @@ void gba_tmhm_pocket_test(
     // Confirm exceptions are thrown when expected.
     test_item_list_out_of_range_error(
         tmhm_pocket,
-        "TM01"
+        pkmn::e_item::TM01
     );
 
     // Make sure we can't add items from other pockets.
-    static const std::vector<std::string> wrong_pocket_items = boost::assign::list_of
-        ("Potion")("Bicycle")("Great Ball")("Razz Berry")
-    ;
+    static const std::vector<pkmn::e_item> wrong_pocket_items =
+    {
+        pkmn::e_item::POTION,
+        pkmn::e_item::BICYCLE,
+        pkmn::e_item::GREAT_BALL,
+        pkmn::e_item::RAZZ_BERRY
+    };
     test_item_list_invalid_items(
         tmhm_pocket,
         wrong_pocket_items
     );
 
     // Make sure we can't add items from other generations.
-    static const std::vector<std::string> wrong_generation_items = boost::assign::list_of
-        ("TM51")
-    ;
+    static const std::vector<pkmn::e_item> wrong_generation_items =
+    {
+        pkmn::e_item::TM51
+    };
     test_item_list_invalid_items(
         tmhm_pocket,
         wrong_generation_items
     );
 
     // Start adding and removing stuff, and make sure the numbers are accurate.
-    static const std::vector<std::string> item_names = boost::assign::list_of
-        ("TM01")("HM01")("TM02")("HM02")
-        ("TM03")("HM03")("TM04")("HM04")
-    ;
+    static const std::vector<pkmn::e_item> items =
+    {
+        pkmn::e_item::TM01,
+        pkmn::e_item::TM02,
+        pkmn::e_item::TM03,
+        pkmn::e_item::TM04,
+        pkmn::e_item::HM01,
+        pkmn::e_item::HM02,
+        pkmn::e_item::HM03,
+        pkmn::e_item::HM04
+    };
     test_item_list_add_remove(
         tmhm_pocket,
-        item_names
+        items
     );
 
     const std::vector<pkmn::e_item>& valid_items = tmhm_pocket->get_valid_items();
@@ -421,35 +495,49 @@ void gba_berry_pocket_test(
     // Confirm exceptions are thrown when expected.
     test_item_list_out_of_range_error(
         berry_pocket,
-        "Razz Berry"
+        pkmn::e_item::RAZZ_BERRY
     );
 
     // Make sure we can't add items from other pockets.
-    static const std::vector<std::string> wrong_pocket_items = boost::assign::list_of
-        ("Potion")("Bicycle")("Great Ball")("HM02")
-    ;
+    static const std::vector<pkmn::e_item> wrong_pocket_items =
+    {
+        pkmn::e_item::POTION,
+        pkmn::e_item::BICYCLE,
+        pkmn::e_item::GREAT_BALL,
+        pkmn::e_item::HM02
+    };
     test_item_list_invalid_items(
         berry_pocket,
         wrong_pocket_items
     );
 
     // Make sure we can't add items from other generations.
-    static const std::vector<std::string> wrong_generation_items = boost::assign::list_of
-        ("Berry")("Occa Berry")("Roseli Berry")
-    ;
+    static const std::vector<pkmn::e_item> wrong_generation_items =
+    {
+        pkmn::e_item::BERRY,
+        pkmn::e_item::OCCA_BERRY,
+        pkmn::e_item::ROSELI_BERRY
+    };
     test_item_list_invalid_items(
         berry_pocket,
         wrong_generation_items
     );
 
     // Start adding and removing stuff, and make sure the numbers are accurate.
-    static const std::vector<std::string> item_names = boost::assign::list_of
-        ("Cheri Berry")("Razz Berry")("Lum Berry")("Pinap Berry")
-        ("Aspear Berry")("Iapapa Berry")("Wiki Berry")("Apicot Berry")
-    ;
+    static const std::vector<pkmn::e_item> items =
+    {
+        pkmn::e_item::CHERI_BERRY,
+        pkmn::e_item::RAZZ_BERRY,
+        pkmn::e_item::LUM_BERRY,
+        pkmn::e_item::PINAP_BERRY,
+        pkmn::e_item::ASPEAR_BERRY,
+        pkmn::e_item::IAPAPA_BERRY,
+        pkmn::e_item::WIKI_BERRY,
+        pkmn::e_item::APICOT_BERRY
+    };
     test_item_list_add_remove(
         berry_pocket,
-        item_names
+        items
     );
 
     const std::vector<pkmn::e_item>& valid_items = berry_pocket->get_valid_items();
@@ -480,19 +568,19 @@ void gba_item_pc_test(
     // Confirm exceptions are thrown when expected.
     test_item_list_out_of_range_error(
         item_pc,
-        "Potion"
+        pkmn::e_item::POTION
     );
 
     // Make sure we can't add items from other generations or incompatible Generation III games.
     test_item_list_invalid_items(
         item_pc,
-        wrong_game_all_pocket_items
+        WRONG_GAME_ALL_POCKET_ITEMS
     );
 
     // Start adding and removing stuff, and make sure the numbers are accurate.
     test_item_list_add_remove(
         item_pc,
-        all_pocket_item_names
+        ALL_POCKET_ITEMS
     );
 
     check_pksav_struct(
@@ -643,7 +731,7 @@ TEST_P(gba_item_bag_test, item_bag_test)
     for(int item_index = 0; item_index < 8; ++item_index)
     {
         bag->add(
-            all_pocket_item_names[item_index],
+            ALL_POCKET_ITEMS[item_index],
             5
         );
     }
@@ -654,35 +742,35 @@ TEST_P(gba_item_bag_test, item_bag_test)
     const pkmn::item_slots_t& tm_hm_slots = bag->get_pocket(tmhm_pocket_name)->as_vector();
     const pkmn::item_slots_t& berry_slots = bag->get_pocket(berry_pocket_name)->as_vector();
 
-    EXPECT_EQ("Potion", item_slots.at(0).item);
+    EXPECT_EQ(pkmn::e_item::POTION, item_slots.at(0).item) << pkmn::item_to_string(item_slots.at(0).item);
     EXPECT_EQ(5, item_slots.at(0).amount);
-    EXPECT_EQ("None", item_slots.at(1).item);
+    EXPECT_EQ(pkmn::e_item::NONE, item_slots.at(1).item) << pkmn::item_to_string(item_slots.at(1).item);
     EXPECT_EQ(0, item_slots.at(1).amount);
 
-    EXPECT_EQ("Mach Bike", key_item_slots.at(0).item);
+    EXPECT_EQ(pkmn::e_item::MACH_BIKE, key_item_slots.at(0).item) << pkmn::item_to_string(key_item_slots.at(0).item);
     EXPECT_EQ(5, key_item_slots.at(0).amount);
-    EXPECT_EQ("Wailmer Pail", key_item_slots.at(1).item);
+    EXPECT_EQ(pkmn::e_item::WAILMER_PAIL, key_item_slots.at(1).item) << pkmn::item_to_string(key_item_slots.at(1).item);
     EXPECT_EQ(5, key_item_slots.at(1).amount);
-    EXPECT_EQ("None", key_item_slots.at(2).item);
+    EXPECT_EQ(pkmn::e_item::NONE, key_item_slots.at(2).item) << pkmn::item_to_string(key_item_slots.at(2).item);
     EXPECT_EQ(0, key_item_slots.at(2).amount);
 
-    EXPECT_EQ("Great Ball", ball_slots.at(0).item);
+    EXPECT_EQ(pkmn::e_item::GREAT_BALL, ball_slots.at(0).item) << pkmn::item_to_string(ball_slots.at(0).item);
     EXPECT_EQ(5, ball_slots.at(0).amount);
-    EXPECT_EQ("Master Ball", ball_slots.at(1).item);
+    EXPECT_EQ(pkmn::e_item::MASTER_BALL, ball_slots.at(1).item) << pkmn::item_to_string(ball_slots.at(1).item);
     EXPECT_EQ(5, ball_slots.at(1).amount);
-    EXPECT_EQ("None", ball_slots.at(2).item);
+    EXPECT_EQ(pkmn::e_item::NONE, ball_slots.at(2).item) << pkmn::item_to_string(ball_slots.at(2).item);
     EXPECT_EQ(0, ball_slots.at(2).amount);
 
-    EXPECT_EQ("TM01", tm_hm_slots.at(0).item);
+    EXPECT_EQ(pkmn::e_item::TM01, tm_hm_slots.at(0).item) << pkmn::item_to_string(tm_hm_slots.at(0).item);
     EXPECT_EQ(5, tm_hm_slots.at(0).amount);
-    EXPECT_EQ("HM04", tm_hm_slots.at(1).item);
+    EXPECT_EQ(pkmn::e_item::HM04, tm_hm_slots.at(1).item) << pkmn::item_to_string(tm_hm_slots.at(1).item);
     EXPECT_EQ(5, tm_hm_slots.at(1).amount);
-    EXPECT_EQ("None", tm_hm_slots.at(2).item);
+    EXPECT_EQ(pkmn::e_item::NONE, tm_hm_slots.at(2).item) << pkmn::item_to_string(tm_hm_slots.at(2).item);
     EXPECT_EQ(0, tm_hm_slots.at(2).amount);
 
-    EXPECT_EQ("Aspear Berry", berry_slots.at(0).item);
+    EXPECT_EQ(pkmn::e_item::ASPEAR_BERRY, berry_slots.at(0).item) << pkmn::item_to_string(berry_slots.at(0).item);
     EXPECT_EQ(5, berry_slots.at(0).amount);
-    EXPECT_EQ("None", berry_slots.at(1).item);
+    EXPECT_EQ(pkmn::e_item::NONE, berry_slots.at(1).item) << pkmn::item_to_string(berry_slots.at(1).item);
     EXPECT_EQ(0, berry_slots.at(1).amount);
 
     /*
@@ -794,46 +882,46 @@ TEST_P(gba_item_bag_test, item_bag_test)
     for(int item_index = 0; item_index < 8; ++item_index)
     {
         bag->remove(
-            all_pocket_item_names[item_index],
+            ALL_POCKET_ITEMS[item_index],
             5
         );
     }
 
-    EXPECT_EQ("None", item_slots.at(0).item);
+    EXPECT_EQ(pkmn::e_item::NONE, item_slots.at(0).item);
     EXPECT_EQ(0, item_slots.at(0).amount);
-    EXPECT_EQ("None", item_slots.at(1).item);
+    EXPECT_EQ(pkmn::e_item::NONE, item_slots.at(1).item);
     EXPECT_EQ(0, item_slots.at(1).amount);
 
-    EXPECT_EQ("None", key_item_slots.at(0).item);
+    EXPECT_EQ(pkmn::e_item::NONE, key_item_slots.at(0).item);
     EXPECT_EQ(0, key_item_slots.at(0).amount);
-    EXPECT_EQ("None", key_item_slots.at(1).item);
+    EXPECT_EQ(pkmn::e_item::NONE, key_item_slots.at(1).item);
     EXPECT_EQ(0, key_item_slots.at(1).amount);
-    EXPECT_EQ("None", key_item_slots.at(2).item);
+    EXPECT_EQ(pkmn::e_item::NONE, key_item_slots.at(2).item);
     EXPECT_EQ(0, key_item_slots.at(2).amount);
 
-    EXPECT_EQ("None", ball_slots.at(0).item);
+    EXPECT_EQ(pkmn::e_item::NONE, ball_slots.at(0).item);
     EXPECT_EQ(0, ball_slots.at(0).amount);
-    EXPECT_EQ("None", ball_slots.at(1).item);
+    EXPECT_EQ(pkmn::e_item::NONE, ball_slots.at(1).item);
     EXPECT_EQ(0, ball_slots.at(1).amount);
-    EXPECT_EQ("None", ball_slots.at(2).item);
+    EXPECT_EQ(pkmn::e_item::NONE, ball_slots.at(2).item);
     EXPECT_EQ(0, ball_slots.at(2).amount);
 
-    EXPECT_EQ("None", tm_hm_slots.at(0).item);
+    EXPECT_EQ(pkmn::e_item::NONE, tm_hm_slots.at(0).item);
     EXPECT_EQ(0, tm_hm_slots.at(0).amount);
-    EXPECT_EQ("None", tm_hm_slots.at(1).item);
+    EXPECT_EQ(pkmn::e_item::NONE, tm_hm_slots.at(1).item);
     EXPECT_EQ(0, tm_hm_slots.at(1).amount);
-    EXPECT_EQ("None", tm_hm_slots.at(2).item);
+    EXPECT_EQ(pkmn::e_item::NONE, tm_hm_slots.at(2).item);
     EXPECT_EQ(0, tm_hm_slots.at(2).amount);
 
-    EXPECT_EQ("None", berry_slots.at(0).item);
+    EXPECT_EQ(pkmn::e_item::NONE, berry_slots.at(0).item);
     EXPECT_EQ(0, berry_slots.at(0).amount);
-    EXPECT_EQ("None", berry_slots.at(1).item);
+    EXPECT_EQ(pkmn::e_item::NONE, berry_slots.at(1).item);
     EXPECT_EQ(0, berry_slots.at(1).amount);
 
     // Make sure we can't add items from other generations or invalid Generation III games.
     test_item_bag_invalid_items(
         bag,
-        wrong_game_all_pocket_items
+        WRONG_GAME_ALL_POCKET_ITEMS
     );
 }
 

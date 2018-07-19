@@ -127,7 +127,7 @@ static inline bool is_game_gamecube(enum pkmn_game game)
 }
 
 static void check_initial_values(
-    struct pkmn_pokemon* p_pokemon
+    const struct pkmn_pokemon* p_pokemon
 )
 {
     TEST_ASSERT_NOT_NULL(p_pokemon);
@@ -225,14 +225,13 @@ static void check_initial_values(
     {
         TEST_ASSERT_EQUAL(PKMN_GENDER_MALE, original_trainer_info.gender);
 
+        enum pkmn_item held_item = PKMN_ITEM_POTION;
         error = pkmn_pokemon_get_held_item(
                     p_pokemon,
-                    strbuffer,
-                    sizeof(strbuffer),
-                    NULL
+                    &held_item
                 );
         PKMN_TEST_ASSERT_SUCCESS(error);
-        TEST_ASSERT_EQUAL_STRING("None", strbuffer);
+        TEST_ASSERT_EQUAL(PKMN_ITEM_NONE, held_item);
 
         int current_trainer_friendship = 0;
         error = pkmn_pokemon_get_current_trainer_friendship(
@@ -268,17 +267,13 @@ static void check_initial_values(
             original_trainer_info.id.id
         );
 
+        enum pkmn_ball ball = PKMN_BALL_NONE;
         error = pkmn_pokemon_get_ball(
                     p_pokemon,
-                    strbuffer,
-                    sizeof(strbuffer),
-                    NULL
+                    &ball
                 );
         PKMN_TEST_ASSERT_SUCCESS(error);
-        TEST_ASSERT_EQUAL_STRING(
-            "Premier Ball",
-            strbuffer
-        );
+        TEST_ASSERT_EQUAL(PKMN_BALL_POKE_BALL, ball);
 
         enum pkmn_game original_game = PKMN_GAME_NONE;
         error = pkmn_pokemon_get_original_game(
@@ -378,7 +373,7 @@ static void check_initial_values(
 }
 
 static void check_initial_maps(
-    struct pkmn_pokemon* p_pokemon
+    const struct pkmn_pokemon* p_pokemon
 )
 {
     TEST_ASSERT_NOT_NULL(p_pokemon);
@@ -572,7 +567,7 @@ static void check_initial_maps(
 }
 
 static void test_image_filepaths(
-    struct pkmn_pokemon* p_pokemon
+    const struct pkmn_pokemon* p_pokemon
 )
 {
     TEST_ASSERT_NOT_NULL(p_pokemon);
@@ -637,7 +632,7 @@ static void test_image_filepaths(
 }
 
 static void test_setting_ability(
-    struct pkmn_pokemon* p_pokemon
+    const struct pkmn_pokemon* p_pokemon
 )
 {
     TEST_ASSERT_NOT_NULL(p_pokemon);
@@ -752,17 +747,15 @@ static void test_setting_ability(
 }
 
 static void test_setting_ball(
-    struct pkmn_pokemon* p_pokemon,
-    const char* valid_ball_name,
-    const char** invalid_ball_names
+    const struct pkmn_pokemon* p_pokemon,
+    enum pkmn_ball valid_ball,
+    const enum pkmn_ball* p_invalid_balls
 )
 {
     TEST_ASSERT_NOT_NULL(p_pokemon);
-    TEST_ASSERT_NOT_NULL(valid_ball_name);
-    TEST_ASSERT_NOT_NULL(invalid_ball_names);
+    TEST_ASSERT_NOT_NULL(p_invalid_balls);
 
     enum pkmn_error error = PKMN_ERROR_NONE;
-    char strbuffer[STRBUFFER_LEN] = {0};
 
     int generation = game_to_generation(p_pokemon->game);
 
@@ -770,52 +763,48 @@ static void test_setting_ball(
     {
         error = pkmn_pokemon_set_ball(
                     p_pokemon,
-                    valid_ball_name
+                    valid_ball
                 );
         PKMN_TEST_ASSERT_SUCCESS(error);
 
+        enum pkmn_ball ball = PKMN_BALL_NONE;
         error = pkmn_pokemon_get_ball(
                     p_pokemon,
-                    strbuffer,
-                    sizeof(strbuffer),
-                    NULL
+                    &ball
                 );
         PKMN_TEST_ASSERT_SUCCESS(error);
+        TEST_ASSERT_EQUAL(valid_ball, ball);
 
-        TEST_ASSERT_EQUAL_STRING(
-            valid_ball_name,
-            strbuffer
-        );
-
-        for(size_t ball_index = 0; invalid_ball_names[ball_index]; ++ball_index)
+        for(size_t ball_index = 0;
+            p_invalid_balls[ball_index] != PKMN_BALL_NONE;
+            ++ball_index)
         {
             error = pkmn_pokemon_set_ball(
                         p_pokemon,
-                        invalid_ball_names[ball_index]
+                        p_invalid_balls[ball_index]
                     );
             TEST_ASSERT_EQUAL(PKMN_ERROR_INVALID_ARGUMENT, error);
         }
     }
     else
     {
+        enum pkmn_ball ball = PKMN_BALL_NONE;
         error = pkmn_pokemon_get_ball(
                     p_pokemon,
-                    strbuffer,
-                    sizeof(strbuffer),
-                    NULL
+                    &ball
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_FEATURE_NOT_IN_GAME_ERROR, error);
 
         error = pkmn_pokemon_set_ball(
                     p_pokemon,
-                    "Great Ball" // Doesn't matter what it is
+                    PKMN_BALL_GREAT_BALL // Doesn't matter what it is
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_FEATURE_NOT_IN_GAME_ERROR, error);
     }
 }
 
 static void test_setting_condition(
-    struct pkmn_pokemon* p_pokemon
+    const struct pkmn_pokemon* p_pokemon
 )
 {
     TEST_ASSERT_NOT_NULL(p_pokemon);
@@ -847,7 +836,7 @@ static void test_setting_condition(
 }
 
 static void test_setting_friendship(
-    struct pkmn_pokemon* p_pokemon
+    const struct pkmn_pokemon* p_pokemon
 )
 {
     TEST_ASSERT_NOT_NULL(p_pokemon);
@@ -904,17 +893,15 @@ static void test_setting_friendship(
 }
 
 static void test_setting_held_item(
-    struct pkmn_pokemon* p_pokemon,
-    const char* valid_item_name,
-    const char** invalid_item_names
+    const struct pkmn_pokemon* p_pokemon,
+    enum pkmn_item valid_item,
+    const enum pkmn_item* p_invalid_items
 )
 {
     TEST_ASSERT_NOT_NULL(p_pokemon);
-    TEST_ASSERT_NOT_NULL(valid_item_name);
-    TEST_ASSERT_NOT_NULL(invalid_item_names);
+    TEST_ASSERT_NOT_NULL(p_invalid_items);
 
     enum pkmn_error error = PKMN_ERROR_NONE;
-    char strbuffer[STRBUFFER_LEN] = {0};
 
     int generation = game_to_generation(p_pokemon->game);
 
@@ -922,52 +909,48 @@ static void test_setting_held_item(
     {
         error = pkmn_pokemon_set_held_item(
                     p_pokemon,
-                    valid_item_name
+                    valid_item
                 );
         PKMN_TEST_ASSERT_SUCCESS(error);
 
+        enum pkmn_item item = PKMN_ITEM_NONE;
         error = pkmn_pokemon_get_held_item(
                     p_pokemon,
-                    strbuffer,
-                    sizeof(strbuffer),
-                    NULL
+                    &item
                 );
         PKMN_TEST_ASSERT_SUCCESS(error);
+        TEST_ASSERT_EQUAL(valid_item, item);
 
-        TEST_ASSERT_EQUAL_STRING(
-            valid_item_name,
-            strbuffer
-        );
-
-        for(size_t held_item_index = 0; invalid_item_names[held_item_index]; ++held_item_index)
+        for(size_t held_item_index = 0;
+            p_invalid_items[held_item_index] != PKMN_ITEM_NONE;
+            ++held_item_index)
         {
             error = pkmn_pokemon_set_held_item(
                         p_pokemon,
-                        invalid_item_names[held_item_index]
+                        p_invalid_items[held_item_index]
                     );
             TEST_ASSERT_EQUAL(PKMN_ERROR_INVALID_ARGUMENT, error);
         }
     }
     else
     {
+        enum pkmn_item item = PKMN_ITEM_NONE;
         error = pkmn_pokemon_get_held_item(
                     p_pokemon,
-                    strbuffer,
-                    sizeof(strbuffer),
-                    NULL
+                    &item
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_FEATURE_NOT_IN_GAME_ERROR, error);
 
         error = pkmn_pokemon_set_held_item(
                     p_pokemon,
-                    "Potion" // Doesn't matter what it is
+                    PKMN_ITEM_POTION // Doesn't matter what it is
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_FEATURE_NOT_IN_GAME_ERROR, error);
     }
 }
 
 static void test_setting_levels(
-    struct pkmn_pokemon* p_pokemon
+    const struct pkmn_pokemon* p_pokemon
 )
 {
     TEST_ASSERT_NOT_NULL(p_pokemon);
@@ -1155,7 +1138,7 @@ static void test_setting_levels(
 }
 
 static void test_setting_location_met(
-    struct pkmn_pokemon* p_pokemon,
+    const struct pkmn_pokemon* p_pokemon,
     const char* expected_original_location,
     const char** valid_locations,
     const char** invalid_locations
@@ -1313,7 +1296,7 @@ static void test_setting_location_met(
 }
 
 static void test_setting_markings(
-    struct pkmn_pokemon* p_pokemon
+    const struct pkmn_pokemon* p_pokemon
 )
 {
     TEST_ASSERT_NOT_NULL(p_pokemon);
@@ -1381,7 +1364,7 @@ static void test_setting_markings(
 }
 
 static void test_setting_moves(
-    struct pkmn_pokemon* p_pokemon,
+    const struct pkmn_pokemon* p_pokemon,
     const char** valid_move_names,
     const char** invalid_move_names
 )
@@ -1478,7 +1461,7 @@ static void test_setting_moves(
 }
 
 static void test_setting_original_game(
-    struct pkmn_pokemon* p_pokemon,
+    const struct pkmn_pokemon* p_pokemon,
     enum pkmn_game* valid_games,
     enum pkmn_game* invalid_games
 )
@@ -1546,7 +1529,7 @@ static void test_setting_original_game(
 }
 
 static void test_setting_personality(
-    struct pkmn_pokemon* p_pokemon
+    const struct pkmn_pokemon* p_pokemon
 )
 {
     TEST_ASSERT_NOT_NULL(p_pokemon);
@@ -1588,7 +1571,7 @@ static void test_setting_personality(
 }
 
 static void test_setting_pokerus(
-    struct pkmn_pokemon* p_pokemon
+    const struct pkmn_pokemon* p_pokemon
 )
 {
     TEST_ASSERT_NOT_NULL(p_pokemon);
@@ -1645,7 +1628,7 @@ static void test_setting_pokerus(
 }
 
 static void test_setting_stats(
-    struct pkmn_pokemon* p_pokemon
+    const struct pkmn_pokemon* p_pokemon
 )
 {
     TEST_ASSERT_NOT_NULL(p_pokemon);
@@ -1810,7 +1793,7 @@ static void test_setting_stats(
 }
 
 static void test_setting_trainer_info(
-    struct pkmn_pokemon* p_pokemon
+    const struct pkmn_pokemon* p_pokemon
 )
 {
     TEST_ASSERT_NOT_NULL(p_pokemon);
@@ -1969,7 +1952,7 @@ static void test_setting_trainer_info(
 }
 
 void pokemon_test_common(
-    struct pkmn_pokemon* p_pokemon,
+    const struct pkmn_pokemon* p_pokemon,
     pkmn_test_values_t* p_test_values
 )
 {
@@ -1982,7 +1965,7 @@ void pokemon_test_common(
     test_setting_ball(
         p_pokemon,
         p_test_values->valid_ball,
-        (const char**)(p_test_values->invalid_balls)
+        (enum pkmn_ball*)(p_test_values->p_invalid_balls)
     );
     test_setting_condition(p_pokemon);
     test_image_filepaths(p_pokemon);
@@ -1990,7 +1973,7 @@ void pokemon_test_common(
     test_setting_held_item(
         p_pokemon,
         p_test_values->valid_item,
-        (const char**)(p_test_values->invalid_items)
+        (enum pkmn_item*)(p_test_values->p_invalid_items)
     );
     test_setting_levels(p_pokemon);
     test_setting_location_met(

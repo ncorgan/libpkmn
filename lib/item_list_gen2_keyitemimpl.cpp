@@ -41,7 +41,7 @@ namespace pkmn {
     }
 
     void item_list_gen2_keyitemimpl::add(
-        const std::string& item_name,
+        pkmn::e_item item,
         int amount
     )
     {
@@ -50,8 +50,8 @@ namespace pkmn {
             throw std::out_of_range("Amount: valid value 1");
         }
 
-        pkmn::database::item_entry item(item_name, get_game());
-        if(item.get_pocket() != get_name())
+        pkmn::database::item_entry entry(item, get_game());
+        if(entry.get_pocket() != get_name())
         {
             throw std::invalid_argument("This item is not valid for this list.");
         }
@@ -65,7 +65,7 @@ namespace pkmn {
          */
         for(int item_index = 0; item_index < _num_items; ++item_index)
         {
-            if(_item_slots[item_index].item == item_name)
+            if(_item_slots[item_index].item == item)
             {
                 throw std::invalid_argument("This item is already in this pocket.");
             }
@@ -73,7 +73,7 @@ namespace pkmn {
 
         if(_num_items < _capacity)
         {
-            _item_slots[_num_items].item = item_name;
+            _item_slots[_num_items].item = item;
             _item_slots[_num_items].amount = amount;
             _to_native(_num_items++);
         }
@@ -84,7 +84,7 @@ namespace pkmn {
     }
 
     void item_list_gen2_keyitemimpl::remove(
-        const std::string& item_name,
+        pkmn::e_item item,
         int amount
     )
     {
@@ -93,8 +93,8 @@ namespace pkmn {
             throw std::out_of_range("Amount: valid value 1");
         }
 
-        pkmn::database::item_entry item(item_name, get_game());
-        if(item.get_pocket() != get_name())
+        pkmn::database::item_entry entry(item, get_game());
+        if(entry.get_pocket() != get_name())
         {
             throw std::invalid_argument("This item is not valid for this list.");
         }
@@ -108,7 +108,7 @@ namespace pkmn {
          */
         for(int item_index = 0; item_index < _num_items; ++item_index)
         {
-            if(_item_slots[item_index].item == item_name)
+            if(_item_slots[item_index].item == item)
             {
                 _item_slots.erase(_item_slots.begin()+item_index);
                 _item_slots.resize(_capacity);
@@ -122,7 +122,7 @@ namespace pkmn {
 
     void item_list_gen2_keyitemimpl::set_item(
         int position,
-        const std::string& item_name,
+        pkmn::e_item item,
         int amount
     )
     {
@@ -132,7 +132,7 @@ namespace pkmn {
 
         boost::lock_guard<item_list_gen2_keyitemimpl> lock(*this);
 
-        if(item_name == "None")
+        if(item == pkmn::e_item::NONE)
         {
             if(amount != 0)
             {
@@ -145,7 +145,7 @@ namespace pkmn {
         }
         else
         {
-            pkmn::database::item_entry entry(item_name, get_game());
+            pkmn::database::item_entry entry(item, get_game());
             if(entry.get_pocket() != get_name())
             {
                 throw std::invalid_argument("This item does not belong in this pocket.");
@@ -158,7 +158,7 @@ namespace pkmn {
 
             for(int item_index = 0; item_index < _num_items; ++item_index)
             {
-                if((_item_slots[item_index].item == item_name) && (item_index != position))
+                if((_item_slots[item_index].item == item) && (item_index != position))
                 {
                     // TODO: all error messages should have what slot item is in
                     std::string err_msg = "This item is already present in slot ";
@@ -170,12 +170,12 @@ namespace pkmn {
             }
         }
 
-        _item_slots[position].item = item_name;
+        _item_slots[position].item = item;
         _item_slots[position].amount = amount;
-        if(item_name == "None" and position < end_boundary)
+        if((item == pkmn::e_item::NONE) && (position < end_boundary))
         {
             _item_slots.erase(_item_slots.begin()+position);
-            _item_slots.emplace_back(pkmn::item_slot("None", 0));
+            _item_slots.emplace_back(pkmn::item_slot(pkmn::e_item::NONE, 0));
             --_num_items;
         }
         else
@@ -197,7 +197,7 @@ namespace pkmn {
             _item_slots[index].item = pkmn::database::item_entry(
                                           _pksav_list.item_indices[index],
                                           _game_id
-                                      ).get_name();
+                                      ).get_item();
             _item_slots[index].amount = (_pksav_list.item_indices[index] > 0) ? 1 : 0;
         }
         else
@@ -207,7 +207,7 @@ namespace pkmn {
                 _item_slots[item_index].item = pkmn::database::item_entry(
                                                    _pksav_list.item_indices[item_index],
                                                    _game_id
-                                               ).get_name();
+                                               ).get_item();
                 _item_slots[item_index].amount = (_pksav_list.item_indices[item_index] > 0) ? 1 : 0;
             }
         }

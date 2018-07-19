@@ -485,7 +485,7 @@ TEST(cpp_to_c_test, natural_gift_cpp_to_c_test)
 
 TEST(cpp_to_c_test, item_slot_cpp_to_c_test)
 {
-    pkmn::item_slot item_slot_cpp("Potion", 50);
+    pkmn::item_slot item_slot_cpp(pkmn::e_item::POTION, 50);
     struct pkmn_item_slot item_slot_c;
 
     pkmn::c::item_slot_cpp_to_c(
@@ -493,21 +493,17 @@ TEST(cpp_to_c_test, item_slot_cpp_to_c_test)
         &item_slot_c
     );
 
-    EXPECT_STREQ("Potion", item_slot_c.p_item);
+    EXPECT_EQ(PKMN_ITEM_POTION, item_slot_c.item);
     EXPECT_EQ(50, item_slot_c.amount);
-
-    pkmn_item_slot_free(&item_slot_c);
-    EXPECT_EQ(NULL, item_slot_c.p_item);
-    EXPECT_EQ(0, item_slot_c.amount);
 }
 
 TEST(cpp_to_c_test, item_slots_cpp_to_c_test)
 {
     pkmn::item_slots_t item_slots_cpp =
     {
-        pkmn::item_slot("Potion", 50),
-        pkmn::item_slot("Berry", 28),
-        pkmn::item_slot("Berry Pouch", 1)
+        pkmn::item_slot(pkmn::e_item::POTION, 50),
+        pkmn::item_slot(pkmn::e_item::BERRY, 28),
+        pkmn::item_slot(pkmn::e_item::BERRY_POUCH, 1)
     };
 
     struct pkmn_item_slots item_slots_c = { NULL, 0 };
@@ -517,11 +513,11 @@ TEST(cpp_to_c_test, item_slots_cpp_to_c_test)
     );
 
     EXPECT_EQ(3, item_slots_c.length);
-    EXPECT_STREQ("Potion", item_slots_c.p_item_slots[0].p_item);
+    EXPECT_EQ(PKMN_ITEM_POTION, item_slots_c.p_item_slots[0].item);
     EXPECT_EQ(50, item_slots_c.p_item_slots[0].amount);
-    EXPECT_STREQ("Berry", item_slots_c.p_item_slots[1].p_item);
+    EXPECT_EQ(PKMN_ITEM_BERRY, item_slots_c.p_item_slots[1].item);
     EXPECT_EQ(28, item_slots_c.p_item_slots[1].amount);
-    EXPECT_STREQ("Berry Pouch", item_slots_c.p_item_slots[2].p_item);
+    EXPECT_EQ(PKMN_ITEM_BERRY_POUCH, item_slots_c.p_item_slots[2].item);
     EXPECT_EQ(1, item_slots_c.p_item_slots[2].amount);
 
     pkmn_item_slots_free(

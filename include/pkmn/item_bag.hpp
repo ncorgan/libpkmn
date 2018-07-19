@@ -11,6 +11,7 @@
 #include <pkmn/item_list.hpp>
 
 #include <pkmn/enums/game.hpp>
+#include <pkmn/enums/item.hpp>
 
 #include <memory>
 #include <string>
@@ -95,7 +96,7 @@ namespace pkmn {
              * \throws std::out_of_range If the amount is not in the range [0,99]
              */
             virtual void add(
-                const std::string& item_name,
+                pkmn::e_item item,
                 int amount
             ) = 0;
 
@@ -113,7 +114,7 @@ namespace pkmn {
              * \throws std::out_of_range If the amount is not in the range [0,99]
              */
             virtual void remove(
-                const std::string& item_name,
+                pkmn::e_item item,
                 int amount
             ) = 0;
 

@@ -34,7 +34,9 @@ static int dummy_int = 0;
 static size_t dummy_size_t = 0;
 static uint32_t dummy_uint32 = 0;
 static float dummy_float = 0;
+static enum pkmn_ball dummy_ball = PKMN_BALL_NONE;
 static enum pkmn_game dummy_game = PKMN_GAME_NONE;
+static enum pkmn_item dummy_item = PKMN_ITEM_NONE;
 static struct pkmn_string_list dummy_string_list = { NULL, 0 };
 static struct pkmn_trainer_info dummy_trainer_info = { NULL, {0}, PKMN_GENDER_GENDERLESS};
 static struct pkmn_attribute_names dummy_attribute_names = {{NULL, 0}, {NULL, 0}, {NULL, 0}};
@@ -561,17 +563,10 @@ static void item_bag_error_test()
 
     error = pkmn_item_bag_add(
                 NULL,
-                "Potion",
+                PKMN_ITEM_POTION,
                 5
             );
     TEST_NULL_POINTER_RETURN("p_item_bag");
-
-    error = pkmn_item_bag_add(
-                &item_bag,
-                NULL,
-                5
-            );
-    TEST_ITEM_BAG_NULL_POINTER_RETURN(item_bag, "p_item");
 
     /*
      * pkmn_item_bag_remove
@@ -579,17 +574,10 @@ static void item_bag_error_test()
 
     error = pkmn_item_bag_remove(
                 NULL,
-                "Potion",
+                PKMN_ITEM_POTION,
                 5
             );
     TEST_NULL_POINTER_RETURN("p_item_bag");
-
-    error = pkmn_item_bag_remove(
-                &item_bag,
-                NULL,
-                5
-            );
-    TEST_ITEM_BAG_NULL_POINTER_RETURN(item_bag, "p_item");
 
     error = pkmn_item_bag_free(&item_bag);
     PKMN_TEST_ASSERT_SUCCESS(error);
@@ -651,17 +639,10 @@ static void item_list_error_test()
 
     error = pkmn_item_list_add(
                 NULL,
-                "Potion",
+                PKMN_ITEM_POTION,
                 0
             );
     TEST_NULL_POINTER_RETURN("p_item_list");
-
-    error = pkmn_item_list_add(
-                &item_list,
-                NULL,
-                0
-            );
-    TEST_ITEM_LIST_NULL_POINTER_RETURN(item_list, "p_item");
 
     /*
      * pkmn_item_list_remove
@@ -669,17 +650,10 @@ static void item_list_error_test()
 
     error = pkmn_item_list_remove(
                 NULL,
-                "Potion",
+                PKMN_ITEM_POTION,
                 0
             );
     TEST_NULL_POINTER_RETURN("p_item_list");
-
-    error = pkmn_item_list_remove(
-                &item_list,
-                NULL,
-                0
-            );
-    TEST_ITEM_LIST_NULL_POINTER_RETURN(item_list, "p_item");
 
     /*
      * pkmn_item_list_move
@@ -699,18 +673,10 @@ static void item_list_error_test()
     error = pkmn_item_list_set_item(
                 NULL,
                 0,
-                "Potion",
+                PKMN_ITEM_POTION,
                 5
             );
     TEST_NULL_POINTER_RETURN("p_item_list");
-
-    error = pkmn_item_list_set_item(
-                &item_list,
-                0,
-                NULL,
-                5
-            );
-    TEST_NULL_POINTER_RETURN("p_item");
 
     /*
      * pkmn_item_list_get_valid_items
@@ -1216,17 +1182,13 @@ static void pokemon_error_test()
 
     error = pkmn_pokemon_get_held_item(
                 NULL,
-                strbuffer,
-                0,
-                &dummy_size_t
+                &dummy_item
             );
     TEST_NULL_POINTER_RETURN("p_pokemon");
 
     error = pkmn_pokemon_get_held_item(
                 &pokemon,
-                NULL,
-                0,
-                &dummy_size_t
+                NULL
             );
     TEST_POKEMON_NULL_POINTER_RETURN(pokemon, "p_held_item_out");
 
@@ -1236,15 +1198,9 @@ static void pokemon_error_test()
 
     error = pkmn_pokemon_set_held_item(
                 NULL,
-                strbuffer
+                PKMN_ITEM_POTION
             );
     TEST_NULL_POINTER_RETURN("p_pokemon");
-
-    error = pkmn_pokemon_set_held_item(
-                &pokemon,
-                NULL
-            );
-    TEST_POKEMON_NULL_POINTER_RETURN(pokemon, "p_held_item");
 
     /*
      * pkmn_pokemon_get_pokerus_duration
@@ -1396,17 +1352,13 @@ static void pokemon_error_test()
 
     error = pkmn_pokemon_get_ball(
                 NULL,
-                strbuffer,
-                0,
-                &dummy_size_t
+                &dummy_ball
             );
     TEST_NULL_POINTER_RETURN("p_pokemon");
 
     error = pkmn_pokemon_get_ball(
                 &pokemon,
-                NULL,
-                0,
-                &dummy_size_t
+                NULL
             );
     TEST_POKEMON_NULL_POINTER_RETURN(pokemon, "p_ball_out");
 
@@ -1416,15 +1368,9 @@ static void pokemon_error_test()
 
     error = pkmn_pokemon_set_ball(
                 NULL,
-                strbuffer
+                PKMN_BALL_POKE_BALL
             );
     TEST_NULL_POINTER_RETURN("p_pokemon");
-
-    error = pkmn_pokemon_set_ball(
-                &pokemon,
-                NULL
-            );
-    TEST_POKEMON_NULL_POINTER_RETURN(pokemon, "p_ball");
 
     /*
      * pkmn_pokemon_get_level_met
@@ -3194,21 +3140,12 @@ static void calculations_moves_power_error_test()
  */
 static void database_item_entry_error_test()
 {
-    struct pkmn_database_item_entry dummy_pkmn_database_item_entry;
-
     /*
      * pkmn_database_get_item_entry
      */
 
     error = pkmn_database_get_item_entry(
-                NULL,
-                PKMN_GAME_RED,
-                &dummy_pkmn_database_item_entry
-            );
-    TEST_NULL_POINTER_RETURN("p_item_name");
-
-    error = pkmn_database_get_item_entry(
-                strbuffer,
+                PKMN_ITEM_POTION,
                 PKMN_GAME_RED,
                 NULL
             );
@@ -3699,12 +3636,6 @@ static void types_hidden_power_test()
  */
 static void types_item_slot_test()
 {
-    /*
-     * pkmn_item_slot_free
-     */
-    error = pkmn_item_slot_free(NULL);
-    TEST_NULL_POINTER_RETURN("p_item_slot");
-
     /*
      * pkmn_item_slots_free
      */

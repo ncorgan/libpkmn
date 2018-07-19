@@ -16,17 +16,16 @@
 #include <cstring>
 
 enum pkmn_error pkmn_database_get_item_entry(
-    const char* p_item_name,
+    enum pkmn_item item,
     enum pkmn_game game,
     struct pkmn_database_item_entry* p_item_entry_out
 )
 {
-    PKMN_CHECK_NULL_PARAM(p_item_name);
     PKMN_CHECK_NULL_PARAM(p_item_entry_out);
 
     PKMN_CPP_TO_C(
         pkmn::database::item_entry item_entry_cpp(
-                                       p_item_name,
+                                       static_cast<pkmn::e_item>(item),
                                        static_cast<pkmn::e_game>(game)
                                    );
         pkmn::c::item_entry_cpp_to_c(
@@ -42,16 +41,16 @@ enum pkmn_error pkmn_database_item_entry_free(
 {
     PKMN_CHECK_NULL_PARAM(p_item_entry);
 
-    pkmn::c::free_pointer_and_set_to_null(&p_item_entry->p_name);
     pkmn::c::free_pointer_and_set_to_null(&p_item_entry->p_category);
     pkmn::c::free_pointer_and_set_to_null(&p_item_entry->p_description);
     pkmn::c::free_pointer_and_set_to_null(&p_item_entry->p_pocket);
     pkmn::c::free_pointer_and_set_to_null(&p_item_entry->p_fling_effect);
 
-    p_item_entry->game = PKMN_GAME_NONE;
-    p_item_entry->cost = 0;
-    p_item_entry->holdable = false;
-    p_item_entry->fling_power = 0;
+    std::memset(
+        p_item_entry,
+        0,
+        sizeof(*p_item_entry)
+    );
 
     return PKMN_ERROR_NONE;
 }

@@ -116,40 +116,38 @@ enum pkmn_error pkmn_item_list_at(
 
 enum pkmn_error pkmn_item_list_add(
     const struct pkmn_item_list* p_item_list,
-    const char* p_item,
+    enum pkmn_item item,
     size_t amount
 )
 {
     PKMN_CHECK_NULL_WRAPPER_PARAM(p_item_list);
     pkmn_item_list_internal_t* p_internal = ITEM_LIST_INTERNAL_RCAST(p_item_list->p_internal);
-    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_item, p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
         pkmn::item_list::sptr cpp = p_internal->cpp;
 
         cpp->add(
-            p_item,
-            int(amount)
+            static_cast<pkmn::e_item>(item),
+            static_cast<int>(amount)
         );
     )
 }
 
 enum pkmn_error pkmn_item_list_remove(
     const struct pkmn_item_list* p_item_list,
-    const char* p_item,
+    enum pkmn_item item,
     size_t amount
 )
 {
     PKMN_CHECK_NULL_WRAPPER_PARAM(p_item_list);
     pkmn_item_list_internal_t* p_internal = ITEM_LIST_INTERNAL_RCAST(p_item_list->p_internal);
-    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_item, p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
         pkmn::item_list::sptr cpp = p_internal->cpp;
 
         cpp->remove(
-            p_item,
-            int(amount)
+            static_cast<pkmn::e_item>(item),
+            static_cast<int>(amount)
         );
     )
 }
@@ -176,21 +174,20 @@ enum pkmn_error pkmn_item_list_move(
 enum pkmn_error pkmn_item_list_set_item(
     const struct pkmn_item_list* p_item_list,
     size_t position,
-    const char* p_item,
+    enum pkmn_item item,
     size_t amount
 )
 {
     PKMN_CHECK_NULL_WRAPPER_PARAM(p_item_list);
     pkmn_item_list_internal_t* p_internal = ITEM_LIST_INTERNAL_RCAST(p_item_list->p_internal);
-    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_item, p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
         pkmn::item_list::sptr cpp = p_internal->cpp;
 
         cpp->set_item(
-            int(position),
-            p_item,
-            int(amount)
+            static_cast<int>(position),
+            static_cast<pkmn::e_item>(item),
+            static_cast<int>(amount)
         );
     )
 }

@@ -78,11 +78,9 @@ namespace pkmn {
                 bool value
             ) final;
 
-            std::string get_held_item() final;
+            pkmn::e_item get_held_item() final;
 
-            void set_held_item(
-                const std::string& held_item
-            ) final;
+            void set_held_item(pkmn::e_item) final;
 
             std::string get_nature() final;
 
@@ -144,10 +142,10 @@ namespace pkmn {
                 const std::string& ability
             ) final;
 
-            std::string get_ball() final;
+            pkmn::e_ball get_ball() final;
 
             void set_ball(
-                const std::string& ball
+                pkmn::e_ball ball
             ) final;
 
             int get_level_met() final;

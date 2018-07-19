@@ -13,32 +13,41 @@
 
 #include <string.h>
 
-static const char* COLOSSEUM_ALL_POCKET_ITEM_NAMES[] =
+static const enum pkmn_item COLOSSEUM_ALL_POCKET_ITEMS[] =
 {
-    "Potion", "Ein File S", "Great Ball", "TM01",
-    "TM02", "Aspear Berry", "Joy Scent", "Excite Scent"
+    PKMN_ITEM_POTION,
+    PKMN_ITEM_EIN_FILE_S,
+    PKMN_ITEM_GREAT_BALL,
+    PKMN_ITEM_TM01,
+    PKMN_ITEM_TM02,
+    PKMN_ITEM_ASPEAR_BERRY,
+    PKMN_ITEM_JOY_SCENT,
+    PKMN_ITEM_EXCITE_SCENT
 };
-
-static const char* XD_ALL_POCKET_ITEM_NAMES[] =
+static const enum pkmn_item XD_ALL_POCKET_ITEMS[] =
 {
-    "Potion", "Gonzap's Key", "Great Ball", "TM01",
-    "TM02", "Aspear Berry", "Joy Scent", "Battle CD 01"
+    PKMN_ITEM_POTION,
+    PKMN_ITEM_GONZAPS_KEY,
+    PKMN_ITEM_GREAT_BALL,
+    PKMN_ITEM_TM01,
+    PKMN_ITEM_TM02,
+    PKMN_ITEM_ASPEAR_BERRY,
+    PKMN_ITEM_JOY_SCENT,
+    PKMN_ITEM_BATTLE_CD_01
 };
-
-static const char* COLOSSEUM_WRONG_GAME_ALL_POCKET_ITEM_NAMES[] =
+static const enum pkmn_item COLOSSEUM_WRONG_GAME_ALL_POCKET_ITEMS[] =
 {
-    "Pink Bow", "Black Sludge",
-    "GS Ball", "Gonzap's Key", "Poffin Items",
-    "TM51", "HM01",
-    "Berry", "Occa Berry"
+    PKMN_ITEM_PINK_BOW, PKMN_ITEM_BLACK_SLUDGE,
+    PKMN_ITEM_GS_BALL, PKMN_ITEM_GONZAPS_KEY, PKMN_ITEM_POFFIN_CASE,
+    PKMN_ITEM_TM51, PKMN_ITEM_HM01,
+    PKMN_ITEM_BERRY, PKMN_ITEM_OCCA_BERRY
 };
-
-static const char* XD_WRONG_GAME_ALL_POCKET_ITEM_NAMES[] =
+static const enum pkmn_item XD_WRONG_GAME_ALL_POCKET_ITEMS[] =
 {
-    "Pink Bow", "Black Sludge",
-    "GS Ball", "Ein File S", "Poffin Items",
-    "TM51", "HM01",
-    "Berry", "Occa Berry"
+    PKMN_ITEM_PINK_BOW, PKMN_ITEM_BLACK_SLUDGE,
+    PKMN_ITEM_GS_BALL, PKMN_ITEM_EIN_FILE_S, PKMN_ITEM_POFFIN_CASE,
+    PKMN_ITEM_TM51, PKMN_ITEM_HM01,
+    PKMN_ITEM_BERRY, PKMN_ITEM_OCCA_BERRY
 };
 
 static inline bool is_game_colosseum(enum pkmn_game game)
@@ -68,17 +77,26 @@ static void gcn_item_pocket_test(
     // Confirm errors are returned when expected.
     test_item_list_out_of_range_error(
         p_item_pocket,
-        "Potion"
+        PKMN_ITEM_POTION
     );
 
     // Make sure we can't add items from other pockets.
-    static const char* colosseum_wrong_pocket_items[] =
+    static const enum pkmn_item colosseum_wrong_pocket_items[] =
     {
-        "Ein File S", "Great Ball", "TM01", "Oran Berry", "Joy Scent"
+        PKMN_ITEM_EIN_FILE_S,
+        PKMN_ITEM_GREAT_BALL,
+        PKMN_ITEM_TM01,
+        PKMN_ITEM_ORAN_BERRY,
+        PKMN_ITEM_JOY_SCENT
     };
-    static const char* xd_wrong_pocket_items[] =
+    static const enum pkmn_item xd_wrong_pocket_items[] =
     {
-        "Miror Radar", "Great Ball", "TM01", "Oran Berry", "Joy Scent", "Battle CD 01"
+        PKMN_ITEM_MIROR_RADAR,
+        PKMN_ITEM_GREAT_BALL,
+        PKMN_ITEM_TM01,
+        PKMN_ITEM_ORAN_BERRY,
+        PKMN_ITEM_JOY_SCENT,
+        PKMN_ITEM_BATTLE_CD_01
     };
     test_item_list_invalid_items(
         p_item_pocket,
@@ -87,26 +105,38 @@ static void gcn_item_pocket_test(
     );
 
     // Make sure we can't add items from later generations.
-    const char* wrong_generation_item_names[] = {"Pink Bow", "Black Sludge", "Binding Band", "Beedrillite"};
-    test_item_list_invalid_items(p_item_pocket, wrong_generation_item_names, 4);
-
-    const char* item_names[] =
+    static const enum pkmn_item wrong_generation_items[] =
     {
-        "Potion", "Orange Mail", "Lava Cookie", "Stardust",
-        "Shadow Mail", "Pink Scarf", "Antidote", "Green Shard"
+        PKMN_ITEM_PINK_BOW,
+        PKMN_ITEM_BLACK_SLUDGE,
+        PKMN_ITEM_BINDING_BAND,
+        PKMN_ITEM_BEEDRILLITE
+    };
+    test_item_list_invalid_items(p_item_pocket, wrong_generation_items, 4);
+
+    static const enum pkmn_item items[] =
+    {
+        PKMN_ITEM_POTION,
+        PKMN_ITEM_ORANGE_MAIL,
+        PKMN_ITEM_LAVA_COOKIE,
+        PKMN_ITEM_STARDUST,
+        PKMN_ITEM_SHADOW_MAIL,
+        PKMN_ITEM_PINK_SCARF,
+        PKMN_ITEM_ANTIDOTE,
+        PKMN_ITEM_GREEN_SHARD
     };
 
     // Test setting items by index.
     test_item_list_set_item(
         p_item_pocket,
-        item_names,
+        items,
         3
     );
 
     // Start adding and removing items, and make sure the numbers are accurate.
     test_item_list_add_remove(
         p_item_pocket,
-        item_names,
+        items,
         8
     );
 
@@ -158,7 +188,8 @@ static void gcn_key_item_pocket_test(
 
     enum pkmn_error error = PKMN_ERROR_NONE;
 
-    const char* gcn_item = is_game_colosseum(game) ? "Ein File S" : "Miror Radar";
+    enum pkmn_item gcn_item = is_game_colosseum(game) ? PKMN_ITEM_EIN_FILE_S
+                                                      : PKMN_ITEM_MIROR_RADAR;
 
     TEST_ASSERT_EQUAL_STRING("Key Items", p_key_item_pocket->p_name);
     TEST_ASSERT_EQUAL(game, p_key_item_pocket->game);
@@ -171,13 +202,22 @@ static void gcn_key_item_pocket_test(
     test_item_list_out_of_range_error(p_key_item_pocket, gcn_item);
 
     // Make sure we can't add items from other pockets.
-    static const char* colosseum_wrong_pocket_items[] =
+    static const enum pkmn_item colosseum_wrong_pocket_items[] =
     {
-        "Potion", "Great Ball", "TM01", "Oran Berry", "Joy Scent"
+        PKMN_ITEM_POTION,
+        PKMN_ITEM_GREAT_BALL,
+        PKMN_ITEM_TM01,
+        PKMN_ITEM_ORAN_BERRY,
+        PKMN_ITEM_JOY_SCENT
     };
-    static const char* xd_wrong_pocket_items[] =
+    static const enum pkmn_item xd_wrong_pocket_items[] =
     {
-        "Potion", "Great Ball", "TM01", "Oran Berry", "Joy Scent", "Battle CD 01"
+        PKMN_ITEM_POTION,
+        PKMN_ITEM_GREAT_BALL,
+        PKMN_ITEM_TM01,
+        PKMN_ITEM_ORAN_BERRY,
+        PKMN_ITEM_JOY_SCENT,
+        PKMN_ITEM_BATTLE_CD_01
     };
     test_item_list_invalid_items(
         p_key_item_pocket,
@@ -186,38 +226,65 @@ static void gcn_key_item_pocket_test(
     );
 
     // Make sure we can't add items from later generations.
-    const char* wrong_generation_item_names[] = {"GS Ball", "Poffin Items", "DNA Splicers", "Aqua Suit"};
-    test_item_list_invalid_items(p_key_item_pocket, wrong_generation_item_names, 4);
+    static const enum pkmn_item wrong_generation_items[] =
+    {
+        PKMN_ITEM_GS_BALL,
+        PKMN_ITEM_POFFIN_CASE,
+        PKMN_ITEM_DNA_SPLICERS,
+        PKMN_ITEM_AQUA_SUIT
+    };
+    test_item_list_invalid_items(p_key_item_pocket, wrong_generation_items, 4);
 
     // Make sure we can't add items from incompatible Generation III games.
-    const char* frlg_items[] = {"Helix Fossil", "Tea", "Ruby"};;
-    const char* emerald_items[] = {"Magma Emblem", "Old Sea Map"};
+    static const enum pkmn_item frlg_items[] =
+    {
+        PKMN_ITEM_HELIX_FOSSIL,
+        PKMN_ITEM_TEA,
+        PKMN_ITEM_RUBY
+    };
+    static const enum pkmn_item emerald_items[] =
+    {
+        PKMN_ITEM_MAGMA_EMBLEM,
+        PKMN_ITEM_OLD_SEA_MAP
+};
 
     test_item_list_invalid_items(p_key_item_pocket, frlg_items, 3);
     test_item_list_invalid_items(p_key_item_pocket, emerald_items, 2);
 
-    static const char* colosseum_item_names[] =
+    static const enum pkmn_item colosseum_items[] =
     {
-        "Jail Key", "Elevator Key", "Small Tablet", "F-Disk",
-        "R-Disk", "L-Disk", "D-Disk", "U-Disk"
+        PKMN_ITEM_JAIL_KEY,
+        PKMN_ITEM_ELEVATOR_KEY,
+        PKMN_ITEM_SMALL_TABLET,
+        PKMN_ITEM_F_DISK,
+        PKMN_ITEM_R_DISK,
+        PKMN_ITEM_L_DISK,
+        PKMN_ITEM_D_DISK,
+        PKMN_ITEM_U_DISK
     };
-    static const char* xd_item_names[] =
+    static const enum pkmn_item xd_items[] =
     {
-        "Krane Memo 1", "Krane Memo 2", "Krane Memo 3", "Krane Memo 4",
-        "Krane Memo 5", "Voice Case 1", "Voice Case 2", "Voice Case 3"
+        PKMN_ITEM_KRANE_MEMO_1,
+        PKMN_ITEM_KRANE_MEMO_2,
+        PKMN_ITEM_KRANE_MEMO_3,
+        PKMN_ITEM_KRANE_MEMO_4,
+        PKMN_ITEM_KRANE_MEMO_5,
+        PKMN_ITEM_VOICE_CASE_1,
+        PKMN_ITEM_VOICE_CASE_2,
+        PKMN_ITEM_VOICE_CASE_3
     };
 
     // Test setting items by index.
     test_item_list_set_item(
         p_key_item_pocket,
-        is_game_colosseum(game) ? colosseum_item_names : xd_item_names,
+        is_game_colosseum(game) ? colosseum_items : xd_items,
         3
     );
 
     // Start adding and removing items, and make sure the numbers are accurate.
     test_item_list_add_remove(
         p_key_item_pocket,
-        is_game_colosseum(game) ? colosseum_item_names : xd_item_names,
+        is_game_colosseum(game) ? colosseum_items : xd_items,
         8
     );
 
@@ -279,17 +346,26 @@ static void gcn_ball_pocket_test(
     // Confirm errors are returned when expected.
     test_item_list_out_of_range_error(
         p_ball_pocket,
-        "Master Ball"
+        PKMN_ITEM_MASTER_BALL
     );
 
     // Make sure we can't add items from other pockets.
-    static const char* colosseum_wrong_pocket_items[] =
+    static const enum pkmn_item colosseum_wrong_pocket_items[] =
     {
-        "Ein File S", "Potion", "TM01", "Oran Berry", "Joy Scent"
+        PKMN_ITEM_EIN_FILE_S,
+        PKMN_ITEM_POTION,
+        PKMN_ITEM_TM01,
+        PKMN_ITEM_ORAN_BERRY,
+        PKMN_ITEM_JOY_SCENT
     };
-    static const char* xd_wrong_pocket_items[] =
+    static const enum pkmn_item xd_wrong_pocket_items[] =
     {
-        "Miror Radar", "Potion", "TM01", "Oran Berry", "Joy Scent", "Battle CD 01"
+        PKMN_ITEM_MIROR_RADAR,
+        PKMN_ITEM_POTION,
+        PKMN_ITEM_TM01,
+        PKMN_ITEM_ORAN_BERRY,
+        PKMN_ITEM_JOY_SCENT,
+        PKMN_ITEM_BATTLE_CD_01
     };
     test_item_list_invalid_items(
         p_ball_pocket,
@@ -298,26 +374,37 @@ static void gcn_ball_pocket_test(
     );
 
     // Make sure we can't add items from later generations.
-    const char* wrong_generation_item_names[] = {"Moon Ball", "Heal Ball", "Dream Ball"};
-    test_item_list_invalid_items(p_ball_pocket, wrong_generation_item_names, 3);
-
-    const char* item_names[] =
+    static const enum pkmn_item wrong_generation_items[] =
     {
-        "Master Ball", "Ultra Ball", "Great Ball", "Poké Ball",
-        "Safari Ball", "Net Ball", "Dive Ball", "Nest Ball"
+        PKMN_ITEM_MOON_BALL,
+        PKMN_ITEM_HEAL_BALL,
+        PKMN_ITEM_DREAM_BALL
+    };
+    test_item_list_invalid_items(p_ball_pocket, wrong_generation_items, 3);
+
+    static const enum pkmn_item items[] =
+    {
+        PKMN_ITEM_MASTER_BALL,
+        PKMN_ITEM_ULTRA_BALL,
+        PKMN_ITEM_GREAT_BALL,
+        PKMN_ITEM_POKE_BALL,
+        PKMN_ITEM_SAFARI_BALL,
+        PKMN_ITEM_NET_BALL,
+        PKMN_ITEM_DIVE_BALL,
+        PKMN_ITEM_NEST_BALL
     };
 
     // Test setting items by index.
     test_item_list_set_item(
         p_ball_pocket,
-        item_names,
+        items,
         3
     );
 
     // Start adding and removing items, and make sure the numbers are accurate.
     test_item_list_add_remove(
         p_ball_pocket,
-        item_names,
+        items,
         8
     );
 
@@ -379,17 +466,26 @@ static void gcn_tm_pocket_test(
     // Confirm errors are returned when expected.
     test_item_list_out_of_range_error(
         p_tm_pocket,
-        "TM01"
+        PKMN_ITEM_TM01
     );
 
     // Make sure we can't add items from other pockets.
-    static const char* colosseum_wrong_pocket_items[] =
+    static const enum pkmn_item colosseum_wrong_pocket_items[] =
     {
-        "Ein File S", "Potion", "Great Ball", "Oran Berry", "Joy Scent"
+        PKMN_ITEM_EIN_FILE_S,
+        PKMN_ITEM_POTION,
+        PKMN_ITEM_GREAT_BALL,
+        PKMN_ITEM_ORAN_BERRY,
+        PKMN_ITEM_JOY_SCENT
     };
-    static const char* xd_wrong_pocket_items[] =
+    static const enum pkmn_item xd_wrong_pocket_items[] =
     {
-        "Miror Radar", "Potion", "Great Ball", "Oran Berry", "Joy Scent", "Battle CD 01"
+        PKMN_ITEM_MIROR_RADAR,
+        PKMN_ITEM_POTION,
+        PKMN_ITEM_GREAT_BALL,
+        PKMN_ITEM_ORAN_BERRY,
+        PKMN_ITEM_JOY_SCENT,
+        PKMN_ITEM_BATTLE_CD_01
     };
     test_item_list_invalid_items(
         p_tm_pocket,
@@ -398,26 +494,36 @@ static void gcn_tm_pocket_test(
     );
 
     // Make sure we can't add items from later games.
-    const char* wrong_generation_item_names[] = {"TM51", "HM01"};
-    test_item_list_invalid_items(p_tm_pocket, wrong_generation_item_names, 2);
-
-    const char* item_names[] =
+    static const enum pkmn_item wrong_generation_items[] =
     {
-        "TM01", "TM02", "TM03", "TM04",
-        "TM05", "TM06", "TM07", "TM08"
+        PKMN_ITEM_TM51,
+        PKMN_ITEM_HM01
+    };
+    test_item_list_invalid_items(p_tm_pocket, wrong_generation_items, 2);
+
+    static const enum pkmn_item items[] =
+    {
+        PKMN_ITEM_TM01,
+        PKMN_ITEM_TM02,
+        PKMN_ITEM_TM03,
+        PKMN_ITEM_TM04,
+        PKMN_ITEM_TM05,
+        PKMN_ITEM_TM06,
+        PKMN_ITEM_TM07,
+        PKMN_ITEM_TM08
     };
 
     // Test setting items by index.
     test_item_list_set_item(
         p_tm_pocket,
-        item_names,
+        items,
         3
     );
 
     // Start adding and removing items, and make sure the numbers are accurate.
     test_item_list_add_remove(
         p_tm_pocket,
-        item_names,
+        items,
         8
     );
 
@@ -479,17 +585,26 @@ static void gcn_berry_pocket_test(
     // Confirm errors are returned when expected.
     test_item_list_out_of_range_error(
         p_berry_pocket,
-        "Oran Berry"
+        PKMN_ITEM_ORAN_BERRY
     );
 
     // Make sure we can't add items from other pockets.
-    static const char* colosseum_wrong_pocket_items[] =
+    static const enum pkmn_item colosseum_wrong_pocket_items[] =
     {
-        "Ein File S", "Potion", "Great Ball", "TM01", "Joy Scent"
+        PKMN_ITEM_EIN_FILE_S,
+        PKMN_ITEM_POTION,
+        PKMN_ITEM_GREAT_BALL,
+        PKMN_ITEM_TM01,
+        PKMN_ITEM_JOY_SCENT
     };
-    static const char* xd_wrong_pocket_items[] =
+    static const enum pkmn_item xd_wrong_pocket_items[] =
     {
-        "Miror Radar", "Potion", "Great Ball", "TM01", "Joy Scent", "Battle CD 01"
+        PKMN_ITEM_MIROR_RADAR,
+        PKMN_ITEM_POTION,
+        PKMN_ITEM_GREAT_BALL,
+        PKMN_ITEM_TM01,
+        PKMN_ITEM_JOY_SCENT,
+        PKMN_ITEM_BATTLE_CD_01
     };
     test_item_list_invalid_items(
         p_berry_pocket,
@@ -498,26 +613,37 @@ static void gcn_berry_pocket_test(
     );
 
     // Make sure we can't add items from later generations.
-    const char* wrong_generation_item_names[] = {"Berry", "Occa Berry", "Roseli Berry"};
-    test_item_list_invalid_items(p_berry_pocket, wrong_generation_item_names, 3);
-
-    const char* item_names[] =
+    static const enum pkmn_item wrong_generation_items[] =
     {
-        "Cheri Berry", "Razz Berry", "Lum Berry", "Pinap Berry",
-        "Aspear Berry", "Iapapa Berry", "Wiki Berry", "Apicot Berry"
+        PKMN_ITEM_BERRY,
+        PKMN_ITEM_OCCA_BERRY,
+        PKMN_ITEM_ROSELI_BERRY
+    };
+    test_item_list_invalid_items(p_berry_pocket, wrong_generation_items, 3);
+
+    static const enum pkmn_item items[] =
+    {
+        PKMN_ITEM_CHERI_BERRY,
+        PKMN_ITEM_RAZZ_BERRY,
+        PKMN_ITEM_LUM_BERRY,
+        PKMN_ITEM_PINAP_BERRY,
+        PKMN_ITEM_ASPEAR_BERRY,
+        PKMN_ITEM_IAPAPA_BERRY,
+        PKMN_ITEM_WIKI_BERRY,
+        PKMN_ITEM_APICOT_BERRY
     };
 
     // Test setting items by index.
     test_item_list_set_item(
         p_berry_pocket,
-        item_names,
+        items,
         3
     );
 
     // Start adding and removing items, and make sure the numbers are accurate.
     test_item_list_add_remove(
         p_berry_pocket,
-        item_names,
+        items,
         8
     );
 
@@ -579,17 +705,26 @@ static void gcn_cologne_pocket_test(
     // Confirm errors are returned when expected.
     test_item_list_out_of_range_error(
         p_cologne_pocket,
-        "Joy Scent"
+        PKMN_ITEM_JOY_SCENT
     );
 
     // Make sure we can't add items from other pockets.
-    static const char* colosseum_wrong_pocket_items[] =
+    static const enum pkmn_item colosseum_wrong_pocket_items[] =
     {
-        "Ein File S", "Potion", "Great Ball", "TM01", "Oran Berry"
+        PKMN_ITEM_EIN_FILE_S,
+        PKMN_ITEM_POTION,
+        PKMN_ITEM_GREAT_BALL,
+        PKMN_ITEM_TM01,
+        PKMN_ITEM_ORAN_BERRY
     };
-    static const char* xd_wrong_pocket_items[] =
+    static const enum pkmn_item xd_wrong_pocket_items[] =
     {
-        "Miror Radar", "Potion", "Great Ball", "TM01", "Oran Berry", "Battle CD 01"
+        PKMN_ITEM_MIROR_RADAR,
+        PKMN_ITEM_POTION,
+        PKMN_ITEM_GREAT_BALL,
+        PKMN_ITEM_TM01,
+        PKMN_ITEM_ORAN_BERRY,
+        PKMN_ITEM_BATTLE_CD_01
     };
     test_item_list_invalid_items(
         p_cologne_pocket,
@@ -601,49 +736,49 @@ static void gcn_cologne_pocket_test(
 
     error = pkmn_item_list_add(
                 p_cologne_pocket,
-                "Joy Scent",
+                PKMN_ITEM_JOY_SCENT,
                 3
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
     error = pkmn_item_list_add(
                 p_cologne_pocket,
-                "Excite Scent",
+                PKMN_ITEM_EXCITE_SCENT,
                 3
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
     error = pkmn_item_list_add(
                 p_cologne_pocket,
-                "Vivid Scent",
+                PKMN_ITEM_VIVID_SCENT,
                 3
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
 
     error = pkmn_item_list_remove(
                 p_cologne_pocket,
-                "Excite Scent",
+                PKMN_ITEM_EXCITE_SCENT,
                 3
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
     error = pkmn_item_list_remove(
                 p_cologne_pocket,
-                "Vivid Scent",
+                PKMN_ITEM_VIVID_SCENT,
                 1
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
 
-    check_item_at_index(p_cologne_pocket, 0, "Joy Scent", 3);
-    check_item_at_index(p_cologne_pocket, 1, "Vivid Scent", 2);
-    check_item_at_index(p_cologne_pocket, 2, "None", 0);
+    check_item_at_index(p_cologne_pocket, 0, PKMN_ITEM_JOY_SCENT, 3);
+    check_item_at_index(p_cologne_pocket, 1, PKMN_ITEM_VIVID_SCENT, 2);
+    check_item_at_index(p_cologne_pocket, 2, PKMN_ITEM_NONE, 0);
 
     error = pkmn_item_list_remove(
                 p_cologne_pocket,
-                "Joy Scent",
+                PKMN_ITEM_JOY_SCENT,
                 3
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
     error = pkmn_item_list_remove(
                 p_cologne_pocket,
-                "Vivid Scent",
+                PKMN_ITEM_VIVID_SCENT,
                 2
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
@@ -707,13 +842,18 @@ static void gcn_battle_cd_pocket_test(
     // Confirm errors are returned when expected.
     test_item_list_out_of_range_error(
         p_battle_cd_pocket,
-        "Battle CD 01"
+        PKMN_ITEM_BATTLE_CD_01
     );
 
     // Make sure we can't add items from other pockets.
-    static const char* wrong_pocket_items[] =
+    static const enum pkmn_item wrong_pocket_items[] =
     {
-        "Miror Radar", "Potion", "Great Ball", "TM01", "Oran Berry", "Joy Scent"
+        PKMN_ITEM_MIROR_RADAR,
+        PKMN_ITEM_POTION,
+        PKMN_ITEM_GREAT_BALL,
+        PKMN_ITEM_TM01,
+        PKMN_ITEM_ORAN_BERRY,
+        PKMN_ITEM_JOY_SCENT
     };
     test_item_list_invalid_items(
         p_battle_cd_pocket,
@@ -721,23 +861,29 @@ static void gcn_battle_cd_pocket_test(
         6
     );
 
-    const char* item_names[] =
+    static const enum pkmn_item items[] =
     {
-        "Battle CD 01", "Battle CD 02", "Battle CD 03", "Battle CD 04",
-        "Battle CD 05", "Battle CD 06", "Battle CD 07", "Battle CD 08"
+        PKMN_ITEM_BATTLE_CD_01,
+        PKMN_ITEM_BATTLE_CD_02,
+        PKMN_ITEM_BATTLE_CD_03,
+        PKMN_ITEM_BATTLE_CD_04,
+        PKMN_ITEM_BATTLE_CD_05,
+        PKMN_ITEM_BATTLE_CD_06,
+        PKMN_ITEM_BATTLE_CD_07,
+        PKMN_ITEM_BATTLE_CD_08
     };
 
     // Test setting items by index.
     test_item_list_set_item(
         p_battle_cd_pocket,
-        item_names,
+        items,
         3
     );
 
     // Start adding and removing items, and make sure the numbers are accurate.
     test_item_list_add_remove(
         p_battle_cd_pocket,
-        item_names,
+        items,
         8
     );
 
@@ -812,30 +958,30 @@ static void gcn_item_pc_test(
     // Confirm errors are returned when expected.
     test_item_list_out_of_range_error(
         &item_pc,
-        "Potion"
+        PKMN_ITEM_POTION
     );
 
     // Make sure we can't add items from incompatible games.
     test_item_list_invalid_items(
         &item_pc,
-        is_game_colosseum(game) ? COLOSSEUM_WRONG_GAME_ALL_POCKET_ITEM_NAMES
-                     : XD_WRONG_GAME_ALL_POCKET_ITEM_NAMES,
+        is_game_colosseum(game) ? COLOSSEUM_WRONG_GAME_ALL_POCKET_ITEMS
+                                : XD_WRONG_GAME_ALL_POCKET_ITEMS,
         9
     );
 
     // Test setting items by index.
     test_item_list_set_item(
         &item_pc,
-        is_game_colosseum(game) ? COLOSSEUM_ALL_POCKET_ITEM_NAMES
-                     : XD_ALL_POCKET_ITEM_NAMES,
+        is_game_colosseum(game) ? COLOSSEUM_ALL_POCKET_ITEMS
+                                : XD_ALL_POCKET_ITEMS,
         3
     );
 
     // Start adding and removing items, and make sure the numbers are accurate.
     test_item_list_add_remove(
         &item_pc,
-        is_game_colosseum(game) ? COLOSSEUM_ALL_POCKET_ITEM_NAMES
-                     : XD_ALL_POCKET_ITEM_NAMES,
+        is_game_colosseum(game) ? COLOSSEUM_ALL_POCKET_ITEMS
+                                : XD_ALL_POCKET_ITEMS,
         8
     );
 
@@ -1062,50 +1208,51 @@ static void gcn_item_bag_test(enum pkmn_game game)
     check_num_items(&tm_pocket, 0);
     check_num_items(&berry_pocket, 0);
 
-    const char* gcn_key_item = is_game_colosseum(game) ? "Ein File S" : "Gonzap's Key";
-    const char** all_pocket_item_names = is_game_colosseum(game) ? COLOSSEUM_ALL_POCKET_ITEM_NAMES
-                                       : XD_ALL_POCKET_ITEM_NAMES;
-    const char** wrong_game_all_pocket_item_names = is_game_colosseum(game) ? COLOSSEUM_WRONG_GAME_ALL_POCKET_ITEM_NAMES
-                                                  : XD_WRONG_GAME_ALL_POCKET_ITEM_NAMES;
+    const enum pkmn_item gcn_key_item =
+        is_game_colosseum(game) ? PKMN_ITEM_EIN_FILE_S : PKMN_ITEM_GONZAPS_KEY;
+    const enum pkmn_item* all_pocket_items =
+        is_game_colosseum(game) ? COLOSSEUM_ALL_POCKET_ITEMS : XD_ALL_POCKET_ITEMS;
+    const enum pkmn_item* wrong_game_all_pocket_items =
+        is_game_colosseum(game) ? COLOSSEUM_WRONG_GAME_ALL_POCKET_ITEMS : XD_WRONG_GAME_ALL_POCKET_ITEMS;
 
     for(size_t item_index = 0; item_index < 8; ++item_index)
     {
         pkmn_item_bag_add(
             &item_bag,
-            all_pocket_item_names[item_index],
+            all_pocket_items[item_index],
             5
         );
         PKMN_TEST_ASSERT_SUCCESS(error);
     }
 
-    check_item_at_index(&item_pocket, 0, "Potion", 5);
-    check_item_at_index(&item_pocket, 1, "None", 0);
+    check_item_at_index(&item_pocket, 0, PKMN_ITEM_POTION, 5);
+    check_item_at_index(&item_pocket, 1, PKMN_ITEM_NONE, 0);
 
     check_item_at_index(&key_item_pocket, 0, gcn_key_item, 5);
-    check_item_at_index(&key_item_pocket, 1, "None", 0);
+    check_item_at_index(&key_item_pocket, 1, PKMN_ITEM_NONE, 0);
 
-    check_item_at_index(&ball_pocket, 0, "Great Ball", 5);
-    check_item_at_index(&ball_pocket, 1, "None", 0);
+    check_item_at_index(&ball_pocket, 0, PKMN_ITEM_GREAT_BALL, 5);
+    check_item_at_index(&ball_pocket, 1, PKMN_ITEM_NONE, 0);
 
-    check_item_at_index(&tm_pocket, 0, "TM01", 5);
-    check_item_at_index(&tm_pocket, 1, "TM02", 5);
-    check_item_at_index(&tm_pocket, 2, "None", 0);
+    check_item_at_index(&tm_pocket, 0, PKMN_ITEM_TM01, 5);
+    check_item_at_index(&tm_pocket, 1, PKMN_ITEM_TM02, 5);
+    check_item_at_index(&tm_pocket, 2, PKMN_ITEM_NONE, 0);
 
-    check_item_at_index(&berry_pocket, 0, "Aspear Berry", 5);
-    check_item_at_index(&berry_pocket, 1, "None", 0);
+    check_item_at_index(&berry_pocket, 0, PKMN_ITEM_ASPEAR_BERRY, 5);
+    check_item_at_index(&berry_pocket, 1, PKMN_ITEM_NONE, 0);
 
-    check_item_at_index(&cologne_pocket, 0, "Joy Scent", 5);
+    check_item_at_index(&cologne_pocket, 0, PKMN_ITEM_JOY_SCENT, 5);
 
     if(is_game_colosseum(game))
     {
-        check_item_at_index(&cologne_pocket, 1, "Excite Scent", 5);
+        check_item_at_index(&cologne_pocket, 1, PKMN_ITEM_EXCITE_SCENT, 5);
     }
     else
     {
-        check_item_at_index(&cologne_pocket, 1, "None", 0);
+        check_item_at_index(&cologne_pocket, 1, PKMN_ITEM_NONE, 0);
 
-        check_item_at_index(&battle_cd_pocket, 0, "Battle CD 01", 5);
-        check_item_at_index(&battle_cd_pocket, 1, "None", 0);
+        check_item_at_index(&battle_cd_pocket, 0, PKMN_ITEM_BATTLE_CD_01, 5);
+        check_item_at_index(&battle_cd_pocket, 1, PKMN_ITEM_NONE, 0);
     }
 
     // Make sure removing items through the bag removes from the proper pockets.
@@ -1113,7 +1260,7 @@ static void gcn_item_bag_test(enum pkmn_game game)
     {
         pkmn_item_bag_remove(
             &item_bag,
-            all_pocket_item_names[item_index],
+            all_pocket_items[item_index],
             5
         );
         PKMN_TEST_ASSERT_SUCCESS(error);
@@ -1129,40 +1276,40 @@ static void gcn_item_bag_test(enum pkmn_game game)
         check_num_items(&battle_cd_pocket, 0);
     }
 
-    check_item_at_index(&item_pocket, 0, "None", 0);
-    check_item_at_index(&item_pocket, 1, "None", 0);
+    check_item_at_index(&item_pocket, 0, PKMN_ITEM_NONE, 0);
+    check_item_at_index(&item_pocket, 1, PKMN_ITEM_NONE, 0);
 
-    check_item_at_index(&key_item_pocket, 0, "None", 0);
-    check_item_at_index(&key_item_pocket, 1, "None", 0);
+    check_item_at_index(&key_item_pocket, 0, PKMN_ITEM_NONE, 0);
+    check_item_at_index(&key_item_pocket, 1, PKMN_ITEM_NONE, 0);
 
-    check_item_at_index(&ball_pocket, 0, "None", 0);
-    check_item_at_index(&ball_pocket, 1, "None", 0);
+    check_item_at_index(&ball_pocket, 0, PKMN_ITEM_NONE, 0);
+    check_item_at_index(&ball_pocket, 1, PKMN_ITEM_NONE, 0);
 
-    check_item_at_index(&tm_pocket, 0, "None", 0);
-    check_item_at_index(&tm_pocket, 1, "None", 0);
-    check_item_at_index(&tm_pocket, 2, "None", 0);
+    check_item_at_index(&tm_pocket, 0, PKMN_ITEM_NONE, 0);
+    check_item_at_index(&tm_pocket, 1, PKMN_ITEM_NONE, 0);
+    check_item_at_index(&tm_pocket, 2, PKMN_ITEM_NONE, 0);
 
-    check_item_at_index(&berry_pocket, 0, "None", 0);
-    check_item_at_index(&berry_pocket, 1, "None", 0);
+    check_item_at_index(&berry_pocket, 0, PKMN_ITEM_NONE, 0);
+    check_item_at_index(&berry_pocket, 1, PKMN_ITEM_NONE, 0);
 
-    check_item_at_index(&cologne_pocket, 0, "None", 0);
+    check_item_at_index(&cologne_pocket, 0, PKMN_ITEM_NONE, 0);
 
     if(is_game_colosseum(game))
     {
-        check_item_at_index(&cologne_pocket, 1, "None", 0);
+        check_item_at_index(&cologne_pocket, 1, PKMN_ITEM_NONE, 0);
     }
     else
     {
-        check_item_at_index(&cologne_pocket, 1, "None", 0);
+        check_item_at_index(&cologne_pocket, 1, PKMN_ITEM_NONE, 0);
 
-        check_item_at_index(&battle_cd_pocket, 0, "None", 0);
-        check_item_at_index(&battle_cd_pocket, 1, "None", 0);
+        check_item_at_index(&battle_cd_pocket, 0, PKMN_ITEM_NONE, 0);
+        check_item_at_index(&battle_cd_pocket, 1, PKMN_ITEM_NONE, 0);
     }
 
     // Make sure we can't add items from later generations.
     test_item_bag_invalid_items(
         &item_bag,
-        wrong_game_all_pocket_item_names,
+        wrong_game_all_pocket_items,
         9
     );
 

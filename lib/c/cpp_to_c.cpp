@@ -623,7 +623,7 @@ namespace pkmn { namespace c {
         // a concern.
         struct pkmn_database_item_entry temp_item_entry_c =
         {
-            nullptr, // p_name
+            PKMN_ITEM_NONE, // name
             PKMN_GAME_NONE, // game
             nullptr, // p_category
             nullptr, // p_pocket
@@ -634,10 +634,6 @@ namespace pkmn { namespace c {
             nullptr  // p_fling_effect
         };
 
-        string_cpp_to_c_alloc(
-            item_entry_cpp.get_name(),
-            &temp_item_entry_c.p_name
-        );
         string_cpp_to_c_alloc(
             item_entry_cpp.get_category(),
             &temp_item_entry_c.p_category
@@ -655,6 +651,7 @@ namespace pkmn { namespace c {
             &temp_item_entry_c.p_fling_effect
         );
 
+        temp_item_entry_c.item = static_cast<enum pkmn_item>(item_entry_cpp.get_item());
         temp_item_entry_c.game = static_cast<enum pkmn_game>(item_entry_cpp.get_game());
 
         temp_item_entry_c.cost = item_entry_cpp.get_cost();

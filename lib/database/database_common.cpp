@@ -259,13 +259,6 @@ namespace pkmn { namespace database {
         }
     }
 
-    static inline bool is_item_enum_berry(pkmn::e_item item)
-    {
-        return ((item >= pkmn::e_item::CHERI_BERRY) && (item <= pkmn::e_item::ROWAP_BERRY)) ||
-               ((item >= pkmn::e_item::ROSELI_BERRY) && (item <= pkmn::e_item::MARANGA_BERRY)) ||
-               ((item >= pkmn::e_item::BERRY) && (item <= pkmn::e_item::MYSTERYBERRY));
-    }
-
     void _get_item_lists(
         std::vector<pkmn::e_item>& r_items,
         std::vector<std::string>& r_item_names,

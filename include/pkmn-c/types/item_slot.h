@@ -10,6 +10,8 @@
 #include <pkmn-c/config.h>
 #include <pkmn-c/error.h>
 
+#include <pkmn-c/enums/item.h>
+
 #include <stdlib.h>
 
 /*!
@@ -20,8 +22,8 @@
  */
 struct pkmn_item_slot
 {
-    //! The item name.
-    char* p_item;
+    //! The item.
+    enum pkmn_item item;
     //! The item amount, in the range [0-99].
     size_t amount;
 };
@@ -43,10 +45,6 @@ struct pkmn_item_slots
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-PKMN_C_API enum pkmn_error pkmn_item_slot_free(
-    struct pkmn_item_slot* p_item_slot
-);
 
 /*!
  * @brief Frees the dynamically allocated memory in a struct pkmn_item_slot.

@@ -460,6 +460,13 @@ namespace pkmn { namespace database {
 
         return false;
     }
+
+    inline bool is_item_enum_berry(pkmn::e_item item)
+    {
+        return ((item >= pkmn::e_item::CHERI_BERRY) && (item <= pkmn::e_item::ROWAP_BERRY)) ||
+               ((item >= pkmn::e_item::ROSELI_BERRY) && (item <= pkmn::e_item::MARANGA_BERRY)) ||
+               ((item >= pkmn::e_item::BERRY) && (item <= pkmn::e_item::MYSTERYBERRY));
+    }
 }}
 
 #endif /* PKMN_DATABASE_DATABASE_COMMON_HPP */

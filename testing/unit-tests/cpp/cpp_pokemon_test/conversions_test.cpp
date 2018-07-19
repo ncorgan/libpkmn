@@ -86,7 +86,7 @@ TEST_P(conversions_test, conversions_test)
     pkmn::rng<uint32_t> uint32_rng;
     pkmn::rng<size_t> size_rng;
 
-    std::vector<std::string> items = pkmn::database::get_item_name_list(game_for_lists);
+    std::vector<pkmn::e_item> items = pkmn::database::get_item_list(game_for_lists);
     std::vector<std::string> moves = pkmn::database::get_move_name_list(game_for_lists);
 
     for(int i = 0; i < 4; ++i)
@@ -133,12 +133,13 @@ TEST_P(conversions_test, conversions_test)
          * Make sure the item is holdable. For Generation III, no GCN-exclusive items appear
          * to be holdable.
          */
-        std::string held_item = "";
+        pkmn::e_item held_item = pkmn::e_item::NONE;
         do
         {
             held_item = items[size_rng.rand(0, items.size()-1)];
-        } while(not pkmn::database::item_entry(held_item, params.origin_game).holdable() or
-                (held_item.find("Scent") != std::string::npos));
+        }
+        while(!pkmn::database::item_entry(held_item, params.origin_game).holdable() ||
+              (held_item == pkmn::e_item::JOY_SCENT) || (held_item == pkmn::e_item::VIVID_SCENT));
 
         first_pokemon->set_held_item(held_item);
     }

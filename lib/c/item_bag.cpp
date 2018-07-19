@@ -99,40 +99,38 @@ enum pkmn_error pkmn_item_bag_get_pocket(
 
 enum pkmn_error pkmn_item_bag_add(
     const struct pkmn_item_bag* p_item_bag,
-    const char* p_item,
+    enum pkmn_item item,
     size_t amount
 )
 {
     PKMN_CHECK_NULL_WRAPPER_PARAM(p_item_bag);
     pkmn_item_bag_internal_t* p_internal = ITEM_BAG_INTERNAL_RCAST(p_item_bag->p_internal);
-    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_item, p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
         pkmn::item_bag::sptr cpp = p_internal->cpp;
 
         cpp->add(
-            p_item,
-            int(amount)
+            static_cast<pkmn::e_item>(item),
+            static_cast<int>(amount)
         );
     )
 }
 
 enum pkmn_error pkmn_item_bag_remove(
     const struct pkmn_item_bag* p_item_bag,
-    const char* p_item,
+    enum pkmn_item item,
     size_t amount
 )
 {
     PKMN_CHECK_NULL_WRAPPER_PARAM(p_item_bag);
     pkmn_item_bag_internal_t* p_internal = ITEM_BAG_INTERNAL_RCAST(p_item_bag->p_internal);
-    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_item, p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
         pkmn::item_bag::sptr cpp = p_internal->cpp;
 
         cpp->remove(
-            p_item,
-            int(amount)
+            static_cast<pkmn::e_item>(item),
+            static_cast<int>(amount)
         );
     )
 }

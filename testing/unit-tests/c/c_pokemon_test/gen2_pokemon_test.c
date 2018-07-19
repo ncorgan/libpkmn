@@ -36,11 +36,15 @@ static void gen2_pokemon_test(
 
     pkmn_test_values_t test_values =
     {
-        .valid_ball = "Great Ball",
-        .invalid_balls = (char*[]){"Great Ball", NULL},
+        .valid_ball = PKMN_BALL_GREAT_BALL,
+        .p_invalid_balls = (enum pkmn_ball[]){PKMN_BALL_GREAT_BALL, PKMN_BALL_NONE},
 
-        .valid_item = "Berry",
-        .invalid_items = (char*[]){"Razz Berry", "Bicycle", NULL},
+        .valid_item = PKMN_ITEM_BERRY,
+        .p_invalid_items = (enum pkmn_item[]){
+            PKMN_ITEM_RAZZ_BERRY,
+            PKMN_ITEM_BICYCLE,
+            PKMN_ITEM_NONE
+        },
 
         .expected_original_location = "Special",
         .valid_locations = (char*[]){"Sprout Tower", "Tohjo Falls", NULL},

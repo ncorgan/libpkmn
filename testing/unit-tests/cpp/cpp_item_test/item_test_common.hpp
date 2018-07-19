@@ -69,17 +69,17 @@ void test_item_list_empty_slots(
 
 void test_item_list_out_of_range_error(
     const pkmn::item_list::sptr& list,
-    const std::string& item_name
+    pkmn::e_item item
 );
 
 void test_item_list_invalid_items(
     const pkmn::item_list::sptr& list,
-    const std::vector<std::string> &item_names
+    const std::vector<pkmn::e_item>& items
 );
 
 void test_item_list_add_remove(
     const pkmn::item_list::sptr& list,
-    const std::vector<std::string> &item_names
+    const std::vector<pkmn::e_item>& items
 );
 
 class item_bag_test: public ::testing::TestWithParam<pkmn::e_game> {
@@ -115,7 +115,7 @@ class item_bag_test: public ::testing::TestWithParam<pkmn::e_game> {
 
 void test_item_bag_invalid_items(
     const pkmn::item_bag::sptr& bag,
-    const std::vector<std::string>& item_names
+    const std::vector<pkmn::e_item>& items
 );
 
 #endif /* ITEM_TEST_COMMON_HPP */

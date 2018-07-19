@@ -375,10 +375,7 @@ namespace pkmn { namespace c {
     {
         BOOST_ASSERT(p_item_slot_c_out != nullptr);
 
-        string_cpp_to_c_alloc(
-            item_slot_cpp.item,
-            &p_item_slot_c_out->p_item
-        );
+        p_item_slot_c_out->item = static_cast<enum pkmn_item>(item_slot_cpp.item);
         p_item_slot_c_out->amount = item_slot_cpp.amount;
     }
 

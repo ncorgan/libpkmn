@@ -19,17 +19,18 @@
 
 class gen1_pokemon_test: public pokemon_test {};
 
-TEST_P(gen1_pokemon_test, gen1_pokemon_test) {
+TEST_P(gen1_pokemon_test, gen1_pokemon_test)
+{
     pkmn::pokemon::sptr pokemon = get_pokemon();
 
     pokemon_test_common(
         pokemon,
         {
-            "Great Ball",
-            {"Great Ball"},
+            pkmn::e_ball::GREAT_BALL,
+            {pkmn::e_ball::GREAT_BALL},
 
-            "Potion",
-            {"Potion"},
+            pkmn::e_item::POTION,
+            {pkmn::e_item::POTION},
 
             "Special",
             {"Route 1"},

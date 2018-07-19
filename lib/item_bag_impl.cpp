@@ -70,16 +70,17 @@ namespace pkmn {
         int game_id
     ): item_bag(),
        _game_id(game_id),
+       _generation(pkmn::database::game_id_to_generation(game_id)),
+       _version_group_id(pkmn::database::game_id_to_version_group(game_id)),
        _p_native(nullptr)
     {
         // Populate pocket name vector
-        int version_group_id = pkmn::database::game_id_to_version_group(game_id);
         static BOOST_CONSTEXPR const char* query = \
             "SELECT name FROM libpkmn_item_lists WHERE version_group_id=? "
             "AND name != 'PC'";
 
         pkmn::database::query_db_list_bind1<std::string, int>(
-            query, _item_pocket_names, version_group_id
+            query, _item_pocket_names, _version_group_id
         );
     }
 
@@ -113,127 +114,28 @@ namespace pkmn {
         return _item_pocket_names;
     }
 
-    static BOOST_CONSTEXPR const char* list_name_query =
-        "SELECT name FROM libpkmn_item_lists WHERE id="
-        "(SELECT libpkmn_list_id FROM veekun_pocket_to_libpkmn_list "
-        "WHERE version_group_id=? AND veekun_pocket_id=(SELECT "
-        "pocket_id FROM item_categories WHERE id=(SELECT category_id "
-        "FROM items WHERE id=(SELECT item_id FROM item_names WHERE "
-        "name=?))))";
-
-    static BOOST_CONSTEXPR const char* list_name_query_with_old_item_name =
-        "SELECT name FROM libpkmn_item_lists WHERE id="
-        "(SELECT libpkmn_list_id FROM veekun_pocket_to_libpkmn_list "
-        "WHERE version_group_id=? AND veekun_pocket_id=(SELECT "
-        "pocket_id FROM item_categories WHERE id=(SELECT category_id "
-        "FROM items WHERE id=(SELECT item_id FROM old_item_names WHERE "
-        "name=?))))";
-
-    BOOST_STATIC_CONSTEXPR int FRLG_VERSION_GROUP = 7;
-
-    // Skips creating item entry
-    static std::string get_pocket_name(
-        const std::string& item_name,
-        int version_group_id
-    )
-    {
-        std::string ret;
-        if(not pkmn::database::maybe_query_db_bind2<std::string, int, const std::string&>(
-                   list_name_query_with_old_item_name, ret, version_group_id, item_name
-           ))
-        {
-            std::string error_message = "Invalid item: ";
-            error_message += item_name;
-
-            ret = pkmn::database::query_db_bind2<std::string, int, const std::string&>(
-                       list_name_query, version_group_id, item_name,
-                       error_message
-                  );
-        }
-
-        return ret;
-    }
-
     void item_bag_impl::add(
-        const std::string& item_name,
+        pkmn::e_item item,
         int amount
     )
     {
         boost::lock_guard<item_bag_impl> lock(*this);
 
-        int version_group_id = pkmn::database::game_id_to_version_group(
-                                   _game_id
-                               );
-
-        std::string pocket_name;
-
-        // Special logic for Berries
-        if(item_name.find("Berry") != std::string::npos)
-        {
-            int generation = pkmn::database::game_id_to_generation(
-                                  _game_id
-                             );
-            if(version_group_id == FRLG_VERSION_GROUP)
-            {
-                pocket_name = "Berry Pouch";
-            }
-            else if(generation > 2)
-            {
-                pocket_name = "Berries";
-            }
-            else
-            {
-                pocket_name = get_pocket_name(item_name, version_group_id);
-            }
-        }
-        else
-        {
-            pocket_name = get_pocket_name(item_name, version_group_id);
-        }
-
-        _item_pockets.at(pocket_name)->add(item_name, amount);
+        std::string pocket_name = _get_pocket_name(item);
+        _item_pockets.at(pocket_name)->add(item, amount);
 
         _to_native();
     }
 
     void item_bag_impl::remove(
-        const std::string& item_name,
+        pkmn::e_item item,
         int amount
     )
     {
         boost::lock_guard<item_bag_impl> lock(*this);
 
-        int version_group_id = pkmn::database::game_id_to_version_group(
-                                   _game_id
-                               );
-
-        std::string pocket_name;
-
-        // Special logic for Berries
-        if(item_name.find("Berry") != std::string::npos)
-        {
-            int generation = pkmn::database::game_id_to_generation(
-                                  _game_id
-                             );
-            if(version_group_id == FRLG_VERSION_GROUP)
-            {
-                pocket_name = "Berry Pouch";
-            }
-            else if(generation > 2)
-            {
-                pocket_name = "Berries";
-            }
-            else
-            {
-                pocket_name = get_pocket_name(item_name, version_group_id);
-            }
-        }
-        else
-        {
-            pocket_name = get_pocket_name(item_name, version_group_id);
-        }
-
-        _item_pockets.at(pocket_name)->remove(item_name, amount);
+        std::string pocket_name = _get_pocket_name(item);
+        _item_pockets.at(pocket_name)->remove(item, amount);
 
         _to_native();
     }
@@ -245,6 +147,37 @@ namespace pkmn {
         _to_native();
 
         return _p_native;
+    }
+
+    // Skips creating item entry
+    std::string item_bag_impl::_get_pocket_name(pkmn::e_item item)
+    {
+        std::string pocket_name;
+
+        if(pkmn::database::is_item_enum_berry(item) && (_generation > 2))
+        {
+            static const int VERSION_GROUP_FRLG = 7;
+
+            pocket_name = (_version_group_id == VERSION_GROUP_FRLG) ? "Berry Pouch"
+                                                                    : "Berries";
+        }
+        else
+        {
+            static const std::string list_name_query =
+                "SELECT name FROM libpkmn_item_lists WHERE id="
+                "(SELECT libpkmn_list_id FROM veekun_pocket_to_libpkmn_list "
+                "WHERE version_group_id=? AND veekun_pocket_id=(SELECT "
+                "pocket_id FROM item_categories WHERE id=(SELECT category_id "
+                "FROM items WHERE id=?)))";
+
+            pocket_name = pkmn::database::query_db_bind2<std::string, int, int>(
+                              list_name_query.c_str(),
+                              _version_group_id,
+                              static_cast<int>(item)
+                          );
+        }
+
+        return pocket_name;
     }
 
 }

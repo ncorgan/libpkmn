@@ -29,6 +29,9 @@
 
 namespace pkmn { namespace breeding {
 
+    // Needed to avoid using commas in BOOST_ASSERT
+    #define IV_MAP_KEYS_TO_VECTOR(iv_map) (map_keys_to_vector<std::map<pkmn::e_stat, int>, pkmn::e_stat>(iv_map))
+
     struct incense_breeding_pokemon
     {
         std::vector<pkmn::e_species> species;
@@ -299,7 +302,8 @@ namespace pkmn { namespace breeding {
 
             if(has_volt_tackle_policy)
             {
-                if((mother->get_held_item() == "Light Ball") || (father->get_held_item() == "Light Ball"))
+                if((mother->get_held_item() == pkmn::e_item::LIGHT_BALL) ||
+                   (father->get_held_item() == pkmn::e_item::LIGHT_BALL))
                 {
                     child_moves.emplace_back("Volt Tackle");
                 }
@@ -621,7 +625,10 @@ namespace pkmn { namespace breeding {
         )
         ideal_child_IVs[pkmn::e_stat::HP] = pksav_IVs[PKSAV_GB_IV_HP];
 
-        BOOST_ASSERT(map_keys_to_vector(ideal_child_IVs) == map_keys_to_vector(parent_IVs));
+        BOOST_ASSERT(
+            IV_MAP_KEYS_TO_VECTOR(ideal_child_IVs) ==
+            IV_MAP_KEYS_TO_VECTOR(parent_IVs)
+        );
         return ideal_child_IVs;
     }
 
@@ -630,7 +637,10 @@ namespace pkmn { namespace breeding {
         const std::map<pkmn::e_stat, int>& map2
     )
     {
-        BOOST_ASSERT(map_keys_to_vector(map1) == map_keys_to_vector(map2));
+        BOOST_ASSERT(
+            IV_MAP_KEYS_TO_VECTOR(map1) ==
+            IV_MAP_KEYS_TO_VECTOR(map2)
+        );
 
         std::map<pkmn::e_stat, int> combined_map;
         for(const auto& map1_pair: map1)
@@ -641,7 +651,10 @@ namespace pkmn { namespace breeding {
             combined_map[key] = std::max(value, map2.at(key));
         }
 
-        BOOST_ASSERT(map_keys_to_vector(combined_map) == map_keys_to_vector(map1));
+        BOOST_ASSERT(
+            IV_MAP_KEYS_TO_VECTOR(combined_map) ==
+            IV_MAP_KEYS_TO_VECTOR(map1)
+        );
         return combined_map;
     }
 
@@ -691,7 +704,10 @@ namespace pkmn { namespace breeding {
          */
         std::map<pkmn::e_stat, int> mother_IVs = mother->get_IVs();
         std::map<pkmn::e_stat, int> father_IVs = father->get_IVs();
-        BOOST_ASSERT(map_keys_to_vector(mother_IVs) == map_keys_to_vector(father_IVs));
+        BOOST_ASSERT(
+            IV_MAP_KEYS_TO_VECTOR(mother_IVs) ==
+            IV_MAP_KEYS_TO_VECTOR(father_IVs)
+        );
 
         std::map<pkmn::e_stat, int> max_parent_IVs = combine_maps_with_higher_values(
                                                         mother_IVs,
@@ -718,7 +734,10 @@ namespace pkmn { namespace breeding {
             ideal_child_IVs[stat] = PKSAV_MAX_IV;
         }
 
-        BOOST_ASSERT(map_keys_to_vector(ideal_child_IVs) == map_keys_to_vector(mother_IVs));
+        BOOST_ASSERT(
+            IV_MAP_KEYS_TO_VECTOR(ideal_child_IVs) ==
+            IV_MAP_KEYS_TO_VECTOR(mother_IVs)
+        );
         return ideal_child_IVs;
     }
 
@@ -764,7 +783,10 @@ namespace pkmn { namespace breeding {
          */
         std::map<pkmn::e_stat, int> mother_IVs = mother->get_IVs();
         std::map<pkmn::e_stat, int> father_IVs = father->get_IVs();
-        BOOST_ASSERT(map_keys_to_vector(mother_IVs) == map_keys_to_vector(father_IVs));
+        BOOST_ASSERT(
+            IV_MAP_KEYS_TO_VECTOR(mother_IVs) ==
+            IV_MAP_KEYS_TO_VECTOR(father_IVs)
+        );
 
         std::map<pkmn::e_stat, int> ideal_child_IVs;
 
@@ -810,7 +832,10 @@ namespace pkmn { namespace breeding {
             }
         }
 
-        BOOST_ASSERT(map_keys_to_vector(ideal_child_IVs) == map_keys_to_vector(mother_IVs));
+        BOOST_ASSERT(
+            IV_MAP_KEYS_TO_VECTOR(ideal_child_IVs) ==
+            IV_MAP_KEYS_TO_VECTOR(mother_IVs)
+        );
         return ideal_child_IVs;
     }
 

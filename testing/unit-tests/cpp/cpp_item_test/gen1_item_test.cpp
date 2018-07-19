@@ -14,6 +14,8 @@
 #include <pkmn/exception.hpp>
 #include <pkmn/database/item_entry.hpp>
 #include <pkmn/database/lists.hpp>
+#include <pkmn/enums/enum_to_string.hpp>
+
 #include "pksav/pksav_call.hpp"
 
 #include <pksav/common/stats.h>
@@ -25,12 +27,25 @@
 
 #include <vector>
 
-static const std::vector<std::string> item_names = boost::assign::list_of
-    ("Potion")("Great Ball")("Ether")("PP Up")
-    ("TM34")("Moon Stone")("Bicycle")("Full Heal")
-;
-static const std::vector<std::string> wrong_generation_item_names = boost::assign::list_of
-    ("Amulet Coin")("Apicot Berry")("Air Mail")("Air Balloon")("Aqua Suit")
+static const std::vector<pkmn::e_item> ITEMS =
+{
+    pkmn::e_item::POTION,
+    pkmn::e_item::GREAT_BALL,
+    pkmn::e_item::ETHER,
+    pkmn::e_item::PP_UP,
+    pkmn::e_item::TM34,
+    pkmn::e_item::MOON_STONE,
+    pkmn::e_item::BICYCLE,
+    pkmn::e_item::FULL_HEAL
+};
+static const std::vector<pkmn::e_item> WRONG_GENERATION_ITEMS =
+{
+    pkmn::e_item::AMULET_COIN,
+    pkmn::e_item::APICOT_BERRY,
+    pkmn::e_item::AIR_MAIL,
+    pkmn::e_item::AIR_BALLOON,
+    pkmn::e_item::AQUA_SUIT
+};
 ;
 
 class gen1_item_list_test: public item_list_test {};
@@ -89,19 +104,19 @@ static void gen1_item_list_test_common(
     // Confirm exceptions are thrown when expected.
     test_item_list_out_of_range_error(
         list,
-        "Potion"
+        pkmn::e_item::POTION
     );
 
     // Confirm items from later generations can't be added.
     test_item_list_invalid_items(
         list,
-        wrong_generation_item_names
+        WRONG_GENERATION_ITEMS
     );
 
     // Start adding and removing stuff, and make sure the numbers are accurate.
     test_item_list_add_remove(
         list,
-        item_names
+        ITEMS
     );
     ASSERT_EQ(6, list->get_num_items());
 
@@ -198,16 +213,16 @@ TEST_P(gen1_item_bag_test, item_bag_test)
     for(int item_index = 0; item_index < 8; ++item_index)
     {
         bag->add(
-            item_names[item_index],
+            ITEMS[item_index],
             item_index+1
         );
     }
     for(int item_index = 0; item_index < 8; ++item_index)
     {
-        EXPECT_EQ(item_names[item_index], item_slots.at(item_index).item);
-        EXPECT_EQ(item_index+1, item_slots.at(item_index).amount);
+        EXPECT_EQ(ITEMS[item_index], item_slots.at(item_index).item) << pkmn::item_to_string(ITEMS[item_index]);
+        EXPECT_EQ(item_index+1, item_slots.at(item_index).amount) << pkmn::item_to_string(ITEMS[item_index]);
     }
-    EXPECT_EQ("None", item_slots.at(8).item);
+    EXPECT_EQ(pkmn::e_item::NONE, item_slots.at(8).item);
     EXPECT_EQ(0, item_slots.at(8).amount);
 
     check_pksav_struct(
@@ -222,13 +237,13 @@ TEST_P(gen1_item_bag_test, item_bag_test)
     for(int item_index = 0; item_index < 8; ++item_index)
     {
         bag->remove(
-            item_names[item_index],
+            ITEMS[item_index],
             item_index+1
         );
     }
     for(int item_index = 0; item_index < 9; ++item_index)
     {
-        EXPECT_EQ("None", item_slots.at(item_index).item);
+        EXPECT_EQ(pkmn::e_item::NONE, item_slots.at(item_index).item);
         EXPECT_EQ(0, item_slots.at(item_index).amount);
     }
 }

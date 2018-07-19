@@ -122,7 +122,7 @@ namespace pkmn
         _libpkmgc_pokemon_uptr->heldItem = LibPkmGC::NoItem;
         _libpkmgc_pokemon_uptr->friendship = LibPkmGC::u8(_database_entry.get_base_friendship());
         _libpkmgc_pokemon_uptr->locationCaught = 0; // Met in a distant land
-        _libpkmgc_pokemon_uptr->ballCaughtWith = LibPkmGC::PremierBall;
+        _libpkmgc_pokemon_uptr->ballCaughtWith = LibPkmGC::PokeBall;
         _libpkmgc_pokemon_uptr->levelMet = LibPkmGC::u8(level);
         _libpkmgc_pokemon_uptr->OTGender = LibPkmGC::Male;
         _libpkmgc_pokemon_uptr->OTName->fromUTF8(pkmn::pokemon::DEFAULT_TRAINER_NAME.c_str());
@@ -499,18 +499,20 @@ namespace pkmn
         }
     }
 
-    std::string pokemon_gcnimpl::get_held_item()
+    pkmn::e_item pokemon_gcnimpl::get_held_item()
     {
         boost::lock_guard<pokemon_gcnimpl> lock(*this);
 
-        return pkmn::database::item_entry(
-                   _libpkmgc_pokemon_uptr->heldItem,
-                   _database_entry.get_game_id()
-               ).get_name();
+        return pkmn::e_item(
+                   pkmn::database::item_index_to_id(
+                       _libpkmgc_pokemon_uptr->heldItem,
+                       _database_entry.get_game_id()
+                   )
+               );
     }
 
     void pokemon_gcnimpl::set_held_item(
-        const std::string& held_item
+        pkmn::e_item held_item
     )
     {
         boost::lock_guard<pokemon_gcnimpl> lock(*this);
@@ -521,7 +523,7 @@ namespace pkmn
             get_game()
         );
 
-        if(not item.holdable() and (held_item != "None"))
+        if(!item.holdable() && (held_item != pkmn::e_item::NONE))
         {
             throw std::invalid_argument("This item is not holdable.");
         }
@@ -781,23 +783,32 @@ namespace pkmn
                                       );
     }
 
-    std::string pokemon_gcnimpl::get_ball()
+    pkmn::e_ball pokemon_gcnimpl::get_ball()
     {
         boost::lock_guard<pokemon_gcnimpl> lock(*this);
 
-        return pkmn::database::ball_id_to_name(int(_libpkmgc_pokemon_uptr->ballCaughtWith));
+        pkmn::e_ball ball = pkmn::e_ball(_libpkmgc_pokemon_uptr->ballCaughtWith);
+        if((ball < pkmn::e_ball::NONE) || (ball > pkmn::e_ball::PREMIER_BALL))
+        {
+            ball = pkmn::e_ball::INVALID;
+        }
+
+        return ball;
     }
 
     void pokemon_gcnimpl::set_ball(
-        const std::string& ball
+        pkmn::e_ball ball
     )
     {
         boost::lock_guard<pokemon_gcnimpl> lock(*this);
 
         // Try and instantiate an item_entry to validate the ball.
-        pkmn::database::item_entry item(ball, get_game());
+        pkmn::database::item_entry item(
+            pkmn::database::ball_to_item(ball),
+            get_game()
+        );
 
-        _libpkmgc_pokemon_uptr->ballCaughtWith = LibPkmGC::ItemIndex(item.get_item_index());
+        _libpkmgc_pokemon_uptr->ballCaughtWith = LibPkmGC::ItemIndex(ball);
     }
 
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -20,8 +20,9 @@ class item_entry_none_test: public ::testing::TestWithParam<pkmn::e_game> {};
 
 TEST_P(item_entry_none_test, item_entry_none_test)
 {
-    pkmn::database::item_entry none_entry("None", GetParam());
+    pkmn::database::item_entry none_entry(pkmn::e_item::NONE, GetParam());
 
+    EXPECT_EQ(pkmn::e_item::NONE, none_entry.get_item());
     EXPECT_EQ("None", none_entry.get_name());
     EXPECT_EQ("None", none_entry.get_category());
     EXPECT_EQ("None", none_entry.get_pocket());
@@ -44,7 +45,8 @@ INSTANTIATE_TEST_CASE_P(
 class item_entry_test: public ::testing::Test
 {
     public:
-        static void SetUpTestCase() {
+        static void SetUpTestCase()
+        {
             byindex_gen1 = pkmn::database::item_entry(20, 1);
             byindex_gen2 = pkmn::database::item_entry(104, 5);
             byindex_gba  = pkmn::database::item_entry(148, 9);
@@ -52,13 +54,13 @@ class item_entry_test: public ::testing::Test
             byindex_gen4 = pkmn::database::item_entry(492, 16);
             byindex_gen5 = pkmn::database::item_entry(638, 21);
             byindex_gen6 = pkmn::database::item_entry(769, 25);
-            byname_gen1  = pkmn::database::item_entry("Potion", pkmn::e_game::RED);
-            byname_gen2  = pkmn::database::item_entry("Pink Bow", pkmn::e_game::SILVER);
-            byname_gba   = pkmn::database::item_entry("Razz Berry", pkmn::e_game::EMERALD);
-            byname_gcn   = pkmn::database::item_entry("Battle CD 03", pkmn::e_game::XD);
-            byname_gen4  = pkmn::database::item_entry("Fast Ball", pkmn::e_game::SOULSILVER);
-            byname_gen5  = pkmn::database::item_entry("Reveal Glass", pkmn::e_game::BLACK2);
-            byname_gen6  = pkmn::database::item_entry("Salamencite", pkmn::e_game::OMEGA_RUBY);
+            byname_gen1  = pkmn::database::item_entry(pkmn::e_item::POTION, pkmn::e_game::RED);
+            byname_gen2  = pkmn::database::item_entry(pkmn::e_item::PINK_BOW, pkmn::e_game::SILVER);
+            byname_gba   = pkmn::database::item_entry(pkmn::e_item::RAZZ_BERRY, pkmn::e_game::EMERALD);
+            byname_gcn   = pkmn::database::item_entry(pkmn::e_item::BATTLE_CD_03, pkmn::e_game::XD);
+            byname_gen4  = pkmn::database::item_entry(pkmn::e_item::FAST_BALL, pkmn::e_game::SOULSILVER);
+            byname_gen5  = pkmn::database::item_entry(pkmn::e_item::REVEAL_GLASS, pkmn::e_game::BLACK2);
+            byname_gen6  = pkmn::database::item_entry(pkmn::e_item::SALAMENCITE, pkmn::e_game::OMEGA_RUBY);
         }
 
         static pkmn::database::item_entry byindex_gen1, byname_gen1;
@@ -94,140 +96,121 @@ TEST_F(item_entry_test, wrong_game_test)
     // Items from later generations
     EXPECT_THROW(
         pkmn::database::item_entry(
-            "Pink Bow", pkmn::e_game::RED
+            pkmn::e_item::PINK_BOW, pkmn::e_game::RED
         );
     , std::invalid_argument);
     EXPECT_THROW(
         pkmn::database::item_entry(
-            "Razz Berry", pkmn::e_game::SILVER
+            pkmn::e_item::RAZZ_BERRY, pkmn::e_game::SILVER
         );
     , std::invalid_argument);
     EXPECT_THROW(
         pkmn::database::item_entry(
-            "Flame Plate", pkmn::e_game::EMERALD
+            pkmn::e_item::FLAME_PLATE, pkmn::e_game::EMERALD
         );
     , std::invalid_argument);
     EXPECT_THROW(
         pkmn::database::item_entry(
-            "DNA Splicers", pkmn::e_game::PEARL
+            pkmn::e_item::DNA_SPLICERS, pkmn::e_game::PEARL
         )
     , std::invalid_argument);
     EXPECT_THROW(
         pkmn::database::item_entry(
-            "Mega Ring", pkmn::e_game::WHITE
+            pkmn::e_item::MEGA_RING, pkmn::e_game::WHITE
         )
     , std::invalid_argument);
 
     // Items that were only in certain games within a generation
     EXPECT_THROW(
         pkmn::database::item_entry(
-            "GS Ball", pkmn::e_game::GOLD
+            pkmn::e_item::GS_BALL, pkmn::e_game::GOLD
         )
     , std::invalid_argument);
     pkmn::database::item_entry(
-        "GS Ball", pkmn::e_game::CRYSTAL
+        pkmn::e_item::GS_BALL, pkmn::e_game::CRYSTAL
     );
 
     EXPECT_THROW(
         pkmn::database::item_entry(
-            "F-Disk", pkmn::e_game::RUBY
+            pkmn::e_item::F_DISK, pkmn::e_game::RUBY
         )
     , std::invalid_argument);
     pkmn::database::item_entry(
-        "F-Disk", pkmn::e_game::COLOSSEUM
+        pkmn::e_item::F_DISK, pkmn::e_game::COLOSSEUM
     );
     EXPECT_THROW(
         pkmn::database::item_entry(
-            "HM01", pkmn::e_game::COLOSSEUM
+            pkmn::e_item::HM01, pkmn::e_game::COLOSSEUM
         )
     , std::invalid_argument);
     pkmn::database::item_entry(
-        "HM01", pkmn::e_game::RUBY
+        pkmn::e_item::HM01, pkmn::e_game::RUBY
     );
     EXPECT_THROW(
         pkmn::database::item_entry(
-            "Claw Fossil", pkmn::e_game::COLOSSEUM
+            pkmn::e_item::CLAW_FOSSIL, pkmn::e_game::COLOSSEUM
         )
     , std::invalid_argument);
     pkmn::database::item_entry(
-        "Claw Fossil", pkmn::e_game::RUBY
+        pkmn::e_item::CLAW_FOSSIL, pkmn::e_game::RUBY
     );
 
     // Items that didn't make it into later generations
     pkmn::database::item_entry(
-        "Pink Bow", pkmn::e_game::SILVER
+        pkmn::e_item::PINK_BOW, pkmn::e_game::SILVER
     );
     EXPECT_THROW(
         pkmn::database::item_entry(
-            "Pink Bow", pkmn::e_game::RUBY
+            pkmn::e_item::PINK_BOW, pkmn::e_game::RUBY
         )
     , std::invalid_argument);
 }
 
 /*
- * Make sure item entries can be created from any name
- * the item has ever had, even from different games.
+ * Make sure the name returned from item entries reflects its name
+ * from the given game.
  */
 TEST_F(item_entry_test, different_name_test)
 {
     /*
      * Test an item that changed only once.
      */
-
-    pkmn::database::item_entry elixir1("Elixer", pkmn::e_game::RED);
-    pkmn::database::item_entry elixir2("Elixir", pkmn::e_game::RED);
-    EXPECT_TRUE(elixir1 == elixir2);
+    pkmn::database::item_entry elixir1(
+        pkmn::e_item::ELIXIR,
+        pkmn::e_game::RED
+    );
     EXPECT_EQ("Elixer", elixir1.get_name());
-    EXPECT_EQ("Elixer", elixir2.get_name());
-
-    pkmn::database::item_entry elixir3("Elixir", pkmn::e_game::X);
-    pkmn::database::item_entry elixir4("Elixer", pkmn::e_game::X);
-    EXPECT_TRUE(elixir3 == elixir4);
-    EXPECT_EQ("Elixir", elixir3.get_name());
-    EXPECT_EQ("Elixir", elixir4.get_name());
-
-    EXPECT_TRUE(elixir1 != elixir3);
+    pkmn::database::item_entry elixir2(
+        pkmn::e_item::ELIXIR,
+        pkmn::e_game::X
+    );
+    EXPECT_EQ("Elixir", elixir2.get_name());
 
     /*
      * Test an item that changed twice.
      */
-
-    pkmn::database::item_entry dowsing_machine1("Itemfinder", pkmn::e_game::RED);
-    pkmn::database::item_entry dowsing_machine2("Dowsing MCHN", pkmn::e_game::RED);
-    pkmn::database::item_entry dowsing_machine3("Dowsing Machine", pkmn::e_game::RED);
-    EXPECT_TRUE(dowsing_machine1 == dowsing_machine2);
-    EXPECT_TRUE(dowsing_machine2 == dowsing_machine3);
+    pkmn::database::item_entry dowsing_machine1(
+        pkmn::e_item::DOWSING_MACHINE,
+        pkmn::e_game::RED
+    );
     EXPECT_EQ("Itemfinder", dowsing_machine1.get_name());
-    EXPECT_EQ("Itemfinder", dowsing_machine2.get_name());
-    EXPECT_EQ("Itemfinder", dowsing_machine3.get_name());
-
-    pkmn::database::item_entry dowsing_machine4("Itemfinder", pkmn::e_game::HEARTGOLD);
-    pkmn::database::item_entry dowsing_machine5("Dowsing MCHN", pkmn::e_game::HEARTGOLD);
-    pkmn::database::item_entry dowsing_machine6("Dowsing Machine", pkmn::e_game::HEARTGOLD);
-    EXPECT_TRUE(dowsing_machine4 == dowsing_machine5);
-    EXPECT_TRUE(dowsing_machine5 == dowsing_machine6);
-    EXPECT_EQ("Dowsing MCHN", dowsing_machine4.get_name());
-    EXPECT_EQ("Dowsing MCHN", dowsing_machine5.get_name());
-    EXPECT_EQ("Dowsing MCHN", dowsing_machine6.get_name());
-
-    pkmn::database::item_entry dowsing_machine7("Itemfinder", pkmn::e_game::X);
-    pkmn::database::item_entry dowsing_machine8("Dowsing MCHN", pkmn::e_game::X);
-    pkmn::database::item_entry dowsing_machine9("Dowsing Machine", pkmn::e_game::X);
-    EXPECT_TRUE(dowsing_machine7 == dowsing_machine8);
-    EXPECT_TRUE(dowsing_machine8 == dowsing_machine9);
-    EXPECT_EQ("Dowsing Machine", dowsing_machine7.get_name());
-    EXPECT_EQ("Dowsing Machine", dowsing_machine8.get_name());
-    EXPECT_EQ("Dowsing Machine", dowsing_machine9.get_name());
-
-    EXPECT_TRUE(dowsing_machine1 != dowsing_machine4);
-    EXPECT_TRUE(dowsing_machine4 != dowsing_machine7);
-    EXPECT_TRUE(dowsing_machine1 != dowsing_machine7);
+    pkmn::database::item_entry dowsing_machine2(
+        pkmn::e_item::DOWSING_MACHINE,
+        pkmn::e_game::HEARTGOLD
+    );
+    EXPECT_EQ("Dowsing MCHN", dowsing_machine2.get_name());
+    pkmn::database::item_entry dowsing_machine3(
+        pkmn::e_item::DOWSING_MACHINE,
+        pkmn::e_game::X
+    );
+    EXPECT_EQ("Dowsing Machine", dowsing_machine3.get_name());
 }
 
 static void invalid_index_test(
-    const pkmn::database::item_entry &entry
+    const pkmn::database::item_entry& entry
 )
 {
+    EXPECT_EQ(pkmn::e_item::INVALID, entry.get_item());
     EXPECT_EQ("Invalid (0x258)", entry.get_name());
     EXPECT_EQ("Unknown", entry.get_category());
     EXPECT_EQ("Unknown", entry.get_pocket());
@@ -252,7 +235,7 @@ TEST_F(item_entry_test, invalid_index_test)
 }
 
 static void tmhm_entry_check_move(
-    const pkmn::database::item_entry &tmhm_entry,
+    const pkmn::database::item_entry& tmhm_entry,
     const std::string& move
 )
 {
@@ -267,51 +250,51 @@ static void tmhm_entry_check_move(
 TEST_F(item_entry_test, tmhm_test)
 {
     pkmn::database::item_entry tm16_gen1(
-        "TM16", pkmn::e_game::RED
+        pkmn::e_item::TM16, pkmn::e_game::RED
     );
     pkmn::database::item_entry tm16_gen2(
-        "TM16", pkmn::e_game::SILVER
+        pkmn::e_item::TM16, pkmn::e_game::SILVER
     );
     pkmn::database::item_entry tm16_gen3(
-        "TM16", pkmn::e_game::XD
+        pkmn::e_item::TM16, pkmn::e_game::XD
     );
     tmhm_entry_check_move(tm16_gen1, "Pay Day");
     tmhm_entry_check_move(tm16_gen2, "Icy Wind");
     tmhm_entry_check_move(tm16_gen3, "Light Screen");
 
     pkmn::database::item_entry tm83_gen4(
-        "TM83", pkmn::e_game::PLATINUM
+        pkmn::e_item::TM83, pkmn::e_game::PLATINUM
     );
     pkmn::database::item_entry tm83_gen5(
-        "TM83", pkmn::e_game::WHITE
+        pkmn::e_item::TM83, pkmn::e_game::WHITE
     );
     pkmn::database::item_entry tm83_gen6(
-        "TM83", pkmn::e_game::OMEGA_RUBY
+        pkmn::e_item::TM83, pkmn::e_game::OMEGA_RUBY
     );
     tmhm_entry_check_move(tm83_gen4, "Natural Gift");
     tmhm_entry_check_move(tm83_gen5, "Work Up");
     tmhm_entry_check_move(tm83_gen6, "Infestation");
 
     pkmn::database::item_entry tm83_xy(
-        "TM94", pkmn::e_game::Y
+        pkmn::e_item::TM94, pkmn::e_game::Y
     );
     pkmn::database::item_entry tm83_oras(
-        "TM94", pkmn::e_game::ALPHA_SAPPHIRE
+        pkmn::e_item::TM94, pkmn::e_game::ALPHA_SAPPHIRE
     );
     tmhm_entry_check_move(tm83_xy, "Rock Smash");
     tmhm_entry_check_move(tm83_oras, "Secret Power");
 
     pkmn::database::item_entry hm05_gen3(
-        "HM05", pkmn::e_game::EMERALD
+        pkmn::e_item::HM05, pkmn::e_game::EMERALD
     );
     pkmn::database::item_entry hm05_dppt(
-        "HM05", pkmn::e_game::DIAMOND
+        pkmn::e_item::HM05, pkmn::e_game::DIAMOND
     );
     pkmn::database::item_entry hm05_hgss(
-        "HM05", pkmn::e_game::SOULSILVER
+        pkmn::e_item::HM05, pkmn::e_game::SOULSILVER
     );
     pkmn::database::item_entry hm05_gen5(
-        "HM05", pkmn::e_game::BLACK
+        pkmn::e_item::HM05, pkmn::e_game::BLACK
     );
     tmhm_entry_check_move(hm05_gen3, "Flash");
     tmhm_entry_check_move(hm05_dppt, "Defog");
@@ -321,12 +304,12 @@ TEST_F(item_entry_test, tmhm_test)
     // Gamecube games have no HMs
     EXPECT_THROW(
         pkmn::database::item_entry hm01_gcn(
-            "HM01", pkmn::e_game::COLOSSEUM
+            pkmn::e_item::HM01, pkmn::e_game::COLOSSEUM
         )
     , std::invalid_argument);
     EXPECT_THROW(
         pkmn::database::item_entry hm01_gcn(
-            "HM01", pkmn::e_game::XD
+            pkmn::e_item::HM01, pkmn::e_game::XD
         )
     , std::invalid_argument);
 }
@@ -350,13 +333,13 @@ TEST_F(item_entry_test, equality_test)
 }
 
 static void _item_entry_test(
-    const pkmn::database::item_entry &item_entry_gen1,
-    const pkmn::database::item_entry &item_entry_gen2,
-    const pkmn::database::item_entry &item_entry_gba,
-    const pkmn::database::item_entry &item_entry_gcn,
-    const pkmn::database::item_entry &item_entry_gen4,
-    const pkmn::database::item_entry &item_entry_gen5,
-    const pkmn::database::item_entry &item_entry_gen6
+    const pkmn::database::item_entry& item_entry_gen1,
+    const pkmn::database::item_entry& item_entry_gen2,
+    const pkmn::database::item_entry& item_entry_gba,
+    const pkmn::database::item_entry& item_entry_gcn,
+    const pkmn::database::item_entry& item_entry_gen4,
+    const pkmn::database::item_entry& item_entry_gen5,
+    const pkmn::database::item_entry& item_entry_gen6
 )
 {
     /*
@@ -366,6 +349,7 @@ static void _item_entry_test(
      */
 
     // Generation I entry
+    EXPECT_EQ(pkmn::e_item::POTION, item_entry_gen1.get_item());
     EXPECT_EQ("Potion", item_entry_gen1.get_name());
     EXPECT_EQ(pkmn::e_game::RED, item_entry_gen1.get_game());
     EXPECT_EQ("Healing", item_entry_gen1.get_category());
@@ -377,6 +361,7 @@ static void _item_entry_test(
     EXPECT_EQ("None", item_entry_gen1.get_fling_effect());
 
     // Generation II entry
+    EXPECT_EQ(pkmn::e_item::PINK_BOW, item_entry_gen2.get_item());
     EXPECT_EQ("Pink Bow", item_entry_gen2.get_name());
     EXPECT_EQ(pkmn::e_game::SILVER, item_entry_gen2.get_game());
     EXPECT_EQ("Stat boosts", item_entry_gen2.get_category());
@@ -388,6 +373,7 @@ static void _item_entry_test(
     EXPECT_EQ("None", item_entry_gen2.get_fling_effect());
 
     // GBA entry
+    EXPECT_EQ(pkmn::e_item::RAZZ_BERRY, item_entry_gba.get_item());
     EXPECT_EQ("Razz Berry", item_entry_gba.get_name());
     EXPECT_EQ(pkmn::e_game::EMERALD, item_entry_gba.get_game());
     EXPECT_EQ("Baking only", item_entry_gba.get_category());
@@ -399,6 +385,7 @@ static void _item_entry_test(
     EXPECT_EQ("None", item_entry_gba.get_fling_effect());
 
     // Gamecube entry
+    EXPECT_EQ(pkmn::e_item::BATTLE_CD_03, item_entry_gcn.get_item());
     EXPECT_EQ("Battle CD 03", item_entry_gcn.get_name());
     EXPECT_EQ(pkmn::e_game::XD, item_entry_gcn.get_game());
     EXPECT_EQ("Battle CDs", item_entry_gcn.get_category());
@@ -410,6 +397,7 @@ static void _item_entry_test(
     EXPECT_EQ("None", item_entry_gcn.get_fling_effect());
 
     // Generation IV entry
+    EXPECT_EQ(pkmn::e_item::FAST_BALL, item_entry_gen4.get_item());
     EXPECT_EQ("Fast Ball", item_entry_gen4.get_name());
     EXPECT_EQ(pkmn::e_game::SOULSILVER, item_entry_gen4.get_game());
     EXPECT_EQ("Apricorn balls", item_entry_gen4.get_category());
@@ -421,6 +409,7 @@ static void _item_entry_test(
     EXPECT_EQ("None", item_entry_gen4.get_fling_effect());
 
     // Generation V entry
+    EXPECT_EQ(pkmn::e_item::REVEAL_GLASS, item_entry_gen5.get_item());
     EXPECT_EQ("Reveal Glass", item_entry_gen5.get_name());
     EXPECT_EQ(pkmn::e_game::BLACK2, item_entry_gen5.get_game());
     EXPECT_EQ("Gameplay", item_entry_gen5.get_category());
@@ -432,6 +421,7 @@ static void _item_entry_test(
     EXPECT_EQ("None", item_entry_gen5.get_fling_effect());
 
     // Generation VI entry
+    EXPECT_EQ(pkmn::e_item::SALAMENCITE, item_entry_gen6.get_item());
     EXPECT_EQ("Salamencite", item_entry_gen6.get_name());
     EXPECT_EQ(pkmn::e_game::OMEGA_RUBY, item_entry_gen6.get_game());
     EXPECT_EQ("Mega Stones", item_entry_gen6.get_category());
