@@ -32,6 +32,7 @@ SET(cpp_tests
     cpp_breeding_test
     cpp_calculations_test
     cpp_daycare_test
+    cpp_enum_test
     cpp_exception_test
     cpp_game_save_test
     cpp_lists_test
