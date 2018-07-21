@@ -13,6 +13,7 @@
 
 // Convert getter/setter functions into attributes for more idiomatic C#.
 
+%attributestring(pkmn::database::item_entry, pkmn::e_item, Item, get_item);
 %attributestring(pkmn::database::item_entry, std::string, Name, get_name);
 %attribute(pkmn::database::item_entry, pkmn::e_game, Game, get_game);
 %attributestring(pkmn::database::item_entry, std::string, Category, get_category);

@@ -278,11 +278,11 @@ public class GameSaveTest
         {
             if(i < numPokemon)
             {
-                Assert.AreNotEqual(party[i].Species, "None");
+                Assert.AreNotEqual(party[i].Species, PKMN.Species.NONE);
             }
             else
             {
-                Assert.AreEqual(party[i].Species, "None");
+                Assert.AreEqual(party[i].Species, PKMN.Species.NONE);
             }
         }
 
@@ -302,11 +302,11 @@ public class GameSaveTest
                 {
                     if(j < numPokemon)
                     {
-                        Assert.AreNotEqual(box[j].Species, "None");
+                        Assert.AreNotEqual(box[j].Species, PKMN.Species.NONE);
                     }
                     else
                     {
-                        Assert.AreEqual(box[j].Species, "None");
+                        Assert.AreEqual(box[j].Species, PKMN.Species.NONE);
                     }
                 }
             }
@@ -320,8 +320,8 @@ public class GameSaveTest
 
             for(int partyIndex = 0; partyIndex < party.Length; ++partyIndex)
             {
-                string species = party[partyIndex].Species;
-                if(!species.Equals("None") && !party[partyIndex].IsEgg)
+                PKMN.Species species = party[partyIndex].Species;
+                if((species != PKMN.Species.NONE) && !party[partyIndex].IsEgg)
                 {
                     Assert.IsTrue(pokedex.SeenPokemonMap[species]);
                     Assert.IsTrue(pokedex.CaughtPokemonMap[species]);
@@ -333,8 +333,8 @@ public class GameSaveTest
                 PKMN.PokemonBox box = pokemonPC[PCIndex];
                 for(int boxIndex = 0; boxIndex < box.Length; ++boxIndex)
                 {
-                    string species = box[boxIndex].Species;
-                    if(!species.Equals("None") && !box[boxIndex].IsEgg)
+                    PKMN.Species species = box[boxIndex].Species;
+                    if((species != PKMN.Species.NONE) && !box[boxIndex].IsEgg)
                     {
                         Assert.IsTrue(pokedex.SeenPokemonMap[species]);
                         Assert.IsTrue(pokedex.CaughtPokemonMap[species]);
@@ -346,8 +346,8 @@ public class GameSaveTest
             // added to the Pokédex. Manually remove the test species from the
             // Pokédex to confirm this behavior.
 
-            string testSpecies1 = "Bulbasaur";
-            string testSpecies2 = "Charmander";
+            PKMN.Species testSpecies1 = PKMN.Species.BULBASAUR;
+            PKMN.Species testSpecies2 = PKMN.Species.CHARMANDER;
 
             pokedex.SeenPokemonMap[testSpecies1] = false;
             Assert.IsFalse(pokedex.SeenPokemonMap[testSpecies1]);
@@ -436,18 +436,18 @@ public class GameSaveTest
 
     private static void RandomizePokemon(
         PKMN.GameSave gameSave,
-        PKMN.StringList itemList
+        PKMN.ItemEnumList itemList
     )
     {
         PKMN.Game game = gameSave.Game;
 
-        PKMN.StringList moveList = PKMN.Database.Lists.MoveList(game);
-        PKMN.StringList pokemonList = PKMN.Database.Lists.PokemonList(1, true);
+        PKMN.StringList moveNameList = PKMN.Database.Lists.MoveNameList(game);
+        PKMN.SpeciesEnumList pokemonList = PKMN.Database.Lists.PokemonList(1, true);
 
         PKMN.PokemonParty party = gameSave.PokemonParty;
         for(int i = 0; i < 6; ++i)
         {
-            party[i] = Util.GetRandomPokemon(game, itemList, moveList, pokemonList);
+            party[i] = Util.GetRandomPokemon(game, itemList, moveNameList, pokemonList);
         }
 
         PKMN.PokemonPC PC = gameSave.PokemonPC;
@@ -456,7 +456,7 @@ public class GameSaveTest
             PKMN.PokemonBox box = PC[i];
             for(int j = 0; j < box.Length; ++j)
             {
-                box[j] = Util.GetRandomPokemon(game, itemList, moveList, pokemonList);
+                box[j] = Util.GetRandomPokemon(game, itemList, moveNameList, pokemonList);
             }
         }
     }
@@ -625,7 +625,7 @@ public class GameSaveTest
         Assert.AreEqual(gameSave.Filepath, saveFilepath);
         Assert.AreEqual(gameSave.Game, game);
 
-        PKMN.StringList itemList = PKMN.Database.Lists.ItemList(game);
+        PKMN.ItemEnumList itemList = PKMN.Database.Lists.ItemList(game);
 
         TestCommonFields(gameSave);
         TestAttributes(gameSave);

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -13,14 +13,24 @@ namespace PKMNTest
 
 public class Gen1ItemsTest
 {
-    private static string[] ItemNames =
+    private static PKMN.Item[] Items =
     {
-        "Potion", "Great Ball", "Ether", "PP Up",
-        "TM34", "Moon Stone", "Bicycle", "Full Heal"
+        PKMN.Item.POTION,
+        PKMN.Item.GREAT_BALL,
+        PKMN.Item.ETHER,
+        PKMN.Item.PP_UP,
+        PKMN.Item.TM34,
+        PKMN.Item.MOON_STONE,
+        PKMN.Item.BICYCLE,
+        PKMN.Item.FULL_HEAL
     };
-    private static string[] WrongGenerationItemNames =
+    private static PKMN.Item[] WrongGenerationItems =
     {
-        "Amulet Coin", "Apicot Berry", "Air Mail", "Air Balloon", "Aqua Suit"
+        PKMN.Item.AMULET_COIN,
+        PKMN.Item.APICOT_BERRY,
+        PKMN.Item.AIR_MAIL,
+        PKMN.Item.AIR_BALLOON,
+        PKMN.Item.AQUA_SUIT
     };
 
     public static void ItemListCommon(
@@ -34,26 +44,28 @@ public class Gen1ItemsTest
         // Confirm exceptions are thrown when expected.
         ItemsTestsCommon.TestItemListIndexOutOfRangeException(
             itemList,
-            "Potion"
+            PKMN.Item.POTION
         );
 
         // Confirm items from later generations can't be added.
         ItemsTestsCommon.TestItemListInvalidItems(
             itemList,
-            WrongGenerationItemNames
+            WrongGenerationItems
         );
 
         // Start adding and removing stuff, and make sure the numbers are accurate.
         ItemsTestsCommon.TestItemListSettingItems(
             itemList,
-            ItemNames
+            Items
         );
         ItemsTestsCommon.TestItemListAddingAndRemovingItems(
             itemList,
-            ItemNames
+            Items
         );
 
-        PKMN.StringList fullItemList = PKMN.Database.Lists.ItemList(game);
+        PKMN.ItemEnumList fullItemList = PKMN.Database.Lists.ItemList(game);
+
+        Assert.AreEqual(itemList.ValidItems.Count, itemList.ValidItemNames.Count);
         Assert.AreEqual(itemList.ValidItems.Count, fullItemList.Count);
     }
 
@@ -97,7 +109,7 @@ public class Gen1ItemsTest
         // Confirm items from later generations can't be added.
         ItemsTestsCommon.TestItemBagInvalidItems(
             itemBag,
-            WrongGenerationItemNames
+            WrongGenerationItems
         );
 
         ItemListTest(itemBag["Items"], game);
@@ -109,28 +121,28 @@ public class Gen1ItemsTest
         for(int i = 0; i < 8; ++i)
         {
             itemBag.Add(
-                ItemNames[i],
+                Items[i],
                 i+1
             );
         }
         for(int i = 0; i < 8; ++i)
         {
-            Assert.AreEqual(itemPocket[i].Item, ItemNames[i]);
+            Assert.AreEqual(itemPocket[i].Item, Items[i]);
             Assert.AreEqual(itemPocket[i].Amount, i+1);
         }
-        Assert.AreEqual(itemPocket[8].Item, "None");
+        Assert.AreEqual(itemPocket[8].Item, PKMN.Item.NONE);
         Assert.AreEqual(itemPocket[8].Amount, 0);
 
         for(int i = 0; i < 8; ++i)
         {
             itemBag.Remove(
-                ItemNames[i],
+                Items[i],
                 i+1
             );
         }
         for(int i = 0; i < 9; ++i)
         {
-            Assert.AreEqual(itemPocket[i].Item, "None");
+            Assert.AreEqual(itemPocket[i].Item, PKMN.Item.NONE);
             Assert.AreEqual(itemPocket[i].Amount, 0);
         }
     }

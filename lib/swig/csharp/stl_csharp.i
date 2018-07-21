@@ -9,15 +9,33 @@
 PKMN_CSHARP_INIT
 
 %{
-    #include <pkmn/enums/stat.hpp>
+    #include <pkmn/enums/enum_to_string.hpp>
 %}
 
 /*
  * This file contains STL containers with either pure STL types or with LibPKMN
- * enums.
+ * enums. For convenience, the enums will be here as well.
  */
 
 %include <pkmn/enums/stat.hpp>
+%include <pkmn/enums/ability.hpp>
+%include <pkmn/enums/ball.hpp>
+%include <pkmn/enums/condition.hpp>
+%include <pkmn/enums/egg_group.hpp>
+%include <pkmn/enums/game.hpp>
+%include <pkmn/enums/gender.hpp>
+%include <pkmn/enums/item.hpp>
+%include <pkmn/enums/language.hpp>
+
+%rename(SING) SING_MOVE;
+%include <pkmn/enums/move.hpp>
+
+%include <pkmn/enums/move_damage_class.hpp>
+%include <pkmn/enums/nature.hpp>
+%include <pkmn/enums/species.hpp>
+%include <pkmn/enums/stat.hpp>
+%include <pkmn/enums/type.hpp>
+
 %include <std_string.i>
 
 // std::map
@@ -28,6 +46,19 @@ PKMN_CSHARP_PAIR(int,         int,         int,    int,    IntPair)
 PKMN_CSHARP_PAIR(std::string, std::string, string, string, StringPair)
 
 // std::vector
-PKMN_CSHARP_VECTOR(int,          int,       IntList)
-PKMN_CSHARP_VECTOR(std::string,  string,    StringList)
-PKMN_CSHARP_VECTOR(pkmn::e_stat, Stat, StatList);
+PKMN_CSHARP_VECTOR(int,                       int,                  IntList)
+PKMN_CSHARP_VECTOR(std::string,               string,               StringList)
+PKMN_CSHARP_VECTOR(pkmn::e_ability,           PKMN.Ability,         AbilityEnumList);
+PKMN_CSHARP_VECTOR(pkmn::e_ball,              PKMN.Ball,            BallEnumList);
+PKMN_CSHARP_VECTOR(pkmn::e_condition,         PKMN.Condition,       ConditionEnumList);
+PKMN_CSHARP_VECTOR(pkmn::e_egg_group,         PKMN.EggGroup,        EggGroupEnumList);
+PKMN_CSHARP_VECTOR(pkmn::e_game,              PKMN.Game,            GameEnumList);
+PKMN_CSHARP_VECTOR(pkmn::e_gender,            PKMN.Gender,          GenderEnumList);
+PKMN_CSHARP_VECTOR(pkmn::e_item,              PKMN.Item,            ItemEnumList);
+PKMN_CSHARP_VECTOR(pkmn::e_language,          PKMN.Language,        LanguageEnumList);
+PKMN_CSHARP_VECTOR(pkmn::e_move,              PKMN.Move,            MoveEnumList);
+PKMN_CSHARP_VECTOR(pkmn::e_move_damage_class, PKMN.MoveDamageClass, MoveDamageClassEnumList);
+PKMN_CSHARP_VECTOR(pkmn::e_nature,            PKMN.Nature,          NatureEnumList);
+PKMN_CSHARP_VECTOR(pkmn::e_species,           PKMN.Species,         SpeciesEnumList);
+PKMN_CSHARP_VECTOR(pkmn::e_stat,              PKMN.Stat,            StatEnumList);
+PKMN_CSHARP_VECTOR(pkmn::e_type,              PKMN.Type,            TypeEnumList);

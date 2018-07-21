@@ -21,8 +21,8 @@ public class CSharpGUITest
     {
         PKMN.GUI.AbilityListComboBox abilityListComboBox = new PKMN.GUI.AbilityListComboBox(6);
         Assert.AreEqual(abilityListComboBox.Items.Count, 191);
-        Assert.AreEqual(abilityListComboBox.Items[0], "Adaptability");
-        Assert.AreEqual(abilityListComboBox.Items[190], "Zen Mode");
+        Assert.AreEqual(abilityListComboBox.Items[0], "Stench");
+        Assert.AreEqual(abilityListComboBox.Items[190], "Delta Stream");
     }
 
     [Test]
@@ -39,8 +39,8 @@ public class CSharpGUITest
     {
         PKMN.GUI.ItemListComboBox itemListComboBox = new PKMN.GUI.ItemListComboBox(PKMN.Game.HEARTGOLD);
         Assert.AreEqual(itemListComboBox.Items.Count, 513);
-        Assert.AreEqual(itemListComboBox.Items[0], "Adamant Orb");
-        Assert.AreEqual(itemListComboBox.Items[512], "Zoom Lens");
+        Assert.AreEqual(itemListComboBox.Items[0], "Master Ball");
+        Assert.AreEqual(itemListComboBox.Items[512], "Photo Album");
     }
 
     [Test]
@@ -254,7 +254,7 @@ public class CSharpGUITest
     [Test]
     public void PokemonImageTest()
     {
-        PKMN.Pokemon pokemon = new PKMN.Pokemon("Bulbasaur", PKMN.Game.RED, "", 5);
+        PKMN.Pokemon pokemon = new PKMN.Pokemon(PKMN.Species.BULBASAUR, PKMN.Game.RED, "", 5);
 
         // These calls succeeding is enough to show that the image (or the image
         // generated for Mono) was loaded successfully.
@@ -265,7 +265,7 @@ public class CSharpGUITest
     [Test]
     public void PokemonDatabaseEntryImageTest()
     {
-        PKMN.Database.PokemonEntry pokemonEntry = new PKMN.Database.PokemonEntry("Bulbasaur", PKMN.Game.RED, "");
+        PKMN.Database.PokemonEntry pokemonEntry = new PKMN.Database.PokemonEntry(PKMN.Species.BULBASAUR, PKMN.Game.RED, "");
 
         // These calls succeeding is enough to show that the image (or the image
         // generated for Mono) was loaded successfully.

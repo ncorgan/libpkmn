@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -16,10 +16,10 @@ public class PokemonTestParams
     public PokemonTestParams() {}
 
     public PokemonTestParams(
-        string validBall,
-        string[] invalidBalls,
-        string validItem,
-        string[] invalidItems,
+        PKMN.Ball validBall,
+        PKMN.Ball[] invalidBalls,
+        PKMN.Item validItem,
+        PKMN.Item[] invalidItems,
         string expectedOriginalLocation,
         string[] validLocations,
         string[] invalidLocations,
@@ -42,11 +42,11 @@ public class PokemonTestParams
         InvalidOriginalGames = invalidOriginalGames;
     }
 
-    public string ValidBall;
-    public string[] InvalidBalls;
+    public PKMN.Ball ValidBall;
+    public PKMN.Ball[] InvalidBalls;
 
-    public string ValidItem;
-    public string[] InvalidItems;
+    public PKMN.Item ValidItem;
+    public PKMN.Item[] InvalidItems;
 
     public string ExpectedOriginalLocation;
     public string[] ValidLocations;

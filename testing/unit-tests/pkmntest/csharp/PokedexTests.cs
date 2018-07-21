@@ -30,7 +30,7 @@ public class PokedexTests
 
         // Set random Pokémon to be seen and caught.
 
-        PKMN.StringList allPokemon = PKMN.Database.Lists.PokemonList(generation, true);
+        PKMN.SpeciesEnumList allPokemon = PKMN.Database.Lists.PokemonList(generation, true);
         int numSeen = rng.Next(0, allPokemon.Count);
         int numCaught = rng.Next(0, allPokemon.Count);
 
@@ -42,7 +42,7 @@ public class PokedexTests
             {
                 allSeenNums.Add(index);
 
-                string species = allPokemon[index];
+                PKMN.Species species = allPokemon[index];
                 pokedex.SeenPokemonMap[species] = true;
                 Assert.IsTrue(pokedex.SeenPokemonMap[species]);
             }
@@ -58,7 +58,7 @@ public class PokedexTests
             {
                 allCaughtNums.Add(index);
 
-                string species = allPokemon[index];
+                PKMN.Species species = allPokemon[index];
                 pokedex.CaughtPokemonMap[species] = true;
                 Assert.IsTrue(pokedex.CaughtPokemonMap[species]);
             }
@@ -68,7 +68,7 @@ public class PokedexTests
 
         // Remove all entries.
 
-        foreach(string species in pokedex.AllSeen)
+        foreach(PKMN.Species species in pokedex.AllSeen)
         {
             pokedex.SeenPokemonMap[species] = false;
             Assert.IsFalse(pokedex.SeenPokemonMap[species]);
@@ -76,7 +76,7 @@ public class PokedexTests
         Assert.AreEqual(0, pokedex.NumSeen);
         Assert.AreEqual(0, pokedex.AllSeen.Count);
 
-        foreach(string species in pokedex.AllCaught)
+        foreach(PKMN.Species species in pokedex.AllCaught)
         {
             pokedex.CaughtPokemonMap[species] = false;
             Assert.IsFalse(pokedex.CaughtPokemonMap[species]);

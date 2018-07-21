@@ -8,6 +8,8 @@
 using System;
 using NUnit.Framework;
 
+// TODO: enum vectors
+
 [TestFixture]
 public class CSharpEqualityHashCodeTest
 {
@@ -38,11 +40,11 @@ public class CSharpEqualityHashCodeTest
     [Test]
     public void ItemEntryTest()
     {
-        PKMN.Database.ItemEntry itemEntry = new PKMN.Database.ItemEntry("Potion", PKMN.Game.RED);
+        PKMN.Database.ItemEntry itemEntry = new PKMN.Database.ItemEntry(PKMN.Item.POTION, PKMN.Game.RED);
 
-        PKMN.Database.ItemEntry itemEntrySame = new PKMN.Database.ItemEntry("Potion", PKMN.Game.RED);
-        PKMN.Database.ItemEntry itemEntryDifferentItem = new PKMN.Database.ItemEntry("Great Ball", PKMN.Game.RED);
-        PKMN.Database.ItemEntry itemEntryDifferentGame = new PKMN.Database.ItemEntry("Potion", PKMN.Game.BLUE);
+        PKMN.Database.ItemEntry itemEntrySame = new PKMN.Database.ItemEntry(PKMN.Item.POTION, PKMN.Game.RED);
+        PKMN.Database.ItemEntry itemEntryDifferentItem = new PKMN.Database.ItemEntry(PKMN.Item.GREAT_BALL, PKMN.Game.RED);
+        PKMN.Database.ItemEntry itemEntryDifferentGame = new PKMN.Database.ItemEntry(PKMN.Item.POTION, PKMN.Game.BLUE);
 
         Assert.AreEqual(itemEntry, itemEntry);
         Assert.AreEqual(itemEntry, itemEntrySame);
@@ -137,12 +139,12 @@ public class CSharpEqualityHashCodeTest
     [Test]
     public void PokemonEntryTest()
     {
-        PKMN.Database.PokemonEntry pokemonEntry = new PKMN.Database.PokemonEntry("Venusaur", PKMN.Game.OMEGA_RUBY, "");
+        PKMN.Database.PokemonEntry pokemonEntry = new PKMN.Database.PokemonEntry(PKMN.Species.VENUSAUR, PKMN.Game.OMEGA_RUBY, "");
 
-        PKMN.Database.PokemonEntry pokemonEntrySame = new PKMN.Database.PokemonEntry("Venusaur", PKMN.Game.OMEGA_RUBY, "");
-        PKMN.Database.PokemonEntry pokemonEntryDifferentPokemon = new PKMN.Database.PokemonEntry("Charizard", PKMN.Game.OMEGA_RUBY, "");
-        PKMN.Database.PokemonEntry pokemonEntryDifferentGame = new PKMN.Database.PokemonEntry("Venusaur", PKMN.Game.RUBY, "");
-        PKMN.Database.PokemonEntry pokemonEntryDifferentForm = new PKMN.Database.PokemonEntry("Venusaur", PKMN.Game.OMEGA_RUBY, "Mega");
+        PKMN.Database.PokemonEntry pokemonEntrySame = new PKMN.Database.PokemonEntry(PKMN.Species.VENUSAUR, PKMN.Game.OMEGA_RUBY, "");
+        PKMN.Database.PokemonEntry pokemonEntryDifferentPokemon = new PKMN.Database.PokemonEntry(PKMN.Species.CHARIZARD, PKMN.Game.OMEGA_RUBY, "");
+        PKMN.Database.PokemonEntry pokemonEntryDifferentGame = new PKMN.Database.PokemonEntry(PKMN.Species.VENUSAUR, PKMN.Game.RUBY, "");
+        PKMN.Database.PokemonEntry pokemonEntryDifferentForm = new PKMN.Database.PokemonEntry(PKMN.Species.VENUSAUR, PKMN.Game.OMEGA_RUBY, "Mega");
 
         Assert.AreEqual(pokemonEntry, pokemonEntry);
         Assert.AreEqual(pokemonEntry, pokemonEntrySame);
@@ -238,7 +240,7 @@ public class CSharpEqualityHashCodeTest
     [Test]
     public void PokemonHelpersTest()
     {
-        PKMN.Pokemon pokemon = new PKMN.Pokemon("Mew", PKMN.Game.RUBY, "", 70);
+        PKMN.Pokemon pokemon = new PKMN.Pokemon(PKMN.Species.MEW, PKMN.Game.RUBY, "", 70);
 
         // The Pokemon class and its helpers all use the underlying pointer
         // in generating their hash codes. Make sure these aren't equal.
@@ -497,35 +499,35 @@ public class CSharpEqualityHashCodeTest
     {
         PKMN.Database.PokemonEntryList pokemonEntryList = new PKMN.Database.PokemonEntryList();
         pokemonEntryList.Add(
-            new PKMN.Database.PokemonEntry("Squirtle", PKMN.Game.BLUE, "")
+            new PKMN.Database.PokemonEntry(PKMN.Species.SQUIRTLE, PKMN.Game.BLUE, "")
         );
         pokemonEntryList.Add(
-            new PKMN.Database.PokemonEntry("Totodile", PKMN.Game.SILVER, "")
+            new PKMN.Database.PokemonEntry(PKMN.Species.TOTODILE, PKMN.Game.SILVER, "")
         );
         pokemonEntryList.Add(
-            new PKMN.Database.PokemonEntry("Mudkip", PKMN.Game.SAPPHIRE, "")
+            new PKMN.Database.PokemonEntry(PKMN.Species.MUDKIP, PKMN.Game.SAPPHIRE, "")
         );
 
         PKMN.Database.PokemonEntryList pokemonEntryListSame = new PKMN.Database.PokemonEntryList();
         pokemonEntryListSame.Add(
-            new PKMN.Database.PokemonEntry("Squirtle", PKMN.Game.BLUE, "")
+            new PKMN.Database.PokemonEntry(PKMN.Species.SQUIRTLE, PKMN.Game.BLUE, "")
         );
         pokemonEntryListSame.Add(
-            new PKMN.Database.PokemonEntry("Totodile", PKMN.Game.SILVER, "")
+            new PKMN.Database.PokemonEntry(PKMN.Species.TOTODILE, PKMN.Game.SILVER, "")
         );
         pokemonEntryListSame.Add(
-            new PKMN.Database.PokemonEntry("Mudkip", PKMN.Game.SAPPHIRE, "")
+            new PKMN.Database.PokemonEntry(PKMN.Species.MUDKIP, PKMN.Game.SAPPHIRE, "")
         );
 
         PKMN.Database.PokemonEntryList pokemonEntryListReversed = new PKMN.Database.PokemonEntryList();
         pokemonEntryListReversed.Add(
-            new PKMN.Database.PokemonEntry("Mudkip", PKMN.Game.SAPPHIRE, "")
+            new PKMN.Database.PokemonEntry(PKMN.Species.MUDKIP, PKMN.Game.SAPPHIRE, "")
         );
         pokemonEntryListReversed.Add(
-            new PKMN.Database.PokemonEntry("Totodile", PKMN.Game.SILVER, "")
+            new PKMN.Database.PokemonEntry(PKMN.Species.TOTODILE, PKMN.Game.SILVER, "")
         );
         pokemonEntryListReversed.Add(
-            new PKMN.Database.PokemonEntry("Squirtle", PKMN.Game.BLUE, "")
+            new PKMN.Database.PokemonEntry(PKMN.Species.SQUIRTLE, PKMN.Game.BLUE, "")
         );
 
         Assert.AreEqual(pokemonEntryList, pokemonEntryList);

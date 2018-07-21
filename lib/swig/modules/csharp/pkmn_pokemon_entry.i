@@ -13,6 +13,7 @@
 
 %attributestring(pkmn::database::pokemon_entry, std::string, Name, get_name);
 %attribute(pkmn::database::pokemon_entry, e_game, Game, get_game);
+%attribute(pkmn::database::pokemon_entry, e_species, SpeciesEnum, get_species_enum);
 %attributestring(pkmn::database::pokemon_entry, std::string, Species, get_species);
 %attributestring(pkmn::database::pokemon_entry, std::string, PokedexEntry, get_pokedex_entry);
 %attributestring(pkmn::database::pokemon_entry, std::string, Form, get_form, set_form);
@@ -48,17 +49,27 @@
     {
         string iconFilepath = this.GetIconFilepath(isFemale);
 
+        /*
+         * Until recent versions, Mono's System.Drawing.Image implementation used
+         * a version of libgdiplus that doesn't support 64bpp PNGs. If this is
+         * the case, this function will write a temporary copy that Mono can import.
+         *
+         * Which exception is thrown depends on the version of libgdiplus.
+         */
         try
         {
             return System.Drawing.Image.FromFile(iconFilepath);
         }
+        catch (System.ArgumentException)
+        {
+            string tmpFilepath = PKMN.ConvertImageForMono(iconFilepath);
+            System.Drawing.Image tmpImage = System.Drawing.Image.FromFile(tmpFilepath);
+            System.IO.File.Delete(tmpFilepath);
+
+            return tmpImage;
+        }
         catch (System.NotSupportedException)
         {
-            /*
-             * Until recent versions, Mono's System.Drawing.Image implementation uses
-             * a version of libgdiplus that doesn't support 64bpp PNGs. If this is
-             * the case, this function will write a temporary copy that Mono can import.
-             */
             string tmpFilepath = PKMN.ConvertImageForMono(iconFilepath);
             System.Drawing.Image tmpImage = System.Drawing.Image.FromFile(tmpFilepath);
             System.IO.File.Delete(tmpFilepath);
@@ -71,17 +82,27 @@
     {
         string spriteFilepath = this.GetSpriteFilepath(isFemale, isShiny);
 
+        /*
+         * Until recent versions, Mono's System.Drawing.Image implementation used
+         * a version of libgdiplus that doesn't support 64bpp PNGs. If this is
+         * the case, this function will write a temporary copy that Mono can import.
+         *
+         * Which exception is thrown depends on the version of libgdiplus.
+         */
         try
         {
             return System.Drawing.Image.FromFile(spriteFilepath);
         }
+        catch (System.ArgumentException)
+        {
+            string tmpFilepath = PKMN.ConvertImageForMono(spriteFilepath);
+            System.Drawing.Image tmpImage = System.Drawing.Image.FromFile(tmpFilepath);
+            System.IO.File.Delete(tmpFilepath);
+
+            return tmpImage;
+        }
         catch (System.NotSupportedException)
         {
-            /*
-             * Until recent versions, Mono's System.Drawing.Image implementation uses
-             * a version of libgdiplus that doesn't support 64bpp PNGs. If this is
-             * the case, this function will write a temporary copy that Mono can import.
-             */
             string tmpFilepath = PKMN.ConvertImageForMono(spriteFilepath);
             System.Drawing.Image tmpImage = System.Drawing.Image.FromFile(tmpFilepath);
             System.IO.File.Delete(tmpFilepath);

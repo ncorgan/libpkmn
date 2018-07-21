@@ -72,38 +72,38 @@ public class CSharpPokemonTest
         PKMNTest.UnownTests.Gen3UnownTest(game);
     }
 
-    [TestCase(PKMN.Game.RED,    "Charmander")]
-    [TestCase(PKMN.Game.BLUE,   "Squirtle")]
-    [TestCase(PKMN.Game.YELLOW, "Bulbasaur")]
+    [TestCase(PKMN.Game.RED,    PKMN.Species.CHARMANDER)]
+    [TestCase(PKMN.Game.BLUE,   PKMN.Species.SQUIRTLE)]
+    [TestCase(PKMN.Game.YELLOW, PKMN.Species.BULBASAUR)]
     public void Gen1PokemonTest(
         PKMN.Game game,
-        string species
+        PKMN.Species species
     )
     {
         PKMNTest.Gen1PokemonTests.PokemonTest(game, species);
     }
 
-    [TestCase(PKMN.Game.GOLD,    "Cyndaquil")]
-    [TestCase(PKMN.Game.SILVER,  "Totodile")]
-    [TestCase(PKMN.Game.CRYSTAL, "Chikorita")]
+    [TestCase(PKMN.Game.GOLD,    PKMN.Species.CYNDAQUIL)]
+    [TestCase(PKMN.Game.SILVER,  PKMN.Species.TOTODILE)]
+    [TestCase(PKMN.Game.CRYSTAL, PKMN.Species.CHIKORITA)]
     public void Gen2PokemonTest(
         PKMN.Game game,
-        string species
+        PKMN.Species species
     )
     {
         PKMNTest.Gen2PokemonTests.PokemonTest(game, species);
     }
 
-    [TestCase(PKMN.Game.RUBY, "Torchic")]
-    [TestCase(PKMN.Game.SAPPHIRE, "Mudkip")]
-    [TestCase(PKMN.Game.EMERALD, "Treecko")]
-    [TestCase(PKMN.Game.FIRERED, "Charmander")]
-    [TestCase(PKMN.Game.LEAFGREEN, "Bulbasaur")]
-    [TestCase(PKMN.Game.COLOSSEUM, "Espeon")]
-    [TestCase(PKMN.Game.XD, "Umbreon")]
+    [TestCase(PKMN.Game.RUBY, PKMN.Species.TORCHIC)]
+    [TestCase(PKMN.Game.SAPPHIRE, PKMN.Species.MUDKIP)]
+    [TestCase(PKMN.Game.EMERALD, PKMN.Species.TREECKO)]
+    [TestCase(PKMN.Game.FIRERED, PKMN.Species.CHARMANDER)]
+    [TestCase(PKMN.Game.LEAFGREEN, PKMN.Species.BULBASAUR)]
+    [TestCase(PKMN.Game.COLOSSEUM, PKMN.Species.ESPEON)]
+    [TestCase(PKMN.Game.XD, PKMN.Species.UMBREON)]
     public void Gen3PokemonTest(
         PKMN.Game game,
-        string species
+        PKMN.Species species
     )
     {
         PKMNTest.Gen3PokemonTests.PokemonTest(game, species);
@@ -156,52 +156,52 @@ public class CSharpPokemonTest
      */
 
     // Generation I -> Generation I
-    [TestCase("Bulbasaur", "", PKMN.Game.RED, PKMN.Game.YELLOW)]
+    [TestCase(PKMN.Species.BULBASAUR, "", PKMN.Game.RED, PKMN.Game.YELLOW)]
 
     // Generation I -> Generation II
-    [TestCase("Squirtle", "", PKMN.Game.BLUE, PKMN.Game.GOLD)]
+    [TestCase(PKMN.Species.SQUIRTLE, "", PKMN.Game.BLUE, PKMN.Game.GOLD)]
 
     // Generation II -> Generation II
-    [TestCase("Cyndaquil", "", PKMN.Game.GOLD, PKMN.Game.CRYSTAL)]
-    [TestCase("Totodile", "", PKMN.Game.CRYSTAL, PKMN.Game.GOLD)]
+    [TestCase(PKMN.Species.CYNDAQUIL, "", PKMN.Game.GOLD, PKMN.Game.CRYSTAL)]
+    [TestCase(PKMN.Species.TOTODILE, "", PKMN.Game.CRYSTAL, PKMN.Game.GOLD)]
 
     // Generation II -> Generation I
-    [TestCase("Charmander", "", PKMN.Game.SILVER, PKMN.Game.BLUE)]
+    [TestCase(PKMN.Species.CHARMANDER, "", PKMN.Game.SILVER, PKMN.Game.BLUE)]
 
     // GBA -> GBA
-    [TestCase("Torchic", "", PKMN.Game.RUBY, PKMN.Game.SAPPHIRE)]
-    [TestCase("Mudkip", "", PKMN.Game.RUBY, PKMN.Game.EMERALD)]
-    [TestCase("Treecko", "", PKMN.Game.RUBY, PKMN.Game.FIRERED)]
-    [TestCase("Torchic", "", PKMN.Game.EMERALD, PKMN.Game.SAPPHIRE)]
-    [TestCase("Mudkip", "", PKMN.Game.EMERALD, PKMN.Game.EMERALD)]
-    [TestCase("Treecko", "", PKMN.Game.EMERALD, PKMN.Game.FIRERED)]
-    [TestCase("Charmander", "", PKMN.Game.FIRERED, PKMN.Game.SAPPHIRE)]
-    [TestCase("Squirtle", "", PKMN.Game.FIRERED, PKMN.Game.EMERALD)]
-    [TestCase("Bulbasaur", "", PKMN.Game.FIRERED, PKMN.Game.FIRERED)]
+    [TestCase(PKMN.Species.TORCHIC, "", PKMN.Game.RUBY, PKMN.Game.SAPPHIRE)]
+    [TestCase(PKMN.Species.MUDKIP, "", PKMN.Game.RUBY, PKMN.Game.EMERALD)]
+    [TestCase(PKMN.Species.TREECKO, "", PKMN.Game.RUBY, PKMN.Game.FIRERED)]
+    [TestCase(PKMN.Species.TORCHIC, "", PKMN.Game.EMERALD, PKMN.Game.SAPPHIRE)]
+    [TestCase(PKMN.Species.MUDKIP, "", PKMN.Game.EMERALD, PKMN.Game.EMERALD)]
+    [TestCase(PKMN.Species.TREECKO, "", PKMN.Game.EMERALD, PKMN.Game.FIRERED)]
+    [TestCase(PKMN.Species.CHARMANDER, "", PKMN.Game.FIRERED, PKMN.Game.SAPPHIRE)]
+    [TestCase(PKMN.Species.SQUIRTLE, "", PKMN.Game.FIRERED, PKMN.Game.EMERALD)]
+    [TestCase(PKMN.Species.BULBASAUR, "", PKMN.Game.FIRERED, PKMN.Game.FIRERED)]
 
     // GBA -> GCN
-    [TestCase("Eevee", "", PKMN.Game.RUBY, PKMN.Game.COLOSSEUM)]
-    [TestCase("Espeon", "", PKMN.Game.EMERALD, PKMN.Game.COLOSSEUM)]
-    [TestCase("Umbreon", "", PKMN.Game.FIRERED, PKMN.Game.COLOSSEUM)]
-    [TestCase("Eevee", "", PKMN.Game.RUBY, PKMN.Game.XD)]
-    [TestCase("Espeon", "", PKMN.Game.EMERALD, PKMN.Game.XD)]
-    [TestCase("Umbreon", "", PKMN.Game.FIRERED, PKMN.Game.XD)]
+    [TestCase(PKMN.Species.EEVEE, "", PKMN.Game.RUBY, PKMN.Game.COLOSSEUM)]
+    [TestCase(PKMN.Species.ESPEON, "", PKMN.Game.EMERALD, PKMN.Game.COLOSSEUM)]
+    [TestCase(PKMN.Species.UMBREON, "", PKMN.Game.FIRERED, PKMN.Game.COLOSSEUM)]
+    [TestCase(PKMN.Species.EEVEE, "", PKMN.Game.RUBY, PKMN.Game.XD)]
+    [TestCase(PKMN.Species.ESPEON, "", PKMN.Game.EMERALD, PKMN.Game.XD)]
+    [TestCase(PKMN.Species.UMBREON, "", PKMN.Game.FIRERED, PKMN.Game.XD)]
 
     // GCN -> GBA
-    [TestCase("Eevee", "", PKMN.Game.COLOSSEUM, PKMN.Game.SAPPHIRE)]
-    [TestCase("Espeon", "", PKMN.Game.COLOSSEUM, PKMN.Game.EMERALD)]
-    [TestCase("Umbreon", "", PKMN.Game.COLOSSEUM, PKMN.Game.LEAFGREEN)]
-    [TestCase("Eevee", "", PKMN.Game.XD, PKMN.Game.SAPPHIRE)]
-    [TestCase("Espeon", "", PKMN.Game.XD, PKMN.Game.EMERALD)]
-    [TestCase("Umbreon", "", PKMN.Game.XD, PKMN.Game.LEAFGREEN)]
+    [TestCase(PKMN.Species.EEVEE, "", PKMN.Game.COLOSSEUM, PKMN.Game.SAPPHIRE)]
+    [TestCase(PKMN.Species.ESPEON, "", PKMN.Game.COLOSSEUM, PKMN.Game.EMERALD)]
+    [TestCase(PKMN.Species.UMBREON, "", PKMN.Game.COLOSSEUM, PKMN.Game.LEAFGREEN)]
+    [TestCase(PKMN.Species.EEVEE, "", PKMN.Game.XD, PKMN.Game.SAPPHIRE)]
+    [TestCase(PKMN.Species.ESPEON, "", PKMN.Game.XD, PKMN.Game.EMERALD)]
+    [TestCase(PKMN.Species.UMBREON, "", PKMN.Game.XD, PKMN.Game.LEAFGREEN)]
 
     // GCN -> GCN
-    [TestCase("Vaporeon", "", PKMN.Game.COLOSSEUM, PKMN.Game.COLOSSEUM)]
-    [TestCase("Jolteon", "", PKMN.Game.COLOSSEUM, PKMN.Game.XD)]
-    [TestCase("Vaporeon", "", PKMN.Game.XD, PKMN.Game.XD)]
-    [TestCase("Jolteon", "", PKMN.Game.XD, PKMN.Game.COLOSSEUM)]
+    [TestCase(PKMN.Species.VAPOREON, "", PKMN.Game.COLOSSEUM, PKMN.Game.COLOSSEUM)]
+    [TestCase(PKMN.Species.JOLTEON, "", PKMN.Game.COLOSSEUM, PKMN.Game.XD)]
+    [TestCase(PKMN.Species.VAPOREON, "", PKMN.Game.XD, PKMN.Game.XD)]
+    [TestCase(PKMN.Species.JOLTEON, "", PKMN.Game.XD, PKMN.Game.COLOSSEUM)]
     public void PokemonConversionsTest(
-        string species,
+        PKMN.Species species,
         string form,
         PKMN.Game originGame,
         PKMN.Game destGame

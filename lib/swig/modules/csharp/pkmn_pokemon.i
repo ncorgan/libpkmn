@@ -29,7 +29,7 @@ using Database;"
 
 // Convert getter/setter functions into attributes for more idiomatic C#.
 
-%attributestring(pkmn::swig::pokemon, std::string, Species, get_species);
+%attributestring(pkmn::swig::pokemon, pkmn::e_species, Species, get_species);
 %attribute(pkmn::swig::pokemon, pkmn::e_game, Game, get_game);
 %attributestring(pkmn::swig::pokemon, std::string, Form, get_form, set_form);
 %attribute(pkmn::swig::pokemon, bool, IsEgg, is_egg, set_is_egg);
@@ -38,7 +38,7 @@ using Database;"
 %attributestring(pkmn::swig::pokemon, std::string, Condition, get_condition, set_condition);
 %attribute(pkmn::swig::pokemon, pkmn::e_gender, Gender, get_gender, set_gender);
 %attribute(pkmn::swig::pokemon, bool, IsShiny, is_shiny, set_shininess);
-%attributestring(pkmn::swig::pokemon, std::string, HeldItem, get_held_item, set_held_item);
+%attributestring(pkmn::swig::pokemon, pkmn::e_item, HeldItem, get_held_item, set_held_item);
 %attribute(pkmn::swig::pokemon, int, PokerusDuration, get_pokerus_duration, set_pokerus_duration);
 %attributestring(pkmn::swig::pokemon, std::string, OriginalTrainerName, get_original_trainer_name, set_original_trainer_name);
 %attribute(pkmn::swig::pokemon, uint16_t, OriginalTrainerPublicID, get_original_trainer_public_id, set_original_trainer_public_id);
@@ -48,7 +48,7 @@ using Database;"
 %attribute(pkmn::swig::pokemon, pkmn::e_language, Language, get_language, set_language);
 %attribute(pkmn::swig::pokemon, int, CurrentTrainerFriendship, get_current_trainer_friendship, set_current_trainer_friendship);
 %attributestring(pkmn::swig::pokemon, std::string, Ability, get_ability, set_ability);
-%attributestring(pkmn::swig::pokemon, std::string, Ball, get_ball, set_ball);
+%attributestring(pkmn::swig::pokemon, pkmn::e_ball, Ball, get_ball, set_ball);
 %attribute(pkmn::swig::pokemon, int, LevelMet, get_level_met, set_level_met);
 %attributestring(pkmn::swig::pokemon, std::string, LocationMet, get_location_met, set_location_met);
 %attributestring(pkmn::swig::pokemon, std::string, LocationMetAsEgg, get_location_met_as_egg, set_location_met_as_egg);
@@ -76,17 +76,27 @@ using Database;"
     {
         get
         {
+            /*
+             * Until recent versions, Mono's System.Drawing.Image implementation used
+             * a version of libgdiplus that doesn't support 64bpp PNGs. If this is
+             * the case, this function will write a temporary copy that Mono can import.
+             *
+             * Which exception is thrown depends on the version of libgdiplus.
+             */
             try
             {
                 return System.Drawing.Image.FromFile(this.IconFilepath);
             }
+            catch (System.ArgumentException)
+            {
+                string tmpFilepath = PKMN.ConvertImageForMono(this.IconFilepath);
+                System.Drawing.Image tmpImage = System.Drawing.Image.FromFile(tmpFilepath);
+                System.IO.File.Delete(tmpFilepath);
+
+                return tmpImage;
+            }
             catch (System.NotSupportedException)
             {
-                /*
-                 * Until recent versions, Mono's System.Drawing.Image implementation uses
-                 * a version of libgdiplus that doesn't support 64bpp PNGs. If this is
-                 * the case, this function will write a temporary copy that Mono can import.
-                 */
                 string tmpFilepath = PKMN.ConvertImageForMono(this.IconFilepath);
                 System.Drawing.Image tmpImage = System.Drawing.Image.FromFile(tmpFilepath);
                 System.IO.File.Delete(tmpFilepath);
@@ -100,17 +110,27 @@ using Database;"
     {
         get
         {
+            /*
+             * Until recent versions, Mono's System.Drawing.Image implementation used
+             * a version of libgdiplus that doesn't support 64bpp PNGs. If this is
+             * the case, this function will write a temporary copy that Mono can import.
+             *
+             * Which exception is thrown depends on the version of libgdiplus.
+             */
             try
             {
                 return System.Drawing.Image.FromFile(this.SpriteFilepath);
             }
+            catch (System.ArgumentException)
+            {
+                string tmpFilepath = PKMN.ConvertImageForMono(this.SpriteFilepath);
+                System.Drawing.Image tmpImage = System.Drawing.Image.FromFile(tmpFilepath);
+                System.IO.File.Delete(tmpFilepath);
+
+                return tmpImage;
+            }
             catch (System.NotSupportedException)
             {
-                /*
-                 * Until recent versions, Mono's System.Drawing.Image implementation uses
-                 * a version of libgdiplus that doesn't support 64bpp PNGs. If this is
-                 * the case, this function will write a temporary copy that Mono can import.
-                 */
                 string tmpFilepath = PKMN.ConvertImageForMono(this.SpriteFilepath);
                 System.Drawing.Image tmpImage = System.Drawing.Image.FromFile(tmpFilepath);
                 System.IO.File.Delete(tmpFilepath);

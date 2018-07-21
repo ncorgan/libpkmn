@@ -30,7 +30,8 @@ using System.Runtime.InteropServices;"
 %attribute(pkmn::swig::item_list, pkmn::e_game, Game, get_game);
 %attribute(pkmn::swig::item_list, int, Length, get_capacity);
 %attribute(pkmn::swig::item_list, int, NumItems, get_num_items);
-%attributeval(pkmn::swig::item_list, %arg(std::vector<std::string>), ValidItems, get_valid_items);
+%attributeval(pkmn::swig::item_list, %arg(std::vector<pkmn::e_item>), ValidItems, get_valid_items);
+%attributeval(pkmn::swig::item_list, %arg(std::vector<std::string>), ValidItemNames, get_valid_item_names);
 
 %typemap(cscode) pkmn::swig::item_list
 %{

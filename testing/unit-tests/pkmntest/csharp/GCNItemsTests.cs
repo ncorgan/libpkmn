@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -13,29 +13,42 @@ namespace PKMNTest
 
 public class GCNItemsTest
 {
-    private static string[] ColosseumAllPocketItems =
+    private static PKMN.Item[] ColosseumAllPocketItems =
     {
-        "Potion", "Ein File S", "Great Ball", "TM01",
-        "TM02", "Aspear Berry", "Joy Scent", "Excite Scent"
+        PKMN.Item.POTION,
+        PKMN.Item.EIN_FILE_S,
+        PKMN.Item.GREAT_BALL,
+        PKMN.Item.TM01,
+        PKMN.Item.TM02,
+        PKMN.Item.ASPEAR_BERRY,
+        PKMN.Item.JOY_SCENT,
+        PKMN.Item.EXCITE_SCENT
     };
-    private static string[] XDAllPocketItems =
+    private static PKMN.Item[] XDAllPocketItems =
     {
-        "Potion", "Gonzap's Key", "Great Ball", "TM01",
-        "TM02", "Aspear Berry", "Joy Scent", "Battle CD 01"
+        PKMN.Item.POTION,
+        PKMN.Item.GONZAPS_KEY,
+        PKMN.Item.GREAT_BALL,
+        PKMN.Item.TM01,
+        PKMN.Item.TM02,
+        PKMN.Item.ASPEAR_BERRY,
+        PKMN.Item.JOY_SCENT,
+        PKMN.Item.BATTLE_CD_01
     };
-    private static string[] ColosseumWrongGameAllPocketItems =
+
+    private static PKMN.Item[] ColosseumWrongGameAllPocketItems =
     {
-        "Pink Bow", "Black Sludge",
-        "GS Ball", "Gonzap's Key", "Poffin Items",
-        "TM51", "HM01",
-        "Berry", "Occa Berry"
+        PKMN.Item.PINK_BOW, PKMN.Item.BLACK_SLUDGE,
+        PKMN.Item.GS_BALL, PKMN.Item.GONZAPS_KEY, PKMN.Item.POFFIN_CASE,
+        PKMN.Item.TM51, PKMN.Item.HM01,
+        PKMN.Item.BERRY, PKMN.Item.OCCA_BERRY
     };
-    private static string[] XDWrongGameAllPocketItems =
+    private static PKMN.Item[] XDWrongGameAllPocketItems =
     {
-        "Pink Bow", "Black Sludge",
-        "GS Ball", "Ein File S", "Poffin Items",
-        "TM51", "HM01",
-        "Berry", "Occa Berry",
+        PKMN.Item.PINK_BOW, PKMN.Item.BLACK_SLUDGE,
+        PKMN.Item.GS_BALL, PKMN.Item.EIN_FILE_S, PKMN.Item.POFFIN_CASE,
+        PKMN.Item.TM51, PKMN.Item.HM01,
+        PKMN.Item.BERRY, PKMN.Item.OCCA_BERRY
     };
 
     public static void ItemPocketTest(
@@ -58,7 +71,7 @@ public class GCNItemsTest
         // Confirm exceptions are thrown when expected.
         ItemsTestsCommon.TestItemListIndexOutOfRangeException(
             itemPocket,
-            "Potion"
+            PKMN.Item.POTION
         );
 
         // Confirm items from other pockets can't be added.
@@ -66,26 +79,55 @@ public class GCNItemsTest
         {
             ItemsTestsCommon.TestItemListInvalidItems(
                 itemPocket,
-                new string[]{"Ein File S", "Great Ball", "TM01", "Oran Berry", "Joy Scent"}
+                new PKMN.Item[]
+                    {
+                        PKMN.Item.EIN_FILE_S,
+                        PKMN.Item.GREAT_BALL,
+                        PKMN.Item.TM01,
+                        PKMN.Item.ORAN_BERRY,
+                        PKMN.Item.JOY_SCENT
+                    }
             );
         }
         else
         {
             ItemsTestsCommon.TestItemListInvalidItems(
                 itemPocket,
-                new string[]{"Gonzap's Key", "Great Ball", "TM01", "Oran Berry", "Joy Scent", "Battle CD 01"}
+                new PKMN.Item[]
+                    {
+                        PKMN.Item.GONZAPS_KEY,
+                        PKMN.Item.GREAT_BALL,
+                        PKMN.Item.TM01,
+                        PKMN.Item.ORAN_BERRY,
+                        PKMN.Item.BATTLE_CD_01
+                    }
             );
         }
 
         // Confirm items from other generations can't be added.
         ItemsTestsCommon.TestItemListInvalidItems(
             itemPocket,
-            new string[]{"Pink Bow", "Black Sludge", "Binding Band", "Beedrillite"}
+            new PKMN.Item[]
+                {
+                    PKMN.Item.PINK_BOW,
+                    PKMN.Item.BLACK_SLUDGE,
+                    PKMN.Item.BINDING_BAND,
+                    PKMN.Item.BEEDRILLITE
+                }
         );
 
         // Start adding and removing stuff, and make sure the numbers are accurate.
-        string[] validItems = {"Potion", "Orange Mail", "Lava Cookie", "Stardust",
-                               "Shadow Mail", "Pink Scarf", "Antidote", "Green Shard"};
+        PKMN.Item[] validItems =
+        {
+            PKMN.Item.POTION,
+            PKMN.Item.ORANGE_MAIL,
+            PKMN.Item.LAVA_COOKIE,
+            PKMN.Item.STARDUST,
+            PKMN.Item.SHADOW_MAIL,
+            PKMN.Item.PINK_SCARF,
+            PKMN.Item.ANTIDOTE,
+            PKMN.Item.GREEN_SHARD
+        };
         ItemsTestsCommon.TestItemListSettingItems(
             itemPocket,
             validItems
@@ -95,6 +137,7 @@ public class GCNItemsTest
             validItems
         );
 
+        Assert.AreEqual(itemPocket.ValidItems.Count, itemPocket.ValidItemNames.Count);
         Assert.Greater(itemPocket.ValidItems.Count, 0);
     }
 
@@ -104,7 +147,7 @@ public class GCNItemsTest
     )
     {
         bool colosseum = (game == PKMN.Game.COLOSSEUM);
-        string keyItem = colosseum ? "Ein File S" : "Gonzap's Key";
+        PKMN.Item keyItem = colosseum ? PKMN.Item.EIN_FILE_S : PKMN.Item.GONZAPS_KEY;
         int expectedLength = 43;
 
         // Check unchanging and initial values.
@@ -127,31 +170,61 @@ public class GCNItemsTest
         {
             ItemsTestsCommon.TestItemListInvalidItems(
                 keyItemPocket,
-                new string[]{"Potion", "Great Ball", "TM01", "Oran Berry", "Joy Scent"}
+                new PKMN.Item[]
+                    {
+                        PKMN.Item.POTION,
+                        PKMN.Item.GREAT_BALL,
+                        PKMN.Item.TM01,
+                        PKMN.Item.ORAN_BERRY,
+                        PKMN.Item.JOY_SCENT
+                    }
             );
         }
         else
         {
             ItemsTestsCommon.TestItemListInvalidItems(
                 keyItemPocket,
-                new string[]{"Potion", "Great Ball", "TM01", "Oran Berry", "Joy Scent", "Battle CD 01"}
+                new PKMN.Item[]
+                    {
+                        PKMN.Item.POTION,
+                        PKMN.Item.GREAT_BALL,
+                        PKMN.Item.TM01,
+                        PKMN.Item.ORAN_BERRY,
+                        PKMN.Item.JOY_SCENT,
+                        PKMN.Item.BATTLE_CD_01
+                    }
             );
         }
 
         // Confirm items from other generations can't be added.
         ItemsTestsCommon.TestItemListInvalidItems(
             keyItemPocket,
-            new string[]{"GS Ball", "Poffin Items", "DNA Splicers", "Aqua Suit"}
+            new PKMN.Item[]
+                {
+                    PKMN.Item.GS_BALL,
+                    PKMN.Item.POFFIN_CASE,
+                    PKMN.Item.DNA_SPLICERS,
+                    PKMN.Item.AQUA_SUIT
+                }
         );
 
         // Confirm items from incompatible Generation III games can't be added.
         ItemsTestsCommon.TestItemListInvalidItems(
             keyItemPocket,
-            new string[]{"Helix Fossil", "Tea", "Ruby"}
+            new PKMN.Item[]
+                {
+                    PKMN.Item.HELIX_FOSSIL,
+                    PKMN.Item.TEA,
+                    PKMN.Item.RUBY
+                }
         );
         ItemsTestsCommon.TestItemListInvalidItems(
             keyItemPocket,
-            new string[]{"Magma Emblem", "Old Sea Map"}
+            new PKMN.Item[]
+                {
+                    PKMN.Item.MAGMA_EMBLEM,
+                    PKMN.Item.OLD_SEA_MAP
+                }
         );
 
         // Start adding and removing stuff, and make sure the numbers are accurate.
@@ -159,29 +232,66 @@ public class GCNItemsTest
         {
             ItemsTestsCommon.TestItemListSettingItems(
                 keyItemPocket,
-                new string[]{"Jail Key", "Elevator Key", "Small Tablet", "F-Disk",
-                             "R-Disk", "L-Disk", "D-Disk", "U-Disk"}
+                new PKMN.Item[]
+                    {
+                        PKMN.Item.JAIL_KEY,
+                        PKMN.Item.ELEVATOR_KEY,
+                        PKMN.Item.SMALL_TABLET,
+                        PKMN.Item.F_DISK,
+                        PKMN.Item.R_DISK,
+                        PKMN.Item.L_DISK,
+                        PKMN.Item.D_DISK,
+                        PKMN.Item.U_DISK
+                    }
             );
             ItemsTestsCommon.TestItemListAddingAndRemovingItems(
                 keyItemPocket,
-                new string[]{"Jail Key", "Elevator Key", "Small Tablet", "F-Disk",
-                             "R-Disk", "L-Disk", "D-Disk", "U-Disk"}
+                new PKMN.Item[]
+                    {
+                        PKMN.Item.JAIL_KEY,
+                        PKMN.Item.ELEVATOR_KEY,
+                        PKMN.Item.SMALL_TABLET,
+                        PKMN.Item.F_DISK,
+                        PKMN.Item.R_DISK,
+                        PKMN.Item.L_DISK,
+                        PKMN.Item.D_DISK,
+                        PKMN.Item.U_DISK
+                    }
             );
         }
         else
         {
             ItemsTestsCommon.TestItemListSettingItems(
                 keyItemPocket,
-                new string[]{"Krane Memo 1", "Krane Memo 2", "Krane Memo 3", "Krane Memo 4",
-                             "Krane Memo 5", "Voice Case 1", "Voice Case 2", "Voice Case 3"}
+                new PKMN.Item[]
+                    {
+                        PKMN.Item.KRANE_MEMO_1,
+                        PKMN.Item.KRANE_MEMO_2,
+                        PKMN.Item.KRANE_MEMO_3,
+                        PKMN.Item.KRANE_MEMO_4,
+                        PKMN.Item.KRANE_MEMO_5,
+                        PKMN.Item.VOICE_CASE_1,
+                        PKMN.Item.VOICE_CASE_2,
+                        PKMN.Item.VOICE_CASE_3
+                    }
             );
             ItemsTestsCommon.TestItemListAddingAndRemovingItems(
                 keyItemPocket,
-                new string[]{"Krane Memo 1", "Krane Memo 2", "Krane Memo 3", "Krane Memo 4",
-                             "Krane Memo 5", "Voice Case 1", "Voice Case 2", "Voice Case 3"}
+                new PKMN.Item[]
+                    {
+                        PKMN.Item.KRANE_MEMO_1,
+                        PKMN.Item.KRANE_MEMO_2,
+                        PKMN.Item.KRANE_MEMO_3,
+                        PKMN.Item.KRANE_MEMO_4,
+                        PKMN.Item.KRANE_MEMO_5,
+                        PKMN.Item.VOICE_CASE_1,
+                        PKMN.Item.VOICE_CASE_2,
+                        PKMN.Item.VOICE_CASE_3
+                    }
             );
         }
 
+        Assert.AreEqual(keyItemPocket.ValidItems.Count, keyItemPocket.ValidItemNames.Count);
         Assert.Greater(keyItemPocket.ValidItems.Count, 0);
     }
 
@@ -205,7 +315,7 @@ public class GCNItemsTest
         // Confirm exceptions are thrown when expected.
         ItemsTestsCommon.TestItemListIndexOutOfRangeException(
             ballPocket,
-            "Master Ball"
+            PKMN.Item.MASTER_BALL
         );
 
         // Confirm items from other pockets can't be added.
@@ -213,26 +323,55 @@ public class GCNItemsTest
         {
             ItemsTestsCommon.TestItemListInvalidItems(
                 ballPocket,
-                new string[]{"Ein File S", "Potion", "TM01", "Oran Berry", "Joy Scent"}
+                new PKMN.Item[]
+                    {
+                        PKMN.Item.EIN_FILE_S,
+                        PKMN.Item.POTION,
+                        PKMN.Item.TM01,
+                        PKMN.Item.ORAN_BERRY,
+                        PKMN.Item.JOY_SCENT
+                    }
             );
         }
         else
         {
             ItemsTestsCommon.TestItemListInvalidItems(
                 ballPocket,
-                new string[]{"Gonzap's Key", "Potion", "TM01", "Oran Berry", "Joy Scent", "Battle CD 01"}
+                new PKMN.Item[]
+                    {
+                        PKMN.Item.GONZAPS_KEY,
+                        PKMN.Item.POTION,
+                        PKMN.Item.TM01,
+                        PKMN.Item.ORAN_BERRY,
+                        PKMN.Item.JOY_SCENT,
+                        PKMN.Item.BATTLE_CD_01
+                    }
             );
         }
 
         // Confirm items from later generations can't be added.
         ItemsTestsCommon.TestItemListInvalidItems(
             ballPocket,
-            new string[]{"Moon Ball", "Heal Ball", "Dream Ball"}
+            new PKMN.Item[]
+                {
+                    PKMN.Item.MOON_BALL,
+                    PKMN.Item.HEAL_BALL,
+                    PKMN.Item.DREAM_BALL
+                }
         );
 
         // Start adding and removing stuff, and make sure the numbers are accurate.
-        string[] validItems = {"Master Ball", "Ultra Ball", "Great Ball", "Poké Ball",
-                               "Safari Ball", "Net Ball", "Dive Ball", "Nest Ball"};
+        PKMN.Item[] validItems =
+        {
+            PKMN.Item.MASTER_BALL,
+            PKMN.Item.ULTRA_BALL,
+            PKMN.Item.GREAT_BALL,
+            PKMN.Item.POKE_BALL,
+            PKMN.Item.SAFARI_BALL,
+            PKMN.Item.NET_BALL,
+            PKMN.Item.DIVE_BALL,
+            PKMN.Item.NEST_BALL
+        };
         ItemsTestsCommon.TestItemListSettingItems(
             ballPocket,
             validItems
@@ -242,6 +381,7 @@ public class GCNItemsTest
             validItems
         );
 
+        Assert.AreEqual(ballPocket.ValidItems.Count, ballPocket.ValidItemNames.Count);
         Assert.Greater(ballPocket.ValidItems.Count, 0);
     }
 
@@ -265,7 +405,7 @@ public class GCNItemsTest
         // Confirm exceptions are thrown when expected.
         ItemsTestsCommon.TestItemListIndexOutOfRangeException(
             tmPocket,
-            "TM01"
+            PKMN.Item.TM01
         );
 
         // Confirm items from other pockets can't be added.
@@ -273,26 +413,54 @@ public class GCNItemsTest
         {
             ItemsTestsCommon.TestItemListInvalidItems(
                 tmPocket,
-                new string[]{"Ein File S", "Potion", "Master Ball", "Oran Berry", "Joy Scent"}
+                new PKMN.Item[]
+                    {
+                        PKMN.Item.EIN_FILE_S,
+                        PKMN.Item.POTION,
+                        PKMN.Item.MASTER_BALL,
+                        PKMN.Item.ORAN_BERRY,
+                        PKMN.Item.JOY_SCENT
+                    }
             );
         }
         else
         {
             ItemsTestsCommon.TestItemListInvalidItems(
                 tmPocket,
-                new string[]{"Gonzap's Key", "Potion", "Master Ball", "Oran Berry", "Joy Scent", "Battle CD 01"}
+                new PKMN.Item[]
+                    {
+                        PKMN.Item.GONZAPS_KEY,
+                        PKMN.Item.POTION,
+                        PKMN.Item.MASTER_BALL,
+                        PKMN.Item.ORAN_BERRY,
+                        PKMN.Item.JOY_SCENT,
+                        PKMN.Item.BATTLE_CD_01
+                    }
             );
         }
 
         // Confirm items from later generations can't be added.
         ItemsTestsCommon.TestItemListInvalidItems(
             tmPocket,
-            new string[]{"TM51", "HM01"}
+            new PKMN.Item[]
+            {
+                PKMN.Item.TM51,
+                PKMN.Item.HM01
+            }
         );
 
         // Start adding and removing stuff, and make sure the numbers are accurate.
-        string[] validItems = {"TM01", "TM02", "TM03", "TM04",
-                               "TM05", "TM06", "TM07", "TM08"};
+        PKMN.Item[] validItems =
+        {
+            PKMN.Item.TM01,
+            PKMN.Item.TM02,
+            PKMN.Item.TM03,
+            PKMN.Item.TM04,
+            PKMN.Item.TM05,
+            PKMN.Item.TM06,
+            PKMN.Item.TM07,
+            PKMN.Item.TM08
+        };
         ItemsTestsCommon.TestItemListSettingItems(
             tmPocket,
             validItems
@@ -302,6 +470,7 @@ public class GCNItemsTest
             validItems
         );
 
+        Assert.AreEqual(tmPocket.ValidItems.Count, tmPocket.ValidItemNames.Count);
         Assert.AreEqual(tmPocket.ValidItems.Count, 50);
     }
 
@@ -325,7 +494,7 @@ public class GCNItemsTest
         // Confirm exceptions are thrown when expected.
         ItemsTestsCommon.TestItemListIndexOutOfRangeException(
             berryPocket,
-            "Razz Berry"
+            PKMN.Item.RAZZ_BERRY
         );
 
         // Confirm items from other pockets can't be added.
@@ -333,26 +502,55 @@ public class GCNItemsTest
         {
             ItemsTestsCommon.TestItemListInvalidItems(
                 berryPocket,
-                new string[]{"Ein File S", "Potion", "Master Ball", "TM01", "Joy Scent"}
+                new PKMN.Item[]
+                    {
+                        PKMN.Item.EIN_FILE_S,
+                        PKMN.Item.POTION,
+                        PKMN.Item.MASTER_BALL,
+                        PKMN.Item.TM01,
+                        PKMN.Item.JOY_SCENT
+                    }
             );
         }
         else
         {
             ItemsTestsCommon.TestItemListInvalidItems(
                 berryPocket,
-                new string[]{"Gonzap's Key", "Potion", "Master Ball", "TM01", "Joy Scent", "Battle CD 01"}
+                new PKMN.Item[]
+                    {
+                        PKMN.Item.GONZAPS_KEY,
+                        PKMN.Item.POTION,
+                        PKMN.Item.MASTER_BALL,
+                        PKMN.Item.TM01,
+                        PKMN.Item.JOY_SCENT,
+                        PKMN.Item.BATTLE_CD_01
+                    }
             );
         }
 
         // Confirm items from later generations can't be added.
         ItemsTestsCommon.TestItemListInvalidItems(
             berryPocket,
-            new string[]{"Berry", "Occa Berry", "Roseli Berry"}
+            new PKMN.Item[]
+                {
+                    PKMN.Item.BERRY,
+                    PKMN.Item.OCCA_BERRY,
+                    PKMN.Item.ROSELI_BERRY
+                }
         );
 
         // Start adding and removing stuff, and make sure the numbers are accurate.
-        string[] validItems = {"Cheri Berry", "Razz Berry", "Lum Berry", "Pinap Berry",
-                               "Aspear Berry", "Iapapa Berry", "Wiki Berry", "Apicot Berry"};
+        PKMN.Item[] validItems =
+        {
+            PKMN.Item.CHERI_BERRY,
+            PKMN.Item.RAZZ_BERRY,
+            PKMN.Item.LUM_BERRY,
+            PKMN.Item.PINAP_BERRY,
+            PKMN.Item.ASPEAR_BERRY,
+            PKMN.Item.IAPAPA_BERRY,
+            PKMN.Item.WIKI_BERRY,
+            PKMN.Item.APICOT_BERRY
+        };
         ItemsTestsCommon.TestItemListSettingItems(
             berryPocket,
             validItems
@@ -362,6 +560,7 @@ public class GCNItemsTest
             validItems
         );
 
+        Assert.AreEqual(berryPocket.ValidItems.Count, berryPocket.ValidItemNames.Count);
         Assert.Greater(berryPocket.ValidItems.Count, 0);
     }
 
@@ -385,7 +584,7 @@ public class GCNItemsTest
         // Confirm exceptions are thrown when expected.
         ItemsTestsCommon.TestItemListIndexOutOfRangeException(
             colognePocket,
-            "Joy Scent"
+            PKMN.Item.JOY_SCENT
         );
 
         // Confirm items from other pockets can't be added.
@@ -393,41 +592,57 @@ public class GCNItemsTest
         {
             ItemsTestsCommon.TestItemListInvalidItems(
                 colognePocket,
-                new string[]{"Ein File S", "Potion", "Master Ball", "TM01", "Oran Berry"}
+                new PKMN.Item[]
+                    {
+                        PKMN.Item.EIN_FILE_S,
+                        PKMN.Item.POTION,
+                        PKMN.Item.MASTER_BALL,
+                        PKMN.Item.TM01,
+                        PKMN.Item.ORAN_BERRY
+                    }
             );
         }
         else
         {
             ItemsTestsCommon.TestItemListInvalidItems(
                 colognePocket,
-                new string[]{"Gonzap's Key", "Potion", "Master Ball", "TM01", "Oran Berry", "Battle CD 01"}
+                new PKMN.Item[]
+                    {
+                        PKMN.Item.GONZAPS_KEY,
+                        PKMN.Item.POTION,
+                        PKMN.Item.MASTER_BALL,
+                        PKMN.Item.TM01,
+                        PKMN.Item.ORAN_BERRY,
+                        PKMN.Item.BATTLE_CD_01
+                    }
             );
         }
 
-        colognePocket.Add("Joy Scent", 3);
-        colognePocket.Add("Excite Scent", 3);
-        colognePocket.Add("Vivid Scent", 3);
+        colognePocket.Add(PKMN.Item.JOY_SCENT, 3);
+        colognePocket.Add(PKMN.Item.EXCITE_SCENT, 3);
+        colognePocket.Add(PKMN.Item.VIVID_SCENT, 3);
 
-        colognePocket.Remove("Excite Scent", 3);
-        colognePocket.Remove("Vivid Scent", 1);
+        colognePocket.Remove(PKMN.Item.EXCITE_SCENT, 3);
+        colognePocket.Remove(PKMN.Item.VIVID_SCENT, 1);
 
-        Assert.AreEqual(colognePocket[0].Item, "Joy Scent");
+        Assert.AreEqual(colognePocket[0].Item, PKMN.Item.JOY_SCENT);
         Assert.AreEqual(colognePocket[0].Amount, 3);
-        Assert.AreEqual(colognePocket[1].Item, "Vivid Scent");
+        Assert.AreEqual(colognePocket[1].Item, PKMN.Item.VIVID_SCENT);
         Assert.AreEqual(colognePocket[1].Amount, 2);
-        Assert.AreEqual(colognePocket[2].Item, "None");
+        Assert.AreEqual(colognePocket[2].Item, PKMN.Item.NONE);
         Assert.AreEqual(colognePocket[2].Amount, 0);
 
-        colognePocket.Remove("Joy Scent", 3);
-        colognePocket.Remove("Vivid Scent", 2);
+        colognePocket.Remove(PKMN.Item.JOY_SCENT, 3);
+        colognePocket.Remove(PKMN.Item.VIVID_SCENT, 2);
 
-        Assert.AreEqual(colognePocket[0].Item, "None");
+        Assert.AreEqual(colognePocket[0].Item, PKMN.Item.NONE);
         Assert.AreEqual(colognePocket[0].Amount, 0);
-        Assert.AreEqual(colognePocket[1].Item, "None");
+        Assert.AreEqual(colognePocket[1].Item, PKMN.Item.NONE);
         Assert.AreEqual(colognePocket[1].Amount, 0);
-        Assert.AreEqual(colognePocket[2].Item, "None");
+        Assert.AreEqual(colognePocket[2].Item, PKMN.Item.NONE);
         Assert.AreEqual(colognePocket[2].Amount, 0);
 
+        Assert.AreEqual(colognePocket.ValidItems.Count, colognePocket.ValidItemNames.Count);
         Assert.AreEqual(colognePocket.ValidItems.Count, 3);
     }
 
@@ -449,18 +664,35 @@ public class GCNItemsTest
         // Confirm exceptions are thrown when expected.
         ItemsTestsCommon.TestItemListIndexOutOfRangeException(
             battleCDPocket,
-            "Battle CD 01"
+            PKMN.Item.BATTLE_CD_01
         );
 
         // Confirm items from other pockets can't be added.
         ItemsTestsCommon.TestItemListInvalidItems(
             battleCDPocket,
-            new string[]{"Gonzap's Key", "Potion", "Master Ball", "TM01", "Joy Scent", "Oran Berry"}
+            new PKMN.Item[]
+                {
+                    PKMN.Item.GONZAPS_KEY,
+                    PKMN.Item.POTION,
+                    PKMN.Item.MASTER_BALL,
+                    PKMN.Item.TM01,
+                    PKMN.Item.JOY_SCENT,
+                    PKMN.Item.ORAN_BERRY,
+                }
         );
 
         // Start adding and removing stuff, and make sure the numbers are accurate.
-        string[] validItems = {"Battle CD 01", "Battle CD 02", "Battle CD 03", "Battle CD 04",
-                               "Battle CD 05", "Battle CD 06", "Battle CD 07", "Battle CD 08"};
+        PKMN.Item[] validItems =
+        {
+            PKMN.Item.BATTLE_CD_01,
+            PKMN.Item.BATTLE_CD_02,
+            PKMN.Item.BATTLE_CD_03,
+            PKMN.Item.BATTLE_CD_04,
+            PKMN.Item.BATTLE_CD_05,
+            PKMN.Item.BATTLE_CD_06,
+            PKMN.Item.BATTLE_CD_07,
+            PKMN.Item.BATTLE_CD_08
+        };
         ItemsTestsCommon.TestItemListSettingItems(
             battleCDPocket,
             validItems
@@ -470,6 +702,7 @@ public class GCNItemsTest
             validItems
         );
 
+        Assert.AreEqual(battleCDPocket.ValidItems.Count, battleCDPocket.ValidItemNames.Count);
         Assert.AreEqual(battleCDPocket.ValidItems.Count, 60);
     }
 
@@ -492,7 +725,7 @@ public class GCNItemsTest
         // Confirm exceptions are thrown when expected.
         ItemsTestsCommon.TestItemListIndexOutOfRangeException(
             itemPC,
-            "Potion"
+            PKMN.Item.POTION
         );
 
         // Confirm items from later generations can't be added.
@@ -511,8 +744,12 @@ public class GCNItemsTest
             colosseum ? ColosseumAllPocketItems : XDAllPocketItems
         );
 
-        PKMN.StringList fullItemList = PKMN.Database.Lists.ItemList(game);
+        PKMN.ItemEnumList fullItemList = PKMN.Database.Lists.ItemList(game);
+        PKMN.StringList fullItemNameList = PKMN.Database.Lists.ItemNameList(game);
+
+        Assert.AreEqual(itemPC.ValidItems.Count, itemPC.ValidItemNames.Count);
         Assert.AreEqual(itemPC.ValidItems.Count, fullItemList.Count);
+        Assert.AreEqual(itemPC.ValidItemNames.Count, fullItemNameList.Count);
     }
 
     public static void ItemBagTest(
@@ -521,7 +758,7 @@ public class GCNItemsTest
     )
     {
         bool colosseum = (game == PKMN.Game.COLOSSEUM);
-        string keyItem = colosseum ? "Ein File S" : "Gonzap's Key";
+        PKMN.Item keyItem = colosseum ? PKMN.Item.EIN_FILE_S : PKMN.Item.GONZAPS_KEY;
 
         // Check unchanging and initial values.
         Assert.AreEqual(itemBag.Game, game);
@@ -549,104 +786,106 @@ public class GCNItemsTest
         {
             Assert.AreEqual(itemBag["Battle CDs"].NumItems, 0);
         }
-        foreach(string itemName in (colosseum ? ColosseumAllPocketItems : XDAllPocketItems)) {
-            itemBag.Add(itemName, 5);
+        foreach(PKMN.Item item in (colosseum ? ColosseumAllPocketItems : XDAllPocketItems))
+        {
+            itemBag.Add(item, 5);
         }
 
-        Assert.AreEqual(itemBag["Items"][0].Item, "Potion");
+        Assert.AreEqual(itemBag["Items"][0].Item, PKMN.Item.POTION);
         Assert.AreEqual(itemBag["Items"][0].Amount, 5);
-        Assert.AreEqual(itemBag["Items"][1].Item, "None");
+        Assert.AreEqual(itemBag["Items"][1].Item, PKMN.Item.NONE);
         Assert.AreEqual(itemBag["Items"][1].Amount, 0);
 
         Assert.AreEqual(itemBag["Key Items"][0].Item, keyItem);
         Assert.AreEqual(itemBag["Key Items"][0].Amount, 5);
-        Assert.AreEqual(itemBag["Key Items"][1].Item, "None");
+        Assert.AreEqual(itemBag["Key Items"][1].Item, PKMN.Item.NONE);
         Assert.AreEqual(itemBag["Key Items"][1].Amount, 0);
 
-        Assert.AreEqual(itemBag["Poké Balls"][0].Item, "Great Ball");
+        Assert.AreEqual(itemBag["Poké Balls"][0].Item, PKMN.Item.GREAT_BALL);
         Assert.AreEqual(itemBag["Poké Balls"][0].Amount, 5);
-        Assert.AreEqual(itemBag["Poké Balls"][1].Item, "None");
+        Assert.AreEqual(itemBag["Poké Balls"][1].Item, PKMN.Item.NONE);
         Assert.AreEqual(itemBag["Poké Balls"][1].Amount, 0);
 
-        Assert.AreEqual(itemBag["TMs"][0].Item, "TM01");
+        Assert.AreEqual(itemBag["TMs"][0].Item, PKMN.Item.TM01);
         Assert.AreEqual(itemBag["TMs"][0].Amount, 5);
-        Assert.AreEqual(itemBag["TMs"][1].Item, "TM02");
+        Assert.AreEqual(itemBag["TMs"][1].Item, PKMN.Item.TM02);
         Assert.AreEqual(itemBag["TMs"][1].Amount, 5);
-        Assert.AreEqual(itemBag["TMs"][2].Item, "None");
+        Assert.AreEqual(itemBag["TMs"][2].Item, PKMN.Item.NONE);
         Assert.AreEqual(itemBag["TMs"][2].Amount, 0);
 
-        Assert.AreEqual(itemBag["Berries"][0].Item, "Aspear Berry");
+        Assert.AreEqual(itemBag["Berries"][0].Item, PKMN.Item.ASPEAR_BERRY);
         Assert.AreEqual(itemBag["Berries"][0].Amount, 5);
-        Assert.AreEqual(itemBag["Berries"][1].Item, "None");
+        Assert.AreEqual(itemBag["Berries"][1].Item, PKMN.Item.NONE);
         Assert.AreEqual(itemBag["Berries"][1].Amount, 0);
 
-        Assert.AreEqual(itemBag["Colognes"][0].Item, "Joy Scent");
+        Assert.AreEqual(itemBag["Colognes"][0].Item, PKMN.Item.JOY_SCENT);
         Assert.AreEqual(itemBag["Colognes"][0].Amount, 5);
 
         if(colosseum)
         {
-            Assert.AreEqual(itemBag["Colognes"][1].Item, "Excite Scent");
+            Assert.AreEqual(itemBag["Colognes"][1].Item, PKMN.Item.EXCITE_SCENT);
             Assert.AreEqual(itemBag["Colognes"][1].Amount, 5);
-            Assert.AreEqual(itemBag["Colognes"][2].Item, "None");
+            Assert.AreEqual(itemBag["Colognes"][2].Item, PKMN.Item.NONE);
             Assert.AreEqual(itemBag["Colognes"][2].Amount, 0);
         }
         else
         {
-            Assert.AreEqual(itemBag["Colognes"][1].Item, "None");
+            Assert.AreEqual(itemBag["Colognes"][1].Item, PKMN.Item.NONE);
             Assert.AreEqual(itemBag["Colognes"][1].Amount, 0);
 
-            Assert.AreEqual(itemBag["Battle CDs"][0].Item, "Battle CD 01");
+            Assert.AreEqual(itemBag["Battle CDs"][0].Item, PKMN.Item.BATTLE_CD_01);
             Assert.AreEqual(itemBag["Battle CDs"][0].Amount, 5);
         }
 
         // Make sure removing items through the bag removes from the proper pockets.
-        foreach(string itemName in (colosseum ? ColosseumAllPocketItems : XDAllPocketItems)) {
-            itemBag.Remove(itemName, 5);
+        foreach(PKMN.Item item in (colosseum ? ColosseumAllPocketItems : XDAllPocketItems))
+        {
+            itemBag.Remove(item, 5);
         }
 
-        Assert.AreEqual(itemBag["Items"][0].Item, "None");
+        Assert.AreEqual(itemBag["Items"][0].Item, PKMN.Item.NONE);
         Assert.AreEqual(itemBag["Items"][0].Amount, 0);
-        Assert.AreEqual(itemBag["Items"][1].Item, "None");
+        Assert.AreEqual(itemBag["Items"][1].Item, PKMN.Item.NONE);
         Assert.AreEqual(itemBag["Items"][1].Amount, 0);
 
-        Assert.AreEqual(itemBag["Key Items"][0].Item, "None");
+        Assert.AreEqual(itemBag["Key Items"][0].Item, PKMN.Item.NONE);
         Assert.AreEqual(itemBag["Key Items"][0].Amount, 0);
-        Assert.AreEqual(itemBag["Key Items"][1].Item, "None");
+        Assert.AreEqual(itemBag["Key Items"][1].Item, PKMN.Item.NONE);
         Assert.AreEqual(itemBag["Key Items"][1].Amount, 0);
 
-        Assert.AreEqual(itemBag["Poké Balls"][0].Item, "None");
+        Assert.AreEqual(itemBag["Poké Balls"][0].Item, PKMN.Item.NONE);
         Assert.AreEqual(itemBag["Poké Balls"][0].Amount, 0);
-        Assert.AreEqual(itemBag["Poké Balls"][1].Item, "None");
+        Assert.AreEqual(itemBag["Poké Balls"][1].Item, PKMN.Item.NONE);
         Assert.AreEqual(itemBag["Poké Balls"][1].Amount, 0);
 
-        Assert.AreEqual(itemBag["TMs"][0].Item, "None");
+        Assert.AreEqual(itemBag["TMs"][0].Item, PKMN.Item.NONE);
         Assert.AreEqual(itemBag["TMs"][0].Amount, 0);
-        Assert.AreEqual(itemBag["TMs"][1].Item, "None");
+        Assert.AreEqual(itemBag["TMs"][1].Item, PKMN.Item.NONE);
         Assert.AreEqual(itemBag["TMs"][1].Amount, 0);
-        Assert.AreEqual(itemBag["TMs"][2].Item, "None");
+        Assert.AreEqual(itemBag["TMs"][2].Item, PKMN.Item.NONE);
         Assert.AreEqual(itemBag["TMs"][2].Amount, 0);
 
-        Assert.AreEqual(itemBag["Berries"][0].Item, "None");
+        Assert.AreEqual(itemBag["Berries"][0].Item, PKMN.Item.NONE);
         Assert.AreEqual(itemBag["Berries"][0].Amount, 0);
-        Assert.AreEqual(itemBag["Berries"][1].Item, "None");
+        Assert.AreEqual(itemBag["Berries"][1].Item, PKMN.Item.NONE);
         Assert.AreEqual(itemBag["Berries"][1].Amount, 0);
 
-        Assert.AreEqual(itemBag["Colognes"][0].Item, "None");
+        Assert.AreEqual(itemBag["Colognes"][0].Item, PKMN.Item.NONE);
         Assert.AreEqual(itemBag["Colognes"][0].Amount, 0);
 
         if(colosseum)
         {
-            Assert.AreEqual(itemBag["Colognes"][1].Item, "None");
+            Assert.AreEqual(itemBag["Colognes"][1].Item, PKMN.Item.NONE);
             Assert.AreEqual(itemBag["Colognes"][1].Amount, 0);
-            Assert.AreEqual(itemBag["Colognes"][2].Item, "None");
+            Assert.AreEqual(itemBag["Colognes"][2].Item, PKMN.Item.NONE);
             Assert.AreEqual(itemBag["Colognes"][2].Amount, 0);
         }
         else
         {
-            Assert.AreEqual(itemBag["Colognes"][1].Item, "None");
+            Assert.AreEqual(itemBag["Colognes"][1].Item, PKMN.Item.NONE);
             Assert.AreEqual(itemBag["Colognes"][1].Amount, 0);
 
-            Assert.AreEqual(itemBag["Battle CDs"][0].Item, "None");
+            Assert.AreEqual(itemBag["Battle CDs"][0].Item, PKMN.Item.NONE);
             Assert.AreEqual(itemBag["Battle CDs"][0].Amount, 0);
         }
 

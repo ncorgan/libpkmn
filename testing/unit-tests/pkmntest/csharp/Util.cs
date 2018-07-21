@@ -85,22 +85,22 @@ internal class Util
 
     internal static PKMN.Pokemon GetRandomPokemon(
         PKMN.Game game,
-        PKMN.StringList itemList,
+        PKMN.ItemEnumList itemList,
         PKMN.StringList moveList,
-        PKMN.StringList pokemonList
+        PKMN.SpeciesEnumList pokemonList
     )
     {
         int generation = Util.GameToGeneration(game);
 
         // Don't deal with Deoxys or Unown issues here.
-        string species;
+        PKMN.Species species = PKMN.Species.NONE;
         if(generation == 3)
         {
             do
             {
                 species = pokemonList[rng.Next(0, pokemonList.Count-1)];
             }
-            while(species == "Deoxys" || species == "Unown");
+            while((species == PKMN.Species.DEOXYS) || (species == PKMN.Species.UNOWN));
         }
         else
         {
@@ -108,11 +108,11 @@ internal class Util
         }
 
         PKMN.Pokemon ret = new PKMN.Pokemon(
-                                    species,
-                                    game,
-                                    "",
-                                    rng.Next(2, 100)
-                                );
+                                   species,
+                                   game,
+                                   "",
+                                   rng.Next(2, 100)
+                               );
 
         for(int moveIndex = 0; moveIndex < 4; ++moveIndex)
         {
@@ -138,7 +138,7 @@ internal class Util
         if(generation >= 2)
         {
             // Keep going until one is holdable.
-            while(ret.HeldItem == "None")
+            while(ret.HeldItem == PKMN.Item.NONE)
             {
                 try
                 {

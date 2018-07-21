@@ -22,14 +22,14 @@ using System.Runtime.InteropServices;"
 // Make C++ methods private, replace with properties for more idiomatic C#.
 
 %csmethodmodifiers pkmn::swig::item_slot::get_item() "private";
-%csmethodmodifiers pkmn::swig::item_slot::set_item(const std::string&) "private";
+%csmethodmodifiers pkmn::swig::item_slot::set_item(pkmn::e_item) "private";
 %csmethodmodifiers pkmn::swig::item_slot::get_amount() "private";
 %csmethodmodifiers pkmn::swig::item_slot::set_amount(int) "private";
 %csmethodmodifiers pkmn::swig::item_slot::index() "private";
 
 %typemap(cscode) pkmn::swig::item_slot
 %{
-    public string Item
+    public Item Item
     {
         get { return GetItem(); }
         set { SetItem(value); }

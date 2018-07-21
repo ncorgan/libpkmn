@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -16,7 +16,7 @@ public class PokemonConversionsTest
     private static System.Random rng = new System.Random();
 
     public static void ConversionsTest(
-        string species,
+        PKMN.Species species,
         string form,
         PKMN.Game originGame,
         PKMN.Game destGame
@@ -29,8 +29,8 @@ public class PokemonConversionsTest
         int minGeneration = System.Math.Min(originGeneration, destGeneration);
         PKMN.Game gameForLists = (minGeneration == originGeneration) ? originGame : destGame;
 
-        PKMN.StringList items = PKMN.Database.Lists.ItemList(gameForLists);
-        PKMN.StringList moves = PKMN.Database.Lists.MoveList(gameForLists);
+        PKMN.ItemEnumList items = PKMN.Database.Lists.ItemList(gameForLists);
+        PKMN.StringList moveNames = PKMN.Database.Lists.MoveNameList(gameForLists);
 
         for(int i = 0; i < 4; ++i)
         {
@@ -41,7 +41,7 @@ public class PokemonConversionsTest
             string moveName = "";
             do
             {
-                moveName = moves[rng.Next(0, moves.Count-1)];
+                moveName = moveNames[rng.Next(0, moveNames.Count-1)];
             } while(moveName.IndexOf("Shadow") == 0);
 
             firstPokemon.Moves[i].Move = moveName;
@@ -61,12 +61,12 @@ public class PokemonConversionsTest
 
         if(minGeneration >= 2)
         {
-            string heldItem = "";
+            PKMN.Item heldItem = PKMN.Item.NONE;
             do
             {
                 heldItem = items[rng.Next(0, items.Count-1)];
             } while(!(new PKMN.Database.ItemEntry(heldItem, originGame).IsHoldable) ||
-                    (heldItem.IndexOf("Scent") != -1));
+                    ((heldItem >= PKMN.Item.JOY_SCENT) && (heldItem <= PKMN.Item.VIVID_SCENT)));
 
             firstPokemon.HeldItem = heldItem;
         }

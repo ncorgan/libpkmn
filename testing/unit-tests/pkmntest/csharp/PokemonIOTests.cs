@@ -24,11 +24,11 @@ public class PokemonIOTests
     {
         string pk1Path = System.IO.Path.Combine(TmpDir, String.Format("{0}_{1}.pk1", game, rng.Next()));
 
-        PKMN.StringList itemList = PKMN.Database.Lists.ItemList(game);
-        PKMN.StringList moveList = PKMN.Database.Lists.MoveList(game);
-        PKMN.StringList pokemonList = PKMN.Database.Lists.PokemonList(1, true);
+        PKMN.ItemEnumList itemList = PKMN.Database.Lists.ItemList(game);
+        PKMN.StringList moveNameList = PKMN.Database.Lists.MoveNameList(game);
+        PKMN.SpeciesEnumList pokemonList = PKMN.Database.Lists.PokemonList(1, true);
 
-        PKMN.Pokemon randomPokemon = Util.GetRandomPokemon(game, itemList, moveList, pokemonList);
+        PKMN.Pokemon randomPokemon = Util.GetRandomPokemon(game, itemList, moveNameList, pokemonList);
         randomPokemon.ExportToFile(pk1Path);
 
         PKMN.Pokemon importedPokemon = new PKMN.Pokemon(pk1Path);
@@ -43,11 +43,11 @@ public class PokemonIOTests
     {
         string pk2Path = System.IO.Path.Combine(TmpDir, String.Format("{0}_{1}.pk2", game, rng.Next()));
 
-        PKMN.StringList itemList = PKMN.Database.Lists.ItemList(game);
-        PKMN.StringList moveList = PKMN.Database.Lists.MoveList(game);
-        PKMN.StringList pokemonList = PKMN.Database.Lists.PokemonList(2, true);
+        PKMN.ItemEnumList itemList = PKMN.Database.Lists.ItemList(game);
+        PKMN.StringList moveNameList = PKMN.Database.Lists.MoveNameList(game);
+        PKMN.SpeciesEnumList pokemonList = PKMN.Database.Lists.PokemonList(2, true);
 
-        PKMN.Pokemon randomPokemon = Util.GetRandomPokemon(game, itemList, moveList, pokemonList);
+        PKMN.Pokemon randomPokemon = Util.GetRandomPokemon(game, itemList, moveNameList, pokemonList);
         randomPokemon.ExportToFile(pk2Path);
 
         PKMN.Pokemon importedPokemon = new PKMN.Pokemon(pk2Path);
@@ -62,11 +62,11 @@ public class PokemonIOTests
     {
         string _3gpkmPath = System.IO.Path.Combine(TmpDir, String.Format("{0}_{1}.3gpkm", game, rng.Next()));
 
-        PKMN.StringList itemList = PKMN.Database.Lists.ItemList(game);
-        PKMN.StringList moveList = PKMN.Database.Lists.MoveList(game);
-        PKMN.StringList pokemonList = PKMN.Database.Lists.PokemonList(3, true);
+        PKMN.ItemEnumList itemList = PKMN.Database.Lists.ItemList(game);
+        PKMN.StringList moveNameList = PKMN.Database.Lists.MoveNameList(game);
+        PKMN.SpeciesEnumList pokemonList = PKMN.Database.Lists.PokemonList(3, true);
 
-        PKMN.Pokemon randomPokemon = Util.GetRandomPokemon(game, itemList, moveList, pokemonList);
+        PKMN.Pokemon randomPokemon = Util.GetRandomPokemon(game, itemList, moveNameList, pokemonList);
         randomPokemon.ExportToFile(_3gpkmPath);
 
         PKMN.Pokemon importedPokemon = new PKMN.Pokemon(_3gpkmPath);
@@ -85,12 +85,12 @@ public class PokemonIOTests
         PKMN.Pokemon mightyena = new PKMN.Pokemon(
                                           System.IO.Path.Combine(_3GPKMDir, "MIGHTYENA.3gpkm")
                                       );
-        Assert.AreEqual(mightyena.Species, "Mightyena");
+        Assert.AreEqual(mightyena.Species, PKMN.Species.MIGHTYENA);
         Assert.AreEqual(mightyena.Game, PKMN.Game.EMERALD);
         Assert.AreEqual(mightyena.Form, "Standard");
         Assert.AreEqual(mightyena.Nickname, "MIGHTYENA");
         Assert.IsFalse(mightyena.IsShiny);
-        Assert.AreEqual(mightyena.HeldItem, "Heart Scale");
+        Assert.AreEqual(mightyena.HeldItem, PKMN.Item.HEART_SCALE);
         Assert.AreEqual(mightyena.OriginalTrainerName, "A");
         Assert.AreEqual(mightyena.OriginalTrainerPublicID, 61415);
         Assert.AreEqual(mightyena.OriginalTrainerSecretID, 3417);
@@ -98,7 +98,7 @@ public class PokemonIOTests
         Assert.AreEqual(mightyena.OriginalTrainerGender, PKMN.Gender.FEMALE);
         Assert.AreEqual(mightyena.CurrentTrainerFriendship, 254);
         Assert.AreEqual(mightyena.Ability, "Intimidate");
-        Assert.AreEqual(mightyena.Ball, "Great Ball");
+        Assert.AreEqual(mightyena.Ball, PKMN.Ball.GREAT_BALL);
         Assert.AreEqual(mightyena.LevelMet, 25);
         Assert.AreEqual(mightyena.LocationMet, "Route 120");
         Assert.AreEqual(mightyena.OriginalGame, PKMN.Game.EMERALD);

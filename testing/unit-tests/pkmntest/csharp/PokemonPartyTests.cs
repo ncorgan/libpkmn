@@ -21,7 +21,7 @@ public class PokemonPartyTests
 
         for(int i = 0; i < party.Length; ++i)
         {
-            Assert.AreEqual("None", party[i].Species);
+            Assert.AreEqual(PKMN.Species.NONE, party[i].Species);
             Assert.AreEqual(party.Game, party[i].Game);
 
             for(int j = 0; j < party[i].Moves.Count; ++j)
@@ -71,36 +71,36 @@ public class PokemonPartyTests
 
         // Create Pokémon and place in party. The original variables should
         // still have the same underlying Pokémon.
-        PKMN.Pokemon bulbasaur = new PKMN.Pokemon("Bulbasaur", party.Game, "", 5);
-        PKMN.Pokemon charmander = new PKMN.Pokemon("Charmander", party.Game, "", 5);
-        PKMN.Pokemon squirtle = new PKMN.Pokemon("Squirtle", party.Game, "", 5);
+        PKMN.Pokemon bulbasaur = new PKMN.Pokemon(PKMN.Species.BULBASAUR, party.Game, "", 5);
+        PKMN.Pokemon charmander = new PKMN.Pokemon(PKMN.Species.CHARMANDER, party.Game, "", 5);
+        PKMN.Pokemon squirtle = new PKMN.Pokemon(PKMN.Species.SQUIRTLE, party.Game, "", 5);
 
         party[0] = bulbasaur;
         Assert.AreEqual(1, party.NumPokemon);
-        Assert.AreEqual("Bulbasaur", party[0].Species);
+        Assert.AreEqual(PKMN.Species.BULBASAUR, party[0].Species);
         party[1] = charmander;
         Assert.AreEqual(2, party.NumPokemon);
-        Assert.AreEqual("Charmander", party[1].Species);
+        Assert.AreEqual(PKMN.Species.CHARMANDER, party[1].Species);
 
         // Replace one of the new ones.
         party[0] = squirtle;
         Assert.AreEqual(2, party.NumPokemon);
-        Assert.AreEqual("Squirtle", party[0].Species);
+        Assert.AreEqual(PKMN.Species.SQUIRTLE, party[0].Species);
 
         // Copy a Pokémon already part of the party.
         party[2] = party[1];
         Assert.AreEqual(3, party.NumPokemon);
-        Assert.AreEqual("Charmander", party[2].Species);
+        Assert.AreEqual(PKMN.Species.CHARMANDER, party[2].Species);
 
         // We should be able to clear the last contiguous Pokémon.
         party[2] = originalFirst;
         Assert.AreEqual(2, party.NumPokemon);
-        Assert.AreEqual("None", party[2].Species);
+        Assert.AreEqual(PKMN.Species.NONE, party[2].Species);
 
         // Put it back.
         party[2] = party[1];
         Assert.AreEqual(3, party.NumPokemon);
-        Assert.AreEqual("Charmander", party[2].Species);
+        Assert.AreEqual(PKMN.Species.CHARMANDER, party[2].Species);
 
         // Check that Pokémon cannot be placed non-contiguously.
         Assert.Throws<ArgumentOutOfRangeException>(
@@ -110,7 +110,7 @@ public class PokemonPartyTests
             }
         );
         Assert.AreEqual(3, party.NumPokemon);
-        Assert.AreEqual("Charmander", party[1].Species);
+        Assert.AreEqual(PKMN.Species.CHARMANDER, party[1].Species);
 
         Assert.Throws<IndexOutOfRangeException>(
             delegate
@@ -119,33 +119,43 @@ public class PokemonPartyTests
             }
         );
         Assert.AreEqual(3, party.NumPokemon);
-        Assert.AreEqual("None", party[4].Species);
+        Assert.AreEqual(PKMN.Species.NONE, party[4].Species);
 
         // Now check everything we've created. Each variable should have
         // the same underlying Pokémon.
-        Assert.AreEqual("Squirtle", party[0].Species);
-        Assert.AreEqual("Charmander", party[1].Species);
-        Assert.AreEqual("Charmander", party[2].Species);
-        Assert.AreEqual("None", originalFirst.Species);
-        Assert.AreEqual("None", originalSecond.Species);
-        Assert.AreEqual("Bulbasaur", bulbasaur.Species);
-        Assert.AreEqual("Charmander", charmander.Species);
-        Assert.AreEqual("Squirtle", squirtle.Species);
+        Assert.AreEqual(PKMN.Species.SQUIRTLE, party[0].Species);
+        Assert.AreEqual(PKMN.Species.CHARMANDER, party[1].Species);
+        Assert.AreEqual(PKMN.Species.CHARMANDER, party[2].Species);
+        Assert.AreEqual(PKMN.Species.NONE, originalFirst.Species);
+        Assert.AreEqual(PKMN.Species.NONE, originalSecond.Species);
+        Assert.AreEqual(PKMN.Species.BULBASAUR, bulbasaur.Species);
+        Assert.AreEqual(PKMN.Species.CHARMANDER, charmander.Species);
+        Assert.AreEqual(PKMN.Species.SQUIRTLE, squirtle.Species);
 
         // Make sure converting Pokémon before putting them in the party works (or doesn't)
         // as expected.
         foreach(PKMN.Game validGame in validOtherGames)
         {
-            PKMN.Pokemon pikachu = new PKMN.Pokemon("Pikachu", validGame, "", 50);
+            PKMN.Pokemon pikachu = new PKMN.Pokemon(
+                                           PKMN.Species.PIKACHU,
+                                           validGame,
+                                           "",
+                                           50
+                                       );
             Assert.AreEqual(validGame, pikachu.Game);
 
             party[3] = pikachu;
-            Assert.AreEqual("Pikachu", party[3].Species);
+            Assert.AreEqual(PKMN.Species.PIKACHU, party[3].Species);
             Assert.AreEqual(party.Game, party[3].Game);
             Assert.AreEqual(50, party[3].Level);
         }
 
-        PKMN.Pokemon invalidPikachu = new PKMN.Pokemon("Pikachu", invalidOtherGame, "", 50);
+        PKMN.Pokemon invalidPikachu = new PKMN.Pokemon(
+                                              PKMN.Species.PIKACHU,
+                                              invalidOtherGame,
+                                              "",
+                                              50
+                                          );
         Assert.Throws<ArgumentOutOfRangeException>(
             delegate
             {

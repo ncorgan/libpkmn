@@ -1447,37 +1447,37 @@ public class CSharpCalculationsTest {
         // Make sure expected exceptions are thrown.
         Assert.Throws<ArgumentOutOfRangeException>(
             delegate {
-                PKMN.Calculations.Gen2PokemonGender("Not a species", 0);
+                PKMN.Calculations.Gen2PokemonGender(PKMN.Species.INVALID, 0);
             }
         );
         Assert.Throws<IndexOutOfRangeException>(
             delegate {
-                PKMN.Calculations.Gen2PokemonGender("Bulbasaur", -1);
+                PKMN.Calculations.Gen2PokemonGender(PKMN.Species.BULBASAUR, -1);
             }
         );
         Assert.Throws<IndexOutOfRangeException>(
             delegate {
-                PKMN.Calculations.Gen2PokemonGender("Bulbasaur", 16);
+                PKMN.Calculations.Gen2PokemonGender(PKMN.Species.BULBASAUR, 16);
             }
         );
 
         // Make sure known good inputs result in expected results.
 
         // All male
-        Assert.AreEqual(PKMN.Gender.MALE, PKMN.Calculations.Gen2PokemonGender("Nidorino", 0));
-        Assert.AreEqual(PKMN.Gender.MALE, PKMN.Calculations.Gen2PokemonGender("Nidorino", 15));
+        Assert.AreEqual(PKMN.Gender.MALE, PKMN.Calculations.Gen2PokemonGender(PKMN.Species.NIDORINO, 0));
+        Assert.AreEqual(PKMN.Gender.MALE, PKMN.Calculations.Gen2PokemonGender(PKMN.Species.NIDORINO, 15));
 
         // 25% male, 75% female
-        Assert.AreEqual(PKMN.Gender.FEMALE, PKMN.Calculations.Gen2PokemonGender("Vulpix", 11));
-        Assert.AreEqual(PKMN.Gender.MALE, PKMN.Calculations.Gen2PokemonGender("Vulpix", 12));
+        Assert.AreEqual(PKMN.Gender.FEMALE, PKMN.Calculations.Gen2PokemonGender(PKMN.Species.VULPIX, 11));
+        Assert.AreEqual(PKMN.Gender.MALE, PKMN.Calculations.Gen2PokemonGender(PKMN.Species.VULPIX, 12));
 
         // All female
-        Assert.AreEqual(PKMN.Gender.FEMALE, PKMN.Calculations.Gen2PokemonGender("Nidorina", 0));
-        Assert.AreEqual(PKMN.Gender.FEMALE, PKMN.Calculations.Gen2PokemonGender("Nidorina", 15));
+        Assert.AreEqual(PKMN.Gender.FEMALE, PKMN.Calculations.Gen2PokemonGender(PKMN.Species.NIDORINA, 0));
+        Assert.AreEqual(PKMN.Gender.FEMALE, PKMN.Calculations.Gen2PokemonGender(PKMN.Species.NIDORINA, 15));
 
         // Genderless
-        Assert.AreEqual(PKMN.Gender.GENDERLESS, PKMN.Calculations.Gen2PokemonGender("Magnemite", 0));
-        Assert.AreEqual(PKMN.Gender.GENDERLESS, PKMN.Calculations.Gen2PokemonGender("Magnemite", 15));
+        Assert.AreEqual(PKMN.Gender.GENDERLESS, PKMN.Calculations.Gen2PokemonGender(PKMN.Species.MAGNEMITE, 0));
+        Assert.AreEqual(PKMN.Gender.GENDERLESS, PKMN.Calculations.Gen2PokemonGender(PKMN.Species.MAGNEMITE, 15));
     }
 
     [Test]
@@ -1485,27 +1485,27 @@ public class CSharpCalculationsTest {
         // Make sure expected exceptions are thrown.
         Assert.Throws<ArgumentOutOfRangeException>(
             delegate {
-                PKMN.Calculations.ModernPokemonGender("Not a species", 0);
+                PKMN.Calculations.ModernPokemonGender(PKMN.Species.INVALID, 0);
             }
         );
 
         // Make sure known good inputs result in expected results.
 
         // All male
-        Assert.AreEqual(PKMN.Gender.MALE, PKMN.Calculations.ModernPokemonGender("Nidorino", 0));
-        Assert.AreEqual(PKMN.Gender.MALE, PKMN.Calculations.ModernPokemonGender("Nidorino", 0xFFFFFFFF));
+        Assert.AreEqual(PKMN.Gender.MALE, PKMN.Calculations.ModernPokemonGender(PKMN.Species.NIDORINO, 0));
+        Assert.AreEqual(PKMN.Gender.MALE, PKMN.Calculations.ModernPokemonGender(PKMN.Species.NIDORINO, 0xFFFFFFFF));
 
         // 25% male, 75% female
-        Assert.AreEqual(PKMN.Gender.FEMALE, PKMN.Calculations.ModernPokemonGender("Vulpix", 190));
-        Assert.AreEqual(PKMN.Gender.MALE, PKMN.Calculations.ModernPokemonGender("Vulpix", 191));
+        Assert.AreEqual(PKMN.Gender.FEMALE, PKMN.Calculations.ModernPokemonGender(PKMN.Species.VULPIX, 190));
+        Assert.AreEqual(PKMN.Gender.MALE, PKMN.Calculations.ModernPokemonGender(PKMN.Species.VULPIX, 191));
 
         // All female
-        Assert.AreEqual(PKMN.Gender.FEMALE, PKMN.Calculations.ModernPokemonGender("Nidorina", 0));
-        Assert.AreEqual(PKMN.Gender.FEMALE, PKMN.Calculations.ModernPokemonGender("Nidorina", 0xFFFFFFFF));
+        Assert.AreEqual(PKMN.Gender.FEMALE, PKMN.Calculations.ModernPokemonGender(PKMN.Species.NIDORINA, 0));
+        Assert.AreEqual(PKMN.Gender.FEMALE, PKMN.Calculations.ModernPokemonGender(PKMN.Species.NIDORINA, 0xFFFFFFFF));
 
         // Genderless
-        Assert.AreEqual(PKMN.Gender.GENDERLESS, PKMN.Calculations.ModernPokemonGender("Magnemite", 0));
-        Assert.AreEqual(PKMN.Gender.GENDERLESS, PKMN.Calculations.ModernPokemonGender("Magnemite", 0xFFFFFFFF));
+        Assert.AreEqual(PKMN.Gender.GENDERLESS, PKMN.Calculations.ModernPokemonGender(PKMN.Species.MAGNEMITE, 0));
+        Assert.AreEqual(PKMN.Gender.GENDERLESS, PKMN.Calculations.ModernPokemonGender(PKMN.Species.MAGNEMITE, 0xFFFFFFFF));
     }
 
     [Test]
@@ -1706,20 +1706,15 @@ public class CSharpCalculationsTest {
     }
 
     [Test]
-    public void NatureTest() {
-        string[] natures = {
-            "Hardy", "Lonely", "Brave", "Adamant", "Naughty",
-            "Bold", "Docile", "Relaxed", "Impish", "Lax",
-            "Timid", "Hasty", "Serious", "Jolly", "Naive",
-            "Modest", "Mild", "Quiet", "Bashful", "Rash",
-            "Calm", "Gentle", "Sassy", "Careful", "Quirky"
-        };
+    public void NatureTest()
+    {
+        PKMN.NatureEnumList natures = PKMN.Database.Lists.NatureList();
 
-        for(uint i = 0; i < natures.Length; ++i) {
-            Assert.AreEqual(
-                natures[i],
-                PKMN.Calculations.Nature((uint)((rng.Next(0,50001) * 1000) + i))
-            );
+        foreach(PKMN.Nature nature in natures)
+        {
+            uint personality = (uint)(((rng.Next() % 50000) * 1000) + (uint)nature - 1);
+
+            Assert.AreEqual(nature, PKMN.Calculations.Nature(personality));
         }
     }
 
@@ -1734,12 +1729,12 @@ public class CSharpCalculationsTest {
         Assert.Throws<ArgumentOutOfRangeException>(
             delegate {
                 PKMN.Calculations.GeneratePersonality(
-                    "Charmander",
+                    PKMN.Species.CHARMANDER,
                     PKMN.Pokemon.DefaultTrainerID,
                     true,
                     "Torrent",
                     PKMN.Gender.MALE,
-                    "Quiet"
+                    PKMN.Nature.QUIET
                 );
             }
         );
@@ -1748,12 +1743,12 @@ public class CSharpCalculationsTest {
         Assert.Throws<ArgumentOutOfRangeException>(
             delegate {
                 PKMN.Calculations.GeneratePersonality(
-                    "Charmander",
+                    PKMN.Species.CHARMANDER,
                     PKMN.Pokemon.DefaultTrainerID,
                     true,
                     "Blaze",
                     PKMN.Gender.NONE,
-                    "Quiet"
+                    PKMN.Nature.QUIET
                 );
             }
         );
@@ -1762,29 +1757,29 @@ public class CSharpCalculationsTest {
         Assert.Throws<ArgumentOutOfRangeException>(
             delegate {
                 PKMN.Calculations.GeneratePersonality(
-                    "Charmander",
+                    PKMN.Species.CHARMANDER,
                     PKMN.Pokemon.DefaultTrainerID,
                     true,
                     "Blaze",
                     PKMN.Gender.MALE,
-                    "Not a nature"
+                    PKMN.Nature.NONE
                 );
             }
         );
 
         // Test and validate a valid call.
         uint personality = PKMN.Calculations.GeneratePersonality(
-                               "Charmander",
+                               PKMN.Species.CHARMANDER,
                                PKMN.Pokemon.DefaultTrainerID,
                                true,
                                "Blaze",
                                PKMN.Gender.MALE,
-                               "Quiet"
+                               PKMN.Nature.QUIET
                            );
         Assert.AreEqual(
             PKMN.Gender.MALE,
             PKMN.Calculations.ModernPokemonGender(
-                "Charmander", personality
+                PKMN.Species.CHARMANDER, personality
             )
         );
         Assert.IsTrue(
@@ -1864,62 +1859,62 @@ public class CSharpCalculationsTest {
         // Make sure expected exceptions are thrown.
         Assert.Throws<IndexOutOfRangeException>(
             delegate {
-                PKMN.Calculations.PokemonSize("Magikarp", 0, -1, 0, 0, 0, 0, 0);
+                PKMN.Calculations.PokemonSize(PKMN.Species.MAGIKARP, 0, -1, 0, 0, 0, 0, 0);
             }
         );
         Assert.Throws<IndexOutOfRangeException>(
             delegate {
-                PKMN.Calculations.PokemonSize("Magikarp", 0, 32, 0, 0, 0, 0, 0);
+                PKMN.Calculations.PokemonSize(PKMN.Species.MAGIKARP, 0, 32, 0, 0, 0, 0, 0);
             }
         );
         Assert.Throws<IndexOutOfRangeException>(
             delegate {
-                PKMN.Calculations.PokemonSize("Magikarp", 0, 0, -1, 0, 0, 0, 0);
+                PKMN.Calculations.PokemonSize(PKMN.Species.MAGIKARP, 0, 0, -1, 0, 0, 0, 0);
             }
         );
         Assert.Throws<IndexOutOfRangeException>(
             delegate {
-                PKMN.Calculations.PokemonSize("Magikarp", 0, 0, 32, 0, 0, 0, 0);
+                PKMN.Calculations.PokemonSize(PKMN.Species.MAGIKARP, 0, 0, 32, 0, 0, 0, 0);
             }
         );
         Assert.Throws<IndexOutOfRangeException>(
             delegate {
-                PKMN.Calculations.PokemonSize("Magikarp", 0, 0, 0, -1, 0, 0, 0);
+                PKMN.Calculations.PokemonSize(PKMN.Species.MAGIKARP, 0, 0, 0, -1, 0, 0, 0);
             }
         );
         Assert.Throws<IndexOutOfRangeException>(
             delegate {
-                PKMN.Calculations.PokemonSize("Magikarp", 0, 0, 0, 32, 0, 0, 0);
+                PKMN.Calculations.PokemonSize(PKMN.Species.MAGIKARP, 0, 0, 0, 32, 0, 0, 0);
             }
         );
         Assert.Throws<IndexOutOfRangeException>(
             delegate {
-                PKMN.Calculations.PokemonSize("Magikarp", 0, 0, 0, 0, -1, 0, 0);
+                PKMN.Calculations.PokemonSize(PKMN.Species.MAGIKARP, 0, 0, 0, 0, -1, 0, 0);
             }
         );
         Assert.Throws<IndexOutOfRangeException>(
             delegate {
-                PKMN.Calculations.PokemonSize("Magikarp", 0, 0, 0, 0, 32, 0, 0);
+                PKMN.Calculations.PokemonSize(PKMN.Species.MAGIKARP, 0, 0, 0, 0, 32, 0, 0);
             }
         );
         Assert.Throws<IndexOutOfRangeException>(
             delegate {
-                PKMN.Calculations.PokemonSize("Magikarp", 0, 0, 0, 0, 0, -1, 0);
+                PKMN.Calculations.PokemonSize(PKMN.Species.MAGIKARP, 0, 0, 0, 0, 0, -1, 0);
             }
         );
         Assert.Throws<IndexOutOfRangeException>(
             delegate {
-                PKMN.Calculations.PokemonSize("Magikarp", 0, 0, 0, 0, 0, 32, 0);
+                PKMN.Calculations.PokemonSize(PKMN.Species.MAGIKARP, 0, 0, 0, 0, 0, 32, 0);
             }
         );
         Assert.Throws<IndexOutOfRangeException>(
             delegate {
-                PKMN.Calculations.PokemonSize("Magikarp", 0, 0, 0, 0, 0, 0, -1);
+                PKMN.Calculations.PokemonSize(PKMN.Species.MAGIKARP, 0, 0, 0, 0, 0, 0, -1);
             }
         );
         Assert.Throws<IndexOutOfRangeException>(
             delegate {
-                PKMN.Calculations.PokemonSize("Magikarp", 0, 0, 0, 0, 0, 0, 32);
+                PKMN.Calculations.PokemonSize(PKMN.Species.MAGIKARP, 0, 0, 0, 0, 0, 0, 32);
             }
         );
 
@@ -1928,18 +1923,20 @@ public class CSharpCalculationsTest {
          * for each relevant Pokémon.
          */
         PKMN.Database.PokemonEntry[] pokemonWithSizeChecks = {
-            new PKMN.Database.PokemonEntry("Barboach", PKMN.Game.RUBY, ""),
-            new PKMN.Database.PokemonEntry("Shroomish", PKMN.Game.RUBY, ""),
-            new PKMN.Database.PokemonEntry("Seedot", PKMN.Game.EMERALD, ""),
-            new PKMN.Database.PokemonEntry("Lotad", PKMN.Game.EMERALD, ""),
-            new PKMN.Database.PokemonEntry("Magikarp", PKMN.Game.FIRERED, ""),
-            new PKMN.Database.PokemonEntry("Heracross", PKMN.Game.FIRERED, "")
+            new PKMN.Database.PokemonEntry(PKMN.Species.BARBOACH, PKMN.Game.RUBY, ""),
+            new PKMN.Database.PokemonEntry(PKMN.Species.SHROOMISH, PKMN.Game.RUBY, ""),
+            new PKMN.Database.PokemonEntry(PKMN.Species.SEEDOT, PKMN.Game.EMERALD, ""),
+            new PKMN.Database.PokemonEntry(PKMN.Species.LOTAD, PKMN.Game.EMERALD, ""),
+            new PKMN.Database.PokemonEntry(PKMN.Species.MAGIKARP, PKMN.Game.FIRERED, ""),
+            new PKMN.Database.PokemonEntry(PKMN.Species.HERACROSS, PKMN.Game.FIRERED, "")
         };
 
-        for(int i = 0; i < pokemonWithSizeChecks.Length; ++i) {
-            for(int j = 0; j < 10; ++j) {
+        for(int i = 0; i < pokemonWithSizeChecks.Length; ++i)
+        {
+            for(int j = 0; j < 10; ++j)
+            {
                 float size = PKMN.Calculations.PokemonSize(
-                                 pokemonWithSizeChecks[i].Name,
+                                 pokemonWithSizeChecks[i].SpeciesEnum,
                                  (uint)rng.Next(0, Int32.MaxValue),
                                  rng.Next(0, 32),
                                  rng.Next(0, 32),

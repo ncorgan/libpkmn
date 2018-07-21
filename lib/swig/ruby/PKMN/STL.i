@@ -28,4 +28,4 @@ PKMN_RUBY_PAIR(std::string, std::string, StringPair);
 // std::vector
 PKMN_RUBY_VECTOR(int,          IntList);
 PKMN_RUBY_VECTOR(std::string,  StringList);
-PKMN_RUBY_VECTOR(pkmn::e_stat, StatList);
+PKMN_RUBY_VECTOR(pkmn::e_stat, StatEnumList);

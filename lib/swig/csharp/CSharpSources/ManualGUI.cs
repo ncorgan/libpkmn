@@ -42,7 +42,7 @@ namespace PKMN
         {
             public AbilityListComboBox(int generation)
             {
-                StringList abilities = Database.Lists.AbilityList(generation);
+                StringList abilities = Database.Lists.AbilityNameList(generation);
                 foreach(string ability in abilities)
                 {
                     this.Items.Add(ability);
@@ -54,7 +54,7 @@ namespace PKMN
         {
             public GameListComboBox(int generation, bool includePrevious)
             {
-                StringList games = Database.Lists.GameList(generation, includePrevious);
+                StringList games = Database.Lists.GameNameList(generation, includePrevious);
                 foreach(string game in games)
                 {
                     this.Items.Add(game);
@@ -66,7 +66,7 @@ namespace PKMN
         {
             public ItemListComboBox(Game game)
             {
-                StringList items = Database.Lists.ItemList(game);
+                StringList items = Database.Lists.ItemNameList(game);
                 foreach(string item in items)
                 {
                     this.Items.Add(item);
@@ -78,7 +78,7 @@ namespace PKMN
         {
             public LocationListComboBox(Game game, bool wholeGeneration)
             {
-                StringList locations = Database.Lists.LocationList(game, wholeGeneration);
+                StringList locations = Database.Lists.LocationNameList(game, wholeGeneration);
                 foreach(string location in locations)
                 {
                     this.Items.Add(location);
@@ -90,7 +90,7 @@ namespace PKMN
         {
             public MoveListComboBox(Game game)
             {
-                StringList moves = Database.Lists.MoveList(game);
+                StringList moves = Database.Lists.MoveNameList(game);
                 foreach(string move in moves)
                 {
                     this.Items.Add(move);
@@ -102,7 +102,7 @@ namespace PKMN
         {
             public NatureListComboBox()
             {
-                StringList natures = Database.Lists.NatureList();
+                StringList natures = Database.Lists.NatureNameList();
                 foreach(string nature in natures)
                 {
                     this.Items.Add(nature);
@@ -114,7 +114,7 @@ namespace PKMN
         {
             public PokemonListComboBox(int generation, bool wholeGeneration)
             {
-                StringList pokemon = Database.Lists.PokemonList(generation, wholeGeneration);
+                StringList pokemon = Database.Lists.PokemonNameList(generation, wholeGeneration);
                 foreach(string pkmn in pokemon)
                 {
                     this.Items.Add(pkmn);
@@ -126,7 +126,7 @@ namespace PKMN
         {
             public RegionListComboBox()
             {
-                StringList regions = Database.Lists.RegionList();
+                StringList regions = Database.Lists.RegionNameList();
                 foreach(string region in regions)
                 {
                     this.Items.Add(region);
@@ -138,7 +138,7 @@ namespace PKMN
         {
             public RibbonListComboBox(int generation)
             {
-                StringList ribbons = Database.Lists.RibbonList(generation);
+                StringList ribbons = Database.Lists.RibbonNameList(generation);
                 foreach(string ribbon in ribbons)
                 {
                     this.Items.Add(ribbon);
@@ -150,7 +150,7 @@ namespace PKMN
         {
             public SuperTrainingMedalListComboBox()
             {
-                StringList superTrainingMedals = Database.Lists.SuperTrainingMedalList();
+                StringList superTrainingMedals = Database.Lists.SuperTrainingMedalNameList();
                 foreach(string superTrainingMedal in superTrainingMedals)
                 {
                     this.Items.Add(superTrainingMedal);
@@ -162,7 +162,7 @@ namespace PKMN
         {
             public TypeListComboBox(Game game)
             {
-                StringList types = Database.Lists.TypeList(game);
+                StringList types = Database.Lists.TypeNameList(game);
                 foreach(string type in types)
                 {
                     this.Items.Add(type);

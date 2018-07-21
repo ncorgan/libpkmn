@@ -81,7 +81,7 @@ public class Gen3PokemonTests
 
     static public void PokemonTest(
         PKMN.Game game,
-        string species
+        PKMN.Species species
     )
     {
         PKMN.Pokemon pokemon = new PKMN.Pokemon(species, game, "", 30);
@@ -92,10 +92,10 @@ public class Gen3PokemonTests
         if(isGamecube)
         {
             testParams = new PokemonTestParams(
-                                 "Great Ball",
-                                 new string[]{"Friend Ball", "Heal Ball"},
-                                 "Razz Berry",
-                                 new string[]{"Berry", "Mach Bike"},
+                                 PKMN.Ball.GREAT_BALL,
+                                 new PKMN.Ball[]{PKMN.Ball.FRIEND_BALL, PKMN.Ball.HEAL_BALL},
+                                 PKMN.Item.RAZZ_BERRY,
+                                 new PKMN.Item[]{PKMN.Item.BERRY, PKMN.Item.MACH_BIKE},
                                  "Distant land",
                                  new string[]{"Phenac City", "Orre Colosseum"},
                                  new string[]{"New Bark Town", "Twinleaf Town"},
@@ -112,10 +112,10 @@ public class Gen3PokemonTests
         else
         {
             testParams = new PokemonTestParams(
-                                 "Great Ball",
-                                 new string[]{"Friend Ball", "Heal Ball"},
-                                 "Razz Berry",
-                                 new string[]{"Berry", "Mach Bike"},
+                                 PKMN.Ball.GREAT_BALL,
+                                 new PKMN.Ball[]{PKMN.Ball.FRIEND_BALL, PKMN.Ball.HEAL_BALL},
+                                 PKMN.Item.RAZZ_BERRY,
+                                 new PKMN.Item[]{PKMN.Item.BERRY, PKMN.Item.MACH_BIKE},
                                  "Fateful encounter",
                                  new string[]{"Petalburg Woods", "Viridian Forest"},
                                  new string[]{"New Bark Town", "Twinleaf Town"},
@@ -160,7 +160,8 @@ public class Gen3PokemonTests
 
         if(isGamecube)
         {
-            string shadowSpecies = (game == PKMN.Game.COLOSSEUM) ? "Ledian" : "Ledyba";
+            PKMN.Species shadowSpecies = (game == PKMN.Game.COLOSSEUM) ? PKMN.Species.LEDIAN
+                                                                       : PKMN.Species.LEDYBA;
 
             PKMN.Pokemon shadowPokemon = new PKMN.Pokemon(shadowSpecies, game, "", 50);
             Assert.AreEqual(shadowPokemon.Form, "Standard");
@@ -172,7 +173,7 @@ public class Gen3PokemonTests
             Assert.Throws<ArgumentOutOfRangeException>(
                 delegate
                 {
-                    new PKMN.Pokemon("Ledyba", game, "Shadow", 50);
+                    new PKMN.Pokemon(PKMN.Species.LEDYBA, game, "Shadow", 50);
                 }
             );
         }

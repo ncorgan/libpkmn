@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -18,13 +18,15 @@ public class UnownTests
     )
     {
         PKMN.Database.PokemonEntry unownEntry = new PKMN.Database.PokemonEntry(
-                                                        "Unown", game, ""
+                                                        PKMN.Species.UNOWN,
+                                                        game,
+                                                        ""
                                                     );
         PKMN.Pokemon unown;
 
         foreach(string form in unownEntry.Forms)
         {
-            unown = new PKMN.Pokemon("Unown", game, form, 5);
+            unown = new PKMN.Pokemon(PKMN.Species.UNOWN, game, form, 5);
             Assert.AreEqual(unown.Form, form);
 
             // Make sure IVs are properly set.
@@ -40,7 +42,7 @@ public class UnownTests
             Assert.IsTrue(System.IO.File.Exists(unown.SpriteFilepath));
         }
 
-        unown = new PKMN.Pokemon("Unown", game, "A", 5);
+        unown = new PKMN.Pokemon(PKMN.Species.UNOWN, game, "A", 5);
 
         // Make sure setting the form properly changes the IVs.
         foreach(string form in unownEntry.Forms)
@@ -73,13 +75,15 @@ public class UnownTests
     )
     {
         PKMN.Database.PokemonEntry unownEntry = new PKMN.Database.PokemonEntry(
-                                                        "Unown", game, ""
+                                                        PKMN.Species.UNOWN,
+                                                        game,
+                                                        ""
                                                     );
         PKMN.Pokemon unown;
 
         foreach(string form in unownEntry.Forms)
         {
-            unown = new PKMN.Pokemon("Unown", game, form, 5);
+            unown = new PKMN.Pokemon(PKMN.Species.UNOWN, game, form, 5);
             Assert.AreEqual(unown.Form, form);
 
             // Make sure the personality is properly set.
@@ -90,7 +94,7 @@ public class UnownTests
             Assert.IsTrue(System.IO.File.Exists(unown.SpriteFilepath));
         }
 
-        unown = new PKMN.Pokemon("Unown", game, "A", 5);
+        unown = new PKMN.Pokemon(PKMN.Species.UNOWN, game, "A", 5);
 
         foreach(string form in unownEntry.Forms)
         {

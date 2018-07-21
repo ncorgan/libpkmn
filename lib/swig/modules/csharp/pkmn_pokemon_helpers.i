@@ -43,7 +43,7 @@ using System.Runtime.InteropServices;"
         get { return (int)size(); }
     }
 
-    public StatList Keys
+    public StatEnumList Keys
     {
         get { return KeysFunction(); }
     }
@@ -85,7 +85,7 @@ using System.Runtime.InteropServices;"
     public override int GetHashCode()
     {
         return HashCodeBuilder.Create().AddValue<ulong>(this.Cptr())
-                                       .AddValue<StatList>(this.Keys)
+                                       .AddValue<StatEnumList>(this.Keys)
                                        .AddValue<string>(this.GetType().Name)
                                        .ToHashCode();
     }
@@ -125,7 +125,7 @@ using System.Runtime.InteropServices;"
         get { return (int)size(); }
     }
 
-    public StatList Keys
+    public StatEnumList Keys
     {
         get { return KeysFunction(); }
     }
@@ -167,7 +167,7 @@ using System.Runtime.InteropServices;"
     public override int GetHashCode()
     {
         return HashCodeBuilder.Create().AddValue<ulong>(this.Cptr())
-                                       .AddValue<StatList>(this.Keys)
+                                       .AddValue<StatEnumList>(this.Keys)
                                        .AddValue<string>(this.GetType().Name)
                                        .ToHashCode();
     }

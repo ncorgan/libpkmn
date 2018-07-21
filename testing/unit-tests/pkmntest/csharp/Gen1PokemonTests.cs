@@ -15,16 +15,16 @@ public class Gen1PokemonTests
 {
     public static void PokemonTest(
         PKMN.Game game,
-        string species
+        PKMN.Species species
     )
     {
         PKMN.Pokemon pokemon = new PKMN.Pokemon(species, game, "", 30);
 
         PokemonTestParams testParams = new PokemonTestParams(
-                                               "Great Ball",
-                                               new string[]{"Great Ball"},
-                                               "Potion",
-                                               new string[]{"Potion"},
+                                               PKMN.Ball.GREAT_BALL,
+                                               new PKMN.Ball[]{PKMN.Ball.GREAT_BALL},
+                                               PKMN.Item.POTION,
+                                               new PKMN.Item[]{PKMN.Item.POTION},
                                                "Special",
                                                new string[]{"Route 1"},
                                                new string[]{"Route 1"},

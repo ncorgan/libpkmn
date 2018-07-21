@@ -15,16 +15,16 @@ public class Gen2PokemonTests
 {
     public static void PokemonTest(
         PKMN.Game game,
-        string species
+        PKMN.Species species
     )
     {
         PKMN.Pokemon pokemon = new PKMN.Pokemon(species, game, "", 30);
 
         PokemonTestParams testParams = new PokemonTestParams(
-                                               "Great Ball",
-                                               new string[]{"Great Ball"},
-                                               "Berry",
-                                               new string[]{"Razz Berry", "Bicycle"},
+                                               PKMN.Ball.GREAT_BALL,
+                                               new PKMN.Ball[]{PKMN.Ball.GREAT_BALL},
+                                               PKMN.Item.BERRY,
+                                               new PKMN.Item[]{PKMN.Item.RAZZ_BERRY, PKMN.Item.BICYCLE},
                                                "Special",
                                                new string[]{"Sprout Tower", "Tohjo Falls"},
                                                new string[]{"Littleroot Town", "Petalburg Woods"},
