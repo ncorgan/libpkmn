@@ -22,6 +22,8 @@
 
 namespace fs = boost::filesystem;
 
+// TODO: test nature, look for other missing coverage
+
 // These are actually one more than the max, but we need this for the modulo.
 BOOST_STATIC_CONSTEXPR int GB_EV_MAX     = 65536;
 BOOST_STATIC_CONSTEXPR int MODERN_EV_MAX = 256;

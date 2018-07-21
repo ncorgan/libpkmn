@@ -235,6 +235,27 @@ namespace pkmn { namespace swig {
                 _pokemon->set_held_item(held_item);
             }
 
+            inline pkmn::e_nature get_nature()
+            {
+                BOOST_ASSERT(_pokemon.get() != nullptr);
+
+                if(_generation >= 3)
+                {
+                    return _pokemon->get_nature();
+                }
+                else
+                {
+                    return pkmn::e_nature::NONE;
+                }
+            }
+
+            inline void set_nature(pkmn::e_nature nature)
+            {
+                BOOST_ASSERT(_pokemon.get() != nullptr);
+
+                _pokemon->set_nature(nature);
+            }
+
             inline int get_pokerus_duration()
             {
                 BOOST_ASSERT(_pokemon.get() != nullptr);

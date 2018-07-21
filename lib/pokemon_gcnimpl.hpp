@@ -83,11 +83,9 @@ namespace pkmn {
                 pkmn::e_item held_item
             ) final;
 
-            std::string get_nature() final;
+            pkmn::e_nature get_nature() final;
 
-            void set_nature(
-                const std::string& nature
-            ) final;
+            void set_nature(pkmn::e_nature nature) final;
 
             int get_pokerus_duration() final;
 

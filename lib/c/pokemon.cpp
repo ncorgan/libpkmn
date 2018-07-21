@@ -398,6 +398,37 @@ enum pkmn_error pkmn_pokemon_set_held_item(
     )
 }
 
+enum pkmn_error pkmn_pokemon_get_nature(
+    const struct pkmn_pokemon* p_pokemon,
+    enum pkmn_nature* p_nature_out
+)
+{
+    PKMN_CHECK_NULL_PARAM(p_pokemon);
+    pkmn_pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
+    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_nature_out, p_internal);
+
+    PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
+        *p_nature_out = static_cast<enum pkmn_nature>(
+                               p_internal->cpp->get_nature()
+                           );
+    )
+}
+
+enum pkmn_error pkmn_pokemon_set_nature(
+    const struct pkmn_pokemon* p_pokemon,
+    enum pkmn_nature nature
+)
+{
+    PKMN_CHECK_NULL_PARAM(p_pokemon);
+    pkmn_pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
+
+    PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
+        p_internal->cpp->set_nature(
+            static_cast<pkmn::e_nature>(nature)
+        );
+    )
+}
+
 enum pkmn_error pkmn_pokemon_get_pokerus_duration(
     const struct pkmn_pokemon* p_pokemon,
     int* p_pokerus_duration_out

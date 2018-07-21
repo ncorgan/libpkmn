@@ -344,12 +344,12 @@ namespace pkmn
         throw pkmn::feature_not_in_game_error("Held items", "Generation I");
     }
 
-    std::string pokemon_gen1impl::get_nature()
+    pkmn::e_nature pokemon_gen1impl::get_nature()
     {
         throw pkmn::feature_not_in_game_error("Natures", "Generation I");
     }
 
-    void pokemon_gen1impl::set_nature(const std::string&)
+    void pokemon_gen1impl::set_nature(pkmn::e_nature)
     {
         throw pkmn::feature_not_in_game_error("Natures", "Generation I");
     }

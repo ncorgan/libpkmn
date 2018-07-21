@@ -466,12 +466,12 @@ namespace pkmn
         _pksav_pokemon.pc_data.held_item = uint8_t(item.get_item_index());
     }
 
-    std::string pokemon_gen2impl::get_nature()
+    pkmn::e_nature pokemon_gen2impl::get_nature()
     {
         throw pkmn::feature_not_in_game_error("Natures", "Generation II");
     }
 
-    void pokemon_gen2impl::set_nature(const std::string&)
+    void pokemon_gen2impl::set_nature(pkmn::e_nature)
     {
         throw pkmn::feature_not_in_game_error("Natures", "Generation II");
     }

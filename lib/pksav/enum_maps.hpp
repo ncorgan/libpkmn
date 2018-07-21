@@ -10,6 +10,7 @@
 
 #include <pkmn/enums/gender.hpp>
 #include <pkmn/enums/language.hpp>
+#include <pkmn/enums/nature.hpp>
 #include <pkmn/enums/stat.hpp>
 
 #include <pksav/gen1/options.h>
@@ -86,7 +87,7 @@ namespace pksav
     typedef boost::bimap<std::string, enum pksav_gen1_type> gen1_type_bimap_t;
     typedef boost::bimap<std::string, enum pksav_gen2_mom_money_policy> gen2_mom_money_policy_bimap_t;
     typedef boost::bimap<pkmn::e_language, enum pksav_gba_language> gba_language_bimap_t;
-    typedef boost::bimap<std::string, enum pksav_nature> nature_bimap_t;
+    typedef boost::bimap<pkmn::e_nature, enum pksav_nature> nature_bimap_t;
 
     const gen1_type_bimap_t& get_gen1_type_bimap();
     const gen2_mom_money_policy_bimap_t& get_gen2_mom_money_policy_bimap();

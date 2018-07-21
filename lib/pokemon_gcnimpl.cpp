@@ -531,7 +531,7 @@ namespace pkmn
         _libpkmgc_pokemon_uptr->heldItem = LibPkmGC::ItemIndex(item.get_item_index());
     }
 
-    std::string pokemon_gcnimpl::get_nature()
+    pkmn::e_nature pokemon_gcnimpl::get_nature()
     {
         boost::lock_guard<pokemon_gcnimpl> lock(*this);
 
@@ -549,7 +549,7 @@ namespace pkmn
     }
 
     void pokemon_gcnimpl::set_nature(
-        const std::string& nature
+        pkmn::e_nature nature
     )
     {
         const pksav::nature_bimap_t& nature_bimap = pksav::get_nature_bimap();
@@ -562,7 +562,8 @@ namespace pkmn
         boost::lock_guard<pokemon_gcnimpl> lock(*this);
 
         // Nature is derived from personality, so we need to find a new
-        // one that preserves all other values.
+        // one that preserves all other values. Note that nature is not stored
+        // in the LibPkmGC class, so we just set the personality.
         set_personality(
             pkmn::calculations::generate_personality(
                 get_species(),
@@ -570,7 +571,7 @@ namespace pkmn
                 is_shiny(),
                 get_ability(),
                 get_gender(),
-                pkmn::e_nature::NONE
+                nature
             )
         );
     }
@@ -779,7 +780,7 @@ namespace pkmn
                                           is_shiny(),
                                           ability,
                                           get_gender(),
-                                          pkmn::string_to_nature(get_nature())
+                                          get_nature()
                                       );
     }
 

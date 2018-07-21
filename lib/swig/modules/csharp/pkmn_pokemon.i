@@ -38,7 +38,8 @@ using Database;"
 %attributestring(pkmn::swig::pokemon, std::string, Condition, get_condition, set_condition);
 %attribute(pkmn::swig::pokemon, pkmn::e_gender, Gender, get_gender, set_gender);
 %attribute(pkmn::swig::pokemon, bool, IsShiny, is_shiny, set_shininess);
-%attributestring(pkmn::swig::pokemon, pkmn::e_item, HeldItem, get_held_item, set_held_item);
+%attribute(pkmn::swig::pokemon, pkmn::e_item, HeldItem, get_held_item, set_held_item);
+%attribute(pkmn::swig::pokemon, pkmn::e_nature, Nature, get_nature, set_nature);
 %attribute(pkmn::swig::pokemon, int, PokerusDuration, get_pokerus_duration, set_pokerus_duration);
 %attributestring(pkmn::swig::pokemon, std::string, OriginalTrainerName, get_original_trainer_name, set_original_trainer_name);
 %attribute(pkmn::swig::pokemon, uint16_t, OriginalTrainerPublicID, get_original_trainer_public_id, set_original_trainer_public_id);

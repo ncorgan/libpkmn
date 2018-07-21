@@ -110,10 +110,10 @@ namespace pkmn {
                 pkmn::e_item held_item
             ) = 0;
 
-            virtual std::string get_nature() = 0;
+            virtual pkmn::e_nature get_nature() = 0;
 
             virtual void set_nature(
-                const std::string& nature
+                pkmn::e_nature nature
             ) = 0;
 
             virtual int get_pokerus_duration() = 0;

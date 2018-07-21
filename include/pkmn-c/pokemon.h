@@ -29,6 +29,8 @@
 #include <pkmn-c/types/move_slot.h>
 #include <pkmn-c/types/trainer_info.h>
 
+// TODO: sync this with C++ class
+
 struct pkmn_pokemon
 {
     enum pkmn_species species;
@@ -154,6 +156,16 @@ PKMN_C_API enum pkmn_error pkmn_pokemon_get_held_item(
 PKMN_C_API enum pkmn_error pkmn_pokemon_set_held_item(
     const struct pkmn_pokemon* p_pokemon,
     enum pkmn_item held_item
+);
+
+PKMN_C_API enum pkmn_error pkmn_pokemon_get_nature(
+    const struct pkmn_pokemon* p_pokemon,
+    enum pkmn_nature* p_nature_out
+);
+
+PKMN_C_API enum pkmn_error pkmn_pokemon_set_nature(
+    const struct pkmn_pokemon* p_pokemon,
+    enum pkmn_nature nature
 );
 
 PKMN_C_API enum pkmn_error pkmn_pokemon_get_pokerus_duration(

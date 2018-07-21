@@ -522,7 +522,7 @@ namespace pkmn
         _p_growth_block->held_item = pksav_littleendian16(uint16_t(item.get_item_index()));
     }
 
-    std::string pokemon_gbaimpl::get_nature()
+    pkmn::e_nature pokemon_gbaimpl::get_nature()
     {
         boost::lock_guard<pokemon_gbaimpl> lock(*this);
 
@@ -538,7 +538,7 @@ namespace pkmn
     }
 
     void pokemon_gbaimpl::set_nature(
-        const std::string& nature
+        pkmn::e_nature nature
     )
     {
         const pksav::nature_bimap_t& nature_bimap = pksav::get_nature_bimap();
@@ -559,7 +559,7 @@ namespace pkmn
                 is_shiny(),
                 get_ability(),
                 get_gender(),
-                pkmn::string_to_nature(nature)
+                nature
             )
         );
     }
@@ -793,7 +793,7 @@ namespace pkmn
                 is_shiny(),
                 ability,
                 get_gender(),
-                pkmn::string_to_nature(get_nature())
+                get_nature()
             ));
     }
 
