@@ -759,8 +759,8 @@ namespace pkmn { namespace c {
             0, // base_friendship
             // types
             {
-                nullptr, // p_first
-                nullptr  // p_second
+                PKMN_TYPE_NONE, // first
+                PKMN_TYPE_NONE  // second
             },
             // abilities
             {
@@ -820,10 +820,6 @@ namespace pkmn { namespace c {
             pokemon_entry_cpp.get_pokedex_entry(),
             &temp_pokemon_entry_c.p_pokedex_entry
         );
-        string_pair_cpp_to_c(
-            pokemon_entry_cpp.get_types(),
-            &temp_pokemon_entry_c.types
-        );
 
         ability_pair_cpp_to_c(
             pokemon_entry_cpp.get_abilities(),
@@ -832,6 +828,10 @@ namespace pkmn { namespace c {
         egg_group_pair_cpp_to_c(
             pokemon_entry_cpp.get_egg_groups(),
             &temp_pokemon_entry_c.egg_groups
+        );
+        type_pair_cpp_to_c(
+            pokemon_entry_cpp.get_types(),
+            &temp_pokemon_entry_c.types
         );
 
         temp_pokemon_entry_c.name = static_cast<enum pkmn_species>(pokemon_entry_cpp.get_species_enum());

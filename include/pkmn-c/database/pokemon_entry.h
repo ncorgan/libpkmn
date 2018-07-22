@@ -35,7 +35,7 @@ struct pkmn_database_pokemon_entry
     float chance_female;
     bool has_gender_differences;
     int base_friendship;
-    struct pkmn_string_pair types;
+    struct pkmn_type_enum_pair types;
     struct pkmn_ability_enum_pair abilities;
     enum pkmn_ability hidden_ability;
     struct pkmn_egg_group_enum_pair egg_groups;

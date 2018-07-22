@@ -214,12 +214,11 @@ namespace pkmn { namespace database {
              *
              * This value can vary between generations and between forms.
              *
-             * If the Pokémon has a single type, the second value will be "None".
+             * If the Pokémon has a single type, the second value will be NONE.
              *
-             * \returns For "None" entries: "None"/"None"
-             * \returns For invalid Pokémon: "Unknown"/"Unknown"
+             * \returns For None/Invalid entries: NONE/NONE
              */
-            std::pair<std::string, std::string> get_types() const;
+            std::pair<pkmn::e_type, pkmn::e_type> get_types() const;
 
             /*!
              * @brief Returns this Pokémon's types.

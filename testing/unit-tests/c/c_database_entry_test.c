@@ -237,8 +237,8 @@ static void assert_pokemon_entry_uninitialized(
     TEST_ASSERT_EQUAL_FLOAT(p_pokemon_entry->chance_female, 0.0f);
     TEST_ASSERT_FALSE(p_pokemon_entry->has_gender_differences);
     TEST_ASSERT_EQUAL(p_pokemon_entry->base_friendship, 0);
-    TEST_ASSERT_NULL(p_pokemon_entry->types.p_first);
-    TEST_ASSERT_NULL(p_pokemon_entry->types.p_second);
+    TEST_ASSERT_EQUAL(PKMN_TYPE_NONE, p_pokemon_entry->types.first);
+    TEST_ASSERT_EQUAL(PKMN_TYPE_NONE, p_pokemon_entry->types.second);
     TEST_ASSERT_EQUAL(PKMN_ABILITY_NONE, p_pokemon_entry->abilities.first);
     TEST_ASSERT_EQUAL(PKMN_ABILITY_NONE, p_pokemon_entry->abilities.second);
     TEST_ASSERT_EQUAL(PKMN_ABILITY_NONE, p_pokemon_entry->hidden_ability);
@@ -288,8 +288,8 @@ static void pokemon_entry_test() {
         .chance_female = 0.0f,
         .has_gender_differences = false,
         .types = {
-            .p_first = NULL,
-            .p_second = NULL
+            .first = PKMN_TYPE_NONE,
+            .second = PKMN_TYPE_NONE
         },
         .abilities = {
             .first = PKMN_ABILITY_NONE,
@@ -403,8 +403,8 @@ static void pokemon_entry_test() {
     TEST_ASSERT_EQUAL_FLOAT(0.5f, pokemon_entry.chance_female);
     TEST_ASSERT_FALSE(pokemon_entry.has_gender_differences);
     TEST_ASSERT_EQUAL(70, pokemon_entry.base_friendship);
-    TEST_ASSERT_EQUAL_STRING("Ground", pokemon_entry.types.p_first);
-    TEST_ASSERT_EQUAL_STRING("Electric", pokemon_entry.types.p_second);
+    TEST_ASSERT_EQUAL(PKMN_TYPE_GROUND, pokemon_entry.types.first);
+    TEST_ASSERT_EQUAL(PKMN_TYPE_ELECTRIC, pokemon_entry.types.second);
     TEST_ASSERT_EQUAL(PKMN_ABILITY_STATIC, pokemon_entry.abilities.first);
     TEST_ASSERT_EQUAL(PKMN_ABILITY_LIMBER, pokemon_entry.abilities.second);
     TEST_ASSERT_EQUAL(PKMN_ABILITY_SAND_VEIL, pokemon_entry.hidden_ability);

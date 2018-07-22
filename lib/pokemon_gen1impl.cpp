@@ -79,13 +79,13 @@ namespace pkmn
         // Set internal members
         _pksav_pokemon.pc_data.species = uint8_t(_database_entry.get_pokemon_index());
 
-        std::pair<std::string, std::string> types = _database_entry.get_types();
+        std::pair<pkmn::e_type, pkmn::e_type> types = _database_entry.get_types();
         static const pksav::gen1_type_bimap_t& gen1_type_bimap = pksav::get_gen1_type_bimap();
 
         BOOST_ASSERT(gen1_type_bimap.left.find(types.first) != gen1_type_bimap.left.end());
         _pksav_pokemon.pc_data.types[0] = uint8_t(gen1_type_bimap.left.at(types.first));
 
-        if(types.second == "None")
+        if(types.second == pkmn::e_type::NONE)
         {
             _pksav_pokemon.pc_data.types[1] = _pksav_pokemon.pc_data.types[0];
         }

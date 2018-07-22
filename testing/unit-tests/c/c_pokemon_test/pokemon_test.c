@@ -66,8 +66,8 @@ static const struct pkmn_database_pokemon_entry empty_pokemon_entry =
     .base_friendship = 0,
     .types =
     {
-        .p_first = NULL,
-        .p_second = NULL
+        .first = PKMN_TYPE_NONE,
+        .second = PKMN_TYPE_NONE
     },
     .abilities =
     {

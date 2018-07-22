@@ -46,6 +46,7 @@ PKMN_CSHARP_PAIR(int,         int,         int,    int,    IntPair);
 PKMN_CSHARP_PAIR(std::string, std::string, string, string, StringPair);
 PKMN_CSHARP_PAIR(pkmn::e_ability, pkmn::e_ability, PKMN.Ability, PKMN.Ability, AbilityEnumPair);
 PKMN_CSHARP_PAIR(pkmn::e_egg_group, pkmn::e_egg_group, PKMN.EggGroup, PKMN.EggGroup, EggGroupEnumPair);
+PKMN_CSHARP_PAIR(pkmn::e_type, pkmn::e_type, PKMN.Type, PKMN.Type, TypeEnumPair);
 
 // std::vector
 PKMN_CSHARP_VECTOR(int,                       int,                  IntList)

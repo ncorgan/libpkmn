@@ -157,7 +157,10 @@ public class CSharpDatabaseEntryTest {
         Assert.That(pokemonEntry.ChanceFemale, Is.EqualTo(0.5).Within(0.0001));
         Assert.IsFalse(pokemonEntry.HasGenderDifferences);
         Assert.AreEqual(pokemonEntry.BaseFriendship, 70);
-        Assert.AreEqual(pokemonEntry.Types, (new PKMN.StringPair("Ground", "Electric")));
+        Assert.AreEqual(
+            pokemonEntry.Types,
+            new PKMN.TypeEnumPair(PKMN.Type.GROUND, PKMN.Type.ELECTRIC)
+        );
         Assert.AreEqual(
             pokemonEntry.Abilities,
             new PKMN.AbilityEnumPair(PKMN.Ability.STATIC, PKMN.Ability.LIMBER)

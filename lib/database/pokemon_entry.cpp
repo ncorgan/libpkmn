@@ -525,41 +525,59 @@ namespace pkmn { namespace database {
         return (std::find(old_none_secondary, old_none_secondary+14, species_id) != (old_none_secondary+14));
     }
 
-    static const std::pair<std::string, std::string> normal_only_pair = std::make_pair(
-        "Normal", "None"
-    );
+    std::pair<pkmn::e_type, pkmn::e_type> pokemon_entry::get_types() const
+    {
+        static const std::pair<pkmn::e_type, pkmn::e_type> normal_only_pair =
+        {
+            pkmn::e_type::NORMAL,
+            pkmn::e_type::NONE
+        };
 
-    std::pair<std::string, std::string> pokemon_entry::get_types() const {
-        std::pair<std::string, std::string> ret;
+        std::pair<pkmn::e_type, pkmn::e_type> ret =
+        {
+            pkmn::e_type::NONE,
+            pkmn::e_type::NONE
+        };
 
-        if(_none) {
-            ret = {"None", "None"};
-        } else if(_invalid) {
-            ret = {"Unknown", "Unknown"};
-        } else if(_generation < 6 and species_id_had_normal_only(_species_id)) {
-            // Corner cases
-            ret = normal_only_pair;
-        } else {
-            static BOOST_CONSTEXPR const char* query1 = \
-                "SELECT name FROM type_names WHERE local_language_id=9 AND type_id="
-                "(SELECT type_id FROM pokemon_types WHERE pokemon_id=? AND slot=1)";
-            static BOOST_CONSTEXPR const char* query2 = \
-                "SELECT name FROM type_names WHERE local_language_id=9 AND type_id="
-                "(SELECT type_id FROM pokemon_types WHERE pokemon_id=? AND slot=2)";
-
-            ret.first = pkmn::database::query_db_bind1<std::string, int>(
-                            query1, _pokemon_id
-                        );
-            if(not pkmn::database::maybe_query_db_bind1<std::string, int>(
-                   query2, ret.second, _pokemon_id
-               )) {
-                ret.second = "None";
+        if(!_none && !_invalid)
+        {
+            if((_generation < 6) && species_id_had_normal_only(_species_id))
+            {
+                // Corner cases
+                ret = normal_only_pair;
             }
+            else
+            {
+                static const std::string first_type_query =
+                    "SELECT type_id FROM pokemon_types WHERE pokemon_id=? AND slot=1";
 
-            if(_generation < 6 and species_id_had_normal_primary(_species_id)) {
-                ret.first = "Normal";
-            } else if(_generation < 6 and species_id_had_none_secondary(_species_id)) {
-                ret.second = "None";
+                ret.first = static_cast<pkmn::e_type>(int(
+                                pkmn::database::query_db_bind1<int, int>(
+                                    first_type_query.c_str(),
+                                    _pokemon_id
+                                )));
+
+                static const std::string second_type_query =
+                    "SELECT type_id FROM pokemon_types WHERE pokemon_id=? AND slot=2";
+                int second_type_as_int = 0;
+
+                if(pkmn::database::maybe_query_db_bind1<int, int>(
+                       second_type_query.c_str(),
+                       second_type_as_int,
+                       _pokemon_id
+                   ))
+                {
+                    ret.second = static_cast<pkmn::e_type>(second_type_as_int);
+                }
+
+                if((_generation < 6) && species_id_had_normal_primary(_species_id))
+                {
+                    ret.first = pkmn::e_type::NORMAL;
+                }
+                else if((_generation < 6) && species_id_had_none_secondary(_species_id))
+                {
+                    ret.second = pkmn::e_type::NONE;
+                }
             }
         }
 

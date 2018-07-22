@@ -23,7 +23,7 @@
 %attribute(pkmn::database::pokemon_entry, float, ChanceFemale, get_chance_female);
 %attribute(pkmn::database::pokemon_entry, bool, HasGenderDifferences, has_gender_differences);
 %attribute(pkmn::database::pokemon_entry, int, BaseFriendship, get_base_friendship);
-%attributeval(pkmn::database::pokemon_entry, %arg(std::pair<std::string, std::string>), Types, get_types);
+%attributeval(pkmn::database::pokemon_entry, %arg(std::pair<pkmn::e_type, pkmn::e_type>), Types, get_types);
 %attributeval(pkmn::database::pokemon_entry, %arg(std::pair<pkmn::e_ability, pkmn::e_ability>), Abilities, get_abilities);
 %attribute(pkmn::database::pokemon_entry, pkmn::e_ability, HiddenAbility, get_hidden_ability);
 %attributeval(pkmn::database::pokemon_entry, %arg(std::pair<pkmn::e_egg_group, pkmn::e_egg_group>), EggGroups, get_egg_groups);

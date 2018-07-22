@@ -31,6 +31,7 @@
 
 #include <pkmn/enums/ability.hpp>
 #include <pkmn/enums/egg_group.hpp>
+#include <pkmn/enums/type.hpp>
 
 #include <pkmn/types/time_duration.hpp>
 
@@ -40,6 +41,7 @@
 #include <pkmn-c/database/pokemon_entry.h>
 #include <pkmn-c/enums/ability.h>
 #include <pkmn-c/enums/egg_group.h>
+#include <pkmn-c/enums/type.h>
 #include <pkmn-c/types/hidden_power.h>
 #include <pkmn-c/types/int_pair.h>
 #include <pkmn-c/types/item_slot.h>
@@ -266,6 +268,17 @@ namespace pkmn { namespace c {
 
         p_egg_group_pair_c_out->first = static_cast<enum pkmn_egg_group>(egg_group_pair_cpp.first);
         p_egg_group_pair_c_out->second = static_cast<enum pkmn_egg_group>(egg_group_pair_cpp.second);
+    }
+
+    inline void type_pair_cpp_to_c(
+        const std::pair<pkmn::e_type, pkmn::e_type>& type_pair_cpp,
+        struct pkmn_type_enum_pair* p_type_pair_c_out
+    )
+    {
+        BOOST_ASSERT(p_type_pair_c_out != nullptr);
+
+        p_type_pair_c_out->first = static_cast<enum pkmn_type>(type_pair_cpp.first);
+        p_type_pair_c_out->second = static_cast<enum pkmn_type>(type_pair_cpp.second);
     }
 
     void string_cpp_to_c(
