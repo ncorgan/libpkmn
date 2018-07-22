@@ -445,6 +445,53 @@ TEST(cpp_to_c_test, list_cpp_to_c_test)
     }
 }
 
+enum class cpp_enum
+{
+    VALUE1 = 0,
+    VALUE2,
+    VALUE3
+};
+
+enum c_enum
+{
+    C_ENUM_VALUE1,
+    C_ENUM_VALUE2,
+    C_ENUM_VALUE3
+};
+
+struct c_test_enum_list
+{
+    c_enum* p_enums;
+    size_t length;
+};
+
+TEST(cpp_to_c_test, enum_list_cpp_to_c_test)
+{
+    const std::vector<cpp_enum> cpp_enum_vector =
+    {
+        cpp_enum::VALUE2,
+        cpp_enum::VALUE1,
+        cpp_enum::VALUE3
+    };
+    struct c_test_enum_list c_enum_list =
+    {
+        nullptr,
+        0
+    };
+
+    pkmn::c::list_cpp_to_c<cpp_enum, enum c_enum, c_test_enum_list>(
+        cpp_enum_vector,
+        &c_enum_list
+    );
+
+    ASSERT_NE(nullptr, c_enum_list.p_enums);
+    EXPECT_EQ(3ULL, c_enum_list.length);
+
+    EXPECT_EQ(C_ENUM_VALUE2, c_enum_list.p_enums[0]);
+    EXPECT_EQ(C_ENUM_VALUE1, c_enum_list.p_enums[1]);
+    EXPECT_EQ(C_ENUM_VALUE3, c_enum_list.p_enums[2]);
+}
+
 TEST(cpp_to_c_test, hidden_power_cpp_to_c_test)
 {
     pkmn::calculations::hidden_power hidden_power_cpp("Normal", 90);
