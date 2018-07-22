@@ -48,7 +48,7 @@ using Database;"
 %attribute(pkmn::swig::pokemon, pkmn::e_gender, OriginalTrainerGender, get_original_trainer_gender, set_original_trainer_gender);
 %attribute(pkmn::swig::pokemon, pkmn::e_language, Language, get_language, set_language);
 %attribute(pkmn::swig::pokemon, int, CurrentTrainerFriendship, get_current_trainer_friendship, set_current_trainer_friendship);
-%attributestring(pkmn::swig::pokemon, std::string, Ability, get_ability, set_ability);
+%attribute(pkmn::swig::pokemon, pkmn::e_ability, Ability, get_ability, set_ability);
 %attributestring(pkmn::swig::pokemon, pkmn::e_ball, Ball, get_ball, set_ball);
 %attribute(pkmn::swig::pokemon, int, LevelMet, get_level_met, set_level_met);
 %attributestring(pkmn::swig::pokemon, std::string, LocationMet, get_location_met, set_location_met);

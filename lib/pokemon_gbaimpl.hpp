@@ -136,11 +136,9 @@ namespace pkmn {
                 int friendship
             ) final;
 
-            std::string get_ability() final;
+            pkmn::e_ability get_ability() final;
 
-            void set_ability(
-                const std::string& ability
-            ) final;
+            void set_ability(pkmn::e_ability ability) final;
 
             pkmn::e_ball get_ball() final;
 
@@ -247,7 +245,7 @@ namespace pkmn {
 
             void _update_moves(int index) final;
 
-            void _set_ability(const std::string& ability) final;
+            void _set_ability(pkmn::e_ability ability) final;
 
             void _set_unown_form_from_personality();
             void _set_unown_personality_from_form();

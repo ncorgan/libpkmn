@@ -34,6 +34,7 @@ static int dummy_int = 0;
 static size_t dummy_size_t = 0;
 static uint32_t dummy_uint32 = 0;
 static float dummy_float = 0;
+static enum pkmn_ability dummy_ability = PKMN_ABILITY_NONE;
 static enum pkmn_ball dummy_ball = PKMN_BALL_NONE;
 static enum pkmn_game dummy_game = PKMN_GAME_NONE;
 static enum pkmn_item dummy_item = PKMN_ITEM_NONE;
@@ -1316,17 +1317,13 @@ static void pokemon_error_test()
 
     error = pkmn_pokemon_get_ability(
                 NULL,
-                strbuffer,
-                0,
-                &dummy_size_t
+                &dummy_ability
             );
     TEST_NULL_POINTER_RETURN("p_pokemon");
 
     error = pkmn_pokemon_get_ability(
                 &pokemon,
-                NULL,
-                0,
-                &dummy_size_t
+                NULL
             );
     TEST_POKEMON_NULL_POINTER_RETURN(pokemon, "p_ability_out");
 
@@ -1336,15 +1333,9 @@ static void pokemon_error_test()
 
     error = pkmn_pokemon_set_ability(
                 NULL,
-                strbuffer
+                dummy_ability
             );
     TEST_NULL_POINTER_RETURN("p_pokemon");
-
-    error = pkmn_pokemon_set_ability(
-                &pokemon,
-                NULL
-            );
-    TEST_POKEMON_NULL_POINTER_RETURN(pokemon, "p_ability");
 
     /*
      * pkmn_pokemon_get_ball
@@ -2440,18 +2431,7 @@ static void calculations_personality_error_test()
                 PKMN_SPECIES_BULBASAUR,
                 0,
                 false,
-                NULL,
-                PKMN_GENDER_GENDERLESS,
-                PKMN_NATURE_QUIET,
-                &dummy_uint32
-            );
-    TEST_NULL_POINTER_RETURN("p_ability");
-
-    error = pkmn_calculations_generate_personality(
-                PKMN_SPECIES_BULBASAUR,
-                0,
-                false,
-                strbuffer,
+                PKMN_ABILITY_NONE,
                 PKMN_GENDER_GENDERLESS,
                 PKMN_NATURE_QUIET,
                 NULL

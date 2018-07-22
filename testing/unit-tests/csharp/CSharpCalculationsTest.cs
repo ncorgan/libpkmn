@@ -1732,7 +1732,7 @@ public class CSharpCalculationsTest {
                     PKMN.Species.CHARMANDER,
                     PKMN.Pokemon.DefaultTrainerID,
                     true,
-                    "Torrent",
+                    PKMN.Ability.TORRENT,
                     PKMN.Gender.MALE,
                     PKMN.Nature.QUIET
                 );
@@ -1746,7 +1746,7 @@ public class CSharpCalculationsTest {
                     PKMN.Species.CHARMANDER,
                     PKMN.Pokemon.DefaultTrainerID,
                     true,
-                    "Blaze",
+                    PKMN.Ability.BLAZE,
                     PKMN.Gender.NONE,
                     PKMN.Nature.QUIET
                 );
@@ -1760,7 +1760,7 @@ public class CSharpCalculationsTest {
                     PKMN.Species.CHARMANDER,
                     PKMN.Pokemon.DefaultTrainerID,
                     true,
-                    "Blaze",
+                    PKMN.Ability.BLAZE,
                     PKMN.Gender.MALE,
                     PKMN.Nature.NONE
                 );
@@ -1772,7 +1772,7 @@ public class CSharpCalculationsTest {
                                PKMN.Species.CHARMANDER,
                                PKMN.Pokemon.DefaultTrainerID,
                                true,
-                               "Blaze",
+                               PKMN.Ability.BLAZE,
                                PKMN.Gender.MALE,
                                PKMN.Nature.QUIET
                            );

@@ -134,11 +134,9 @@ namespace pkmn {
                 int friendship
             ) final;
 
-            std::string get_ability() final;
+            pkmn::e_ability get_ability() final;
 
-            void set_ability(
-                const std::string& ability
-            ) final;
+            void set_ability(pkmn::e_ability) final;
 
             pkmn::e_ball get_ball() final;
 

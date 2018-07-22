@@ -240,40 +240,46 @@ static void test_image_filepaths(
 
 static void test_setting_ability(
     const pkmn::pokemon::sptr& pokemon
-) {
+)
+{
     int generation = pkmn::priv::game_enum_to_generation(pokemon->get_game());
 
-    if(generation >= 3) {
-        std::pair<std::string, std::string> abilities = pokemon->get_database_entry().get_abilities();
-        ASSERT_NE("None", abilities.first);
+    if(generation >= 3)
+    {
+        std::pair<pkmn::e_ability, pkmn::e_ability> abilities = pokemon->get_database_entry().get_abilities();
+        ASSERT_NE(pkmn::e_ability::NONE, abilities.first);
 
         pokemon->set_ability(abilities.first);
         EXPECT_EQ(abilities.first, pokemon->get_ability());
-        if(abilities.second != "None") {
+        if(abilities.second != pkmn::e_ability::NONE)
+        {
             pokemon->set_ability(abilities.second);
             EXPECT_EQ(abilities.second, pokemon->get_ability());
         }
 
-        if(generation >= 5) {
-            std::string hidden_ability = pokemon->get_database_entry().get_hidden_ability();
-            ASSERT_NE("None", hidden_ability);
+        if(generation >= 5)
+        {
+            pkmn::e_ability hidden_ability = pokemon->get_database_entry().get_hidden_ability();
+            ASSERT_NE(pkmn::e_ability::NONE, hidden_ability);
 
             pokemon->set_ability(hidden_ability);
             EXPECT_EQ(hidden_ability, pokemon->get_ability());
         }
 
         EXPECT_THROW(
-            pokemon->set_ability("Not an ability");
+            pokemon->set_ability(pkmn::e_ability::NONE);
         , std::invalid_argument);
         EXPECT_THROW(
-            pokemon->set_ability("Wonder Guard");
+            pokemon->set_ability(pkmn::e_ability::WONDER_GUARD);
         , std::invalid_argument);
-    } else {
+    }
+    else
+    {
         EXPECT_THROW(
             pokemon->get_ability();
         , pkmn::feature_not_in_game_error);
         EXPECT_THROW(
-            pokemon->set_ability("Wonder Guard");
+            pokemon->set_ability(pkmn::e_ability::WONDER_GUARD);
         , pkmn::feature_not_in_game_error);
     }
 }

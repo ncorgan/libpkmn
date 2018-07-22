@@ -519,12 +519,6 @@ void test_outside_3gpkm()
         254,
         pkmn_pokemon_get_current_trainer_friendship
     );
-    test_pokemon_string(
-        &pokemon,
-        "Ability",
-        "Intimidate",
-        pkmn_pokemon_get_ability
-    );
     test_pokemon_int(
         &pokemon,
         "Level met",
@@ -554,6 +548,14 @@ void test_outside_3gpkm()
         50,
         pkmn_pokemon_get_level
     );
+
+    enum pkmn_ability ability = PKMN_ABILITY_NONE;
+    error = pkmn_pokemon_get_ability(
+                &pokemon,
+                &ability
+            );
+    PKMN_TEST_ASSERT_SUCCESS(error);
+    TEST_ASSERT_EQUAL(PKMN_ABILITY_INTIMIDATE, ability);
 
     enum pkmn_ball ball = PKMN_BALL_NONE;
     error = pkmn_pokemon_get_ball(

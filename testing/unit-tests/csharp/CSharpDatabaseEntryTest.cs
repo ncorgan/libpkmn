@@ -158,8 +158,11 @@ public class CSharpDatabaseEntryTest {
         Assert.IsFalse(pokemonEntry.HasGenderDifferences);
         Assert.AreEqual(pokemonEntry.BaseFriendship, 70);
         Assert.AreEqual(pokemonEntry.Types, (new PKMN.StringPair("Ground", "Electric")));
-        Assert.AreEqual(pokemonEntry.Abilities, (new PKMN.StringPair("Static", "Limber")));
-        Assert.AreEqual(pokemonEntry.HiddenAbility, "Sand Veil");
+        Assert.AreEqual(
+            pokemonEntry.Abilities,
+            new PKMN.AbilityEnumPair(PKMN.Ability.STATIC, PKMN.Ability.LIMBER)
+        );
+        Assert.AreEqual(pokemonEntry.HiddenAbility, PKMN.Ability.SAND_VEIL);
         Assert.AreEqual(
             pokemonEntry.EggGroups,
             new PKMN.EggGroupEnumPair(PKMN.EggGroup.WATER1, PKMN.EggGroup.INDETERMINATE)

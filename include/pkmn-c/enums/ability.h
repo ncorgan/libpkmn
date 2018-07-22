@@ -215,6 +215,12 @@ struct pkmn_ability_enum_list
     size_t length;
 };
 
+struct pkmn_ability_enum_pair
+{
+    enum pkmn_ability first;
+    enum pkmn_ability second;
+};
+
 #ifdef __cplusplus
 extern "C" {
 #endif

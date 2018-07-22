@@ -239,9 +239,9 @@ static void assert_pokemon_entry_uninitialized(
     TEST_ASSERT_EQUAL(p_pokemon_entry->base_friendship, 0);
     TEST_ASSERT_NULL(p_pokemon_entry->types.p_first);
     TEST_ASSERT_NULL(p_pokemon_entry->types.p_second);
-    TEST_ASSERT_NULL(p_pokemon_entry->abilities.p_first);
-    TEST_ASSERT_NULL(p_pokemon_entry->abilities.p_second);
-    TEST_ASSERT_NULL(p_pokemon_entry->p_hidden_ability);
+    TEST_ASSERT_EQUAL(PKMN_ABILITY_NONE, p_pokemon_entry->abilities.first);
+    TEST_ASSERT_EQUAL(PKMN_ABILITY_NONE, p_pokemon_entry->abilities.second);
+    TEST_ASSERT_EQUAL(PKMN_ABILITY_NONE, p_pokemon_entry->hidden_ability);
     TEST_ASSERT_EQUAL(PKMN_EGG_GROUP_NONE, p_pokemon_entry->egg_groups.first);
     TEST_ASSERT_EQUAL(PKMN_EGG_GROUP_NONE, p_pokemon_entry->egg_groups.second);
     for(int i = 0; i < 7; ++i) {
@@ -292,10 +292,10 @@ static void pokemon_entry_test() {
             .p_second = NULL
         },
         .abilities = {
-            .p_first = NULL,
-            .p_second = NULL
+            .first = PKMN_ABILITY_NONE,
+            .second = PKMN_ABILITY_NONE
         },
-        .p_hidden_ability = NULL,
+        .hidden_ability = PKMN_ABILITY_NONE,
         .egg_groups = {
             .first = PKMN_EGG_GROUP_NONE,
             .second = PKMN_EGG_GROUP_NONE
@@ -405,9 +405,9 @@ static void pokemon_entry_test() {
     TEST_ASSERT_EQUAL(70, pokemon_entry.base_friendship);
     TEST_ASSERT_EQUAL_STRING("Ground", pokemon_entry.types.p_first);
     TEST_ASSERT_EQUAL_STRING("Electric", pokemon_entry.types.p_second);
-    TEST_ASSERT_EQUAL_STRING("Static", pokemon_entry.abilities.p_first);
-    TEST_ASSERT_EQUAL_STRING("Limber", pokemon_entry.abilities.p_second);
-    TEST_ASSERT_EQUAL_STRING("Sand Veil", pokemon_entry.p_hidden_ability);
+    TEST_ASSERT_EQUAL(PKMN_ABILITY_STATIC, pokemon_entry.abilities.first);
+    TEST_ASSERT_EQUAL(PKMN_ABILITY_LIMBER, pokemon_entry.abilities.second);
+    TEST_ASSERT_EQUAL(PKMN_ABILITY_SAND_VEIL, pokemon_entry.hidden_ability);
     TEST_ASSERT_EQUAL(PKMN_EGG_GROUP_WATER1, pokemon_entry.egg_groups.first);
     TEST_ASSERT_EQUAL(PKMN_EGG_GROUP_INDETERMINATE, pokemon_entry.egg_groups.second);
     TEST_ASSERT_EQUAL(109, pokemon_entry.base_stats[PKMN_STAT_HP]);

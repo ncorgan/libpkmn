@@ -1633,7 +1633,7 @@ struct personality_test_data
 {
     pkmn::e_species species;
     std::vector<pkmn::e_gender> genders;
-    std::vector<std::string> abilities;
+    std::vector<pkmn::e_ability> abilities;
 };
 
 static void personality_test(
@@ -1646,9 +1646,9 @@ static void personality_test(
     {
         for(pkmn::e_nature nature: natures)
         {
-            for(const std::string& ability: test_params.abilities)
+            for(pkmn::e_ability ability: test_params.abilities)
             {
-                if(ability != "None")
+                if(ability != pkmn::e_ability::NONE)
                 {
                     for(pkmn::e_gender gender: test_params.genders)
                     {
@@ -1696,7 +1696,7 @@ TEST(cpp_calculations_test, personality_test)
                   pkmn::e_species::CHARMANDER,
                   pkmn::pokemon::DEFAULT_TRAINER_ID,
                   true,
-                  "None",
+                  pkmn::e_ability::NONE,
                   pkmn::e_gender::MALE,
                   pkmn::e_nature::QUIET
               );
@@ -1706,7 +1706,7 @@ TEST(cpp_calculations_test, personality_test)
                   pkmn::e_species::CHARMANDER,
                   pkmn::pokemon::DEFAULT_TRAINER_ID,
                   true,
-                  "Torrent",
+                  pkmn::e_ability::NONE,
                   pkmn::e_gender::MALE,
                   pkmn::e_nature::QUIET
               );
@@ -1718,7 +1718,7 @@ TEST(cpp_calculations_test, personality_test)
                   pkmn::e_species::CHARMANDER,
                   pkmn::pokemon::DEFAULT_TRAINER_ID,
                   true,
-                  "Blaze",
+                  pkmn::e_ability::NONE,
                   pkmn::e_gender::NONE,
                   pkmn::e_nature::QUIET
               );
@@ -1728,7 +1728,7 @@ TEST(cpp_calculations_test, personality_test)
                   pkmn::e_species::NIDORINA,
                   pkmn::pokemon::DEFAULT_TRAINER_ID,
                   true,
-                  "Poison Point",
+                  pkmn::e_ability::POISON_POINT,
                   pkmn::e_gender::NONE,
                   pkmn::e_nature::QUIET
               );
@@ -1738,7 +1738,7 @@ TEST(cpp_calculations_test, personality_test)
                   pkmn::e_species::NIDORINA,
                   pkmn::pokemon::DEFAULT_TRAINER_ID,
                   true,
-                  "Poison Point",
+                  pkmn::e_ability::POISON_POINT,
                   pkmn::e_gender::GENDERLESS,
                   pkmn::e_nature::QUIET
               );
@@ -1748,7 +1748,7 @@ TEST(cpp_calculations_test, personality_test)
                   pkmn::e_species::NIDORINA,
                   pkmn::pokemon::DEFAULT_TRAINER_ID,
                   true,
-                  "Poison Point",
+                  pkmn::e_ability::POISON_POINT,
                   pkmn::e_gender::MALE,
                   pkmn::e_nature::QUIET
               );
@@ -1758,7 +1758,7 @@ TEST(cpp_calculations_test, personality_test)
                   pkmn::e_species::NIDORINO,
                   pkmn::pokemon::DEFAULT_TRAINER_ID,
                   true,
-                  "Poison Point",
+                  pkmn::e_ability::POISON_POINT,
                   pkmn::e_gender::NONE,
                   pkmn::e_nature::QUIET
               );
@@ -1768,7 +1768,7 @@ TEST(cpp_calculations_test, personality_test)
                   pkmn::e_species::NIDORINO,
                   pkmn::pokemon::DEFAULT_TRAINER_ID,
                   true,
-                  "Poison Point",
+                  pkmn::e_ability::POISON_POINT,
                   pkmn::e_gender::GENDERLESS,
                   pkmn::e_nature::QUIET
               );
@@ -1778,7 +1778,7 @@ TEST(cpp_calculations_test, personality_test)
                   pkmn::e_species::NIDORINO,
                   pkmn::pokemon::DEFAULT_TRAINER_ID,
                   true,
-                  "Poison Point",
+                  pkmn::e_ability::POISON_POINT,
                   pkmn::e_gender::FEMALE,
                   pkmn::e_nature::QUIET
               );
@@ -1788,7 +1788,7 @@ TEST(cpp_calculations_test, personality_test)
                   pkmn::e_species::MAGNEMITE,
                   pkmn::pokemon::DEFAULT_TRAINER_ID,
                   true,
-                  "Magnet Pull",
+                  pkmn::e_ability::MAGNET_PULL,
                   pkmn::e_gender::NONE,
                   pkmn::e_nature::QUIET
               );
@@ -1798,7 +1798,7 @@ TEST(cpp_calculations_test, personality_test)
             pkmn::e_species::MAGNEMITE,
             pkmn::pokemon::DEFAULT_TRAINER_ID,
             true,
-            "Magnet Pull",
+            pkmn::e_ability::MAGNET_PULL,
             pkmn::e_gender::FEMALE,
             pkmn::e_nature::QUIET
         );
@@ -1808,7 +1808,7 @@ TEST(cpp_calculations_test, personality_test)
                   pkmn::e_species::MAGNEMITE,
                   pkmn::pokemon::DEFAULT_TRAINER_ID,
                   true,
-                  "Magnet Pull",
+                  pkmn::e_ability::MAGNET_PULL,
                   pkmn::e_gender::MALE,
                   pkmn::e_nature::QUIET
               );
@@ -1820,7 +1820,7 @@ TEST(cpp_calculations_test, personality_test)
                   pkmn::e_species::MAGNEMITE,
                   pkmn::pokemon::DEFAULT_TRAINER_ID,
                   true,
-                  "Magnet Pull",
+                  pkmn::e_ability::MAGNET_PULL,
                   pkmn::e_gender::GENDERLESS,
                   pkmn::e_nature::NONE
               );
@@ -1830,15 +1830,70 @@ TEST(cpp_calculations_test, personality_test)
     static const std::vector<personality_test_data> test_values =
     {
         // Single-gender Pokémon
-        {pkmn::e_species::MAGNEMITE, {pkmn::e_gender::GENDERLESS}, {"Magnet Pull", "Sturdy", "Analytic"}},
-        {pkmn::e_species::NIDORINA,  {pkmn::e_gender::FEMALE},     {"Poison Point", "Rivalry", "Hustle"}},
-        {pkmn::e_species::NIDORINO,  {pkmn::e_gender::MALE},       {"Poison Point", "Rivalry", "Hustle"}},
+        {
+            pkmn::e_species::MAGNEMITE,
+            {pkmn::e_gender::GENDERLESS},
+            {
+                pkmn::e_ability::MAGNET_PULL,
+                pkmn::e_ability::STURDY,
+                pkmn::e_ability::ANALYTIC
+            }
+        },
+        {
+            pkmn::e_species::NIDORINA,
+            {pkmn::e_gender::FEMALE},
+            {
+                pkmn::e_ability::POISON_POINT,
+                pkmn::e_ability::RIVALRY,
+                pkmn::e_ability::HUSTLE
+            }
+        },
+        {
+            pkmn::e_species::NIDORINO,
+            {pkmn::e_gender::MALE},
+            {
+                pkmn::e_ability::POISON_POINT,
+                pkmn::e_ability::RIVALRY,
+                pkmn::e_ability::HUSTLE
+            }
+        },
 
         // Mixed-gender Pokémon
-        {pkmn::e_species::CHARMANDER, genders, {"Blaze",      "None",         "Solar Power"}},
-        {pkmn::e_species::GROWLITHE,  genders, {"Intimidate", "Flash Fire",   "Justified"}},
-        {pkmn::e_species::PIDGEY,     genders, {"Keen Eye",   "Tangled Feet", "Big Pecks"}},
-        {pkmn::e_species::VULPIX,     genders, {"Flash Fire", "None",         "Drought"}},
+        {
+            pkmn::e_species::CHARMANDER,
+            genders,
+            {
+                pkmn::e_ability::BLAZE,
+                pkmn::e_ability::NONE,
+                pkmn::e_ability::SOLAR_POWER}
+            },
+        {
+            pkmn::e_species::GROWLITHE,
+            genders,
+            {
+                pkmn::e_ability::INTIMIDATE,
+                pkmn::e_ability::FLASH_FIRE,
+                pkmn::e_ability::JUSTIFIED
+            }
+        },
+        {
+            pkmn::e_species::PIDGEY,
+            genders,
+            {
+                pkmn::e_ability::KEEN_EYE,
+                pkmn::e_ability::TANGLED_FEET,
+                pkmn::e_ability::BIG_PECKS
+            }
+        },
+        {
+            pkmn::e_species::VULPIX,
+            genders,
+            {
+                pkmn::e_ability::FLASH_FIRE,
+                pkmn::e_ability::NONE,
+                pkmn::e_ability::DROUGHT
+            }
+        },
     };
     personality_test(test_values);
 }

@@ -676,8 +676,8 @@ namespace pkmn
 
     void pokemon_impl::_set_ability_from_personality()
     {
-        const std::pair<std::string, std::string> abilities = _database_entry.get_abilities();
-        if((abilities.second != "None") && ((get_personality() % 2) == 1))
+        const std::pair<pkmn::e_ability, pkmn::e_ability> abilities = _database_entry.get_abilities();
+        if((abilities.second != pkmn::e_ability::NONE) && ((get_personality() % 2) == 1))
         {
             _set_ability(abilities.second);
         }

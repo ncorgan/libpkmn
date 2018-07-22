@@ -152,12 +152,6 @@ static void conversions_test(
     }
     if(min_generation >= 3)
     {
-        compare_pokemon_strings(
-            &first_pokemon,
-            &second_pokemon,
-            "Ability",
-            pkmn_pokemon_get_ability
-        );
         compare_pokemon_uint32s(
             &first_pokemon,
             &second_pokemon,
@@ -170,6 +164,23 @@ static void conversions_test(
             "Pokérus duration",
             pkmn_pokemon_get_pokerus_duration
         );
+
+        // Ability
+
+        enum pkmn_ability first_pokemon_ability = PKMN_ABILITY_NONE;
+        enum pkmn_ability second_pokemon_ability = PKMN_ABILITY_NONE;
+
+        error = pkmn_pokemon_get_ability(
+                    &first_pokemon,
+                    &first_pokemon_ability
+                );
+        PKMN_TEST_ASSERT_SUCCESS(error);
+        error = pkmn_pokemon_get_ability(
+                    &second_pokemon,
+                    &second_pokemon_ability
+                );
+        PKMN_TEST_ASSERT_SUCCESS(error);
+        TEST_ASSERT_EQUAL(first_pokemon_ability, second_pokemon_ability);
 
         // Ball
 

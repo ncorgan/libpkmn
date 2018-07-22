@@ -746,29 +746,27 @@ namespace pkmn
         _libpkmgc_pokemon_uptr->friendship = LibPkmGC::u8(friendship);
     }
 
-    std::string pokemon_gcnimpl::get_ability()
+    pkmn::e_ability pokemon_gcnimpl::get_ability()
     {
         boost::lock_guard<pokemon_gcnimpl> lock(*this);
 
-        std::string ret;
+        pkmn::e_ability ret = pkmn::e_ability::NONE;
 
-        std::pair<std::string, std::string> abilities = _database_entry.get_abilities();
-        if(abilities.second == "None")
+        std::pair<pkmn::e_ability, pkmn::e_ability> abilities = _database_entry.get_abilities();
+        if(abilities.second == pkmn::e_ability::NONE)
         {
             ret = abilities.first;
         }
         else
         {
-            // Don't use LibPkmGC's call, it has some mistakes.
+            // Don't use LibPkmGC's function to get the ability. It has some mistakes.
             ret = _libpkmgc_pokemon_uptr->hasSecondAbility() ? abilities.second : abilities.first;
         }
 
         return ret;
     }
 
-    void pokemon_gcnimpl::set_ability(
-        const std::string& ability
-    )
+    void pokemon_gcnimpl::set_ability(pkmn::e_ability ability)
     {
         boost::lock_guard<pokemon_gcnimpl> lock(*this);
 
@@ -1347,34 +1345,35 @@ namespace pkmn
         _stats[pkmn::e_stat::SPECIAL_DEFENSE] = int(_libpkmgc_pokemon_uptr->partyData.stats[LIBPKMGC_STAT_SPDEF]);
     }
 
-    void pokemon_gcnimpl::_set_ability(const std::string& ability)
+    void pokemon_gcnimpl::_set_ability(pkmn::e_ability ability)
     {
-        std::pair<std::string, std::string> abilities = _database_entry.get_abilities();
-        if(ability == "None")
+        std::pair<pkmn::e_ability, pkmn::e_ability> abilities = _database_entry.get_abilities();
+        if(ability == pkmn::e_ability::NONE)
         {
             throw std::invalid_argument("The ability cannot be set to None.");
         }
         else if(ability == abilities.first)
         {
-            _libpkmgc_pokemon_uptr->setSecondAbilityFlag(false);
+                _libpkmgc_pokemon_uptr->setSecondAbilityFlag(false);
         }
         else if(ability == abilities.second)
         {
+            BOOST_ASSERT(abilities.second != pkmn::e_ability::NONE);
             _libpkmgc_pokemon_uptr->setSecondAbilityFlag(true);
         }
         else
         {
             std::string error_message;
-            if(abilities.second == "None")
+            if(abilities.second == pkmn::e_ability::NONE)
             {
                 error_message = str(boost::format("ability: valid values \"%s\"")
-                                    % abilities.first.c_str());
+                                    % pkmn::ability_to_string(abilities.first).c_str());
             }
             else
             {
                 error_message = str(boost::format("ability: valid values \"%s\", \"%s\"")
-                                    % abilities.first.c_str()
-                                    % abilities.second.c_str());
+                                    % pkmn::ability_to_string(abilities.first).c_str()
+                                    % pkmn::ability_to_string(abilities.second).c_str());
             }
 
             throw std::invalid_argument(error_message.c_str());

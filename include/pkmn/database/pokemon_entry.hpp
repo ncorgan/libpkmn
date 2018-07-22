@@ -12,6 +12,7 @@
 #include <pkmn/database/levelup_move.hpp>
 #include <pkmn/database/move_entry.hpp>
 
+#include <pkmn/enums/ability.hpp>
 #include <pkmn/enums/egg_group.hpp>
 #include <pkmn/enums/game.hpp>
 #include <pkmn/enums/species.hpp>
@@ -224,17 +225,15 @@ namespace pkmn { namespace database {
              * @brief Returns this Pokémon's types.
              *
              * Abilities were introduced in Generation III, so for entries from
-             * previous generations, this function will always return "None"/"None".
+             * previous generations, this function will always return NONE/NONE.
              *
-             * If the Pokémon has a single ability, the second value will be "None".
+             * If the Pokémon has a single ability, the second value will be NONE.
              *
              * This value can vary between forms.
              *
-             * \returns For Generation I-II entries: "None"/"None"
-             * \returns For "None" entries: "None"/"None"
-             * \returns For invalid Pokémon: "Unknown"/"Unknown"
+             * \returns For Generation I-II/None/Invalid entries: NONE/NONE
              */
-            std::pair<std::string, std::string> get_abilities() const;
+            std::pair<pkmn::e_ability, pkmn::e_ability> get_abilities() const;
 
             /*!
              * @brief Returns this Pokémon's hidden ability.
@@ -243,11 +242,9 @@ namespace pkmn { namespace database {
              * corresponding to earlier games, this function will always return
              * "None".
              *
-             * \returns For Generation I-IV entries: "None"
-             * \returns For "None" entries: "None"
-             * \returns For invalid Pokémon: "Unknown"
+             * \returns For Generation I-IV/None/Invalid entries: NONE
              */
-            std::string get_hidden_ability() const;
+            pkmn::e_ability get_hidden_ability() const;
 
             /*!
              * @brief Returns this Pokémon's egg groups.

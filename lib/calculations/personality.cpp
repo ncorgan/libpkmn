@@ -62,7 +62,7 @@ namespace pkmn { namespace calculations {
         pkmn::e_species species,
         uint32_t trainer_id,
         bool shiny,
-        const std::string& ability,
+        pkmn::e_ability ability,
         pkmn::e_gender gender,
         pkmn::e_nature nature
     )
@@ -85,8 +85,8 @@ namespace pkmn { namespace calculations {
         uint32_t ret = 0;
 
         pkmn::database::pokemon_entry entry(species, pkmn::e_game::OMEGA_RUBY, "");
-        std::pair<std::string, std::string> abilities = entry.get_abilities();
-        std::string hidden_ability = entry.get_hidden_ability();
+        std::pair<pkmn::e_ability, pkmn::e_ability> abilities = entry.get_abilities();
+        pkmn::e_ability hidden_ability = entry.get_hidden_ability();
         float chance_male = entry.get_chance_male();
         float chance_female = entry.get_chance_female();
 
@@ -94,16 +94,16 @@ namespace pkmn { namespace calculations {
         uint32_t ability_modulo = 0; // If first or hidden ability, keep this
         if(ability == abilities.second)
         {
-            if(ability != "None")
+            if(ability != pkmn::e_ability::NONE)
             {
                 ability_modulo = 1;
             }
             else
             {
-                throw std::invalid_argument("You cannot use \"None\".");
+                throw std::invalid_argument("You cannot use NONE.");
             }
         }
-        else if(ability != abilities.first and ability != hidden_ability)
+        else if((ability != abilities.first) && (ability != hidden_ability))
         {
             throw std::invalid_argument("Invalid ability.");
         }
@@ -142,7 +142,6 @@ namespace pkmn { namespace calculations {
         // Start trying to find a valid value.
         uint32_t gender_threshold = get_gender_threshold(chance_male);
         bool found = false;
-        size_t count = 0;
         pkmn::rng<uint32_t> rng;
         do
         {
@@ -160,17 +159,15 @@ namespace pkmn { namespace calculations {
                 ret |= (rng.rand() % gender_threshold);
             }
 
-            if(modern_shiny(ret, trainer_id) == shiny and
-               (ret % NUM_NATURES) == nature_index and
-               (ret % 2) == ability_modulo
+            if((modern_shiny(ret, trainer_id) == shiny) &&
+               ((ret % NUM_NATURES) == nature_index) &&
+               ((ret % 2) == ability_modulo)
             )
             {
                 found = true;
             }
-
-            ++count;
         }
-        while(not found);
+        while(!found);
 
         return ret;
     }

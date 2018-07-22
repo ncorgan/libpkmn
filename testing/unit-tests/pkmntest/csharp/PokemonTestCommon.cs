@@ -830,7 +830,7 @@ public class PokemonTestCommon
 
         if(generation >= 3)
         {
-            Assert.AreNotEqual(pokemon.DatabaseEntry.Abilities.First, "None");
+            Assert.AreNotEqual(pokemon.DatabaseEntry.Abilities.First, PKMN.Ability.NONE);
 
             pokemon.Ability = pokemon.DatabaseEntry.Abilities.First;
             Assert.AreEqual(
@@ -838,7 +838,7 @@ public class PokemonTestCommon
                 pokemon.DatabaseEntry.Abilities.First
             );
 
-            if(!pokemon.DatabaseEntry.Abilities.Second.Equals("None"))
+            if(pokemon.DatabaseEntry.Abilities.Second != PKMN.Ability.NONE)
             {
                 pokemon.Ability = pokemon.DatabaseEntry.Abilities.Second;
                 Assert.AreEqual(
@@ -849,7 +849,7 @@ public class PokemonTestCommon
 
             if(generation >= 5)
             {
-                if(!pokemon.DatabaseEntry.HiddenAbility.Equals("None"))
+                if(!pokemon.DatabaseEntry.HiddenAbility.Equals(PKMN.Ability.NONE))
                 {
                     pokemon.Ability = pokemon.DatabaseEntry.HiddenAbility;
                     Assert.AreEqual(
@@ -862,13 +862,13 @@ public class PokemonTestCommon
             Assert.Throws<ArgumentOutOfRangeException>(
                 delegate
                 {
-                    pokemon.Ability = "Not an ability";
+                    pokemon.Ability = PKMN.Ability.NONE;
                 }
             );
             Assert.Throws<ArgumentOutOfRangeException>(
                 delegate
                 {
-                    pokemon.Ability = "Wonder Guard";
+                    pokemon.Ability = PKMN.Ability.WONDER_GUARD;
                 }
             );
         }
@@ -876,12 +876,12 @@ public class PokemonTestCommon
         {
             // The getter shouldn't throw by convention, but the setter will.
 
-            Assert.AreEqual("", pokemon.Ability);
+            Assert.AreEqual(PKMN.Ability.NONE, pokemon.Ability);
 
             Assert.Throws<ApplicationException>(
                 delegate
                 {
-                    pokemon.Ability = "Wonder Guard";
+                    pokemon.Ability = PKMN.Ability.WONDER_GUARD;
                 }
             );
         }

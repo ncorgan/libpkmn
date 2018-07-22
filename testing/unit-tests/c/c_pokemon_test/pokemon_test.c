@@ -71,10 +71,10 @@ static const struct pkmn_database_pokemon_entry empty_pokemon_entry =
     },
     .abilities =
     {
-        .p_first = NULL,
-        .p_second = NULL
+        .first = PKMN_ABILITY_NONE,
+        .second = PKMN_ABILITY_NONE
     },
-    .p_hidden_ability = NULL,
+    .hidden_ability = PKMN_ABILITY_NONE,
     .egg_groups =
     {
         .first = PKMN_EGG_GROUP_NONE,
@@ -638,7 +638,6 @@ static void test_setting_ability(
     TEST_ASSERT_NOT_NULL(p_pokemon);
 
     enum pkmn_error error = PKMN_ERROR_NONE;
-    char strbuffer[STRBUFFER_LEN] = {0};
 
     int generation = game_to_generation(p_pokemon->game);
 
@@ -653,65 +652,48 @@ static void test_setting_ability(
 
         error = pkmn_pokemon_set_ability(
                     p_pokemon,
-                    database_entry.abilities.p_first
+                    database_entry.abilities.first
                 );
         PKMN_TEST_ASSERT_SUCCESS(error);
 
+        enum pkmn_ability ability = PKMN_ABILITY_NONE;
         error = pkmn_pokemon_get_ability(
                     p_pokemon,
-                    strbuffer,
-                    sizeof(strbuffer),
-                    NULL
+                    &ability
                 );
         PKMN_TEST_ASSERT_SUCCESS(error);
+        TEST_ASSERT_EQUAL(database_entry.abilities.first, ability);
 
-        TEST_ASSERT_EQUAL_STRING(
-            database_entry.abilities.p_first,
-            strbuffer
-        );
-
-        if(strcmp(database_entry.abilities.p_second, "None"))
+        if(database_entry.abilities.second != PKMN_ABILITY_NONE)
         {
             error = pkmn_pokemon_set_ability(
                         p_pokemon,
-                        database_entry.abilities.p_second
+                        database_entry.abilities.second
                     );
             PKMN_TEST_ASSERT_SUCCESS(error);
 
             error = pkmn_pokemon_get_ability(
                         p_pokemon,
-                        strbuffer,
-                        sizeof(strbuffer),
-                        NULL
+                        &ability
                     );
             PKMN_TEST_ASSERT_SUCCESS(error);
-
-            TEST_ASSERT_EQUAL_STRING(
-                database_entry.abilities.p_second,
-                strbuffer
-            );
+            TEST_ASSERT_EQUAL(database_entry.abilities.second, ability);
         }
 
-        if((generation >= 5) && !strcmp(database_entry.p_hidden_ability, "None"))
+        if((generation >= 5) && (database_entry.hidden_ability != PKMN_ABILITY_NONE))
         {
             error = pkmn_pokemon_set_ability(
                         p_pokemon,
-                        database_entry.p_hidden_ability
+                        database_entry.hidden_ability
                     );
             PKMN_TEST_ASSERT_SUCCESS(error);
 
             error = pkmn_pokemon_get_ability(
                         p_pokemon,
-                        strbuffer,
-                        sizeof(strbuffer),
-                        NULL
+                        &ability
                     );
             PKMN_TEST_ASSERT_SUCCESS(error);
-
-            TEST_ASSERT_EQUAL_STRING(
-                database_entry.p_hidden_ability,
-                strbuffer
-            );
+            TEST_ASSERT_EQUAL(database_entry.hidden_ability, ability);
         }
 
         error = pkmn_database_pokemon_entry_free(&database_entry);
@@ -719,28 +701,27 @@ static void test_setting_ability(
 
         error = pkmn_pokemon_set_ability(
                     p_pokemon,
-                    "Not an ability"
+                    PKMN_ABILITY_NONE
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_INVALID_ARGUMENT, error);
         error = pkmn_pokemon_set_ability(
                     p_pokemon,
-                    "Wonder Guard"
+                    PKMN_ABILITY_WONDER_GUARD
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_INVALID_ARGUMENT, error);
     }
     else
     {
+        enum pkmn_ability ability = PKMN_ABILITY_NONE;
         error = pkmn_pokemon_get_ability(
                     p_pokemon,
-                    strbuffer,
-                    sizeof(strbuffer),
-                    NULL
+                    &ability
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_FEATURE_NOT_IN_GAME_ERROR, error);
 
         error = pkmn_pokemon_set_ability(
                     p_pokemon,
-                    "Wonder Guard" // Doesn't matter what it is
+                    PKMN_ABILITY_WONDER_GUARD // Doesn't matter what it is
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_FEATURE_NOT_IN_GAME_ERROR, error);
     }

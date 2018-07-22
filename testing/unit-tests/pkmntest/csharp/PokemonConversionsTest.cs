@@ -51,7 +51,7 @@ public class PokemonConversionsTest
         {
             firstPokemon.OriginalTrainerSecretID = (ushort)rng.Next(0, 0xFFFF);
 
-            if(!firstPokemon.DatabaseEntry.Abilities.Second.Equals("None"))
+            if(firstPokemon.DatabaseEntry.Abilities.Second != PKMN.Ability.NONE)
             {
                 firstPokemon.Ability = Util.RandomBool() ? firstPokemon.DatabaseEntry.Abilities.First
                                                          : firstPokemon.DatabaseEntry.Abilities.Second;

@@ -764,10 +764,10 @@ namespace pkmn { namespace c {
             },
             // abilities
             {
-                nullptr, // p_first
-                nullptr  // p_second
+                PKMN_ABILITY_NONE, // first
+                PKMN_ABILITY_NONE, // second
             },
-            nullptr, // hidden_ability
+            PKMN_ABILITY_NONE, // hidden_ability
             // egg_groups
             {
                 PKMN_EGG_GROUP_NONE, // first
@@ -824,12 +824,8 @@ namespace pkmn { namespace c {
             pokemon_entry_cpp.get_types(),
             &temp_pokemon_entry_c.types
         );
-        string_cpp_to_c_alloc(
-            pokemon_entry_cpp.get_hidden_ability(),
-            &temp_pokemon_entry_c.p_hidden_ability
-        );
 
-        string_pair_cpp_to_c(
+        ability_pair_cpp_to_c(
             pokemon_entry_cpp.get_abilities(),
             &temp_pokemon_entry_c.abilities
         );
@@ -840,6 +836,7 @@ namespace pkmn { namespace c {
 
         temp_pokemon_entry_c.name = static_cast<enum pkmn_species>(pokemon_entry_cpp.get_species_enum());
         temp_pokemon_entry_c.game = static_cast<enum pkmn_game>(pokemon_entry_cpp.get_game());
+        temp_pokemon_entry_c.hidden_ability = static_cast<enum pkmn_ability>(pokemon_entry_cpp.get_hidden_ability());
 
         temp_pokemon_entry_c.height = pokemon_entry_cpp.get_height();
         temp_pokemon_entry_c.weight = pokemon_entry_cpp.get_weight();

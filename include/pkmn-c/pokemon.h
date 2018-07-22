@@ -12,6 +12,7 @@
 
 #include <pkmn-c/database/pokemon_entry.h>
 
+#include <pkmn-c/enums/ability.h>
 #include <pkmn-c/enums/ball.h>
 #include <pkmn-c/enums/condition.h>
 #include <pkmn-c/enums/contest_stat.h>
@@ -230,14 +231,12 @@ PKMN_C_API enum pkmn_error pkmn_pokemon_set_current_trainer_friendship(
 
 PKMN_C_API enum pkmn_error pkmn_pokemon_get_ability(
     const struct pkmn_pokemon* p_pokemon,
-    char* p_ability_out,
-    size_t ability_buffer_len,
-    size_t* p_actual_ability_len_out
+    enum pkmn_ability* p_ability_out
 );
 
 PKMN_C_API enum pkmn_error pkmn_pokemon_set_ability(
     const struct pkmn_pokemon* p_pokemon,
-    const char* p_ability
+    enum pkmn_ability ability
 );
 
 PKMN_C_API enum pkmn_error pkmn_pokemon_get_ball(

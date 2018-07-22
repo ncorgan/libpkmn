@@ -210,7 +210,7 @@ namespace pkmn {
             }
 
             // Set without applying policy
-            virtual void _set_ability(const std::string&) {}
+            virtual void _set_ability(pkmn::e_ability) {}
             void _set_ability_from_personality();
 
             virtual void _update_held_item() {}

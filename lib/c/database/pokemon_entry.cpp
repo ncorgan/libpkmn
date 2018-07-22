@@ -159,10 +159,8 @@ enum pkmn_error pkmn_database_pokemon_entry_free(
     pkmn::c::free_pointer_and_set_to_null(&p_pokemon_entry->p_species);
     pkmn::c::free_pointer_and_set_to_null(&p_pokemon_entry->p_form);
     pkmn::c::free_pointer_and_set_to_null(&p_pokemon_entry->p_pokedex_entry);
-    pkmn::c::free_pointer_and_set_to_null(&p_pokemon_entry->p_hidden_ability);
 
     pkmn_string_pair_free(&p_pokemon_entry->types);
-    pkmn_string_pair_free(&p_pokemon_entry->abilities);
 
     pkmn_string_list_free(&p_pokemon_entry->tm_hm_moves);
     pkmn_string_list_free(&p_pokemon_entry->egg_moves);

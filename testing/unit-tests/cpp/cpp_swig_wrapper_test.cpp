@@ -445,8 +445,8 @@ TEST(cpp_swig_wrapper_test, test_pokemon)
     swig_pokemon.set_current_trainer_friendship(100);
     EXPECT_EQ(100, swig_pokemon.get_current_trainer_friendship());
 
-    swig_pokemon.set_ability("Overgrow");
-    EXPECT_EQ("Overgrow", swig_pokemon.get_ability());
+    swig_pokemon.set_ability(pkmn::e_ability::OVERGROW);
+    EXPECT_EQ(pkmn::e_ability::OVERGROW, swig_pokemon.get_ability());
 
     swig_pokemon.set_ball(pkmn::e_ball::ULTRA_BALL);
     EXPECT_EQ(pkmn::e_ball::ULTRA_BALL, swig_pokemon.get_ball());

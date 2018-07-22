@@ -36,8 +36,8 @@ struct pkmn_database_pokemon_entry
     bool has_gender_differences;
     int base_friendship;
     struct pkmn_string_pair types;
-    struct pkmn_string_pair abilities;
-    char* p_hidden_ability;
+    struct pkmn_ability_enum_pair abilities;
+    enum pkmn_ability hidden_ability;
     struct pkmn_egg_group_enum_pair egg_groups;
     int base_stats[PKMN_NUM_STATS];
     int EV_yields[PKMN_NUM_STATS];

@@ -10,6 +10,7 @@
 #include <pkmn-c/config.h>
 #include <pkmn-c/error.h>
 
+#include <pkmn-c/enums/ability.h>
 #include <pkmn-c/enums/gender.h>
 #include <pkmn-c/enums/nature.h>
 #include <pkmn-c/enums/species.h>
@@ -28,7 +29,7 @@ extern "C" {
  * \param species The Pokémon species
  * \param trainer_id The trainer ID to use in the shininess calculation
  * \param shiny Whether or not the Pokémon should be shiny
- * \param p_ability Which ability the Pokémon should have
+ * \param ability Which ability the Pokémon should have
  * \param gender What gender the Pokémon should be
  * \param nature What nature the Pokémon should have
  * \param p_personality_out Where to return the generated personality
@@ -41,7 +42,7 @@ PKMN_C_API enum pkmn_error pkmn_calculations_generate_personality(
     enum pkmn_species species,
     uint32_t trainer_id,
     bool shiny,
-    const char* p_ability,
+    enum pkmn_ability ability,
     enum pkmn_gender gender,
     enum pkmn_nature nature,
     uint32_t* p_personality_out

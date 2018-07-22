@@ -24,8 +24,8 @@
 %attribute(pkmn::database::pokemon_entry, bool, HasGenderDifferences, has_gender_differences);
 %attribute(pkmn::database::pokemon_entry, int, BaseFriendship, get_base_friendship);
 %attributeval(pkmn::database::pokemon_entry, %arg(std::pair<std::string, std::string>), Types, get_types);
-%attributeval(pkmn::database::pokemon_entry, %arg(std::pair<std::string, std::string>), Abilities, get_abilities);
-%attributestring(pkmn::database::pokemon_entry, std::string, HiddenAbility, get_hidden_ability);
+%attributeval(pkmn::database::pokemon_entry, %arg(std::pair<pkmn::e_ability, pkmn::e_ability>), Abilities, get_abilities);
+%attribute(pkmn::database::pokemon_entry, pkmn::e_ability, HiddenAbility, get_hidden_ability);
 %attributeval(pkmn::database::pokemon_entry, %arg(std::pair<pkmn::e_egg_group, pkmn::e_egg_group>), EggGroups, get_egg_groups);
 %attributeval(pkmn::database::pokemon_entry, %arg(std::map<pkmn::e_stat, int>), BaseStats, get_base_stats);
 %attributeval(pkmn::database::pokemon_entry, %arg(std::map<pkmn::e_stat, int>), EVYields, get_EV_yields);

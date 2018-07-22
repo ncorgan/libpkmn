@@ -281,7 +281,7 @@ if __name__ == "__main__":
 
     os.chdir(os.path.join(include_dir, "pkmn-c/enums"))
 
-    generate_c_enum_file("ability", abilities)
+    generate_c_enum_file("ability", abilities, True)
     generate_c_enum_file("ball", balls)
     generate_c_enum_file("egg_group", egg_groups, True)
     generate_c_enum_file("item", items)

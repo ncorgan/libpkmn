@@ -829,7 +829,7 @@ namespace pkmntest {
             EXPECT_STREQ(native1->name->toUTF8(), native2->name->toUTF8());
             EXPECT_STREQ(native1->OTName->toUTF8(), native2->OTName->toUTF8());
 
-            std::pair<std::string, std::string> abilities = pokemon1->get_database_entry().get_abilities();
+            std::pair<pkmn::e_ability, pkmn::e_ability> abilities = pokemon1->get_database_entry().get_abilities();
 
             EXPECT_EQ(
                 native1->getAbility(),
@@ -837,7 +837,8 @@ namespace pkmntest {
             ) << pkmn::species_to_string(pokemon1->get_species()) << " "
               << LibPkmGC::Localization::getPokemonAbilityName(LibPkmGC::English, native1->getAbility()) << " "
               << LibPkmGC::Localization::getPokemonAbilityName(LibPkmGC::English, native2->getAbility()) << " "
-              << "(" << abilities.first << ", " << abilities.second << ")";
+              << "(" << pkmn::ability_to_string(abilities.first) << ", "
+              << pkmn::ability_to_string(abilities.second) << ")";
 
             const pkmn::move_slots_t& moves1 = pokemon1->get_moves();
             const pkmn::move_slots_t& moves2 = pokemon2->get_moves();

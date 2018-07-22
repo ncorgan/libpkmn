@@ -619,9 +619,7 @@ enum pkmn_error pkmn_pokemon_set_current_trainer_friendship(
 
 enum pkmn_error pkmn_pokemon_get_ability(
     const struct pkmn_pokemon* p_pokemon,
-    char* p_ability_out,
-    size_t ability_buffer_len,
-    size_t* p_actual_ability_len_out
+    enum pkmn_ability* p_ability_out
 )
 {
     PKMN_CHECK_NULL_PARAM(p_pokemon);
@@ -629,26 +627,22 @@ enum pkmn_error pkmn_pokemon_get_ability(
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_ability_out, p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
-        pkmn::c::string_cpp_to_c(
-            p_internal->cpp->get_ability(),
-            p_ability_out,
-            ability_buffer_len,
-            p_actual_ability_len_out
-        );
+        *p_ability_out = static_cast<enum pkmn_ability>(
+                             p_internal->cpp->get_ability()
+                         );
     )
 }
 
 enum pkmn_error pkmn_pokemon_set_ability(
     const struct pkmn_pokemon* p_pokemon,
-    const char* p_ability
+    enum pkmn_ability ability
 )
 {
     PKMN_CHECK_NULL_PARAM(p_pokemon);
     pkmn_pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
-    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_ability, p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
-        p_internal->cpp->set_ability(p_ability);
+        p_internal->cpp->set_ability(static_cast<pkmn::e_ability>(ability));
     )
 }
 

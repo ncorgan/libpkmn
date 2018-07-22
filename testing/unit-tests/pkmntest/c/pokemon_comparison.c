@@ -507,6 +507,33 @@ void compare_pokemon_original_trainer_info(
     PKMN_TEST_ASSERT_SUCCESS(error);
 }
 
+void compare_pokemon_abilities(
+    const struct pkmn_pokemon* p_pokemon1,
+    const struct pkmn_pokemon* p_pokemon2
+)
+{
+    TEST_ASSERT_NOT_NULL(p_pokemon1);
+    TEST_ASSERT_NOT_NULL(p_pokemon2);
+
+    enum pkmn_error error = PKMN_ERROR_NONE;
+
+    enum pkmn_ability pokemon1_ability = PKMN_ABILITY_NONE;
+    enum pkmn_ability pokemon2_ability = PKMN_ABILITY_NONE;
+
+    error = pkmn_pokemon_get_ability(
+                p_pokemon1,
+                &pokemon1_ability
+            );
+    PKMN_TEST_ASSERT_SUCCESS(error);
+    error = pkmn_pokemon_get_ability(
+                p_pokemon2,
+                &pokemon2_ability
+            );
+    PKMN_TEST_ASSERT_SUCCESS(error);
+
+    TEST_ASSERT_EQUAL(pokemon1_ability, pokemon2_ability);
+}
+
 void compare_pokemon_balls(
     const struct pkmn_pokemon* p_pokemon1,
     const struct pkmn_pokemon* p_pokemon2
@@ -802,12 +829,6 @@ void compare_pokemon(
     }
     if(generation >= 3)
     {
-        compare_pokemon_strings(
-            p_pokemon1,
-            p_pokemon2,
-            "Ability",
-            pkmn_pokemon_get_ability
-        );
         compare_pokemon_uint32s(
             p_pokemon1,
             p_pokemon2,
@@ -828,6 +849,7 @@ void compare_pokemon(
             "Contest stats",
             pkmn_pokemon_get_contest_stats
         );
+        compare_pokemon_abilities(p_pokemon1, p_pokemon2);
         compare_pokemon_balls(p_pokemon1, p_pokemon2);
         compare_pokemon_ribbons(p_pokemon1, p_pokemon2);
     }

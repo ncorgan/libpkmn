@@ -566,66 +566,67 @@ namespace pkmn { namespace database {
         return ret;
     }
 
-    std::pair<std::string, std::string> pokemon_entry::get_abilities() const
+    std::pair<pkmn::e_ability, pkmn::e_ability> pokemon_entry::get_abilities() const
     {
-        std::pair<std::string, std::string> ret;
+        std::pair<pkmn::e_ability, pkmn::e_ability> ret =
+        {
+            pkmn::e_ability::NONE,
+            pkmn::e_ability::NONE
+        };
 
         // Abilities were introduced in Generation III
-        if(_none or _generation < 3)
+        if(!_none && !_invalid && (_generation >= 3))
         {
-            ret = {"None", "None"};
-        }
-        else if(_invalid)
-        {
-            ret = {"Unknown", "Unknown"};
-        }
-        else
-        {
-            static BOOST_CONSTEXPR const char* query1 =
-                "SELECT name FROM ability_names WHERE local_language_id=9 AND ability_id="
-                "(SELECT ability_id FROM pokemon_abilities WHERE pokemon_id=? AND "
-                "is_hidden=0 AND slot=1)";
+            static const std::string first_ability_query =
+                "SELECT ability_id FROM pokemon_abilities WHERE pokemon_id=? "
+                "AND is_hidden=0 AND slot=1";
 
-            static BOOST_CONSTEXPR const char* query2 =
-                "SELECT name FROM ability_names WHERE local_language_id=9 AND ability_id="
-                "(SELECT abilities.id FROM abilities INNER JOIN pokemon_abilities ON "
+            // Account for abilities being added in later generations.
+            static const std::string second_ability_query =
+                "SELECT abilities.id FROM abilities INNER JOIN pokemon_abilities ON "
                 "(abilities.id=pokemon_abilities.ability_id) WHERE pokemon_abilities.pokemon_id=? "
                 "AND pokemon_abilities.is_hidden=0 AND pokemon_abilities.slot=2 AND "
-                "abilities.generation_id<=?)";
+                "abilities.generation_id<=?";
 
-            ret.first = pkmn::database::query_db_bind1<std::string, int>(
-                            query1, _pokemon_id
+            ret.first = static_cast<pkmn::e_ability>(
+                            pkmn::database::query_db_bind1<int, int>(
+                                first_ability_query.c_str(),
+                                _pokemon_id
+                            )
                         );
-            if(not pkmn::database::maybe_query_db_bind2<std::string, int>(
-                   query2, ret.second, _pokemon_id, _generation
-               ))
+
+            int second_ability_as_int = 0;
+            if(pkmn::database::maybe_query_db_bind2<int, int>(
+                   second_ability_query.c_str(),
+                   second_ability_as_int,
+                   _pokemon_id,
+                   _generation))
             {
-                ret.second = "None";
+                ret.second = static_cast<pkmn::e_ability>(second_ability_as_int);
             }
         }
 
         return ret;
     }
 
-    std::string pokemon_entry::get_hidden_ability() const {
-        std::string ret;
+    pkmn::e_ability pokemon_entry::get_hidden_ability() const
+    {
+        pkmn::e_ability ret = pkmn::e_ability::NONE;
 
-        // Hidden Abilities were introduced in Generation V
-        if(_none or _generation < 5) {
-            ret = "None";
-        } else if(_invalid) {
-            ret = "Unknown";
-        } else {
-            static BOOST_CONSTEXPR const char* query = \
-                "SELECT name FROM ability_names WHERE local_language_id=9 AND ability_id=("
-                "SELECT ability_id FROM pokemon_abilities WHERE pokemon_id=? AND "
-                "is_hidden=1)";
+        // Hidden Abilities were introduced in Generation V.
+        if(!_none && !_invalid && (_generation >= 5))
+        {
+            static const std::string query =
+                "SELECT ability_id FROM pokemon_abilities WHERE pokemon_id=? "
+                "AND is_hidden=1";
 
-            if(not pkmn::database::maybe_query_db_bind1<std::string, int>(
-                       query, ret, _pokemon_id
-              ))
+            int hidden_ability_as_int = 0;
+            if(pkmn::database::maybe_query_db_bind1<int, int>(
+                   query.c_str(),
+                   hidden_ability_as_int,
+                   _pokemon_id))
             {
-                ret = "None";
+                ret = static_cast<pkmn::e_ability>(hidden_ability_as_int);
             }
         }
 

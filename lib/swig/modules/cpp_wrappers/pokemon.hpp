@@ -415,7 +415,7 @@ namespace pkmn { namespace swig {
                 _pokemon->set_current_trainer_friendship(friendship);
             }
 
-            inline std::string get_ability()
+            inline pkmn::e_ability get_ability()
             {
                 BOOST_ASSERT(_pokemon.get() != nullptr);
 
@@ -425,13 +425,11 @@ namespace pkmn { namespace swig {
                 }
                 else
                 {
-                    return "";
+                    return pkmn::e_ability::NONE;
                 }
             }
 
-            inline void set_ability(
-                const std::string& ability
-            )
+            inline void set_ability(pkmn::e_ability ability)
             {
                 BOOST_ASSERT(_pokemon.get() != nullptr);
 

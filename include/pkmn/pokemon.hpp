@@ -164,11 +164,9 @@ namespace pkmn {
                 int friendship
             ) = 0;
 
-            virtual std::string get_ability() = 0;
+            virtual pkmn::e_ability get_ability() = 0;
 
-            virtual void set_ability(
-                const std::string& ability
-            ) = 0;
+            virtual void set_ability(pkmn::e_ability ability) = 0;
 
             virtual pkmn::e_ball get_ball() = 0;
 

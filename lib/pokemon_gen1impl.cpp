@@ -461,12 +461,12 @@ namespace pkmn
         throw pkmn::feature_not_in_game_error("Friendship", "Generation I");
     }
 
-    std::string pokemon_gen1impl::get_ability()
+    pkmn::e_ability pokemon_gen1impl::get_ability()
     {
         throw pkmn::feature_not_in_game_error("Abilities", "Generation I");
     }
 
-    void pokemon_gen1impl::set_ability(const std::string&)
+    void pokemon_gen1impl::set_ability(pkmn::e_ability)
     {
         throw pkmn::feature_not_in_game_error("Abilities", "Generation I");
     }

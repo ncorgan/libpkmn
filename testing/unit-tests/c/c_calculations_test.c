@@ -2004,7 +2004,7 @@ static void personality_test()
                 PKMN_SPECIES_CHARMANDER,
                 pkmn_pokemon_default_trainer_id().id,
                 true,
-                "Torrent",
+                PKMN_ABILITY_TORRENT,
                 PKMN_GENDER_MALE,
                 PKMN_NATURE_QUIET,
                 &personality
@@ -2016,7 +2016,7 @@ static void personality_test()
                 PKMN_SPECIES_CHARMANDER,
                 pkmn_pokemon_default_trainer_id().id,
                 true,
-                "Blaze",
+                PKMN_ABILITY_BLAZE,
                 PKMN_GENDER_GENDERLESS,
                 PKMN_NATURE_QUIET,
                 &personality
@@ -2028,7 +2028,7 @@ static void personality_test()
                 PKMN_SPECIES_CHARMANDER,
                 pkmn_pokemon_default_trainer_id().id,
                 true,
-                "Blaze",
+                PKMN_ABILITY_BLAZE,
                 PKMN_GENDER_MALE,
                 PKMN_NATURE_NONE,
                 &personality
@@ -2040,7 +2040,7 @@ static void personality_test()
                 PKMN_SPECIES_CHARMANDER,
                 pkmn_pokemon_default_trainer_id().id,
                 true,
-                "Blaze",
+                PKMN_ABILITY_BLAZE,
                 PKMN_GENDER_FEMALE,
                 PKMN_NATURE_QUIET,
                 &personality
@@ -2068,7 +2068,7 @@ static void personality_test()
                 PKMN_SPECIES_CHARMANDER,
                 pkmn_pokemon_default_trainer_id().id,
                 true,
-                "Blaze",
+                PKMN_ABILITY_BLAZE,
                 PKMN_GENDER_MALE,
                 PKMN_NATURE_QUIET,
                 &personality
@@ -2096,7 +2096,7 @@ static void personality_test()
                 PKMN_SPECIES_MAGNEMITE,
                 pkmn_pokemon_default_trainer_id().id,
                 true,
-                "Magnet Pull",
+                PKMN_ABILITY_MAGNET_PULL,
                 PKMN_GENDER_GENDERLESS,
                 PKMN_NATURE_QUIET,
                 &personality

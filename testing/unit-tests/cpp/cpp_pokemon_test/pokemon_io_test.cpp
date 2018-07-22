@@ -341,7 +341,7 @@ TEST(pokemon_io_test, test_outside_3gpkm) {
     EXPECT_EQ(223997927, mightyena->get_original_trainer_id());
     EXPECT_EQ(pkmn::e_gender::FEMALE, mightyena->get_original_trainer_gender());
     EXPECT_EQ(254, mightyena->get_current_trainer_friendship());
-    EXPECT_EQ("Intimidate" , mightyena->get_ability());
+    EXPECT_EQ(pkmn::e_ability::INTIMIDATE, mightyena->get_ability());
     EXPECT_EQ(pkmn::e_ball::GREAT_BALL, mightyena->get_ball());
     EXPECT_EQ(25, mightyena->get_level_met());
     EXPECT_EQ("Route 120", mightyena->get_location_met(false));

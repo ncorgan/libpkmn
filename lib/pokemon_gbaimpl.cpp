@@ -759,26 +759,28 @@ namespace pkmn
         _p_growth_block->friendship = uint8_t(friendship);
     }
 
-    std::string pokemon_gbaimpl::get_ability()
+    pkmn::e_ability pokemon_gbaimpl::get_ability()
     {
         boost::lock_guard<pokemon_gbaimpl> lock(*this);
 
-        std::string ret;
+        pkmn::e_ability ret;
 
-        std::pair<std::string, std::string> abilities = _database_entry.get_abilities();
-        if(abilities.second == "None") {
+        std::pair<pkmn::e_ability, pkmn::e_ability> abilities = _database_entry.get_abilities();
+        if(abilities.second == pkmn::e_ability::NONE)
+        {
             ret = abilities.first;
-        } else {
-            ret = (_p_misc_block->iv_egg_ability & PKSAV_GBA_POKEMON_ABILITY_MASK) ? abilities.second
-                                                                    : abilities.first;
+        }
+        else
+        {
+            bool has_second_ability = bool(_p_misc_block->iv_egg_ability & PKSAV_GBA_POKEMON_ABILITY_MASK);
+
+            ret = has_second_ability ? abilities.second : abilities.first;
         }
 
         return ret;
     }
 
-    void pokemon_gbaimpl::set_ability(
-        const std::string& ability
-    )
+    void pokemon_gbaimpl::set_ability(pkmn::e_ability ability)
     {
         boost::lock_guard<pokemon_gbaimpl> lock(*this);
 
@@ -1436,10 +1438,10 @@ namespace pkmn
         _stats[pkmn::e_stat::SPECIAL_DEFENSE] = int(pksav_littleendian16(_pksav_pokemon.party_data.spdef));
     }
 
-    void pokemon_gbaimpl::_set_ability(const std::string& ability)
+    void pokemon_gbaimpl::_set_ability(pkmn::e_ability ability)
     {
-        std::pair<std::string, std::string> abilities = _database_entry.get_abilities();
-        if(ability == "None")
+        std::pair<pkmn::e_ability, pkmn::e_ability> abilities = _database_entry.get_abilities();
+        if(ability == pkmn::e_ability::NONE)
         {
             throw std::invalid_argument("The ability cannot be set to None.");
         }
@@ -1449,21 +1451,22 @@ namespace pkmn
         }
         else if(ability == abilities.second)
         {
+            BOOST_ASSERT(abilities.second != pkmn::e_ability::NONE);
             _p_misc_block->iv_egg_ability |= PKSAV_GBA_POKEMON_ABILITY_MASK;
         }
         else
         {
             std::string error_message;
-            if(abilities.second == "None")
+            if(abilities.second == pkmn::e_ability::NONE)
             {
                 error_message = str(boost::format("ability: valid values \"%s\"")
-                                    % abilities.first.c_str());
+                                    % pkmn::ability_to_string(abilities.first).c_str());
             }
             else
             {
                 error_message = str(boost::format("ability: valid values \"%s\", \"%s\"")
-                                    % abilities.first.c_str()
-                                    % abilities.second.c_str());
+                                    % pkmn::ability_to_string(abilities.first).c_str()
+                                    % pkmn::ability_to_string(abilities.second).c_str());
             }
 
             throw std::invalid_argument(error_message.c_str());

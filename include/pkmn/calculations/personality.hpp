@@ -9,6 +9,7 @@
 
 #include <pkmn/config.hpp>
 
+#include <pkmn/enums/ability.hpp>
 #include <pkmn/enums/gender.hpp>
 #include <pkmn/enums/nature.hpp>
 #include <pkmn/enums/species.hpp>
@@ -36,7 +37,7 @@ namespace pkmn { namespace calculations {
         pkmn::e_species species,
         uint32_t trainer_id,
         bool shiny,
-        const std::string& ability,
+        pkmn::e_ability ability,
         pkmn::e_gender gender,
         pkmn::e_nature nature
     );

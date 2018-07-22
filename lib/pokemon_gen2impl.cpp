@@ -625,12 +625,12 @@ namespace pkmn
         _pksav_pokemon.pc_data.friendship = uint8_t(friendship);
     }
 
-    std::string pokemon_gen2impl::get_ability()
+    pkmn::e_ability pokemon_gen2impl::get_ability()
     {
         throw pkmn::feature_not_in_game_error("Abilities", "Generation II");
     }
 
-    void pokemon_gen2impl::set_ability(const std::string&)
+    void pokemon_gen2impl::set_ability(pkmn::e_ability)
     {
         throw pkmn::feature_not_in_game_error("Abilities", "Generation II");
     }
