@@ -26,7 +26,7 @@
 %attributeval(pkmn::database::pokemon_entry, %arg(std::pair<std::string, std::string>), Types, get_types);
 %attributeval(pkmn::database::pokemon_entry, %arg(std::pair<std::string, std::string>), Abilities, get_abilities);
 %attributestring(pkmn::database::pokemon_entry, std::string, HiddenAbility, get_hidden_ability);
-%attributeval(pkmn::database::pokemon_entry, %arg(std::pair<std::string, std::string>), EggGroups, get_egg_groups);
+%attributeval(pkmn::database::pokemon_entry, %arg(std::pair<pkmn::e_egg_group, pkmn::e_egg_group>), EggGroups, get_egg_groups);
 %attributeval(pkmn::database::pokemon_entry, %arg(std::map<pkmn::e_stat, int>), BaseStats, get_base_stats);
 %attributeval(pkmn::database::pokemon_entry, %arg(std::map<pkmn::e_stat, int>), EVYields, get_EV_yields);
 %attribute(pkmn::database::pokemon_entry, int, ExperienceYield, get_experience_yield);
@@ -123,7 +123,7 @@
         }
         else
         {
-            return this.Name.Equals(rhs.Name) &&
+            return this.SpeciesEnum.Equals(rhs.SpeciesEnum) &&
                    this.Game.Equals(rhs.Game) &&
                    this.Form.Equals(rhs.Form);
         }
@@ -149,7 +149,7 @@
 
     public override int GetHashCode()
     {
-        return HashCodeBuilder.Create().AddValue<string>(this.Name)
+        return HashCodeBuilder.Create().AddValue<Species>(this.SpeciesEnum)
                                        .AddValue<Game>(this.Game)
                                        .AddValue<string>(this.Form)
                                        .ToHashCode();

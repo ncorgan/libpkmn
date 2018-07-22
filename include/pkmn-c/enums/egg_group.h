@@ -39,6 +39,12 @@ struct pkmn_egg_group_enum_list
     size_t length;
 };
 
+struct pkmn_egg_group_enum_pair
+{
+    enum pkmn_egg_group first;
+    enum pkmn_egg_group second;
+};
+
 #ifdef __cplusplus
 extern "C" {
 #endif

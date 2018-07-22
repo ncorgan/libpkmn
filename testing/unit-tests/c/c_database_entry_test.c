@@ -242,8 +242,8 @@ static void assert_pokemon_entry_uninitialized(
     TEST_ASSERT_NULL(p_pokemon_entry->abilities.p_first);
     TEST_ASSERT_NULL(p_pokemon_entry->abilities.p_second);
     TEST_ASSERT_NULL(p_pokemon_entry->p_hidden_ability);
-    TEST_ASSERT_NULL(p_pokemon_entry->egg_groups.p_first);
-    TEST_ASSERT_NULL(p_pokemon_entry->egg_groups.p_second);
+    TEST_ASSERT_EQUAL(PKMN_EGG_GROUP_NONE, p_pokemon_entry->egg_groups.first);
+    TEST_ASSERT_EQUAL(PKMN_EGG_GROUP_NONE, p_pokemon_entry->egg_groups.second);
     for(int i = 0; i < 7; ++i) {
         TEST_ASSERT_EQUAL(p_pokemon_entry->base_stats[i], 0);
         TEST_ASSERT_EQUAL(p_pokemon_entry->EV_yields[i], 0);
@@ -297,8 +297,8 @@ static void pokemon_entry_test() {
         },
         .p_hidden_ability = NULL,
         .egg_groups = {
-            .p_first = NULL,
-            .p_second = NULL
+            .first = PKMN_EGG_GROUP_NONE,
+            .second = PKMN_EGG_GROUP_NONE
         },
         .base_stats = {0,0,0,0,0,0,0},
         .EV_yields = {0,0,0,0,0,0,0},
@@ -408,8 +408,8 @@ static void pokemon_entry_test() {
     TEST_ASSERT_EQUAL_STRING("Static", pokemon_entry.abilities.p_first);
     TEST_ASSERT_EQUAL_STRING("Limber", pokemon_entry.abilities.p_second);
     TEST_ASSERT_EQUAL_STRING("Sand Veil", pokemon_entry.p_hidden_ability);
-    TEST_ASSERT_EQUAL_STRING("Water 1", pokemon_entry.egg_groups.p_first);
-    TEST_ASSERT_EQUAL_STRING("Amorphous", pokemon_entry.egg_groups.p_second);
+    TEST_ASSERT_EQUAL(PKMN_EGG_GROUP_WATER1, pokemon_entry.egg_groups.first);
+    TEST_ASSERT_EQUAL(PKMN_EGG_GROUP_INDETERMINATE, pokemon_entry.egg_groups.second);
     TEST_ASSERT_EQUAL(109, pokemon_entry.base_stats[PKMN_STAT_HP]);
     TEST_ASSERT_EQUAL(66, pokemon_entry.base_stats[PKMN_STAT_ATTACK]);
     TEST_ASSERT_EQUAL(84, pokemon_entry.base_stats[PKMN_STAT_DEFENSE]);

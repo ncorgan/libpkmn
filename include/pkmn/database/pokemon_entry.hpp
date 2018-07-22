@@ -257,11 +257,9 @@ namespace pkmn { namespace database {
              *
              * If the Pokémon has a single egg group, the second value will be "None".
              *
-             * \returns For Generation I entries: "None"/"None"
-             * \returns For "None" entries: "None"/"None"
-             * \returns For invalid Pokémon: "Unknown"/"Unknown"
+             * \returns For Generation I/"None"/"Unknown" entries: NONE/NONE
              */
-            std::pair<std::string, std::string> get_egg_groups() const;
+            std::pair<pkmn::e_egg_group, pkmn::e_egg_group> get_egg_groups() const;
 
             /*!
              * @brief Returns this Pokémon's base stats in the given game.

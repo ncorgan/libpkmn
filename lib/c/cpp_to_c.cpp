@@ -770,8 +770,8 @@ namespace pkmn { namespace c {
             nullptr, // hidden_ability
             // egg_groups
             {
-                nullptr, // p_first
-                nullptr  // p_second
+                PKMN_EGG_GROUP_NONE, // first
+                PKMN_EGG_GROUP_NONE, // second
             },
             {0}, // base_stats
             {0}, // EV_yields
@@ -833,7 +833,7 @@ namespace pkmn { namespace c {
             pokemon_entry_cpp.get_abilities(),
             &temp_pokemon_entry_c.abilities
         );
-        string_pair_cpp_to_c(
+        egg_group_pair_cpp_to_c(
             pokemon_entry_cpp.get_egg_groups(),
             &temp_pokemon_entry_c.egg_groups
         );

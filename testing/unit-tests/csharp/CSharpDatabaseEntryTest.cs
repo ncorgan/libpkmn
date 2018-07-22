@@ -160,7 +160,10 @@ public class CSharpDatabaseEntryTest {
         Assert.AreEqual(pokemonEntry.Types, (new PKMN.StringPair("Ground", "Electric")));
         Assert.AreEqual(pokemonEntry.Abilities, (new PKMN.StringPair("Static", "Limber")));
         Assert.AreEqual(pokemonEntry.HiddenAbility, "Sand Veil");
-        Assert.AreEqual(pokemonEntry.EggGroups, (new PKMN.StringPair("Water 1", "Amorphous")));
+        Assert.AreEqual(
+            pokemonEntry.EggGroups,
+            new PKMN.EggGroupEnumPair(PKMN.EggGroup.WATER1, PKMN.EggGroup.INDETERMINATE)
+        );
 
         PKMN.StatDict baseStats = pokemonEntry.BaseStats;
         Assert.AreEqual(baseStats[PKMN.Stat.HP], 109);

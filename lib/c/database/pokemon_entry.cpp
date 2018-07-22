@@ -163,7 +163,6 @@ enum pkmn_error pkmn_database_pokemon_entry_free(
 
     pkmn_string_pair_free(&p_pokemon_entry->types);
     pkmn_string_pair_free(&p_pokemon_entry->abilities);
-    pkmn_string_pair_free(&p_pokemon_entry->egg_groups);
 
     pkmn_string_list_free(&p_pokemon_entry->tm_hm_moves);
     pkmn_string_list_free(&p_pokemon_entry->egg_moves);

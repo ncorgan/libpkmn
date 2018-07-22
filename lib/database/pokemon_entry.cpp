@@ -632,29 +632,32 @@ namespace pkmn { namespace database {
         return ret;
     }
 
-    std::pair<std::string, std::string> pokemon_entry::get_egg_groups() const {
-        std::pair<std::string, std::string> ret;
+    std::pair<pkmn::e_egg_group, pkmn::e_egg_group> pokemon_entry::get_egg_groups() const
+    {
+        std::pair<pkmn::e_egg_group, pkmn::e_egg_group> ret =
+        {
+            pkmn::e_egg_group::NONE,
+            pkmn::e_egg_group::NONE
+        };
 
-        // Breeding was introduced in Generation I
-        if(_none or _generation == 1) {
-            ret = {"None", "None"};
-        } else if(_invalid) {
-            ret = {"Unknown", "Unknown"};
-        } else {
-            static BOOST_CONSTEXPR const char* query = \
-                "SELECT name FROM egg_group_prose WHERE local_language_id=9 AND egg_group_id IN "
-                "(SELECT egg_group_id FROM pokemon_egg_groups WHERE species_id=? "
-                "ORDER BY egg_group_id)";
+        // Breeding was introduced in Generation II
+        if(!_none && !_invalid && (_generation >= 2))
+        {
+            static const std::string query =
+                "SELECT egg_group_id FROM pokemon_egg_groups WHERE species_id=? ORDER BY egg_group_id";
 
             SQLite::Statement stmt(get_connection(), query);
             stmt.bind(1, _species_id);
 
             stmt.executeStep();
-            ret.first = std::string(stmt.getColumn(0));
-            if(stmt.executeStep()) {
-                ret.second = std::string(stmt.getColumn(0));
-            } else {
-                ret.second = "None";
+            ret.first = static_cast<pkmn::e_egg_group>(int(stmt.getColumn(0)));
+            if(stmt.executeStep())
+            {
+                ret.second = static_cast<pkmn::e_egg_group>(int(stmt.getColumn(0)));
+            }
+            else
+            {
+                ret.second = pkmn::e_egg_group::NONE;
             }
         }
 

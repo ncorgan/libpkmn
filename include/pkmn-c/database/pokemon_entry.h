@@ -38,7 +38,7 @@ struct pkmn_database_pokemon_entry
     struct pkmn_string_pair types;
     struct pkmn_string_pair abilities;
     char* p_hidden_ability;
-    struct pkmn_string_pair egg_groups;
+    struct pkmn_egg_group_enum_pair egg_groups;
     int base_stats[PKMN_NUM_STATS];
     int EV_yields[PKMN_NUM_STATS];
     int experience_yield;

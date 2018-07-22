@@ -179,7 +179,7 @@ namespace pkmn
     with open("{0}.hpp".format(enum_name), "w") as output:
         output.write(file_contents)
 
-def generate_c_enum_file(enum_name, enum_values):
+def generate_c_enum_file(enum_name, enum_values, has_pair_struct = False):
     file_contents = """/*
  * Copyright (c) 2018 Nicholas Corgan (n.corgan@gmail.com)
  *
@@ -209,7 +209,18 @@ struct pkmn_{0}_enum_list
 {{
     enum pkmn_{0}* p_enums;
     size_t length;
-}};
+}};""".format(enum_name)
+
+    if has_pair_struct:
+        file_contents += """
+
+struct pkmn_{0}_enum_pair
+{{
+    enum pkmn_{0} first;
+    enum pkmn_{0} second;
+}};""".format(enum_name)
+
+    file_contents += """
 
 #ifdef __cplusplus
 extern \"C\" {{
@@ -272,7 +283,7 @@ if __name__ == "__main__":
 
     generate_c_enum_file("ability", abilities)
     generate_c_enum_file("ball", balls)
-    generate_c_enum_file("egg_group", egg_groups)
+    generate_c_enum_file("egg_group", egg_groups, True)
     generate_c_enum_file("item", items)
     generate_c_enum_file("move", moves)
     generate_c_enum_file("move_damage_class", move_damage_classes)
