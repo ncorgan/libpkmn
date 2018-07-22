@@ -829,7 +829,7 @@ namespace pkmntest {
             EXPECT_STREQ(native1->name->toUTF8(), native2->name->toUTF8());
             EXPECT_STREQ(native1->OTName->toUTF8(), native2->OTName->toUTF8());
 
-            std::pair<pkmn::e_ability, pkmn::e_ability> abilities = pokemon1->get_database_entry().get_abilities();
+            pkmn::ability_pair_t abilities = pokemon1->get_database_entry().get_abilities();
 
             EXPECT_EQ(
                 native1->getAbility(),

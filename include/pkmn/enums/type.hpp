@@ -8,6 +8,8 @@
 #ifndef PKMN_ENUMS_TYPE_HPP
 #define PKMN_ENUMS_TYPE_HPP
 
+#include <utility>
+
 namespace pkmn
 {
     enum class e_type
@@ -35,6 +37,8 @@ namespace pkmn
         SHADOW = 10002,
         INVALID = 30000,
     };
+
+    using type_pair_t = std::pair<pkmn::e_type, pkmn::e_type>;
 }
 
 #endif /* PKMN_ENUMS_TYPE_HPP */

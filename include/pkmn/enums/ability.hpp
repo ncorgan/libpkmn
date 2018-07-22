@@ -8,6 +8,8 @@
 #ifndef PKMN_ENUMS_ABILITY_HPP
 #define PKMN_ENUMS_ABILITY_HPP
 
+#include <utility>
+
 namespace pkmn
 {
     enum class e_ability
@@ -205,6 +207,8 @@ namespace pkmn
         DESOLATE_LAND = 190,
         DELTA_STREAM = 191,
     };
+
+    using ability_pair_t = std::pair<pkmn::e_ability, pkmn::e_ability>;
 }
 
 #endif /* PKMN_ENUMS_ABILITY_HPP */

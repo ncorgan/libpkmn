@@ -8,6 +8,8 @@
 #ifndef PKMN_ENUMS_EGG_GROUP_HPP
 #define PKMN_ENUMS_EGG_GROUP_HPP
 
+#include <utility>
+
 namespace pkmn
 {
     enum class e_egg_group
@@ -29,6 +31,8 @@ namespace pkmn
         DRAGON = 14,
         UNDISCOVERED = 15,
     };
+
+    using egg_group_pair_t = std::pair<pkmn::e_egg_group, pkmn::e_egg_group>;
 }
 
 #endif /* PKMN_ENUMS_EGG_GROUP_HPP */

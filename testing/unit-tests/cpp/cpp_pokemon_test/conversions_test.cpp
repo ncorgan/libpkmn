@@ -112,7 +112,7 @@ TEST_P(conversions_test, conversions_test)
     {
         first_pokemon->set_original_trainer_id(uint32_rng.rand());
 
-        std::pair<pkmn::e_ability, pkmn::e_ability> abilities = first_pokemon->get_database_entry().get_abilities();
+        pkmn::ability_pair_t abilities = first_pokemon->get_database_entry().get_abilities();
         if(abilities.second != pkmn::e_ability::NONE)
         {
             first_pokemon->set_ability(random_bool() ? abilities.first : abilities.second);

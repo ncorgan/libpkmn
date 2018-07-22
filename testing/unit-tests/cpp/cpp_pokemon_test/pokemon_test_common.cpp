@@ -246,7 +246,7 @@ static void test_setting_ability(
 
     if(generation >= 3)
     {
-        std::pair<pkmn::e_ability, pkmn::e_ability> abilities = pokemon->get_database_entry().get_abilities();
+        pkmn::ability_pair_t abilities = pokemon->get_database_entry().get_abilities();
         ASSERT_NE(pkmn::e_ability::NONE, abilities.first);
 
         pokemon->set_ability(abilities.first);

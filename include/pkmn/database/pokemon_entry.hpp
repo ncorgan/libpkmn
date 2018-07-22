@@ -218,7 +218,7 @@ namespace pkmn { namespace database {
              *
              * \returns For None/Invalid entries: NONE/NONE
              */
-            std::pair<pkmn::e_type, pkmn::e_type> get_types() const;
+            pkmn::type_pair_t get_types() const;
 
             /*!
              * @brief Returns this Pokémon's types.
@@ -232,7 +232,7 @@ namespace pkmn { namespace database {
              *
              * \returns For Generation I-II/None/Invalid entries: NONE/NONE
              */
-            std::pair<pkmn::e_ability, pkmn::e_ability> get_abilities() const;
+            pkmn::ability_pair_t get_abilities() const;
 
             /*!
              * @brief Returns this Pokémon's hidden ability.
@@ -255,7 +255,7 @@ namespace pkmn { namespace database {
              *
              * \returns For Generation I/"None"/"Unknown" entries: NONE/NONE
              */
-            std::pair<pkmn::e_egg_group, pkmn::e_egg_group> get_egg_groups() const;
+            pkmn::egg_group_pair_t get_egg_groups() const;
 
             /*!
              * @brief Returns this Pokémon's base stats in the given game.

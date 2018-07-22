@@ -327,12 +327,12 @@ TEST(cpp_enum_test, test_stat_enum)
 
 TEST(cpp_enum_test, test_type_enum)
 {
-    static const std::vector<std::pair<pkmn::e_type, pkmn::e_type>> TYPE_ENUM_GROUPS =
+    static const std::vector<pkmn::type_pair_t> TYPE_ENUM_GROUPS =
     {
         {pkmn::e_type::NONE,          pkmn::e_type::FAIRY},
         {pkmn::e_type::QUESTION_MARK, pkmn::e_type::SHADOW},
     };
-    for(const std::pair<pkmn::e_type, pkmn::e_type>& type_enum_group: TYPE_ENUM_GROUPS)
+    for(const pkmn::type_pair_t& type_enum_group: TYPE_ENUM_GROUPS)
     {
         test_enum_string_conversions<pkmn::e_type>(
             type_enum_group.first,

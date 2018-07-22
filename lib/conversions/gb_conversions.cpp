@@ -211,7 +211,7 @@ namespace pkmn { namespace conversions {
 
         // Keep status field at 0
 
-        std::pair<pkmn::e_type, pkmn::e_type> types = pkmn::database::pokemon_entry(
+        pkmn::type_pair_t types = pkmn::database::pokemon_entry(
                                                           to->species, RED
                                                       ).get_types();
         to->types[0] = uint8_t(pksav::get_gen1_type_bimap().left.at(types.first));

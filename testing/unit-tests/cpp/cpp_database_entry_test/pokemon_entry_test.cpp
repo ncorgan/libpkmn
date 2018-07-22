@@ -22,19 +22,19 @@
 
 namespace fs = boost::filesystem;
 
-static const std::pair<pkmn::e_ability, pkmn::e_ability> ability_none_pair =
+static const pkmn::ability_pair_t ability_none_pair =
 {
     pkmn::e_ability::NONE,
     pkmn::e_ability::NONE
 };
 
-static const std::pair<pkmn::e_egg_group, pkmn::e_egg_group> egg_group_none_pair =
+static const pkmn::egg_group_pair_t egg_group_none_pair =
 {
     pkmn::e_egg_group::NONE,
     pkmn::e_egg_group::NONE
 };
 
-static const std::pair<pkmn::e_type, pkmn::e_type> type_none_pair =
+static const pkmn::type_pair_t type_none_pair =
 {
     pkmn::e_type::NONE,
     pkmn::e_type::NONE
@@ -303,8 +303,8 @@ TEST_F(pokemon_entry_test, changing_type_test) {
         pkmn::e_species::CLEFAIRY, pkmn::e_game::Y, ""
     );
 
-    std::pair<pkmn::e_type, pkmn::e_type> clefairy_types5 = clefairy5.get_types();
-    std::pair<pkmn::e_type, pkmn::e_type> clefairy_types6 = clefairy6.get_types();
+    pkmn::type_pair_t clefairy_types5 = clefairy5.get_types();
+    pkmn::type_pair_t clefairy_types6 = clefairy6.get_types();
 
     EXPECT_EQ(pkmn::e_type::NORMAL, clefairy_types5.first)
         << pkmn::type_to_string(clefairy_types5.first);
@@ -321,8 +321,8 @@ TEST_F(pokemon_entry_test, changing_type_test) {
         pkmn::e_species::JIGGLYPUFF, pkmn::e_game::Y, ""
     );
 
-    std::pair<pkmn::e_type, pkmn::e_type> jigglypuff_types5 = jigglypuff5.get_types();
-    std::pair<pkmn::e_type, pkmn::e_type> jigglypuff_types6 = jigglypuff6.get_types();
+    pkmn::type_pair_t jigglypuff_types5 = jigglypuff5.get_types();
+    pkmn::type_pair_t jigglypuff_types6 = jigglypuff6.get_types();
 
     EXPECT_EQ(pkmn::e_type::NORMAL, jigglypuff_types5.first)
         << pkmn::type_to_string(jigglypuff_types5.first);
@@ -376,7 +376,7 @@ TEST_F(pokemon_entry_test, changing_abilities_test)
             ""
         );
 
-        std::pair<pkmn::e_ability, pkmn::e_ability> first_game_abilities = first_game_entry.get_abilities();
+        pkmn::ability_pair_t first_game_abilities = first_game_entry.get_abilities();
         EXPECT_EQ(
             test_params.first_ability,
             first_game_abilities.first
@@ -390,7 +390,7 @@ TEST_F(pokemon_entry_test, changing_abilities_test)
           << pkmn::game_to_string(test_params.first_game) << " "
           << pkmn::ability_to_string(test_params.second_ability);
 
-        std::pair<pkmn::e_ability, pkmn::e_ability> second_game_abilities = second_game_entry.get_abilities();
+        pkmn::ability_pair_t second_game_abilities = second_game_entry.get_abilities();
         EXPECT_EQ(
             test_params.first_ability,
             second_game_abilities.first
@@ -450,7 +450,7 @@ static void _pokemon_entry_test(
     EXPECT_FALSE(pokemon_entry_gen1.has_gender_differences());
     EXPECT_EQ(-1, pokemon_entry_gen1.get_base_friendship());
 
-    std::pair<pkmn::e_type, pkmn::e_type> types1 = pokemon_entry_gen1.get_types();
+    pkmn::type_pair_t types1 = pokemon_entry_gen1.get_types();
     EXPECT_EQ(pkmn::e_type::ICE, types1.first)
         << pkmn::type_to_string(types1.first);
     EXPECT_EQ(pkmn::e_type::FLYING, types1.second)
@@ -515,7 +515,7 @@ static void _pokemon_entry_test(
     EXPECT_FALSE(pokemon_entry_gen2.has_gender_differences());
     EXPECT_EQ(70, pokemon_entry_gen2.get_base_friendship());
 
-    std::pair<pkmn::e_type, pkmn::e_type> types2 = pokemon_entry_gen2.get_types();
+    pkmn::type_pair_t types2 = pokemon_entry_gen2.get_types();
     EXPECT_EQ(pkmn::e_type::WATER, types2.first)
         << pkmn::type_to_string(types2.first);
     EXPECT_EQ(pkmn::e_type::NONE, types2.second)
@@ -525,7 +525,7 @@ static void _pokemon_entry_test(
     EXPECT_EQ(pkmn::e_ability::NONE, pokemon_entry_gen2.get_hidden_ability())
         << pkmn::ability_to_string(pokemon_entry_gen2.get_hidden_ability());
 
-    std::pair<pkmn::e_egg_group, pkmn::e_egg_group> egg_groups2 = pokemon_entry_gen2.get_egg_groups();
+    pkmn::egg_group_pair_t egg_groups2 = pokemon_entry_gen2.get_egg_groups();
     EXPECT_EQ(pkmn::e_egg_group::MONSTER, egg_groups2.first)
         << pkmn::egg_group_to_string(egg_groups2.first);
     EXPECT_EQ(pkmn::e_egg_group::WATER1, egg_groups2.second)
@@ -585,13 +585,13 @@ static void _pokemon_entry_test(
     EXPECT_FALSE(pokemon_entry_gba.has_gender_differences());
     EXPECT_EQ(35, pokemon_entry_gba.get_base_friendship());
 
-    std::pair<pkmn::e_type, pkmn::e_type> types_gba = pokemon_entry_gba.get_types();
+    pkmn::type_pair_t types_gba = pokemon_entry_gba.get_types();
     EXPECT_EQ(pkmn::e_type::ICE, types_gba.first)
         << pkmn::type_to_string(types_gba.first);
     EXPECT_EQ(pkmn::e_type::NONE, types_gba.second)
         << pkmn::type_to_string(types_gba.second);
 
-    std::pair<pkmn::e_ability, pkmn::e_ability> abilities_gba = pokemon_entry_gba.get_abilities();
+    pkmn::ability_pair_t abilities_gba = pokemon_entry_gba.get_abilities();
     EXPECT_EQ(pkmn::e_ability::CLEAR_BODY, abilities_gba.first)
         << pkmn::ability_to_string(abilities_gba.first);
     EXPECT_EQ(pkmn::e_ability::NONE, abilities_gba.second)
@@ -600,7 +600,7 @@ static void _pokemon_entry_test(
     EXPECT_EQ(pkmn::e_ability::NONE, pokemon_entry_gba.get_hidden_ability())
         << pkmn::ability_to_string(pokemon_entry_gba.get_hidden_ability());
 
-    std::pair<pkmn::e_egg_group, pkmn::e_egg_group> egg_groups_gba = pokemon_entry_gba.get_egg_groups();
+    pkmn::egg_group_pair_t egg_groups_gba = pokemon_entry_gba.get_egg_groups();
     EXPECT_EQ(pkmn::e_egg_group::UNDISCOVERED, egg_groups_gba.first)
         << pkmn::egg_group_to_string(egg_groups_gba.first);
     EXPECT_EQ(pkmn::e_egg_group::NONE, egg_groups_gba.second)
@@ -661,13 +661,13 @@ static void _pokemon_entry_test(
     EXPECT_FALSE(pokemon_entry_gcn.has_gender_differences());
     EXPECT_EQ(70, pokemon_entry_gcn.get_base_friendship());
 
-    std::pair<pkmn::e_type, pkmn::e_type> types_gcn = pokemon_entry_gcn.get_types();
+    pkmn::type_pair_t types_gcn = pokemon_entry_gcn.get_types();
     EXPECT_EQ(pkmn::e_type::GRASS, types_gcn.first)
         << pkmn::type_to_string(types_gcn.first);
     EXPECT_EQ(pkmn::e_type::NONE, types_gcn.second)
         << pkmn::type_to_string(types_gcn.second);
 
-    std::pair<pkmn::e_ability, pkmn::e_ability> abilities_gcn = pokemon_entry_gcn.get_abilities();
+    pkmn::ability_pair_t abilities_gcn = pokemon_entry_gcn.get_abilities();
     EXPECT_EQ(pkmn::e_ability::EFFECT_SPORE, abilities_gcn.first)
         << pkmn::ability_to_string(abilities_gcn.first);
     EXPECT_EQ(pkmn::e_ability::NONE, abilities_gcn.second)
@@ -675,7 +675,7 @@ static void _pokemon_entry_test(
 
     EXPECT_EQ(pkmn::e_ability::NONE, pokemon_entry_gcn.get_hidden_ability()) << pkmn::ability_to_string(pokemon_entry_gcn.get_hidden_ability());
 
-    std::pair<pkmn::e_egg_group, pkmn::e_egg_group> egg_groups_gcn = pokemon_entry_gcn.get_egg_groups();
+    pkmn::egg_group_pair_t egg_groups_gcn = pokemon_entry_gcn.get_egg_groups();
     EXPECT_EQ(pkmn::e_egg_group::FAIRY, egg_groups_gcn.first)
         << pkmn::egg_group_to_string(egg_groups_gcn.first);
     EXPECT_EQ(pkmn::e_egg_group::PLANT, egg_groups_gcn.second)
@@ -736,13 +736,13 @@ static void _pokemon_entry_test(
     EXPECT_TRUE(pokemon_entry_gen4.has_gender_differences());
     EXPECT_EQ(70, pokemon_entry_gen4.get_base_friendship());
 
-    std::pair<pkmn::e_type, pkmn::e_type> types_gen4 = pokemon_entry_gen4.get_types();
+    pkmn::type_pair_t types_gen4 = pokemon_entry_gen4.get_types();
     EXPECT_EQ(pkmn::e_type::BUG, types_gen4.first)
         << pkmn::type_to_string(types_gen4.first);
     EXPECT_EQ(pkmn::e_type::NONE, types_gen4.second)
         << pkmn::type_to_string(types_gen4.second);
 
-    std::pair<pkmn::e_ability, pkmn::e_ability> abilities_gen4 = pokemon_entry_gen4.get_abilities();
+    pkmn::ability_pair_t abilities_gen4 = pokemon_entry_gen4.get_abilities();
     EXPECT_EQ(pkmn::e_ability::SHED_SKIN, abilities_gen4.first)
         << pkmn::ability_to_string(abilities_gen4.first);
     EXPECT_EQ(pkmn::e_ability::NONE, abilities_gen4.second)
@@ -751,7 +751,7 @@ static void _pokemon_entry_test(
     EXPECT_EQ(pkmn::e_ability::NONE, pokemon_entry_gen4.get_hidden_ability())
         << pkmn::ability_to_string(pokemon_entry_gen4.get_hidden_ability());
 
-    std::pair<pkmn::e_egg_group, pkmn::e_egg_group> egg_groups_gen4 = pokemon_entry_gen4.get_egg_groups();
+    pkmn::egg_group_pair_t egg_groups_gen4 = pokemon_entry_gen4.get_egg_groups();
     EXPECT_EQ(pkmn::e_egg_group::BUG, egg_groups_gen4.first)
         << pkmn::egg_group_to_string(egg_groups_gen4.first);
     EXPECT_EQ(pkmn::e_egg_group::NONE, egg_groups_gen4.second)
@@ -812,13 +812,13 @@ static void _pokemon_entry_test(
     EXPECT_FALSE(pokemon_entry_gen5.has_gender_differences());
     EXPECT_EQ(70, pokemon_entry_gen5.get_base_friendship());
 
-    std::pair<pkmn::e_type, pkmn::e_type> types_gen5 = pokemon_entry_gen5.get_types();
+    pkmn::type_pair_t types_gen5 = pokemon_entry_gen5.get_types();
     EXPECT_EQ(pkmn::e_type::GROUND, types_gen5.first)
         << pkmn::type_to_string(types_gen5.first);
     EXPECT_EQ(pkmn::e_type::ELECTRIC, types_gen5.second)
         << pkmn::type_to_string(types_gen5.second);
 
-    std::pair<pkmn::e_ability, pkmn::e_ability> abilities_gen5 = pokemon_entry_gen5.get_abilities();
+    pkmn::ability_pair_t abilities_gen5 = pokemon_entry_gen5.get_abilities();
     EXPECT_EQ(pkmn::e_ability::STATIC, abilities_gen5.first)
         << pkmn::ability_to_string(abilities_gen5.first);
     EXPECT_EQ(pkmn::e_ability::LIMBER, abilities_gen5.second)
@@ -827,7 +827,7 @@ static void _pokemon_entry_test(
     EXPECT_EQ(pkmn::e_ability::SAND_VEIL, pokemon_entry_gen5.get_hidden_ability())
         << pkmn::ability_to_string(pokemon_entry_gen5.get_hidden_ability());
 
-    std::pair<pkmn::e_egg_group, pkmn::e_egg_group> egg_groups_gen5 = pokemon_entry_gen5.get_egg_groups();
+    pkmn::egg_group_pair_t egg_groups_gen5 = pokemon_entry_gen5.get_egg_groups();
     EXPECT_EQ(pkmn::e_egg_group::WATER1, egg_groups_gen5.first)
         << pkmn::egg_group_to_string(egg_groups_gen5.first);
     EXPECT_EQ(pkmn::e_egg_group::INDETERMINATE, egg_groups_gen5.second)
@@ -888,13 +888,13 @@ static void _pokemon_entry_test(
     EXPECT_FALSE(pokemon_entry_gen6.has_gender_differences());
     EXPECT_EQ(70, pokemon_entry_gen6.get_base_friendship());
 
-    std::pair<pkmn::e_type, pkmn::e_type> types_gen6 = pokemon_entry_gen6.get_types();
+    pkmn::type_pair_t types_gen6 = pokemon_entry_gen6.get_types();
     EXPECT_EQ(pkmn::e_type::FAIRY, types_gen6.first)
         << pkmn::type_to_string(types_gen6.first);
     EXPECT_EQ(pkmn::e_type::NONE, types_gen6.second)
         << pkmn::type_to_string(types_gen6.second);
 
-    std::pair<pkmn::e_ability, pkmn::e_ability> abilities_gen6 = pokemon_entry_gen6.get_abilities();
+    pkmn::ability_pair_t abilities_gen6 = pokemon_entry_gen6.get_abilities();
     EXPECT_EQ(pkmn::e_ability::CUTE_CHARM, abilities_gen6.first)
         << pkmn::ability_to_string(abilities_gen6.first);
     EXPECT_EQ(pkmn::e_ability::NONE, abilities_gen6.second)
@@ -903,7 +903,7 @@ static void _pokemon_entry_test(
     EXPECT_EQ(pkmn::e_ability::PIXILATE, pokemon_entry_gen6.get_hidden_ability())
         << pkmn::ability_to_string(pokemon_entry_gen6.get_hidden_ability());
 
-    std::pair<pkmn::e_egg_group, pkmn::e_egg_group> egg_groups_gen6 = pokemon_entry_gen6.get_egg_groups();
+    pkmn::egg_group_pair_t egg_groups_gen6 = pokemon_entry_gen6.get_egg_groups();
     EXPECT_EQ(pkmn::e_egg_group::GROUND, egg_groups_gen6.first)
         << pkmn::egg_group_to_string(egg_groups_gen6.first);
     EXPECT_EQ(pkmn::e_egg_group::NONE, egg_groups_gen6.second)

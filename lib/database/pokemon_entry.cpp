@@ -525,15 +525,15 @@ namespace pkmn { namespace database {
         return (std::find(old_none_secondary, old_none_secondary+14, species_id) != (old_none_secondary+14));
     }
 
-    std::pair<pkmn::e_type, pkmn::e_type> pokemon_entry::get_types() const
+    pkmn::type_pair_t pokemon_entry::get_types() const
     {
-        static const std::pair<pkmn::e_type, pkmn::e_type> normal_only_pair =
+        static const pkmn::type_pair_t normal_only_pair =
         {
             pkmn::e_type::NORMAL,
             pkmn::e_type::NONE
         };
 
-        std::pair<pkmn::e_type, pkmn::e_type> ret =
+        pkmn::type_pair_t ret =
         {
             pkmn::e_type::NONE,
             pkmn::e_type::NONE
@@ -584,9 +584,9 @@ namespace pkmn { namespace database {
         return ret;
     }
 
-    std::pair<pkmn::e_ability, pkmn::e_ability> pokemon_entry::get_abilities() const
+    pkmn::ability_pair_t pokemon_entry::get_abilities() const
     {
-        std::pair<pkmn::e_ability, pkmn::e_ability> ret =
+        pkmn::ability_pair_t ret =
         {
             pkmn::e_ability::NONE,
             pkmn::e_ability::NONE
@@ -651,9 +651,9 @@ namespace pkmn { namespace database {
         return ret;
     }
 
-    std::pair<pkmn::e_egg_group, pkmn::e_egg_group> pokemon_entry::get_egg_groups() const
+    pkmn::egg_group_pair_t pokemon_entry::get_egg_groups() const
     {
-        std::pair<pkmn::e_egg_group, pkmn::e_egg_group> ret =
+        pkmn::egg_group_pair_t ret =
         {
             pkmn::e_egg_group::NONE,
             pkmn::e_egg_group::NONE

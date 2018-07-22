@@ -85,7 +85,7 @@ namespace pkmn { namespace calculations {
         uint32_t ret = 0;
 
         pkmn::database::pokemon_entry entry(species, pkmn::e_game::OMEGA_RUBY, "");
-        std::pair<pkmn::e_ability, pkmn::e_ability> abilities = entry.get_abilities();
+        pkmn::ability_pair_t abilities = entry.get_abilities();
         pkmn::e_ability hidden_ability = entry.get_hidden_ability();
         float chance_male = entry.get_chance_male();
         float chance_female = entry.get_chance_female();

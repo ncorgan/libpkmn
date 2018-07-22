@@ -752,7 +752,7 @@ namespace pkmn
 
         pkmn::e_ability ret = pkmn::e_ability::NONE;
 
-        std::pair<pkmn::e_ability, pkmn::e_ability> abilities = _database_entry.get_abilities();
+        pkmn::ability_pair_t abilities = _database_entry.get_abilities();
         if(abilities.second == pkmn::e_ability::NONE)
         {
             ret = abilities.first;
@@ -1347,7 +1347,7 @@ namespace pkmn
 
     void pokemon_gcnimpl::_set_ability(pkmn::e_ability ability)
     {
-        std::pair<pkmn::e_ability, pkmn::e_ability> abilities = _database_entry.get_abilities();
+        pkmn::ability_pair_t abilities = _database_entry.get_abilities();
         if(ability == pkmn::e_ability::NONE)
         {
             throw std::invalid_argument("The ability cannot be set to None.");

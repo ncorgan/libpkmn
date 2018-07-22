@@ -149,7 +149,7 @@ def get_types(c):
 
     return types
 
-def generate_cpp_enum_file(enum_name, enum_values):
+def generate_cpp_enum_file(enum_name, enum_values, has_pair_using = False):
     file_contents = """/*
  * Copyright (c) 2018 Nicholas Corgan (n.corgan@gmail.com)
  *
@@ -160,17 +160,31 @@ def generate_cpp_enum_file(enum_name, enum_values):
 #ifndef PKMN_ENUMS_{0}_HPP
 #define PKMN_ENUMS_{0}_HPP
 
-namespace pkmn
+""".format(enum_name.upper())
+
+    if has_pair_using:
+        file_contents += """#include <utility>
+
+"""
+
+    file_contents += """namespace pkmn
 {{
-    enum class e_{1}
-    {{""".format(enum_name.upper(), enum_name)
+    enum class e_{0}
+    {{""".format(enum_name)
 
     for enum_value in enum_values:
         file_contents += """
         {0},""".format(enum_value)
 
     file_contents += """
-    }};
+    };"""
+
+    if has_pair_using:
+        file_contents += """
+
+    using {0}_pair_t = std::pair<pkmn::e_{0}, pkmn::e_{0}>;""".format(enum_name)
+
+    file_contents += """
 }}
 
 #endif /* PKMN_ENUMS_{0}_HPP */
@@ -273,15 +287,15 @@ if __name__ == "__main__":
     if options.cpp or options.all:
         os.chdir(os.path.join(include_dir, "pkmn/enums"))
 
-        generate_cpp_enum_file("ability", abilities)
+        generate_cpp_enum_file("ability", abilities, True)
         generate_cpp_enum_file("ball", balls)
-        generate_cpp_enum_file("egg_group", egg_groups)
+        generate_cpp_enum_file("egg_group", egg_groups, True)
         generate_cpp_enum_file("item", items)
         generate_cpp_enum_file("move", moves)
         generate_cpp_enum_file("move_damage_class", move_damage_classes)
         generate_cpp_enum_file("nature", natures)
         generate_cpp_enum_file("species", species)
-        generate_cpp_enum_file("type", types)
+        generate_cpp_enum_file("type", types, True)
 
     if options.c or options.all:
         os.chdir(os.path.join(include_dir, "pkmn-c/enums"))

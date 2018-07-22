@@ -92,8 +92,8 @@ namespace pkmn { namespace breeding {
     {
         bool are_compatible = true;
 
-        std::pair<pkmn::e_egg_group, pkmn::e_egg_group> pokemon1_egg_groups = pokemon1_entry.get_egg_groups();
-        std::pair<pkmn::e_egg_group, pkmn::e_egg_group> pokemon2_egg_groups = pokemon2_entry.get_egg_groups();
+        pkmn::egg_group_pair_t pokemon1_egg_groups = pokemon1_entry.get_egg_groups();
+        pkmn::egg_group_pair_t pokemon2_egg_groups = pokemon2_entry.get_egg_groups();
 
         bool is_pokemon1_ditto = (pokemon1_egg_groups.first == pkmn::e_egg_group::DITTO);
         bool is_pokemon2_ditto = (pokemon2_egg_groups.first == pkmn::e_egg_group::DITTO);
