@@ -133,53 +133,62 @@ namespace pkmn { namespace database {
         return pkmn::database::game_id_to_enum(_game_id);
     }
 
-    std::string move_entry::get_type() const {
-        std::string ret;
+    pkmn::e_type move_entry::get_type() const
+    {
+        pkmn::e_type ret = pkmn::e_type::NONE;
 
-        if(_none) {
-            ret = "None";
-        } else if(_invalid) {
-            ret = "Invalid";
-        } else {
-            /*
-             * In Generation I, before the Dark type was introduced,
-             * four moves were Normal type.
-             *
-             * There aren't enough edge cases to warrant adding them
-             * to the database.
-             */
-            if(_generation == 1) {
+        if(!_none && !_invalid)
+        {
+            if(_generation == 1)
+            {
+                /*
+                 * In Generation I, before the Dark type was introduced,
+                 * four moves were Normal type.
+                 *
+                 * There aren't enough edge cases to warrant adding them
+                 * to the database.
+                 */
                 BOOST_STATIC_CONSTEXPR int NORMAL_IDS[] = {2,16,28,44};
-                for(int normal_id: NORMAL_IDS) {
-                    if(_move_id == normal_id) {
-                        ret = "Normal";
+                for(int normal_id: NORMAL_IDS)
+                {
+                    if(_move_id == normal_id)
+                    {
+                        ret = pkmn::e_type::NORMAL;
                     }
                 }
             }
 
-            /*
-             * In Generation VI, before the Fairy type was introduced,
-             * three moves were Normal type.
-             *
-             * There aren't enough edge cases to warrant adding them
-             * to the database.
-             */
-            if(_generation < 6) {
+            if((ret == pkmn::e_type::NONE) && (_generation < 6))
+            {
+                /*
+                 * In Generation VI, before the Fairy type was introduced,
+                 * three moves were Normal type.
+                 *
+                 * There aren't enough edge cases to warrant adding them
+                 * to the database.
+                 */
                 BOOST_STATIC_CONSTEXPR int NORMAL_IDS[] = {186,204,236};
-                for(int normal_id: NORMAL_IDS) {
-                    if(_move_id == normal_id) {
-                        ret = "Normal";
+                for(int normal_id: NORMAL_IDS)
+                {
+                    if(_move_id == normal_id)
+                    {
+                        ret = pkmn::e_type::NORMAL;
                     }
                 }
             }
 
-            static BOOST_CONSTEXPR const char* query = \
-                "SELECT name FROM type_names WHERE local_language_id=9 "
-                "AND type_id=(SELECT type_id FROM moves WHERE id=?)";
+            if(ret == pkmn::e_type::NONE)
+            {
+                static const std::string query =
+                    "SELECT type_id FROM moves WHERE id=?";
 
-            ret = pkmn::database::query_db_bind1<std::string, int>(
-                      query, _move_id
-                  );
+                ret = static_cast<pkmn::e_type>(
+                          pkmn::database::query_db_bind1<int, int>(
+                              query.c_str(),
+                              _move_id
+                          )
+                      );
+            }
         }
 
         return ret;
@@ -225,42 +234,41 @@ namespace pkmn { namespace database {
         return ret;
     }
 
-    std::string move_entry::get_damage_class() const {
-        std::string ret;
+    pkmn::e_move_damage_class move_entry::get_damage_class() const
+    {
+        pkmn::e_move_damage_class ret = pkmn::e_move_damage_class::NONE;
 
-        if(_none) {
-            ret = "None";
-        } else if(_invalid) {
-            ret = "Unknown";
-        } else {
+        if(!_none && !_invalid)
+        {
+            static const std::string main_query =
+                "SELECT damage_class_id FROM moves WHERE id=?";
+
+            ret = static_cast<pkmn::e_move_damage_class>(
+                      pkmn::database::query_db_bind1<int, int>(
+                          main_query.c_str(),
+                          _move_id
+                      )
+                  );
+
             /*
              * In Generations I-III (minus the Gamecube games), a move's damage
              * class was associated with its type instead of the move itself,
              * unless it's a status move.
              */
-            static BOOST_CONSTEXPR const char* old_games_query = \
-                "SELECT damage_class_id FROM types WHERE id="
-                "(SELECT type_id FROM moves where id=?)";
+            const bool is_old_game = ((_generation < 4) && !game_is_gamecube(_game_id));
+            if(is_old_game && (ret != pkmn::e_move_damage_class::STATUS))
+            {
+                static const std::string old_game_query =
+                    "SELECT damage_class_id FROM types WHERE id="
+                    "(SELECT type_id FROM moves where id=?)";
 
-            static BOOST_CONSTEXPR const char* main_query = \
-                "SELECT damage_class_id FROM moves WHERE id=?";
-
-            bool old_game = (_generation < 4 and not game_is_gamecube(_game_id));
-            int damage_class_id = pkmn::database::query_db_bind1<int, int>(
-                                      main_query, _move_id
-                                  );
-
-            static BOOST_CONSTEXPR const char* damage_classes[] = {
-                "", "Status", "Physical", "Special"
-            };
-
-            if(old_game and damage_class_id > 1) {
-                damage_class_id = pkmn::database::query_db_bind1<int, int>(
-                                      old_games_query, _move_id
-                                  );
+                ret = static_cast<pkmn::e_move_damage_class>(
+                          pkmn::database::query_db_bind1<int, int>(
+                              old_game_query.c_str(),
+                              _move_id
+                          )
+                      );
             }
-
-            ret = damage_classes[damage_class_id];
         }
 
         return ret;

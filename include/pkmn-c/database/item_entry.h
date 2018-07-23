@@ -15,6 +15,8 @@
 
 #include <stdbool.h>
 
+// TODO: store item name
+
 /*!
  * @brief A struct representing a database entry for an in-game item.
  *

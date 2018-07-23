@@ -676,11 +676,13 @@ namespace pkmn { namespace c {
         // a concern.
         struct pkmn_database_move_entry temp_move_entry_c =
         {
+            PKMN_MOVE_NONE, // move
             nullptr, // p_name
             PKMN_GAME_NONE, // game
+            PKMN_TYPE_NONE, // type
             nullptr, // p_description
             nullptr, // p_target
-            nullptr, // p_damage_class
+            PKMN_MOVE_DAMAGE_CLASS_NONE, // damage_class
             0,       // base_power
             {0},     // pp
             0.0f,    // accuracy
@@ -703,10 +705,6 @@ namespace pkmn { namespace c {
             &temp_move_entry_c.p_target
         );
         string_cpp_to_c_alloc(
-            move_entry_cpp.get_damage_class(),
-            &temp_move_entry_c.p_damage_class
-        );
-        string_cpp_to_c_alloc(
             move_entry_cpp.get_effect(),
             &temp_move_entry_c.p_effect
         );
@@ -723,7 +721,10 @@ namespace pkmn { namespace c {
             &temp_move_entry_c.p_super_contest_effect
         );
 
+        temp_move_entry_c.move = static_cast<enum pkmn_move>(move_entry_cpp.get_move());
         temp_move_entry_c.game = static_cast<enum pkmn_game>(move_entry_cpp.get_game());
+        temp_move_entry_c.type = static_cast<enum pkmn_type>(move_entry_cpp.get_type());
+        temp_move_entry_c.damage_class = static_cast<enum pkmn_move_damage_class>(move_entry_cpp.get_damage_class());
 
         temp_move_entry_c.base_power = move_entry_cpp.get_base_power();
         for(int num_pp = 0; num_pp < 4; ++num_pp)

@@ -13,16 +13,19 @@
 #include <pkmn-c/enums/game.h>
 #include <pkmn-c/enums/move.h>
 #include <pkmn-c/enums/move_damage_class.h>
+#include <pkmn-c/enums/type.h>
 
 #include <stdbool.h>
 
 struct pkmn_database_move_entry
 {
+    enum pkmn_move move;
     char* p_name;
     enum pkmn_game game;
+    enum pkmn_type type;
     char* p_description;
     char* p_target;
-    char* p_damage_class;
+    enum pkmn_move_damage_class damage_class;
     int base_power;
     int pp[4];
     float accuracy;

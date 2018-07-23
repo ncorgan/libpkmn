@@ -13,12 +13,13 @@
 
 // Convert getter/setter functions into attributes for more idiomatic C#.
 
+%attribute(pkmn::database::move_entry, pkmn::e_move, Move, get_move);
 %attributestring(pkmn::database::move_entry, std::string, Name, get_name);
 %attribute(pkmn::database::move_entry, pkmn::e_game, Game, get_game);
-%attributestring(pkmn::database::move_entry, std::string, MoveType, get_type);
+%attribute(pkmn::database::move_entry, pkmn::e_type, MoveType, get_type);
 %attributestring(pkmn::database::move_entry, std::string, Description, get_description);
 %attributestring(pkmn::database::move_entry, std::string, Target, get_target);
-%attributestring(pkmn::database::move_entry, std::string, DamageClass, get_damage_class);
+%attribute(pkmn::database::move_entry, pkmn::e_move_damage_class, DamageClass, get_damage_class);
 %attribute(pkmn::database::move_entry, int, BasePower, get_base_power);
 %attribute(pkmn::database::move_entry, float, Accuracy, get_accuracy);
 %attribute(pkmn::database::move_entry, int, Priority, get_priority);

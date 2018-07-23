@@ -1150,7 +1150,7 @@ namespace pkmn
          * move on demand, whether it be in-battle or on a stats screen. As such,
          * don't allow it to be set here.
          */
-        if(entry.get_type() == "Shadow")
+        if(entry.get_type() == pkmn::e_type::SHADOW)
         {
             throw std::invalid_argument("You cannot set Shadow moves.");
         }

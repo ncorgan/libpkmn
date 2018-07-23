@@ -114,11 +114,13 @@ static void assert_move_entry_uninitialized(
     struct pkmn_database_move_entry* p_move_entry
 )
 {
+    TEST_ASSERT_EQUAL(PKMN_MOVE_NONE, p_move_entry->move);
     TEST_ASSERT_NULL(p_move_entry->p_name);
     TEST_ASSERT_EQUAL(PKMN_GAME_NONE, p_move_entry->game);
+    TEST_ASSERT_EQUAL(PKMN_TYPE_NONE, p_move_entry->type);
     TEST_ASSERT_NULL(p_move_entry->p_description);
     TEST_ASSERT_NULL(p_move_entry->p_target);
-    TEST_ASSERT_NULL(p_move_entry->p_damage_class);
+    TEST_ASSERT_EQUAL(PKMN_MOVE_DAMAGE_CLASS_NONE, p_move_entry->damage_class);
     TEST_ASSERT_EQUAL(p_move_entry->base_power, 0);
     for(int i = 0; i < 4; ++i) {
         TEST_ASSERT_EQUAL(p_move_entry->pp[i], 0);
@@ -134,11 +136,13 @@ static void move_entry_test()
 {
     struct pkmn_database_move_entry move_entry =
     {
+        .move = PKMN_MOVE_NONE,
         .p_name = NULL,
         .game = PKMN_GAME_NONE,
+        .type = PKMN_TYPE_NONE,
         .p_description = NULL,
         .p_target = NULL,
-        .p_damage_class = NULL,
+        .damage_class = PKMN_MOVE_DAMAGE_CLASS_NONE,
         .base_power = 0,
         .pp = {0,0,0,0},
         .accuracy = 0.0f,
@@ -196,21 +200,23 @@ static void move_entry_test()
     );
 
     // Make sure fields are properly populated
-    TEST_ASSERT_EQUAL_STRING(move_entry.p_name, "Octazooka");
-    TEST_ASSERT_EQUAL(move_entry.game, PKMN_GAME_SILVER);
+    TEST_ASSERT_EQUAL(PKMN_MOVE_OCTAZOOKA, move_entry.move);
+    TEST_ASSERT_EQUAL_STRING("Octazooka", move_entry.p_name);
+    TEST_ASSERT_EQUAL(PKMN_GAME_SILVER, move_entry.game);
+    TEST_ASSERT_EQUAL(PKMN_TYPE_WATER, move_entry.type);
     TEST_ASSERT_NOT_NULL(move_entry.p_description);
-    TEST_ASSERT_EQUAL_STRING(move_entry.p_target, "Selected Pokémon");
-    TEST_ASSERT_EQUAL_STRING(move_entry.p_damage_class, "Special");
-    TEST_ASSERT_EQUAL(move_entry.base_power, 65);
-    TEST_ASSERT_EQUAL(move_entry.pp[0], 10);
-    TEST_ASSERT_EQUAL(move_entry.pp[1], 12);
-    TEST_ASSERT_EQUAL(move_entry.pp[2], 14);
-    TEST_ASSERT_EQUAL(move_entry.pp[3], 16);
-    TEST_ASSERT_EQUAL_FLOAT(move_entry.accuracy, 0.85f);
+    TEST_ASSERT_EQUAL_STRING("Selected Pokémon", move_entry.p_target);
+    TEST_ASSERT_EQUAL(PKMN_MOVE_DAMAGE_CLASS_SPECIAL, move_entry.damage_class);
+    TEST_ASSERT_EQUAL(65, move_entry.base_power);
+    TEST_ASSERT_EQUAL(10, move_entry.pp[0]);
+    TEST_ASSERT_EQUAL(12, move_entry.pp[1]);
+    TEST_ASSERT_EQUAL(14, move_entry.pp[2]);
+    TEST_ASSERT_EQUAL(16, move_entry.pp[3]);
+    TEST_ASSERT_EQUAL_FLOAT(0.85f, move_entry.accuracy);
     TEST_ASSERT_NOT_NULL(move_entry.p_effect);
-    TEST_ASSERT_EQUAL_STRING(move_entry.p_contest_type, "None");
-    TEST_ASSERT_EQUAL_STRING(move_entry.p_contest_effect, "None");
-    TEST_ASSERT_EQUAL_STRING(move_entry.p_super_contest_effect, "None");
+    TEST_ASSERT_EQUAL_STRING("None", move_entry.p_contest_type);
+    TEST_ASSERT_EQUAL_STRING("None", move_entry.p_contest_effect);
+    TEST_ASSERT_EQUAL_STRING("None", move_entry.p_super_contest_effect);
 
     // Make sure freeing properly works
     TEST_ASSERT_EQUAL(

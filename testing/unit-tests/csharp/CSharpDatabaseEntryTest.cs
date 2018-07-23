@@ -80,15 +80,16 @@ public class CSharpDatabaseEntryTest {
 
         PKMN.Database.MoveEntry moveEntry = new PKMN.Database.MoveEntry("Octazooka", PKMN.Game.SILVER);
 
+        Assert.AreEqual(moveEntry.Move, PKMN.Move.OCTAZOOKA);
         Assert.AreEqual(moveEntry.Name, "Octazooka");
         Assert.AreEqual(moveEntry.Game, PKMN.Game.SILVER);
-        Assert.AreEqual(moveEntry.MoveType, "Water");
+        Assert.AreEqual(moveEntry.MoveType, PKMN.Type.WATER);
 
         // Just make sure it works
         string description = moveEntry.Description;
 
         Assert.AreEqual(moveEntry.Target, "Selected Pokémon");
-        Assert.AreEqual(moveEntry.DamageClass, "Special");
+        Assert.AreEqual(moveEntry.DamageClass, PKMN.MoveDamageClass.SPECIAL);
         Assert.AreEqual(moveEntry.BasePower, 65);
 
         int[] PPs = {10, 12, 14, 16};

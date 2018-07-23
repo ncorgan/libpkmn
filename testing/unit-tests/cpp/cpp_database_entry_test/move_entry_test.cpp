@@ -8,19 +8,22 @@
 #include <pkmntest/util.hpp>
 
 #include <pkmn/database/move_entry.hpp>
+#include <pkmn/enums/enum_to_string.hpp>
 
 #include <gtest/gtest.h>
 
 class move_entry_none_test: public ::testing::TestWithParam<pkmn::e_game> {};
 
-TEST_P(move_entry_none_test, move_entry_none_test) {
+TEST_P(move_entry_none_test, move_entry_none_test)
+{
     pkmn::database::move_entry none_entry("None", GetParam());
 
+    EXPECT_EQ(pkmn::e_move::NONE, none_entry.get_move());
     EXPECT_EQ("None", none_entry.get_name());
-    EXPECT_EQ("None", none_entry.get_type());
+    EXPECT_EQ(pkmn::e_type::NONE, none_entry.get_type());
     EXPECT_EQ("None", none_entry.get_description());
     EXPECT_EQ("None", none_entry.get_target());
-    EXPECT_EQ("None", none_entry.get_damage_class());
+    EXPECT_EQ(pkmn::e_move_damage_class::NONE, none_entry.get_damage_class());
     EXPECT_EQ(-1, none_entry.get_base_power());
     EXPECT_EQ(0, none_entry.get_pp(0));
     EXPECT_FLOAT_EQ(-1.0f, none_entry.get_accuracy());
@@ -37,7 +40,8 @@ INSTANTIATE_TEST_CASE_P(
     ::testing::ValuesIn(pkmntest::ALL_GAMES)
 );
 
-class move_entry_test: public ::testing::Test {
+class move_entry_test: public ::testing::Test
+{
     public:
         static void SetUpTestCase() {
             byid_gen1   = pkmn::database::move_entry(89,1);
@@ -80,7 +84,8 @@ pkmn::database::move_entry move_entry_test::byname_gen4;
 pkmn::database::move_entry move_entry_test::byname_gen5;
 pkmn::database::move_entry move_entry_test::byname_gen6;
 
-TEST_F(move_entry_test, equality_test) {
+TEST_F(move_entry_test, equality_test)
+{
     EXPECT_TRUE(byid_gen1 == byname_gen1);
     EXPECT_TRUE(byid_gen2 == byname_gen2);
     EXPECT_TRUE(byid_gba  == byname_gba);
@@ -105,7 +110,8 @@ static void _move_entry_test(
     const pkmn::database::move_entry &move_entry_gen4,
     const pkmn::database::move_entry &move_entry_gen5,
     const pkmn::database::move_entry &move_entry_gen6
-) {
+)
+{
     // Check for expected exceptions in get_pp()
     EXPECT_THROW(
         (void)move_entry_gen1.get_pp(-1)
@@ -115,12 +121,13 @@ static void _move_entry_test(
     , std::out_of_range);
 
     // Generation I entry
+    EXPECT_EQ(pkmn::e_move::EARTHQUAKE, move_entry_gen1.get_move());
     EXPECT_EQ("Earthquake", move_entry_gen1.get_name());
     EXPECT_EQ(pkmn::e_game::RED, move_entry_gen1.get_game());
-    EXPECT_EQ("Ground", move_entry_gen1.get_type());
+    EXPECT_EQ(pkmn::e_type::GROUND, move_entry_gen1.get_type());
     (void)move_entry_gen1.get_description();
     EXPECT_EQ("All other Pokémon", move_entry_gen1.get_target());
-    EXPECT_EQ("Physical", move_entry_gen1.get_damage_class());
+    EXPECT_EQ(pkmn::e_move_damage_class::PHYSICAL, move_entry_gen1.get_damage_class());
     EXPECT_EQ(100, move_entry_gen1.get_base_power());
     EXPECT_EQ(10, move_entry_gen1.get_pp(0));
     EXPECT_EQ(12, move_entry_gen1.get_pp(1));
@@ -134,12 +141,13 @@ static void _move_entry_test(
     EXPECT_EQ("None", move_entry_gen1.get_super_contest_effect());
 
     // Generation II entry
+    EXPECT_EQ(pkmn::e_move::OCTAZAOOKA, move_entry_gen2.get_move());
     EXPECT_EQ("Octazooka", move_entry_gen2.get_name());
     EXPECT_EQ(pkmn::e_game::SILVER, move_entry_gen2.get_game());
-    EXPECT_EQ("Water", move_entry_gen2.get_type());
+    EXPECT_EQ(pkmn::e_type::WATER, move_entry_gen2.get_type());
     (void)move_entry_gen2.get_description();
     EXPECT_EQ("Selected Pokémon", move_entry_gen2.get_target());
-    EXPECT_EQ("Special", move_entry_gen2.get_damage_class());
+    EXPECT_EQ(pkmn::e_move_damage_class::SPECIAL, move_entry_gen2.get_damage_class());
     EXPECT_EQ(65, move_entry_gen2.get_base_power());
     EXPECT_EQ(10, move_entry_gen2.get_pp(0));
     EXPECT_EQ(12, move_entry_gen2.get_pp(1));
@@ -153,12 +161,13 @@ static void _move_entry_test(
     EXPECT_EQ("None", move_entry_gen2.get_super_contest_effect());
 
     // GBA entry
+    EXPECT_EQ(pkmn::e_move::MEMENTO, move_entry_gba.get_move());
     EXPECT_EQ("Memento", move_entry_gba.get_name());
     EXPECT_EQ(pkmn::e_game::RUBY, move_entry_gba.get_game());
-    EXPECT_EQ("Dark", move_entry_gba.get_type());
+    EXPECT_EQ(pkmn::e_type::DARK, move_entry_gba.get_type());
     (void)move_entry_gba.get_description();
     EXPECT_EQ("Selected Pokémon", move_entry_gba.get_target());
-    EXPECT_EQ("Status", move_entry_gba.get_damage_class());
+    EXPECT_EQ(pkmn::e_move_damage_class::STATUS, move_entry_gba.get_damage_class());
     EXPECT_EQ(0, move_entry_gba.get_base_power());
     EXPECT_EQ(10, move_entry_gba.get_pp(0));
     EXPECT_EQ(12, move_entry_gba.get_pp(1));
@@ -172,12 +181,13 @@ static void _move_entry_test(
     EXPECT_EQ("None", move_entry_gba.get_super_contest_effect());
 
     // Gamecube entry
+    EXPECT_EQ(pkmn::e_move::SHADOW_BLITZ, move_entry_gcn.get_move());
     EXPECT_EQ("Shadow Blitz", move_entry_gcn.get_name());
     EXPECT_EQ(pkmn::e_game::XD, move_entry_gcn.get_game());
-    EXPECT_EQ("Shadow", move_entry_gcn.get_type());
+    EXPECT_EQ(pkmn::e_type::SHADOW, move_entry_gcn.get_type());
     (void)move_entry_gcn.get_description();
     EXPECT_EQ("Selected Pokémon", move_entry_gcn.get_target());
-    EXPECT_EQ("Physical", move_entry_gcn.get_damage_class());
+    EXPECT_EQ(pkmn::e_move_damage_class::PHYSICAL, move_entry_gcn.get_damage_class());
     EXPECT_EQ(40, move_entry_gcn.get_base_power());
     EXPECT_EQ(0, move_entry_gcn.get_pp(0));
     EXPECT_EQ(0, move_entry_gcn.get_pp(1));
@@ -191,12 +201,13 @@ static void _move_entry_test(
     EXPECT_EQ("None", move_entry_gcn.get_super_contest_effect());
 
     // Generation IV entry
+    EXPECT_EQ(pkmn::e_move::BULLET_PUNCH, move_entry_gen4.get_move());
     EXPECT_EQ("Bullet Punch", move_entry_gen4.get_name());
     EXPECT_EQ(pkmn::e_game::PEARL, move_entry_gen4.get_game());
-    EXPECT_EQ("Steel", move_entry_gen4.get_type());
+    EXPECT_EQ(pkmn::e_type::STEEL, move_entry_gen4.get_type());
     (void)move_entry_gen4.get_description();
     EXPECT_EQ("Selected Pokémon", move_entry_gen4.get_target());
-    EXPECT_EQ("Physical", move_entry_gen4.get_damage_class());
+    EXPECT_EQ(pkmn::e_move_damage_class::PHYSICAL, move_entry_gen4.get_damage_class());
     EXPECT_EQ(40, move_entry_gen4.get_base_power());
     EXPECT_EQ(30, move_entry_gen4.get_pp(0));
     EXPECT_EQ(36, move_entry_gen4.get_pp(1));
@@ -210,12 +221,13 @@ static void _move_entry_test(
     EXPECT_NE("None", move_entry_gen4.get_super_contest_effect());
 
     // Generation V entry
+    EXPECT_EQ(pkmn::e_move::DRAGON_TAIL, move_entry_gen5.get_move());
     EXPECT_EQ("Dragon Tail", move_entry_gen5.get_name());
     EXPECT_EQ(pkmn::e_game::BLACK, move_entry_gen5.get_game());
-    EXPECT_EQ("Dragon", move_entry_gen5.get_type());
+    EXPECT_EQ(pkmn::e_type::DRAGON, move_entry_gen5.get_type());
     (void)move_entry_gen5.get_description();
     EXPECT_EQ("Selected Pokémon", move_entry_gen5.get_target());
-    EXPECT_EQ("Physical", move_entry_gen5.get_damage_class());
+    EXPECT_EQ(pkmn::e_move_damage_class::PHYSICAL, move_entry_gen5.get_damage_class());
     EXPECT_EQ(60, move_entry_gen5.get_base_power());
     EXPECT_EQ(10, move_entry_gen5.get_pp(0));
     EXPECT_EQ(12, move_entry_gen5.get_pp(1));
@@ -229,12 +241,13 @@ static void _move_entry_test(
     EXPECT_EQ("None", move_entry_gen5.get_super_contest_effect());
 
     // Generation VI entry
+    EXPECT_EQ(pkmn::e_move::NUZZLE, move_entry_gen6.get_move());
     EXPECT_EQ("Nuzzle", move_entry_gen6.get_name());
     EXPECT_EQ(pkmn::e_game::Y, move_entry_gen6.get_game());
-    EXPECT_EQ("Electric", move_entry_gen6.get_type());
+    EXPECT_EQ(pkmn::e_type::ELECTRIC, move_entry_gen6.get_type());
     (void)move_entry_gen6.get_description();
     EXPECT_EQ("Selected Pokémon", move_entry_gen6.get_target());
-    EXPECT_EQ("Physical", move_entry_gen6.get_damage_class());
+    EXPECT_EQ(pkmn::e_move_damage_class::PHYSICAL, move_entry_gen6.get_damage_class());
     EXPECT_EQ(20, move_entry_gen6.get_base_power());
     EXPECT_EQ(20, move_entry_gen6.get_pp(0));
     EXPECT_EQ(24, move_entry_gen6.get_pp(1));
@@ -248,7 +261,8 @@ static void _move_entry_test(
     EXPECT_EQ("None", move_entry_gen6.get_super_contest_effect());
 }
 
-TEST_F(move_entry_test, by_id_test) {
+TEST_F(move_entry_test, by_id_test)
+{
     _move_entry_test(
         byid_gen1, byid_gen2, byid_gba,
         byid_gcn, byid_gen4, byid_gen5,
@@ -256,10 +270,14 @@ TEST_F(move_entry_test, by_id_test) {
     );
 }
 
-TEST_F(move_entry_test, by_name_test) {
+TEST_F(move_entry_test, by_name_test)
+{
     _move_entry_test(
         byname_gen1, byname_gen2, byname_gba,
         byname_gcn, byname_gen4, byname_gen5,
         byname_gen6
     );
 }
+
+// Test fields that change between games/generations
+// https://bulbapedia.bulbagarden.net/wiki/List_of_modified_moves

@@ -46,16 +46,12 @@ enum pkmn_error pkmn_database_move_entry_free(
     pkmn::c::free_pointer_and_set_to_null(&p_move_entry->p_name);
     pkmn::c::free_pointer_and_set_to_null(&p_move_entry->p_description);
     pkmn::c::free_pointer_and_set_to_null(&p_move_entry->p_target);
-    pkmn::c::free_pointer_and_set_to_null(&p_move_entry->p_damage_class);
     pkmn::c::free_pointer_and_set_to_null(&p_move_entry->p_effect);
     pkmn::c::free_pointer_and_set_to_null(&p_move_entry->p_contest_type);
     pkmn::c::free_pointer_and_set_to_null(&p_move_entry->p_contest_effect);
     pkmn::c::free_pointer_and_set_to_null(&p_move_entry->p_super_contest_effect);
 
-    p_move_entry->game = PKMN_GAME_NONE;
-    p_move_entry->base_power = 0;
-    p_move_entry->accuracy = 0.0f;
-    std::memset(p_move_entry->pp, 0, sizeof(p_move_entry->pp));
+    std::memset(p_move_entry, 0, sizeof(*p_move_entry));
 
     return PKMN_ERROR_NONE;
 }
