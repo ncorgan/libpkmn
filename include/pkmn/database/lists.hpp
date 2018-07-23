@@ -13,12 +13,15 @@
 #include <pkmn/enums/game.hpp>
 #include <pkmn/enums/item.hpp>
 #include <pkmn/enums/move.hpp>
+#include <pkmn/enums/move_target.hpp>
 #include <pkmn/enums/nature.hpp>
 #include <pkmn/enums/species.hpp>
 #include <pkmn/enums/type.hpp>
 
 #include <string>
 #include <vector>
+
+// TODO: move targets
 
 namespace pkmn { namespace database {
 

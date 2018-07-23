@@ -16,8 +16,9 @@ IF(NOT PKMN_DONT_INSTALL_HEADERS)
         gender.hpp
         item.hpp
         language.hpp
-        move_damage_class.hpp
         move.hpp
+        move_damage_class.hpp
+        move_target.hpp
         nature.hpp
         species.hpp
         stat.hpp

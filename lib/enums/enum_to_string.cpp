@@ -5,6 +5,7 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
+#include "database/database_common.hpp"
 #include "database/enum_conversions.hpp"
 #include "database/id_to_string.hpp"
 #include "database/index_to_string.hpp"
@@ -331,6 +332,31 @@ namespace pkmn {
             const std::string error_message = "Invalid move damage class: " + move_damage_class_name;
             throw std::invalid_argument(error_message);
         }
+    }
+
+    std::string move_target_to_string(pkmn::e_move_target move_target)
+    {
+        static const std::string query =
+            "SELECT name FROM move_target_prose WHERE move_target_id=? AND "
+            "local_language_id=9";
+
+        return pkmn::database::query_db_bind1<std::string, int>(
+                   query.c_str(),
+                   static_cast<int>(move_target)
+               );
+    }
+
+    pkmn::e_move_target string_to_move_target(const std::string& move_target_name)
+    {
+        static const std::string query =
+            "SELECT move_target_id FOM move_target_prose WHERE name=?";
+
+        return static_cast<pkmn::e_move_target>(
+                   pkmn::database::query_db_bind1<int, const std::string&>(
+                       query.c_str(),
+                       move_target_name
+                   )
+               );
     }
 
     std::string move_to_string(pkmn::e_move move)

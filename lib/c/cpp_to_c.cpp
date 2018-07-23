@@ -681,7 +681,7 @@ namespace pkmn { namespace c {
             PKMN_GAME_NONE, // game
             PKMN_TYPE_NONE, // type
             nullptr, // p_description
-            nullptr, // p_target
+            PKMN_MOVE_TARGET_NONE, // target
             PKMN_MOVE_DAMAGE_CLASS_NONE, // damage_class
             0,       // base_power
             {0},     // pp
@@ -699,10 +699,6 @@ namespace pkmn { namespace c {
         string_cpp_to_c_alloc(
             move_entry_cpp.get_description(),
             &temp_move_entry_c.p_description
-        );
-        string_cpp_to_c_alloc(
-            move_entry_cpp.get_target(),
-            &temp_move_entry_c.p_target
         );
         string_cpp_to_c_alloc(
             move_entry_cpp.get_effect(),
@@ -724,6 +720,7 @@ namespace pkmn { namespace c {
         temp_move_entry_c.move = static_cast<enum pkmn_move>(move_entry_cpp.get_move());
         temp_move_entry_c.game = static_cast<enum pkmn_game>(move_entry_cpp.get_game());
         temp_move_entry_c.type = static_cast<enum pkmn_type>(move_entry_cpp.get_type());
+        temp_move_entry_c.target = static_cast<enum pkmn_move_target>(move_entry_cpp.get_target());
         temp_move_entry_c.damage_class = static_cast<enum pkmn_move_damage_class>(move_entry_cpp.get_damage_class());
 
         temp_move_entry_c.base_power = move_entry_cpp.get_base_power();

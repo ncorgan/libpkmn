@@ -88,7 +88,7 @@ public class CSharpDatabaseEntryTest {
         // Just make sure it works
         string description = moveEntry.Description;
 
-        Assert.AreEqual(moveEntry.Target, "Selected Pokémon");
+        Assert.AreEqual(moveEntry.Target, PKMN.MoveTarget.SELECTED_POKEMON);
         Assert.AreEqual(moveEntry.DamageClass, PKMN.MoveDamageClass.SPECIAL);
         Assert.AreEqual(moveEntry.BasePower, 65);
 

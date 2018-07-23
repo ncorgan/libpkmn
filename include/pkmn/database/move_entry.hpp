@@ -12,6 +12,7 @@
 #include <pkmn/enums/game.hpp>
 #include <pkmn/enums/move.hpp>
 #include <pkmn/enums/move_damage_class.hpp>
+#include <pkmn/enums/move_target.hpp>
 #include <pkmn/enums/type.hpp>
 
 #include <string>
@@ -126,13 +127,10 @@ namespace pkmn { namespace database {
             /*!
              * @brief Returns which Pokémon this move will target in battle.
              *
-             * If this entry corresponds to a "None" move, this function will
-             * return the string "None".
-             *
-             * If this entry corresponds to an invalid move, this function will
-             * return the string "Unknown".
+             * If this entry corresponds to a None/Invalid move, this function will
+             * return NONE.
              */
-            std::string get_target() const;
+            pkmn::e_move_target get_target() const;
 
             /*!
              * @brief Returns this move's damage class (Physical, Special, Status).

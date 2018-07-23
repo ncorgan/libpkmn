@@ -20,6 +20,7 @@ IF(NOT PKMN_DONT_INSTALL_HEADERS)
         marking.h
         move.h
         move_damage_class.h
+        move_target.h
         nature.h
         species.h
         stat.h

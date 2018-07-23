@@ -7,8 +7,6 @@
 
 #include <pkmn/enums/enum_to_string.hpp>
 
-#include <pkmn/enums/ability.hpp>
-
 #include <gtest/gtest.h>
 
 #include <functional>
@@ -260,6 +258,20 @@ TEST(cpp_enum_test, test_move_damage_class_enum)
         "move damage class",
         pkmn::move_damage_class_to_string,
         pkmn::string_to_move_damage_class
+    );
+}
+
+TEST(cpp_enum_test, test_move_target_enum)
+{
+    static const pkmn::e_move_target MIN_MOVE_TARGET_ENUM = pkmn::e_move_target::NONE;
+    static const pkmn::e_move_target MAX_MOVE_TARGET_ENUM = pkmn::e_move_target::ALL_POKEMON;
+
+    test_enum_string_conversions<pkmn::e_move_target>(
+        MIN_MOVE_TARGET_ENUM,
+        MAX_MOVE_TARGET_ENUM,
+        "move target",
+        pkmn::move_target_to_string,
+        pkmn::string_to_move_target
     );
 }
 

@@ -100,6 +100,16 @@ def get_move_damage_classes(c):
 
     return move_damage_classes
 
+def get_move_targets(c):
+    c.execute("SELECT id,identifier FROM move_targets ORDER BY id")
+    db_responses = c.fetchall()
+    move_targets = ["NONE = 0"]
+
+    for db_response in db_responses:
+        move_targets += ["{0} = {1}".format(str(unidecode(db_response[1])).upper().replace("-","_"), db_response[0])]
+
+    return move_targets
+
 def get_natures(c):
     c.execute("SELECT game_index,identifier FROM natures ORDER BY game_index")
     db_responses = c.fetchall()
@@ -280,6 +290,7 @@ if __name__ == "__main__":
     items = get_items(c)
     moves = get_moves(c)
     move_damage_classes = get_move_damage_classes(c)
+    move_targets = get_move_targets(c)
     natures = get_natures(c)
     species = get_species(c)
     types = get_types(c)
@@ -293,6 +304,7 @@ if __name__ == "__main__":
         generate_cpp_enum_file("item", items)
         generate_cpp_enum_file("move", moves)
         generate_cpp_enum_file("move_damage_class", move_damage_classes)
+        generate_cpp_enum_file("move_target", move_targets)
         generate_cpp_enum_file("nature", natures)
         generate_cpp_enum_file("species", species)
         generate_cpp_enum_file("type", types, True)
@@ -306,6 +318,7 @@ if __name__ == "__main__":
         generate_c_enum_file("item", items)
         generate_c_enum_file("move", moves)
         generate_c_enum_file("move_damage_class", move_damage_classes)
+        generate_c_enum_file("move_target", move_targets)
         generate_c_enum_file("nature", natures)
         generate_c_enum_file("species", species)
         generate_c_enum_file("type", types, True)

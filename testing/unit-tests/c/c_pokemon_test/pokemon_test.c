@@ -39,8 +39,9 @@ static const struct pkmn_database_move_entry empty_move_entry =
 {
     .p_name = NULL,
     .game = PKMN_GAME_NONE,
+    .type = PKMN_TYPE_NONE,
     .p_description = NULL,
-    .p_target = NULL,
+    .target = PKMN_MOVE_TARGET_NONE,
     .damage_class = PKMN_MOVE_DAMAGE_CLASS_NONE,
     .base_power = 0,
     .pp = {0},

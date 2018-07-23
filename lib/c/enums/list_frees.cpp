@@ -14,6 +14,7 @@
 #include <pkmn-c/enums/item.h>
 #include <pkmn-c/enums/move.h>
 #include <pkmn-c/enums/move_damage_class.h>
+#include <pkmn-c/enums/move_target.h>
 #include <pkmn-c/enums/nature.h>
 #include <pkmn-c/enums/species.h>
 #include <pkmn-c/enums/type.h>
@@ -48,6 +49,7 @@ PKMN_C_ENUM_LIST_FREE_FCN(game)
 PKMN_C_ENUM_LIST_FREE_FCN(item)
 PKMN_C_ENUM_LIST_FREE_FCN(move)
 PKMN_C_ENUM_LIST_FREE_FCN(move_damage_class)
+PKMN_C_ENUM_LIST_FREE_FCN(move_target)
 PKMN_C_ENUM_LIST_FREE_FCN(nature)
 PKMN_C_ENUM_LIST_FREE_FCN(species)
 PKMN_C_ENUM_LIST_FREE_FCN(type)

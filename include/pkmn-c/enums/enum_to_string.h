@@ -20,6 +20,7 @@
 #include <pkmn-c/enums/item.h>
 #include <pkmn-c/enums/language.h>
 #include <pkmn-c/enums/move_damage_class.h>
+#include <pkmn-c/enums/move_target.h>
 #include <pkmn-c/enums/move.h>
 #include <pkmn-c/enums/nature.h>
 #include <pkmn-c/enums/species.h>
@@ -138,6 +139,18 @@ PKMN_C_API enum pkmn_error pkmn_move_damage_class_to_string(
 PKMN_C_API enum pkmn_error pkmn_string_to_move_damage_class(
     const char* p_move_damage_class_name,
     enum pkmn_move_damage_class* move_damage_class_out
+);
+
+PKMN_C_API enum pkmn_error pkmn_move_target_to_string(
+    enum pkmn_move_target move_target,
+    char* p_move_target_name_out,
+    size_t move_target_name_buffer_len,
+    size_t* p_move_target_name_len_out
+);
+
+PKMN_C_API enum pkmn_error pkmn_string_to_move_target(
+    const char* p_move_target_name,
+    enum pkmn_move_target* move_target_out
 );
 
 PKMN_C_API enum pkmn_error pkmn_move_to_string(

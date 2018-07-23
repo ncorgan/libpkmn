@@ -31,6 +31,7 @@ PKMN_CSHARP_INIT
 %include <pkmn/enums/move.hpp>
 
 %include <pkmn/enums/move_damage_class.hpp>
+%include <pkmn/enums/move_target.hpp>
 %include <pkmn/enums/nature.hpp>
 %include <pkmn/enums/species.hpp>
 %include <pkmn/enums/stat.hpp>
@@ -61,6 +62,7 @@ PKMN_CSHARP_VECTOR(pkmn::e_item,              PKMN.Item,            ItemEnumList
 PKMN_CSHARP_VECTOR(pkmn::e_language,          PKMN.Language,        LanguageEnumList);
 PKMN_CSHARP_VECTOR(pkmn::e_move,              PKMN.Move,            MoveEnumList);
 PKMN_CSHARP_VECTOR(pkmn::e_move_damage_class, PKMN.MoveDamageClass, MoveDamageClassEnumList);
+PKMN_CSHARP_VECTOR(pkmn::e_move_target,       PKMN.MoveTarget,      MoveTargetEnumList);
 PKMN_CSHARP_VECTOR(pkmn::e_nature,            PKMN.Nature,          NatureEnumList);
 PKMN_CSHARP_VECTOR(pkmn::e_species,           PKMN.Species,         SpeciesEnumList);
 PKMN_CSHARP_VECTOR(pkmn::e_stat,              PKMN.Stat,            StatEnumList);

@@ -22,7 +22,7 @@ TEST_P(move_entry_none_test, move_entry_none_test)
     EXPECT_EQ("None", none_entry.get_name());
     EXPECT_EQ(pkmn::e_type::NONE, none_entry.get_type());
     EXPECT_EQ("None", none_entry.get_description());
-    EXPECT_EQ("None", none_entry.get_target());
+    EXPECT_EQ(pkmn::e_move_target::NONE, none_entry.get_target());
     EXPECT_EQ(pkmn::e_move_damage_class::NONE, none_entry.get_damage_class());
     EXPECT_EQ(-1, none_entry.get_base_power());
     EXPECT_EQ(0, none_entry.get_pp(0));
@@ -126,7 +126,7 @@ static void _move_entry_test(
     EXPECT_EQ(pkmn::e_game::RED, move_entry_gen1.get_game());
     EXPECT_EQ(pkmn::e_type::GROUND, move_entry_gen1.get_type());
     (void)move_entry_gen1.get_description();
-    EXPECT_EQ("All other Pokémon", move_entry_gen1.get_target());
+    EXPECT_EQ(pkmn::e_move_target::ALL_OTHER_POKEMON, move_entry_gen1.get_target());
     EXPECT_EQ(pkmn::e_move_damage_class::PHYSICAL, move_entry_gen1.get_damage_class());
     EXPECT_EQ(100, move_entry_gen1.get_base_power());
     EXPECT_EQ(10, move_entry_gen1.get_pp(0));
@@ -146,7 +146,7 @@ static void _move_entry_test(
     EXPECT_EQ(pkmn::e_game::SILVER, move_entry_gen2.get_game());
     EXPECT_EQ(pkmn::e_type::WATER, move_entry_gen2.get_type());
     (void)move_entry_gen2.get_description();
-    EXPECT_EQ("Selected Pokémon", move_entry_gen2.get_target());
+    EXPECT_EQ(pkmn::e_move_target::SELECTED_POKEMON, move_entry_gen2.get_target());
     EXPECT_EQ(pkmn::e_move_damage_class::SPECIAL, move_entry_gen2.get_damage_class());
     EXPECT_EQ(65, move_entry_gen2.get_base_power());
     EXPECT_EQ(10, move_entry_gen2.get_pp(0));
@@ -166,7 +166,7 @@ static void _move_entry_test(
     EXPECT_EQ(pkmn::e_game::RUBY, move_entry_gba.get_game());
     EXPECT_EQ(pkmn::e_type::DARK, move_entry_gba.get_type());
     (void)move_entry_gba.get_description();
-    EXPECT_EQ("Selected Pokémon", move_entry_gba.get_target());
+    EXPECT_EQ(pkmn::e_move_target::SELECTED_POKEMON, move_entry_gba.get_target());
     EXPECT_EQ(pkmn::e_move_damage_class::STATUS, move_entry_gba.get_damage_class());
     EXPECT_EQ(0, move_entry_gba.get_base_power());
     EXPECT_EQ(10, move_entry_gba.get_pp(0));
@@ -186,7 +186,7 @@ static void _move_entry_test(
     EXPECT_EQ(pkmn::e_game::XD, move_entry_gcn.get_game());
     EXPECT_EQ(pkmn::e_type::SHADOW, move_entry_gcn.get_type());
     (void)move_entry_gcn.get_description();
-    EXPECT_EQ("Selected Pokémon", move_entry_gcn.get_target());
+    EXPECT_EQ(pkmn::e_move_target::SELECTED_POKEMON, move_entry_gcn.get_target());
     EXPECT_EQ(pkmn::e_move_damage_class::PHYSICAL, move_entry_gcn.get_damage_class());
     EXPECT_EQ(40, move_entry_gcn.get_base_power());
     EXPECT_EQ(0, move_entry_gcn.get_pp(0));
@@ -206,7 +206,7 @@ static void _move_entry_test(
     EXPECT_EQ(pkmn::e_game::PEARL, move_entry_gen4.get_game());
     EXPECT_EQ(pkmn::e_type::STEEL, move_entry_gen4.get_type());
     (void)move_entry_gen4.get_description();
-    EXPECT_EQ("Selected Pokémon", move_entry_gen4.get_target());
+    EXPECT_EQ(pkmn::e_move_target::SELECTED_POKEMON, move_entry_gen4.get_target());
     EXPECT_EQ(pkmn::e_move_damage_class::PHYSICAL, move_entry_gen4.get_damage_class());
     EXPECT_EQ(40, move_entry_gen4.get_base_power());
     EXPECT_EQ(30, move_entry_gen4.get_pp(0));
@@ -226,7 +226,7 @@ static void _move_entry_test(
     EXPECT_EQ(pkmn::e_game::BLACK, move_entry_gen5.get_game());
     EXPECT_EQ(pkmn::e_type::DRAGON, move_entry_gen5.get_type());
     (void)move_entry_gen5.get_description();
-    EXPECT_EQ("Selected Pokémon", move_entry_gen5.get_target());
+    EXPECT_EQ(pkmn::e_move_target::SELECTED_POKEMON, move_entry_gen5.get_target());
     EXPECT_EQ(pkmn::e_move_damage_class::PHYSICAL, move_entry_gen5.get_damage_class());
     EXPECT_EQ(60, move_entry_gen5.get_base_power());
     EXPECT_EQ(10, move_entry_gen5.get_pp(0));
@@ -246,7 +246,7 @@ static void _move_entry_test(
     EXPECT_EQ(pkmn::e_game::Y, move_entry_gen6.get_game());
     EXPECT_EQ(pkmn::e_type::ELECTRIC, move_entry_gen6.get_type());
     (void)move_entry_gen6.get_description();
-    EXPECT_EQ("Selected Pokémon", move_entry_gen6.get_target());
+    EXPECT_EQ(pkmn::e_move_target::SELECTED_POKEMON, move_entry_gen6.get_target());
     EXPECT_EQ(pkmn::e_move_damage_class::PHYSICAL, move_entry_gen6.get_damage_class());
     EXPECT_EQ(20, move_entry_gen6.get_base_power());
     EXPECT_EQ(20, move_entry_gen6.get_pp(0));

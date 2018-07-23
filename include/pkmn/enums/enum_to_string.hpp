@@ -19,6 +19,7 @@
 #include <pkmn/enums/item.hpp>
 #include <pkmn/enums/language.hpp>
 #include <pkmn/enums/move_damage_class.hpp>
+#include <pkmn/enums/move_target.hpp>
 #include <pkmn/enums/move.hpp>
 #include <pkmn/enums/nature.hpp>
 #include <pkmn/enums/species.hpp>
@@ -99,6 +100,14 @@ namespace pkmn
 
     PKMN_API pkmn::e_move_damage_class string_to_move_damage_class(
         const std::string& move_damage_class_name
+    );
+
+    PKMN_API std::string move_target_to_string(
+        pkmn::e_move_target move_target
+    );
+
+    PKMN_API pkmn::e_move_target string_to_move_target(
+        const std::string& move_target_name
     );
 
     PKMN_API std::string move_to_string(

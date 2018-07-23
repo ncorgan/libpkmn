@@ -119,7 +119,7 @@ static void assert_move_entry_uninitialized(
     TEST_ASSERT_EQUAL(PKMN_GAME_NONE, p_move_entry->game);
     TEST_ASSERT_EQUAL(PKMN_TYPE_NONE, p_move_entry->type);
     TEST_ASSERT_NULL(p_move_entry->p_description);
-    TEST_ASSERT_NULL(p_move_entry->p_target);
+    TEST_ASSERT_EQUAL(PKMN_MOVE_TARGET_NONE, p_move_entry->target);
     TEST_ASSERT_EQUAL(PKMN_MOVE_DAMAGE_CLASS_NONE, p_move_entry->damage_class);
     TEST_ASSERT_EQUAL(p_move_entry->base_power, 0);
     for(int i = 0; i < 4; ++i) {
@@ -141,7 +141,7 @@ static void move_entry_test()
         .game = PKMN_GAME_NONE,
         .type = PKMN_TYPE_NONE,
         .p_description = NULL,
-        .p_target = NULL,
+        .target = PKMN_MOVE_TARGET_NONE,
         .damage_class = PKMN_MOVE_DAMAGE_CLASS_NONE,
         .base_power = 0,
         .pp = {0,0,0,0},
@@ -205,7 +205,7 @@ static void move_entry_test()
     TEST_ASSERT_EQUAL(PKMN_GAME_SILVER, move_entry.game);
     TEST_ASSERT_EQUAL(PKMN_TYPE_WATER, move_entry.type);
     TEST_ASSERT_NOT_NULL(move_entry.p_description);
-    TEST_ASSERT_EQUAL_STRING("Selected Pokémon", move_entry.p_target);
+    TEST_ASSERT_EQUAL(PKMN_MOVE_TARGET_SELECTED_POKEMON, move_entry.target);
     TEST_ASSERT_EQUAL(PKMN_MOVE_DAMAGE_CLASS_SPECIAL, move_entry.damage_class);
     TEST_ASSERT_EQUAL(65, move_entry.base_power);
     TEST_ASSERT_EQUAL(10, move_entry.pp[0]);

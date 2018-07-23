@@ -213,22 +213,22 @@ namespace pkmn { namespace database {
         return ret;
     }
 
-    std::string move_entry::get_target() const {
-        std::string ret;
+    pkmn::e_move_target move_entry::get_target() const
+    {
+        pkmn::e_move_target ret = pkmn::e_move_target::NONE;
 
-        if(_none) {
-            ret = "None";
-        } else if(_invalid) {
-            ret = "Unknown";
-        } else {
-            static BOOST_CONSTEXPR const char* query = \
-                "SELECT name FROM move_target_prose WHERE local_language_id=9 "
-                "AND move_target_id=(SELECT id FROM move_targets WHERE id="
-                "(SELECT target_id FROM moves WHERE id=?))";
+        if(!_none && !_invalid)
+        {
+            static const std::string query =
+                "SELECT id FROM move_targets WHERE id="
+                "(SELECT target_id FROM moves WHERE id=?)";
 
-            ret = pkmn::database::query_db_bind1<std::string, int>(
-                       query, _move_id
-                   );
+            ret = static_cast<pkmn::e_move_target>(
+                      pkmn::database::query_db_bind1<int, int>(
+                          query.c_str(),
+                          _move_id
+                      )
+                  );
         }
 
         return ret;
