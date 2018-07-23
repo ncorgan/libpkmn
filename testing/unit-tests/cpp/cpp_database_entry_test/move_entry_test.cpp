@@ -141,7 +141,7 @@ static void _move_entry_test(
     EXPECT_EQ("None", move_entry_gen1.get_super_contest_effect());
 
     // Generation II entry
-    EXPECT_EQ(pkmn::e_move::OCTAZAOOKA, move_entry_gen2.get_move());
+    EXPECT_EQ(pkmn::e_move::OCTAZOOKA, move_entry_gen2.get_move());
     EXPECT_EQ("Octazooka", move_entry_gen2.get_name());
     EXPECT_EQ(pkmn::e_game::SILVER, move_entry_gen2.get_game());
     EXPECT_EQ(pkmn::e_type::WATER, move_entry_gen2.get_type());
