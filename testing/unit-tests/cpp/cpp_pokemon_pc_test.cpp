@@ -130,7 +130,10 @@ void pokemon_box_test_common(
     }
 
     pkmn::pokemon::sptr original_first = box->get_pokemon(0);
+    ASSERT_EQ(pkmn::e_species::NONE, original_first->get_species());
+
     pkmn::pokemon::sptr original_second = box->get_pokemon(1);
+    ASSERT_EQ(pkmn::e_species::NONE, original_second->get_species());
 
     /*
      * Create new Pokémon and place in box. The original variables should
@@ -344,9 +347,10 @@ void pokemon_pc_test_common(
 
     const pkmn::pokemon_box_list_t& box_list = pc->as_vector();
     ASSERT_EQ(box_list.size(), size_t(pc->get_num_boxes()));
-    for(auto box_iter = box_list.begin(); box_iter != box_list.end(); ++box_iter) {
-        ASSERT_EQ(game, (*box_iter)->get_game());
-        pokemon_box_test_common(*box_iter, test_params);
+    for(size_t box_index = 0; box_index < box_list.size(); ++box_index)
+    {
+        ASSERT_EQ(game, box_list[box_index]->get_game()) << box_index;
+        ASSERT_NO_FATAL_FAILURE(pokemon_box_test_common(box_list[box_index], test_params)) << box_index;
     }
 
     if(generation >= 2) {
@@ -710,7 +714,7 @@ static const test_params_t PARAMS[] =
             pkmn::e_game::COLOSSEUM,
         },
         pkmn::e_game::RED
-    },
+    }
 };
 
 namespace pkmntest

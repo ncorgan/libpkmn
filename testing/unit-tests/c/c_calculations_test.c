@@ -2294,7 +2294,7 @@ static void pokemon_size_test() {
 
         for(int j = 0; j < 10; ++j) {
             error = pkmn_calculations_pokemon_size(
-                        entry.name,
+                        entry.species,
                         (uint32_t)rand(),
                         (rand() % 32),
                         (rand() % 32),

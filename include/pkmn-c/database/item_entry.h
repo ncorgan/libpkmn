@@ -15,8 +15,6 @@
 
 #include <stdbool.h>
 
-// TODO: store item name
-
 /*!
  * @brief A struct representing a database entry for an in-game item.
  *
@@ -29,6 +27,10 @@ struct pkmn_database_item_entry
      * @brief The item.
      */
     enum pkmn_item item;
+    /*!
+     * @brief The name of the item.
+     */
+    char* p_name;
     /*!
      * @brief The game associated with this entry.
      */

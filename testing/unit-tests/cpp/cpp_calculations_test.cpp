@@ -2056,7 +2056,7 @@ TEST(cpp_calculations_test, pokemon_size_test) {
     for(const pkmn::database::pokemon_entry& pokemon: pokemon_with_size_checks)
     {
         float height = pokemon.get_height();
-        pkmn::e_species species = pokemon.get_species_enum();
+        pkmn::e_species species = pokemon.get_species();
 
         for(int i = 0; i < 10; ++i) {
             float size = pkmn::calculations::pokemon_size(

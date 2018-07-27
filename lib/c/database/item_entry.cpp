@@ -41,6 +41,7 @@ enum pkmn_error pkmn_database_item_entry_free(
 {
     PKMN_CHECK_NULL_PARAM(p_item_entry);
 
+    pkmn::c::free_pointer_and_set_to_null(&p_item_entry->p_name);
     pkmn::c::free_pointer_and_set_to_null(&p_item_entry->p_category);
     pkmn::c::free_pointer_and_set_to_null(&p_item_entry->p_description);
     pkmn::c::free_pointer_and_set_to_null(&p_item_entry->p_pocket);

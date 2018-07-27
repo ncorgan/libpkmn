@@ -126,7 +126,7 @@ namespace pkmn
         _libpkmgc_pokemon_uptr->levelMet = LibPkmGC::u8(level);
         _libpkmgc_pokemon_uptr->OTGender = LibPkmGC::Male;
         _libpkmgc_pokemon_uptr->OTName->fromUTF8(pkmn::pokemon::DEFAULT_TRAINER_NAME.c_str());
-        _libpkmgc_pokemon_uptr->name->fromUTF8(boost::algorithm::to_upper_copy(_database_entry.get_name()).c_str());
+        _libpkmgc_pokemon_uptr->name->fromUTF8(boost::algorithm::to_upper_copy(_database_entry.get_species_name()).c_str());
         _libpkmgc_pokemon_uptr->contestLuster = 0;
         _libpkmgc_pokemon_uptr->pokerusStatus = 0;
         _libpkmgc_pokemon_uptr->experience = LibPkmGC::u32(_database_entry.get_experience_at_level(level));

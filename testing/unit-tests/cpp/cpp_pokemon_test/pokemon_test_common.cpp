@@ -47,14 +47,14 @@ static void check_initial_values(
     if(generation >= 5)
     {
         EXPECT_EQ(
-            pokemon->get_database_entry().get_name(),
+            pokemon->get_database_entry().get_species_name(),
             pokemon->get_nickname()
         );
     }
     else
     {
         EXPECT_EQ(
-            boost::algorithm::to_upper_copy(pokemon->get_database_entry().get_name()),
+            boost::algorithm::to_upper_copy(pokemon->get_database_entry().get_species_name()),
             pokemon->get_nickname()
         );
     }

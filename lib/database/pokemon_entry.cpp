@@ -125,6 +125,7 @@ namespace pkmn { namespace database {
         _pokemon_index(pokemon_index),
         _game_id(game_id),
         _none(pokemon_index == 0),
+        _invalid(false),
         _shadow(false)
     {
         /*
@@ -153,12 +154,15 @@ namespace pkmn { namespace database {
          * index. Like Unown, this form is in a separate field and is
          * no longer game-dependent.
          */
-        if(_none) {
+        if(_none)
+        {
             _species_id = _pokemon_id = _form_id = 0;
-        } else if(_generation == 3 and pokemon_index_is_unown(
-                   _pokemon_index,
-                   (_game_id == XD)
-               ))
+        }
+        else if((_generation == 3) && pokemon_index_is_unown(
+                                          _pokemon_index,
+                                          (_game_id == XD)
+                                      )
+               )
         {
             _species_id = _pokemon_id = UNOWN_INDEX;
             _invalid = false;
@@ -171,10 +175,13 @@ namespace pkmn { namespace database {
                            unown_query, _pokemon_index
                        );
 
-        } else if(_generation == 3 and _pokemon_index == DEOXYS_GEN3_INDEX) {
+        }
+        else if((_generation == 3) && (_pokemon_index == DEOXYS_GEN3_INDEX))
+        {
             _species_id = DEOXYS_NORMAL_ID;
             _invalid = false;
-            switch(_game_id) {
+            switch(_game_id)
+            {
                 case FIRERED:
                     _pokemon_id = DEOXYS_ATTACK_ID;
                     _form_id    = DEOXYS_ATTACK_FORM_ID;
@@ -194,26 +201,34 @@ namespace pkmn { namespace database {
                     _pokemon_id = _form_id = DEOXYS_NORMAL_ID;
                     break;
             }
-        } else {
+        }
+        else
+        {
             static BOOST_CONSTEXPR const char* species_id_query = \
                 "SELECT species_id FROM pokemon WHERE id=?";
 
             static BOOST_CONSTEXPR const char* form_id_query = \
                 "SELECT id FROM pokemon_forms WHERE pokemon_id=?";
 
-            try {
+            try
+            {
                 int game_id = game_is_gamecube(_game_id) ? RUBY : _game_id;
                 _pokemon_id = pkmn::database::pokemon_index_to_id(
                                   _pokemon_index, game_id
                               );
                 _invalid = false;
-            } catch(const std::invalid_argument&) {
+            }
+            catch(const std::invalid_argument&)
+            {
                 _invalid = true;
             }
 
-            if(_invalid) {
+            if(_invalid)
+            {
                 _species_id = _pokemon_id = _form_id = -1;
-            } else {
+            }
+            else
+            {
                 _species_id = pkmn::database::query_db_bind1<int, int>(
                                   species_id_query, _pokemon_id
                               );
@@ -231,7 +246,7 @@ namespace pkmn { namespace database {
         const std::string& form_name
     ):
         _none(species == pkmn::e_species::NONE),
-        _invalid(false),
+        _invalid(species == pkmn::e_species::INVALID),
         _shadow(false)
     {
         /*
@@ -250,26 +265,42 @@ namespace pkmn { namespace database {
         /*
          * Pokémon-related info
          */
-        _species_id = static_cast<int>(species);
-
         if(_none)
         {
-            _pokemon_index = _pokemon_id = _species_id;
+            _pokemon_id = 0;
+            _species_id = 0;
+            _form_id = 0;
+            _pokemon_index = 0;
+        }
+        else if(_invalid)
+        {
+            _pokemon_id = -1;
+            _species_id = -1;
+            _form_id = -1;
+            _pokemon_index = -1;
         }
         else
         {
+            _species_id = static_cast<int>(species);
+
             set_form(form_name);
         }
     }
 
-    std::string pokemon_entry::get_name() const {
+    std::string pokemon_entry::get_species_name() const
+    {
         std::string ret;
 
-        if(_none) {
+        if(_none)
+        {
             ret = "None";
-        } else if(_invalid) {
+        }
+        else if(_invalid)
+        {
             ret = str(boost::format("Invalid (0x%x)") % _pokemon_index);
-        } else {
+        }
+        else
+        {
             ret = pkmn::database::species_id_to_name(
                       _species_id
                   );
@@ -283,15 +314,21 @@ namespace pkmn { namespace database {
         return pkmn::database::game_id_to_enum(_game_id);
     };
 
-    std::string pokemon_entry::get_species() const {
+    std::string pokemon_entry::get_category() const
+    {
         std::string ret;
 
-        if(_none) {
+        if(_none)
+        {
             ret = "None";
-        } else if(_invalid) {
+        }
+        else if(_invalid)
+        {
             ret = "Unknown";
-        } else {
-            static BOOST_CONSTEXPR const char* query = \
+        }
+        else
+        {
+            static BOOST_CONSTEXPR const char* query =
                 "SELECT genus FROM pokemon_species_names WHERE "
                 "pokemon_species_id=? AND local_language_id=9";
 

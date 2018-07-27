@@ -175,7 +175,7 @@ namespace pkmn
     {
         boost::lock_guard<pokemon_impl> lock(*this);
 
-        return _database_entry.get_species_enum();
+        return _database_entry.get_species();
     }
 
     std::string pokemon_impl::get_form()

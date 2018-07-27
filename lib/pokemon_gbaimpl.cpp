@@ -89,7 +89,7 @@ namespace pkmn
         PKSAV_CALL(
             pksav_gba_export_text(
                 boost::algorithm::to_upper_copy(
-                    _database_entry.get_name()
+                    _database_entry.get_species_name()
                 ).c_str(),
                 _pksav_pokemon.pc_data.nickname,
                 PKSAV_GBA_POKEMON_NICKNAME_LENGTH

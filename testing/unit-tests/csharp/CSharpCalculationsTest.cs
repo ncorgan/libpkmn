@@ -1936,7 +1936,7 @@ public class CSharpCalculationsTest {
             for(int j = 0; j < 10; ++j)
             {
                 float size = PKMN.Calculations.PokemonSize(
-                                 pokemonWithSizeChecks[i].SpeciesEnum,
+                                 pokemonWithSizeChecks[i].Species,
                                  (uint)rng.Next(0, Int32.MaxValue),
                                  rng.Next(0, 32),
                                  rng.Next(0, 32),

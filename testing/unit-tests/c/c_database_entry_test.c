@@ -18,6 +18,7 @@ static void assert_item_entry_uninitialized(
 )
 {
     TEST_ASSERT_EQUAL(PKMN_ITEM_NONE, p_item_entry->item);
+    TEST_ASSERT_NULL(p_item_entry->p_name);
     TEST_ASSERT_EQUAL(PKMN_GAME_NONE, p_item_entry->game);
     TEST_ASSERT_NULL(p_item_entry->p_category);
     TEST_ASSERT_NULL(p_item_entry->p_pocket);
@@ -33,6 +34,7 @@ static void item_entry_test()
     struct pkmn_database_item_entry item_entry =
     {
         .item = PKMN_ITEM_NONE,
+        .p_name = NULL,
         .game = PKMN_GAME_NONE,
         .p_category = NULL,
         .p_pocket = NULL,
@@ -48,34 +50,34 @@ static void item_entry_test()
      * the output upon failure.
      */
     TEST_ASSERT_EQUAL(
+        PKMN_ERROR_INVALID_ARGUMENT,
         pkmn_database_get_item_entry(
             PKMN_ITEM_INVALID,
             PKMN_GAME_SOULSILVER,
             &item_entry
-        ),
-        PKMN_ERROR_INVALID_ARGUMENT
+        )
     );
     assert_item_entry_uninitialized(
         &item_entry
     );
     TEST_ASSERT_EQUAL(
+        PKMN_ERROR_INVALID_ARGUMENT,
         pkmn_database_get_item_entry(
             PKMN_ITEM_FAST_BALL,
             PKMN_GAME_NONE,
             &item_entry
-        ),
-        PKMN_ERROR_INVALID_ARGUMENT
+        )
     );
     assert_item_entry_uninitialized(
         &item_entry
     );
     TEST_ASSERT_EQUAL(
+        PKMN_ERROR_INVALID_ARGUMENT,
         pkmn_database_get_item_entry(
             PKMN_ITEM_FAST_BALL,
             PKMN_GAME_RED,
             &item_entry
-        ),
-        PKMN_ERROR_INVALID_ARGUMENT
+        )
     );
     assert_item_entry_uninitialized(
         &item_entry
@@ -91,6 +93,7 @@ static void item_entry_test()
 
     // Make sure fields are properly populated
     TEST_ASSERT_EQUAL(PKMN_ITEM_FAST_BALL, item_entry.item);
+    TEST_ASSERT_EQUAL_STRING("Fast Ball", item_entry.p_name);
     TEST_ASSERT_EQUAL(PKMN_GAME_SOULSILVER, item_entry.game);
     TEST_ASSERT_EQUAL_STRING("Apricorn balls", item_entry.p_category);
     TEST_ASSERT_EQUAL_STRING("Poké Balls", item_entry.p_pocket);
@@ -232,9 +235,10 @@ static void assert_pokemon_entry_uninitialized(
     struct pkmn_database_pokemon_entry* p_pokemon_entry
 )
 {
-    TEST_ASSERT_EQUAL(PKMN_SPECIES_NONE, p_pokemon_entry->name);
+    TEST_ASSERT_EQUAL(PKMN_SPECIES_NONE, p_pokemon_entry->species);
+    TEST_ASSERT_NULL(p_pokemon_entry->p_species_name);
     TEST_ASSERT_EQUAL(PKMN_GAME_NONE, p_pokemon_entry->game);
-    TEST_ASSERT_NULL(p_pokemon_entry->p_species);
+    TEST_ASSERT_NULL(p_pokemon_entry->p_category);
     TEST_ASSERT_NULL(p_pokemon_entry->p_pokedex_entry);
     TEST_ASSERT_NULL(p_pokemon_entry->p_form);
     TEST_ASSERT_EQUAL_FLOAT(p_pokemon_entry->height, 0.0f);
@@ -281,11 +285,14 @@ static bool file_exists(
     }
 }
 
-static void pokemon_entry_test() {
-    struct pkmn_database_pokemon_entry pokemon_entry = {
-        .name = PKMN_SPECIES_NONE,
+static void pokemon_entry_test()
+{
+    struct pkmn_database_pokemon_entry pokemon_entry =
+    {
+        .species = PKMN_SPECIES_NONE,
+        .p_species_name = NULL,
         .game = PKMN_GAME_NONE,
-        .p_species = NULL,
+        .p_category = NULL,
         .p_pokedex_entry = NULL,
         .p_form = NULL,
         .height = 0.0f,
@@ -340,68 +347,44 @@ static void pokemon_entry_test() {
      * the output upon failure.
      */
     TEST_ASSERT_EQUAL(
-        pkmn_database_get_pokemon_entry(
-            PKMN_SPECIES_INVALID,
-            PKMN_GAME_BLACK2,
-            "Sunny",
-            &pokemon_entry
-        ),
-        PKMN_ERROR_INVALID_ARGUMENT
-    );
-    assert_pokemon_entry_uninitialized(
-        &pokemon_entry
-    );
-    TEST_ASSERT_EQUAL(
+        PKMN_ERROR_INVALID_ARGUMENT,
         pkmn_database_get_pokemon_entry(
             PKMN_SPECIES_CASTFORM,
             PKMN_GAME_NONE,
             "Sunny",
             &pokemon_entry
-        ),
-        PKMN_ERROR_INVALID_ARGUMENT
+        )
     );
     assert_pokemon_entry_uninitialized(
         &pokemon_entry
     );
     TEST_ASSERT_EQUAL(
-        pkmn_database_get_pokemon_entry(
-            PKMN_SPECIES_INVALID,
-            PKMN_GAME_BLACK2,
-            "Sunny",
-            &pokemon_entry
-        ),
-        PKMN_ERROR_INVALID_ARGUMENT
-    );
-    assert_pokemon_entry_uninitialized(
-        &pokemon_entry
-    );
-    TEST_ASSERT_EQUAL(
+        PKMN_ERROR_INVALID_ARGUMENT,
         pkmn_database_get_pokemon_entry(
             PKMN_SPECIES_CASTFORM,
             PKMN_GAME_BLACK2,
             "Not a form",
             &pokemon_entry
-        ),
-        PKMN_ERROR_INVALID_ARGUMENT
+        )
     );
     assert_pokemon_entry_uninitialized(
         &pokemon_entry
     );
 
-    TEST_ASSERT_EQUAL(
+    PKMN_TEST_ASSERT_SUCCESS(
         pkmn_database_get_pokemon_entry(
             PKMN_SPECIES_STUNFISK,
             PKMN_GAME_BLACK2,
             "",
             &pokemon_entry
-        ),
-        PKMN_ERROR_NONE
+        )
     );
 
-    TEST_ASSERT_EQUAL(PKMN_SPECIES_STUNFISK, pokemon_entry.name);
+    TEST_ASSERT_EQUAL(PKMN_SPECIES_STUNFISK, pokemon_entry.species);
+    TEST_ASSERT_EQUAL_STRING("Stunfisk", pokemon_entry.p_species_name);
     TEST_ASSERT_EQUAL(PKMN_GAME_BLACK2, pokemon_entry.game);
     TEST_ASSERT_EQUAL_STRING("Standard", pokemon_entry.p_form);
-    TEST_ASSERT_EQUAL_STRING("Trap", pokemon_entry.p_species);
+    TEST_ASSERT_EQUAL_STRING("Trap", pokemon_entry.p_category);
     TEST_ASSERT_NOT_NULL(pokemon_entry.p_pokedex_entry);
     TEST_ASSERT_EQUAL_FLOAT(0.7f, pokemon_entry.height);
     TEST_ASSERT_EQUAL_FLOAT(11.0f, pokemon_entry.weight);

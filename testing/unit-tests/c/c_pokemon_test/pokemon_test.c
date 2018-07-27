@@ -54,9 +54,9 @@ static const struct pkmn_database_move_entry empty_move_entry =
 
 static const struct pkmn_database_pokemon_entry empty_pokemon_entry =
 {
-    .name = PKMN_SPECIES_NONE,
+    .species = PKMN_SPECIES_NONE,
     .game = PKMN_GAME_NONE,
-    .p_species = NULL,
+    .p_category = NULL,
     .p_form = NULL,
     .p_pokedex_entry = NULL,
     .height = 0.0f,
@@ -149,7 +149,7 @@ static void check_initial_values(
     PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_EQUAL(
         p_pokemon->species,
-        pokemon_entry.name
+        pokemon_entry.species
     );
     TEST_ASSERT_EQUAL(
         p_pokemon->game,

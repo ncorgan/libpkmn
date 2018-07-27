@@ -50,7 +50,7 @@ enum pkmn_error pkmn_database_pokemon_entry_set_form(
     PKMN_CPP_TO_C(
         // Just to see if it exists
         pkmn::database::pokemon_entry new_entry(
-                                          static_cast<pkmn::e_species>(p_pokemon_entry->name),
+                                          static_cast<pkmn::e_species>(p_pokemon_entry->species),
                                           static_cast<pkmn::e_game>(p_pokemon_entry->game),
                                           p_form
                                       );
@@ -74,7 +74,7 @@ enum pkmn_error pkmn_database_pokemon_entry_experience_at_level(
 
     PKMN_CPP_TO_C(
         *p_experience_out = pkmn::database::pokemon_entry(
-                                static_cast<pkmn::e_species>(p_pokemon_entry->name),
+                                static_cast<pkmn::e_species>(p_pokemon_entry->species),
                                 static_cast<pkmn::e_game>(p_pokemon_entry->game),
                                 p_pokemon_entry->p_form
                             ).get_experience_at_level(level);
@@ -92,7 +92,7 @@ enum pkmn_error pkmn_database_pokemon_entry_level_at_experience(
 
     PKMN_CPP_TO_C(
         *p_level_out = pkmn::database::pokemon_entry(
-                           static_cast<pkmn::e_species>(p_pokemon_entry->name),
+                           static_cast<pkmn::e_species>(p_pokemon_entry->species),
                            static_cast<pkmn::e_game>(p_pokemon_entry->game),
                            p_pokemon_entry->p_form
                        ).get_level_at_experience(experience);
@@ -113,7 +113,7 @@ enum pkmn_error pkmn_database_pokemon_entry_icon_filepath(
     PKMN_CPP_TO_C(
         pkmn::c::string_cpp_to_c(
             pkmn::database::pokemon_entry(
-                static_cast<pkmn::e_species>(p_pokemon_entry->name),
+                static_cast<pkmn::e_species>(p_pokemon_entry->species),
                 static_cast<pkmn::e_game>(p_pokemon_entry->game),
                 p_pokemon_entry->p_form
             ).get_icon_filepath(shiny),
@@ -139,7 +139,7 @@ enum pkmn_error pkmn_database_pokemon_entry_sprite_filepath(
     PKMN_CPP_TO_C(
         pkmn::c::string_cpp_to_c(
             pkmn::database::pokemon_entry(
-                static_cast<pkmn::e_species>(p_pokemon_entry->name),
+                static_cast<pkmn::e_species>(p_pokemon_entry->species),
                 static_cast<pkmn::e_game>(p_pokemon_entry->game),
                 p_pokemon_entry->p_form
             ).get_sprite_filepath(female, shiny),
@@ -156,7 +156,8 @@ enum pkmn_error pkmn_database_pokemon_entry_free(
 {
     PKMN_CHECK_NULL_PARAM(p_pokemon_entry);
 
-    pkmn::c::free_pointer_and_set_to_null(&p_pokemon_entry->p_species);
+    pkmn::c::free_pointer_and_set_to_null(&p_pokemon_entry->p_species_name);
+    pkmn::c::free_pointer_and_set_to_null(&p_pokemon_entry->p_category);
     pkmn::c::free_pointer_and_set_to_null(&p_pokemon_entry->p_form);
     pkmn::c::free_pointer_and_set_to_null(&p_pokemon_entry->p_pokedex_entry);
 

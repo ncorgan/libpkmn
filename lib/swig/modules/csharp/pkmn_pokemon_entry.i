@@ -11,10 +11,10 @@
 
 %include <attribute.i>
 
-%attributestring(pkmn::database::pokemon_entry, std::string, Name, get_name);
+%attribute(pkmn::database::pokemon_entry, e_species, Species, get_species);
+%attributestring(pkmn::database::pokemon_entry, std::string, SpeciesName, get_species_name);
 %attribute(pkmn::database::pokemon_entry, e_game, Game, get_game);
-%attribute(pkmn::database::pokemon_entry, e_species, SpeciesEnum, get_species_enum);
-%attributestring(pkmn::database::pokemon_entry, std::string, Species, get_species);
+%attributestring(pkmn::database::pokemon_entry, std::string, Category, get_category);
 %attributestring(pkmn::database::pokemon_entry, std::string, PokedexEntry, get_pokedex_entry);
 %attributestring(pkmn::database::pokemon_entry, std::string, Form, get_form, set_form);
 %attribute(pkmn::database::pokemon_entry, float, Height, get_height);
@@ -123,7 +123,7 @@
         }
         else
         {
-            return this.SpeciesEnum.Equals(rhs.SpeciesEnum) &&
+            return this.Species.Equals(rhs.Species) &&
                    this.Game.Equals(rhs.Game) &&
                    this.Form.Equals(rhs.Form);
         }
@@ -149,7 +149,7 @@
 
     public override int GetHashCode()
     {
-        return HashCodeBuilder.Create().AddValue<Species>(this.SpeciesEnum)
+        return HashCodeBuilder.Create().AddValue<Species>(this.Species)
                                        .AddValue<Game>(this.Game)
                                        .AddValue<string>(this.Form)
                                        .ToHashCode();

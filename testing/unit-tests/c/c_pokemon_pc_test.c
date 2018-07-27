@@ -303,12 +303,6 @@ static void test_setting_pokemon_in_box(
 
     error = pkmn_pokemon_box_set_pokemon(
                 p_box,
-                1,
-                &second_in_box
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_INVALID_ARGUMENT, error);
-    error = pkmn_pokemon_box_set_pokemon(
-                p_box,
                 2,
                 &second_in_box
             );

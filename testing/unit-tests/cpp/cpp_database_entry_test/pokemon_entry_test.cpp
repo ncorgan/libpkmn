@@ -68,10 +68,10 @@ TEST_P(pokemon_entry_none_test, pokemon_entry_none_test)
 {
     pkmn::database::pokemon_entry none_entry(pkmn::e_species::NONE, GetParam(), "");
 
-    EXPECT_EQ(pkmn::e_species::NONE, none_entry.get_species_enum())
-        << pkmn::species_to_string(none_entry.get_species_enum());
-    EXPECT_EQ("None", none_entry.get_name());
-    EXPECT_EQ("None", none_entry.get_species());
+    EXPECT_EQ(pkmn::e_species::NONE, none_entry.get_species())
+        << pkmn::species_to_string(none_entry.get_species());
+    EXPECT_EQ("None", none_entry.get_species_name());
+    EXPECT_EQ("None", none_entry.get_category());
     EXPECT_EQ("None", none_entry.get_pokedex_entry());
     EXPECT_EQ("None", none_entry.get_form());
     EXPECT_FLOAT_EQ(-1.0f, none_entry.get_height());
@@ -145,28 +145,28 @@ TEST_P(pokemon_entry_evolutions_test, pokemon_entry_evolutions_test)
     pkmn::database::pokemon_entries_t evolutions = eevee_entry.get_evolutions();
     EXPECT_GE(evolutions.size(), 3);
 
-    EXPECT_EQ("Vaporeon", evolutions.at(0).get_name());
-    EXPECT_EQ("Jolteon", evolutions.at(1).get_name());
-    EXPECT_EQ("Flareon", evolutions.at(2).get_name());
+    EXPECT_EQ("Vaporeon", evolutions.at(0).get_species_name());
+    EXPECT_EQ("Jolteon", evolutions.at(1).get_species_name());
+    EXPECT_EQ("Flareon", evolutions.at(2).get_species_name());
 
     if(generation >= 2) {
-        EXPECT_EQ("Espeon", evolutions.at(3).get_name());
-        EXPECT_EQ("Umbreon", evolutions.at(4).get_name());
+        EXPECT_EQ("Espeon", evolutions.at(3).get_species_name());
+        EXPECT_EQ("Umbreon", evolutions.at(4).get_species_name());
     } else {
         EXPECT_EQ(3, evolutions.size());
         return;
     }
 
     if(generation >= 4) {
-        EXPECT_EQ("Leafeon", evolutions.at(5).get_name());
-        EXPECT_EQ("Glaceon", evolutions.at(6).get_name());
+        EXPECT_EQ("Leafeon", evolutions.at(5).get_species_name());
+        EXPECT_EQ("Glaceon", evolutions.at(6).get_species_name());
     } else {
         EXPECT_EQ(5, evolutions.size());
         return;
     }
 
     if(generation >= 6) {
-        EXPECT_EQ("Sylveon", evolutions.at(7).get_name());
+        EXPECT_EQ("Sylveon", evolutions.at(7).get_species_name());
     } else {
         EXPECT_EQ(7, evolutions.size());
     }
@@ -435,12 +435,12 @@ static void _pokemon_entry_test(
     /*
      * Generation I entry
      */
-    EXPECT_EQ(pkmn::e_species::ARTICUNO, pokemon_entry_gen1.get_species_enum())
-        << pkmn::species_to_string(pokemon_entry_gen1.get_species_enum());
-    EXPECT_EQ("Articuno", pokemon_entry_gen1.get_name());
+    EXPECT_EQ(pkmn::e_species::ARTICUNO, pokemon_entry_gen1.get_species())
+        << pkmn::species_to_string(pokemon_entry_gen1.get_species());
+    EXPECT_EQ("Articuno", pokemon_entry_gen1.get_species_name());
     EXPECT_EQ(pkmn::e_game::YELLOW, pokemon_entry_gen1.get_game())
         << pkmn::game_to_string(pokemon_entry_gen1.get_game());
-    EXPECT_EQ("Freeze", pokemon_entry_gen1.get_species());
+    EXPECT_EQ("Freeze", pokemon_entry_gen1.get_category());
     EXPECT_GT(pokemon_entry_gen1.get_pokedex_entry().size(), 0);
     EXPECT_EQ("Standard", pokemon_entry_gen1.get_form());
     EXPECT_FLOAT_EQ(1.7f, pokemon_entry_gen1.get_height());
@@ -500,12 +500,12 @@ static void _pokemon_entry_test(
     /*
      * Generation II entry
      */
-    EXPECT_EQ(pkmn::e_species::FERALIGATR, pokemon_entry_gen2.get_species_enum())
-        << pkmn::species_to_string(pokemon_entry_gen2.get_species_enum());
-    EXPECT_EQ("Feraligatr", pokemon_entry_gen2.get_name());
+    EXPECT_EQ(pkmn::e_species::FERALIGATR, pokemon_entry_gen2.get_species())
+        << pkmn::species_to_string(pokemon_entry_gen2.get_species());
+    EXPECT_EQ("Feraligatr", pokemon_entry_gen2.get_species_name());
     EXPECT_EQ(pkmn::e_game::GOLD, pokemon_entry_gen2.get_game())
         << pkmn::game_to_string(pokemon_entry_gen2.get_game());
-    EXPECT_EQ("Big Jaw", pokemon_entry_gen2.get_species());
+    EXPECT_EQ("Big Jaw", pokemon_entry_gen2.get_category());
     EXPECT_GT(pokemon_entry_gen2.get_pokedex_entry().size(), 0);
     EXPECT_EQ("Standard", pokemon_entry_gen2.get_form());
     EXPECT_FLOAT_EQ(2.3f, pokemon_entry_gen2.get_height());
@@ -570,12 +570,12 @@ static void _pokemon_entry_test(
     /*
      * Game Boy Advance entry
      */
-    EXPECT_EQ(pkmn::e_species::REGICE, pokemon_entry_gba.get_species_enum())
-        << pkmn::species_to_string(pokemon_entry_gba.get_species_enum());
-    EXPECT_EQ("Regice", pokemon_entry_gba.get_name());
+    EXPECT_EQ(pkmn::e_species::REGICE, pokemon_entry_gba.get_species())
+        << pkmn::species_to_string(pokemon_entry_gba.get_species());
+    EXPECT_EQ("Regice", pokemon_entry_gba.get_species_name());
     EXPECT_EQ(pkmn::e_game::EMERALD, pokemon_entry_gba.get_game())
         << pkmn::game_to_string(pokemon_entry_gba.get_game());
-    EXPECT_EQ("Iceberg", pokemon_entry_gba.get_species());
+    EXPECT_EQ("Iceberg", pokemon_entry_gba.get_category());
     EXPECT_GT(pokemon_entry_gba.get_pokedex_entry().size(), 0);
     EXPECT_EQ("Standard", pokemon_entry_gba.get_form());
     EXPECT_FLOAT_EQ(1.8f, pokemon_entry_gba.get_height());
@@ -646,12 +646,12 @@ static void _pokemon_entry_test(
     /*
      * Gamecube entry
      */
-    EXPECT_EQ(pkmn::e_species::SHROOMISH, pokemon_entry_gcn.get_species_enum())
-        << pkmn::species_to_string(pokemon_entry_gcn.get_species_enum());
-    EXPECT_EQ("Shroomish", pokemon_entry_gcn.get_name());
+    EXPECT_EQ(pkmn::e_species::SHROOMISH, pokemon_entry_gcn.get_species())
+        << pkmn::species_to_string(pokemon_entry_gcn.get_species());
+    EXPECT_EQ("Shroomish", pokemon_entry_gcn.get_species_name());
     EXPECT_EQ(pkmn::e_game::XD, pokemon_entry_gcn.get_game())
         << pkmn::game_to_string(pokemon_entry_gcn.get_game());
-    EXPECT_EQ("Mushroom", pokemon_entry_gcn.get_species());
+    EXPECT_EQ("Mushroom", pokemon_entry_gcn.get_category());
     EXPECT_GT(pokemon_entry_gcn.get_pokedex_entry().size(), 0);
     EXPECT_EQ("Standard", pokemon_entry_gcn.get_form());
     EXPECT_FLOAT_EQ(0.4f, pokemon_entry_gcn.get_height());
@@ -721,12 +721,12 @@ static void _pokemon_entry_test(
     /*
      * Generation IV entry
      */
-    EXPECT_EQ(pkmn::e_species::KRICKETOT, pokemon_entry_gen4.get_species_enum())
-        << pkmn::species_to_string(pokemon_entry_gen4.get_species_enum());
-    EXPECT_EQ("Kricketot", pokemon_entry_gen4.get_name());
+    EXPECT_EQ(pkmn::e_species::KRICKETOT, pokemon_entry_gen4.get_species())
+        << pkmn::species_to_string(pokemon_entry_gen4.get_species());
+    EXPECT_EQ("Kricketot", pokemon_entry_gen4.get_species_name());
     EXPECT_EQ(pkmn::e_game::PEARL, pokemon_entry_gen4.get_game())
         << pkmn::game_to_string(pokemon_entry_gen4.get_game());
-    EXPECT_EQ("Cricket", pokemon_entry_gen4.get_species());
+    EXPECT_EQ("Cricket", pokemon_entry_gen4.get_category());
     EXPECT_GT(pokemon_entry_gen4.get_pokedex_entry().size(), 0);
     EXPECT_EQ("Standard", pokemon_entry_gen4.get_form());
     EXPECT_FLOAT_EQ(0.3f, pokemon_entry_gen4.get_height());
@@ -797,12 +797,12 @@ static void _pokemon_entry_test(
     /*
      * Generation V entry
      */
-    EXPECT_EQ(pkmn::e_species::STUNFISK, pokemon_entry_gen5.get_species_enum())
-        << pkmn::species_to_string(pokemon_entry_gen5.get_species_enum());
-    EXPECT_EQ("Stunfisk", pokemon_entry_gen5.get_name());
+    EXPECT_EQ(pkmn::e_species::STUNFISK, pokemon_entry_gen5.get_species())
+        << pkmn::species_to_string(pokemon_entry_gen5.get_species());
+    EXPECT_EQ("Stunfisk", pokemon_entry_gen5.get_species_name());
     EXPECT_EQ(pkmn::e_game::BLACK2, pokemon_entry_gen5.get_game())
         << pkmn::game_to_string(pokemon_entry_gen5.get_game());
-    EXPECT_EQ("Trap", pokemon_entry_gen5.get_species());
+    EXPECT_EQ("Trap", pokemon_entry_gen5.get_category());
     EXPECT_GT(pokemon_entry_gen5.get_pokedex_entry().size(), 0);
     EXPECT_EQ("Standard", pokemon_entry_gen5.get_form());
     EXPECT_FLOAT_EQ(0.7f, pokemon_entry_gen5.get_height());
@@ -873,12 +873,12 @@ static void _pokemon_entry_test(
     /*
      * Generation VI entry
      */
-    EXPECT_EQ(pkmn::e_species::SYLVEON, pokemon_entry_gen6.get_species_enum())
-        << pkmn::species_to_string(pokemon_entry_gen6.get_species_enum());
-    EXPECT_EQ("Sylveon", pokemon_entry_gen6.get_name());
+    EXPECT_EQ(pkmn::e_species::SYLVEON, pokemon_entry_gen6.get_species())
+        << pkmn::species_to_string(pokemon_entry_gen6.get_species());
+    EXPECT_EQ("Sylveon", pokemon_entry_gen6.get_species_name());
     EXPECT_EQ(pkmn::e_game::ALPHA_SAPPHIRE, pokemon_entry_gen6.get_game())
         << pkmn::game_to_string(pokemon_entry_gen6.get_game());
-    EXPECT_EQ("Intertwining", pokemon_entry_gen6.get_species());
+    EXPECT_EQ("Intertwining", pokemon_entry_gen6.get_category());
     EXPECT_GT(pokemon_entry_gen6.get_pokedex_entry().size(), 0);
     EXPECT_EQ("Standard", pokemon_entry_gen6.get_form());
     EXPECT_FLOAT_EQ(1.0f, pokemon_entry_gen6.get_height());

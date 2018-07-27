@@ -24,9 +24,10 @@
 
 struct pkmn_database_pokemon_entry
 {
-    enum pkmn_species name;
+    enum pkmn_species species;
+    char* p_species_name;
     enum pkmn_game game;
-    char* p_species;
+    char* p_category;
     char* p_form;
     char* p_pokedex_entry;
     float height;

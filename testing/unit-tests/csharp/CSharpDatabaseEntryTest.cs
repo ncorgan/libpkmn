@@ -127,11 +127,6 @@ public class CSharpDatabaseEntryTest {
         // Make sure trying to create an invalid entry results in an error.
         Assert.Throws<ArgumentOutOfRangeException>(
             delegate {
-                new PKMN.Database.PokemonEntry(PKMN.Species.INVALID, PKMN.Game.BLACK2, "Sunny");
-            }
-        );
-        Assert.Throws<ArgumentOutOfRangeException>(
-            delegate {
                 new PKMN.Database.PokemonEntry(PKMN.Species.CASTFORM, PKMN.Game.NONE, "Sunny");
             }
         );
@@ -143,10 +138,10 @@ public class CSharpDatabaseEntryTest {
 
         PKMN.Database.PokemonEntry pokemonEntry = new PKMN.Database.PokemonEntry(PKMN.Species.STUNFISK, PKMN.Game.BLACK2, "");
 
-        Assert.AreEqual(pokemonEntry.SpeciesEnum, PKMN.Species.STUNFISK);
-        Assert.AreEqual(pokemonEntry.Name, "Stunfisk");
+        Assert.AreEqual(pokemonEntry.Species, PKMN.Species.STUNFISK);
+        Assert.AreEqual(pokemonEntry.SpeciesName, "Stunfisk");
         Assert.AreEqual(pokemonEntry.Game, PKMN.Game.BLACK2);
-        Assert.AreEqual(pokemonEntry.Species, "Trap");
+        Assert.AreEqual(pokemonEntry.Category, "Trap");
         Assert.AreEqual(pokemonEntry.Form, "Standard");
 
         // Just make sure this works

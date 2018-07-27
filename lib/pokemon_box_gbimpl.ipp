@@ -21,6 +21,7 @@
 #include <boost/thread/lock_guard.hpp>
 
 #include <cstring>
+#include <iostream>
 #include <stdexcept>
 #include <type_traits>
 
@@ -127,11 +128,7 @@ namespace pkmn {
 
         pkmn::enforce_bounds("Box index", index, 0, max_index);
 
-        if(_pokemon_list.at(index)->get_native_pc_data() == new_pokemon->get_native_pc_data())
-        {
-            throw std::invalid_argument("Cannot set a Pokémon to itself.");
-        }
-        else if((index < (num_pokemon-1)) && (new_pokemon->get_species() == pkmn::e_species::NONE))
+        if((index < (num_pokemon-1)) && (new_pokemon->get_species() == pkmn::e_species::NONE))
         {
             throw std::invalid_argument("Generation I-II boxes store Pokémon contiguously.");
         }
@@ -166,6 +163,7 @@ namespace pkmn {
             actual_new_pokemon->get_native_pc_data(),
             &_pksav_box.entries[index]
         );
+
         _pokemon_list[index] = std::make_shared<libpkmn_pokemon_type>(
                                    &_pksav_box.entries[index],
                                    _game_id

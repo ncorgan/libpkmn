@@ -69,7 +69,7 @@ namespace pkmn
         std::memset(&_pksav_pokemon, 0, sizeof(_pksav_pokemon));
 
         _nickname = boost::algorithm::to_upper_copy(
-                        _database_entry.get_name()
+                        _database_entry.get_species_name()
                     );
         _trainer_name = DEFAULT_TRAINER_NAME;
 
@@ -144,7 +144,7 @@ namespace pkmn
         // Nickname and trainer name aren't stored with the binary,
         // so use LibPKMN's defaults.
         _nickname = boost::algorithm::to_upper_copy(
-                        _database_entry.get_name()
+                        _database_entry.get_species_name()
                     );
         _trainer_name = DEFAULT_TRAINER_NAME;
     }
@@ -176,7 +176,7 @@ namespace pkmn
         // Nickname and trainer name aren't stored with the binary,
         // so use LibPKMN's defaults.
         _nickname = boost::algorithm::to_upper_copy(
-                        _database_entry.get_name()
+                        _database_entry.get_species_name()
                     );
         _trainer_name = DEFAULT_TRAINER_NAME;
     }

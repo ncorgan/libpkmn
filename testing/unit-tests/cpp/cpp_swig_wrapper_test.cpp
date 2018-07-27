@@ -401,7 +401,7 @@ TEST(cpp_swig_wrapper_test, test_pokemon)
     EXPECT_EQ(pkmn::e_species::BULBASAUR, swig_pokemon.get_species());
     EXPECT_EQ(pkmn::e_game::FIRERED, swig_pokemon.get_game());
     EXPECT_EQ("Standard", swig_pokemon.get_form());
-    EXPECT_EQ("Bulbasaur", swig_pokemon.get_database_entry().get_name());
+    EXPECT_EQ("Bulbasaur", swig_pokemon.get_database_entry().get_species_name());
 
     swig_pokemon.set_is_egg(true);
     EXPECT_TRUE(swig_pokemon.is_egg());

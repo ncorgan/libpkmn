@@ -599,7 +599,7 @@ namespace pkmn { namespace c {
                 ++entry_index)
             {
                 string_cpp_to_c_alloc(
-                    pokemon_entries_cpp[entry_index].get_name(),
+                    pokemon_entries_cpp[entry_index].get_species_name(),
                     &temp_string_list_c.pp_strings[entry_index]
                 );
             }
@@ -624,6 +624,7 @@ namespace pkmn { namespace c {
         struct pkmn_database_item_entry temp_item_entry_c =
         {
             PKMN_ITEM_NONE, // name
+            nullptr, // p_name
             PKMN_GAME_NONE, // game
             nullptr, // p_category
             nullptr, // p_pocket
@@ -634,6 +635,10 @@ namespace pkmn { namespace c {
             nullptr  // p_fling_effect
         };
 
+        string_cpp_to_c_alloc(
+            item_entry_cpp.get_name(),
+            &temp_item_entry_c.p_name
+        );
         string_cpp_to_c_alloc(
             item_entry_cpp.get_category(),
             &temp_item_entry_c.p_category
@@ -744,9 +749,10 @@ namespace pkmn { namespace c {
 
         struct pkmn_database_pokemon_entry temp_pokemon_entry_c =
         {
-            PKMN_SPECIES_NONE, // name
+            PKMN_SPECIES_NONE, // species
+            nullptr, // p_species_name
             PKMN_GAME_NONE, // game
-            nullptr, // p_species
+            nullptr, // p_category
             nullptr, // p_form
             nullptr, // p_pokedex_entry
             0.0f, // height
@@ -807,12 +813,16 @@ namespace pkmn { namespace c {
         };
 
         string_cpp_to_c_alloc(
+            pokemon_entry_cpp.get_species_name(),
+            &temp_pokemon_entry_c.p_species_name
+        );
+        string_cpp_to_c_alloc(
             pokemon_entry_cpp.get_form(),
             &temp_pokemon_entry_c.p_form
         );
         string_cpp_to_c_alloc(
-            pokemon_entry_cpp.get_species(),
-            &temp_pokemon_entry_c.p_species
+            pokemon_entry_cpp.get_category(),
+            &temp_pokemon_entry_c.p_category
         );
         string_cpp_to_c_alloc(
             pokemon_entry_cpp.get_pokedex_entry(),
@@ -832,7 +842,7 @@ namespace pkmn { namespace c {
             &temp_pokemon_entry_c.types
         );
 
-        temp_pokemon_entry_c.name = static_cast<enum pkmn_species>(pokemon_entry_cpp.get_species_enum());
+        temp_pokemon_entry_c.species = static_cast<enum pkmn_species>(pokemon_entry_cpp.get_species());
         temp_pokemon_entry_c.game = static_cast<enum pkmn_game>(pokemon_entry_cpp.get_game());
         temp_pokemon_entry_c.hidden_ability = static_cast<enum pkmn_ability>(pokemon_entry_cpp.get_hidden_ability());
 

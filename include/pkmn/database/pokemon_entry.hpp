@@ -91,10 +91,10 @@ namespace pkmn { namespace database {
             pokemon_entry& operator=(pokemon_entry&&) = default;
 #endif
 
-            // TODO: rename get_species
-            inline pkmn::e_species get_species_enum() const
+            inline pkmn::e_species get_species() const
             {
-                return static_cast<pkmn::e_species>(_species_id);
+                return _invalid ? pkmn::e_species::INVALID
+                                : static_cast<pkmn::e_species>(_species_id);
             }
 
             // TODO: rename get_species_name
@@ -105,16 +105,15 @@ namespace pkmn { namespace database {
              * \returns For invalid Pokémon: "Invalid (0xXX)", where XX corresponds
              *          to the Pokémon's in-game index in hex.
              */
-            std::string get_name() const;
+            std::string get_species_name() const;
 
             /*!
              * @brief Returns the game this entry corresponds to.
              */
             pkmn::e_game get_game() const;
 
-            // TODO: rename
             /*!
-             * @brief Returns the Pokémon's species.
+             * @brief Returns the Pokémon's category.
              *
              * This is the classification given in the Pokédex, not the name
              * of the Pokémon. For example, for a Pikachu entry, get_name()
@@ -123,7 +122,7 @@ namespace pkmn { namespace database {
              * \returns For "None" entries: "None"
              * \returns For invalid Pokémon: "Unknown"
              */
-            std::string get_species() const;
+            std::string get_category() const;
 
             /*!
              * @brief Returns this Pokémon's Pokédex entry for the given game.
