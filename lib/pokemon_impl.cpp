@@ -304,7 +304,7 @@ namespace pkmn
 
         for(int move_index = 0; move_index < 4; ++move_index)
         {
-            this->set_move("None", move_index);
+            this->set_move(pkmn::e_move::NONE, move_index);
         }
 
         pkmn::database::levelup_moves_t levelup_moves = _database_entry.get_levelup_moves();
@@ -350,7 +350,7 @@ namespace pkmn
                 ++move_index, ++levelup_move_index)
             {
                 this->set_move(
-                    levelup_moves[levelup_move_index].move.get_name(),
+                    levelup_moves[levelup_move_index].move.get_move(),
                     static_cast<int>(move_index)
                 );
             }

@@ -1677,16 +1677,9 @@ static void pokemon_error_test()
     error = pkmn_pokemon_set_move(
                 NULL,
                 0,
-                strbuffer
+                PKMN_MOVE_TACKLE
             );
     TEST_NULL_POINTER_RETURN("p_pokemon");
-
-    error = pkmn_pokemon_set_move(
-                &pokemon,
-                0,
-                NULL
-            );
-    TEST_POKEMON_NULL_POINTER_RETURN(pokemon, "p_move");
 
     /*
      * pkmn_pokemon_set_move_pp
@@ -3393,21 +3386,12 @@ static void database_lists_error_test()
  */
 static void database_move_entry_error_test()
 {
-    struct pkmn_database_move_entry dummy_pkmn_database_move_entry;
-
     /*
      * pkmn_database_get_move_entry
      */
 
     error = pkmn_database_get_move_entry(
-                NULL,
-                PKMN_GAME_RED,
-                &dummy_pkmn_database_move_entry
-            );
-    TEST_NULL_POINTER_RETURN("p_move_name");
-
-    error = pkmn_database_get_move_entry(
-                strbuffer,
+                PKMN_MOVE_TACKLE,
                 PKMN_GAME_RED,
                 NULL
             );
@@ -3629,12 +3613,6 @@ static void types_item_slot_test()
 static void types_levelup_move_test()
 {
     /*
-     * pkmn_levelup_move_free
-     */
-    error = pkmn_levelup_move_free(NULL);
-    TEST_NULL_POINTER_RETURN("p_levelup_move");
-
-    /*
      * pkmn_levelup_moves_free
      */
     error = pkmn_levelup_moves_free(NULL);
@@ -3646,12 +3624,6 @@ static void types_levelup_move_test()
  */
 static void types_move_slot_test()
 {
-    /*
-     * pkmn_move_slot_free
-     */
-    error = pkmn_move_slot_free(NULL);
-    TEST_NULL_POINTER_RETURN("p_move_slot");
-
     /*
      * pkmn_move_slots_free
      */

@@ -441,13 +441,13 @@ public class GameSaveTest
     {
         PKMN.Game game = gameSave.Game;
 
-        PKMN.StringList moveNameList = PKMN.Database.Lists.MoveNameList(game);
+        PKMN.MoveEnumList moveList = PKMN.Database.Lists.MoveList(game);
         PKMN.SpeciesEnumList pokemonList = PKMN.Database.Lists.PokemonList(1, true);
 
         PKMN.PokemonParty party = gameSave.PokemonParty;
         for(int i = 0; i < 6; ++i)
         {
-            party[i] = Util.GetRandomPokemon(game, itemList, moveNameList, pokemonList);
+            party[i] = Util.GetRandomPokemon(game, itemList, moveList, pokemonList);
         }
 
         PKMN.PokemonPC PC = gameSave.PokemonPC;
@@ -456,7 +456,7 @@ public class GameSaveTest
             PKMN.PokemonBox box = PC[i];
             for(int j = 0; j < box.Length; ++j)
             {
-                box[j] = Util.GetRandomPokemon(game, itemList, moveNameList, pokemonList);
+                box[j] = Util.GetRandomPokemon(game, itemList, moveList, pokemonList);
             }
         }
     }

@@ -12,6 +12,7 @@
 
 #include <pkmn/enums/game.hpp>
 #include <pkmn/enums/gender.hpp>
+#include <pkmn/enums/move.hpp>
 #include <pkmn/enums/species.hpp>
 #include <pkmn/enums/stat.hpp>
 
@@ -28,7 +29,7 @@ namespace pkmn { namespace breeding {
 
 #ifndef SWIG
 
-    PKMN_API std::vector<std::string> get_child_moves(
+    PKMN_API std::vector<pkmn::e_move> get_child_moves(
         const pkmn::pokemon::sptr& mother,
         const pkmn::pokemon::sptr& father,
         pkmn::e_species child_species

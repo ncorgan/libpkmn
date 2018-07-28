@@ -38,7 +38,7 @@ namespace pkmn { namespace breeding {
         pkmn::e_species evolution_to_add;
     };
 
-    pkmn::e_species get_earliest_species_in_evolutionary_line(
+    static pkmn::e_species get_earliest_species_in_evolutionary_line(
         int species_id,
         int generation
     )
@@ -247,7 +247,7 @@ namespace pkmn { namespace breeding {
         return possible_child_species;
     }
 
-    std::vector<std::string> get_child_moves(
+    std::vector<pkmn::e_move> get_child_moves(
         const pkmn::pokemon::sptr& mother,
         const pkmn::pokemon::sptr& father,
         pkmn::e_species child_species
@@ -281,7 +281,7 @@ namespace pkmn { namespace breeding {
         const int generation = pkmn::database::game_enum_to_generation(game);
 
         BOOST_STATIC_CONSTEXPR size_t MAX_NUM_MOVES = 4;
-        std::vector<std::string> child_moves;
+        std::vector<pkmn::e_move> child_moves;
 
         const pkmn::move_slots_t& mother_moves = mother->get_moves();
         const pkmn::move_slots_t& father_moves = father->get_moves();
@@ -305,7 +305,7 @@ namespace pkmn { namespace breeding {
                 if((mother->get_held_item() == pkmn::e_item::LIGHT_BALL) ||
                    (father->get_held_item() == pkmn::e_item::LIGHT_BALL))
                 {
-                    child_moves.emplace_back("Volt Tackle");
+                    child_moves.emplace_back(pkmn::e_move::VOLT_TACKLE);
                 }
             }
         }
@@ -327,7 +327,7 @@ namespace pkmn { namespace breeding {
                         child_egg_moves.end(),
                         [&mother_moves, &mother_move_index](const pkmn::database::move_entry& egg_move)
                         {
-                            return (egg_move.get_name() == mother_moves[mother_move_index].move);
+                            return (egg_move.get_move() == mother_moves[mother_move_index].move);
                         });
                 if(egg_move_iter != child_egg_moves.end())
                 {
@@ -351,7 +351,7 @@ namespace pkmn { namespace breeding {
                         child_egg_moves.end(),
                         [&father_moves, &father_move_index](const pkmn::database::move_entry& egg_move)
                         {
-                            return (egg_move.get_name() == father_moves[father_move_index].move);
+                            return (egg_move.get_move() == father_moves[father_move_index].move);
                         });
                 if(egg_move_iter != child_egg_moves.end())
                 {
@@ -371,24 +371,24 @@ namespace pkmn { namespace breeding {
         if((child_moves.size() < MAX_NUM_MOVES) && (generation <= 5))
         {
             pkmn::database::move_list_t child_tm_hm_moves = child_entry.get_tm_hm_moves();
-            std::vector<std::string> child_tm_hm_move_names;
+            std::vector<pkmn::e_move> child_tm_hm_move_enums;
             for(const auto& child_tm_hm_move: child_tm_hm_moves)
             {
-                child_tm_hm_move_names.emplace_back(child_tm_hm_move.get_name());
+                child_tm_hm_move_enums.emplace_back(child_tm_hm_move.get_move());
             }
 
             for(size_t move_index = 0;
                 (move_index < father_moves.size()) && (child_moves.size() < MAX_NUM_MOVES);
                 ++move_index)
             {
-                auto tm_hm_move_name_iter = std::find(
-                                                child_tm_hm_move_names.begin(),
-                                                child_tm_hm_move_names.end(),
+                auto tm_hm_move_enum_iter = std::find(
+                                                child_tm_hm_move_enums.begin(),
+                                                child_tm_hm_move_enums.end(),
                                                 father_moves[move_index].move
                                             );
-                if(tm_hm_move_name_iter != child_tm_hm_move_names.end())
+                if(tm_hm_move_enum_iter != child_tm_hm_move_enums.end())
                 {
-                    child_moves.emplace_back(*tm_hm_move_name_iter);
+                    child_moves.emplace_back(*tm_hm_move_enum_iter);
                 }
             }
         }
@@ -411,7 +411,7 @@ namespace pkmn { namespace breeding {
                         child_tutor_moves.end(),
                         [&father_moves, &father_move_index](const pkmn::database::move_entry& tutor_move)
                         {
-                            return (tutor_move.get_name() == father_moves[father_move_index].move);
+                            return (tutor_move.get_move() == father_moves[father_move_index].move);
                         });
                 if(tutor_move_iter != child_tutor_moves.end())
                 {
@@ -434,7 +434,7 @@ namespace pkmn { namespace breeding {
                 (levelup_move_index < child_levelup_moves.size()) && (child_moves.size() < MAX_NUM_MOVES);
                 ++levelup_move_index)
             {
-                std::string move_name = child_levelup_moves[levelup_move_index].move.get_name();
+                pkmn::e_move move_name = child_levelup_moves[levelup_move_index].move.get_move();
 
                 auto mother_move_iter =
                     std::find_if(
@@ -474,7 +474,7 @@ namespace pkmn { namespace breeding {
                 if(child_levelup_moves[levelup_move_index].level <= child_level)
                 {
                     child_moves.emplace_back(
-                        child_levelup_moves[levelup_move_index].move.get_name()
+                        child_levelup_moves[levelup_move_index].move.get_move()
                     );
                 }
                 else
@@ -484,7 +484,7 @@ namespace pkmn { namespace breeding {
             }
         }
 
-        child_moves.resize(MAX_NUM_MOVES, "None");
+        child_moves.resize(MAX_NUM_MOVES, pkmn::e_move::NONE);
         return child_moves;
     }
 

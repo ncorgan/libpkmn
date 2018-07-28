@@ -99,8 +99,16 @@ public class Gen3PokemonTests
                                  "Distant land",
                                  new string[]{"Phenac City", "Orre Colosseum"},
                                  new string[]{"New Bark Town", "Twinleaf Town"},
-                                 new string[]{"Swallow", "Flamethrower", "Return", "Fire Blast"},
-                                 new string[]{"Roost", "Flame Burst"},
+                                 new PKMN.Move[]{
+                                     PKMN.Move.SWALLOW,
+                                     PKMN.Move.FLAMETHROWER,
+                                     PKMN.Move.RETURN,
+                                     PKMN.Move.FIRE_BLAST
+                                 },
+                                 new PKMN.Move[]{
+                                     PKMN.Move.ROOST,
+                                     PKMN.Move.FLAME_BURST
+                                 },
                                  new PKMN.Game[]{
                                          PKMN.Game.RUBY, PKMN.Game.SAPPHIRE, PKMN.Game.EMERALD,
                                          PKMN.Game.FIRERED, PKMN.Game.LEAFGREEN,
@@ -119,8 +127,16 @@ public class Gen3PokemonTests
                                  "Fateful encounter",
                                  new string[]{"Petalburg Woods", "Viridian Forest"},
                                  new string[]{"New Bark Town", "Twinleaf Town"},
-                                 new string[]{"Swallow", "Flamethrower", "Return", "Fire Blast"},
-                                 new string[]{"Shadow Sky", "Roost"},
+                                 new PKMN.Move[]{
+                                     PKMN.Move.SWALLOW,
+                                     PKMN.Move.FLAMETHROWER,
+                                     PKMN.Move.RETURN,
+                                     PKMN.Move.FIRE_BLAST
+                                 },
+                                 new PKMN.Move[]{
+                                     PKMN.Move.SHADOW_SKY,
+                                     PKMN.Move.ROOST
+                                 },
                                  new PKMN.Game[]{
                                          PKMN.Game.RUBY, PKMN.Game.SAPPHIRE, PKMN.Game.EMERALD,
                                          PKMN.Game.FIRERED, PKMN.Game.LEAFGREEN,

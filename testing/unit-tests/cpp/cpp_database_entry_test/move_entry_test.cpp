@@ -16,7 +16,7 @@ class move_entry_none_test: public ::testing::TestWithParam<pkmn::e_game> {};
 
 TEST_P(move_entry_none_test, move_entry_none_test)
 {
-    pkmn::database::move_entry none_entry("None", GetParam());
+    pkmn::database::move_entry none_entry(pkmn::e_move::NONE, GetParam());
 
     EXPECT_EQ(pkmn::e_move::NONE, none_entry.get_move());
     EXPECT_EQ("None", none_entry.get_name());
@@ -51,22 +51,22 @@ class move_entry_test: public ::testing::Test
             byid_gen4   = pkmn::database::move_entry(418,13);
             byid_gen5   = pkmn::database::move_entry(525,17);
             byid_gen6   = pkmn::database::move_entry(609,24);
-            byname_gen1 = pkmn::database::move_entry("Earthquake", pkmn::e_game::RED);
-            byname_gen2 = pkmn::database::move_entry("Octazooka", pkmn::e_game::SILVER);
-            byname_gba  = pkmn::database::move_entry("Memento", pkmn::e_game::RUBY);
-            byname_gcn  = pkmn::database::move_entry("Shadow Blitz", pkmn::e_game::XD);
-            byname_gen4 = pkmn::database::move_entry("Bullet Punch", pkmn::e_game::PEARL);
-            byname_gen5 = pkmn::database::move_entry("Dragon Tail", pkmn::e_game::BLACK);
-            byname_gen6 = pkmn::database::move_entry("Nuzzle", pkmn::e_game::Y);
+            byenum_gen1 = pkmn::database::move_entry(pkmn::e_move::EARTHQUAKE, pkmn::e_game::RED);
+            byenum_gen2 = pkmn::database::move_entry(pkmn::e_move::OCTAZOOKA, pkmn::e_game::SILVER);
+            byenum_gba  = pkmn::database::move_entry(pkmn::e_move::MEMENTO, pkmn::e_game::RUBY);
+            byenum_gcn  = pkmn::database::move_entry(pkmn::e_move::SHADOW_BLITZ, pkmn::e_game::XD);
+            byenum_gen4 = pkmn::database::move_entry(pkmn::e_move::BULLET_PUNCH, pkmn::e_game::PEARL);
+            byenum_gen5 = pkmn::database::move_entry(pkmn::e_move::DRAGON_TAIL, pkmn::e_game::BLACK);
+            byenum_gen6 = pkmn::database::move_entry(pkmn::e_move::NUZZLE, pkmn::e_game::Y);
         }
 
-        static pkmn::database::move_entry byid_gen1, byname_gen1;
-        static pkmn::database::move_entry byid_gen2, byname_gen2;
-        static pkmn::database::move_entry byid_gba,  byname_gba;
-        static pkmn::database::move_entry byid_gcn,  byname_gcn;
-        static pkmn::database::move_entry byid_gen4, byname_gen4;
-        static pkmn::database::move_entry byid_gen5, byname_gen5;
-        static pkmn::database::move_entry byid_gen6, byname_gen6;
+        static pkmn::database::move_entry byid_gen1, byenum_gen1;
+        static pkmn::database::move_entry byid_gen2, byenum_gen2;
+        static pkmn::database::move_entry byid_gba,  byenum_gba;
+        static pkmn::database::move_entry byid_gcn,  byenum_gcn;
+        static pkmn::database::move_entry byid_gen4, byenum_gen4;
+        static pkmn::database::move_entry byid_gen5, byenum_gen5;
+        static pkmn::database::move_entry byid_gen6, byenum_gen6;
 };
 
 pkmn::database::move_entry move_entry_test::byid_gen1;
@@ -76,30 +76,30 @@ pkmn::database::move_entry move_entry_test::byid_gcn;
 pkmn::database::move_entry move_entry_test::byid_gen4;
 pkmn::database::move_entry move_entry_test::byid_gen5;
 pkmn::database::move_entry move_entry_test::byid_gen6;
-pkmn::database::move_entry move_entry_test::byname_gen1;
-pkmn::database::move_entry move_entry_test::byname_gen2;
-pkmn::database::move_entry move_entry_test::byname_gba;
-pkmn::database::move_entry move_entry_test::byname_gcn;
-pkmn::database::move_entry move_entry_test::byname_gen4;
-pkmn::database::move_entry move_entry_test::byname_gen5;
-pkmn::database::move_entry move_entry_test::byname_gen6;
+pkmn::database::move_entry move_entry_test::byenum_gen1;
+pkmn::database::move_entry move_entry_test::byenum_gen2;
+pkmn::database::move_entry move_entry_test::byenum_gba;
+pkmn::database::move_entry move_entry_test::byenum_gcn;
+pkmn::database::move_entry move_entry_test::byenum_gen4;
+pkmn::database::move_entry move_entry_test::byenum_gen5;
+pkmn::database::move_entry move_entry_test::byenum_gen6;
 
 TEST_F(move_entry_test, equality_test)
 {
-    EXPECT_TRUE(byid_gen1 == byname_gen1);
-    EXPECT_TRUE(byid_gen2 == byname_gen2);
-    EXPECT_TRUE(byid_gba  == byname_gba);
-    EXPECT_TRUE(byid_gcn  == byname_gcn);
-    EXPECT_TRUE(byid_gen4 == byname_gen4);
-    EXPECT_TRUE(byid_gen5 == byname_gen5);
-    EXPECT_TRUE(byid_gen6 == byname_gen6);
+    EXPECT_TRUE(byid_gen1 == byenum_gen1);
+    EXPECT_TRUE(byid_gen2 == byenum_gen2);
+    EXPECT_TRUE(byid_gba  == byenum_gba);
+    EXPECT_TRUE(byid_gcn  == byenum_gcn);
+    EXPECT_TRUE(byid_gen4 == byenum_gen4);
+    EXPECT_TRUE(byid_gen5 == byenum_gen5);
+    EXPECT_TRUE(byid_gen6 == byenum_gen6);
 
-    EXPECT_TRUE(byid_gen1 != byname_gen2);
-    EXPECT_TRUE(byid_gen2 != byname_gba);
-    EXPECT_TRUE(byid_gba  != byname_gcn);
-    EXPECT_TRUE(byid_gcn  != byname_gen4);
-    EXPECT_TRUE(byid_gen4 != byname_gen5);
-    EXPECT_TRUE(byid_gen5 != byname_gen6);
+    EXPECT_TRUE(byid_gen1 != byenum_gen2);
+    EXPECT_TRUE(byid_gen2 != byenum_gba);
+    EXPECT_TRUE(byid_gba  != byenum_gcn);
+    EXPECT_TRUE(byid_gcn  != byenum_gen4);
+    EXPECT_TRUE(byid_gen4 != byenum_gen5);
+    EXPECT_TRUE(byid_gen5 != byenum_gen6);
 }
 
 static void _move_entry_test(
@@ -273,9 +273,9 @@ TEST_F(move_entry_test, by_id_test)
 TEST_F(move_entry_test, by_name_test)
 {
     _move_entry_test(
-        byname_gen1, byname_gen2, byname_gba,
-        byname_gcn, byname_gen4, byname_gen5,
-        byname_gen6
+        byenum_gen1, byenum_gen2, byenum_gba,
+        byenum_gcn, byenum_gen4, byenum_gen5,
+        byenum_gen6
     );
 }
 

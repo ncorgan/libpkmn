@@ -831,7 +831,7 @@ namespace pkmn
     }
 
     void pokemon_gen2impl::set_move(
-        const std::string& move,
+        pkmn::e_move move,
         int index
     )
     {
@@ -844,8 +844,7 @@ namespace pkmn
             move,
             get_game()
         );
-        _moves[index].move = entry.get_name();
-        _moves[index].pp   = entry.get_pp(0);
+        _moves[index] = {move, entry.get_pp(0)};
 
         _pksav_pokemon.pc_data.moves[index] = uint8_t(entry.get_move_id());
         _pksav_pokemon.pc_data.move_pps[index] = uint8_t(_moves[index].pp);
@@ -970,11 +969,9 @@ namespace pkmn
             case 1:
             case 2:
             case 3:
+                // TODO: check move validity
                 _moves[index] = pkmn::move_slot(
-                    pkmn::database::move_id_to_name(
-                        _pksav_pokemon.pc_data.moves[index],
-                        1
-                    ),
+                    static_cast<pkmn::e_move>(_pksav_pokemon.pc_data.moves[index]),
                     (_pksav_pokemon.pc_data.move_pps[index] & PKSAV_GEN2_POKEMON_MOVE_PP_MASK)
                 );
                 break;

@@ -577,23 +577,19 @@ TEST(cpp_to_c_test, item_slots_cpp_to_c_test)
 TEST(cpp_to_c_test, levelup_move_cpp_to_c_test)
 {
     pkmn::database::levelup_move levelup_move_cpp(
-        pkmn::database::move_entry("Scratch", pkmn::e_game::RED),
+        pkmn::database::move_entry(pkmn::e_move::SCRATCH, pkmn::e_game::RED),
         50
     );
 
-    struct pkmn_levelup_move levelup_move_c = { NULL, 0 };
+    struct pkmn_levelup_move levelup_move_c = { PKMN_MOVE_NONE, 0 };
 
     pkmn::c::levelup_move_cpp_to_c(
         levelup_move_cpp,
         &levelup_move_c
     );
 
-    EXPECT_STREQ("Scratch", levelup_move_c.p_move);
+    EXPECT_EQ(PKMN_MOVE_SCRATCH, levelup_move_c.move);
     EXPECT_EQ(50, levelup_move_c.level);
-
-    pkmn_levelup_move_free(&levelup_move_c);
-    EXPECT_EQ(NULL, levelup_move_c.p_move);
-    EXPECT_EQ(0, levelup_move_c.level);
 }
 
 TEST(cpp_to_c_test, levelup_moves_cpp_to_c_test)
@@ -601,15 +597,15 @@ TEST(cpp_to_c_test, levelup_moves_cpp_to_c_test)
     pkmn::database::levelup_moves_t levelup_moves_cpp =
     {
         pkmn::database::levelup_move(
-            pkmn::database::move_entry("Scratch", pkmn::e_game::RED),
+            pkmn::database::move_entry(pkmn::e_move::SCRATCH, pkmn::e_game::RED),
             50
         ),
         pkmn::database::levelup_move(
-            pkmn::database::move_entry("Synthesis", pkmn::e_game::SILVER),
+            pkmn::database::move_entry(pkmn::e_move::SYNTHESIS, pkmn::e_game::SILVER),
             5
         ),
         pkmn::database::levelup_move(
-            pkmn::database::move_entry("Frenzy Plant", pkmn::e_game::EMERALD),
+            pkmn::database::move_entry(pkmn::e_move::FRENZY_PLANT, pkmn::e_game::EMERALD),
             37
         )
     };
@@ -621,11 +617,11 @@ TEST(cpp_to_c_test, levelup_moves_cpp_to_c_test)
     );
 
     EXPECT_EQ(3, levelup_moves_c.length);
-    EXPECT_STREQ("Scratch", levelup_moves_c.p_levelup_moves[0].p_move);
+    EXPECT_EQ(PKMN_MOVE_SCRATCH, levelup_moves_c.p_levelup_moves[0].move);
     EXPECT_EQ(50, levelup_moves_c.p_levelup_moves[0].level);
-    EXPECT_STREQ("Synthesis", levelup_moves_c.p_levelup_moves[1].p_move);
+    EXPECT_EQ(PKMN_MOVE_SYNTHESIS, levelup_moves_c.p_levelup_moves[1].move);
     EXPECT_EQ(5, levelup_moves_c.p_levelup_moves[1].level);
-    EXPECT_STREQ("Frenzy Plant", levelup_moves_c.p_levelup_moves[2].p_move);
+    EXPECT_EQ(PKMN_MOVE_FRENZY_PLANT, levelup_moves_c.p_levelup_moves[2].move);
     EXPECT_EQ(37, levelup_moves_c.p_levelup_moves[2].level);
 
     pkmn_levelup_moves_free(
@@ -639,9 +635,9 @@ TEST(cpp_to_c_test, move_list_cpp_to_c_test)
 {
     pkmn::database::move_list_t move_list_cpp =
     {
-        pkmn::database::move_entry("Scratch", pkmn::e_game::RED),
-        pkmn::database::move_entry("Synthesis", pkmn::e_game::SILVER),
-        pkmn::database::move_entry("Frenzy Plant", pkmn::e_game::EMERALD)
+        pkmn::database::move_entry(pkmn::e_move::SCRATCH, pkmn::e_game::RED),
+        pkmn::database::move_entry(pkmn::e_move::SYNTHESIS, pkmn::e_game::SILVER),
+        pkmn::database::move_entry(pkmn::e_move::FRENZY_PLANT, pkmn::e_game::EMERALD)
     };
 
     struct pkmn_string_list string_list_c = { NULL, 0 };
@@ -665,7 +661,7 @@ TEST(cpp_to_c_test, move_list_cpp_to_c_test)
 TEST(cpp_to_c_test, move_slot_cpp_to_c_test)
 {
     pkmn::move_slot move_slot_cpp(
-        "Tackle",
+        pkmn::e_move::TACKLE,
         50
     );
 
@@ -676,12 +672,8 @@ TEST(cpp_to_c_test, move_slot_cpp_to_c_test)
         &move_slot_c
     );
 
-    EXPECT_STREQ("Tackle", move_slot_c.p_move);
+    EXPECT_EQ(PKMN_MOVE_TACKLE, move_slot_c.move);
     EXPECT_EQ(50, move_slot_c.pp);
-
-    pkmn_move_slot_free(&move_slot_c);
-    EXPECT_EQ(NULL, move_slot_c.p_move);
-    EXPECT_EQ(0, move_slot_c.pp);
 }
 
 TEST(cpp_to_c_test, move_slots_cpp_to_c_test)
@@ -689,15 +681,15 @@ TEST(cpp_to_c_test, move_slots_cpp_to_c_test)
     pkmn::move_slots_t move_slots_cpp =
     {
         pkmn::move_slot(
-            "Tackle",
+            pkmn::e_move::TACKLE,
             50
         ),
         pkmn::move_slot(
-            "Pound",
+            pkmn::e_move::POUND,
             28
         ),
         pkmn::move_slot(
-            "Metronome",
+            pkmn::e_move::METRONOME,
             1
         )
     };
@@ -709,11 +701,11 @@ TEST(cpp_to_c_test, move_slots_cpp_to_c_test)
     );
 
     EXPECT_EQ(3, move_slots_c.length);
-    EXPECT_STREQ("Tackle", move_slots_c.p_move_slots[0].p_move);
+    EXPECT_EQ(PKMN_MOVE_TACKLE, move_slots_c.p_move_slots[0].move);
     EXPECT_EQ(50, move_slots_c.p_move_slots[0].pp);
-    EXPECT_STREQ("Pound", move_slots_c.p_move_slots[1].p_move);
+    EXPECT_EQ(PKMN_MOVE_POUND, move_slots_c.p_move_slots[1].move);
     EXPECT_EQ(28, move_slots_c.p_move_slots[1].pp);
-    EXPECT_STREQ("Metronome", move_slots_c.p_move_slots[2].p_move);
+    EXPECT_EQ(PKMN_MOVE_METRONOME, move_slots_c.p_move_slots[2].move);
     EXPECT_EQ(1, move_slots_c.p_move_slots[2].pp);
 
     pkmn_move_slots_free(

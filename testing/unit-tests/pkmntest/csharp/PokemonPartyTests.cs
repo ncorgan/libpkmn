@@ -26,7 +26,7 @@ public class PokemonPartyTests
 
             for(int j = 0; j < party[i].Moves.Count; ++j)
             {
-                Assert.AreEqual("None", party[i].Moves[j].Move);
+                Assert.AreEqual(PKMN.Move.NONE, party[i].Moves[j].Move);
                 Assert.AreEqual(0, party[i].Moves[j].PP);
             }
         }

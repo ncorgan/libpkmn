@@ -364,7 +364,7 @@ PKMN_C_API enum pkmn_error pkmn_pokemon_get_moves(
 PKMN_C_API enum pkmn_error pkmn_pokemon_set_move(
     const struct pkmn_pokemon* p_pokemon,
     size_t index,
-    const char* p_move
+    enum pkmn_move move
 );
 
 PKMN_C_API enum pkmn_error pkmn_pokemon_set_move_pp(

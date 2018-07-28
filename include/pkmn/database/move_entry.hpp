@@ -58,13 +58,13 @@ namespace pkmn { namespace database {
              * This class allows for querying information regarding the move in the given game.
              * It accounts for differences between games, such as changes in base PP or priority.
              *
-             * \param move_name Move's name (does not need to match name in given game)
+             * \param move Which move
              * \param game Which game this move is from
              * \throw std::invalid_argument If the move or game name is invalid
              * \throw std::invalid_argument If the given move was not in the given game
              */
             move_entry(
-                const std::string& move_name,
+                pkmn::e_move move,
                 pkmn::e_game game
             );
 

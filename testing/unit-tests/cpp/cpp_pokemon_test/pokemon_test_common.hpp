@@ -14,6 +14,7 @@
 
 #include <pkmn/enums/ball.hpp>
 #include <pkmn/enums/item.hpp>
+#include <pkmn/enums/move.hpp>
 
 #include <gtest/gtest.h>
 
@@ -76,8 +77,8 @@ typedef struct
     std::vector<std::string> valid_locations;
     std::vector<std::string> invalid_locations;
 
-    std::vector<std::string> moves;
-    std::vector<std::string> invalid_moves;
+    std::vector<pkmn::e_move> moves;
+    std::vector<pkmn::e_move> invalid_moves;
 
     std::vector<pkmn::e_game> valid_original_games;
     std::vector<pkmn::e_game> invalid_original_games;

@@ -1035,15 +1035,17 @@ enum pkmn_error pkmn_pokemon_get_moves(
 enum pkmn_error pkmn_pokemon_set_move(
     const struct pkmn_pokemon* p_pokemon,
     size_t index,
-    const char* p_move
+    enum pkmn_move move
 )
 {
     PKMN_CHECK_NULL_PARAM(p_pokemon);
     pkmn_pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
-    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_move, p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
-        p_internal->cpp->set_move(p_move, int(index));
+        p_internal->cpp->set_move(
+            static_cast<pkmn::e_move>(move),
+            static_cast<int>(index)
+        );
     )
 }
 

@@ -41,7 +41,7 @@ extern "C" {
 #endif
 
 PKMN_C_API enum pkmn_error pkmn_database_get_move_entry(
-    const char* p_move_name,
+    enum pkmn_move move,
     enum pkmn_game game,
     struct pkmn_database_move_entry* p_move_entry_out
 );

@@ -40,8 +40,16 @@ TEST_P(gen2_pokemon_test, gen2_pokemon_test) {
             {"Sprout Tower", "Tohjo Falls"},
             {"Littleroot Town", "Petalburg Woods"},
 
-            {"Slash", "Flamethrower", "Return", "Fire Blast"},
-            {"Frenzy Plant", "Roost"},
+            {
+                pkmn::e_move::SLASH,
+                pkmn::e_move::FLAMETHROWER,
+                pkmn::e_move::RETURN,
+                pkmn::e_move::FIRE_BLAST
+            },
+            {
+                pkmn::e_move::FRENZY_PLANT,
+                pkmn::e_move::ROOST
+            },
 
             {pkmn::e_game::GOLD},
             {pkmn::e_game::GOLD}

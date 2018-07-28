@@ -38,7 +38,7 @@ PKMN_C_API enum pkmn_error pkmn_breeding_get_child_moves(
     const struct pkmn_pokemon* p_mother,
     const struct pkmn_pokemon* p_father,
     enum pkmn_species child_species,
-    struct pkmn_string_list* p_child_moves_out
+    struct pkmn_move_enum_list* p_child_moves_out
 )
 {
     PKMN_CHECK_NULL_WRAPPER_PARAM(p_mother);
@@ -46,7 +46,7 @@ PKMN_C_API enum pkmn_error pkmn_breeding_get_child_moves(
     PKMN_CHECK_NULL_PARAM(p_child_moves_out);
 
     PKMN_CPP_TO_C(
-        pkmn::c::string_list_cpp_to_c(
+        pkmn::c::list_cpp_to_c<pkmn::e_move, enum pkmn_move, struct pkmn_move_enum_list>(
             pkmn::breeding::get_child_moves(
                 POKEMON_INTERNAL_RCAST(p_mother->p_internal)->cpp,
                 POKEMON_INTERNAL_RCAST(p_father->p_internal)->cpp,

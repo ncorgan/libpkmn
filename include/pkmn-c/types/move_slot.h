@@ -10,16 +10,16 @@
 #include <pkmn-c/config.h>
 #include <pkmn-c/error.h>
 
+#include <pkmn-c/enums/move.h>
+
 #include <stdlib.h>
 
 /*!
  * @brief A struct representing a slot in an move list.
- *
- * This struct must be freed with ::pkmn_move_slot_free.
  */
 struct pkmn_move_slot
 {
-    char* p_move;
+    enum pkmn_move move;
     int pp;
 };
 
@@ -40,17 +40,6 @@ struct pkmn_move_slots
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-/*!
- * @brief Frees the dynamically allocated memory in a pkmn_move_slot_t.
- *
- * \param move_slot_ptr The move slot to free
- * \returns ::PKMN_ERROR_NONE upon success
- * \returns ::PKMN_ERROR_NULL_POINTER if move_slot_ptr is NULL
- */
-PKMN_C_API enum pkmn_error pkmn_move_slot_free(
-    struct pkmn_move_slot* p_move_slot
-);
 
 /*!
  * @brief Frees the dynamically allocated memory in a pkmn_move_slots_t.

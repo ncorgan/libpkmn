@@ -1135,7 +1135,7 @@ namespace pkmn
     }
 
     void pokemon_gcnimpl::set_move(
-        const std::string& move,
+        pkmn::e_move move,
         int index
     )
     {
@@ -1293,11 +1293,9 @@ namespace pkmn
             case 1:
             case 2:
             case 3:
+                // TODO: figure out converting invalid indices
                 _moves[index] = pkmn::move_slot(
-                    pkmn::database::move_id_to_name(
-                        int(_libpkmgc_pokemon_uptr->moves[index].move),
-                        3
-                    ),
+                    static_cast<pkmn::e_move>(_libpkmgc_pokemon_uptr->moves[index].move),
                     _libpkmgc_pokemon_uptr->moves[index].currentPPs
                 );
                 break;

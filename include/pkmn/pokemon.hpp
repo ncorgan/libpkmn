@@ -235,7 +235,7 @@ namespace pkmn {
             virtual const pkmn::move_slots_t& get_moves() = 0;
 
             virtual void set_move(
-                const std::string& move,
+                pkmn::e_move move,
                 int index
             ) = 0;
 

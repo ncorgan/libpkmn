@@ -22,8 +22,8 @@ typedef struct
     char** valid_locations;
     char** invalid_locations;
 
-    char** moves;
-    char** invalid_moves;
+    enum pkmn_move* p_moves;
+    enum pkmn_move* p_invalid_moves;
 
     enum pkmn_game* valid_original_games;
     enum pkmn_game* invalid_original_games;

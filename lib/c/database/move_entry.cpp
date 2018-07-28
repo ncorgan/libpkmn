@@ -16,17 +16,16 @@
 #include <cstring>
 
 enum pkmn_error pkmn_database_get_move_entry(
-    const char* p_move_name,
+    enum pkmn_move move,
     enum pkmn_game game,
     struct pkmn_database_move_entry* p_move_entry_out
 )
 {
-    PKMN_CHECK_NULL_PARAM(p_move_name);
     PKMN_CHECK_NULL_PARAM(p_move_entry_out);
 
     PKMN_CPP_TO_C(
         pkmn::database::move_entry move_entry_cpp(
-                                       p_move_name,
+                                       static_cast<pkmn::e_move>(move),
                                        static_cast<pkmn::e_game>(game)
                                    );
 

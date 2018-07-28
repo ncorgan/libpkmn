@@ -161,18 +161,7 @@ static void move_entry_test()
      */
     TEST_ASSERT_EQUAL(
         pkmn_database_get_move_entry(
-            "Not a move",
-            PKMN_GAME_SILVER,
-            &move_entry
-        ),
-        PKMN_ERROR_INVALID_ARGUMENT
-    );
-    assert_move_entry_uninitialized(
-        &move_entry
-    );
-    TEST_ASSERT_EQUAL(
-        pkmn_database_get_move_entry(
-            "Octazooka",
+            PKMN_MOVE_OCTAZOOKA,
             PKMN_GAME_NONE,
             &move_entry
         ),
@@ -183,7 +172,7 @@ static void move_entry_test()
     );
     TEST_ASSERT_EQUAL(
         pkmn_database_get_move_entry(
-            "Octazooka",
+            PKMN_MOVE_OCTAZOOKA,
             PKMN_GAME_RED,
             &move_entry
         ),
@@ -195,7 +184,7 @@ static void move_entry_test()
 
     TEST_ASSERT_EQUAL(
         pkmn_database_get_move_entry(
-            "Octazooka",
+            PKMN_MOVE_OCTAZOOKA,
             PKMN_GAME_SILVER,
             &move_entry
         ),

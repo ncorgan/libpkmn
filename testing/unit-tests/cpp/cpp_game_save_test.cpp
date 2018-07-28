@@ -624,13 +624,12 @@ namespace pkmntest {
     static pkmn::pokemon::sptr get_random_pokemon(
         pkmn::e_game game,
         const std::vector<pkmn::e_species>& pokemon_list,
-        const std::vector<std::string>& move_list,
+        const std::vector<pkmn::e_move>& move_list,
         const std::vector<pkmn::e_item>& item_list
     )
     {
         int generation = pkmn::priv::game_enum_to_generation(game);
         pkmn::rng<uint32_t> rng;
-        (void)move_list;
 
         // Don't deal with Deoxys or Unown issues here.
         pkmn::e_species species = pkmn::e_species::NONE;
@@ -653,15 +652,15 @@ namespace pkmntest {
                                       "",
                                       ((rng.rand() % 99) + 2)
                                   );
-        for(int i = 0; i < 4; ++i)
+        for(int move_index = 0; move_index < 4; ++move_index)
         {
-            std::string move = "";
+            pkmn::e_move move = pkmn::e_move::NONE;
             do
             {
                 move = move_list[rng.rand() % move_list.size()];
             }
-            while(move.find("Shadow") == 0);
-            ret->set_move(move, i);
+            while(move >= pkmn::e_move::SHADOW_RUSH);
+            ret->set_move(move, move_index);
         }
 
         if(generation >= 2)
@@ -717,7 +716,7 @@ namespace pkmntest {
     {
         int generation = pkmn::priv::game_enum_to_generation(save->get_game());
         std::vector<pkmn::e_species> pokemon_list = pkmn::database::get_pokemon_list(generation, true);
-        std::vector<std::string> move_list = pkmn::database::get_move_name_list(save->get_game());
+        std::vector<pkmn::e_move> move_list = pkmn::database::get_move_list(save->get_game());
 
         pkmn::pokemon_party::sptr party = save->get_pokemon_party();
         for(int i = 0; i < 6; ++i) {

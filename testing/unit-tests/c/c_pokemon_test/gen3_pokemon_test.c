@@ -226,8 +226,20 @@ static void gba_pokemon_test(
         .valid_locations = (char*[]){"Petalburg Woods", "Viridian Forest", NULL},
         .invalid_locations = (char*[]){"New Bark Town", "Twinleaf Town", NULL},
 
-        .moves = (char*[]){"Swallow", "Flamethrower", "Return", "Fire Blast", NULL},
-        .invalid_moves = (char*[]){"Shadow Sky", "Roost", NULL},
+        .p_moves = (enum pkmn_move[])
+        {
+            PKMN_MOVE_SWALLOW,
+            PKMN_MOVE_FLAMETHROWER,
+            PKMN_MOVE_RETURN,
+            PKMN_MOVE_FIRE_BLAST,
+            PKMN_MOVE_NONE
+        },
+        .p_invalid_moves = (enum pkmn_move[])
+        {
+            PKMN_MOVE_SHADOW_SKY,
+            PKMN_MOVE_ROOST,
+            PKMN_MOVE_NONE
+        },
 
         .valid_original_games = (enum pkmn_game[]){
             PKMN_GAME_RUBY, PKMN_GAME_SAPPHIRE, PKMN_GAME_EMERALD,
@@ -298,8 +310,20 @@ static void gcn_pokemon_test(
         .valid_locations = (char*[]){"Phenac City", "Orre Colosseum", NULL},
         .invalid_locations = (char*[]){"New Bark Town", "Twinleaf Town", NULL},
 
-        .moves = (char*[]){"Swallow", "Flamethrower", "Return", "Fire Blast", NULL},
-        .invalid_moves = (char*[]){"Roost", "Flame Burst", NULL},
+        .p_moves = (enum pkmn_move[])
+        {
+            PKMN_MOVE_SWALLOW,
+            PKMN_MOVE_FLAMETHROWER,
+            PKMN_MOVE_RETURN,
+            PKMN_MOVE_FIRE_BLAST,
+            PKMN_MOVE_NONE
+        },
+        .p_invalid_moves = (enum pkmn_move[])
+        {
+            PKMN_MOVE_ROOST,
+            PKMN_MOVE_FLAME_BURST,
+            PKMN_MOVE_NONE
+        },
 
         .valid_original_games = (enum pkmn_game[]){
             PKMN_GAME_RUBY, PKMN_GAME_SAPPHIRE, PKMN_GAME_EMERALD,

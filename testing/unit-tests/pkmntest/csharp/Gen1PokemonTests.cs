@@ -28,8 +28,13 @@ public class Gen1PokemonTests
                                                "Special",
                                                new string[]{"Route 1"},
                                                new string[]{"Route 1"},
-                                               new string[]{"Slash", "Flamethrower", "Tail Whip", "Fire Blast"},
-                                               new string[]{"Return"},
+                                               new PKMN.Move[]{
+                                                   PKMN.Move.SLASH,
+                                                   PKMN.Move.FLAMETHROWER,
+                                                   PKMN.Move.TAIL_WHIP,
+                                                   PKMN.Move.FIRE_BLAST
+                                               },
+                                               new PKMN.Move[]{PKMN.Move.RETURN},
                                                new PKMN.Game[]{PKMN.Game.RED},
                                                new PKMN.Game[]{PKMN.Game.RED}
                                            );

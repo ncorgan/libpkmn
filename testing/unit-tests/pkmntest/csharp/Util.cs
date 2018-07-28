@@ -86,7 +86,7 @@ internal class Util
     internal static PKMN.Pokemon GetRandomPokemon(
         PKMN.Game game,
         PKMN.ItemEnumList itemList,
-        PKMN.StringList moveList,
+        PKMN.MoveEnumList moveList,
         PKMN.SpeciesEnumList pokemonList
     )
     {
@@ -116,12 +116,12 @@ internal class Util
 
         for(int moveIndex = 0; moveIndex < 4; ++moveIndex)
         {
-            string move;
+            PKMN.Move move;
             do
             {
                 move = moveList[rng.Next(0, moveList.Count-1)];
             }
-            while(move.IndexOf("Shadow") != -1);
+            while(move >= PKMN.Move.SHADOW_RUSH);
 
             ret.Moves[moveIndex].Move = move;
         }

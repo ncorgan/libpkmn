@@ -469,12 +469,12 @@ TEST(cpp_swig_wrapper_test, test_pokemon)
     swig_pokemon.set_level(50);
     EXPECT_EQ(50, swig_pokemon.get_level());
 
-    swig_pokemon.get_moves().get_move_slot(0).set_move("Razor Leaf");
-    EXPECT_EQ("Razor Leaf", swig_pokemon.get_moves().get_move_slot(0).get_move());
+    swig_pokemon.get_moves().get_move_slot(0).set_move(pkmn::e_move::RAZOR_LEAF);
+    EXPECT_EQ(pkmn::e_move::RAZOR_LEAF, swig_pokemon.get_moves().get_move_slot(0).get_move());
     EXPECT_EQ(25, swig_pokemon.get_moves().get_move_slot(0).get_pp());
 
-    swig_pokemon.get_moves().get_move_slot(0).set_move("Fissure");
-    EXPECT_EQ("Fissure", swig_pokemon.get_moves().get_move_slot(0).get_move());
+    swig_pokemon.get_moves().get_move_slot(0).set_move(pkmn::e_move::FISSURE);
+    EXPECT_EQ(pkmn::e_move::FISSURE, swig_pokemon.get_moves().get_move_slot(0).get_move());
     EXPECT_EQ(5, swig_pokemon.get_moves().get_move_slot(0).get_pp());
 
     swig_pokemon.get_moves().get_move_slot(0).set_pp(2);
@@ -638,10 +638,10 @@ TEST(cpp_swig_wrapper_test, test_breeding)
     pkmn::pokemon::sptr mother = pkmn::pokemon::make(pkmn::e_species::ILLUMISE, pkmn::e_game::RUBY, "", 50);
     pkmn::pokemon::sptr father = pkmn::pokemon::make(pkmn::e_species::VOLBEAT, pkmn::e_game::RUBY, "", 50);
 
-    mother->set_move("Helping Hand", 0);
+    mother->set_move(pkmn::e_move::HELPING_HAND, 0);
 
-    father->set_move("Helping Hand", 0);
-    father->set_move("Water Pulse", 1);
+    father->set_move(pkmn::e_move::HELPING_HAND, 0);
+    father->set_move(pkmn::e_move::WATER_PULSE, 1);
 
     pkmn::swig::pokemon mother_swig(mother);
     pkmn::swig::pokemon father_swig(father);
@@ -650,16 +650,16 @@ TEST(cpp_swig_wrapper_test, test_breeding)
 
     const pkmn::e_species child_species = pkmn::e_species::ILLUMISE;
 
-    std::vector<std::string> child_moves_cpp = pkmn::breeding::get_child_moves(
-                                                   mother,
-                                                   father,
-                                                   child_species
-                                               );
-    std::vector<std::string> child_moves_swig = pkmn::swig::breeding::get_child_moves(
-                                                    mother_swig,
-                                                    father_swig,
+    std::vector<pkmn::e_move> child_moves_cpp = pkmn::breeding::get_child_moves(
+                                                    mother,
+                                                    father,
                                                     child_species
                                                 );
+    std::vector<pkmn::e_move> child_moves_swig = pkmn::swig::breeding::get_child_moves(
+                                                     mother_swig,
+                                                     father_swig,
+                                                     child_species
+                                                 );
     EXPECT_EQ(child_moves_cpp, child_moves_swig);
 
     // get_ideal_child_IVs

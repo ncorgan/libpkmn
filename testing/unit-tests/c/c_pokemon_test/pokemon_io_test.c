@@ -640,10 +640,10 @@ void test_outside_3gpkm()
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_EQUAL(4, move_slots.length);
-    TEST_ASSERT_EQUAL_STRING("Crunch", move_slots.p_move_slots[0].p_move);
-    TEST_ASSERT_EQUAL_STRING("Strength", move_slots.p_move_slots[1].p_move);
-    TEST_ASSERT_EQUAL_STRING("Shadow Ball", move_slots.p_move_slots[2].p_move);
-    TEST_ASSERT_EQUAL_STRING("Double-Edge", move_slots.p_move_slots[3].p_move);
+    TEST_ASSERT_EQUAL(PKMN_MOVE_CRUNCH, move_slots.p_move_slots[0].move);
+    TEST_ASSERT_EQUAL(PKMN_MOVE_STRENGTH, move_slots.p_move_slots[1].move);
+    TEST_ASSERT_EQUAL(PKMN_MOVE_SHADOW_BALL, move_slots.p_move_slots[2].move);
+    TEST_ASSERT_EQUAL(PKMN_MOVE_DOUBLE_EDGE, move_slots.p_move_slots[3].move);
 
     error = pkmn_move_slots_free(&move_slots);
     PKMN_TEST_ASSERT_SUCCESS(error);

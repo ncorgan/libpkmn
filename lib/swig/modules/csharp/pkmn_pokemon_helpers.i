@@ -441,7 +441,7 @@ using System.Runtime.InteropServices;"
 
 %typemap(cscode) pkmn::swig::move_slot
 %{
-    public string Move
+    public Move Move
     {
         get { return GetMove(); }
         set { SetMove(value); }

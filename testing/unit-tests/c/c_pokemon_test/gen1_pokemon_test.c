@@ -46,8 +46,19 @@ static void gen1_pokemon_test(
         .valid_locations = (char*[]){"Route 1", NULL},
         .invalid_locations = (char*[]){"Route 1", NULL},
 
-        .moves = (char*[]){"Slash", "Flamethrower", "Tail Whip", "Fire Blast", NULL},
-        .invalid_moves = (char*[]){"Return", NULL},
+        .p_moves = (enum pkmn_move[])
+        {
+            PKMN_MOVE_SLASH,
+            PKMN_MOVE_FLAMETHROWER,
+            PKMN_MOVE_TAIL_WHIP,
+            PKMN_MOVE_FIRE_BLAST,
+            PKMN_MOVE_NONE
+        },
+        .p_invalid_moves = (enum pkmn_move[])
+        {
+            PKMN_MOVE_RETURN,
+            PKMN_MOVE_NONE
+        },
 
         .valid_original_games = (enum pkmn_game[]){PKMN_GAME_RED, PKMN_GAME_NONE},
         .invalid_original_games = (enum pkmn_game[]){PKMN_GAME_RED, PKMN_GAME_NONE}

@@ -50,7 +50,8 @@ namespace pkmn { namespace database {
     ):
         _move_id(move_id),
         _game_id(game_id),
-        _none(move_id == 0)
+        _none(move_id == 0),
+        _invalid(false)
     {
         _generation = pkmn::database::game_id_to_generation(
                           _game_id
@@ -61,53 +62,74 @@ namespace pkmn { namespace database {
          *
          * With this constructor, it's fine if not.
          */
-        if(_move_id > MOVE_INDEX_BOUNDS[_generation]) {
-            if(_game_id == COLO) {
+        if(_move_id > MOVE_INDEX_BOUNDS[_generation])
+        {
+            if(_game_id == COLO)
+            {
                 _invalid = (_move_id != SHADOW_RUSH);
-            } else if(_game_id == XD) {
-                _invalid = (_move_id < SHADOW_RUSH) or
+            }
+            else if(_game_id == XD)
+            {
+                _invalid = (_move_id < SHADOW_RUSH) ||
                            (_move_id > SHADOW_SKY);
-            } else {
+            }
+            else
+            {
                 _invalid = true;
             }
-        } else if(_generation == 6 and _game_id <= Y) {
+        }
+        else if((_generation == 6) && (_game_id <= Y))
+        {
             _invalid = (_move_id > XY_MAX);
-        } else {
+        }
+        else
+        {
             _invalid = false;
         }
     }
 
+    // TODO: disallow specifically passing in INVALID here
     move_entry::move_entry(
-        const std::string& move_name,
+        pkmn::e_move move,
         pkmn::e_game game
     ):
-        _none(move_name == "None")
+        _none(move == pkmn::e_move::NONE),
+        _invalid(move == pkmn::e_move::INVALID)
     {
         // Input validation
         _game_id = pkmn::database::game_enum_to_id(game);
         _generation = pkmn::database::game_id_to_generation(
                           _game_id
                       );
-        _move_id = pkmn::database::move_name_to_id(
-                       move_name
-                   );
+        _move_id = static_cast<int>(move);
 
         // Check to see if the move is valid for the given game.
-        if(_move_id > MOVE_INDEX_BOUNDS[_generation]) {
-            if(_game_id == COLO) {
+        if(_move_id > MOVE_INDEX_BOUNDS[_generation])
+        {
+            if(_game_id == COLO)
+            {
                 _invalid = (_move_id != SHADOW_RUSH);
-            } else if(_game_id == XD) {
-                _invalid = (_move_id < SHADOW_RUSH) or
+            }
+            else if(_game_id == XD)
+            {
+                _invalid = (_move_id < SHADOW_RUSH) ||
                            (_move_id > SHADOW_SKY);
-            } else {
+            }
+            else
+            {
                 _invalid = true;
             }
-        } else if(_generation == 6 and _game_id <= Y) {
+        }
+        else if(_generation == 6 and _game_id <= Y)
+        {
             _invalid = (_move_id > XY_MAX);
-        } else {
+        }
+        else
+        {
             _invalid = false;
         }
-        if(_invalid) {
+        if(_invalid)
+        {
             throw std::invalid_argument("This move was not in this game.");
         }
     }

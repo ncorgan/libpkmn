@@ -431,10 +431,7 @@ namespace pkmn { namespace c {
     {
         BOOST_ASSERT(p_levelup_move_c_out != nullptr);
 
-        string_cpp_to_c_alloc(
-            levelup_move_cpp.move.get_name(),
-            &p_levelup_move_c_out->p_move
-        );
+        p_levelup_move_c_out->move = static_cast<enum pkmn_move>(levelup_move_cpp.move.get_move());
         p_levelup_move_c_out->level = levelup_move_cpp.level;
     }
 
@@ -455,10 +452,7 @@ namespace pkmn { namespace c {
     {
         BOOST_ASSERT(p_move_slot_c_out != nullptr);
 
-        string_cpp_to_c_alloc(
-            move_slot_cpp.move,
-            &p_move_slot_c_out->p_move
-        );
+        p_move_slot_c_out->move = static_cast<enum pkmn_move>(move_slot_cpp.move);
         p_move_slot_c_out->pp = move_slot_cpp.pp;
     }
 

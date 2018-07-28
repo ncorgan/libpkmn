@@ -30,21 +30,18 @@ public class PokemonConversionsTest
         PKMN.Game gameForLists = (minGeneration == originGeneration) ? originGame : destGame;
 
         PKMN.ItemEnumList items = PKMN.Database.Lists.ItemList(gameForLists);
-        PKMN.StringList moveNames = PKMN.Database.Lists.MoveNameList(gameForLists);
+        PKMN.MoveEnumList moves = PKMN.Database.Lists.MoveList(gameForLists);
 
         for(int i = 0; i < 4; ++i)
         {
-            /*
-             * This will get rid of legitimate moves, like Shadow Ball, but not
-             * enough to cause an issue.
-             */
-            string moveName = "";
+            PKMN.Move move = PKMN.Move.NONE;
             do
             {
-                moveName = moveNames[rng.Next(0, moveNames.Count-1)];
-            } while(moveName.IndexOf("Shadow") == 0);
+                move = moves[rng.Next(0, moves.Count-1)];
+            }
+            while(move >= PKMN.Move.SHADOW_RUSH);
 
-            firstPokemon.Moves[i].Move = moveName;
+            firstPokemon.Moves[i].Move = move;
         }
 
         if(originGeneration >= 3)

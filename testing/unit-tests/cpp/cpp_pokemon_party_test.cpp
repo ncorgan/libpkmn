@@ -66,7 +66,8 @@ class pokemon_party_test: public ::testing::TestWithParam<test_params_t> {
         pkmn::pokemon_party::sptr _party;
 };
 
-TEST_P(pokemon_party_test, empty_party_test) {
+TEST_P(pokemon_party_test, empty_party_test)
+{
     pkmn::pokemon_party::sptr party = get_party();
     const pkmn::pokemon_list_t& list = party->as_vector();
 
@@ -77,9 +78,10 @@ TEST_P(pokemon_party_test, empty_party_test) {
 
         const pkmn::move_slots_t& move_slots = (*party_iter)->get_moves();
         ASSERT_EQ(4, move_slots.size());
-        for(auto move_iter = move_slots.begin(); move_iter != move_slots.end(); ++move_iter) {
-            EXPECT_EQ("None", move_iter->move);
-            EXPECT_EQ(0, move_iter->pp);
+        for(const pkmn::move_slot& move_slot: move_slots)
+        {
+            EXPECT_EQ(pkmn::e_move::NONE, move_slot.move);
+            EXPECT_EQ(0, move_slot.pp);
         }
     }
 }

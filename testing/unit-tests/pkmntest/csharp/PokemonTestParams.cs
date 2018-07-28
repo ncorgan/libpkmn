@@ -23,8 +23,8 @@ public class PokemonTestParams
         string expectedOriginalLocation,
         string[] validLocations,
         string[] invalidLocations,
-        string[] validMoves,
-        string[] invalidMoves,
+        PKMN.Move[] validMoves,
+        PKMN.Move[] invalidMoves,
         PKMN.Game[] validOriginalGames,
         PKMN.Game[] invalidOriginalGames
     )
@@ -52,8 +52,8 @@ public class PokemonTestParams
     public string[] ValidLocations;
     public string[] InvalidLocations;
 
-    public string[] ValidMoves;
-    public string[] InvalidMoves;
+    public PKMN.Move[] ValidMoves;
+    public PKMN.Move[] InvalidMoves;
 
     public PKMN.Game[] ValidOriginalGames;
     public PKMN.Game[] InvalidOriginalGames;

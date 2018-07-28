@@ -87,24 +87,20 @@ TEST_P(conversions_test, conversions_test)
     pkmn::rng<size_t> size_rng;
 
     std::vector<pkmn::e_item> items = pkmn::database::get_item_list(game_for_lists);
-    std::vector<std::string> moves = pkmn::database::get_move_name_list(game_for_lists);
+    std::vector<pkmn::e_move> moves = pkmn::database::get_move_list(game_for_lists);
 
-    for(int i = 0; i < 4; ++i)
+    for(size_t move_index = 0; move_index < 4; ++move_index)
     {
-        /*
-         * This will get rid of some legitimate moves, like Shadow Ball, but not
-         * enough to cause an issue.
-         */
-        std::string move_name;
+        pkmn::e_move move = pkmn::e_move::NONE;
         do
         {
-            move_name = moves[size_rng.rand(0, moves.size()-1)];
+            move = moves[size_rng.rand(0, moves.size()-1)];
         }
-        while(move_name.find("Shadow") == 0);
+        while(move >= pkmn::e_move::SHADOW_RUSH);
 
         first_pokemon->set_move(
-            move_name,
-            i
+            move,
+            move_index
         );
     }
 

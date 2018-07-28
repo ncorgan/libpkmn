@@ -9,6 +9,8 @@
 
 #include <pkmn/config.hpp>
 
+#include <pkmn/enums/move.hpp>
+
 #include <string>
 #include <vector>
 
@@ -26,10 +28,10 @@ namespace pkmn {
         /*!
          * @brief Default constructor.
          *
-         * The move entry represents an invalid move.
+         * The move entry represents an invalid/none move.
          */
         move_slot():
-            move("None"),
+            move(pkmn::e_move::NONE),
             pp(0) {}
 
         /*!
@@ -37,33 +39,19 @@ namespace pkmn {
          *
          * This calls the copy constructor for the move entry.
          *
-         * \param move_name Move name
+         * \param move Move
          * \param move_pp Move's current PP
          */
         move_slot(
-            const std::string& move_name,
-            int move_pp
-        ): move(move_name),
-           pp(move_pp) {}
+            pkmn::e_move slot_move,
+            int slot_pp
+        ): move(slot_move),
+           pp(slot_pp) {}
 
         move_slot(const move_slot&) = default;
         move_slot& operator=(const move_slot&) = default;
 
 #ifndef SWIG
-        /*!
-         * @brief Constructor that takes in references to each member.
-         *
-         * This calls the move constructor for the move entry.
-         *
-         * \param move_name Move entry
-         * \param move_pp Move's current PP
-         */
-        move_slot(
-            std::string&& move_name,
-            int move_pp
-        ): move(std::move(move_name)),
-           pp(std::move(move_pp)) {}
-
         move_slot(move_slot&&) = default;
         move_slot& operator=(move_slot&&) = default;
 #endif
@@ -73,7 +61,8 @@ namespace pkmn {
          */
         inline bool operator==(const move_slot& rhs) const
         {
-            return (this->move == rhs.move) and (this->pp == rhs.pp);
+            return (this->move == rhs.move) &&
+                   (this->pp == rhs.pp);
         }
 
         /*!
@@ -87,7 +76,7 @@ namespace pkmn {
         /*!
          * @brief The move in the given slot.
          */
-        std::string move;
+        pkmn::e_move move;
         /*!
          * @brief Move's current PP is in the given slot.
          */

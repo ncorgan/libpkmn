@@ -43,20 +43,6 @@ public class CSharpDatabaseEntryTest {
         Assert.IsTrue(itemEntry.IsHoldable);
         Assert.AreEqual(itemEntry.FlingPower, 0);
         Assert.AreEqual(itemEntry.FlingEffect, "None");
-
-        PKMN.Database.ItemEntry itemEntrySame = new PKMN.Database.ItemEntry(PKMN.Item.FAST_BALL, PKMN.Game.SOULSILVER);
-        PKMN.Database.ItemEntry itemEntryDifferentItem = new PKMN.Database.ItemEntry(PKMN.Item.POTION, PKMN.Game.SOULSILVER);
-        PKMN.Database.ItemEntry itemEntryDifferentGame = new PKMN.Database.ItemEntry(PKMN.Item.POTION, PKMN.Game.HEARTGOLD);
-
-        Assert.AreEqual(itemEntry, itemEntry);
-        Assert.AreEqual(itemEntry, itemEntrySame);
-        Assert.AreEqual(itemEntry.GetHashCode(), itemEntrySame.GetHashCode());
-
-        Assert.AreNotEqual(itemEntry, itemEntryDifferentItem);
-        Assert.AreNotEqual(itemEntry.GetHashCode(), itemEntryDifferentItem.GetHashCode());
-
-        Assert.AreNotEqual(itemEntry, itemEntryDifferentGame);
-        Assert.AreNotEqual(itemEntry.GetHashCode(), itemEntryDifferentGame.GetHashCode());
      }
 
     [Test]
@@ -64,21 +50,19 @@ public class CSharpDatabaseEntryTest {
         // Make sure trying to create an invalid entry results in an error.
         Assert.Throws<ArgumentOutOfRangeException>(
             delegate {
-                new PKMN.Database.MoveEntry("Not an item", PKMN.Game.SILVER);
+                new PKMN.Database.MoveEntry(PKMN.Move.OCTAZOOKA, PKMN.Game.NONE);
             }
         );
         Assert.Throws<ArgumentOutOfRangeException>(
             delegate {
-                new PKMN.Database.MoveEntry("Octazooka", PKMN.Game.NONE);
-            }
-        );
-        Assert.Throws<ArgumentOutOfRangeException>(
-            delegate {
-                new PKMN.Database.MoveEntry("Octazooka", PKMN.Game.RED);
+                new PKMN.Database.MoveEntry(PKMN.Move.OCTAZOOKA, PKMN.Game.RED);
             }
         );
 
-        PKMN.Database.MoveEntry moveEntry = new PKMN.Database.MoveEntry("Octazooka", PKMN.Game.SILVER);
+        PKMN.Database.MoveEntry moveEntry = new PKMN.Database.MoveEntry(
+                                                    PKMN.Move.OCTAZOOKA,
+                                                    PKMN.Game.SILVER
+                                                );
 
         Assert.AreEqual(moveEntry.Move, PKMN.Move.OCTAZOOKA);
         Assert.AreEqual(moveEntry.Name, "Octazooka");
@@ -106,20 +90,6 @@ public class CSharpDatabaseEntryTest {
         Assert.AreEqual(moveEntry.ContestType, "None");
         Assert.AreEqual(moveEntry.ContestEffect, "None");
         Assert.AreEqual(moveEntry.SuperContestEffect, "None");
-
-        PKMN.Database.MoveEntry moveEntrySame = new PKMN.Database.MoveEntry("Octazooka", PKMN.Game.SILVER);
-        PKMN.Database.MoveEntry moveEntryDifferentMove = new PKMN.Database.MoveEntry("Hydro Pump", PKMN.Game.SILVER);
-        PKMN.Database.MoveEntry moveEntryDifferentGame = new PKMN.Database.MoveEntry("Octazooka", PKMN.Game.GOLD);
-
-        Assert.AreEqual(moveEntry, moveEntry);
-        Assert.AreEqual(moveEntry, moveEntrySame);
-        Assert.AreEqual(moveEntry.GetHashCode(), moveEntrySame.GetHashCode());
-
-        Assert.AreNotEqual(moveEntry, moveEntryDifferentMove);
-        Assert.AreNotEqual(moveEntry.GetHashCode(), moveEntryDifferentMove.GetHashCode());
-
-        Assert.AreNotEqual(moveEntry, moveEntryDifferentGame);
-        Assert.AreNotEqual(moveEntry.GetHashCode(), moveEntryDifferentGame.GetHashCode());
     }
 
     [Test]
@@ -193,30 +163,11 @@ public class CSharpDatabaseEntryTest {
         Assert.AreEqual(pokemonEntry.Forms.Count, 1);
         Assert.AreEqual(pokemonEntry.Evolutions.Count, 0);
 
-        PKMN.Database.PokemonEntry pokemonEntryFirst = new PKMN.Database.PokemonEntry(PKMN.Species.PIKACHU, PKMN.Game.OMEGA_RUBY, "Standard");
-        PKMN.Database.PokemonEntry pokemonEntrySame = new PKMN.Database.PokemonEntry(PKMN.Species.PIKACHU, PKMN.Game.OMEGA_RUBY, "Standard");
-        PKMN.Database.PokemonEntry pokemonEntryDifferentPokemon = new PKMN.Database.PokemonEntry(PKMN.Species.PICHU, PKMN.Game.OMEGA_RUBY, "Standard");
-        PKMN.Database.PokemonEntry pokemonEntryDifferentGame = new PKMN.Database.PokemonEntry(PKMN.Species.PIKACHU, PKMN.Game.ALPHA_SAPPHIRE, "Standard");
-        PKMN.Database.PokemonEntry pokemonEntryDifferentForm = new PKMN.Database.PokemonEntry(PKMN.Species.PIKACHU, PKMN.Game.OMEGA_RUBY, "Belle");
-
         Assert.IsTrue(System.IO.File.Exists(pokemonEntry.GetIconFilepath(false)));
         Assert.IsTrue(System.IO.File.Exists(pokemonEntry.GetIconFilepath(true)));
         Assert.IsTrue(System.IO.File.Exists(pokemonEntry.GetSpriteFilepath(false,false)));
         Assert.IsTrue(System.IO.File.Exists(pokemonEntry.GetSpriteFilepath(false,true)));
         Assert.IsTrue(System.IO.File.Exists(pokemonEntry.GetSpriteFilepath(true,false)));
         Assert.IsTrue(System.IO.File.Exists(pokemonEntry.GetSpriteFilepath(true,true)));
-
-        Assert.AreEqual(pokemonEntryFirst, pokemonEntryFirst);
-        Assert.AreEqual(pokemonEntryFirst, pokemonEntrySame);
-        Assert.AreEqual(pokemonEntryFirst.GetHashCode(), pokemonEntrySame.GetHashCode());
-
-        Assert.AreNotEqual(pokemonEntryFirst, pokemonEntryDifferentPokemon);
-        Assert.AreNotEqual(pokemonEntryFirst.GetHashCode(), pokemonEntryDifferentPokemon.GetHashCode());
-
-        Assert.AreNotEqual(pokemonEntryFirst, pokemonEntryDifferentGame);
-        Assert.AreNotEqual(pokemonEntryFirst.GetHashCode(), pokemonEntryDifferentGame.GetHashCode());
-
-        Assert.AreNotEqual(pokemonEntryFirst, pokemonEntryDifferentForm);
-        Assert.AreNotEqual(pokemonEntryFirst.GetHashCode(), pokemonEntryDifferentForm.GetHashCode());
     }
 }

@@ -202,7 +202,7 @@ namespace pkmn {
             ) final;
 
             void set_move(
-                const std::string& move,
+                pkmn::e_move move,
                 int index
             ) final;
 

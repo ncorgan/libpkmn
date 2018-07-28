@@ -54,7 +54,7 @@ static pkmn::pokemon::sptr get_random_pokemon(
     pkmn::rng<uint32_t> rng;
 
     std::vector<pkmn::e_item> item_list = pkmn::database::get_item_list(game);
-    std::vector<std::string> move_list = pkmn::database::get_move_name_list(game);
+    std::vector<pkmn::e_move> move_list = pkmn::database::get_move_list(game);
     std::vector<pkmn::e_species> pokemon_list = pkmn::database::get_pokemon_list(generation, true);
 
     // Don't deal with Deoxys or Unown issues here.
@@ -78,15 +78,15 @@ static pkmn::pokemon::sptr get_random_pokemon(
                                   "",
                                   ((rng.rand() % 99) + 2)
                               );
-    for(int i = 0; i < 4; ++i)
+    for(int move_index = 0; move_index < 4; ++move_index)
     {
-        std::string move = "";
+        pkmn::e_move move = pkmn::e_move::NONE;
         do
         {
             move = move_list[rng.rand() % move_list.size()];
         }
-        while(move.find("Shadow") == 0);
-        ret->set_move(move, i);
+        while(move >= pkmn::e_move::SHADOW_RUSH);
+        ret->set_move(move, move_index);
     }
 
     const std::map<pkmn::e_stat, int>& EVs = ret->get_EVs();
@@ -372,13 +372,22 @@ TEST(pokemon_io_test, test_outside_3gpkm) {
         EXPECT_EQ(0, iter->second);
     }
 
-    static const std::string expected_mightyena_moves[] = {
-        "Crunch", "Strength", "Shadow Ball", "Double-Edge"
+    static const std::vector<pkmn::e_move> expected_mightyena_moves =
+    {
+        pkmn::e_move::CRUNCH,
+        pkmn::e_move::STRENGTH,
+        pkmn::e_move::SHADOW_BALL,
+        pkmn::e_move::DOUBLE_EDGE
     };
+
     const pkmn::move_slots_t mightyena_moves = mightyena->get_moves();
     EXPECT_EQ(4, mightyena_moves.size());
-    for(int i = 0; i < 4; ++i) {
-        EXPECT_EQ(expected_mightyena_moves[i], mightyena_moves[i].move);
+    for(int move_index = 0; move_index < 4; ++move_index)
+    {
+        EXPECT_EQ(
+            expected_mightyena_moves[move_index],
+            mightyena_moves[move_index].move
+        );
     }
 
     const std::map<pkmn::e_stat, int>& mightyena_EVs = mightyena->get_EVs();

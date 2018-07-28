@@ -25,10 +25,10 @@ public class PokemonIOTests
         string pk1Path = System.IO.Path.Combine(TmpDir, String.Format("{0}_{1}.pk1", game, rng.Next()));
 
         PKMN.ItemEnumList itemList = PKMN.Database.Lists.ItemList(game);
-        PKMN.StringList moveNameList = PKMN.Database.Lists.MoveNameList(game);
+        PKMN.MoveEnumList moveList = PKMN.Database.Lists.MoveList(game);
         PKMN.SpeciesEnumList pokemonList = PKMN.Database.Lists.PokemonList(1, true);
 
-        PKMN.Pokemon randomPokemon = Util.GetRandomPokemon(game, itemList, moveNameList, pokemonList);
+        PKMN.Pokemon randomPokemon = Util.GetRandomPokemon(game, itemList, moveList, pokemonList);
         randomPokemon.ExportToFile(pk1Path);
 
         PKMN.Pokemon importedPokemon = new PKMN.Pokemon(pk1Path);
@@ -44,10 +44,10 @@ public class PokemonIOTests
         string pk2Path = System.IO.Path.Combine(TmpDir, String.Format("{0}_{1}.pk2", game, rng.Next()));
 
         PKMN.ItemEnumList itemList = PKMN.Database.Lists.ItemList(game);
-        PKMN.StringList moveNameList = PKMN.Database.Lists.MoveNameList(game);
+        PKMN.MoveEnumList moveList = PKMN.Database.Lists.MoveList(game);
         PKMN.SpeciesEnumList pokemonList = PKMN.Database.Lists.PokemonList(2, true);
 
-        PKMN.Pokemon randomPokemon = Util.GetRandomPokemon(game, itemList, moveNameList, pokemonList);
+        PKMN.Pokemon randomPokemon = Util.GetRandomPokemon(game, itemList, moveList, pokemonList);
         randomPokemon.ExportToFile(pk2Path);
 
         PKMN.Pokemon importedPokemon = new PKMN.Pokemon(pk2Path);
@@ -63,10 +63,10 @@ public class PokemonIOTests
         string _3gpkmPath = System.IO.Path.Combine(TmpDir, String.Format("{0}_{1}.3gpkm", game, rng.Next()));
 
         PKMN.ItemEnumList itemList = PKMN.Database.Lists.ItemList(game);
-        PKMN.StringList moveNameList = PKMN.Database.Lists.MoveNameList(game);
+        PKMN.MoveEnumList moveList = PKMN.Database.Lists.MoveList(game);
         PKMN.SpeciesEnumList pokemonList = PKMN.Database.Lists.PokemonList(3, true);
 
-        PKMN.Pokemon randomPokemon = Util.GetRandomPokemon(game, itemList, moveNameList, pokemonList);
+        PKMN.Pokemon randomPokemon = Util.GetRandomPokemon(game, itemList, moveList, pokemonList);
         randomPokemon.ExportToFile(_3gpkmPath);
 
         PKMN.Pokemon importedPokemon = new PKMN.Pokemon(_3gpkmPath);
@@ -128,9 +128,12 @@ public class PokemonIOTests
             Assert.AreEqual(mightyena.ContestStats[contestStat], 0);
         }
 
-        string[] expectedMightyenaMoves =
+        PKMN.Move[] expectedMightyenaMoves =
         {
-            "Crunch", "Strength", "Shadow Ball", "Double-Edge"
+            PKMN.Move.CRUNCH,
+            PKMN.Move.STRENGTH,
+            PKMN.Move.SHADOW_BALL,
+            PKMN.Move.DOUBLE_EDGE
         };
         Assert.AreEqual(mightyena.Moves.Count, 4);
         for(int i = 0; i < 4; ++i)

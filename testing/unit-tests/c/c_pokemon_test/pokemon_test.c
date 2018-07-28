@@ -37,6 +37,7 @@ static const struct pkmn_trainer_info empty_trainer_info =
 
 static const struct pkmn_database_move_entry empty_move_entry =
 {
+    .move = PKMN_MOVE_NONE,
     .p_name = NULL,
     .game = PKMN_GAME_NONE,
     .type = PKMN_TYPE_NONE,
@@ -55,6 +56,7 @@ static const struct pkmn_database_move_entry empty_move_entry =
 static const struct pkmn_database_pokemon_entry empty_pokemon_entry =
 {
     .species = PKMN_SPECIES_NONE,
+    .p_species_name = NULL,
     .game = PKMN_GAME_NONE,
     .p_category = NULL,
     .p_form = NULL,
@@ -1347,36 +1349,36 @@ static void test_setting_markings(
 
 static void test_setting_moves(
     const struct pkmn_pokemon* p_pokemon,
-    const char** valid_move_names,
-    const char** invalid_move_names
+    enum pkmn_move* p_valid_moves,
+    enum pkmn_move* p_invalid_moves
 )
 {
     TEST_ASSERT_NOT_NULL(p_pokemon);
-    TEST_ASSERT_NOT_NULL(valid_move_names);
-    TEST_ASSERT_NOT_NULL(invalid_move_names);
+    TEST_ASSERT_NOT_NULL(p_valid_moves);
+    TEST_ASSERT_NOT_NULL(p_invalid_moves);
 
     enum pkmn_error error = PKMN_ERROR_NONE;
 
     error = pkmn_pokemon_set_move(
                 p_pokemon,
                 -1,
-                valid_move_names[0]
+                p_valid_moves[0]
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
     error = pkmn_pokemon_set_move(
                 p_pokemon,
                 4,
-                valid_move_names[0]
+                p_valid_moves[0]
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
 
     for(size_t move_index = 0;
-        (move_index < 4) && valid_move_names[move_index];
+        (move_index < 4) && (p_valid_moves[move_index] != PKMN_MOVE_NONE);
         ++move_index)
     {
         struct pkmn_database_move_entry move_entry = empty_move_entry;
         error = pkmn_database_get_move_entry(
-                    valid_move_names[move_index],
+                    p_valid_moves[move_index],
                     p_pokemon->game,
                     &move_entry
                 );
@@ -1385,7 +1387,7 @@ static void test_setting_moves(
         error = pkmn_pokemon_set_move(
                     p_pokemon,
                     move_index,
-                    valid_move_names[move_index]
+                    p_valid_moves[move_index]
                 );
         PKMN_TEST_ASSERT_SUCCESS(error);
 
@@ -1395,9 +1397,9 @@ static void test_setting_moves(
                     &move_slots
                 );
         PKMN_TEST_ASSERT_SUCCESS(error);
-        TEST_ASSERT_EQUAL_STRING(
-            valid_move_names[move_index],
-            move_slots.p_move_slots[move_index].p_move
+        TEST_ASSERT_EQUAL(
+            p_valid_moves[move_index],
+            move_slots.p_move_slots[move_index].move
         );
         TEST_ASSERT_EQUAL(
             move_entry.pp[0],
@@ -1431,12 +1433,14 @@ static void test_setting_moves(
         PKMN_TEST_ASSERT_SUCCESS(error);
     }
 
-    for(size_t move_index = 0; invalid_move_names[move_index]; ++move_index)
+    for(size_t move_index = 0;
+        p_invalid_moves[move_index] != PKMN_MOVE_NONE;
+        ++move_index)
     {
         error = pkmn_pokemon_set_move(
                     p_pokemon,
                     0,
-                    invalid_move_names[move_index]
+                    p_invalid_moves[move_index]
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_INVALID_ARGUMENT, error);
     }
@@ -1967,8 +1971,8 @@ void pokemon_test_common(
     test_setting_markings(p_pokemon);
     test_setting_moves(
         p_pokemon,
-        (const char**)(p_test_values->moves),
-        (const char**)(p_test_values->invalid_moves)
+        (enum pkmn_move*)(p_test_values->p_moves),
+        (enum pkmn_move*)(p_test_values->p_invalid_moves)
     );
     test_setting_original_game(
         p_pokemon,

@@ -87,7 +87,11 @@ void get_random_pokemon(
         p_internal_item_list = &internal_item_list;
     }
 
-    struct pkmn_string_list move_list = empty_string_list;
+    struct pkmn_move_enum_list move_list =
+    {
+        .p_enums = NULL,
+        .length = 0
+    };
 
     struct pkmn_species_enum_list pokemon_list =
     {
@@ -95,10 +99,10 @@ void get_random_pokemon(
         .length = 0
     };
 
-    error = pkmn_database_move_name_list(game, &move_list);
+    error = pkmn_database_move_list(game, &move_list);
     PKMN_TEST_ASSERT_SUCCESS(error);
 
-    if(!species)
+    if(species == PKMN_SPECIES_NONE)
     {
         error = pkmn_database_pokemon_list(generation, true, &pokemon_list);
         PKMN_TEST_ASSERT_SUCCESS(error);
@@ -142,11 +146,19 @@ void get_random_pokemon(
 
     for(size_t move_index = 0; move_index < 4; ++move_index)
     {
-        const char* move = NULL;
+        enum pkmn_move move = PKMN_MOVE_NONE;
         do
         {
-            move = move_list.pp_strings[rand() % move_list.length];
-        } while(strstr(move, "Shadow"));
+            move = move_list.p_enums[rand() % move_list.length];
+        }
+        while(move >= PKMN_MOVE_SHADOW_RUSH);
+
+        error = pkmn_pokemon_set_move(
+                    p_pokemon,
+                    move_index,
+                    move
+                );
+        PKMN_TEST_ASSERT_SUCCESS(error);
     }
 
     // Get the EVs first to see which are valid. The same values
@@ -258,7 +270,7 @@ void get_random_pokemon(
         PKMN_TEST_ASSERT_SUCCESS(error);
     }
 
-    error = pkmn_string_list_free(&move_list);
+    error = pkmn_move_enum_list_free(&move_list);
     PKMN_TEST_ASSERT_SUCCESS(error);
 
     if(!p_item_list)
@@ -617,9 +629,9 @@ void compare_pokemon_moves(
 
     for(size_t move_index = 0; move_index < 4; ++move_index)
     {
-        TEST_ASSERT_EQUAL_STRING(
-            move_slots1.p_move_slots[move_index].p_move,
-            move_slots2.p_move_slots[move_index].p_move
+        TEST_ASSERT_EQUAL(
+            move_slots1.p_move_slots[move_index].move,
+            move_slots2.p_move_slots[move_index].move
         );
         TEST_ASSERT_EQUAL(
             move_slots1.p_move_slots[move_index].pp,

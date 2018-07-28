@@ -28,8 +28,16 @@ public class Gen2PokemonTests
                                                "Special",
                                                new string[]{"Sprout Tower", "Tohjo Falls"},
                                                new string[]{"Littleroot Town", "Petalburg Woods"},
-                                               new string[]{"Slash", "Flamethrower", "Return", "Fire Blast"},
-                                               new string[]{"Frenzy Plant", "Roost"},
+                                               new PKMN.Move[]{
+                                                   PKMN.Move.SLASH,
+                                                   PKMN.Move.FLAMETHROWER,
+                                                   PKMN.Move.RETURN,
+                                                   PKMN.Move.FIRE_BLAST
+                                               },
+                                               new PKMN.Move[]{
+                                                   PKMN.Move.FRENZY_PLANT,
+                                                   PKMN.Move.ROOST
+                                               },
                                                new PKMN.Game[]{PKMN.Game.GOLD},
                                                new PKMN.Game[]{PKMN.Game.GOLD}
                                            );

@@ -137,8 +137,16 @@ TEST_P(gba_pokemon_test, gba_pokemon_test) {
             {"Petalburg Woods", "Viridian Forest"},
             {"New Bark Town", "Twinleaf Town"},
 
-            {"Swallow", "Flamethrower", "Return", "Fire Blast"},
-            {"Shadow Sky", "Roost"},
+            {
+                pkmn::e_move::SWALLOW,
+                pkmn::e_move::FLAMETHROWER,
+                pkmn::e_move::RETURN,
+                pkmn::e_move::FIRE_BLAST
+            },
+            {
+                pkmn::e_move::SHADOW_SKY,
+                pkmn::e_move::ROOST,
+            },
 
             {
                 pkmn::e_game::RUBY,
@@ -400,8 +408,16 @@ TEST_P(gcn_pokemon_test, gcn_pokemon_test) {
             {"Phenac City", "Orre Colosseum"},
             {"New Bark Town", "Twinleaf Town"},
 
-            {"Swallow", "Flamethrower", "Return", "Fire Blast"},
-            {"Roost", "Flame Burst"},
+            {
+                pkmn::e_move::SWALLOW,
+                pkmn::e_move::FLAMETHROWER,
+                pkmn::e_move::RETURN,
+                pkmn::e_move::FIRE_BLAST
+            },
+            {
+                pkmn::e_move::ROOST,
+                pkmn::e_move::FLAME_BURST,
+            },
 
             {
                 pkmn::e_game::RUBY,

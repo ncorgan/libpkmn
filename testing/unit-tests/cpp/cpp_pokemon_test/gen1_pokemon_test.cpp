@@ -36,8 +36,13 @@ TEST_P(gen1_pokemon_test, gen1_pokemon_test)
             {"Route 1"},
             {"Route 1"},
 
-            {"Slash", "Flamethrower", "Tail Whip", "Fire Blast"},
-            {"Return"},
+            {
+                pkmn::e_move::SLASH,
+                pkmn::e_move::FLAMETHROWER,
+                pkmn::e_move::TAIL_WHIP,
+                pkmn::e_move::FIRE_BLAST
+            },
+            {pkmn::e_move::RETURN},
 
             {pkmn::e_game::RED},
             {pkmn::e_game::RED}

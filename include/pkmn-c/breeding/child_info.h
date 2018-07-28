@@ -13,6 +13,7 @@
 
 #include <pkmn-c/enums/game.h>
 #include <pkmn-c/enums/gender.h>
+#include <pkmn-c/enums/move.h>
 #include <pkmn-c/enums/species.h>
 
 #include <pkmn-c/types/string_types.h>
@@ -34,7 +35,7 @@ PKMN_C_API enum pkmn_error pkmn_breeding_get_child_moves(
     const struct pkmn_pokemon* p_mother,
     const struct pkmn_pokemon* p_father,
     enum pkmn_species child_species,
-    struct pkmn_string_list* p_child_moves_out
+    struct pkmn_move_enum_list* p_child_moves_out
 );
 
 PKMN_C_API enum pkmn_error pkmn_breeding_get_ideal_child_IVs(

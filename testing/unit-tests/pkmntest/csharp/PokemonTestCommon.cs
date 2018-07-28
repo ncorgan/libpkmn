@@ -1237,19 +1237,19 @@ public class PokemonTestCommon
 
     static private void TestSettingMoves(
         PKMN.Pokemon pokemon,
-        string[] validMoveNames,
-        string[] invalidMoveNames
+        PKMN.Move[] validMoves,
+        PKMN.Move[] invalidMoves
     )
     {
-        Assert.AreEqual(4, validMoveNames.Length);
+        Assert.AreEqual(4, validMoves.Length);
 
         for(int moveIndex = 0; moveIndex < 4; ++moveIndex)
         {
-            pokemon.Moves[moveIndex].Move = validMoveNames[moveIndex];
-            Assert.AreEqual(validMoveNames[moveIndex], pokemon.Moves[moveIndex].Move);
+            pokemon.Moves[moveIndex].Move = validMoves[moveIndex];
+            Assert.AreEqual(validMoves[moveIndex], pokemon.Moves[moveIndex].Move);
 
             PKMN.Database.MoveEntry validMoveEntry = new PKMN.Database.MoveEntry(
-                                                             validMoveNames[moveIndex],
+                                                             validMoves[moveIndex],
                                                              pokemon.Game
                                                          );
 
@@ -1260,12 +1260,12 @@ public class PokemonTestCommon
             pokemon.Moves[moveIndex].PP = maxPP;
             Assert.AreEqual(maxPP, pokemon.Moves[moveIndex].PP);
         }
-        foreach(string invalidMoveName in invalidMoveNames)
+        foreach(PKMN.Move invalidMove in invalidMoves)
         {
             Assert.Throws<ArgumentOutOfRangeException>(
                 delegate
                 {
-                    pokemon.Moves[0].Move = invalidMoveName;
+                    pokemon.Moves[0].Move = invalidMove;
                 }
             );
         }
@@ -1273,13 +1273,13 @@ public class PokemonTestCommon
         Assert.Throws<IndexOutOfRangeException>(
             delegate
             {
-                pokemon.Moves[-1].Move = validMoveNames[0];
+                pokemon.Moves[-1].Move = validMoves[0];
             }
         );
         Assert.Throws<IndexOutOfRangeException>(
             delegate
             {
-                pokemon.Moves[4].Move = validMoveNames[0];
+                pokemon.Moves[4].Move = validMoves[0];
             }
         );
 

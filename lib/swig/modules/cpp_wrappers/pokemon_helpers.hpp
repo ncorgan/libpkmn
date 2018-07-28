@@ -516,7 +516,7 @@ namespace pkmn { namespace swig {
                 BOOST_ASSERT(_pokemon.get() != nullptr);
             }
 
-            std::string get_move()
+            pkmn::e_move get_move()
             {
                 BOOST_ASSERT(_pokemon.get() != nullptr);
 
@@ -524,7 +524,7 @@ namespace pkmn { namespace swig {
             }
 
             void set_move(
-                const std::string& move
+                pkmn::e_move move
             )
             {
                 BOOST_ASSERT(_pokemon.get() != nullptr);
