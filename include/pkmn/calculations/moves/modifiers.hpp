@@ -9,6 +9,8 @@
 
 #include <pkmn/config.hpp>
 
+#include <pkmn/enums/type.hpp>
+
 #include <string>
 
 namespace pkmn { namespace calculations {
@@ -35,8 +37,8 @@ namespace pkmn { namespace calculations {
      */
     PKMN_API float type_damage_modifier(
         int generation,
-        const std::string& attacking_type,
-        const std::string& defending_type
+        pkmn::e_type attacking_type,
+        pkmn::e_type defending_type
     );
 
 }}

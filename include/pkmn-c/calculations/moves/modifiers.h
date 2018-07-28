@@ -10,6 +10,8 @@
 #include <pkmn-c/config.h>
 #include <pkmn-c/error.h>
 
+#include <pkmn-c/enums/type.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -17,7 +19,7 @@ extern "C" {
 /*!
  * @brief The damage modifier when a Pokémon uses a move of a matching type.
  */
-#define PKMN_STAB_MODIFIER 1.5f
+#define PKMN_STAB_MODIFIER (1.5f)
 
 /*!
  * @brief The damage modifier when a move of a given type is used against a
@@ -40,8 +42,8 @@ extern "C" {
  */
 PKMN_C_API enum pkmn_error pkmn_calculations_type_damage_modifier(
     int generation,
-    const char* p_attacking_type,
-    const char* p_defending_type,
+    enum pkmn_type attacking_type,
+    enum pkmn_type defending_type,
     float* p_type_damage_modifier_out
 );
 

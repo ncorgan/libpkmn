@@ -134,16 +134,15 @@ enum pkmn_error pkmn_calculations_flail_power(
 }
 
 enum pkmn_error pkmn_calculations_fling_power(
-    const char* p_held_item,
+    enum pkmn_item held_item,
     int* p_fling_power_out
 )
 {
-    PKMN_CHECK_NULL_PARAM(p_held_item);
     PKMN_CHECK_NULL_PARAM(p_fling_power_out);
 
     PKMN_CPP_TO_C(
         *p_fling_power_out = pkmn::calculations::fling_power(
-                                 p_held_item
+                                 static_cast<pkmn::e_item>(held_item)
                              );
     )
 }

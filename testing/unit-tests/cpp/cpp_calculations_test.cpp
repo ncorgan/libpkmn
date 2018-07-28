@@ -243,28 +243,28 @@ TEST(cpp_calculations_test, fling_power_test)
 {
     // Test invalid inputs.
     EXPECT_THROW(
-        pkmn::calculations::fling_power("Not an item")
+        pkmn::calculations::fling_power(pkmn::e_item::INVALID)
     , std::invalid_argument);
 
     struct fling_power_test_params
     {
-        std::string held_item;
+        pkmn::e_item held_item;
         int expected_power;
     };
 
     static const std::vector<fling_power_test_params> test_params =
     {
-        {"Oran Berry", 10},
-        {"Health Wing", 20},
-        {"Potion", 30},
-        {"Icy Rock", 40},
-        {"Dubious Disc", 50},
-        {"Damp Rock", 60},
-        {"Dragon Fang", 70},
-        {"Dusk Stone", 80},
-        {"Thick Club", 90},
-        {"Rare Bone", 100},
-        {"Iron Ball", 130}
+        {pkmn::e_item::ORAN_BERRY, 10},
+        {pkmn::e_item::HEALTH_WING, 20},
+        {pkmn::e_item::POTION, 30},
+        {pkmn::e_item::ICY_ROCK, 40},
+        {pkmn::e_item::DUBIOUS_DISC, 50},
+        {pkmn::e_item::DAMP_ROCK, 60},
+        {pkmn::e_item::DRAGON_FANG, 70},
+        {pkmn::e_item::DUSK_STONE, 80},
+        {pkmn::e_item::THICK_CLUB, 90},
+        {pkmn::e_item::RARE_BONE, 100},
+        {pkmn::e_item::IRON_BALL, 130}
     };
 
     for(const auto& test_param: test_params)
@@ -1020,12 +1020,16 @@ TEST(cpp_calculations_test, type_damage_modifier_test)
     // Invalid generation
     EXPECT_THROW(
         (void)pkmn::calculations::type_damage_modifier(
-                  -1, "Normal", "Normal"
+                  -1,
+                  pkmn::e_type::NORMAL,
+                  pkmn::e_type::NORMAL
               )
     , std::out_of_range);
     EXPECT_THROW(
         (void)pkmn::calculations::type_damage_modifier(
-                  8, "Normal", "Normal"
+                  8,
+                  pkmn::e_type::NORMAL,
+                  pkmn::e_type::NORMAL
               )
     , std::out_of_range);
 
@@ -1033,15 +1037,15 @@ TEST(cpp_calculations_test, type_damage_modifier_test)
     struct invalid_type_for_generation_t
     {
         int generation;
-        std::string type;
+        pkmn::e_type type;
     };
 
     static const std::vector<invalid_type_for_generation_t> invalid_types_for_generation =
     {
-        {1, "Dark"}, {1, "Steel"},
-        {5, "Fairy"},
-        {3, "???"},{5, "???"},
-        {2, "Shadow"},{4, "Shadow"}
+        {1, pkmn::e_type::DARK}, {1, pkmn::e_type::STEEL},
+        {5, pkmn::e_type::FAIRY},
+        {3, pkmn::e_type::QUESTION_MARK}, {5, pkmn::e_type::QUESTION_MARK},
+        {2, pkmn::e_type::SHADOW}, {4, pkmn::e_type::SHADOW}
     };
 
     for(const auto& invalid_params: invalid_types_for_generation)
@@ -1051,7 +1055,7 @@ TEST(cpp_calculations_test, type_damage_modifier_test)
             (void)pkmn::calculations::type_damage_modifier(
                       invalid_params.generation,
                       invalid_params.type,
-                      "Normal"
+                      pkmn::e_type::NORMAL
                   );
         , std::invalid_argument);
 
@@ -1059,7 +1063,7 @@ TEST(cpp_calculations_test, type_damage_modifier_test)
         EXPECT_THROW(
             (void)pkmn::calculations::type_damage_modifier(
                       invalid_params.generation,
-                      "Normal",
+                      pkmn::e_type::NORMAL,
                       invalid_params.type
                   );
         , std::invalid_argument);
@@ -1070,8 +1074,8 @@ TEST(cpp_calculations_test, type_damage_modifier_test)
 
     struct modifier_changes_t
     {
-        std::string attacking_type;
-        std::string defending_type;
+        pkmn::e_type attacking_type;
+        pkmn::e_type defending_type;
 
         int old_generation;
         float old_modifier;
@@ -1082,12 +1086,12 @@ TEST(cpp_calculations_test, type_damage_modifier_test)
 
     static const std::vector<modifier_changes_t> modifier_changes_between_generations =
     {
-        {"Bug",    "Poison",  1, 2.0f, 2, 0.5f},
-        {"Poison", "Bug",     1, 2.0f, 2, 1.0f},
-        {"Ghost",  "Psychic", 1, 0.0f, 2, 2.0f},
-        {"Ice",    "Fire",    1, 1.0f, 2, 0.5f},
-        {"Ghost",  "Steel",   5, 0.5f, 6, 1.0f},
-        {"Dark",   "Steel",   5, 0.5f, 6, 1.0f},
+        {pkmn::e_type::BUG,    pkmn::e_type::POISON,  1, 2.0f, 2, 0.5f},
+        {pkmn::e_type::POISON, pkmn::e_type::BUG,     1, 2.0f, 2, 1.0f},
+        {pkmn::e_type::GHOST,  pkmn::e_type::PSYCHIC, 1, 0.0f, 2, 2.0f},
+        {pkmn::e_type::ICE,    pkmn::e_type::FIRE,    1, 1.0f, 2, 0.5f},
+        {pkmn::e_type::GHOST,  pkmn::e_type::STEEL,   5, 0.5f, 6, 1.0f},
+        {pkmn::e_type::DARK,   pkmn::e_type::STEEL,   5, 0.5f, 6, 1.0f},
     };
 
     for(const auto& modifier_changes: modifier_changes_between_generations)
@@ -1099,7 +1103,9 @@ TEST(cpp_calculations_test, type_damage_modifier_test)
                 modifier_changes.attacking_type,
                 modifier_changes.defending_type
             )
-        );
+        ) << modifier_changes.old_generation << " "
+          << pkmn::type_to_string(modifier_changes.attacking_type) << " "
+          << pkmn::type_to_string(modifier_changes.defending_type);
         EXPECT_DOUBLE_EQ(
             modifier_changes.new_modifier,
             pkmn::calculations::type_damage_modifier(
@@ -1107,7 +1113,9 @@ TEST(cpp_calculations_test, type_damage_modifier_test)
                 modifier_changes.attacking_type,
                 modifier_changes.defending_type
             )
-        );
+        ) << modifier_changes.new_generation << " "
+          << pkmn::type_to_string(modifier_changes.attacking_type) << " "
+          << pkmn::type_to_string(modifier_changes.defending_type);
     }
 }
 

@@ -272,28 +272,28 @@ static void fling_power_test()
 {
     // Test invalid inputs.
 
-    error = pkmn_calculations_fling_power("Not an item", &int_result);
+    error = pkmn_calculations_fling_power(PKMN_ITEM_INVALID, &int_result);
     TEST_ASSERT_EQUAL(PKMN_ERROR_INVALID_ARGUMENT, error);
 
     struct fling_power_test_params
     {
-        const char* held_item;
+        enum pkmn_item held_item;
         int expected_power;
     };
 
     static const struct fling_power_test_params test_cases[] =
     {
-        {"Oran Berry", 10},
-        {"Health Wing", 20},
-        {"Potion", 30},
-        {"Icy Rock", 40},
-        {"Dubious Disc", 50},
-        {"Damp Rock", 60},
-        {"Dragon Fang", 70},
-        {"Dusk Stone", 80},
-        {"Thick Club", 90},
-        {"Rare Bone", 100},
-        {"Iron Ball", 130}
+        {PKMN_ITEM_ORAN_BERRY, 10},
+        {PKMN_ITEM_HEALTH_WING, 20},
+        {PKMN_ITEM_POTION, 30},
+        {PKMN_ITEM_ICY_ROCK, 40},
+        {PKMN_ITEM_DUBIOUS_DISC, 50},
+        {PKMN_ITEM_DAMP_ROCK, 60},
+        {PKMN_ITEM_DRAGON_FANG, 70},
+        {PKMN_ITEM_DUSK_STONE, 80},
+        {PKMN_ITEM_THICK_CLUB, 90},
+        {PKMN_ITEM_RARE_BONE, 100},
+        {PKMN_ITEM_IRON_BALL, 130}
     };
     static const size_t num_test_cases = sizeof(test_cases)/sizeof(test_cases[0]);
 
@@ -1235,16 +1235,16 @@ static void type_damage_modifier_test()
 
     error = pkmn_calculations_type_damage_modifier(
                 -1,
-                "Normal",
-                "Normal",
+                PKMN_TYPE_NORMAL,
+                PKMN_TYPE_NORMAL,
                 &float_result
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
 
     error = pkmn_calculations_type_damage_modifier(
                 10,
-                "Normal",
-                "Normal",
+                PKMN_TYPE_NORMAL,
+                PKMN_TYPE_NORMAL,
                 &float_result
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
@@ -1254,14 +1254,14 @@ static void type_damage_modifier_test()
     struct invalid_type_for_generation_test_params
     {
         int generation;
-        const char* type;
+        enum pkmn_type type;
     };
     static const struct invalid_type_for_generation_test_params invalid_type_test_cases[] =
     {
-        {1, "Dark"}, {1, "Steel"},
-        {5, "Fairy"},
-        {3, "???"},{5, "???"},
-        {2, "Shadow"},{4, "Shadow"}
+        {1, PKMN_TYPE_DARK}, {1, PKMN_TYPE_STEEL},
+        {5, PKMN_TYPE_FAIRY},
+        {3, PKMN_TYPE_QUESTION_MARK}, {5, PKMN_TYPE_QUESTION_MARK},
+        {2, PKMN_TYPE_SHADOW}, {4, PKMN_TYPE_SHADOW}
     };
     static const size_t num_invalid_type_test_cases =
         sizeof(invalid_type_test_cases)/sizeof(invalid_type_test_cases[0]);
@@ -1275,7 +1275,7 @@ static void type_damage_modifier_test()
         error = pkmn_calculations_type_damage_modifier(
                     invalid_type_test_cases[test_case_index].generation,
                     invalid_type_test_cases[test_case_index].type,
-                    "Normal",
+                    PKMN_TYPE_NORMAL,
                     &float_result
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_INVALID_ARGUMENT, error);
@@ -1283,7 +1283,7 @@ static void type_damage_modifier_test()
         // Invalid defending type
         error = pkmn_calculations_type_damage_modifier(
                     invalid_type_test_cases[test_case_index].generation,
-                    "Normal",
+                    PKMN_TYPE_NORMAL,
                     invalid_type_test_cases[test_case_index].type,
                     &float_result
                 );
@@ -1296,8 +1296,8 @@ static void type_damage_modifier_test()
 
     struct modifier_changes_test_params
     {
-        const char* attacking_type;
-        const char* defending_type;
+        enum pkmn_type attacking_type;
+        enum pkmn_type defending_type;
 
         int old_generation;
         float old_modifier;
@@ -1308,12 +1308,12 @@ static void type_damage_modifier_test()
 
     static const struct modifier_changes_test_params modifier_changes_test_cases[] =
     {
-        {"Bug",    "Poison",  1, 2.0f, 2, 0.5f},
-        {"Poison", "Bug",     1, 2.0f, 2, 1.0f},
-        {"Ghost",  "Psychic", 1, 0.0f, 2, 2.0f},
-        {"Ice",    "Fire",    1, 1.0f, 2, 0.5f},
-        {"Ghost",  "Steel",   5, 0.5f, 6, 1.0f},
-        {"Dark",   "Steel",   5, 0.5f, 6, 1.0f},
+        {PKMN_TYPE_BUG,    PKMN_TYPE_POISON,  1, 2.0f, 2, 0.5f},
+        {PKMN_TYPE_POISON, PKMN_TYPE_BUG,     1, 2.0f, 2, 1.0f},
+        {PKMN_TYPE_GHOST,  PKMN_TYPE_PSYCHIC, 1, 0.0f, 2, 2.0f},
+        {PKMN_TYPE_ICE,    PKMN_TYPE_FIRE,    1, 1.0f, 2, 0.5f},
+        {PKMN_TYPE_GHOST,  PKMN_TYPE_STEEL,   5, 0.5f, 6, 1.0f},
+        {PKMN_TYPE_DARK,   PKMN_TYPE_STEEL,   5, 0.5f, 6, 1.0f},
     };
     static const size_t num_modifier_changes_test_cases =
         sizeof(modifier_changes_test_cases)/sizeof(modifier_changes_test_cases[0]);

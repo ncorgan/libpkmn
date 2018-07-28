@@ -213,17 +213,18 @@ namespace pkmn { namespace calculations {
 
     // TODO: fail if item doesn't appear in games with Fling
     int fling_power(
-        const std::string& item
+        pkmn::e_item item
     )
     {
-        static const char* query = "SELECT fling_power FROM items WHERE id="
-                                   "(SELECT item_id FROM item_names WHERE name=?)";
+        static const char* query = "SELECT fling_power FROM items WHERE id=?";
 
         std::string error_message = "Invalid item: ";
-        error_message += item;
+        error_message += static_cast<int>(item);
 
-        return pkmn::database::query_db_bind1<int, const std::string&>(
-                   query, item, error_message
+        return pkmn::database::query_db_bind1<int, int>(
+                   query,
+                   static_cast<int>(item),
+                   error_message
                );
     }
 

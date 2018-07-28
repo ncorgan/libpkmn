@@ -33,7 +33,6 @@ static bool dummy_bool = false;
 static int dummy_int = 0;
 static size_t dummy_size_t = 0;
 static uint32_t dummy_uint32 = 0;
-static float dummy_float = 0;
 static enum pkmn_ability dummy_ability = PKMN_ABILITY_NONE;
 static enum pkmn_ball dummy_ball = PKMN_BALL_NONE;
 static enum pkmn_game dummy_game = PKMN_GAME_NONE;
@@ -2749,24 +2748,8 @@ static void calculations_moves_modifiers_error_test()
 
     error = pkmn_calculations_type_damage_modifier(
                 1,
-                NULL,
-                "",
-                &dummy_float
-            );
-    TEST_NULL_POINTER_RETURN("p_attacking_type");
-
-    error = pkmn_calculations_type_damage_modifier(
-                1,
-                "",
-                NULL,
-                &dummy_float
-            );
-    TEST_NULL_POINTER_RETURN("p_defending_type");
-
-    error = pkmn_calculations_type_damage_modifier(
-                1,
-                "",
-                "",
+                PKMN_TYPE_NORMAL,
+                PKMN_TYPE_NORMAL,
                 NULL
             );
     TEST_NULL_POINTER_RETURN("p_type_damage_modifier_out");
@@ -2866,13 +2849,7 @@ static void calculations_moves_power_error_test()
      */
 
     error = pkmn_calculations_fling_power(
-                NULL,
-                &dummy_int
-            );
-    TEST_NULL_POINTER_RETURN("p_held_item");
-
-    error = pkmn_calculations_fling_power(
-                "",
+                PKMN_ITEM_POTION,
                 NULL
             );
     TEST_NULL_POINTER_RETURN("p_fling_power_out");

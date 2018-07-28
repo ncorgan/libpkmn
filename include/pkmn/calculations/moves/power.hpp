@@ -9,6 +9,8 @@
 
 #include <pkmn/config.hpp>
 
+#include <pkmn/enums/item.hpp>
+
 #include <algorithm>
 #include <vector>
 
@@ -119,7 +121,7 @@ namespace pkmn { namespace calculations {
      * \throws std::invalid_argument If the given item doesn't exist
      */
     PKMN_API int fling_power(
-        const std::string& held_item
+        pkmn::e_item held_item
     );
 
     /*!

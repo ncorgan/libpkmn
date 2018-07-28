@@ -236,24 +236,31 @@ public class CSharpCalculationsTest {
         Assert.Throws<ArgumentOutOfRangeException>(
             delegate
             {
-                PKMN.Calculations.FlingPower("Not an item");
+                PKMN.Calculations.FlingPower(PKMN.Item.INVALID);
             }
         );
 
-        string[] itemNames =
+        PKMN.Item[] items =
         {
-            "Oran Berry", "Health Wing", "Potion",
-            "Icy Rock", "Dubious Disc", "Damp Rock",
-            "Dragon Fang", "Dusk Stone", "Thick Club",
-            "Rare Bone", "Iron Ball"
+            PKMN.Item.ORAN_BERRY,
+            PKMN.Item.HEALTH_WING,
+            PKMN.Item.POTION,
+            PKMN.Item.ICY_ROCK,
+            PKMN.Item.DUBIOUS_DISC,
+            PKMN.Item.DAMP_ROCK,
+            PKMN.Item.DRAGON_FANG,
+            PKMN.Item.DUSK_STONE,
+            PKMN.Item.THICK_CLUB,
+            PKMN.Item.RARE_BONE,
+            PKMN.Item.IRON_BALL
         };
         int[] expectedPowers = {10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 130};
 
-        for(int testCaseIndex = 0; testCaseIndex < itemNames.Length; ++testCaseIndex)
+        for(int testCaseIndex = 0; testCaseIndex < items.Length; ++testCaseIndex)
         {
             Assert.AreEqual(
                 expectedPowers[testCaseIndex],
-                PKMN.Calculations.FlingPower(itemNames[testCaseIndex])
+                PKMN.Calculations.FlingPower(items[testCaseIndex])
             );
         }
     }
@@ -1293,7 +1300,9 @@ public class CSharpCalculationsTest {
             delegate
             {
                 PKMN.Calculations.TypeDamageModifier(
-                    -1, "Normal", "Normal"
+                    -1,
+                    PKMN.Type.NORMAL,
+                    PKMN.Type.NORMAL
                 );
             }
         );
@@ -1301,14 +1310,24 @@ public class CSharpCalculationsTest {
             delegate
             {
                 PKMN.Calculations.TypeDamageModifier(
-                    8, "Normal", "Normal"
+                    8,
+                    PKMN.Type.NORMAL,
+                    PKMN.Type.NORMAL
                 );
             }
         );
 
         // Invalid types for a given generation
         int[] generations = {1, 1, 5, 3, 5, 2, 4};
-        string[] types = {"Dark", "Steel", "Fairy", "???", "???", "Shadow", "Shadow"};
+        PKMN.Type[] types = {
+            PKMN.Type.DARK,
+            PKMN.Type.STEEL,
+            PKMN.Type.FAIRY,
+            PKMN.Type.QUESTION_MARK,
+            PKMN.Type.QUESTION_MARK,
+            PKMN.Type.SHADOW,
+            PKMN.Type.SHADOW
+        };
 
         for(int testCaseIndex = 0; testCaseIndex < generations.Length; ++testCaseIndex)
         {
@@ -1319,7 +1338,7 @@ public class CSharpCalculationsTest {
                     PKMN.Calculations.TypeDamageModifier(
                         generations[testCaseIndex],
                         types[testCaseIndex],
-                        "Normal"
+                        PKMN.Type.NORMAL
                     );
                 }
             );
@@ -1330,7 +1349,7 @@ public class CSharpCalculationsTest {
                 {
                     PKMN.Calculations.TypeDamageModifier(
                         generations[testCaseIndex],
-                        "Normal",
+                        PKMN.Type.NORMAL,
                         types[testCaseIndex]
                     );
                 }
@@ -1338,8 +1357,22 @@ public class CSharpCalculationsTest {
         }
 
         // Check that changes between generations are properly implemented.
-        string[] attackingTypes = {"Bug", "Poison", "Ghost", "Ice", "Ghost", "Dark"};
-        string[] defendingTypes = {"Poison", "Bug", "Psychic", "Fire", "Steel", "Steel"};
+        PKMN.Type[] attackingTypes = {
+            PKMN.Type.BUG,
+            PKMN.Type.POISON,
+            PKMN.Type.GHOST,
+            PKMN.Type.ICE,
+            PKMN.Type.GHOST,
+            PKMN.Type.DARK
+        };
+        PKMN.Type[] defendingTypes = {
+            PKMN.Type.POISON,
+            PKMN.Type.BUG,
+            PKMN.Type.PSYCHIC,
+            PKMN.Type.FIRE,
+            PKMN.Type.STEEL,
+            PKMN.Type.STEEL
+        };
         int[] oldGenerations = {1, 1, 1, 1, 5, 5};
         float[] oldModifiers = {2.0f, 2.0f, 0.0f, 1.0f, 0.5f, 0.5f};
         int[] newGenerations = {2, 2, 2, 2, 6, 6};
