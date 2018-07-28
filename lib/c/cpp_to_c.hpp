@@ -387,10 +387,7 @@ namespace pkmn { namespace c {
     {
         BOOST_ASSERT(p_hidden_power_c_out != nullptr);
 
-        string_cpp_to_c_alloc(
-            hidden_power_cpp.type,
-            &p_hidden_power_c_out->p_type
-        );
+        p_hidden_power_c_out->type = static_cast<enum pkmn_type>(hidden_power_cpp.type);
         p_hidden_power_c_out->base_power = hidden_power_cpp.base_power;
     }
 
@@ -401,10 +398,7 @@ namespace pkmn { namespace c {
     {
         BOOST_ASSERT(p_natural_gift_c_out != nullptr);
 
-        string_cpp_to_c_alloc(
-            natural_gift_cpp.type,
-            &p_natural_gift_c_out->p_type
-        );
+        p_natural_gift_c_out->type = static_cast<enum pkmn_type>(natural_gift_cpp.type);
         p_natural_gift_c_out->base_power = natural_gift_cpp.base_power;
     }
 

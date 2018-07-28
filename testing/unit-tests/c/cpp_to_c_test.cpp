@@ -494,40 +494,38 @@ TEST(cpp_to_c_test, enum_list_cpp_to_c_test)
 
 TEST(cpp_to_c_test, hidden_power_cpp_to_c_test)
 {
-    pkmn::calculations::hidden_power hidden_power_cpp("Normal", 90);
+    pkmn::calculations::hidden_power hidden_power_cpp(
+                                         pkmn::e_type::NORMAL,
+                                         90
+                                     );
 
-    struct pkmn_hidden_power hidden_power_c;
+    struct pkmn_hidden_power hidden_power_c = { PKMN_TYPE_NONE, 0 };
 
     pkmn::c::hidden_power_cpp_to_c(
         hidden_power_cpp,
         &hidden_power_c
     );
 
-    EXPECT_STREQ("Normal", hidden_power_c.p_type);
+    EXPECT_EQ(PKMN_TYPE_NORMAL, hidden_power_c.type);
     EXPECT_EQ(90, hidden_power_c.base_power);
-
-    pkmn_hidden_power_free(&hidden_power_c);
-    EXPECT_EQ(NULL, hidden_power_c.p_type);
-    EXPECT_EQ(0, hidden_power_c.base_power);
 }
 
 TEST(cpp_to_c_test, natural_gift_cpp_to_c_test)
 {
-    pkmn::calculations::natural_gift natural_gift_cpp("Normal", 90);
+    pkmn::calculations::natural_gift natural_gift_cpp(
+                                         pkmn::e_type::NORMAL,
+                                         90
+                                     );
 
-    struct pkmn_natural_gift natural_gift_c;
+    struct pkmn_natural_gift natural_gift_c = { PKMN_TYPE_NONE, 0 };
 
     pkmn::c::natural_gift_cpp_to_c(
         natural_gift_cpp,
         &natural_gift_c
     );
 
-    EXPECT_STREQ("Normal", natural_gift_c.p_type);
+    EXPECT_EQ(PKMN_TYPE_NORMAL, natural_gift_c.type);
     EXPECT_EQ(90, natural_gift_c.base_power);
-
-    pkmn_natural_gift_free(&natural_gift_c);
-    EXPECT_EQ(NULL, natural_gift_c.p_type);
-    EXPECT_EQ(0, natural_gift_c.base_power);
 }
 
 TEST(cpp_to_c_test, item_slot_cpp_to_c_test)

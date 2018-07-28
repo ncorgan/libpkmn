@@ -2777,21 +2777,12 @@ static void calculations_moves_modifiers_error_test()
  */
 static void calculations_moves_natural_gift_error_test()
 {
-    struct pkmn_natural_gift dummy_natural_gift = { NULL, 0 };
-
     /*
      * pkmn_calculations_natural_gift_stats
      */
 
     error = pkmn_calculations_natural_gift_stats(
-                NULL,
-                5,
-                &dummy_natural_gift
-            );
-    TEST_NULL_POINTER_RETURN("p_item_name");
-
-    error = pkmn_calculations_natural_gift_stats(
-                "Oran Berry",
+                PKMN_ITEM_ORAN_BERRY,
                 5,
                 NULL
             );
@@ -3584,18 +3575,6 @@ static void types_attribute_names_test()
 }
 
 /*
- * <pkmn-c/types/hidden_power.h>
- */
-static void types_hidden_power_test()
-{
-    /*
-     * pkmn_hidden_power_free
-     */
-    error = pkmn_hidden_power_free(NULL);
-    TEST_NULL_POINTER_RETURN("p_hidden_power");
-}
-
-/*
  * <pkmn-c/types/item_slot.h>
  */
 static void types_item_slot_test()
@@ -3629,18 +3608,6 @@ static void types_move_slot_test()
      */
     error = pkmn_move_slots_free(NULL);
     TEST_NULL_POINTER_RETURN("p_move_slots");
-}
-
-/*
- * <pkmn-c/types/natural_gift.h>
- */
-static void types_natural_gift_test()
-{
-    /*
-     * pkmn_natural_gift_free
-     */
-    error = pkmn_natural_gift_free(NULL);
-    TEST_NULL_POINTER_RETURN("p_natural_gift");
 }
 
 /*
@@ -3776,11 +3743,9 @@ PKMN_C_TEST_MAIN(
     PKMN_C_TEST(database_pokemon_entry_error_test)
     PKMN_C_TEST(gui_spinda_test)
     PKMN_C_TEST(types_attribute_names_test)
-    PKMN_C_TEST(types_hidden_power_test)
     PKMN_C_TEST(types_item_slot_test)
     PKMN_C_TEST(types_levelup_move_test)
     PKMN_C_TEST(types_move_slot_test)
-    PKMN_C_TEST(types_natural_gift_test)
     PKMN_C_TEST(types_pokemon_box_list_test)
     PKMN_C_TEST(types_pokemon_list_test)
     PKMN_C_TEST(types_trainer_info_test)

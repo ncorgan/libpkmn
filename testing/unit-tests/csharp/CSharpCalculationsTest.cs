@@ -1509,7 +1509,8 @@ public class CSharpCalculationsTest {
     }
 
     [Test]
-    public void Gen2HiddenPowerTest() {
+    public void Gen2HiddenPowerTest()
+    {
         // Make sure expected exceptions are thrown.
         Assert.Throws<IndexOutOfRangeException>(
             delegate {
@@ -1558,7 +1559,8 @@ public class CSharpCalculationsTest {
          * Source: http://bulbapedia.bulbagarden.net/wiki/Hidden_Power_(move)/Calculation#Generation_II
          */
         PKMN.HiddenPower expectedHiddenPower = new PKMN.HiddenPower(
-                                                       "Dark", 69
+                                                       PKMN.Type.DARK,
+                                                       69
                                                    );
         PKMN.HiddenPower hiddenPower = PKMN.Calculations.Gen2HiddenPower(15, 15, 15, 14);
 
@@ -1566,7 +1568,8 @@ public class CSharpCalculationsTest {
     }
 
     [Test]
-    public void ModernHiddenPowerTest() {
+    public void ModernHiddenPowerTest()
+    {
         // Make sure expected exceptions are thrown.
         Assert.Throws<IndexOutOfRangeException>(
             delegate {
@@ -1635,7 +1638,8 @@ public class CSharpCalculationsTest {
          * Source: http://bulbapedia.bulbagarden.net/wiki/Hidden_Power_(move)/Calculation#Generation_II
          */
         PKMN.HiddenPower expectedHiddenPower = new PKMN.HiddenPower(
-                                                       "Grass", 70
+                                                       PKMN.Type.GRASS,
+                                                       70
                                                    );
         PKMN.HiddenPower hiddenPower = PKMN.Calculations.ModernHiddenPower(30, 31, 31, 31, 30, 31);
 
@@ -1650,13 +1654,13 @@ public class CSharpCalculationsTest {
         Assert.Throws<IndexOutOfRangeException>(
             delegate
             {
-                PKMN.Calculations.NaturalGiftStats("Cheri Berry", 3);
+                PKMN.Calculations.NaturalGiftStats(PKMN.Item.CHERI_BERRY, 3);
             }
         );
         Assert.Throws<IndexOutOfRangeException>(
             delegate
             {
-                PKMN.Calculations.NaturalGiftStats("Cheri Berry", 10);
+                PKMN.Calculations.NaturalGiftStats(PKMN.Item.CHERI_BERRY, 10);
             }
         );
 
@@ -1665,15 +1669,23 @@ public class CSharpCalculationsTest {
         Assert.Throws<ArgumentOutOfRangeException>(
             delegate
             {
-                PKMN.Calculations.NaturalGiftStats("Potion", 4);
+                PKMN.Calculations.NaturalGiftStats(PKMN.Item.POTION, 4);
             }
         );
 
         // Test expected values. Make sure differences between
         // generations are reflected.
 
-        string[] items = {"Cheri Berry", "Nanab Berry", "Belue Berry"};
-        string[] types = {"Fire", "Water", "Electric"};
+        PKMN.Item[] items = {
+            PKMN.Item.CHERI_BERRY,
+            PKMN.Item.NANAB_BERRY,
+            PKMN.Item.BELUE_BERRY
+        };
+        PKMN.Type[] types = {
+            PKMN.Type.FIRE,
+            PKMN.Type.WATER,
+            PKMN.Type.ELECTRIC
+        };
         int[] gen4Powers = {60, 70, 80};
         int[] gen5Powers = {60, 70, 80};
         int[] gen6Powers = {80, 90, 100};

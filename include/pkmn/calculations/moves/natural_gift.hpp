@@ -9,6 +9,9 @@
 
 #include <pkmn/config.hpp>
 
+#include <pkmn/enums/item.hpp>
+#include <pkmn/enums/type.hpp>
+
 #include <string>
 
 namespace pkmn { namespace calculations {
@@ -22,26 +25,21 @@ namespace pkmn { namespace calculations {
     struct natural_gift
     {
         natural_gift():
-            type(""),
+            type(pkmn::e_type::NONE),
             base_power(0)
         {}
 
         natural_gift(
-            const std::string& move_type,
+            pkmn::e_type move_type,
             int move_power
-        ): type(move_type), base_power(move_power)
+        ): type(move_type),
+           base_power(move_power)
         {}
 
         natural_gift(const natural_gift&) = default;
         natural_gift& operator=(const natural_gift&) = default;
 
 #ifndef SWIG
-        natural_gift(
-            std::string&& move_type,
-            int move_power
-        ): type(std::move(move_type)), base_power(move_power)
-        {}
-
         natural_gift(natural_gift&&) = default;
         natural_gift& operator=(natural_gift&&) = default;
 #endif
@@ -56,7 +54,7 @@ namespace pkmn { namespace calculations {
             return !operator==(rhs);
         }
 
-        std::string type;
+        pkmn::e_type type;
         int base_power;
     };
 
@@ -65,13 +63,13 @@ namespace pkmn { namespace calculations {
      *
      * Base powers can vary for the same item between generations.
      *
-     * \param item_name The name of the item held by the Pokémon
+     * \param item The item held by the Pokémon
      * \param generation The generation of the game
      * \throws std::invalid_argument if the item is not a Berry
      * \throws std::out_of_range if the generation is not in the range [4-6]
      */
     PKMN_API natural_gift natural_gift_stats(
-        const std::string& item_name,
+        pkmn::e_item item,
         int generation
     );
 

@@ -41,8 +41,9 @@ public partial class HiddenPower {
 
     /// <summary>Generates a unique hash code for the given HiddenPower.</summary>
     /// <returns>Unique hash code</returns>
-    public override int GetHashCode() {
-        return HashCodeBuilder.Create().AddValue<string>(this.Type)
+    public override int GetHashCode()
+    {
+        return HashCodeBuilder.Create().AddValue<Type>(this.Type)
                                        .AddValue<int>(this.BasePower)
                                        .ToHashCode();
     }
@@ -83,8 +84,9 @@ public partial class NaturalGift {
 
     /// <summary>Generates a unique hash code for the given NaturalGift.</summary>
     /// <returns>Unique hash code</returns>
-    public override int GetHashCode() {
-        return HashCodeBuilder.Create().AddValue<string>(this.Type)
+    public override int GetHashCode()
+    {
+        return HashCodeBuilder.Create().AddValue<Type>(this.Type)
                                        .AddValue<int>(this.BasePower)
                                        .ToHashCode();
     }

@@ -18,11 +18,23 @@ public class CSharpEqualityHashCodeTest
     [Test]
     public void HiddenPowerTest()
     {
-        PKMN.HiddenPower hiddenPower = new PKMN.HiddenPower("Normal", 30);
+        PKMN.HiddenPower hiddenPower = new PKMN.HiddenPower(
+                                               PKMN.Type.NORMAL,
+                                               30
+                                           );
 
-        PKMN.HiddenPower hiddenPowerSame = new PKMN.HiddenPower("Normal", 30);
-        PKMN.HiddenPower hiddenPowerDifferentType = new PKMN.HiddenPower("Fire", 30);
-        PKMN.HiddenPower hiddenPowerDifferentBasePower = new PKMN.HiddenPower("Normal", 40);
+        PKMN.HiddenPower hiddenPowerSame = new PKMN.HiddenPower(
+                                                   PKMN.Type.NORMAL,
+                                                   30
+                                               );
+        PKMN.HiddenPower hiddenPowerDifferentType = new PKMN.HiddenPower(
+                                                            PKMN.Type.FIRE,
+                                                            30
+                                                        );
+        PKMN.HiddenPower hiddenPowerDifferentBasePower = new PKMN.HiddenPower(
+                                                                 PKMN.Type.NORMAL,
+                                                                 40
+                                                             );
 
         Assert.AreEqual(hiddenPower, hiddenPower);
         Assert.AreEqual(hiddenPower, hiddenPowerSame);
@@ -144,11 +156,23 @@ public class CSharpEqualityHashCodeTest
     [Test]
     public void NaturalGiftTest()
     {
-        PKMN.NaturalGift naturalGift = new PKMN.NaturalGift("Normal", 30);
+        PKMN.NaturalGift naturalGift = new PKMN.NaturalGift(
+                                               PKMN.Type.NORMAL,
+                                               30
+                                           );
 
-        PKMN.NaturalGift naturalGiftSame = new PKMN.NaturalGift("Normal", 30);
-        PKMN.NaturalGift naturalGiftDifferentType = new PKMN.NaturalGift("Fire", 30);
-        PKMN.NaturalGift naturalGiftDifferentBasePower = new PKMN.NaturalGift("Normal", 40);
+        PKMN.NaturalGift naturalGiftSame = new PKMN.NaturalGift(
+                                                   PKMN.Type.NORMAL,
+                                                   30
+                                               );
+        PKMN.NaturalGift naturalGiftDifferentType = new PKMN.NaturalGift(
+                                                            PKMN.Type.FIRE,
+                                                            30
+                                                        );
+        PKMN.NaturalGift naturalGiftDifferentBasePower = new PKMN.NaturalGift(
+                                                                 PKMN.Type.NORMAL,
+                                                                 40
+                                                             );
 
         Assert.AreEqual(naturalGift, naturalGift);
         Assert.AreEqual(naturalGift, naturalGiftSame);

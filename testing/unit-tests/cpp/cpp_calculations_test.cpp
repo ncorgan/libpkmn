@@ -23,6 +23,8 @@
 #include <pkmn/calculations/moves/natural_gift.hpp>
 #include <pkmn/calculations/moves/power.hpp>
 
+#include <pkmn/enums/enum_to_string.hpp>
+
 #include <pkmn/database/lists.hpp>
 #include <pkmn/database/move_entry.hpp>
 #include <pkmn/database/pokemon_entry.hpp>
@@ -1420,8 +1422,10 @@ TEST(cpp_calculations_test, modern_gender_test)
     EXPECT_EQ(pkmn::e_gender::GENDERLESS, magnemite2_gender);
 }
 
-TEST(cpp_calculations_test, gen2_hidden_power_test) {
+TEST(cpp_calculations_test, gen2_hidden_power_test)
+{
     pkmn::calculations::hidden_power hidden_power;
+
     /*
      * Make sure expected exceptions are thrown
      */
@@ -1474,12 +1478,14 @@ TEST(cpp_calculations_test, gen2_hidden_power_test) {
     hidden_power = pkmn::calculations::gen2_hidden_power(
                        15, 15, 15, 14
                    );
-    EXPECT_EQ("Dark", hidden_power.type);
-    EXPECT_EQ(69, hidden_power.base_power);
+    EXPECT_EQ(pkmn::e_type::DARK, hidden_power.type) << pkmn::type_to_string(hidden_power.type);
+    EXPECT_EQ(69, hidden_power.base_power); // Nice
 }
 
-TEST(cpp_calculations_test, modern_hidden_power_test) {
+TEST(cpp_calculations_test, modern_hidden_power_test)
+{
     pkmn::calculations::hidden_power hidden_power;
+
     /*
      * Make sure expected exceptions are thrown
      */
@@ -1552,7 +1558,7 @@ TEST(cpp_calculations_test, modern_hidden_power_test) {
     hidden_power = pkmn::calculations::modern_hidden_power(
                        30, 31, 31, 31, 30, 31
                    );
-    EXPECT_EQ("Grass", hidden_power.type);
+    EXPECT_EQ(pkmn::e_type::GRASS, hidden_power.type) << pkmn::type_to_string(hidden_power.type);
     EXPECT_EQ(70, hidden_power.base_power);
 }
 
@@ -1560,32 +1566,41 @@ TEST(cpp_calculations_test, natural_gift_test)
 {
     // Test invalid generations.
     EXPECT_THROW(
-        pkmn::calculations::natural_gift_stats("Cheri Berry", 3);
+        pkmn::calculations::natural_gift_stats(
+            pkmn::e_item::CHERI_BERRY,
+            3
+        );
     , std::out_of_range);
     EXPECT_THROW(
-        pkmn::calculations::natural_gift_stats("Cheri Berry", 7);
+        pkmn::calculations::natural_gift_stats(
+            pkmn::e_item::CHERI_BERRY,
+            7
+        );
     , std::out_of_range);
 
     // Test invalid items.
     EXPECT_THROW(
-        pkmn::calculations::natural_gift_stats("Potion", 4);
+        pkmn::calculations::natural_gift_stats(
+            pkmn::e_item::POTION,
+            4
+        );
     , std::invalid_argument);
 
     // Make sure differences between generations are reflected.
     struct test_params_t
     {
-        std::string item;
+        pkmn::e_item item;
 
-        std::string type;
+        pkmn::e_type type;
         int gen4_power;
         int gen5_power;
         int gen6_power;
     };
     static const std::vector<test_params_t> test_params =
     {
-        {"Cheri Berry", "Fire",     60, 60, 80},
-        {"Nanab Berry", "Water",    70, 70, 90},
-        {"Belue Berry", "Electric", 80, 80, 100}
+        {pkmn::e_item::CHERI_BERRY, pkmn::e_type::FIRE,     60, 60, 80},
+        {pkmn::e_item::NANAB_BERRY, pkmn::e_type::WATER,    70, 70, 90},
+        {pkmn::e_item::BELUE_BERRY, pkmn::e_type::ELECTRIC, 80, 80, 100}
     };
 
     pkmn::calculations::natural_gift stats;
@@ -1595,22 +1610,31 @@ TEST(cpp_calculations_test, natural_gift_test)
                     param.item,
                     4
                 );
-        EXPECT_EQ(param.type, stats.type);
-        EXPECT_EQ(param.gen4_power, stats.base_power);
+        EXPECT_EQ(param.type, stats.type)
+            << pkmn::type_to_string(param.type) << " vs "
+            << pkmn::type_to_string(stats.type);
+        EXPECT_EQ(param.gen4_power, stats.base_power)
+            << pkmn::item_to_string(param.item);
 
         stats = pkmn::calculations::natural_gift_stats(
                     param.item,
                     5
                 );
-        EXPECT_EQ(param.type, stats.type);
-        EXPECT_EQ(param.gen5_power, stats.base_power);
+        EXPECT_EQ(param.type, stats.type)
+            << pkmn::type_to_string(param.type) << " vs "
+            << pkmn::type_to_string(stats.type);
+        EXPECT_EQ(param.gen5_power, stats.base_power)
+            << pkmn::item_to_string(param.item);
 
         stats = pkmn::calculations::natural_gift_stats(
                     param.item,
                     6
                 );
-        EXPECT_EQ(param.type, stats.type);
-        EXPECT_EQ(param.gen6_power, stats.base_power);
+        EXPECT_EQ(param.type, stats.type)
+            << pkmn::type_to_string(param.type) << " vs "
+            << pkmn::type_to_string(stats.type);
+        EXPECT_EQ(param.gen6_power, stats.base_power)
+            << pkmn::item_to_string(param.item);
     }
 }
 
