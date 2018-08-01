@@ -71,39 +71,20 @@ public class CSharpEqualityHashCodeTest
     public void LevelupMoveTest()
     {
         PKMN.Database.LevelupMove levelupMove = new PKMN.Database.LevelupMove(
-                                                        new PKMN.Database.MoveEntry(
-                                                                PKMN.Move.SCRATCH,
-                                                                PKMN.Game.RED
-                                                            ),
+                                                        PKMN.Move.SCRATCH,
                                                         10
                                                     );
 
         PKMN.Database.LevelupMove levelupMoveSame = new PKMN.Database.LevelupMove(
-                                                            new PKMN.Database.MoveEntry(
-                                                                    PKMN.Move.SCRATCH,
-                                                                    PKMN.Game.RED
-                                                                ),
+                                                            PKMN.Move.SCRATCH,
                                                             10
                                                         );
         PKMN.Database.LevelupMove levelupMoveDifferentMove = new PKMN.Database.LevelupMove(
-                                                                     new PKMN.Database.MoveEntry(
-                                                                             PKMN.Move.TACKLE,
-                                                                             PKMN.Game.RED
-                                                                         ),
-                                                                     10
-                                                                 );
-        PKMN.Database.LevelupMove levelupMoveDifferentGame = new PKMN.Database.LevelupMove(
-                                                                     new PKMN.Database.MoveEntry(
-                                                                             PKMN.Move.SCRATCH,
-                                                                             PKMN.Game.BLUE
-                                                                         ),
+                                                                     PKMN.Move.TACKLE,
                                                                      10
                                                                  );
         PKMN.Database.LevelupMove levelupMoveDifferentLevel = new PKMN.Database.LevelupMove(
-                                                                      new PKMN.Database.MoveEntry(
-                                                                              PKMN.Move.SCRATCH,
-                                                                              PKMN.Game.RED
-                                                                          ),
+                                                                      PKMN.Move.SCRATCH,
                                                                       5
                                                                   );
 
@@ -113,9 +94,6 @@ public class CSharpEqualityHashCodeTest
 
         Assert.AreNotEqual(levelupMove, levelupMoveDifferentMove);
         Assert.AreNotEqual(levelupMove.GetHashCode(), levelupMoveDifferentMove.GetHashCode());
-
-        Assert.AreNotEqual(levelupMove, levelupMoveDifferentGame);
-        Assert.AreNotEqual(levelupMove.GetHashCode(), levelupMoveDifferentGame.GetHashCode());
 
         Assert.AreNotEqual(levelupMove, levelupMoveDifferentLevel);
         Assert.AreNotEqual(levelupMove.GetHashCode(), levelupMoveDifferentLevel.GetHashCode());

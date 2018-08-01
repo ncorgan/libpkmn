@@ -750,43 +750,43 @@ public class PokemonTestCommon
         {
             // Contest Stats
 
-            Assert.IsTrue(pokemon.ContestStats.ContainsKey("Cool"));
-            Assert.IsTrue(pokemon.ContestStats.ContainsKey("Beauty"));
-            Assert.IsTrue(pokemon.ContestStats.ContainsKey("Cute"));
-            Assert.IsTrue(pokemon.ContestStats.ContainsKey("Smart"));
-            Assert.IsTrue(pokemon.ContestStats.ContainsKey("Tough"));
+            Assert.IsTrue(pokemon.ContestStats.ContainsKey(PKMN.ContestStat.COOL));
+            Assert.IsTrue(pokemon.ContestStats.ContainsKey(PKMN.ContestStat.BEAUTY));
+            Assert.IsTrue(pokemon.ContestStats.ContainsKey(PKMN.ContestStat.COOL));
+            Assert.IsTrue(pokemon.ContestStats.ContainsKey(PKMN.ContestStat.SMART));
+            Assert.IsTrue(pokemon.ContestStats.ContainsKey(PKMN.ContestStat.TOUGH));
             if(generation == 3)
             {
-                Assert.IsTrue(pokemon.ContestStats.ContainsKey("Feel"));
-                Assert.IsFalse(pokemon.ContestStats.ContainsKey("Sheen"));
+                Assert.IsTrue(pokemon.ContestStats.ContainsKey(PKMN.ContestStat.FEEL));
+                Assert.IsFalse(pokemon.ContestStats.ContainsKey(PKMN.ContestStat.SHEEN));
             }
             else
             {
-                Assert.IsFalse(pokemon.ContestStats.ContainsKey("Feel"));
-                Assert.IsTrue(pokemon.ContestStats.ContainsKey("Sheen"));
+                Assert.IsFalse(pokemon.ContestStats.ContainsKey(PKMN.ContestStat.FEEL));
+                Assert.IsTrue(pokemon.ContestStats.ContainsKey(PKMN.ContestStat.SHEEN));
             }
-            foreach(string contestStat in pokemon.ContestStats.Keys)
+            foreach(PKMN.ContestStat contestStat in pokemon.ContestStats.Keys)
             {
                 Assert.AreEqual(0, pokemon.ContestStats[contestStat]);
             }
 
             // Markings
 
-            Assert.IsTrue(pokemon.Markings.ContainsKey("Circle"));
-            Assert.IsTrue(pokemon.Markings.ContainsKey("Triangle"));
-            Assert.IsTrue(pokemon.Markings.ContainsKey("Square"));
-            Assert.IsTrue(pokemon.Markings.ContainsKey("Heart"));
+            Assert.IsTrue(pokemon.Markings.ContainsKey(PKMN.Marking.CIRCLE));
+            Assert.IsTrue(pokemon.Markings.ContainsKey(PKMN.Marking.TRIANGLE));
+            Assert.IsTrue(pokemon.Markings.ContainsKey(PKMN.Marking.SQUARE));
+            Assert.IsTrue(pokemon.Markings.ContainsKey(PKMN.Marking.HEART));
             if(generation >= 4)
             {
-                Assert.IsTrue(pokemon.Markings.ContainsKey("Star"));
-                Assert.IsTrue(pokemon.Markings.ContainsKey("Diamond"));
+                Assert.IsTrue(pokemon.Markings.ContainsKey(PKMN.Marking.STAR));
+                Assert.IsTrue(pokemon.Markings.ContainsKey(PKMN.Marking.DIAMOND));
             }
             else
             {
-                Assert.IsFalse(pokemon.Markings.ContainsKey("Star"));
-                Assert.IsFalse(pokemon.Markings.ContainsKey("Diamond"));
+                Assert.IsFalse(pokemon.Markings.ContainsKey(PKMN.Marking.STAR));
+                Assert.IsFalse(pokemon.Markings.ContainsKey(PKMN.Marking.DIAMOND));
             }
-            foreach(string marking in pokemon.Markings.Keys)
+            foreach(PKMN.Marking marking in pokemon.Markings.Keys)
             {
                 Assert.IsFalse(pokemon.Markings[marking]);
             }
@@ -1216,7 +1216,7 @@ public class PokemonTestCommon
 
         if(generation >= 3)
         {
-            foreach(string marking in pokemon.Markings.Keys)
+            foreach(PKMN.Marking marking in pokemon.Markings.Keys)
             {
                 Assert.IsFalse(pokemon.Markings[marking]);
                 pokemon.Markings[marking] = true;
@@ -1229,7 +1229,7 @@ public class PokemonTestCommon
             Assert.Throws<ApplicationException>(
                 delegate
                 {
-                    pokemon.Markings["Circle"] = true;
+                    pokemon.Markings[PKMN.Marking.CIRCLE] = true;
                 }
             );
         }
@@ -1453,7 +1453,7 @@ public class PokemonTestCommon
 
         if(generation >= 3)
         {
-            foreach(string contestStat in pokemon.ContestStats.Keys)
+            foreach(PKMN.ContestStat contestStat in pokemon.ContestStats.Keys)
             {
                 int statValue = rng.Next(0, 256);
                 pokemon.ContestStats[contestStat] = statValue;

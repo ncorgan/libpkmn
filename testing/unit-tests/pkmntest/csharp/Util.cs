@@ -153,7 +153,7 @@ internal class Util
         }
         if(generation >= 3)
         {
-            foreach(string marking in ret.Markings.Keys)
+            foreach(PKMN.Marking marking in ret.Markings.Keys)
             {
                 ret.Markings[marking] = Util.RandomBool();
             }
@@ -161,7 +161,7 @@ internal class Util
             {
                 ret.Ribbons[ribbon] = Util.RandomBool();
             }
-            foreach(string contestStat in ret.ContestStats.Keys)
+            foreach(PKMN.ContestStat contestStat in ret.ContestStats.Keys)
             {
                 ret.ContestStats[contestStat] = rng.Next(0, 255);
             }
@@ -260,7 +260,7 @@ internal class Util
             Assert.AreEqual(pokemon1.Personality, pokemon2.Personality);
 
             Assert.AreEqual(pokemon1.Markings.Keys, pokemon2.Markings.Keys);
-            foreach(string marking in pokemon1.Markings.Keys)
+            foreach(PKMN.Marking marking in pokemon1.Markings.Keys)
             {
                 Assert.AreEqual(pokemon1.Markings[marking], pokemon2.Markings[marking]);
             }
@@ -272,7 +272,7 @@ internal class Util
             }
 
             Assert.AreEqual(pokemon1.ContestStats.Keys, pokemon2.ContestStats.Keys);
-            foreach(string contestStat in pokemon1.ContestStats.Keys)
+            foreach(PKMN.ContestStat contestStat in pokemon1.ContestStats.Keys)
             {
                 Assert.AreEqual(pokemon1.ContestStats[contestStat], pokemon2.ContestStats[contestStat]);
             }

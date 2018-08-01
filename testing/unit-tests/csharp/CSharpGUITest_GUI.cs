@@ -37,7 +37,7 @@ public class CSharpGUITest
     [Test]
     public void ItemListComboBoxTest()
     {
-        PKMN.GUI.ItemListComboBox itemListComboBox = new PKMN.GUI.ItemListComboBox(PKMN.Game.HEARTGOLD);
+        PKMN.GUI.ItemListComboBox itemListComboBox = new PKMN.GUI.ItemListComboBox("HeartGold");
         Assert.AreEqual(itemListComboBox.Items.Count, 513);
         Assert.AreEqual(itemListComboBox.Items[0], "Master Ball");
         Assert.AreEqual(itemListComboBox.Items[512], "Photo Album");
@@ -46,7 +46,7 @@ public class CSharpGUITest
     [Test]
     public void LocationListComboBoxTest()
     {
-        PKMN.GUI.LocationListComboBox locationListComboBox = new PKMN.GUI.LocationListComboBox(PKMN.Game.EMERALD, false);
+        PKMN.GUI.LocationListComboBox locationListComboBox = new PKMN.GUI.LocationListComboBox("Emerald", false);
         Assert.AreEqual(locationListComboBox.Items.Count, 106);
         Assert.AreEqual(locationListComboBox.Items[0], "Abandoned Ship");
         Assert.AreEqual(locationListComboBox.Items[105], "Victory Road");
@@ -55,7 +55,7 @@ public class CSharpGUITest
     [Test]
     public void MoveListComboBoxTest()
     {
-        PKMN.GUI.MoveListComboBox moveListComboBox = new PKMN.GUI.MoveListComboBox(PKMN.Game.RED);
+        PKMN.GUI.MoveListComboBox moveListComboBox = new PKMN.GUI.MoveListComboBox("Red");
         Assert.AreEqual(moveListComboBox.Items.Count, 165);
         Assert.AreEqual(moveListComboBox.Items[0], "Pound");
         Assert.AreEqual(moveListComboBox.Items[164], "Struggle");
@@ -245,7 +245,7 @@ public class CSharpGUITest
     [Test]
     public void TypeListComboBoxTest()
     {
-        PKMN.GUI.TypeListComboBox typeListComboBox = new PKMN.GUI.TypeListComboBox(PKMN.Game.ALPHA_SAPPHIRE);
+        PKMN.GUI.TypeListComboBox typeListComboBox = new PKMN.GUI.TypeListComboBox("Alpha Sapphire");
         Assert.AreEqual(typeListComboBox.Items.Count, 18);
         Assert.AreEqual(typeListComboBox.Items[0], "Normal");
         Assert.AreEqual(typeListComboBox.Items[17], "Fairy");

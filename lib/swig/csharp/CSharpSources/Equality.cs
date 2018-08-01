@@ -186,7 +186,7 @@ namespace Database {
 public partial class LevelupMove {
     /// <summary>Compares two LevelupMove instances to determine value equality.</summary>
     /// <remarks>
-    /// Two instances are determined to be equal if their MoveEntry and level are
+    /// Two instances are determined to be equal if their move and level are
     /// equal.
     /// </remarks>
     /// <param name="rhs">LevelupMove with which to compare self</param>
@@ -221,7 +221,7 @@ public partial class LevelupMove {
     /// <summary>Generates a unique hash code for the given LevelupMove.</summary>
     /// <returns>Unique hash code</returns>
     public override int GetHashCode() {
-        return HashCodeBuilder.Create().AddValue<MoveEntry>(this.Move)
+        return HashCodeBuilder.Create().AddValue<Move>(this.Move)
                                        .AddValue<int>(this.Level)
                                        .ToHashCode();
     }

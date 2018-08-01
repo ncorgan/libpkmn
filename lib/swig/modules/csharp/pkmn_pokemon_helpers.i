@@ -185,22 +185,22 @@ using System.Runtime.InteropServices;"
 %ignore pkmn::swig::marking_map::marking_map(const pkmn::pokemon::sptr&);
 %ignore pkmn::swig::marking_map::get_internal;
 %rename("KeysFunction") pkmn::swig::marking_map::keys();
-%rename("ContainsKey") pkmn::swig::marking_map::has_key(const std::string&);
+%rename("ContainsKey") pkmn::swig::marking_map::has_key(pkmn::e_marking);
 
 // Make C++ methods private, replace with properties for more idiomatic C#.
 
-%csmethodmodifiers pkmn::swig::marking_map::get_marking(const std::string&) "private";
-%csmethodmodifiers pkmn::swig::marking_map::set_marking(const std::string&, bool) "private";
+%csmethodmodifiers pkmn::swig::marking_map::get_marking(pkmn::e_marking) "private";
+%csmethodmodifiers pkmn::swig::marking_map::set_marking(pkmn::e_marking, bool) "private";
 %csmethodmodifiers pkmn::swig::marking_map::size() "private";
 %csmethodmodifiers pkmn::swig::marking_map::keys() "private";
 %csmethodmodifiers pkmn::swig::marking_map::cptr() "private";
 
 %typemap(cscode) pkmn::swig::marking_map
 %{
-    public bool this[string stat]
+    public bool this[Marking marking]
     {
-        get { return GetMarking(stat); }
-        set { SetMarking(stat, value); }
+        get { return GetMarking(marking); }
+        set { SetMarking(marking, value); }
     }
 
     public int Count
@@ -208,7 +208,7 @@ using System.Runtime.InteropServices;"
         get { return (int)size(); }
     }
 
-    public StringList Keys
+    public MarkingEnumList Keys
     {
         get { return KeysFunction(); }
     }
@@ -250,7 +250,7 @@ using System.Runtime.InteropServices;"
     public override int GetHashCode()
     {
         return HashCodeBuilder.Create().AddValue<ulong>(this.Cptr())
-                                       .AddValue<StringList>(this.Keys)
+                                       .AddValue<MarkingEnumList>(this.Keys)
                                        .ToHashCode();
     }
 %}
@@ -349,19 +349,19 @@ using System.Runtime.InteropServices;"
 %ignore pkmn::swig::contest_stat_map::contest_stat_map(const pkmn::pokemon::sptr&);
 %ignore pkmn::swig::contest_stat_map::get_internal;
 %rename("KeysFunction") pkmn::swig::contest_stat_map::keys();
-%rename("ContainsKey") pkmn::swig::contest_stat_map::has_key(const std::string&);
+%rename("ContainsKey") pkmn::swig::contest_stat_map::has_key(pkmn::e_contest_stat);
 
 // Make C++ methods private, replace with properties for more idiomatic C#.
 
-%csmethodmodifiers pkmn::swig::contest_stat_map::get_contest_stat(const std::string&) "private";
-%csmethodmodifiers pkmn::swig::contest_stat_map::set_contest_stat(const std::string&, int) "private";
+%csmethodmodifiers pkmn::swig::contest_stat_map::get_contest_stat(pkmn::e_contest_stat) "private";
+%csmethodmodifiers pkmn::swig::contest_stat_map::set_contest_stat(pkmn::e_contest_stat, int) "private";
 %csmethodmodifiers pkmn::swig::contest_stat_map::size() "private";
 %csmethodmodifiers pkmn::swig::contest_stat_map::keys() "private";
 %csmethodmodifiers pkmn::swig::contest_stat_map::cptr() "private";
 
 %typemap(cscode) pkmn::swig::contest_stat_map
 %{
-    public int this[string stat]
+    public int this[ContestStat stat]
     {
         get { return GetContestStat(stat); }
         set { SetContestStat(stat, value); }
@@ -372,7 +372,7 @@ using System.Runtime.InteropServices;"
         get { return (int)size(); }
     }
 
-    public StringList Keys
+    public ContestStatEnumList Keys
     {
         get { return KeysFunction(); }
     }
@@ -414,7 +414,7 @@ using System.Runtime.InteropServices;"
     public override int GetHashCode()
     {
         return HashCodeBuilder.Create().AddValue<ulong>(this.Cptr())
-                                       .AddValue<StringList>(this.Keys)
+                                       .AddValue<ContestStatEnumList>(this.Keys)
                                        .ToHashCode();
     }
 %}

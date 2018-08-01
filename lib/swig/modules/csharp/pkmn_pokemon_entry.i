@@ -31,9 +31,9 @@
 %attributeval(pkmn::database::pokemon_entry, %arg(std::map<pkmn::e_stat, int>), EVYields, get_EV_yields);
 %attribute(pkmn::database::pokemon_entry, int, ExperienceYield, get_experience_yield);
 %attributeval(pkmn::database::pokemon_entry, %arg(std::vector<pkmn::database::levelup_move>), LevelupMoves, get_levelup_moves);
-%attributeval(pkmn::database::pokemon_entry, %arg(std::vector<pkmn::database::move_entry>), TMHMMoves, get_tm_hm_moves);
-%attributeval(pkmn::database::pokemon_entry, %arg(std::vector<pkmn::database::move_entry>), EggMoves, get_egg_moves);
-%attributeval(pkmn::database::pokemon_entry, %arg(std::vector<pkmn::database::move_entry>), TutorMoves, get_tutor_moves);
+%attributeval(pkmn::database::pokemon_entry, %arg(std::vector<pkmn::e_move>), TMHMMoves, get_tm_hm_moves);
+%attributeval(pkmn::database::pokemon_entry, %arg(std::vector<pkmn::e_move>), EggMoves, get_egg_moves);
+%attributeval(pkmn::database::pokemon_entry, %arg(std::vector<pkmn::e_move>), TutorMoves, get_tutor_moves);
 %attributeval(pkmn::database::pokemon_entry, %arg(std::vector<std::string>), Forms, get_forms);
 %attributeval(pkmn::database::pokemon_entry, %arg(std::vector<pkmn::database::pokemon_entry>), Evolutions, get_evolutions);
 

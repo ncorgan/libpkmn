@@ -10,6 +10,9 @@ PKMN_CSHARP_INIT
 
 %{
     #include <pkmn/enums/enum_to_string.hpp>
+
+    // TODO: remove once in enum_to_string
+    #include <pkmn/enums/marking.hpp>
 %}
 
 /*
@@ -21,11 +24,13 @@ PKMN_CSHARP_INIT
 %include <pkmn/enums/ability.hpp>
 %include <pkmn/enums/ball.hpp>
 %include <pkmn/enums/condition.hpp>
+%include <pkmn/enums/contest_stat.hpp>
 %include <pkmn/enums/egg_group.hpp>
 %include <pkmn/enums/game.hpp>
 %include <pkmn/enums/gender.hpp>
 %include <pkmn/enums/item.hpp>
 %include <pkmn/enums/language.hpp>
+%include <pkmn/enums/marking.hpp>
 
 %rename(SING) SING_MOVE;
 %include <pkmn/enums/move.hpp>
@@ -55,12 +60,14 @@ PKMN_CSHARP_VECTOR(std::string,               string,               StringList)
 PKMN_CSHARP_VECTOR(pkmn::e_ability,           PKMN.Ability,         AbilityEnumList);
 PKMN_CSHARP_VECTOR(pkmn::e_ball,              PKMN.Ball,            BallEnumList);
 PKMN_CSHARP_VECTOR(pkmn::e_condition,         PKMN.Condition,       ConditionEnumList);
+PKMN_CSHARP_VECTOR(pkmn::e_contest_stat,      PKMN.ContestStat,     ContestStatEnumList);
 PKMN_CSHARP_VECTOR(pkmn::e_egg_group,         PKMN.EggGroup,        EggGroupEnumList);
 PKMN_CSHARP_VECTOR(pkmn::e_game,              PKMN.Game,            GameEnumList);
 PKMN_CSHARP_VECTOR(pkmn::e_gender,            PKMN.Gender,          GenderEnumList);
 PKMN_CSHARP_VECTOR(pkmn::e_item,              PKMN.Item,            ItemEnumList);
 PKMN_CSHARP_VECTOR(pkmn::e_language,          PKMN.Language,        LanguageEnumList);
 PKMN_CSHARP_VECTOR(pkmn::e_move,              PKMN.Move,            MoveEnumList);
+PKMN_CSHARP_VECTOR(pkmn::e_marking,           PKMN.Marking,         MarkingEnumList);
 PKMN_CSHARP_VECTOR(pkmn::e_move_damage_class, PKMN.MoveDamageClass, MoveDamageClassEnumList);
 PKMN_CSHARP_VECTOR(pkmn::e_move_target,       PKMN.MoveTarget,      MoveTargetEnumList);
 PKMN_CSHARP_VECTOR(pkmn::e_nature,            PKMN.Nature,          NatureEnumList);

@@ -64,9 +64,11 @@ namespace PKMN
 
         public class ItemListComboBox: System.Windows.Forms.ComboBox
         {
-            public ItemListComboBox(Game game)
+            public ItemListComboBox(string game)
             {
-                StringList items = Database.Lists.ItemNameList(game);
+                Game gameEnum = PKMN.StringToGame(game);
+
+                StringList items = Database.Lists.ItemNameList(gameEnum);
                 foreach(string item in items)
                 {
                     this.Items.Add(item);
@@ -76,9 +78,11 @@ namespace PKMN
 
         public class LocationListComboBox: System.Windows.Forms.ComboBox
         {
-            public LocationListComboBox(Game game, bool wholeGeneration)
+            public LocationListComboBox(string game, bool wholeGeneration)
             {
-                StringList locations = Database.Lists.LocationNameList(game, wholeGeneration);
+                Game gameEnum = PKMN.StringToGame(game);
+
+                StringList locations = Database.Lists.LocationNameList(gameEnum, wholeGeneration);
                 foreach(string location in locations)
                 {
                     this.Items.Add(location);
@@ -88,9 +92,11 @@ namespace PKMN
 
         public class MoveListComboBox: System.Windows.Forms.ComboBox
         {
-            public MoveListComboBox(Game game)
+            public MoveListComboBox(string game)
             {
-                StringList moves = Database.Lists.MoveNameList(game);
+                Game gameEnum = PKMN.StringToGame(game);
+
+                StringList moves = Database.Lists.MoveNameList(gameEnum);
                 foreach(string move in moves)
                 {
                     this.Items.Add(move);
@@ -160,9 +166,11 @@ namespace PKMN
 
         public class TypeListComboBox: System.Windows.Forms.ComboBox
         {
-            public TypeListComboBox(Game game)
+            public TypeListComboBox(string game)
             {
-                StringList types = Database.Lists.TypeNameList(game);
+                Game gameEnum = PKMN.StringToGame(game);
+
+                StringList types = Database.Lists.TypeNameList(gameEnum);
                 foreach(string type in types)
                 {
                     this.Items.Add(type);

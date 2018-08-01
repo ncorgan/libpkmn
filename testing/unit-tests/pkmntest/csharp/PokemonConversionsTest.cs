@@ -84,7 +84,7 @@ public class PokemonConversionsTest
         if(originGeneration >= 3)
         {
             // Randomize ribbons, markings, and contest stats.
-            foreach(string marking in firstPokemon.Markings.Keys)
+            foreach(PKMN.Marking marking in firstPokemon.Markings.Keys)
             {
                 firstPokemon.Markings[marking] = Util.RandomBool();
             }
@@ -92,7 +92,7 @@ public class PokemonConversionsTest
             {
                 firstPokemon.Ribbons[ribbon] = Util.RandomBool();
             }
-            foreach(string contestStat in firstPokemon.ContestStats.Keys)
+            foreach(PKMN.ContestStat contestStat in firstPokemon.ContestStats.Keys)
             {
                 firstPokemon.ContestStats[contestStat] = rng.Next(0, 255);
             }
@@ -133,7 +133,7 @@ public class PokemonConversionsTest
 
             if(originGeneration == destGeneration)
             {
-                foreach(string marking in firstPokemon.Markings.Keys)
+                foreach(PKMN.Marking marking in firstPokemon.Markings.Keys)
                 {
                     Assert.AreEqual(firstPokemon.Markings[marking], secondPokemon.Markings[marking]);
                 }
@@ -141,7 +141,7 @@ public class PokemonConversionsTest
                 {
                     Assert.AreEqual(firstPokemon.Ribbons[ribbon], secondPokemon.Ribbons[ribbon]);
                 }
-                foreach(string contestStat in firstPokemon.ContestStats.Keys)
+                foreach(PKMN.ContestStat contestStat in firstPokemon.ContestStats.Keys)
                 {
                     Assert.AreEqual(firstPokemon.ContestStats[contestStat], secondPokemon.ContestStats[contestStat]);
                 }

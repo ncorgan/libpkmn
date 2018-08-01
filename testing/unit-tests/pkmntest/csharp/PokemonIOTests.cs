@@ -107,7 +107,7 @@ public class PokemonIOTests
         Assert.AreEqual(mightyena.Level, 50);
 
         Assert.AreEqual(mightyena.Markings.Count, 4);
-        foreach(string marking in mightyena.Markings.Keys)
+        foreach(PKMN.Marking marking in mightyena.Markings.Keys)
         {
             Assert.IsFalse(mightyena.Markings[marking]);
         }
@@ -123,7 +123,7 @@ public class PokemonIOTests
         }
 
         Assert.AreEqual(mightyena.ContestStats.Count, 6);
-        foreach(string contestStat in mightyena.ContestStats.Keys)
+        foreach(PKMN.ContestStat contestStat in mightyena.ContestStats.Keys)
         {
             Assert.AreEqual(mightyena.ContestStats[contestStat], 0);
         }

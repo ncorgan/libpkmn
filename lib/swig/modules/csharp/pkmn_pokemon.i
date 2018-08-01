@@ -49,7 +49,7 @@ using Database;"
 %attribute(pkmn::swig::pokemon, pkmn::e_language, Language, get_language, set_language);
 %attribute(pkmn::swig::pokemon, int, CurrentTrainerFriendship, get_current_trainer_friendship, set_current_trainer_friendship);
 %attribute(pkmn::swig::pokemon, pkmn::e_ability, Ability, get_ability, set_ability);
-%attributestring(pkmn::swig::pokemon, pkmn::e_ball, Ball, get_ball, set_ball);
+%attribute(pkmn::swig::pokemon, pkmn::e_ball, Ball, get_ball, set_ball);
 %attribute(pkmn::swig::pokemon, int, LevelMet, get_level_met, set_level_met);
 %attributestring(pkmn::swig::pokemon, std::string, LocationMet, get_location_met, set_location_met);
 %attributestring(pkmn::swig::pokemon, std::string, LocationMetAsEgg, get_location_met_as_egg, set_location_met_as_egg);
