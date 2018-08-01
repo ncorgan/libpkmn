@@ -39,6 +39,18 @@ def get_balls(c):
 
     return balls
 
+def get_contest_stats(c):
+    c.execute("SELECT id,identifier FROM contest_types ORDER BY id")
+    db_responses = c.fetchall()
+    contest_stats = ["NONE = 0"]
+
+    for db_response in db_responses:
+        contest_stats += ["{0} = {1}".format(str(db_response[1]).upper(), db_response[0])]
+
+    contest_stats += ["FEEL = 6", "SHEEN = 7"]
+
+    return contest_stats
+
 def get_egg_groups(c):
     c.execute("SELECT id,identifier FROM egg_groups ORDER BY id")
     db_responses = c.fetchall()
@@ -77,6 +89,19 @@ def get_items(c):
     items += ["INVALID = 30000"]
 
     return items
+
+def get_markings():
+    markings = [
+        "NONE = 0",
+        "CIRCLE = 1",
+        "TRIANGLE = 2",
+        "SQUARE = 3",
+        "HEART = 4",
+        "STAR = 5",
+        "DIAMOND = 6",
+    ]
+
+    return markings
 
 def get_moves(c):
     c.execute("SELECT move_id,name FROM move_names WHERE local_language_id=9 ORDER BY move_id")
@@ -286,9 +311,11 @@ if __name__ == "__main__":
 
     abilities = get_abilities(c)
     balls = get_balls(c)
+    contest_stats = get_contest_stats(c)
     egg_groups = get_egg_groups(c)
     items = get_items(c)
     moves = get_moves(c)
+    markings = get_markings()
     move_damage_classes = get_move_damage_classes(c)
     move_targets = get_move_targets(c)
     natures = get_natures(c)
@@ -300,8 +327,10 @@ if __name__ == "__main__":
 
         generate_cpp_enum_file("ability", abilities, True)
         generate_cpp_enum_file("ball", balls)
+        generate_cpp_enum_file("contest_stat", contest_stats)
         generate_cpp_enum_file("egg_group", egg_groups, True)
         generate_cpp_enum_file("item", items)
+        generate_cpp_enum_file("marking", markings)
         generate_cpp_enum_file("move", moves)
         generate_cpp_enum_file("move_damage_class", move_damage_classes)
         generate_cpp_enum_file("move_target", move_targets)
@@ -314,8 +343,10 @@ if __name__ == "__main__":
 
         generate_c_enum_file("ability", abilities, True)
         generate_c_enum_file("ball", balls)
+        generate_c_enum_file("contest_stat", contest_stats)
         generate_c_enum_file("egg_group", egg_groups, True)
         generate_c_enum_file("item", items)
+        generate_c_enum_file("marking", markings)
         generate_c_enum_file("move", moves)
         generate_c_enum_file("move_damage_class", move_damage_classes)
         generate_c_enum_file("move_target", move_targets)

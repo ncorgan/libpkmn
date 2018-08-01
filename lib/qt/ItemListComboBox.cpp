@@ -8,15 +8,18 @@
 #include <pkmn/qt/ItemListComboBox.hpp>
 
 #include <pkmn/database/lists.hpp>
+#include <pkmn/enums/enum_to_string.hpp>
 
 namespace pkmn { namespace qt {
 
     ItemListComboBox::ItemListComboBox(
-        pkmn::e_game game,
+        const QString& game,
         QWidget* parent
     ): QComboBox(parent)
     {
-        std::vector<std::string> items = pkmn::database::get_item_name_list(game);
+        pkmn::e_game game_enum = pkmn::string_to_game(game.toStdString());
+
+        std::vector<std::string> items = pkmn::database::get_item_name_list(game_enum);
         for(const std::string& item: items)
         {
             addItem(QString::fromStdString(item));

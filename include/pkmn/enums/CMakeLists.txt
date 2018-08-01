@@ -10,12 +10,14 @@ IF(NOT PKMN_DONT_INSTALL_HEADERS)
         ability.hpp
         ball.hpp
         condition.hpp
-        enum_to_string.hpp
+        contest_stat.hpp
         egg_group.hpp
+        enum_to_string.hpp
         game.hpp
         gender.hpp
         item.hpp
         language.hpp
+        marking.hpp
         move.hpp
         move_damage_class.hpp
         move_target.hpp

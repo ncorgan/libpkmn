@@ -14,6 +14,7 @@
 #include <pkmntest/util.hpp>
 
 #include <pkmn/exception.hpp>
+#include <pkmn/enums/enum_to_string.hpp>
 
 #include <boost/algorithm/string.hpp>
 #include <boost/filesystem.hpp>
@@ -172,38 +173,47 @@ static void check_initial_maps(
         EXPECT_LE(stat_iter->second, STAT_MAX);
     }
 
-    if(generation >= 3) {
-        const std::map<std::string, int>& contest_stats = pokemon->get_contest_stats();
-        EXPECT_EQ(1, contest_stats.count("Cool"));
-        EXPECT_EQ(1, contest_stats.count("Beauty"));
-        EXPECT_EQ(1, contest_stats.count("Cute"));
-        EXPECT_EQ(1, contest_stats.count("Smart"));
-        EXPECT_EQ(1, contest_stats.count("Tough"));
-        if(generation == 3) {
-            EXPECT_EQ(1, contest_stats.count("Feel"));
-            EXPECT_EQ(0, contest_stats.count("Sheen"));
-        } else {
-            EXPECT_EQ(0, contest_stats.count("Feel"));
-            EXPECT_EQ(1, contest_stats.count("Sheen"));
+    if(generation >= 3)
+    {
+        const std::map<pkmn::e_contest_stat, int>& contest_stats = pokemon->get_contest_stats();
+        EXPECT_EQ(1, contest_stats.count(pkmn::e_contest_stat::COOL));
+        EXPECT_EQ(1, contest_stats.count(pkmn::e_contest_stat::BEAUTY));
+        EXPECT_EQ(1, contest_stats.count(pkmn::e_contest_stat::CUTE));
+        EXPECT_EQ(1, contest_stats.count(pkmn::e_contest_stat::SMART));
+        EXPECT_EQ(1, contest_stats.count(pkmn::e_contest_stat::TOUGH));
+        if(generation == 3)
+        {
+            EXPECT_EQ(1, contest_stats.count(pkmn::e_contest_stat::FEEL));
+            EXPECT_EQ(0, contest_stats.count(pkmn::e_contest_stat::SHEEN));
         }
-        for(auto contest_stat_iter = contest_stats.begin(); contest_stat_iter != contest_stats.end(); ++contest_stat_iter) {
-            EXPECT_EQ(0, contest_stat_iter->second);
+        else
+        {
+            EXPECT_EQ(0, contest_stats.count(pkmn::e_contest_stat::FEEL));
+            EXPECT_EQ(1, contest_stats.count(pkmn::e_contest_stat::SHEEN));
+        }
+        for(const auto& contest_stat_iter: contest_stats)
+        {
+            EXPECT_EQ(0, contest_stat_iter.second);
         }
 
-        const std::map<std::string, bool>& markings = pokemon->get_markings();
-        EXPECT_EQ(1, markings.count("Circle"));
-        EXPECT_EQ(1, markings.count("Triangle"));
-        EXPECT_EQ(1, markings.count("Square"));
-        EXPECT_EQ(1, markings.count("Heart"));
-        if(generation > 3) {
-            EXPECT_EQ(1, markings.count("Star"));
-            EXPECT_EQ(1, markings.count("Diamond"));
-        } else {
-            EXPECT_EQ(0, markings.count("Star"));
-            EXPECT_EQ(0, markings.count("Diamond"));
+        const std::map<pkmn::e_marking, bool>& markings = pokemon->get_markings();
+        EXPECT_EQ(1, markings.count(pkmn::e_marking::CIRCLE));
+        EXPECT_EQ(1, markings.count(pkmn::e_marking::TRIANGLE));
+        EXPECT_EQ(1, markings.count(pkmn::e_marking::SQUARE));
+        EXPECT_EQ(1, markings.count(pkmn::e_marking::HEART));
+        if(generation > 3)
+        {
+            EXPECT_EQ(1, markings.count(pkmn::e_marking::STAR));
+            EXPECT_EQ(1, markings.count(pkmn::e_marking::DIAMOND));
         }
-        for(auto marking_iter = markings.begin(); marking_iter != markings.end(); ++marking_iter) {
-            EXPECT_FALSE(marking_iter->second);
+        else
+        {
+            EXPECT_EQ(0, markings.count(pkmn::e_marking::STAR));
+            EXPECT_EQ(0, markings.count(pkmn::e_marking::DIAMOND));
+        }
+        for(const auto& marking_iter: markings)
+        {
+            EXPECT_FALSE(marking_iter.second);
         }
     } else {
         EXPECT_THROW(
@@ -543,9 +553,9 @@ static void test_setting_markings(
     int generation = pkmn::priv::game_enum_to_generation(pokemon->get_game());
 
     if(generation >= 3) {
-        const std::map<std::string, bool>& markings = pokemon->get_markings();
+        const std::map<pkmn::e_marking, bool>& markings = pokemon->get_markings();
         for(auto markings_iter = markings.begin(); markings_iter != markings.end(); ++markings_iter) {
-            std::map<std::string, bool> markings_before = pokemon->get_markings();
+            std::map<pkmn::e_marking, bool> markings_before = pokemon->get_markings();
             pokemon->set_marking(markings_iter->first, true);
 
             for(auto markings_before_iter = markings_before.begin();
@@ -564,7 +574,7 @@ static void test_setting_markings(
             pokemon->get_markings();
         , pkmn::feature_not_in_game_error);
         EXPECT_THROW(
-            pokemon->set_marking("Circle", true);
+            pokemon->set_marking(pkmn::e_marking::CIRCLE, true);
         , pkmn::feature_not_in_game_error);
     }
 }
@@ -747,9 +757,10 @@ static void test_setting_stats(
         }
 
         // Make sure setting contest stats only impacts the specific contest stat.
-        const std::map<std::string, int>& contest_stats = pokemon->get_contest_stats();
-        for(auto contest_stats_iter = contest_stats.begin(); contest_stats_iter != contest_stats.end(); ++contest_stats_iter) {
-            std::map<std::string, int> contest_stats_before = pokemon->get_contest_stats();
+        const std::map<pkmn::e_contest_stat, int>& contest_stats = pokemon->get_contest_stats();
+        for(auto contest_stats_iter = contest_stats.begin(); contest_stats_iter != contest_stats.end(); ++contest_stats_iter)
+        {
+            std::map<pkmn::e_contest_stat, int> contest_stats_before = pokemon->get_contest_stats();
             int new_value = std::rand() % 255;
             pokemon->set_contest_stat(contest_stats_iter->first, new_value);
 
@@ -758,9 +769,11 @@ static void test_setting_stats(
                 ++contest_stats_before_iter
             ) {
                 if(contest_stats_before_iter->first == contest_stats_iter->first) {
-                    EXPECT_EQ(new_value, contest_stats_iter->second);
+                    EXPECT_EQ(new_value, contest_stats_iter->second)
+                        << pkmn::contest_stat_to_string(contest_stats_before_iter->first);
                 } else {
-                    EXPECT_EQ(contest_stats_before_iter->second, contest_stats.at(contest_stats_before_iter->first));
+                    EXPECT_EQ(contest_stats_before_iter->second, contest_stats.at(contest_stats_before_iter->first))
+                        << pkmn::contest_stat_to_string(contest_stats_before_iter->first);
                 }
             }
         }

@@ -12,6 +12,7 @@ SET(pkmn_c_types_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/move_slot.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/pokemon_list.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/pokemon_box_list.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/stat_list.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/string_types.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/trainer_info.cpp
 PARENT_SCOPE)

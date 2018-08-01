@@ -188,7 +188,7 @@ namespace pkmn {
             ) final;
 
             void set_marking(
-                const std::string& marking,
+                pkmn::e_marking marking,
                 bool value
             ) final;
 
@@ -198,7 +198,7 @@ namespace pkmn {
             ) final;
 
             void set_contest_stat(
-                const std::string& stat,
+                pkmn::e_contest_stat stat,
                 int value
             ) final;
 

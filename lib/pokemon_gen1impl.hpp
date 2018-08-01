@@ -186,20 +186,14 @@ namespace pkmn {
                 int value
             ) final;
 
-            void set_marking(
-                const std::string& marking,
-                bool value
-            ) final;
+            void set_marking(pkmn::e_marking, bool) final;
 
             void set_ribbon(
                 const std::string& ribbon,
                 bool value
             ) final;
 
-            void set_contest_stat(
-                const std::string& stat,
-                int value
-            ) final;
+            void set_contest_stat(pkmn::e_contest_stat, int) final;
 
             void set_move(
                 pkmn::e_move move,

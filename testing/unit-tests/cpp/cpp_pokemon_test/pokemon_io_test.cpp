@@ -118,7 +118,7 @@ static pkmn::pokemon::sptr get_random_pokemon(
 
     if(generation >= 3)
     {
-        const std::map<std::string, bool>& markings = ret->get_markings();
+        const std::map<pkmn::e_marking, bool>& markings = ret->get_markings();
         for(auto iter = markings.begin(); iter != markings.end(); ++iter)
         {
             ret->set_marking(iter->first, get_random_bool());
@@ -130,7 +130,7 @@ static pkmn::pokemon::sptr get_random_pokemon(
             ret->set_ribbon(iter->first, get_random_bool());
         }
 
-        const std::map<std::string, int>& contest_stats = ret->get_contest_stats();
+        const std::map<pkmn::e_contest_stat, int>& contest_stats = ret->get_contest_stats();
         for(auto iter = contest_stats.begin(); iter != contest_stats.end(); ++iter)
         {
             ret->set_contest_stat(iter->first, (rand() % 256));
@@ -207,8 +207,8 @@ static void compare_pokemon(
         EXPECT_EQ(pokemon1->get_personality(), pokemon2->get_personality());
         EXPECT_EQ(pokemon1->get_ball(), pokemon2->get_ball());
 
-        const std::map<std::string, bool>& markings1 = pokemon1->get_markings();
-        const std::map<std::string, bool>& markings2 = pokemon2->get_markings();
+        const std::map<pkmn::e_marking, bool>& markings1 = pokemon1->get_markings();
+        const std::map<pkmn::e_marking, bool>& markings2 = pokemon2->get_markings();
         for(auto iter = markings1.begin(); iter != markings1.end(); ++iter)
         {
             EXPECT_EQ(iter->second, markings2.at(iter->first));
@@ -221,8 +221,8 @@ static void compare_pokemon(
             EXPECT_EQ(iter->second, ribbons2.at(iter->first));
         }
 
-        const std::map<std::string, int>& contest_stats1 = pokemon1->get_contest_stats();
-        const std::map<std::string, int>& contest_stats2 = pokemon2->get_contest_stats();
+        const std::map<pkmn::e_contest_stat, int>& contest_stats1 = pokemon1->get_contest_stats();
+        const std::map<pkmn::e_contest_stat, int>& contest_stats2 = pokemon2->get_contest_stats();
         for(auto iter = contest_stats1.begin(); iter != contest_stats1.end(); ++iter)
         {
             EXPECT_EQ(iter->second, contest_stats2.at(iter->first));
@@ -350,10 +350,11 @@ TEST(pokemon_io_test, test_outside_3gpkm) {
     EXPECT_EQ(128734, mightyena->get_experience());
     EXPECT_EQ(50, mightyena->get_level());
 
-    const std::map<std::string, bool>& mightyena_markings = mightyena->get_markings();
+    const std::map<pkmn::e_marking, bool>& mightyena_markings = mightyena->get_markings();
     EXPECT_EQ(4, mightyena_markings.size());
-    for(auto iter = mightyena_markings.begin(); iter != mightyena_markings.end(); ++iter) {
-        EXPECT_FALSE(iter->second);
+    for(const auto& marking_iter: mightyena_markings)
+    {
+        EXPECT_FALSE(marking_iter.second);
     }
 
     const std::map<std::string, bool>& mightyena_ribbons = mightyena->get_ribbons();
@@ -366,7 +367,7 @@ TEST(pokemon_io_test, test_outside_3gpkm) {
         }
     }
 
-    const std::map<std::string, int>& mightyena_contest_stats = mightyena->get_contest_stats();
+    const std::map<pkmn::e_contest_stat, int>& mightyena_contest_stats = mightyena->get_contest_stats();
     EXPECT_EQ(6, mightyena_contest_stats.size());
     for(auto iter = mightyena_contest_stats.begin(); iter != mightyena_contest_stats.end(); ++iter) {
         EXPECT_EQ(0, iter->second);

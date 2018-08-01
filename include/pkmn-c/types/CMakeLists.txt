@@ -16,6 +16,7 @@ IF(NOT PKMN_DONT_INSTALL_HEADERS)
         natural_gift.h
         pokemon_list.h
         pokemon_box_list.h
+        stat_list.h
         string_types.h
         time_duration.h
         trainer_id.h

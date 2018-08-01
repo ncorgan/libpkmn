@@ -284,13 +284,13 @@ TEST_P(gba_pokemon_test, gba_pokemon_test) {
     EXPECT_EQ(EVs.at(pkmn::e_stat::SPECIAL_ATTACK), int(pksav_littleendian16(effort->ev_spatk)));
     EXPECT_EQ(EVs.at(pkmn::e_stat::SPECIAL_DEFENSE), int(pksav_littleendian16(effort->ev_spdef)));
 
-    const std::map<std::string, int>& contest_stats = pokemon->get_contest_stats();
-    EXPECT_EQ(contest_stats.at("Cool"), int(effort->contest_stats.cool));
-    EXPECT_EQ(contest_stats.at("Beauty"), int(effort->contest_stats.beauty));
-    EXPECT_EQ(contest_stats.at("Cute"), int(effort->contest_stats.cute));
-    EXPECT_EQ(contest_stats.at("Smart"), int(effort->contest_stats.smart));
-    EXPECT_EQ(contest_stats.at("Tough"), int(effort->contest_stats.tough));
-    EXPECT_EQ(contest_stats.at("Feel"), int(effort->contest_stats.feel));
+    const std::map<pkmn::e_contest_stat, int>& contest_stats = pokemon->get_contest_stats();
+    EXPECT_EQ(contest_stats.at(pkmn::e_contest_stat::COOL), int(effort->contest_stats.cool));
+    EXPECT_EQ(contest_stats.at(pkmn::e_contest_stat::BEAUTY), int(effort->contest_stats.beauty));
+    EXPECT_EQ(contest_stats.at(pkmn::e_contest_stat::CUTE), int(effort->contest_stats.cute));
+    EXPECT_EQ(contest_stats.at(pkmn::e_contest_stat::SMART), int(effort->contest_stats.smart));
+    EXPECT_EQ(contest_stats.at(pkmn::e_contest_stat::TOUGH), int(effort->contest_stats.tough));
+    EXPECT_EQ(contest_stats.at(pkmn::e_contest_stat::FEEL), int(effort->contest_stats.feel));
 
     // TODO: Pokérus
     // TODO: get location indices for what we set
@@ -497,13 +497,36 @@ TEST_P(gcn_pokemon_test, gcn_pokemon_test) {
     // TODO: OTGender, probably bring in bimaps
     EXPECT_STREQ(pokemon->get_original_trainer_name().c_str(), native->OTName->toUTF8());
     EXPECT_STREQ(pokemon->get_nickname().c_str(), native->name->toUTF8());
-    EXPECT_EQ(pokemon->get_contest_stats().at("Feel"), int(native->contestLuster));
 
-    const std::map<std::string, bool>& markings = pokemon->get_markings();
-    EXPECT_EQ(markings.at("Circle"), native->markings.circle);
-    EXPECT_EQ(markings.at("Square"), native->markings.square);
-    EXPECT_EQ(markings.at("Triangle"), native->markings.triangle);
-    EXPECT_EQ(markings.at("Heart"), native->markings.heart);
+    const std::map<pkmn::e_contest_stat, int>& contest_stats = pokemon->get_contest_stats();
+    EXPECT_EQ(
+        contest_stats.at(pkmn::e_contest_stat::COOL),
+        int(native->contestStats[LIBPKMGC_CONTEST_STAT_COOL])
+    );
+    EXPECT_EQ(
+        contest_stats.at(pkmn::e_contest_stat::CUTE),
+        int(native->contestStats[LIBPKMGC_CONTEST_STAT_CUTE])
+    );
+    EXPECT_EQ(
+        contest_stats.at(pkmn::e_contest_stat::BEAUTY),
+        int(native->contestStats[LIBPKMGC_CONTEST_STAT_BEAUTY])
+    );
+    EXPECT_EQ(
+        contest_stats.at(pkmn::e_contest_stat::SMART),
+        int(native->contestStats[LIBPKMGC_CONTEST_STAT_SMART])
+    );
+    EXPECT_EQ(
+        contest_stats.at(pkmn::e_contest_stat::TOUGH),
+        int(native->contestStats[LIBPKMGC_CONTEST_STAT_TOUGH])
+    );
+
+    EXPECT_EQ(contest_stats.at(pkmn::e_contest_stat::FEEL), int(native->contestLuster));
+
+    const std::map<pkmn::e_marking, bool>& markings = pokemon->get_markings();
+    EXPECT_EQ(markings.at(pkmn::e_marking::CIRCLE), native->markings.circle);
+    EXPECT_EQ(markings.at(pkmn::e_marking::SQUARE), native->markings.square);
+    EXPECT_EQ(markings.at(pkmn::e_marking::TRIANGLE), native->markings.triangle);
+    EXPECT_EQ(markings.at(pkmn::e_marking::HEART), native->markings.heart);
 
     EXPECT_EQ(pokemon->get_experience(), int(native->experience));
     EXPECT_EQ(pokemon->get_original_trainer_secret_id(), native->SID);

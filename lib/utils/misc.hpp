@@ -15,6 +15,7 @@
 
 #include <algorithm>
 #include <string>
+#include <type_traits>
 #include <vector>
 
 namespace pkmn {
@@ -105,6 +106,22 @@ namespace pkmn {
     )
     {
         return (game_id == COLOSSEUM_ID or game_id == XD_ID);
+    }
+
+    template <typename enum_type>
+    inline typename std::enable_if<std::is_enum<enum_type>::value, void>::type decrement_enum(
+        enum_type& r_enum_value
+    )
+    {
+        r_enum_value = static_cast<enum_type>(static_cast<typename std::underlying_type<enum_type>::type>(r_enum_value) - 1);
+    }
+
+    template <typename enum_type>
+    inline typename std::enable_if<std::is_enum<enum_type>::value, void>::type increment_enum(
+        enum_type& r_enum_value
+    )
+    {
+        r_enum_value = static_cast<enum_type>(static_cast<typename std::underlying_type<enum_type>::type>(r_enum_value) + 1);
     }
 }
 

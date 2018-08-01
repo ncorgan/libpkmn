@@ -9,10 +9,9 @@
 
 #include <pkmn/config.hpp>
 
-#include <pkmn/enums/game.hpp>
-
 #ifdef PKMN_ENABLE_QT
 #include <QComboBox>
+#include <QString>
 #else
 #error Qt support is not enabled in this build of LIbPKMN.
 #endif
@@ -40,7 +39,7 @@ namespace pkmn { namespace qt {
              * \throws std::invalid_argument if the given game is invalid
              */
             LocationListComboBox(
-                pkmn::e_game game,
+                const QString& game,
                 bool wholeGeneration,
                 QWidget* parent
             );

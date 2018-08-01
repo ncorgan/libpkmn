@@ -38,6 +38,24 @@ namespace pkmn {
         return CONDITION_BIMAP;
     }
 
+    typedef boost::bimap<std::string, pkmn::e_contest_stat> contest_stat_bimap_t;
+    static const contest_stat_bimap_t& get_contest_stat_bimap()
+    {
+        static const contest_stat_bimap_t CONTEST_STAT_BIMAP =
+        boost::assign::list_of<contest_stat_bimap_t::relation>
+            ("None",   pkmn::e_contest_stat::NONE)
+            ("Cool",   pkmn::e_contest_stat::COOL)
+            ("Cute",   pkmn::e_contest_stat::CUTE)
+            ("Beauty", pkmn::e_contest_stat::BEAUTY)
+            ("Smart",  pkmn::e_contest_stat::SMART)
+            ("Tough",  pkmn::e_contest_stat::TOUGH)
+            ("Feel",   pkmn::e_contest_stat::FEEL)
+            ("Sheen",  pkmn::e_contest_stat::SHEEN)
+        ;
+
+        return CONTEST_STAT_BIMAP;
+    }
+
     typedef boost::bimap<std::string, pkmn::e_gender> gender_bimap_t;
     static const gender_bimap_t& get_gender_bimap()
     {
@@ -172,6 +190,39 @@ namespace pkmn {
         else
         {
             const std::string error_message = "Invalid condition: " + condition_name;
+            throw std::invalid_argument(error_message);
+        }
+    }
+
+    std::string contest_stat_to_string(pkmn::e_contest_stat contest_stat)
+    {
+        static const contest_stat_bimap_t& CONTEST_STAT_BIMAP = get_contest_stat_bimap();
+
+        auto contest_stat_iter = CONTEST_STAT_BIMAP.right.find(contest_stat);
+        if(contest_stat_iter != CONTEST_STAT_BIMAP.right.end())
+        {
+            return contest_stat_iter->second;
+        }
+        else
+        {
+            const std::string error_message = "Invalid contest_stat: "
+                                            + std::to_string(static_cast<int>(contest_stat));
+            throw std::invalid_argument(error_message);
+        }
+    }
+
+    pkmn::e_contest_stat string_to_contest_stat(const std::string& contest_stat_name)
+    {
+        static const contest_stat_bimap_t& CONTEST_STAT_BIMAP = get_contest_stat_bimap();
+
+        auto contest_stat_name_iter = CONTEST_STAT_BIMAP.left.find(contest_stat_name);
+        if(contest_stat_name_iter != CONTEST_STAT_BIMAP.left.end())
+        {
+            return contest_stat_name_iter->second;
+        }
+        else
+        {
+            const std::string error_message = "Invalid contest_stat: " + contest_stat_name;
             throw std::invalid_argument(error_message);
         }
     }

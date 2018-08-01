@@ -212,12 +212,12 @@ namespace pkmn { namespace swig {
             }
 
             inline bool get_marking(
-                const std::string& marking
+                pkmn::e_marking marking
             )
             {
                 BOOST_ASSERT(_pokemon.get() != nullptr);
 
-                const string_bool_map& markings = _pokemon->get_markings();
+                const std::map<pkmn::e_marking, bool>& markings = _pokemon->get_markings();
                 if(markings.count(marking) == 0)
                 {
                     throw std::invalid_argument("Invalid marking.");
@@ -227,13 +227,13 @@ namespace pkmn { namespace swig {
             }
 
             inline void set_marking(
-                const std::string& stat,
+                pkmn::e_marking marking,
                 bool value
             )
             {
                 BOOST_ASSERT(_pokemon.get() != nullptr);
 
-                _pokemon->set_marking(stat, value);
+                _pokemon->set_marking(marking, value);
             }
 
             inline size_t size()
@@ -250,25 +250,24 @@ namespace pkmn { namespace swig {
                 return ret;
             }
 
-            inline std::vector<std::string> keys()
+            inline std::vector<pkmn::e_marking> keys()
             {
                 BOOST_ASSERT(_pokemon.get() != nullptr);
 
-                std::vector<std::string> ret;
+                std::vector<pkmn::e_marking> ret;
 
                 if(pkmn::priv::game_enum_to_generation(_pokemon->get_game()) >= 3)
                 {
-                    ret = pkmn::map_keys_to_vector<string_bool_map, std::string>(
-                              _pokemon->get_markings()
+                    const std::map<pkmn::e_marking, bool>& markings = _pokemon->get_markings();
+                    ret = pkmn::map_keys_to_vector<decltype(markings), pkmn::e_marking>(
+                              markings
                           );
                 }
 
                 return ret;
             }
 
-            inline bool has_key(
-                const std::string& key
-            )
+            inline bool has_key(pkmn::e_marking key)
             {
                 BOOST_ASSERT(_pokemon.get() != nullptr);
 
@@ -413,13 +412,11 @@ namespace pkmn { namespace swig {
                 BOOST_ASSERT(_pokemon.get() != nullptr);
             }
 
-            inline int get_contest_stat(
-                const std::string& stat
-            )
+            inline int get_contest_stat(pkmn::e_contest_stat stat)
             {
                 BOOST_ASSERT(_pokemon.get() != nullptr);
 
-                const string_int_map& contest_stats = _pokemon->get_contest_stats();
+                const std::map<pkmn::e_contest_stat, int>& contest_stats = _pokemon->get_contest_stats();
                 if(contest_stats.count(stat) == 0)
                 {
                     throw std::invalid_argument("Invalid contest stat.");
@@ -429,7 +426,7 @@ namespace pkmn { namespace swig {
             }
 
             inline void set_contest_stat(
-                const std::string& stat,
+                pkmn::e_contest_stat stat,
                 int value
             )
             {
@@ -452,25 +449,24 @@ namespace pkmn { namespace swig {
                 return ret;
             }
 
-            inline std::vector<std::string> keys()
+            inline std::vector<pkmn::e_contest_stat> keys()
             {
                 BOOST_ASSERT(_pokemon.get() != nullptr);
 
-                std::vector<std::string> ret;
+                std::vector<pkmn::e_contest_stat> ret;
 
                 if(pkmn::priv::game_enum_to_generation(_pokemon->get_game()) >= 3)
                 {
-                    ret = pkmn::map_keys_to_vector<string_int_map, std::string>(
-                              _pokemon->get_contest_stats()
+                    const std::map<pkmn::e_contest_stat, int>& contest_stats = _pokemon->get_contest_stats();
+                    ret = pkmn::map_keys_to_vector<decltype(contest_stats), pkmn::e_contest_stat>(
+                              contest_stats
                           );
                 }
 
                 return ret;
             }
 
-            inline bool has_key(
-                const std::string& key
-            )
+            inline bool has_key(pkmn::e_contest_stat key)
             {
                 BOOST_ASSERT(_pokemon.get() != nullptr);
 

@@ -13,6 +13,7 @@
 #include <pkmn/enums/ability.hpp>
 #include <pkmn/enums/ball.hpp>
 #include <pkmn/enums/condition.hpp>
+#include <pkmn/enums/contest_stat.hpp>
 #include <pkmn/enums/egg_group.hpp>
 #include <pkmn/enums/game.hpp>
 #include <pkmn/enums/gender.hpp>
@@ -52,6 +53,14 @@ namespace pkmn
 
     PKMN_API pkmn::e_condition string_to_condition(
         const std::string& condition_name
+    );
+
+    PKMN_API std::string contest_stat_to_string(
+        pkmn::e_contest_stat contest_stat
+    );
+
+    PKMN_API pkmn::e_contest_stat string_to_contest_stat(
+        const std::string& contest_stat_name
     );
 
     PKMN_API std::string egg_group_to_string(

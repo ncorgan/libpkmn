@@ -94,7 +94,7 @@ void QtTest::testItemListComboBox()
 {
     try
     {
-        pkmn::qt::ItemListComboBox items(pkmn::e_game::HEARTGOLD, nullptr);
+        pkmn::qt::ItemListComboBox items(QString("HeartGold"), nullptr);
         QCOMPARE(items.count(), 513);
     }
     catch(const std::exception& e)
@@ -107,7 +107,7 @@ void QtTest::testLocationListComboBox()
 {
     try
     {
-        pkmn::qt::LocationListComboBox locations(pkmn::e_game::EMERALD, false, nullptr);
+        pkmn::qt::LocationListComboBox locations(QString("Emerald"), false, nullptr);
         QCOMPARE(locations.count(), 106);
 
         locations.setCurrentIndex(0);
@@ -125,7 +125,7 @@ void QtTest::testMoveListComboBox()
 {
     try
     {
-        pkmn::qt::MoveListComboBox moves(pkmn::e_game::RED, nullptr);
+        pkmn::qt::MoveListComboBox moves(QString("Red"), nullptr);
         QCOMPARE(moves.count(), 165);
 
         moves.setCurrentIndex(0);
@@ -279,7 +279,7 @@ void QtTest::testTypeListComboBox()
 {
     try
     {
-        pkmn::qt::TypeListComboBox types(pkmn::e_game::ALPHA_SAPPHIRE, nullptr);
+        pkmn::qt::TypeListComboBox types(QString("Alpha Sapphire"), nullptr);
         QCOMPARE(types.count(), 18);
 
         types.setCurrentIndex(0);

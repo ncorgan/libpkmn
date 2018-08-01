@@ -51,13 +51,13 @@ namespace pkmn
     // TODO: consistency in template order
     //       move to namespace like PKSav, add accessor functions to scope instantiation
 
-    typedef boost::bimap<libpkmgc_contest_stat_t, std::string> contest_stat_bimap_t;
+    typedef boost::bimap<libpkmgc_contest_stat_t, pkmn::e_contest_stat> contest_stat_bimap_t;
     static const contest_stat_bimap_t CONTEST_STAT_BIMAP = boost::assign::list_of<contest_stat_bimap_t::relation>
-        (LIBPKMGC_CONTEST_STAT_COOL,   "Cool")
-        (LIBPKMGC_CONTEST_STAT_BEAUTY, "Beauty")
-        (LIBPKMGC_CONTEST_STAT_CUTE,   "Cute")
-        (LIBPKMGC_CONTEST_STAT_SMART,  "Smart")
-        (LIBPKMGC_CONTEST_STAT_TOUGH,  "Tough")
+        (LIBPKMGC_CONTEST_STAT_COOL,   pkmn::e_contest_stat::COOL)
+        (LIBPKMGC_CONTEST_STAT_BEAUTY, pkmn::e_contest_stat::BEAUTY)
+        (LIBPKMGC_CONTEST_STAT_CUTE,   pkmn::e_contest_stat::CUTE)
+        (LIBPKMGC_CONTEST_STAT_SMART,  pkmn::e_contest_stat::SMART)
+        (LIBPKMGC_CONTEST_STAT_TOUGH,  pkmn::e_contest_stat::TOUGH)
     ;
 
     static const std::map<std::string, LibPkmGC::ContestAchievementLevel> CONTEST_LEVEL_MAP =
@@ -1019,31 +1019,39 @@ namespace pkmn
     }
 
     void pokemon_gcnimpl::set_marking(
-        const std::string& marking,
+        pkmn::e_marking marking,
         bool value
     )
     {
+        pkmn::enforce_value_in_map_keys(
+            "Marking",
+            marking,
+            _markings
+        );
+
         boost::lock_guard<pokemon_gcnimpl> lock(*this);
 
-        if(marking == "Circle")
+        switch(marking)
         {
-            _libpkmgc_pokemon_uptr->markings.circle = value;
-        }
-        else if(marking == "Triangle")
-        {
-            _libpkmgc_pokemon_uptr->markings.triangle = value;
-        }
-        else if(marking == "Square")
-        {
-            _libpkmgc_pokemon_uptr->markings.square = value;
-        }
-        else if(marking == "Heart")
-        {
-            _libpkmgc_pokemon_uptr->markings.heart = value;
-        }
-        else
-        {
-            throw std::invalid_argument("Invalid marking.");
+            case pkmn::e_marking::CIRCLE:
+                _libpkmgc_pokemon_uptr->markings.circle = value;
+                break;
+
+            case pkmn::e_marking::TRIANGLE:
+                _libpkmgc_pokemon_uptr->markings.triangle = value;
+                break;
+
+            case pkmn::e_marking::SQUARE:
+                _libpkmgc_pokemon_uptr->markings.square = value;
+                break;
+
+            case pkmn::e_marking::HEART:
+                _libpkmgc_pokemon_uptr->markings.heart = value;
+                break;
+
+            default:
+                BOOST_ASSERT(false);
+                break;
         }
 
         _markings[marking] = value;
@@ -1072,63 +1080,50 @@ namespace pkmn
             std::vector<std::string> ribbon_parts;
             boost::split(ribbon_parts, ribbon, boost::is_any_of(" "));
 
-            // Validate input (which should already have been validated)
-            if((ribbon_parts.size() == 0 or ribbon_parts.size() > 2) or
-               (CONTEST_STAT_BIMAP.right.count(ribbon_parts.at(0)) == 0) or
-               (ribbon_parts.size() == 2 and
-                CONTEST_LEVEL_MAP.count(ribbon_parts.at(1)) == 0)
-              )
-            {
-                throw std::invalid_argument("Invalid ribbon.");
-            }
-
             if(ribbon_parts.size() == 1)
             {
                 ribbon_parts.emplace_back("");
             }
 
-            _libpkmgc_pokemon_uptr->contestAchievements[CONTEST_STAT_BIMAP.right.at(ribbon_parts[0])] =
-                value ? CONTEST_LEVEL_MAP.at(ribbon_parts[1])
-                      : LibPkmGC::ContestAchievementLevel(CONTEST_LEVEL_MAP.at(ribbon_parts[1])-1);
+            // This should succeed, as we've already validated the ribbon name.
+            libpkmgc_contest_stat_t contest_stat = CONTEST_STAT_BIMAP.right.at(
+                                                       pkmn::string_to_contest_stat(ribbon_parts[0])
+                                                   );
+            LibPkmGC::ContestAchievementLevel contest_level = CONTEST_LEVEL_MAP.at(ribbon_parts[1]);
 
+            // If we're removing the given ribbon, we need the next-lowest level.
+            if(!value)
+            {
+                pkmn::decrement_enum(contest_level);
+            }
+
+            _libpkmgc_pokemon_uptr->contestAchievements[contest_stat] = contest_level;
             _update_ribbons_map();
         }
     }
 
     void pokemon_gcnimpl::set_contest_stat(
-        const std::string& stat,
+        pkmn::e_contest_stat stat,
         int value
     )
     {
+        pkmn::enforce_value_in_map_keys(
+            "Contest stat",
+            stat,
+            _contest_stats
+        );
         pkmn::enforce_bounds("Contest stat", value, 0, 255);
 
-        if(stat == "Cool")
-        {
-            _libpkmgc_pokemon_uptr->contestStats[LIBPKMGC_CONTEST_STAT_COOL] = LibPkmGC::u8(value);
-        }
-        else if(stat == "Beauty")
-        {
-            _libpkmgc_pokemon_uptr->contestStats[LIBPKMGC_CONTEST_STAT_BEAUTY] = LibPkmGC::u8(value);
-        }
-        else if(stat == "Cute")
-        {
-            _libpkmgc_pokemon_uptr->contestStats[LIBPKMGC_CONTEST_STAT_CUTE] = LibPkmGC::u8(value);
-        }
-        else if(stat == "Smart")
-        {
-            _libpkmgc_pokemon_uptr->contestStats[LIBPKMGC_CONTEST_STAT_SMART] = LibPkmGC::u8(value);
-        }
-        else if(stat == "Tough")
-        {
-            _libpkmgc_pokemon_uptr->contestStats[LIBPKMGC_CONTEST_STAT_TOUGH] = LibPkmGC::u8(value);
-        }
-        else if(stat == "Feel")
+        if(stat == pkmn::e_contest_stat::FEEL)
         {
             _libpkmgc_pokemon_uptr->contestLuster = LibPkmGC::u8(value);
         }
         else
         {
-            throw std::invalid_argument("Invalid contest stat.");
+            auto contest_stat_iter = CONTEST_STAT_BIMAP.right.find(stat);
+            BOOST_ASSERT(contest_stat_iter != CONTEST_STAT_BIMAP.end());
+
+            _libpkmgc_pokemon_uptr->contestStats[contest_stat_iter->second] = LibPkmGC::u8(value);
         }
 
         _contest_stats[stat] = value;
@@ -1308,18 +1303,46 @@ namespace pkmn
         }
     }
 
-    void pokemon_gcnimpl::_update_ribbons_map() {
+    void pokemon_gcnimpl::_update_ribbons_map()
+    {
         // Contest ribbons
-        for(auto iter = CONTEST_STAT_BIMAP.right.begin(); iter != CONTEST_STAT_BIMAP.right.end(); ++iter) {
-            _ribbons[iter->first]             = (_libpkmgc_pokemon_uptr->contestAchievements[iter->second] >= LibPkmGC::NormalContestWon);
-            _ribbons[iter->first + " Super"]  = (_libpkmgc_pokemon_uptr->contestAchievements[iter->second] >= LibPkmGC::SuperContestWon);
-            _ribbons[iter->first + " Hyper"]  = (_libpkmgc_pokemon_uptr->contestAchievements[iter->second] >= LibPkmGC::HyperContestWon);
-            _ribbons[iter->first + " Master"] = (_libpkmgc_pokemon_uptr->contestAchievements[iter->second] >= LibPkmGC::MasterContestWon);
+        for(const auto& contest_stat_iter: CONTEST_STAT_BIMAP.right)
+        {
+            pkmn::e_contest_stat libpkmn_contest_stat = contest_stat_iter.first;
+            libpkmgc_contest_stat_t libpkmgc_contest_stat = contest_stat_iter.second;
+
+            static const std::vector<std::string> CONTEST_STAT_NAMES =
+            {
+                "",
+                "Cool",
+                "Beauty",
+                "Cute",
+                "Smart",
+                "Tough"
+            };
+            const std::string& contest_stat_name = CONTEST_STAT_NAMES[size_t(libpkmn_contest_stat)];
+
+            for(const auto& contest_level_iter: CONTEST_LEVEL_MAP)
+            {
+                const std::string& contest_level_name = contest_level_iter.first;
+                LibPkmGC::ContestAchievementLevel contest_level_enum = contest_level_iter.second;
+
+                std::string ribbon_name = contest_stat_name;
+                if(!contest_level_name.empty())
+                {
+                    ribbon_name.append(" ");
+                    ribbon_name.append(contest_level_name);
+                }
+
+                _ribbons[ribbon_name] =
+                    (_libpkmgc_pokemon_uptr->contestAchievements[libpkmgc_contest_stat] >= contest_level_enum);
+            }
         }
 
         // Non-contest ribbons
-        for(auto iter = RIBBON_BIMAP.right.begin(); iter != RIBBON_BIMAP.right.end(); ++iter) {
-            _ribbons[iter->first] = _libpkmgc_pokemon_uptr->specialRibbons[iter->second];
+        for(const auto& ribbon_iter: RIBBON_BIMAP.right)
+        {
+            _ribbons[ribbon_iter.first] = _libpkmgc_pokemon_uptr->specialRibbons[ribbon_iter.second];
         }
     }
 
@@ -1423,20 +1446,26 @@ namespace pkmn
         _IVs[pkmn::e_stat::SPECIAL_DEFENSE] = int(_libpkmgc_pokemon_uptr->IVs[LIBPKMGC_STAT_SPDEF]);
     }
 
-    void pokemon_gcnimpl::_init_gcn_contest_stats_map() {
-        _contest_stats["Cool"]   = int(_libpkmgc_pokemon_uptr->contestStats[LIBPKMGC_CONTEST_STAT_COOL]);
-        _contest_stats["Beauty"] = int(_libpkmgc_pokemon_uptr->contestStats[LIBPKMGC_CONTEST_STAT_BEAUTY]);
-        _contest_stats["Cute"]   = int(_libpkmgc_pokemon_uptr->contestStats[LIBPKMGC_CONTEST_STAT_CUTE]);
-        _contest_stats["Smart"]  = int(_libpkmgc_pokemon_uptr->contestStats[LIBPKMGC_CONTEST_STAT_SMART]);
-        _contest_stats["Tough"]  = int(_libpkmgc_pokemon_uptr->contestStats[LIBPKMGC_CONTEST_STAT_TOUGH]);
-        _contest_stats["Feel"]   = int(_libpkmgc_pokemon_uptr->contestLuster);
+    void pokemon_gcnimpl::_init_gcn_contest_stats_map()
+    {
+        for(const auto& contest_stat_iter: CONTEST_STAT_BIMAP.right)
+        {
+            pkmn::e_contest_stat libpkmn_contest_stat = contest_stat_iter.first;
+            libpkmgc_contest_stat_t libpkmgc_contest_stat = contest_stat_iter.second;
+
+            _contest_stats[libpkmn_contest_stat] =
+                int(_libpkmgc_pokemon_uptr->contestStats[libpkmgc_contest_stat]);
+        }
+
+        _contest_stats[pkmn::e_contest_stat::FEEL] = int(_libpkmgc_pokemon_uptr->contestLuster);
     }
 
-    void pokemon_gcnimpl::_init_markings_map() {
-        _markings["Circle"]   = _libpkmgc_pokemon_uptr->markings.circle;
-        _markings["Triangle"] = _libpkmgc_pokemon_uptr->markings.triangle;
-        _markings["Square"]   = _libpkmgc_pokemon_uptr->markings.square;
-        _markings["Heart"]    = _libpkmgc_pokemon_uptr->markings.heart;
+    void pokemon_gcnimpl::_init_markings_map()
+    {
+        _markings[pkmn::e_marking::CIRCLE]   = _libpkmgc_pokemon_uptr->markings.circle;
+        _markings[pkmn::e_marking::TRIANGLE] = _libpkmgc_pokemon_uptr->markings.triangle;
+        _markings[pkmn::e_marking::SQUARE]   = _libpkmgc_pokemon_uptr->markings.square;
+        _markings[pkmn::e_marking::HEART]    = _libpkmgc_pokemon_uptr->markings.heart;
     }
 
     // TODO: region, until 3DS support brings in functions

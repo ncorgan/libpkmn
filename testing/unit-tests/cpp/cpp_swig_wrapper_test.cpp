@@ -305,12 +305,12 @@ TEST(cpp_swig_wrapper_test, test_pokemon_helpers)
     // Markings
     //
 
-    static const std::vector<std::string> expected_markings =
+    static const std::vector<pkmn::e_marking> expected_markings =
     {
-        "Circle",
-        "Heart",
-        "Square",
-        "Triangle"
+        pkmn::e_marking::CIRCLE,
+        pkmn::e_marking::TRIANGLE,
+        pkmn::e_marking::SQUARE,
+        pkmn::e_marking::HEART
     };
 
     // Test getting information on the marking map.
@@ -318,18 +318,18 @@ TEST(cpp_swig_wrapper_test, test_pokemon_helpers)
     EXPECT_EQ(expected_markings, marking_map.keys());
 
     // Set marking through the Pokémon.
-    pokemon->set_marking("Circle", true);
-    EXPECT_TRUE(pokemon->get_markings().at("Circle"));
-    EXPECT_TRUE(marking_map.get_marking("Circle"));
+    pokemon->set_marking(pkmn::e_marking::CIRCLE, true);
+    EXPECT_TRUE(pokemon->get_markings().at(pkmn::e_marking::CIRCLE));
+    EXPECT_TRUE(marking_map.get_marking(pkmn::e_marking::CIRCLE));
 
     // Set marking through the wrapper class.
-    marking_map.set_marking("Square", true);
-    EXPECT_TRUE(marking_map.get_marking("Square"));
-    EXPECT_TRUE(pokemon->get_markings().at("Square"));
+    marking_map.set_marking(pkmn::e_marking::SQUARE, true);
+    EXPECT_TRUE(marking_map.get_marking(pkmn::e_marking::SQUARE));
+    EXPECT_TRUE(pokemon->get_markings().at(pkmn::e_marking::SQUARE));
 
     // Test has_key.
-    EXPECT_TRUE(marking_map.has_key("Circle"));
-    EXPECT_FALSE(marking_map.has_key("Not a key"));
+    EXPECT_TRUE(marking_map.has_key(pkmn::e_marking::CIRCLE));
+    EXPECT_FALSE(marking_map.has_key(pkmn::e_marking::NONE));
 
     //
     // Ribbons
@@ -357,14 +357,14 @@ TEST(cpp_swig_wrapper_test, test_pokemon_helpers)
     // Contest stats
     //
 
-    static const std::vector<std::string> expected_contest_stats =
+    static const std::vector<pkmn::e_contest_stat> expected_contest_stats =
     {
-        "Beauty",
-        "Cool",
-        "Cute",
-        "Feel",
-        "Smart",
-        "Tough"
+        pkmn::e_contest_stat::COOL,
+        pkmn::e_contest_stat::BEAUTY,
+        pkmn::e_contest_stat::CUTE,
+        pkmn::e_contest_stat::SMART,
+        pkmn::e_contest_stat::TOUGH,
+        pkmn::e_contest_stat::FEEL
     };
 
     // Test getting information on the contest stat map.
@@ -372,18 +372,18 @@ TEST(cpp_swig_wrapper_test, test_pokemon_helpers)
     EXPECT_EQ(expected_contest_stats, contest_stat_map.keys());
 
     // Set contest stat through the Pokémon.
-    pokemon->set_contest_stat("Beauty", 10);
-    EXPECT_EQ(10, pokemon->get_contest_stats().at("Beauty"));
-    EXPECT_EQ(10, contest_stat_map.get_contest_stat("Beauty"));
+    pokemon->set_contest_stat(pkmn::e_contest_stat::BEAUTY, 10);
+    EXPECT_EQ(10, pokemon->get_contest_stats().at(pkmn::e_contest_stat::BEAUTY));
+    EXPECT_EQ(10, contest_stat_map.get_contest_stat(pkmn::e_contest_stat::BEAUTY));
 
     // Set contest stat through the wrapper class.
-    pokemon->set_contest_stat("Tough", 123);
-    EXPECT_EQ(123, contest_stat_map.get_contest_stat("Tough"));
-    EXPECT_EQ(123, pokemon->get_contest_stats().at("Tough"));
+    pokemon->set_contest_stat(pkmn::e_contest_stat::TOUGH, 123);
+    EXPECT_EQ(123, contest_stat_map.get_contest_stat(pkmn::e_contest_stat::TOUGH));
+    EXPECT_EQ(123, pokemon->get_contest_stats().at(pkmn::e_contest_stat::TOUGH));
 
     // Test has_key.
-    EXPECT_TRUE(contest_stat_map.has_key("Cool"));
-    EXPECT_FALSE(contest_stat_map.has_key("Not a key"));
+    EXPECT_TRUE(contest_stat_map.has_key(pkmn::e_contest_stat::COOL));
+    EXPECT_FALSE(contest_stat_map.has_key(pkmn::e_contest_stat::NONE));
 }
 
 TEST(cpp_swig_wrapper_test, test_pokemon)
@@ -489,14 +489,14 @@ TEST(cpp_swig_wrapper_test, test_pokemon)
     swig_pokemon.get_IVs().set_IV(pkmn::e_stat::ATTACK, 5);
     EXPECT_EQ(5, swig_pokemon.get_IVs().get_IV(pkmn::e_stat::ATTACK));
 
-    swig_pokemon.get_markings().set_marking("Triangle", true);
-    EXPECT_TRUE(swig_pokemon.get_markings().get_marking("Triangle"));
+    swig_pokemon.get_markings().set_marking(pkmn::e_marking::TRIANGLE, true);
+    EXPECT_TRUE(swig_pokemon.get_markings().get_marking(pkmn::e_marking::TRIANGLE));
 
     swig_pokemon.get_ribbons().set_ribbon("Cool Hyper", true);
     EXPECT_TRUE(swig_pokemon.get_ribbons().get_ribbon("Cool Hyper"));
 
-    swig_pokemon.get_contest_stats().set_contest_stat("Smart", 5);
-    EXPECT_EQ(5, swig_pokemon.get_contest_stats().get_contest_stat("Smart"));
+    swig_pokemon.get_contest_stats().set_contest_stat(pkmn::e_contest_stat::SMART, 5);
+    EXPECT_EQ(5, swig_pokemon.get_contest_stats().get_contest_stat(pkmn::e_contest_stat::SMART));
 
     EXPECT_TRUE(fs::exists(swig_pokemon.get_icon_filepath()));
     EXPECT_TRUE(fs::exists(swig_pokemon.get_sprite_filepath()));

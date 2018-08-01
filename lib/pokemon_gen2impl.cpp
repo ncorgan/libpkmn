@@ -815,7 +815,7 @@ namespace pkmn
         }
     }
 
-    void pokemon_gen2impl::set_marking(const std::string&, bool)
+    void pokemon_gen2impl::set_marking(pkmn::e_marking, bool)
     {
         throw pkmn::feature_not_in_game_error("Markings", "Generation II");
     }
@@ -825,7 +825,7 @@ namespace pkmn
         throw pkmn::feature_not_in_game_error("Ribbons", "Generation II");
     }
 
-    void pokemon_gen2impl::set_contest_stat(const std::string&, int)
+    void pokemon_gen2impl::set_contest_stat(pkmn::e_contest_stat, int)
     {
         throw pkmn::feature_not_in_game_error("Contests", "Generation II");
     }

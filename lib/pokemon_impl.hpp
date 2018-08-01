@@ -48,11 +48,11 @@ namespace pkmn {
 
             const pkmn::database::pokemon_entry& get_database_entry() final;
 
-            const std::map<std::string, bool>& get_markings() final;
+            const std::map<pkmn::e_marking, bool>& get_markings() final;
 
             const std::map<std::string, bool>& get_ribbons() final;
 
-            const std::map<std::string, int>& get_contest_stats() final;
+            const std::map<pkmn::e_contest_stat, int>& get_contest_stats() final;
 
             const pkmn::move_slots_t& get_moves() final;
 
@@ -103,10 +103,12 @@ namespace pkmn {
 
         protected:
             pkmn::move_slots_t _moves;
-            std::map<std::string, int> _contest_stats;
+
             std::map<pkmn::e_stat, int> _EVs, _IVs, _stats;
 
-            std::map<std::string, bool> _markings, _ribbons;
+            std::map<pkmn::e_contest_stat, int> _contest_stats;
+            std::map<pkmn::e_marking, bool> _markings;
+            std::map<std::string, bool> _ribbons;
 
             pkmn::database::pokemon_entry _database_entry;
 
@@ -114,8 +116,6 @@ namespace pkmn {
 
             void* _p_native_pc;
             void* _p_native_party;
-
-            boost::recursive_mutex _mem_mutex;
 
             virtual void _populate_party_data() = 0;
 
@@ -136,7 +136,7 @@ namespace pkmn {
             );
 
             void _init_contest_stat_map(
-                const struct pksav_contest_stats* native_ptr
+                const struct pksav_contest_stats* p_native
             );
 
             void _init_markings_map(
@@ -178,15 +178,15 @@ namespace pkmn {
             );
 
             void _set_contest_stat(
-                const std::string& stat,
+                pkmn::e_contest_stat stat,
                 int value,
-                struct pksav_contest_stats* native_ptr
+                struct pksav_contest_stats* p_native
             );
 
             void _set_marking(
-                const std::string& marking,
+                pkmn::e_marking marking,
                 bool value,
-                uint8_t* native_ptr
+                uint8_t* p_native
             );
 
             template <typename native_type, typename mask_type>

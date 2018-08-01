@@ -995,7 +995,7 @@ namespace pkmn
     }
 
     void pokemon_gbaimpl::set_marking(
-        const std::string& marking,
+        pkmn::e_marking marking,
         bool value
     )
     {
@@ -1081,7 +1081,7 @@ namespace pkmn
     }
 
     void pokemon_gbaimpl::set_contest_stat(
-        const std::string& stat,
+        pkmn::e_contest_stat stat,
         int value
     )
     {
@@ -1362,11 +1362,12 @@ namespace pkmn
         }
     }
 
-    void pokemon_gbaimpl::_update_markings_map() {
-        _markings["Circle"]   = bool(_pksav_pokemon.pc_data.markings & PKSAV_MARKING_CIRCLE);
-        _markings["Triangle"] = bool(_pksav_pokemon.pc_data.markings & PKSAV_MARKING_TRIANGLE);
-        _markings["Square"]   = bool(_pksav_pokemon.pc_data.markings & PKSAV_MARKING_SQUARE);
-        _markings["Heart"]    = bool(_pksav_pokemon.pc_data.markings & PKSAV_MARKING_HEART);
+    void pokemon_gbaimpl::_update_markings_map()
+    {
+        _markings[pkmn::e_marking::CIRCLE]   = bool(_pksav_pokemon.pc_data.markings & PKSAV_MARKING_CIRCLE);
+        _markings[pkmn::e_marking::TRIANGLE] = bool(_pksav_pokemon.pc_data.markings & PKSAV_MARKING_TRIANGLE);
+        _markings[pkmn::e_marking::SQUARE]   = bool(_pksav_pokemon.pc_data.markings & PKSAV_MARKING_SQUARE);
+        _markings[pkmn::e_marking::HEART]    = bool(_pksav_pokemon.pc_data.markings & PKSAV_MARKING_HEART);
     }
 
     void pokemon_gbaimpl::_update_ribbons_map() {

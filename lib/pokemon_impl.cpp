@@ -199,7 +199,7 @@ namespace pkmn
         return _database_entry;
     }
 
-    const std::map<std::string, bool>& pokemon_impl::get_markings()
+    const std::map<pkmn::e_marking, bool>& pokemon_impl::get_markings()
     {
         if(_generation < 3)
         {
@@ -223,7 +223,7 @@ namespace pkmn
         return _ribbons;
     }
 
-    const std::map<std::string, int>& pokemon_impl::get_contest_stats()
+    const std::map<pkmn::e_contest_stat, int>& pokemon_impl::get_contest_stats()
     {
         if(_generation < 3)
         {
@@ -406,31 +406,34 @@ namespace pkmn
     }
 
     void pokemon_impl::_init_contest_stat_map(
-        const struct pksav_contest_stats* native_ptr
+        const struct pksav_contest_stats* p_native
     )
     {
-        _contest_stats["Cool"]   = int(native_ptr->cool);
-        _contest_stats["Beauty"] = int(native_ptr->beauty);
-        _contest_stats["Cute"]   = int(native_ptr->cute);
-        _contest_stats["Smart"]  = int(native_ptr->smart);
-        _contest_stats["Tough"]  = int(native_ptr->tough);
+        _contest_stats[pkmn::e_contest_stat::COOL]   = int(p_native->cool);
+        _contest_stats[pkmn::e_contest_stat::BEAUTY] = int(p_native->beauty);
+        _contest_stats[pkmn::e_contest_stat::CUTE]   = int(p_native->cute);
+        _contest_stats[pkmn::e_contest_stat::SMART]  = int(p_native->smart);
+        _contest_stats[pkmn::e_contest_stat::TOUGH]  = int(p_native->tough);
 
         // Feel and sheen are a union in this struct, so this is fine.
-        _contest_stats[(_generation == 3) ? "Feel" : "Sheen"] = int(native_ptr->feel);
+        pkmn::e_contest_stat feel_or_sheen = (_generation == 3) ? pkmn::e_contest_stat::FEEL
+                                                                : pkmn::e_contest_stat::SHEEN;
+
+        _contest_stats[feel_or_sheen] = int(p_native->feel);
     }
 
     void pokemon_impl::_init_markings_map(
-        const uint8_t* native_ptr
+        const uint8_t* p_native
     )
     {
-        _markings["Circle"]   = bool((*native_ptr) & PKSAV_MARKING_CIRCLE);
-        _markings["Triangle"] = bool((*native_ptr) & PKSAV_MARKING_TRIANGLE);
-        _markings["Square"]   = bool((*native_ptr) & PKSAV_MARKING_SQUARE);
-        _markings["Heart"]    = bool((*native_ptr) & PKSAV_MARKING_HEART);
+        _markings[pkmn::e_marking::CIRCLE]   = bool((*p_native) & PKSAV_MARKING_CIRCLE);
+        _markings[pkmn::e_marking::TRIANGLE] = bool((*p_native) & PKSAV_MARKING_TRIANGLE);
+        _markings[pkmn::e_marking::SQUARE]   = bool((*p_native) & PKSAV_MARKING_SQUARE);
+        _markings[pkmn::e_marking::HEART]    = bool((*p_native) & PKSAV_MARKING_HEART);
         if(_generation > 3)
         {
-            _markings["Star"]    = bool((*native_ptr) & PKSAV_MARKING_STAR);
-            _markings["Diamond"] = bool((*native_ptr) & PKSAV_MARKING_DIAMOND);
+            _markings[pkmn::e_marking::STAR]    = bool((*p_native) & PKSAV_MARKING_STAR);
+            _markings[pkmn::e_marking::DIAMOND] = bool((*p_native) & PKSAV_MARKING_DIAMOND);
         }
     }
 
@@ -608,19 +611,20 @@ namespace pkmn
         _populate_party_data();
     }
 
-    #define SET_CONTEST_STAT(str,field) \
+    #define SET_CONTEST_STAT(map_key, native_field) \
     { \
-        if(stat == (str)) { \
-            native_ptr->field = uint8_t(value); \
-            _contest_stats[(str)] = value; \
+        if(stat == (map_key)) \
+        { \
+            p_native->native_field = uint8_t(value); \
+            _contest_stats[(map_key)] = value; \
             return; \
         } \
     }
 
     void pokemon_impl::_set_contest_stat(
-        const std::string& stat,
+        pkmn::e_contest_stat stat,
         int value,
-        struct pksav_contest_stats* native_ptr
+        struct pksav_contest_stats* p_native
     )
     {
         pkmn::enforce_value_in_map_keys(
@@ -630,31 +634,34 @@ namespace pkmn
         );
         pkmn::enforce_bounds("Contest stat", value, 0, 255);
 
-        SET_CONTEST_STAT("Cool",   cool);
-        SET_CONTEST_STAT("Beauty", beauty);
-        SET_CONTEST_STAT("Cute",   cute);
-        SET_CONTEST_STAT("Smart",  smart);
-        SET_CONTEST_STAT("Tough",  tough);
-        SET_CONTEST_STAT("Feel",   feel);
-        SET_CONTEST_STAT("Sheen",  sheen);
+        SET_CONTEST_STAT(pkmn::e_contest_stat::COOL,   cool);
+        SET_CONTEST_STAT(pkmn::e_contest_stat::BEAUTY, beauty);
+        SET_CONTEST_STAT(pkmn::e_contest_stat::CUTE,   cute);
+        SET_CONTEST_STAT(pkmn::e_contest_stat::SMART,  smart);
+        SET_CONTEST_STAT(pkmn::e_contest_stat::TOUGH,  tough);
+        SET_CONTEST_STAT(pkmn::e_contest_stat::FEEL,   feel);
+        SET_CONTEST_STAT(pkmn::e_contest_stat::SHEEN,  sheen);
     }
 
-    #define SET_MARKING(str,mask) \
+    #define SET_MARKING(map_key, mask) \
     { \
-        if(marking == (str)) { \
-            if(value) { \
-                *native_ptr |= (mask); \
-            } else { \
-                *native_ptr &= ~(mask); \
+        if(marking == (map_key)) \
+        { \
+            if(value) \
+            { \
+                *p_native |= (mask); \
+            } else \
+            { \
+                *p_native &= ~(mask); \
             } \
             _markings[marking] = value; \
         } \
     }
 
     void pokemon_impl::_set_marking(
-        const std::string& marking,
+        pkmn::e_marking marking,
         bool value,
-        uint8_t* native_ptr
+        uint8_t* p_native
     )
     {
         pkmn::enforce_value_in_map_keys(
@@ -663,14 +670,14 @@ namespace pkmn
             _markings
         );
 
-        SET_MARKING("Circle", PKSAV_MARKING_CIRCLE);
-        SET_MARKING("Triangle", PKSAV_MARKING_TRIANGLE);
-        SET_MARKING("Square", PKSAV_MARKING_SQUARE);
-        SET_MARKING("Heart", PKSAV_MARKING_HEART);
+        SET_MARKING(pkmn::e_marking::CIRCLE, PKSAV_MARKING_CIRCLE);
+        SET_MARKING(pkmn::e_marking::TRIANGLE, PKSAV_MARKING_TRIANGLE);
+        SET_MARKING(pkmn::e_marking::SQUARE, PKSAV_MARKING_SQUARE);
+        SET_MARKING(pkmn::e_marking::HEART, PKSAV_MARKING_HEART);
         if(_generation > 3)
         {
-            SET_MARKING("Star", PKSAV_MARKING_STAR);
-            SET_MARKING("Diamond", PKSAV_MARKING_DIAMOND);
+            SET_MARKING(pkmn::e_marking::STAR, PKSAV_MARKING_STAR);
+            SET_MARKING(pkmn::e_marking::DIAMOND, PKSAV_MARKING_DIAMOND);
         }
     }
 

@@ -156,20 +156,26 @@ TEST_P(conversions_test, conversions_test)
     if(origin_generation >= 3)
     {
         // Randomize markings, ribbons, and contest stats.
-        const std::map<std::string, bool>& markings = first_pokemon->get_markings();
-        for(auto iter = markings.begin(); iter != markings.end(); ++iter)
+        for(const auto& markings_iter: first_pokemon->get_markings())
         {
-            first_pokemon->set_marking(iter->first, random_bool());
+            first_pokemon->set_marking(
+                markings_iter.first,
+                random_bool()
+            );
         }
-        const std::map<std::string, bool>& ribbons = first_pokemon->get_ribbons();
-        for(auto iter = ribbons.begin(); iter != ribbons.end(); ++iter)
+        for(const auto& ribbons_iter: first_pokemon->get_ribbons())
         {
-            first_pokemon->set_ribbon(iter->first, random_bool());
+            first_pokemon->set_ribbon(
+                ribbons_iter.first,
+                random_bool()
+            );
         }
-        const std::map<std::string, int>& contest_stats = first_pokemon->get_contest_stats();
-        for(auto iter = contest_stats.begin(); iter != contest_stats.end(); ++iter)
+        for(const auto& contest_stats_iter: first_pokemon->get_contest_stats())
         {
-            first_pokemon->set_contest_stat(iter->first, int_rng.rand(0, 255));
+            first_pokemon->set_contest_stat(
+                contest_stats_iter.first,
+                int_rng.rand(0, 255)
+            );
         }
 
         first_pokemon->set_pokerus_duration(int_rng.rand(0, 15));
@@ -216,9 +222,9 @@ TEST_P(conversions_test, conversions_test)
 
         if(origin_generation == dest_generation)
         {
-            EXPECT_TRUE(first_pokemon->get_markings() == second_pokemon->get_markings());
-            EXPECT_TRUE(first_pokemon->get_ribbons() == second_pokemon->get_ribbons());
-            EXPECT_TRUE(first_pokemon->get_contest_stats() == second_pokemon->get_contest_stats());
+            EXPECT_EQ(first_pokemon->get_markings(), second_pokemon->get_markings());
+            EXPECT_EQ(first_pokemon->get_ribbons(), second_pokemon->get_ribbons());
+            EXPECT_EQ(first_pokemon->get_contest_stats(), second_pokemon->get_contest_stats());
         }
         // TODO: else specific functions to check
     }

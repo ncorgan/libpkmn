@@ -44,9 +44,11 @@ enum pkmn_error pkmn_ ## name ## _enum_list_free( \
 
 PKMN_C_ENUM_LIST_FREE_FCN(ability)
 PKMN_C_ENUM_LIST_FREE_FCN(ball)
+PKMN_C_ENUM_LIST_FREE_FCN(contest_stat)
 PKMN_C_ENUM_LIST_FREE_FCN(egg_group)
 PKMN_C_ENUM_LIST_FREE_FCN(game)
 PKMN_C_ENUM_LIST_FREE_FCN(item)
+PKMN_C_ENUM_LIST_FREE_FCN(marking)
 PKMN_C_ENUM_LIST_FREE_FCN(move)
 PKMN_C_ENUM_LIST_FREE_FCN(move_damage_class)
 PKMN_C_ENUM_LIST_FREE_FCN(move_target)

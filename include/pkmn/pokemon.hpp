@@ -15,10 +15,12 @@
 
 #include <pkmn/enums/ability.hpp>
 #include <pkmn/enums/ball.hpp>
+#include <pkmn/enums/contest_stat.hpp>
 #include <pkmn/enums/game.hpp>
 #include <pkmn/enums/gender.hpp>
 #include <pkmn/enums/item.hpp>
 #include <pkmn/enums/language.hpp>
+#include <pkmn/enums/marking.hpp>
 #include <pkmn/enums/move.hpp>
 #include <pkmn/enums/nature.hpp>
 #include <pkmn/enums/species.hpp>
@@ -211,10 +213,10 @@ namespace pkmn {
                 int level
             ) = 0;
 
-            virtual const std::map<std::string, bool>& get_markings() = 0;
+            virtual const std::map<pkmn::e_marking, bool>& get_markings() = 0;
 
             virtual void set_marking(
-                const std::string& marking,
+                pkmn::e_marking marking,
                 bool value
             ) = 0;
 
@@ -225,10 +227,10 @@ namespace pkmn {
                 bool value
             ) = 0;
 
-            virtual const std::map<std::string, int>& get_contest_stats() = 0;
+            virtual const std::map<pkmn::e_contest_stat, int>& get_contest_stats() = 0;
 
             virtual void set_contest_stat(
-                const std::string& stat,
+                pkmn::e_contest_stat stat,
                 int value
             ) = 0;
 
