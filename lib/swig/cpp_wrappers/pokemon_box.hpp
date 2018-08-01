@@ -11,7 +11,7 @@
 #include "exception_internal.hpp"
 #include "private_exports.hpp"
 
-#include "swig/modules/cpp_wrappers/pokemon.hpp"
+#include "swig/cpp_wrappers/pokemon.hpp"
 
 #include <pkmn/config.hpp>
 #include <pkmn/exception.hpp>

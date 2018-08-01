@@ -8,7 +8,7 @@
 #ifndef CPP_WRAPPERS_POKEMON_PC_HPP
 #define CPP_WRAPPERS_POKEMON_PC_HPP
 
-#include "swig/modules/cpp_wrappers/pokemon_box.hpp"
+#include "swig/cpp_wrappers/pokemon_box.hpp"
 
 #include "exception_internal.hpp"
 
