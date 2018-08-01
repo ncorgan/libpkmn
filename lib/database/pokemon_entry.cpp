@@ -95,25 +95,24 @@ namespace pkmn { namespace database {
 
     static void _query_to_move_list(
         const char* query,
-        pkmn::database::move_list_t &move_list_out,
+        std::vector<pkmn::e_move>& move_list_out,
         int pokemon_id,
-        int game_id,
         int version_group_id,
         bool tmhm
-    ) {
+    )
+    {
         SQLite::Statement stmt(get_connection(), query);
         stmt.bind(1, pokemon_id);
         stmt.bind(2, version_group_id);
-        if(tmhm) {
+        if(tmhm)
+        {
             stmt.bind(3, version_group_id);
         }
 
-        while(stmt.executeStep()) {
+        while(stmt.executeStep())
+        {
             move_list_out.emplace_back(
-                pkmn::database::move_entry(
-                    int(stmt.getColumn(0)),
-                    game_id
-                )
+                static_cast<pkmn::e_move>(int(stmt.getColumn(0)))
             );
         }
     }
@@ -946,26 +945,24 @@ namespace pkmn { namespace database {
         return ret;
     }
 
-    pkmn::database::levelup_moves_t pokemon_entry::get_levelup_moves() const {
+    pkmn::database::levelup_moves_t pokemon_entry::get_levelup_moves() const
+    {
         pkmn::database::levelup_moves_t ret;
 
-        if(not (_none or _invalid)) {
-            static BOOST_CONSTEXPR const char* query = \
+        if(!_none && !_invalid)
+        {
+            static const std::string query =
                 "SELECT move_id,level FROM pokemon_moves WHERE pokemon_id=? "
                 "AND version_group_id=? AND pokemon_move_method_id=1 ORDER BY level";
 
             SQLite::Statement stmt(get_connection(), query);
             stmt.bind(1, _pokemon_id);
             stmt.bind(2, _version_group_id);
-            while(stmt.executeStep()) {
+            while(stmt.executeStep())
+            {
                 ret.emplace_back(
-                    pkmn::database::levelup_move(
-                        pkmn::database::move_entry(
-                            int(stmt.getColumn(0)),
-                            _game_id
-                        ),
-                        int(stmt.getColumn(1))
-                    )
+                    static_cast<pkmn::e_move>(int(stmt.getColumn(0))),
+                    int(stmt.getColumn(1))
                 );
             }
         }
@@ -973,11 +970,13 @@ namespace pkmn { namespace database {
         return ret;
     }
 
-    pkmn::database::move_list_t pokemon_entry::get_tm_hm_moves() const {
-        pkmn::database::move_list_t ret;
+    std::vector<pkmn::e_move> pokemon_entry::get_tm_hm_moves() const
+    {
+        std::vector<pkmn::e_move> ret;
 
-        if(not (_none or _invalid)) {
-            static BOOST_CONSTEXPR const char* query = \
+        if(!_none && !_invalid)
+        {
+            static const std::string& query =
                 "SELECT move_id FROM machines WHERE move_id IN "
                 "(SELECT move_id FROM pokemon_moves WHERE pokemon_move_method_id=4 AND "
                 "pokemon_id=? AND version_group_id=?) AND version_group_id=? ORDER BY "
@@ -986,16 +985,19 @@ namespace pkmn { namespace database {
             // Gamecube results match Ruby/Sapphire, so use that instead
             int game_id = 0;
             int version_group_id = 0;
-            if(game_is_gamecube(_game_id)) {
+            if(game_is_gamecube(_game_id))
+            {
                 game_id = RUBY;
                 version_group_id = RS;
-            } else {
+            }
+            else
+            {
                 game_id = _game_id;
                 version_group_id = _version_group_id;
             }
 
             _query_to_move_list(
-                query, ret, _pokemon_id, game_id, version_group_id, true
+                query.c_str(), ret, _pokemon_id, version_group_id, true
             );
         }
 
@@ -1006,23 +1008,27 @@ namespace pkmn { namespace database {
      * Veekun's database only stores egg moves for unevolved Pokemon, so we need to
      * figure out this Pokemon's earliest evolution and use that for the query.
      */
-    pkmn::database::move_list_t pokemon_entry::get_egg_moves() const {
-        pkmn::database::move_list_t ret;
+    std::vector<pkmn::e_move> pokemon_entry::get_egg_moves() const
+    {
+        std::vector<pkmn::e_move> ret;
 
-        if(not (_none or _invalid)) {
-            static BOOST_CONSTEXPR const char* evolution_query = \
+        if(!_none && !_invalid)
+        {
+            static const std::string evolution_query =
                 "SELECT evolves_from_species_id FROM pokemon_species WHERE id=?";
 
-            static BOOST_CONSTEXPR const char* move_query = \
+            static const std::string move_query =
                 "SELECT move_id FROM pokemon_moves WHERE pokemon_move_method_id=2 AND "
                 "pokemon_id=? AND version_group_id=?";
 
             int species_id = _species_id;
-            SQLite::Statement stmt(get_connection(), evolution_query);
+            SQLite::Statement stmt(get_connection(), evolution_query.c_str());
             stmt.bind(1, species_id);
-            while(stmt.executeStep()) {
+            while(stmt.executeStep())
+            {
                 // The final query will be valid but return 0, which we can't use
-                if(int(stmt.getColumn(0)) == 0) {
+                if(int(stmt.getColumn(0)) == 0)
+                {
                     break;
                 }
                 species_id = stmt.getColumn(0);
@@ -1034,32 +1040,37 @@ namespace pkmn { namespace database {
             // Gamecube results match Ruby/Sapphire, so use that instead
             int game_id = 0;
             int version_group_id = 0;
-            if(game_is_gamecube(_game_id)) {
+            if(game_is_gamecube(_game_id))
+            {
                 game_id = RUBY;
                 version_group_id = RS;
-            } else {
+            }
+            else
+            {
                 game_id = _game_id;
                 version_group_id = _version_group_id;
             }
 
             _query_to_move_list(
-                move_query, ret, species_id, game_id, version_group_id, false
+                move_query.c_str(), ret, species_id, version_group_id, false
             );
         }
 
         return ret;
     }
 
-    pkmn::database::move_list_t pokemon_entry::get_tutor_moves() const {
-        pkmn::database::move_list_t ret;
+    std::vector<pkmn::e_move> pokemon_entry::get_tutor_moves() const
+    {
+        std::vector<pkmn::e_move> ret;
 
-        if(not (_none or _invalid)) {
-            static BOOST_CONSTEXPR const char* query = \
+        if(!_none && !_invalid)
+        {
+            static const std::string query =
                 "SELECT move_id FROM pokemon_moves WHERE pokemon_move_method_id=3 AND "
                 "pokemon_id=? AND version_group_id=?";
 
             _query_to_move_list(
-                query, ret, _pokemon_id, _game_id, _version_group_id, false
+                query.c_str(), ret, _pokemon_id, _version_group_id, false
             );
         }
 

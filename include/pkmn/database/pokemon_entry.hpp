@@ -15,6 +15,7 @@
 #include <pkmn/enums/ability.hpp>
 #include <pkmn/enums/egg_group.hpp>
 #include <pkmn/enums/game.hpp>
+#include <pkmn/enums/move.hpp>
 #include <pkmn/enums/species.hpp>
 #include <pkmn/enums/stat.hpp>
 #include <pkmn/enums/type.hpp>
@@ -97,7 +98,6 @@ namespace pkmn { namespace database {
                                 : static_cast<pkmn::e_species>(_species_id);
             }
 
-            // TODO: rename get_species_name
             /*!
              * @brief Returns the Pokémon's name.
              *
@@ -330,19 +330,19 @@ namespace pkmn { namespace database {
             /*!
              * @brief Returns entries for the moves this Pokémon can learn via TM/HM.
              */
-            pkmn::database::move_list_t get_tm_hm_moves() const;
+            std::vector<pkmn::e_move> get_tm_hm_moves() const;
 
             /*!
              * @brief Returns entries for the moves this Pokémon can learn via
              *        breeding.
              */
-            pkmn::database::move_list_t get_egg_moves() const;
+            std::vector<pkmn::e_move> get_egg_moves() const;
 
             /*!
              * @brief Returns entries for the moves this Pokémon can learn via
              *        a Move Tutor in the game this entry corresponds to.
              */
-            pkmn::database::move_list_t get_tutor_moves() const;
+            std::vector<pkmn::e_move> get_tutor_moves() const;
 
             /*!
              * @brief Returns a list of this Pokémon's forms in the game this

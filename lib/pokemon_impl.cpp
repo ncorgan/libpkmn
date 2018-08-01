@@ -350,7 +350,7 @@ namespace pkmn
                 ++move_index, ++levelup_move_index)
             {
                 this->set_move(
-                    levelup_moves[levelup_move_index].move.get_move(),
+                    levelup_moves[levelup_move_index].move,
                     static_cast<int>(move_index)
                 );
             }
