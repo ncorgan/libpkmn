@@ -983,16 +983,13 @@ namespace pkmn { namespace database {
                 "machine_number";
 
             // Gamecube results match Ruby/Sapphire, so use that instead
-            int game_id = 0;
             int version_group_id = 0;
             if(game_is_gamecube(_game_id))
             {
-                game_id = RUBY;
                 version_group_id = RS;
             }
             else
             {
-                game_id = _game_id;
                 version_group_id = _version_group_id;
             }
 
@@ -1038,16 +1035,13 @@ namespace pkmn { namespace database {
             }
 
             // Gamecube results match Ruby/Sapphire, so use that instead
-            int game_id = 0;
             int version_group_id = 0;
             if(game_is_gamecube(_game_id))
             {
-                game_id = RUBY;
                 version_group_id = RS;
             }
             else
             {
-                game_id = _game_id;
                 version_group_id = _version_group_id;
             }
 

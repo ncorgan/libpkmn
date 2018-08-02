@@ -123,17 +123,17 @@
 
 // Replace methods with more idiomatic Ruby.
 
-%attributeval(pkmn::swig::marking_map, %arg(std::vector<std::string>), keys, keys);
+%attributeval(pkmn::swig::marking_map, %arg(std::vector<pkmn::e_marking>), keys, keys);
 
 %extend pkmn::swig::marking_map
 {
-    bool __getitem__(const std::string& marking)
+    bool __getitem__(pkmn::e_marking marking)
     {
         return self->get_marking(marking);
     }
 
     void __setitem__(
-        const std::string& marking,
+        pkmn::e_marking marking,
         bool value
     )
     {
@@ -153,10 +153,10 @@
         }
 
         VALUE k, v;
-        std::vector<std::string> keys = self->keys();
-        for(const std::string& key: keys)
+        std::vector<pkmn::e_marking> keys = self->keys();
+        for(pkmn::e_marking key: keys)
         {
-            k = SWIG_From_std_string(key);
+            k = SWIG_From_int(int(key));
             v = self->get_marking(key) ? Qtrue : Qfalse;
             rb_yield_values(2, k, v);
         }
@@ -227,17 +227,17 @@
 
 // Replace methods with more idiomatic Ruby.
 
-%attributeval(pkmn::swig::contest_stat_map, %arg(std::vector<std::string>), keys, keys);
+%attributeval(pkmn::swig::contest_stat_map, %arg(std::vector<pkmn::e_contest_stat>), keys, keys);
 
 %extend pkmn::swig::contest_stat_map
 {
-    int __getitem__(const std::string& stat)
+    int __getitem__(pkmn::e_contest_stat stat)
     {
         return self->get_contest_stat(stat);
     }
 
     void __setitem__(
-        const std::string& stat,
+        pkmn::e_contest_stat stat,
         int value
     )
     {
@@ -257,10 +257,10 @@
         }
 
         VALUE k, v;
-        std::vector<std::string> keys = self->keys();
-        for(const std::string& key: keys)
+        std::vector<pkmn::e_contest_stat> keys = self->keys();
+        for(pkmn::e_contest_stat key: keys)
         {
-            k = SWIG_From_std_string(key);
+            k = SWIG_From_int(int(key));
             v = SWIG_From_int(self->get_contest_stat(key));
             rb_yield_values(2, k, v);
         }
@@ -280,7 +280,7 @@
 
 // Replace methods with more idiomatic Ruby.
 
-%attributestring(pkmn::swig::move_slot, std::string, move, get_move, set_move);
+%attribute(pkmn::swig::move_slot, pkmn::e_move, move, get_move, set_move);
 %attribute(pkmn::swig::move_slot, int, pp, get_pp, set_pp);
 
 //
