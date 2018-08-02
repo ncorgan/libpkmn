@@ -11,7 +11,7 @@
 
 %include <attribute.i>
 
-%attribute(pkmn::swig::item_slot, std::string, item, get_item, set_item);
+%attribute(pkmn::swig::item_slot, pkmn::e_item, item, get_item, set_item);
 %attribute(pkmn::swig::item_slot, int, amount, get_amount, set_amount);
 
 %include "cpp_wrappers/item_slot.hpp"

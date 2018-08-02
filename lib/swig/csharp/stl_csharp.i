@@ -66,8 +66,8 @@ PKMN_CSHARP_VECTOR(pkmn::e_game,              PKMN.Game,            GameEnumList
 PKMN_CSHARP_VECTOR(pkmn::e_gender,            PKMN.Gender,          GenderEnumList);
 PKMN_CSHARP_VECTOR(pkmn::e_item,              PKMN.Item,            ItemEnumList);
 PKMN_CSHARP_VECTOR(pkmn::e_language,          PKMN.Language,        LanguageEnumList);
-PKMN_CSHARP_VECTOR(pkmn::e_move,              PKMN.Move,            MoveEnumList);
 PKMN_CSHARP_VECTOR(pkmn::e_marking,           PKMN.Marking,         MarkingEnumList);
+PKMN_CSHARP_VECTOR(pkmn::e_move,              PKMN.Move,            MoveEnumList);
 PKMN_CSHARP_VECTOR(pkmn::e_move_damage_class, PKMN.MoveDamageClass, MoveDamageClassEnumList);
 PKMN_CSHARP_VECTOR(pkmn::e_move_target,       PKMN.MoveTarget,      MoveTargetEnumList);
 PKMN_CSHARP_VECTOR(pkmn::e_nature,            PKMN.Nature,          NatureEnumList);

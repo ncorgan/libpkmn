@@ -16,20 +16,20 @@
 %ignore pkmn::swig::pokedex_has_seen_helper::pokedex_has_seen_helper();
 %ignore pkmn::swig::pokedex_has_seen_helper::pokedex_has_seen_helper(const pkmn::pokedex::sptr&);
 %ignore pkmn::swig::pokedex_has_seen_helper::pokedex_has_seen_helper(const pkmn::pokedex::sptr&, bool);
-%ignore pkmn::swig::pokedex_has_seen_helper::get_has_seen(const std::string&);
-%ignore pkmn::swig::pokedex_has_seen_helper::set_has_seen(const std::string&, bool);
+%ignore pkmn::swig::pokedex_has_seen_helper::get_has_seen(pkmn::e_species);
+%ignore pkmn::swig::pokedex_has_seen_helper::set_has_seen(pkmn::e_species, bool);
 
 // Replace methods with more idiomatic Lua.
 
 %extend pkmn::swig::pokedex_has_seen_helper
 {
-    bool __getitem__(const std::string& species)
+    bool __getitem__(pkmn::e_species species)
     {
         return self->get_has_seen(species);
     }
 
     void __setitem__(
-        const std::string& species,
+        pkmn::e_species species,
         bool value
     )
     {
@@ -44,19 +44,19 @@
 %ignore pkmn::swig::pokedex_has_caught_helper::pokedex_has_caught_helper();
 %ignore pkmn::swig::pokedex_has_caught_helper::pokedex_has_caught_helper(const pkmn::pokedex::sptr&);
 %ignore pkmn::swig::pokedex_has_caught_helper::pokedex_has_caught_helper(const pkmn::pokedex::sptr&, bool);
-%ignore pkmn::swig::pokedex_has_caught_helper::get_has_caught(const std::string&);
-%ignore pkmn::swig::pokedex_has_caught_helper::set_has_caught(const std::string&, bool);
+%ignore pkmn::swig::pokedex_has_caught_helper::get_has_caught(pkmn::e_species);
+%ignore pkmn::swig::pokedex_has_caught_helper::set_has_caught(pkmn::e_species, bool);
 
 // Replace methods with more idiomatic Lua.
 
 %extend pkmn::swig::pokedex_has_caught_helper
 {
-    bool __getitem__(const std::string& species)
+    bool __getitem__(pkmn::e_species species)
     {
         return self->get_has_caught(species);
     }
 
-    void __setitem__(const std::string& species, bool value)
+    void __setitem__(pkmn::e_species species, bool value)
     {
         self->set_has_caught(species, value);
     }
