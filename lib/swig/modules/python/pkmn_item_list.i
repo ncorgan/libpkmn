@@ -24,7 +24,8 @@
 %attributestring(pkmn::swig::item_list, std::string, name, get_name);
 %attribute(pkmn::swig::item_list, pkmn::e_game, game, get_game);
 %attribute(pkmn::swig::item_list, int, num_items, get_num_items);
-%attributeval(pkmn::swig::item_list, %arg(std::vector<std::string>), valid_items, get_valid_items);
+%attributeval(pkmn::swig::item_list, %arg(std::vector<pkmn::e_item>), valid_items, get_valid_items);
+%attributeval(pkmn::swig::item_list, %arg(std::vector<std::string>), valid_item_names, get_valid_item_names);
 
 %extend pkmn::swig::item_list
 {

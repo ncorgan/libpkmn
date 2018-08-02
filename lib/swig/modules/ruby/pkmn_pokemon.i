@@ -22,7 +22,7 @@
 
 // Convert getter/setter functions into attributes for more idiomatic Ruby.
 
-%attributestring(pkmn::swig::pokemon, std::string, species, get_species);
+%attribute(pkmn::swig::pokemon, pkmn::e_species, species, get_species);
 %attribute(pkmn::swig::pokemon, pkmn::e_game, game, get_game);
 %attributestring(pkmn::swig::pokemon, std::string, form, get_form, set_form);
 %attribute(pkmn::swig::pokemon, bool, is_egg, is_egg, set_is_egg);
@@ -37,7 +37,7 @@
 %attribute(pkmn::swig::pokemon, pkmn::e_gender, original_trainer_gender, get_original_trainer_gender, set_original_trainer_gender);
 %attribute(pkmn::swig::pokemon, pkmn::e_language, language, get_language, set_language);
 %attribute(pkmn::swig::pokemon, int, current_trainer_friendship, get_current_trainer_friendship, set_current_trainer_friendship);
-%attributestring(pkmn::swig::pokemon, std::string, ability, get_ability, set_ability);
+%attribute(pkmn::swig::pokemon, pkmn::e_ability, ability, get_ability, set_ability);
 %attribute(pkmn::swig::pokemon, int, level_met, get_level_met, set_level_met);
 %attribute(pkmn::swig::pokemon, pkmn::e_game, original_game, get_original_game, set_original_game);
 %attribute(pkmn::swig::pokemon, uint32_t, personality, get_personality, set_personality);
@@ -56,8 +56,8 @@
 %attributeval(pkmn::swig::pokemon, %arg(pkmn::swig::numeric_attribute_map<pkmn::pokemon>), numeric_attributes, get_numeric_attributes);
 %attributeval(pkmn::swig::pokemon, %arg(pkmn::swig::string_attribute_map<pkmn::pokemon>), string_attributes, get_string_attributes);
 %attributeval(pkmn::swig::pokemon, %arg(pkmn::swig::boolean_attribute_map<pkmn::pokemon>), boolean_attributes, get_boolean_attributes);
-%attributestring(pkmn::swig::pokemon, std::string, ball, get_ball, set_ball);
-%attributestring(pkmn::swig::pokemon, std::string, held_item, get_held_item, set_held_item);
+%attribute(pkmn::swig::pokemon, pkmn::e_ball, ball, get_ball, set_ball);
+%attribute(pkmn::swig::pokemon, pkmn::e_item, held_item, get_held_item, set_held_item);
 %attributestring(pkmn::swig::pokemon, std::string, location_met, get_location_met, set_location_met);
 %attributestring(pkmn::swig::pokemon, std::string, location_met_as_egg, get_location_met_as_egg, set_location_met_as_egg);
 %attributestring(pkmn::swig::pokemon, std::string, nickname, get_nickname, set_nickname);
