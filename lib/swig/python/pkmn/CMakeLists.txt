@@ -7,6 +7,19 @@
 
 INCLUDE(SWIGPython)
 
+# Get list of enum modules to add to dependencies, as well as the import
+# string.
+EXECUTE_PROCESS(
+    COMMAND ${PYTHON_EXECUTABLE} ${PKMN_SOURCE_DIR}/scripts/print_enum_names_for_cmake.py --enum-dir=${PKMN_SOURCE_DIR}/include/pkmn/enums --print-as-cmake-list
+    OUTPUT_VARIABLE ENUM_LIST OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+SET(ENUM_LIST ${ENUM_LIST} CACHE STRING "Enum list")
+EXECUTE_PROCESS(
+    COMMAND ${PYTHON_EXECUTABLE} ${PKMN_SOURCE_DIR}/scripts/print_enum_names_for_cmake.py --enum-dir=${PKMN_SOURCE_DIR}/include/pkmn/enums --print-as-python-imports
+    OUTPUT_VARIABLE ENUM_IMPORT OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+SET(ENUM_IMPORT ${ENUM_IMPORT} CACHE STRING "Enum import")
+
 #
 # Set variables needed for CMake macros
 #
@@ -35,3 +48,31 @@ ADD_SUBDIRECTORY(calculations)
 ADD_SUBDIRECTORY(database)
 ADD_SUBDIRECTORY(qt)
 ADD_SUBDIRECTORY(paths)
+
+# Generate .py files with enums.
+SET(py_enums_deps
+    ${PKMN_SOURCE_DIR}/include/pkmn/enums/CMakeLists.txt
+    ${PKMN_SOURCE_DIR}/scripts/generate_python_enums.py
+)
+FOREACH(enum ${ENUM_LIST})
+    LIST(APPEND py_enums
+        "${CMAKE_CURRENT_BINARY_DIR}/${enum}.py"
+    )
+ENDFOREACH()
+
+ADD_CUSTOM_COMMAND(
+    DEPENDS ${py_enums_deps}
+    OUTPUT ${py_enums}
+    COMMAND ${PYTHON_EXECUTABLE} ${PKMN_SOURCE_DIR}/scripts/generate_python_enums.py --enum-dir=${PKMN_SOURCE_DIR}/include/pkmn/enums --output-dir=${CMAKE_CURRENT_BINARY_DIR}
+    COMMENT "Generating Python enums"
+)
+ADD_CUSTOM_TARGET(
+    pkmn_python_enums ALL
+    DEPENDS ${py_enums}
+)
+
+INSTALL(
+    FILES ${py_enums}
+    DESTINATION ${PYTHON_INSTALL_DIR}/pkmn
+    COMPONENT Python
+)

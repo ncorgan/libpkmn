@@ -11,6 +11,8 @@ PKMN_PYTHON_INIT
 // Will be called on import
 
 %{
+    #include <pkmn/enums/enum_to_string.hpp>
+
     #include <pkmn/utils/paths.hpp>
 
 #include "private_exports.hpp"
@@ -25,6 +27,9 @@ namespace pkmn { namespace priv {
 
 %import <database/database_python.i>
 %import <stl_python.i>
+
+// Enums
+%include <pkmn/enums/enum_to_string.hpp>
 
 // Attribute Maps
 %include <python/pkmn_attribute_maps.i>
