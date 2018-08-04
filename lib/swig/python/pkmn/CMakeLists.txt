@@ -49,6 +49,10 @@ ADD_SUBDIRECTORY(database)
 ADD_SUBDIRECTORY(qt)
 ADD_SUBDIRECTORY(paths)
 
+# Oh, SWIG. We need to build this for other SWIG modules to treat C++ enum
+# parameters properly, but we don't need to install it.
+SWIG_BUILD_PYTHON_MODULE_BUILD_ONLY(enums_python Enums pkmn TRUE)
+
 # Generate .py files with enums.
 SET(py_enums_deps
     ${PKMN_SOURCE_DIR}/include/pkmn/enums/CMakeLists.txt

@@ -20,27 +20,7 @@ PKMN_PYTHON_INIT
  * This file contains STL containers with either pure STL types or with LibPKMN
  * enums.
  */
-
-// Don't actually wrap the enums. SWIG treats these as ints anyway, so we'll
-// manually create the .py files.
-%import <pkmn/enums/stat.hpp>
-%import <pkmn/enums/ability.hpp>
-%import <pkmn/enums/ball.hpp>
-%import <pkmn/enums/condition.hpp>
-%import <pkmn/enums/contest_stat.hpp>
-%import <pkmn/enums/egg_group.hpp>
-%import <pkmn/enums/game.hpp>
-%import <pkmn/enums/gender.hpp>
-%import <pkmn/enums/item.hpp>
-%import <pkmn/enums/language.hpp>
-%import <pkmn/enums/marking.hpp>
-%import <pkmn/enums/move.hpp>
-%import <pkmn/enums/move_damage_class.hpp>
-%import <pkmn/enums/move_target.hpp>
-%import <pkmn/enums/nature.hpp>
-%import <pkmn/enums/species.hpp>
-%import <pkmn/enums/stat.hpp>
-%import <pkmn/enums/type.hpp>
+%import <enums_python.i>
 
 %include <std_string.i>
 

@@ -26,6 +26,7 @@ namespace pkmn { namespace priv {
 %include <pkmn_python_docstrings.i>
 
 %import <database/database_python.i>
+%import <enums_python.i>
 %import <stl_python.i>
 
 // Enums

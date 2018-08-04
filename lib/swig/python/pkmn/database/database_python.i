@@ -10,13 +10,11 @@ PKMN_PYTHON_INIT
 
 %include <std_string.i>
 
+%import <enums_python.i>
 %import <stl_python.i>
 
 // Convert Doxygen docs to Python docstrings
 %include <pkmn_python_docstrings.i>
-
-%import <pkmn/enums/game.hpp>
-%import <pkmn/enums/stat.hpp>
 
 %include <python/pkmn_database_item_entry.i>
 %include <python/pkmn_database_move_entry.i>
