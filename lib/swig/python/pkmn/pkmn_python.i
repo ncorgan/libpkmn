@@ -25,8 +25,8 @@ namespace pkmn { namespace priv {
 // Convert Doxygen docs to Python docstrings
 %include <pkmn_python_docstrings.i>
 
-%import <database/database_python.i>
 %import <enums_python.i>
+%import <database/database_python.i>
 %import <stl_python.i>
 
 // Enums

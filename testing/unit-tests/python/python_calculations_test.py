@@ -156,20 +156,28 @@ class calculations_test(unittest.TestCase):
         # Test invalid parameters.
 
         with self.assertRaises(ValueError):
-            pkmn.calculations.fling_power("Not an item")
+            pkmn.calculations.fling_power(pkmn.item.INVALID)
 
         # Test expected results.
-
-        item_names = ["Oran Berry", "Health Wing", "Potion",
-                      "Icy Rock", "Dubious Disc", "Damp Rock",
-                      "Dragon Fang", "Dusk Stone", "Thick Club",
-                      "Rare Bone", "Iron Ball"]
+        items = [
+            pkmn.item.ORAN_BERRY,
+            pkmn.item.HEALTH_WING,
+            pkmn.item.POTION,
+            pkmn.item.ICY_ROCK,
+            pkmn.item.DUBIOUS_DISC,
+            pkmn.item.DAMP_ROCK,
+            pkmn.item.DRAGON_FANG,
+            pkmn.item.DUSK_STONE,
+            pkmn.item.THICK_CLUB,
+            pkmn.item.RARE_BONE,
+            pkmn.item.IRON_BALL
+        ]
         expected_powers = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 130]
-        test_cases = zip(item_names, expected_powers)
+        test_cases = zip(items, expected_powers)
 
-        for item_name, expected_power in test_cases:
+        for item, expected_power in test_cases:
             self.assertEqual(
-                pkmn.calculations.fling_power(item_name),
+                pkmn.calculations.fling_power(item),
                 expected_power
             )
 
@@ -778,13 +786,29 @@ class calculations_test(unittest.TestCase):
 
         # Invalid generation
         with self.assertRaises(IndexError):
-            pkmn.calculations.type_damage_modifier(-1, "Normal", "Normal")
+            pkmn.calculations.type_damage_modifier(
+                -1,
+                pkmn.pokemon_type.NORMAL,
+                pkmn.pokemon_type.NORMAL
+            )
         with self.assertRaises(IndexError):
-            pkmn.calculations.type_damage_modifier(8, "Normal", "Normal")
+            pkmn.calculations.type_damage_modifier(
+                8,
+                pkmn.pokemon_type.NORMAL,
+                pkmn.pokemon_type.NORMAL
+            )
 
         # Invalid types for a given generation
         generations = [1, 1, 5, 3, 5, 2, 4]
-        types = ["Dark", "Steel", "Fairy", "???", "???", "Shadow", "Shadow"]
+        types = [
+            pkmn.pokemon_type.DARK,
+            pkmn.pokemon_type.STEEL,
+            pkmn.pokemon_type.FAIRY,
+            pkmn.pokemon_type.QUESTION_MARK,
+            pkmn.pokemon_type.QUESTION_MARK,
+            pkmn.pokemon_type.SHADOW,
+            pkmn.pokemon_type.SHADOW
+        ]
         test_cases = zip(generations, types)
 
         for generation, type_name in test_cases:
@@ -793,21 +817,35 @@ class calculations_test(unittest.TestCase):
                 pkmn.calculations.type_damage_modifier(
                     generation,
                     type_name,
-                    "Normal"
+                    pkmn.pokemon_type.NORMAL
                 )
 
             # Invalid defending type
             with self.assertRaises(ValueError):
                 pkmn.calculations.type_damage_modifier(
                     generation,
-                    "Normal",
+                    pkmn.pokemon_type.NORMAL,
                     type_name
                 )
 
         # Check that changes between generations are properly implemented.
 
-        attacking_types = ["Bug", "Poison", "Ghost", "Ice", "Ghost", "Dark"]
-        defending_types = ["Poison", "Bug", "Psychic", "Fire", "Steel", "Steel"]
+        attacking_types = [
+            pkmn.pokemon_type.BUG,
+            pkmn.pokemon_type.POISON,
+            pkmn.pokemon_type.GHOST,
+            pkmn.pokemon_type.ICE,
+            pkmn.pokemon_type.GHOST,
+            pkmn.pokemon_type.DARK
+        ]
+        defending_types = [
+            pkmn.pokemon_type.POISON,
+            pkmn.pokemon_type.BUG,
+            pkmn.pokemon_type.PSYCHIC,
+            pkmn.pokemon_type.FIRE,
+            pkmn.pokemon_type.STEEL,
+            pkmn.pokemon_type.STEEL
+        ]
         old_generations = [1, 1, 1, 1, 5, 5]
         old_modifiers = [2.0, 2.0, 0.0, 1.0, 0.5, 0.5]
         new_generations = [2, 2, 2, 2, 6, 6]
@@ -884,50 +922,50 @@ class calculations_test(unittest.TestCase):
     def test_gen2_gender(self):
         # Make sure expected errors are raised.
         with self.assertRaises(ValueError):
-            gender = pkmn.calculations.gen2_pokemon_gender("Not a species", 0)
+            gender = pkmn.calculations.gen2_pokemon_gender(pkmn.species.NONE, 0)
         with self.assertRaises(IndexError):
-            gender = pkmn.calculations.gen2_pokemon_gender("Bulbasaur", -1)
+            gender = pkmn.calculations.gen2_pokemon_gender(pkmn.species.BULBASAUR, -1)
         with self.assertRaises(IndexError):
-            gender = pkmn.calculations.gen2_pokemon_gender("Bulbasaur", 16)
+            gender = pkmn.calculations.gen2_pokemon_gender(pkmn.species.BULBASAUR, 16)
 
         # Make sure known good inputs result in expected results.
 
         # All male
-        self.assertEquals(pkmn.calculations.gen2_pokemon_gender("Nidorino", 0), "Male")
-        self.assertEquals(pkmn.calculations.gen2_pokemon_gender("Nidorino", 15), "Male")
+        self.assertEquals(pkmn.calculations.gen2_pokemon_gender(pkmn.species.NIDORINO, 0), pkmn.gender.MALE)
+        self.assertEquals(pkmn.calculations.gen2_pokemon_gender(pkmn.species.NIDORINO, 15), pkmn.gender.MALE)
 
         # 25% male, 75% female
-        self.assertEquals(pkmn.calculations.gen2_pokemon_gender("Vulpix", 11), "Female")
-        self.assertEquals(pkmn.calculations.gen2_pokemon_gender("Vulpix", 12), "Male")
+        self.assertEquals(pkmn.calculations.gen2_pokemon_gender(pkmn.species.VULPIX, 11), pkmn.gender.FEMALE)
+        self.assertEquals(pkmn.calculations.gen2_pokemon_gender(pkmn.species.VULPIX, 12), pkmn.gender.MALE)
 
         # All female
-        self.assertEquals(pkmn.calculations.gen2_pokemon_gender("Nidorina", 0), "Female")
-        self.assertEquals(pkmn.calculations.gen2_pokemon_gender("Nidorina", 15), "Female")
+        self.assertEquals(pkmn.calculations.gen2_pokemon_gender(pkmn.species.NIDORINA, 0), pkmn.gender.FEMALE)
+        self.assertEquals(pkmn.calculations.gen2_pokemon_gender(pkmn.species.NIDORINA, 15), pkmn.gender.FEMALE)
 
         # Genderless
-        self.assertEquals(pkmn.calculations.gen2_pokemon_gender("Magnemite", 0), "Genderless")
-        self.assertEquals(pkmn.calculations.gen2_pokemon_gender("Magnemite", 15), "Genderless")
+        self.assertEquals(pkmn.calculations.gen2_pokemon_gender(pkmn.species.MAGNEMITE, 0), pkmn.gender.GENDERLESS)
+        self.assertEquals(pkmn.calculations.gen2_pokemon_gender(pkmn.species.MAGNEMITE, 15), pkmn.gender.GENDERLESS)
 
     def test_modern_gender(self):
         # Make sure expected errors are raised.
         with self.assertRaises(ValueError):
-            gender = pkmn.calculations.modern_pokemon_gender("Not a species", 0)
+            gender = pkmn.calculations.modern_pokemon_gender(pkmn.species.NONE, 0)
 
         # All male
-        self.assertEquals(pkmn.calculations.modern_pokemon_gender("Nidorino", 0), "Male")
-        self.assertEquals(pkmn.calculations.modern_pokemon_gender("Nidorino", 0xFFFFFFFF), "Male")
+        self.assertEquals(pkmn.calculations.modern_pokemon_gender(pkmn.species.NIDORINO, 0), pkmn.gender.MALE)
+        self.assertEquals(pkmn.calculations.modern_pokemon_gender(pkmn.species.NIDORINO, 0xFFFFFFFF), pkmn.gender.MALE)
 
         # 25% male, 75% female
-        self.assertEquals(pkmn.calculations.modern_pokemon_gender("Vulpix", 190), "Female")
-        self.assertEquals(pkmn.calculations.modern_pokemon_gender("Vulpix", 191), "Male")
+        self.assertEquals(pkmn.calculations.modern_pokemon_gender(pkmn.species.VULPIX, 190), pkmn.gender.FEMALE)
+        self.assertEquals(pkmn.calculations.modern_pokemon_gender(pkmn.species.VULPIX, 191), pkmn.gender.MALE)
 
         # All female
-        self.assertEquals(pkmn.calculations.modern_pokemon_gender("Nidorina", 0), "Female")
-        self.assertEquals(pkmn.calculations.modern_pokemon_gender("Nidorina", 0xFFFFFFFF), "Female")
+        self.assertEquals(pkmn.calculations.modern_pokemon_gender(pkmn.species.NIDORINA, 0), pkmn.gender.FEMALE)
+        self.assertEquals(pkmn.calculations.modern_pokemon_gender(pkmn.species.NIDORINA, 0xFFFFFFFF), pkmn.gender.FEMALE)
 
         # Genderless
-        self.assertEquals(pkmn.calculations.modern_pokemon_gender("Magnemite", 0), "Genderless")
-        self.assertEquals(pkmn.calculations.modern_pokemon_gender("Magnemite", 0xFFFFFFFF), "Genderless")
+        self.assertEquals(pkmn.calculations.modern_pokemon_gender(pkmn.species.MAGNEMITE, 0), pkmn.gender.GENDERLESS)
+        self.assertEquals(pkmn.calculations.modern_pokemon_gender(pkmn.species.MAGNEMITE, 0xFFFFFFFF), pkmn.gender.GENDERLESS)
 
     def test_gen2_hidden_power(self):
         # Make sure expected errors are raised.
@@ -953,17 +991,10 @@ class calculations_test(unittest.TestCase):
         #
         # Source: http://bulbapedia.bulbagarden.net/wiki/Hidden_Power_(move)/Calculation#Generation_II
         #
-        expected_hidden_power = pkmn.calculations.hidden_power("Dark", 69)
-        hidden_power_different_type = pkmn.calculations.hidden_power("Normal", 69)
-        hidden_power_different_base_power = pkmn.calculations.hidden_power("Dark", 50)
+        expected_hidden_power = pkmn.calculations.hidden_power(pkmn.pokemon_type.DARK, 69)
 
         hidden_power = pkmn.calculations.gen2_hidden_power(15, 15, 15, 14)
-        self.assertTrue(hidden_power == expected_hidden_power)
-        self.assertFalse(hidden_power != expected_hidden_power)
-        self.assertFalse(hidden_power == hidden_power_different_type)
-        self.assertTrue(hidden_power != hidden_power_different_type)
-        self.assertFalse(hidden_power == hidden_power_different_base_power)
-        self.assertTrue(hidden_power != hidden_power_different_base_power)
+        self.assertEqual(hidden_power, expected_hidden_power)
 
     def test_modern_hidden_power(self):
         # Make sure expected errors are raised.
@@ -997,35 +1028,36 @@ class calculations_test(unittest.TestCase):
         #
         # Source: http://bulbapedia.bulbagarden.net/wiki/Hidden_Power_(move)/Calculation#Generation_III_to_VI
         #
-        expected_hidden_power = pkmn.calculations.hidden_power("Grass", 70)
-        hidden_power_different_type = pkmn.calculations.hidden_power("Steel", 70)
-        hidden_power_different_base_power = pkmn.calculations.hidden_power("Grass", 10)
+        expected_hidden_power = pkmn.calculations.hidden_power(pkmn.pokemon_type.GRASS, 70)
 
         hidden_power = pkmn.calculations.modern_hidden_power(30, 31, 31, 31, 30, 31)
-        self.assertTrue(hidden_power == expected_hidden_power)
-        self.assertFalse(hidden_power != expected_hidden_power)
-        self.assertFalse(hidden_power == hidden_power_different_type)
-        self.assertTrue(hidden_power != hidden_power_different_type)
-        self.assertFalse(hidden_power == hidden_power_different_base_power)
-        self.assertTrue(hidden_power != hidden_power_different_base_power)
+        self.assertEqual(hidden_power, expected_hidden_power)
 
     def test_natural_gift(self):
         # Test invalid generations.
 
         with self.assertRaises(IndexError):
-            pkmn.calculations.natural_gift_stats("Cheri Berry", 3)
+            pkmn.calculations.natural_gift_stats(pkmn.item.CHERI_BERRY, 3)
         with self.assertRaises(IndexError):
-            pkmn.calculations.natural_gift_stats("Cheri Berry", 10)
+            pkmn.calculations.natural_gift_stats(pkmn.item.CHERI_BERRY, 10)
 
         # Test invalid items.
 
         with self.assertRaises(ValueError):
-            pkmn.calculations.natural_gift_stats("Potion", 4)
+            pkmn.calculations.natural_gift_stats(pkmn.item.POTION, 4)
 
         # Test expected values.
 
-        items = ["Cheri Berry", "Nanab Berry", "Belue Berry"]
-        types = ["Fire", "Water", "Electric"]
+        items = [
+            pkmn.item.CHERI_BERRY,
+            pkmn.item.NANAB_BERRY,
+            pkmn.item.BELUE_BERRY
+        ]
+        types = [
+            pkmn.pokemon_type.FIRE,
+            pkmn.pokemon_type.WATER,
+            pkmn.pokemon_type.ELECTRIC
+        ]
         gen4_powers = [60, 70, 80]
         gen5_powers = [60, 70, 80]
         gen6_powers = [80, 90, 100]
@@ -1046,11 +1078,31 @@ class calculations_test(unittest.TestCase):
 
     def test_nature(self):
         natures = [
-            "Hardy", "Lonely", "Brave", "Adamant", "Naughty",
-            "Bold", "Docile", "Relaxed", "Impish", "Lax",
-            "Timid", "Hasty", "Serious", "Jolly", "Naive",
-            "Modest", "Mild", "Quiet", "Bashful", "Rash",
-            "Calm", "Gentle", "Sassy", "Careful", "Quirky",
+            pkmn.nature.HARDY,
+            pkmn.nature.LONELY,
+            pkmn.nature.BRAVE,
+            pkmn.nature.ADAMANT,
+            pkmn.nature.NAUGHTY,
+            pkmn.nature.BOLD,
+            pkmn.nature.DOCILE,
+            pkmn.nature.RELAXED,
+            pkmn.nature.IMPISH,
+            pkmn.nature.LAX,
+            pkmn.nature.TIMID,
+            pkmn.nature.HASTY,
+            pkmn.nature.SERIOUS,
+            pkmn.nature.JOLLY,
+            pkmn.nature.NAIVE,
+            pkmn.nature.MODEST,
+            pkmn.nature.MILD,
+            pkmn.nature.QUIET,
+            pkmn.nature.BASHFUL,
+            pkmn.nature.RASH,
+            pkmn.nature.CALM,
+            pkmn.nature.GENTLE,
+            pkmn.nature.SASSY,
+            pkmn.nature.CAREFUL,
+            pkmn.nature.QUIRKY
         ]
 
         # Make sure the SWIG wrapper keeps personality within the proper bounds.
@@ -1076,34 +1128,34 @@ class calculations_test(unittest.TestCase):
         # Test invalid ability.
         with self.assertRaises(ValueError):
             personality = pkmn.calculations.generate_personality(
-                              "Charmander",
+                              pkmn.species.CHARMANDER,
                               pkmn.pokemon.DEFAULT_TRAINER_ID,
                               True,
-                              "Torrent",
-                              "Male",
-                              "Quiet"
+                              pkmn.ability.TORRENT,
+                              pkmn.gender.MALE,
+                              pkmn.nature.QUIET
                           )
 
         # Test invalid gender.
         with self.assertRaises(ValueError):
             personality = pkmn.calculations.generate_personality(
-                              "Charmander",
+                              pkmn.species.CHARMANDER,
                               pkmn.pokemon.DEFAULT_TRAINER_ID,
                               True,
-                              "Blaze",
-                              "Not a gender",
-                              "Quiet"
+                              pkmn.ability.BLAZE,
+                              pkmn.gender.NONE,
+                              pkmn.nature.QUIET
                           )
 
         # Test invalid nature.
         with self.assertRaises(ValueError):
             personality = pkmn.calculations.generate_personality(
-                              "Charmander",
+                              pkmn.species.CHARMANDER,
                               pkmn.pokemon.DEFAULT_TRAINER_ID,
                               True,
-                              "Blaze",
-                              "Male",
-                              "Not a nature"
+                              pkmn.ability.BLAZE,
+                              pkmn.gender.MALE,
+                              pkmn.nature.NONE
                           )
 
         # Make sure the SWIG wrapper keeps personality within the proper bounds.
@@ -1111,52 +1163,52 @@ class calculations_test(unittest.TestCase):
         try:
             with self.assertRaises(OverflowError):
                 personality = pkmn.calculations.generate_personality(
-                                  "Charmander",
+                                  pkmn.species.CHARMANDER,
                                   -1,
                                   True,
-                                  "Blaze",
-                                  "Male",
-                                  "Quiet"
+                                  pkmn.ability.BLAZE,
+                                  pkmn.gender.MALE,
+                                  pkmn.nature.QUIET
                               )
         except:
             with self.assertRaises(TypeError):
                 personality = pkmn.calculations.generate_personality(
-                                  "Charmander",
+                                  pkmn.species.CHARMANDER,
                                   -1,
                                   True,
-                                  "Blaze",
-                                  "Male",
-                                  "Quiet"
+                                  pkmn.ability.BLAZE,
+                                  pkmn.gender.MALE,
+                                  pkmn.nature.QUIET
                               )
         try:
             with self.assertRaises(OverflowError):
                 personality = pkmn.calculations.generate_personality(
-                                  "Charmander",
+                                  pkmn.species.CHARMANDER,
                                   0xFFFFFFFF+1,
                                   True,
-                                  "Blaze",
-                                  "Male",
-                                  "Quiet"
+                                  pkmn.ability.BLAZE,
+                                  pkmn.gender.MALE,
+                                  pkmn.nature.QUIET
                               )
         except:
             with self.assertRaises(TypeError):
                 personality = pkmn.calculations.generate_personality(
-                                  "Charmander",
+                                  pkmn.species.CHARMANDER,
                                   0xFFFFFFFF+1,
                                   True,
-                                  "Blaze",
-                                  "Male",
-                                  "Quiet"
+                                  pkmn.ability.BLAZE,
+                                  pkmn.gender.MALE,
+                                  pkmn.nature.QUIET
                               )
 
         # Test and validate a valid call.
         personality = pkmn.calculations.generate_personality(
-                          "Charmander",
+                          pkmn.species.CHARMANDER,
                           pkmn.pokemon.DEFAULT_TRAINER_ID,
                           True,
-                          "Blaze",
-                          "Male",
-                          "Quiet"
+                          pkmn.ability.BLAZE,
+                          pkmn.gender.MALE,
+                          pkmn.nature.QUIET
                       )
         self.assertTrue(
             pkmn.calculations.modern_shiny(
@@ -1164,9 +1216,9 @@ class calculations_test(unittest.TestCase):
             )
         )
         self.assertEquals(
-            "Male",
+            pkmn.gender.MALE,
             pkmn.calculations.modern_pokemon_gender(
-                "Charmander",
+                pkmn.species.CHARMANDER,
                 personality
             )
         )
@@ -1212,12 +1264,36 @@ class calculations_test(unittest.TestCase):
         # There are no known good calculations, so just check for reasonable values
         # for each relevant Pokemon.
         pokemon_with_size_checks = [
-            pkmn.database.pokemon_entry("Barboach", "Ruby", ""),
-            pkmn.database.pokemon_entry("Shroomish", "Ruby", ""),
-            pkmn.database.pokemon_entry("Seedot", "Emerald", ""),
-            pkmn.database.pokemon_entry("Lotad", "Emerald", ""),
-            pkmn.database.pokemon_entry("Magikarp", "FireRed", ""),
-            pkmn.database.pokemon_entry("Heracross", "FireRed", "")
+            pkmn.database.pokemon_entry(
+                pkmn.species.BARBOACH,
+                pkmn.game.RUBY,
+                ""
+            ),
+            pkmn.database.pokemon_entry(
+                pkmn.species.SHROOMISH,
+                pkmn.game.RUBY,
+                ""
+            ),
+            pkmn.database.pokemon_entry(
+                pkmn.species.SEEDOT,
+                pkmn.game.EMERALD,
+                ""
+            ),
+            pkmn.database.pokemon_entry(
+                pkmn.species.LOTAD,
+                pkmn.game.EMERALD,
+                ""
+            ),
+            pkmn.database.pokemon_entry(
+                pkmn.species.MAGIKARP,
+                pkmn.game.FIRERED,
+                ""
+            ),
+            pkmn.database.pokemon_entry(
+                pkmn.species.HERACROSS,
+                pkmn.game.FIRERED,
+                ""
+            )
         ]
 
         # Make sure the SWIG wrapper keeps personality within the proper bounds.
@@ -1225,81 +1301,80 @@ class calculations_test(unittest.TestCase):
         try:
             with self.assertRaises(OverflowError):
                 pkmn.calculations.pokemon_size(
-                    "Magikarp", -1, 0, 0, 0, 0, 0, 0
+                    pkmn.species.MAGIKARP, -1, 0, 0, 0, 0, 0, 0
                 )
         except:
             with self.assertRaises(TypeError):
                 pkmn.calculations.pokemon_size(
-                    "Magikarp", -1, 0, 0, 0, 0, 0, 0
+                    pkmn.species.MAGIKARP, -1, 0, 0, 0, 0, 0, 0
                 )
         try:
             with self.assertRaises(OverflowError):
                 pkmn.calculations.pokemon_size(
-                    "Magikarp", 0xFFFFFFFF+1, 0, 0, 0, 0, 0, 0
+                    pkmn.species.MAGIKARP, 0xFFFFFFFF+1, 0, 0, 0, 0, 0, 0
                 )
         except:
             with self.assertRaises(TypeError):
                 pkmn.calculations.pokemon_size(
-                    "Magikarp", 0xFFFFFFFF+1, 0, 0, 0, 0, 0, 0
+                    pkmn.species.MAGIKARP, 0xFFFFFFFF+1, 0, 0, 0, 0, 0, 0
                 )
 
         # Test input validation.
         with self.assertRaises(IndexError):
             pkmn.calculations.pokemon_size(
-                "Magikarp", 0, -1, 0, 0, 0, 0, 0
+                pkmn.species.MAGIKARP, 0, -1, 0, 0, 0, 0, 0
             )
         with self.assertRaises(IndexError):
             pkmn.calculations.pokemon_size(
-                "Magikarp", 0, 32, 0, 0, 0, 0, 0
+                pkmn.species.MAGIKARP, 0, 32, 0, 0, 0, 0, 0
             )
         with self.assertRaises(IndexError):
             pkmn.calculations.pokemon_size(
-                "Magikarp", 0, 0, -1, 0, 0, 0, 0
+                pkmn.species.MAGIKARP, 0, 0, -1, 0, 0, 0, 0
             )
         with self.assertRaises(IndexError):
             pkmn.calculations.pokemon_size(
-                "Magikarp", 0, 0, 32, 0, 0, 0, 0
+                pkmn.species.MAGIKARP, 0, 0, 32, 0, 0, 0, 0
             )
         with self.assertRaises(IndexError):
             pkmn.calculations.pokemon_size(
-                "Magikarp", 0, 0, 0, -1, 0, 0, 0
+                pkmn.species.MAGIKARP, 0, 0, 0, -1, 0, 0, 0
             )
         with self.assertRaises(IndexError):
             pkmn.calculations.pokemon_size(
-                "Magikarp", 0, 0, 0, 32, 0, 0, 0
+                pkmn.species.MAGIKARP, 0, 0, 0, 32, 0, 0, 0
             )
         with self.assertRaises(IndexError):
             pkmn.calculations.pokemon_size(
-                "Magikarp", 0, 0, 0, 0, -1, 0, 0
+                pkmn.species.MAGIKARP, 0, 0, 0, 0, -1, 0, 0
             )
         with self.assertRaises(IndexError):
             pkmn.calculations.pokemon_size(
-                "Magikarp", 0, 0, 0, 0, 32, 0, 0
+                pkmn.species.MAGIKARP, 0, 0, 0, 0, 32, 0, 0
             )
         with self.assertRaises(IndexError):
             pkmn.calculations.pokemon_size(
-                "Magikarp", 0, 0, 0, 0, 0, -1, 0
+                pkmn.species.MAGIKARP, 0, 0, 0, 0, 0, -1, 0
             )
         with self.assertRaises(IndexError):
             pkmn.calculations.pokemon_size(
-                "Magikarp", 0, 0, 0, 0, 0, 32, 0
+                pkmn.species.MAGIKARP, 0, 0, 0, 0, 0, 32, 0
             )
         with self.assertRaises(IndexError):
             pkmn.calculations.pokemon_size(
-                "Magikarp", 0, 0, 0, 0, 0, 0, -1
+                pkmn.species.MAGIKARP, 0, 0, 0, 0, 0, 0, -1
             )
         with self.assertRaises(IndexError):
             pkmn.calculations.pokemon_size(
-                "Magikarp", 0, 0, 0, 0, 0, 0, 32
+                pkmn.species.MAGIKARP, 0, 0, 0, 0, 0, 0, 32
             )
 
         for entry in pokemon_with_size_checks:
             height = entry.height
-            species = entry.name
 
             for i in range(10):
                 size = pkmn.calculations.pokemon_size(
-                           species,
+                           entry.species,
                            random.randint(0, 0xFFFFFF),
                            random.randint(0, 31),
                            random.randint(0, 31),
@@ -1411,43 +1486,43 @@ class calculations_test(unittest.TestCase):
     def test_gb_stats(self):
         # Make sure expected errors are raised.
         with self.assertRaises(ValueError):
-            stat = pkmn.calculations.get_gb_stat("Not a stat", 1, 1, 1, 1)
+            stat = pkmn.calculations.get_gb_stat(pkmn.pokemon_stat.NONE, 1, 1, 1, 1)
         with self.assertRaises(IndexError):
-            stat = pkmn.calculations.get_gb_stat("Attack", 1, 1, 123456, 1)
+            stat = pkmn.calculations.get_gb_stat(pkmn.pokemon_stat.ATTACK, 1, 1, 123456, 1)
         with self.assertRaises(IndexError):
-            stat = pkmn.calculations.get_gb_stat("Attack", 1, 1, 1, 12345)
+            stat = pkmn.calculations.get_gb_stat(pkmn.pokemon_stat.ATTACK, 1, 1, 1, 12345)
 
         #
         # Test with known good inputs.
         #
         # Source: http://bulbapedia.bulbagarden.net/wiki/Statistic#In_Generations_I_and_II
         #
-        stat = pkmn.calculations.get_gb_stat("HP", 81, 35, 22850, 7)
+        stat = pkmn.calculations.get_gb_stat(pkmn.pokemon_stat.HP, 81, 35, 22850, 7)
         self.assertIntsAlmostEqual(stat, 189)
-        stat = pkmn.calculations.get_gb_stat("Attack", 81, 55, 23140, 8)
+        stat = pkmn.calculations.get_gb_stat(pkmn.pokemon_stat.ATTACK, 81, 55, 23140, 8)
         self.assertIntsAlmostEqual(stat, 137)
 
     def test_modern_stats(self):
         # Make sure expected errors are raised.
         with self.assertRaises(ValueError):
-            stat = pkmn.calculations.get_modern_stat("Not a stat", 1, 1.0, 1, 1, 1)
+            stat = pkmn.calculations.get_modern_stat(pkmn.pokemon_stat.NONE, 1, 1.0, 1, 1, 1)
         with self.assertRaises(ValueError):
-            stat = pkmn.calculations.get_modern_stat("Special", 1, 1.0, 1, 1, 1)
+            stat = pkmn.calculations.get_modern_stat(pkmn.pokemon_stat.SPECIAL, 1, 1.0, 1, 1, 1)
         with self.assertRaises(ValueError):
-            stat = pkmn.calculations.get_modern_stat("Attack", 1, 0.666, 1, 1, 1)
+            stat = pkmn.calculations.get_modern_stat(pkmn.pokemon_stat.ATTACK, 1, 0.666, 1, 1, 1)
         with self.assertRaises(IndexError):
-            stat = pkmn.calculations.get_modern_stat("Attack", 1, 1.0, 1, 12345, 1)
+            stat = pkmn.calculations.get_modern_stat(pkmn.pokemon_stat.ATTACK, 1, 1.0, 1, 12345, 1)
         with self.assertRaises(IndexError):
-            stat = pkmn.calculations.get_modern_stat("Attack", 1, 1.0, 1, 1, 12345)
+            stat = pkmn.calculations.get_modern_stat(pkmn.pokemon_stat.ATTACK, 1, 1.0, 1, 1, 12345)
 
         #
         # Test with known good inputs.
         #
         # Source: http://bulbapedia.bulbagarden.net/wiki/Statistic#In_Generation_III_onward
         #
-        stat = pkmn.calculations.get_modern_stat("HP", 78, 1.0, 108, 74, 24)
+        stat = pkmn.calculations.get_modern_stat(pkmn.pokemon_stat.HP, 78, 1.0, 108, 74, 24)
         self.assertIntsAlmostEqual(stat, 289)
-        stat = pkmn.calculations.get_modern_stat("Attack", 78, 1.1, 130, 195, 12)
+        stat = pkmn.calculations.get_modern_stat(pkmn.pokemon_stat.ATTACK, 78, 1.1, 130, 195, 12)
         self.assertIntsAlmostEqual(stat, 280)
 
 if __name__ == "__main__":

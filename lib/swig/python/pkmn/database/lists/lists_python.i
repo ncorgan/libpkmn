@@ -8,7 +8,6 @@
 %include <python/python_init.i>
 PKMN_PYTHON_INIT
 
-%import <enums_python.i>
 %import <stl_python.i>
 
 %{
