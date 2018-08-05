@@ -76,11 +76,7 @@ class pokemon_conversions_test(base_test):
         (pkmn.species.VAPOREON, "", pkmn.game.XD, pkmn.game.XD),
         (pkmn.species.JOLTEON, "", pkmn.game.XD, pkmn.game.COLOSSEUM)
     ], testcase_func_name=test_name_func)
-    def test_conversion(self, species_name, form, origin_game_name, dest_game_name):
-        species = pkmn.string_to_species(species_name)
-        origin_game_name = pkmn.string_to_game(origin_game_name)
-        dest_game_name = pkmn.string_to_game(dest_game_name)
-
+    def test_conversion(self, species, form, origin_game, dest_game):
         origin_generation = GAME_TO_GENERATION[origin_game]
         dest_generation = GAME_TO_GENERATION[dest_game]
         min_generation = min(origin_generation, dest_generation)

@@ -90,7 +90,7 @@ class base_test(unittest.TestCase):
             move = ""
             while True:
                 move = random.choice(move_list)
-                if not move.startswith("Shadow"):
+                if move < pkmn.move.SHADOW_RUSH:
                     break
             pokemon.moves[move_index].move = move
 
@@ -101,7 +101,8 @@ class base_test(unittest.TestCase):
 
         if generation >= 2:
             # Keep going until one is holdable.
-            while pokemon.held_item == "None" or "Scent" in pokemon.held_item:
+            while (pokemon.held_item == pkmn.item.NONE) or \
+                   ((pokemon.held_item >= pkmn.item.JOY_SCENT) and (pokemon.held_item <= pkmn.item.VIVID_SCENT)):
                 try:
                     pokemon.held_item = random.choice(item_list)
                 except:
@@ -125,7 +126,7 @@ class base_test(unittest.TestCase):
         if generation == 3:
             while True:
                 species = random.choice(pokemon_list)
-                if species != "Deoxys":
+                if species != pkmn.species.DEOXYS:
                     break
         else:
             species = random.choice(pokemon_list)

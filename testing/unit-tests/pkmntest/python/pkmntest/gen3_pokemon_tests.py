@@ -22,14 +22,6 @@ def test_name_func_pokemon(testcase_func, param_num, param):
 def test_name_func_unown(testcase_func, param_num, param):
     return "{0}_{1}".format(testcase_func.__name__, param.args[0])
 
-MARKINGS = ["Circle", "Triangle", "Square", "Heart"]
-CONTEST_TYPES = ["Cool", "Beauty", "Cute", "Smart", "Tough"]
-CONTEST_LEVELS = ["", " Super", " Hyper", " Master"]
-RIBBONS = ["Champion", "Winning", "Victory", "Artist",
-           "Effort", "Marine", "Land", "Sky",
-           "Country", "National", "Earth", "World"]
-STATS = ["HP", "Attack", "Defense", "Speed", "Special Attack", "Special Defense"]
-
 class gen3_pokemon_test(pokemon_test_base.pokemon_test_base):
 
     @parameterized.expand([
@@ -41,37 +33,56 @@ class gen3_pokemon_test(pokemon_test_base.pokemon_test_base):
         ("Espeon", "Colosseum"),
         ("Umbreon", "XD")
     ], testcase_func_name=test_name_func_pokemon)
-    def test_pokemon(self, species, game):
+    def test_pokemon(self, species_name, game_name):
+        species = pkmn.string_to_species(species_name)
+        game = pkmn.string_to_game(game_name)
+
         pokemon = pkmn.pokemon(species, game, "", 30)
         test_params = None
 
-        if game in ["Colosseum", "XD"]:
+        valid_moves = [
+            pkmn.move.SWALLOW,
+            pkmn.move.FLAMETHROWER,
+            pkmn.move.RETURN,
+            pkmn.move.FIRE_BLAST
+        ]
+        valid_games = [
+            pkmn.game.RUBY,
+            pkmn.game.SAPPHIRE,
+            pkmn.game.EMERALD,
+            pkmn.game.FIRERED,
+            pkmn.game.LEAFGREEN,
+            pkmn.game.COLOSSEUM,
+            pkmn.game.XD
+        ]
+
+        if game in [pkmn.game.COLOSSEUM, pkmn.game.XD]:
             test_params = pokemon_test_base.pokemon_test_params(
-                              "Great Ball",
-                              ["Friend Ball", "Heal Ball"],
-                              "Razz Berry",
-                              ["Berry", "Mach Bike"],
+                              pkmn.ball.GREAT_BALL,
+                              [pkmn.ball.FRIEND_BALL, pkmn.ball.HEAL_BALL],
+                              pkmn.item.RAZZ_BERRY,
+                              [pkmn.item.BERRY, pkmn.item.MACH_BIKE],
                               "Distant land",
                               ["Phenac Story", "Orre Colosseum"],
                               ["New Bark Town", "Twinleaf Town"],
-                              ["Swallow", "Flamethrower", "Return", "Fire Blast"],
-                              ["Roost", "Flame Burst"],
-                              ["Ruby", "Sapphire", "Emerald", "FireRed", "LeafGreen", "Colosseum/XD", "Colosseum", "XD"],
-                              ["Gold", "HeartGold"]
+                              valid_moves,
+                              [pkmn.move.ROOST, pkmn.move.FLAME_BURST],
+                              valid_games,
+                              [pkmn.game.GOLD, pkmn.game.HEARTGOLD]
                           )
         else:
             test_params = pokemon_test_base.pokemon_test_params(
-                              "Great Ball",
-                              ["Friend Ball", "Heal Ball"],
-                              "Razz Berry",
-                              ["Berry", "Mach Bike"],
+                              pkmn.ball.GREAT_BALL,
+                              [pkmn.ball.FRIEND_BALL, pkmn.ball.HEAL_BALL],
+                              pkmn.item.RAZZ_BERRY,
+                              [pkmn.item.BERRY, pkmn.item.MACH_BIKE],
                               "Fateful encounter",
                               ["Petalburg Woods", "Viridian Forest"],
                               ["New Bark Town", "Twinleaf Town"],
-                              ["Swallow", "Flamethrower", "Return", "Fire Blast"],
-                              ["Shadow Sky", "Roost"],
-                              ["Ruby", "Sapphire", "Emerald", "FireRed", "LeafGreen", "Colosseum/XD", "Colosseum", "XD"],
-                              ["Gold", "HeartGold"]
+                              valid_moves,
+                              [pkmn.move.SHADOW_SKY, pkmn.move.ROOST],
+                              valid_games,
+                              [pkmn.game.GOLD, pkmn.game.HEARTGOLD]
                           )
 
         self.common_test(pokemon, test_params)
@@ -81,13 +92,15 @@ class gen3_pokemon_test(pokemon_test_base.pokemon_test_base):
         "FireRed", "LeafGreen",
         "Colosseum", "XD"
     ], testcase_func_name=test_name_func_unown)
-    def test_unown(self, game):
-        unown_entry = pkmn.database.pokemon_entry("Unown", game, "")
+    def test_unown(self, game_name):
+        game = pkmn.string_to_game(game_name)
+
+        unown_entry = pkmn.database.pokemon_entry(pkmn.species.UNOWN, game, "")
 
         unown = None
 
         for form in unown_entry.forms:
-            unown = pkmn.pokemon("Unown", game, form, 5)
+            unown = pkmn.pokemon(pkmn.species.UNOWN, game, form, 5)
             self.assertEqual(unown.form, form)
 
             # Make sure personality is properly set.
