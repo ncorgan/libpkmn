@@ -61,6 +61,19 @@ def get_egg_groups(c):
 
     return egg_groups
 
+def get_game_save_types():
+    return [
+        "NONE = 0",
+        "RED_BLUE = 1",
+        "YELLOW = 2",
+        "GOLD_SILVER = 3",
+        "CRYSTAL = 4",
+        "RUBY_SAPPHIRE = 5",
+        "EMERALD = 6",
+        "FIRERED_LEAFGREEN = 7",
+        "COLOSSEUM_XD = 8"
+    ]
+
 def get_items(c):
     c.execute("SELECT item_id,name FROM item_names WHERE local_language_id=9 ORDER BY item_id")
     db_responses = c.fetchall()
@@ -313,6 +326,7 @@ if __name__ == "__main__":
     balls = get_balls(c)
     contest_stats = get_contest_stats(c)
     egg_groups = get_egg_groups(c)
+    game_save_types = get_game_save_types()
     items = get_items(c)
     moves = get_moves(c)
     markings = get_markings()
@@ -329,6 +343,7 @@ if __name__ == "__main__":
         generate_cpp_enum_file("ball", balls)
         generate_cpp_enum_file("contest_stat", contest_stats)
         generate_cpp_enum_file("egg_group", egg_groups, True)
+        generate_cpp_enum_file("game_save_type", game_save_types)
         generate_cpp_enum_file("item", items)
         generate_cpp_enum_file("marking", markings)
         generate_cpp_enum_file("move", moves)
@@ -345,6 +360,7 @@ if __name__ == "__main__":
         generate_c_enum_file("ball", balls)
         generate_c_enum_file("contest_stat", contest_stats)
         generate_c_enum_file("egg_group", egg_groups, True)
+        generate_c_enum_file("game_save_type", game_save_types)
         generate_c_enum_file("item", items)
         generate_c_enum_file("marking", markings)
         generate_c_enum_file("move", moves)

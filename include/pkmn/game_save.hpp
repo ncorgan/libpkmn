@@ -15,6 +15,7 @@
 #include <pkmn/pokemon_pc.hpp>
 
 #include <pkmn/enums/game.hpp>
+#include <pkmn/enums/game_save_type.hpp>
 #include <pkmn/enums/gender.hpp>
 
 #include <pkmn/types/class_with_attributes.hpp>
@@ -30,19 +31,6 @@
 #endif
 
 namespace pkmn {
-
-    enum class e_game_save_type
-    {
-        NONE = 0,
-        RED_BLUE,
-        YELLOW,
-        GOLD_SILVER,
-        CRYSTAL,
-        RUBY_SAPPHIRE,
-        EMERALD,
-        FIRERED_LEAFGREEN,
-        COLOSSEUM_XD
-    };
 
     /*!
      * @brief A class that provides a common interface for editing various

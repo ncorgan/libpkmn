@@ -17,6 +17,7 @@
 #include <pkmn-c/pokemon_pc.h>
 
 #include <pkmn-c/enums/game.h>
+#include <pkmn-c/enums/game_save_type.h>
 #include <pkmn-c/enums/gender.h>
 
 #include <pkmn-c/types/attribute_names.h>
@@ -24,28 +25,6 @@
 #include <pkmn-c/types/trainer_info.h>
 
 #include <stdint.h>
-
-enum pkmn_game_save_type
-{
-    //! Not a valid save.
-    PKMN_GAME_SAVE_TYPE_NONE = 0,
-    //! Red/Blue
-    PKMN_GAME_SAVE_TYPE_RED_BLUE,
-    //! Yellow
-    PKMN_GAME_SAVE_TYPE_YELLOW,
-    //! Gold/Silver
-    PKMN_GAME_SAVE_TYPE_GOLD_SILVER,
-    //! Crystal
-    PKMN_GAME_SAVE_TYPE_CRYSTAL,
-    //! Ruby/Sapphire
-    PKMN_GAME_SAVE_TYPE_RUBY_SAPPHIRE,
-    //! Emerald
-    PKMN_GAME_SAVE_TYPE_EMERALD,
-    //! FireRed/LeafGreen
-    PKMN_GAME_SAVE_TYPE_FIRERED_LEAFGREEN,
-    //! Colosseum/XD
-    PKMN_GAME_SAVE_TYPE_COLOSSEUM_XD
-};
 
 struct pkmn_game_save
 {

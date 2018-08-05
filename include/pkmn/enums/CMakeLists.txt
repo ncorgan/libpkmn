@@ -14,6 +14,7 @@ IF(NOT PKMN_DONT_INSTALL_HEADERS)
         egg_group.hpp
         enum_to_string.hpp
         game.hpp
+        game_save_type.hpp
         gender.hpp
         item.hpp
         language.hpp

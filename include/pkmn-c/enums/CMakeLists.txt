@@ -14,6 +14,7 @@ IF(NOT PKMN_DONT_INSTALL_HEADERS)
         egg_group.h
         enum_to_string.h
         game.h
+        game_save_type.h
         gender.h
         item.h
         language.h
