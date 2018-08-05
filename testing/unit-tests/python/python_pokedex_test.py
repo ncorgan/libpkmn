@@ -22,10 +22,12 @@ def test_name_func(testcase_func, param_num, param):
 class pokedex_test(pkmntest.base_test):
 
     @parameterized.expand(
-        pkmntest.ALL_MAIN_SERIES_GAMES,
+        pkmntest.ALL_MAIN_SERIES_GAME_NAMES,
         testcase_func_name=test_name_func
     )
-    def test_pokedex(self, game):
+    def test_pokedex(self, game_name):
+        game = pkmn.string_to_game(game_name)
+
         generation = pkmntest.GAME_TO_GENERATION[game]
 
         pokedex = pkmn.pokedex(game)

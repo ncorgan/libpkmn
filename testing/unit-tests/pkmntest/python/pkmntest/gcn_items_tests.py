@@ -16,35 +16,37 @@ import unittest
 PYTHON_MAJOR_VERSION = sys.version_info[0]
 
 COLOSSEUM_ALL_POCKET_ITEMS = [
-    "Potion", "Ein File S", "Great Ball", "TM01",
-    "TM02", "Aspear Berry", "Joy Scent", "Excite Scent"
+    pkmn.item.POTION, pkmn.item.EIN_FILE_S,
+    pkmn.item.GREAT_BALL, pkmn.item.TM01,
+    pkmn.item.TM02, pkmn.item.ASPEAR_BERRY,
+    pkmn.item.JOY_SCENT, pkmn.item.EXCITE_SCENT
 ]
 XD_ALL_POCKET_ITEMS = [
-    "Potion", "Gonzap's Key", "Great Ball", "TM01",
-    "TM02", "Aspear Berry", "Joy Scent", "Battle CD 01"
+    pkmn.item.POTION, pkmn.item.GONZAPS_KEY,
+    pkmn.item.GREAT_BALL, pkmn.item.TM01,
+    pkmn.item.TM02, pkmn.item.ASPEAR_BERRY,
+    pkmn.item.JOY_SCENT, pkmn.item.BATTLE_CD_01
 ]
 COLOSSEUM_WRONG_GAME_ALL_POCKET_ITEMS = [
-    "Pink Bow", "Black Sludge",
-    "GS Ball", "Gonzap's Key", "Poffin Items",
-    "TM51", "HM01",
-    "Berry", "Occa Berry"
+    pkmn.item.PINK_BOW, pkmn.item.BLACK_SLUDGE,
+    pkmn.item.GS_BALL, pkmn.item.GONZAPS_KEY, pkmn.item.POFFIN_CASE,
+    pkmn.item.TM51, pkmn.item.HM01,
+    pkmn.item.BERRY, pkmn.item.OCCA_BERRY
 ]
 XD_WRONG_GAME_ALL_POCKET_ITEMS = [
-    "Pink Bow", "Black Sludge",
-    "GS Ball", "Ein File S", "Poffin Items",
-    "TM51", "HM01",
-    "Berry", "Occa Berry"
+    pkmn.item.PINK_BOW, pkmn.item.BLACK_SLUDGE,
+    pkmn.item.GS_BALL, pkmn.item.EIN_FILE_S, pkmn.item.POFFIN_CASE,
+    pkmn.item.TM51, pkmn.item.HM01,
+    pkmn.item.BERRY, pkmn.item.OCCA_BERRY
 ]
 
 class gcn_items_test(items_tests):
-
-
     #
     # Helper functions
     #
 
     def __test_item_pocket(self, item_pocket, game):
-        colosseum = (game == "Colosseum")
+        colosseum = (game == pkmn.game.COLOSSEUM)
         expected_capacity = 20 if colosseum else 30
 
         # Check unchanging and initial values.
@@ -58,11 +60,16 @@ class gcn_items_test(items_tests):
         self.item_list_test_empty_slot(item_pocket)
 
         # Confirm errors are thrown when expected.
-        self.item_list_test_out_of_range_error(item_pocket, "Potion")
+        self.item_list_test_out_of_range_error(item_pocket, pkmn.item.POTION)
 
         # Make sure we can't add items from other pockets.'
-        wrong_pocket_items = ["Ein File S", "Great Ball", "TM01", "Oran Berry", "Joy Scent"] if colosseum else \
-                             ["Miror Radar", "Great Ball", "TM01", "Oran Berry", "Joy Scent", "Battle CD 01"]
+        wrong_pocket_items = [
+            pkmn.item.EIN_FILE_S, pkmn.item.GREAT_BALL,
+            pkmn.item.TM01, pkmn.item.ORAN_BERRY,
+            pkmn.item.JOY_SCENT] if colosseum else \
+           [pkmn.item.MIROR_RADAR, pkmn.item.GREAT_BALL,
+            pkmn.item.TM01, pkmn.item.ORAN_BERRY,
+            pkmn.item.JOY_SCENT, pkmn.item.BATTLE_CD_01]
         self.item_class_test_invalid_items(
             item_pocket,
             wrong_pocket_items
@@ -71,24 +78,24 @@ class gcn_items_test(items_tests):
         # Make sure we can't add items from other generations.
         self.item_class_test_invalid_items(
             item_pocket,
-            ["Pink Bow", "Black Sludge", "Binding Band", "Beedrillite"]
+            [pkmn.item.PINK_BOW, pkmn.item.BLACK_SLUDGE,
+             pkmn.item.BINDING_BAND, pkmn.item.BEEDRILLITE]
         )
 
         # Start adding and removing stuff, and make sure the numbers are accurate.
         self.item_list_test_add_remove(
             item_pocket,
-            [u"Potion", u"Orange Mail", u"Lava Cookie", u"Stardust",
-             u"Shadow Mail", u"Pink Scarf", u"Antidote", u"Green Shard"]
+            [pkmn.item.POTION, pkmn.item.ORANGE_MAIL,
+             pkmn.item.LAVA_COOKIE, pkmn.item.STARDUST,
+             pkmn.item.SHADOW_MAIL, pkmn.item.PINK_SCARF,
+             pkmn.item.ANTIDOTE, pkmn.item.GREEN_SHARD]
         )
 
-        valid_items = item_pocket.valid_items
-        self.assertGreater(len(valid_items), 0)
-
-        # See TODO in item_entry.hpp
-        #self.item_list_test_both_text_types(item_pocket)
+        self.assertGreater(len(item_pocket.valid_items), 0)
+        self.assertEqual(len(item_pocket.valid_items), len(item_pocket.valid_item_names))
 
     def __test_key_item_pocket(self, key_item_pocket, game):
-        colosseum = (game == "Colosseum")
+        colosseum = (game == pkmn.game.COLOSSEUM)
         expected_capacity = 43
 
         # Check unchanging and initial values.
@@ -104,12 +111,17 @@ class gcn_items_test(items_tests):
         # Confirm errors are thrown when expected.
         self.item_list_test_out_of_range_error(
             key_item_pocket,
-            "Ein File S" if colosseum else "Miror Radar"
+            pkmn.item.EIN_FILE_S if colosseum else pkmn.item.MIROR_RADAR
         )
 
         # Make sure we can't add items from other pockets.
-        wrong_pocket_items = ["Potion", "Great Ball", "TM01", "Oran Berry", "Joy Scent"] if colosseum else \
-                             ["Potion", "Great Ball", "TM01", "Oran Berry", "Joy Scent", "Battle CD 01"]
+        wrong_pocket_items = [
+            pkmn.item.POTION, pkmn.item.GREAT_BALL,
+            pkmn.item.TM01, pkmn.item.ORAN_BERRY,
+            pkmn.item.JOY_SCENT] if colosseum else \
+           [pkmn.item.POTION, pkmn.item.GREAT_BALL,
+            pkmn.item.TM01, pkmn.item.ORAN_BERRY,
+            pkmn.item.JOY_SCENT, pkmn.item.BATTLE_CD_01]
         self.item_class_test_invalid_items(
             key_item_pocket,
             wrong_pocket_items
@@ -118,35 +130,39 @@ class gcn_items_test(items_tests):
         # Make sure we can't add items from other generations.
         self.item_class_test_invalid_items(
             key_item_pocket,
-            ["GS Ball", "Poffin Items", "DNA Splicers", "Aqua Suit"]
+            [pkmn.item.GS_BALL, pkmn.item.POFFIN_CASE,
+             pkmn.item.DNA_SPLICERS, pkmn.item.AQUA_SUIT]
         )
 
         # Make sure we can't add items from incompatible Generation III games.
         self.item_class_test_invalid_items(
             key_item_pocket,
-            ["Helix Fossil", "Tea", "Ruby"]
+            [pkmn.item.HELIX_FOSSIL, pkmn.item.TEA, pkmn.item.RUBY]
         )
         self.item_class_test_invalid_items(
             key_item_pocket,
-            ["Magma Emblem", "Old Sea Map"]
+            [pkmn.item.MAGMA_EMBLEM, pkmn.item.OLD_SEA_MAP]
         )
 
         # Start adding and removing stuff, and make sure the numbers are accurate.
-        items = ["Jail Key", "Elevator Key", "Small Tablet", "F-Disk",
-                 "R-Disk", "L-Disk", "D-Disk", "U-Disk"] if colosseum else \
-                ["Krane Memo 1", "Krane Memo 2", "Krane Memo 3", "Krane Memo 4",
-                 "Krane Memo 5", "Voice Case 1", "Voice Case 2", "Voice Case 3"]
+        items = [pkmn.item.JAIL_KEY, pkmn.item.ELEVATOR_KEY,
+                 pkmn.item.SMALL_TABLET, pkmn.item.F_DISK,
+                 pkmn.item.R_DISK, pkmn.item.L_DISK,
+                 pkmn.item.D_DISK, pkmn.item.U_DISK] if colosseum else \
+                [pkmn.item.KRANE_MEMO_1, pkmn.item.KRANE_MEMO_2,
+                 pkmn.item.KRANE_MEMO_3, pkmn.item.KRANE_MEMO_4,
+                 pkmn.item.KRANE_MEMO_5, pkmn.item.VOICE_CASE_1,
+                 pkmn.item.VOICE_CASE_2, pkmn.item.VOICE_CASE_3]
         self.item_list_test_add_remove(
             key_item_pocket,
             items
         )
 
-        valid_items = key_item_pocket.valid_items
-        self.assertGreater(len(valid_items), 0)
-        self.item_list_test_both_text_types(key_item_pocket)
+        self.assertGreater(len(key_item_pocket.valid_items), 0)
+        self.assertEqual(len(key_item_pocket.valid_items), len(key_item_pocket.valid_item_names))
 
     def __test_ball_pocket(self, ball_pocket, game):
-        colosseum = (game == "Colosseum")
+        colosseum = (game == pkmn.game.COLOSSEUM)
         expected_capacity = 16
 
         # Check unchanging and initial values.
@@ -160,11 +176,15 @@ class gcn_items_test(items_tests):
         self.item_list_test_empty_slot(ball_pocket)
 
         # Confirm errors are thrown when expected.
-        self.item_list_test_out_of_range_error(ball_pocket, "Master Ball")
+        self.item_list_test_out_of_range_error(ball_pocket, pkmn.item.MASTER_BALL)
 
         # Make sure we can't add items from other pockets.
-        wrong_pocket_items = ["Ein File S", "Potion", "TM01", "Oran Berry", "Joy Scent"] if colosseum else \
-                             ["Miror Radar", "Potion", "TM01", "Oran Berry", "Joy Scent", "Battle CD 01"]
+        wrong_pocket_items = [pkmn.item.EIN_FILE_S, pkmn.item.POTION,
+                              pkmn.item.TM01, pkmn.item.ORAN_BERRY,
+                              pkmn.item.JOY_SCENT] if colosseum else \
+                             [pkmn.item.MIROR_RADAR, pkmn.item.POTION,
+                              pkmn.item.TM01, pkmn.item.ORAN_BERRY,
+                              pkmn.item.JOY_SCENT, pkmn.item.BATTLE_CD_01]
         self.item_class_test_invalid_items(
             ball_pocket,
             wrong_pocket_items
@@ -173,23 +193,24 @@ class gcn_items_test(items_tests):
         # Make sure we can't add items from other generations.
         self.item_class_test_invalid_items(
             ball_pocket,
-            ["Moon Ball", "Heal Ball", "Dream Ball"]
+            [pkmn.item.MOON_BALL, pkmn.item.HEAL_BALL, pkmn.item.DREAM_BALL]
         )
 
         # Start adding and removing stuff, and make sure the numbers are accurate.
-        item_names = [u"Master Ball", u"Ultra Ball", u"Great Ball", u"Pok\u00e9 Ball",
-                      u"Safari Ball", u"Net Ball", u"Dive Ball", u"Nest Ball"]
+        item_names = [pkmn.item.MASTER_BALL, pkmn.item.ULTRA_BALL,
+                      pkmn.item.GREAT_BALL, pkmn.item.POKE_BALL,
+                      pkmn.item.SAFARI_BALL, pkmn.item.NET_BALL,
+                      pkmn.item.DIVE_BALL, pkmn.item.NEST_BALL]
         self.item_list_test_add_remove(
             ball_pocket,
             item_names
         )
 
-        valid_items = ball_pocket.valid_items
-        self.assertGreater(len(valid_items), 0)
-        self.item_list_test_both_text_types(ball_pocket)
+        self.assertGreater(len(ball_pocket.valid_items), 0)
+        self.assertEqual(len(ball_pocket.valid_items), len(ball_pocket.valid_item_names))
 
     def __test_tm_pocket(self, tm_pocket, game):
-        colosseum = (game == "Colosseum")
+        colosseum = (game == pkmn.game.COLOSSEUM)
         expected_capacity = 64
 
         # Check unchanging and initial values.
@@ -203,11 +224,15 @@ class gcn_items_test(items_tests):
         self.item_list_test_empty_slot(tm_pocket)
 
         # Confirm errors are thrown when expected.
-        self.item_list_test_out_of_range_error(tm_pocket, "TM01")
+        self.item_list_test_out_of_range_error(tm_pocket, pkmn.item.TM01)
 
         # Make sure we can't add items from other pockets.
-        wrong_pocket_items = ["Ein File S", "Potion", "Great Ball", "Oran Berry", "Joy Scent"] if colosseum else \
-                             ["Miror Radar", "Potion", "Great Ball", "Oran Berry", "Joy Scent", "Battle CD 01"]
+        wrong_pocket_items = [pkmn.item.EIN_FILE_S, pkmn.item.POTION,
+                              pkmn.item.GREAT_BALL, pkmn.item.ORAN_BERRY,
+                              pkmn.item.JOY_SCENT] if colosseum else \
+                             [pkmn.item.MIROR_RADAR, pkmn.item.POTION,
+                              pkmn.item.GREAT_BALL, pkmn.item.ORAN_BERRY,
+                              pkmn.item.JOY_SCENT, pkmn.item.BATTLE_CD_01]
         self.item_class_test_invalid_items(
             tm_pocket,
             wrong_pocket_items
@@ -216,22 +241,21 @@ class gcn_items_test(items_tests):
         # Make sure we can't add items from other generations.
         self.item_class_test_invalid_items(
             tm_pocket,
-            ["TM51"]
+            [pkmn.item.TM51]
         )
 
         # Start adding and removing stuff, and make sure the numbers are accurate.
         self.item_list_test_add_remove(
             tm_pocket,
-            ["TM01", "TM02", "TM03", "TM04",
-             "TM05", "TM06", "TM07", "TM08"]
+            [pkmn.item.TM01, pkmn.item.TM02, pkmn.item.TM03, pkmn.item.TM04,
+             pkmn.item.TM05, pkmn.item.TM06, pkmn.item.TM07, pkmn.item.TM08]
         )
 
-        valid_items = tm_pocket.valid_items
-        self.assertGreater(len(valid_items), 0)
-        self.item_list_test_both_text_types(tm_pocket)
+        self.assertGreater(len(tm_pocket.valid_items), 0)
+        self.assertEqual(len(tm_pocket.valid_items), len(tm_pocket.valid_item_names))
 
     def __test_berry_pocket(self, berry_pocket, game):
-        colosseum = (game == "Colosseum")
+        colosseum = (game == pkmn.game.COLOSSEUM)
         expected_capacity = 46
 
         # Check unchanging and initial values.
@@ -245,11 +269,15 @@ class gcn_items_test(items_tests):
         self.item_list_test_empty_slot(berry_pocket)
 
         # Confirm errors are thrown when expected.
-        self.item_list_test_out_of_range_error(berry_pocket, "Razz Berry")
+        self.item_list_test_out_of_range_error(berry_pocket, pkmn.item.RAZZ_BERRY)
 
         # Make sure we can't add items from other pockets.
-        wrong_pocket_items = ["Ein File S", "Potion", "Great Ball", "TM01", "Joy Scent"] if colosseum else \
-                             ["Miror Radar", "Potion", "Great Ball", "TM01", "Joy Scent", "Battle CD 01"]
+        wrong_pocket_items = [pkmn.item.EIN_FILE_S, pkmn.item.POTION,
+                              pkmn.item.GREAT_BALL, pkmn.item.TM01,
+                              pkmn.item.JOY_SCENT] if colosseum else \
+                             [pkmn.item.MIROR_RADAR, pkmn.item.POTION,
+                              pkmn.item.GREAT_BALL, pkmn.item.TM01,
+                              pkmn.item.JOY_SCENT, pkmn.item.BATTLE_CD_01]
         self.item_class_test_invalid_items(
             berry_pocket,
             wrong_pocket_items
@@ -258,22 +286,23 @@ class gcn_items_test(items_tests):
         # Make sure we can't add items from other generations.
         self.item_class_test_invalid_items(
             berry_pocket,
-            ["Berry", "Occa Berry", "Roseli Berry"]
+            [pkmn.item.BERRY, pkmn.item.OCCA_BERRY, pkmn.item.ROSELI_BERRY]
         )
 
         # Start adding and removing stuff, and make sure the numbers are accurate.
         self.item_list_test_add_remove(
             berry_pocket,
-            [u"Cheri Berry", u"Razz Berry", u"Lum Berry", u"Pinap Berry",
-             u"Aspear Berry", u"Iapapa Berry", u"Wiki Berry", u"Apicot Berry"]
+            [pkmn.item.CHERI_BERRY, pkmn.item.RAZZ_BERRY,
+             pkmn.item.LUM_BERRY, pkmn.item.PINAP_BERRY,
+             pkmn.item.ASPEAR_BERRY, pkmn.item.IAPAPA_BERRY,
+             pkmn.item.WIKI_BERRY, pkmn.item.APICOT_BERRY]
         )
 
-        valid_items = berry_pocket.valid_items
-        self.assertGreater(len(valid_items), 0)
-        self.item_list_test_both_text_types(berry_pocket)
+        self.assertGreater(len(berry_pocket.valid_items), 0)
+        self.assertEqual(len(berry_pocket.valid_items), len(berry_pocket.valid_item_names))
 
     def __test_cologne_pocket(self, cologne_pocket, game):
-        colosseum = (game == "Colosseum")
+        colosseum = (game == pkmn.game.COLOSSEUM)
         expected_capacity = 3
 
         # Check unchanging and initial values.
@@ -287,44 +316,47 @@ class gcn_items_test(items_tests):
         self.item_list_test_empty_slot(cologne_pocket)
 
         # Confirm errors are thrown when expected.
-        self.item_list_test_out_of_range_error(cologne_pocket, "Joy Scent")
+        self.item_list_test_out_of_range_error(cologne_pocket, pkmn.item.JOY_SCENT)
 
         # Make sure we can't add items from other pockets.
-        wrong_pocket_items = ["Ein File S", "Potion", "Great Ball", "TM01", "Oran Berry"] if colosseum else \
-                             ["Miror Radar", "Potion", "Great Ball", "TM01", "Oran Berry", "Battle CD 01"]
+        wrong_pocket_items = [pkmn.item.EIN_FILE_S, pkmn.item.POTION,
+                              pkmn.item.GREAT_BALL, pkmn.item.TM01,
+                              pkmn.item.ORAN_BERRY] if colosseum else \
+                             [pkmn.item.MIROR_RADAR, pkmn.item.POTION,
+                              pkmn.item.GREAT_BALL, pkmn.item.TM01,
+                              pkmn.item.ORAN_BERRY, pkmn.item.BATTLE_CD_01]
         self.item_class_test_invalid_items(
             cologne_pocket,
             wrong_pocket_items
         )
 
         # Since this pocket can only have 3 items, we can't use our typical function, which requires 8.
-        cologne_pocket.add("Joy Scent", 3)
-        cologne_pocket.add("Excite Scent", 3)
-        cologne_pocket.add("Vivid Scent", 3)
+        cologne_pocket.add(pkmn.item.JOY_SCENT, 3)
+        cologne_pocket.add(pkmn.item.EXCITE_SCENT, 3)
+        cologne_pocket.add(pkmn.item.VIVID_SCENT, 3)
 
-        cologne_pocket.remove("Excite Scent", 3)
-        cologne_pocket.remove("Vivid Scent", 1)
+        cologne_pocket.remove(pkmn.item.EXCITE_SCENT, 3)
+        cologne_pocket.remove(pkmn.item.VIVID_SCENT, 1)
 
-        self.assertEquals("Joy Scent", cologne_pocket[0].item)
+        self.assertEquals(pkmn.item.JOY_SCENT, cologne_pocket[0].item)
         self.assertEquals(3, cologne_pocket[0].amount)
-        self.assertEquals("Vivid Scent", cologne_pocket[1].item)
+        self.assertEquals(pkmn.item.VIVID_SCENT, cologne_pocket[1].item)
         self.assertEquals(2, cologne_pocket[1].amount)
-        self.assertEquals("None", cologne_pocket[2].item)
+        self.assertEquals(pkmn.item.NONE, cologne_pocket[2].item)
         self.assertEquals(0, cologne_pocket[2].amount)
 
-        cologne_pocket.remove("Joy Scent", 3)
-        cologne_pocket.remove("Vivid Scent", 2)
+        cologne_pocket.remove(pkmn.item.JOY_SCENT, 3)
+        cologne_pocket.remove(pkmn.item.VIVID_SCENT, 2)
 
-        self.assertEquals("None", cologne_pocket[0].item)
+        self.assertEquals(pkmn.item.NONE, cologne_pocket[0].item)
         self.assertEquals(0, cologne_pocket[0].amount)
-        self.assertEquals("None", cologne_pocket[1].item)
+        self.assertEquals(pkmn.item.NONE, cologne_pocket[1].item)
         self.assertEquals(0, cologne_pocket[1].amount)
-        self.assertEquals("None", cologne_pocket[2].item)
+        self.assertEquals(pkmn.item.NONE, cologne_pocket[2].item)
         self.assertEquals(0, cologne_pocket[2].amount)
 
-        valid_items = cologne_pocket.valid_items
-        self.assertEquals(len(valid_items), 3)
-        self.item_list_test_both_text_types(cologne_pocket)
+        self.assertEquals(len(cologne_pocket.valid_items), 3)
+        self.assertEquals(len(cologne_pocket.valid_item_names), 3)
 
     def __test_battle_cd_pocket(self, battle_cd_pocket, game):
         expected_capacity = 60
@@ -340,27 +372,30 @@ class gcn_items_test(items_tests):
         self.item_list_test_empty_slot(battle_cd_pocket)
 
         # Confirm errors are thrown when expected.
-        self.item_list_test_out_of_range_error(battle_cd_pocket, "Battle CD 01")
+        self.item_list_test_out_of_range_error(battle_cd_pocket, pkmn.item.BATTLE_CD_01)
 
         # Make sure we can't add items from other pockets.
         self.item_class_test_invalid_items(
             battle_cd_pocket,
-            ["Miror Radar", "Potion", "Great Ball", "TM01", "Joy Scent", "Oran Berry"]
+            [pkmn.item.MIROR_RADAR, pkmn.item.POTION,
+             pkmn.item.GREAT_BALL, pkmn.item.TM01,
+             pkmn.item.JOY_SCENT, pkmn.item.ORAN_BERRY]
         )
 
         # Start adding and removing stuff, and make sure the numbers are accurate.
         self.item_list_test_add_remove(
             battle_cd_pocket,
-            [u"Battle CD 01", u"Battle CD 02", u"Battle CD 03", u"Battle CD 04",
-             u"Battle CD 05", u"Battle CD 06", u"Battle CD 07", u"Battle CD 08"]
+            [pkmn.item.BATTLE_CD_01, pkmn.item.BATTLE_CD_02,
+             pkmn.item.BATTLE_CD_03, pkmn.item.BATTLE_CD_04,
+             pkmn.item.BATTLE_CD_05, pkmn.item.BATTLE_CD_06,
+             pkmn.item.BATTLE_CD_07, pkmn.item.BATTLE_CD_08]
         )
 
-        valid_items = battle_cd_pocket.valid_items
-        self.assertEquals(len(valid_items), 60)
-        self.item_list_test_both_text_types(battle_cd_pocket)
+        self.assertEquals(len(battle_cd_pocket.valid_items), 60)
+        self.assertEquals(len(battle_cd_pocket.valid_item_names), 60)
 
     def __test_pc(self, pc, game):
-        colosseum = (game == "Colosseum")
+        colosseum = (game == pkmn.game.COLOSSEUM)
         expected_capacity = 235
 
         # Check unchanging and initial values.
@@ -374,7 +409,7 @@ class gcn_items_test(items_tests):
         self.item_list_test_empty_slot(pc)
 
         # Confirm errors are thrown when expected.
-        self.item_list_test_out_of_range_error(pc, "Potion")
+        self.item_list_test_out_of_range_error(pc, pkmn.item.POTION)
 
         # Make sure we can't add items from other generations.
         self.item_class_test_invalid_items(
@@ -388,12 +423,11 @@ class gcn_items_test(items_tests):
             COLOSSEUM_ALL_POCKET_ITEMS if colosseum else XD_ALL_POCKET_ITEMS
         )
 
-        valid_items = pc.valid_items
-        self.assertGreater(len(valid_items), 0)
-        self.item_list_test_both_text_types(pc)
+        self.assertGreater(len(pc.valid_items), 0)
+        self.assertEqual(len(pc.valid_items), len(pc.valid_item_names))
 
     def __test_item_bag(self, bag, game):
-        colosseum = (game == "Colosseum")
+        colosseum = (game == pkmn.game.COLOSSEUM)
 
         # Check unchanging and initial values.
         self.assertEqual(bag.game, game)
@@ -401,6 +435,7 @@ class gcn_items_test(items_tests):
         expected_num_pockets = 6 if colosseum else 7
         self.assertEqual(len(bag), expected_num_pockets)
         self.assertEqual(len(bag.pocket_names), expected_num_pockets)
+        self.item_bag_test_get_pockets_with_both_text_types(bag)
 
         unicode_pocket_names = []
         if PYTHON_MAJOR_VERSION == 2:
@@ -431,7 +466,6 @@ class gcn_items_test(items_tests):
         self.__test_cologne_pocket(bag["Colognes"], game)
         if not colosseum:
             self.__test_battle_cd_pocket(bag["Battle CDs"], game)
-        self.item_bag_test_get_pockets_with_both_text_types(bag)
 
         items = COLOSSEUM_ALL_POCKET_ITEMS if colosseum else XD_ALL_POCKET_ITEMS
 
@@ -447,95 +481,95 @@ class gcn_items_test(items_tests):
         for item in items:
             bag.add(item, 5)
 
-        self.assertEqual(bag["Items"][0].item, "Potion")
+        self.assertEqual(bag["Items"][0].item, pkmn.item.POTION)
         self.assertEqual(bag["Items"][0].amount, 5)
-        self.assertEqual(bag["Items"][1].item, "None")
+        self.assertEqual(bag["Items"][1].item, pkmn.item.NONE)
         self.assertEqual(bag["Items"][1].amount, 0)
 
-        key_item = "Ein File S" if colosseum else "Gonzap's Key"
+        key_item = pkmn.item.EIN_FILE_S if colosseum else pkmn.item.GONZAPS_KEY
         self.assertEqual(bag["Key Items"][0].item, key_item)
         self.assertEqual(bag["Key Items"][0].amount, 5)
-        self.assertEqual(bag["Key Items"][1].item, "None")
+        self.assertEqual(bag["Key Items"][1].item, pkmn.item.NONE)
         self.assertEqual(bag["Key Items"][1].amount, 0)
 
-        self.assertEqual(bag[u"Pok\u00e9 Balls"][0].item, "Great Ball")
+        self.assertEqual(bag[u"Pok\u00e9 Balls"][0].item, pkmn.item.GREAT_BALL)
         self.assertEqual(bag[u"Pok\u00e9 Balls"][0].amount, 5)
-        self.assertEqual(bag[u"Pok\u00e9 Balls"][1].item, "None")
+        self.assertEqual(bag[u"Pok\u00e9 Balls"][1].item, pkmn.item.NONE)
         self.assertEqual(bag[u"Pok\u00e9 Balls"][1].amount, 0)
 
-        self.assertEqual(bag["TMs"][0].item, "TM01")
+        self.assertEqual(bag["TMs"][0].item, pkmn.item.TM01)
         self.assertEqual(bag["TMs"][0].amount, 5)
-        self.assertEqual(bag["TMs"][1].item, "TM02")
+        self.assertEqual(bag["TMs"][1].item, pkmn.item.TM02)
         self.assertEqual(bag["TMs"][1].amount, 5)
-        self.assertEqual(bag["TMs"][2].item, "None")
+        self.assertEqual(bag["TMs"][2].item, pkmn.item.NONE)
         self.assertEqual(bag["TMs"][2].amount, 0)
 
-        self.assertEqual(bag["Berries"][0].item, "Aspear Berry")
+        self.assertEqual(bag["Berries"][0].item, pkmn.item.ASPEAR_BERRY)
         self.assertEqual(bag["Berries"][0].amount, 5)
-        self.assertEqual(bag["Berries"][1].item, "None")
+        self.assertEqual(bag["Berries"][1].item, pkmn.item.NONE)
         self.assertEqual(bag["Berries"][1].amount, 0)
 
-        self.assertEqual(bag["Colognes"][0].item, "Joy Scent")
+        self.assertEqual(bag["Colognes"][0].item, pkmn.item.JOY_SCENT)
         self.assertEqual(bag["Colognes"][0].amount, 5)
         if colosseum:
-            self.assertEqual(bag["Colognes"][1].item, "Excite Scent")
+            self.assertEqual(bag["Colognes"][1].item, pkmn.item.EXCITE_SCENT)
             self.assertEqual(bag["Colognes"][1].amount, 5)
-            self.assertEqual(bag["Colognes"][2].item, "None")
+            self.assertEqual(bag["Colognes"][2].item, pkmn.item.NONE)
             self.assertEqual(bag["Colognes"][2].amount, 0)
         else:
-            self.assertEqual(bag["Colognes"][1].item, "None")
+            self.assertEqual(bag["Colognes"][1].item, pkmn.item.NONE)
             self.assertEqual(bag["Colognes"][1].amount, 0)
 
-            self.assertEqual(bag["Battle CDs"][0].item, "Battle CD 01")
+            self.assertEqual(bag["Battle CDs"][0].item, pkmn.item.BATTLE_CD_01)
             self.assertEqual(bag["Battle CDs"][0].amount, 5)
-            self.assertEqual(bag["Battle CDs"][1].item, "None")
+            self.assertEqual(bag["Battle CDs"][1].item, pkmn.item.NONE)
             self.assertEqual(bag["Battle CDs"][1].amount, 0)
 
         # Make sure removing items through the bag removes from the proper pocket.
         for item in items:
             bag.remove(item, 5)
 
-        self.assertEqual(bag["Items"][0].item, "None")
+        self.assertEqual(bag["Items"][0].item, pkmn.item.NONE)
         self.assertEqual(bag["Items"][0].amount, 0)
-        self.assertEqual(bag["Items"][1].item, "None")
+        self.assertEqual(bag["Items"][1].item, pkmn.item.NONE)
         self.assertEqual(bag["Items"][1].amount, 0)
 
-        self.assertEqual(bag["Key Items"][0].item, "None")
+        self.assertEqual(bag["Key Items"][0].item, pkmn.item.NONE)
         self.assertEqual(bag["Key Items"][0].amount, 0)
-        self.assertEqual(bag["Key Items"][1].item, "None")
+        self.assertEqual(bag["Key Items"][1].item, pkmn.item.NONE)
         self.assertEqual(bag["Key Items"][1].amount, 0)
 
-        self.assertEqual(bag[u"Pok\u00e9 Balls"][0].item, "None")
+        self.assertEqual(bag[u"Pok\u00e9 Balls"][0].item, pkmn.item.NONE)
         self.assertEqual(bag[u"Pok\u00e9 Balls"][0].amount, 0)
-        self.assertEqual(bag[u"Pok\u00e9 Balls"][1].item, "None")
+        self.assertEqual(bag[u"Pok\u00e9 Balls"][1].item, pkmn.item.NONE)
         self.assertEqual(bag[u"Pok\u00e9 Balls"][1].amount, 0)
 
-        self.assertEqual(bag["TMs"][0].item, "None")
+        self.assertEqual(bag["TMs"][0].item, pkmn.item.NONE)
         self.assertEqual(bag["TMs"][0].amount, 0)
-        self.assertEqual(bag["TMs"][1].item, "None")
+        self.assertEqual(bag["TMs"][1].item, pkmn.item.NONE)
         self.assertEqual(bag["TMs"][1].amount, 0)
-        self.assertEqual(bag["TMs"][2].item, "None")
+        self.assertEqual(bag["TMs"][2].item, pkmn.item.NONE)
         self.assertEqual(bag["TMs"][2].amount, 0)
 
-        self.assertEqual(bag["Berries"][0].item, "None")
+        self.assertEqual(bag["Berries"][0].item, pkmn.item.NONE)
         self.assertEqual(bag["Berries"][0].amount, 0)
-        self.assertEqual(bag["Berries"][1].item, "None")
+        self.assertEqual(bag["Berries"][1].item, pkmn.item.NONE)
         self.assertEqual(bag["Berries"][1].amount, 0)
 
-        self.assertEqual(bag["Colognes"][0].item, "None")
+        self.assertEqual(bag["Colognes"][0].item, pkmn.item.NONE)
         self.assertEqual(bag["Colognes"][0].amount, 0)
         if colosseum:
-            self.assertEqual(bag["Colognes"][1].item, "None")
+            self.assertEqual(bag["Colognes"][1].item, pkmn.item.NONE)
             self.assertEqual(bag["Colognes"][1].amount, 0)
-            self.assertEqual(bag["Colognes"][2].item, "None")
+            self.assertEqual(bag["Colognes"][2].item, pkmn.item.NONE)
             self.assertEqual(bag["Colognes"][2].amount, 0)
         else:
-            self.assertEqual(bag["Colognes"][1].item, "None")
+            self.assertEqual(bag["Colognes"][1].item, pkmn.item.NONE)
             self.assertEqual(bag["Colognes"][1].amount, 0)
 
-            self.assertEqual(bag["Battle CDs"][0].item, "None")
+            self.assertEqual(bag["Battle CDs"][0].item, pkmn.item.NONE)
             self.assertEqual(bag["Battle CDs"][0].amount, 0)
-            self.assertEqual(bag["Battle CDs"][1].item, "None")
+            self.assertEqual(bag["Battle CDs"][1].item, pkmn.item.NONE)
             self.assertEqual(bag["Battle CDs"][1].amount, 0)
 
     #
@@ -543,73 +577,73 @@ class gcn_items_test(items_tests):
     #
 
     def test_colosseum_item_pocket(self):
-        item_pocket = pkmn.item_list("Items", "Colosseum")
-        self.__test_item_pocket(item_pocket, "Colosseum")
+        item_pocket = pkmn.item_list("Items", pkmn.game.COLOSSEUM)
+        self.__test_item_pocket(item_pocket, pkmn.game.COLOSSEUM)
 
     def test_colosseum_key_item_pocket(self):
-        key_item_pocket = pkmn.item_list("Key Items", "Colosseum")
-        self.__test_key_item_pocket(key_item_pocket, "Colosseum")
+        key_item_pocket = pkmn.item_list("Key Items", pkmn.game.COLOSSEUM)
+        self.__test_key_item_pocket(key_item_pocket, pkmn.game.COLOSSEUM)
 
     def test_colosseum_ball_pocket(self):
-        ball_pocket = pkmn.item_list(u"Pok\u00e9 Balls", "Colosseum")
-        self.__test_ball_pocket(ball_pocket, "Colosseum")
+        ball_pocket = pkmn.item_list(u"Pok\u00e9 Balls", pkmn.game.COLOSSEUM)
+        self.__test_ball_pocket(ball_pocket, pkmn.game.COLOSSEUM)
 
     def test_colosseum_tm_pocket(self):
-        tm_pocket = pkmn.item_list("TMs", "Colosseum")
-        self.__test_tm_pocket(tm_pocket, "Colosseum")
+        tm_pocket = pkmn.item_list("TMs", pkmn.game.COLOSSEUM)
+        self.__test_tm_pocket(tm_pocket, pkmn.game.COLOSSEUM)
 
     def test_colosseum_berry_pocket(self):
-        berry_pocket = pkmn.item_list("Berries", "Colosseum")
-        self.__test_berry_pocket(berry_pocket, "Colosseum")
+        berry_pocket = pkmn.item_list("Berries", pkmn.game.COLOSSEUM)
+        self.__test_berry_pocket(berry_pocket, pkmn.game.COLOSSEUM)
 
     def test_colosseum_cologne_pocket(self):
-        cologne_pocket = pkmn.item_list("Colognes", "Colosseum")
-        self.__test_cologne_pocket(cologne_pocket, "Colosseum")
+        cologne_pocket = pkmn.item_list("Colognes", pkmn.game.COLOSSEUM)
+        self.__test_cologne_pocket(cologne_pocket, pkmn.game.COLOSSEUM)
 
     def test_colosseum_pc(self):
-        pc = pkmn.item_list("PC", "Colosseum")
-        self.__test_pc(pc, "Colosseum")
+        pc = pkmn.item_list("PC", pkmn.game.COLOSSEUM)
+        self.__test_pc(pc, pkmn.game.COLOSSEUM)
 
     def test_colosseum_bag(self):
-        bag = pkmn.item_bag("Colosseum")
-        self.__test_item_bag(bag, "Colosseum")
+        bag = pkmn.item_bag(pkmn.game.COLOSSEUM)
+        self.__test_item_bag(bag, pkmn.game.COLOSSEUM)
 
     #
     # XD
     #
 
     def test_xd_item_pocket(self):
-        item_pocket = pkmn.item_list("Items", "XD")
-        self.__test_item_pocket(item_pocket, "XD")
+        item_pocket = pkmn.item_list("Items", pkmn.game.XD)
+        self.__test_item_pocket(item_pocket, pkmn.game.XD)
 
     def test_xd_key_item_pocket(self):
-        key_item_pocket = pkmn.item_list("Key Items", "XD")
-        self.__test_key_item_pocket(key_item_pocket, "XD")
+        key_item_pocket = pkmn.item_list("Key Items", pkmn.game.XD)
+        self.__test_key_item_pocket(key_item_pocket, pkmn.game.XD)
 
     def test_xd_ball_pocket(self):
-        ball_pocket = pkmn.item_list(u"Pok\u00e9 Balls", "XD")
-        self.__test_ball_pocket(ball_pocket, "XD")
+        ball_pocket = pkmn.item_list(u"Pok\u00e9 Balls", pkmn.game.XD)
+        self.__test_ball_pocket(ball_pocket, pkmn.game.XD)
 
     def test_xd_tm_pocket(self):
-        tm_pocket = pkmn.item_list("TMs", "XD")
-        self.__test_tm_pocket(tm_pocket, "XD")
+        tm_pocket = pkmn.item_list("TMs", pkmn.game.XD)
+        self.__test_tm_pocket(tm_pocket, pkmn.game.XD)
 
     def test_xd_berry_pocket(self):
-        berry_pocket = pkmn.item_list("Berries", "XD")
-        self.__test_berry_pocket(berry_pocket, "XD")
+        berry_pocket = pkmn.item_list("Berries", pkmn.game.XD)
+        self.__test_berry_pocket(berry_pocket, pkmn.game.XD)
 
     def test_xd_cologne_pocket(self):
-        cologne_pocket = pkmn.item_list("Colognes", "XD")
-        self.__test_cologne_pocket(cologne_pocket, "XD")
+        cologne_pocket = pkmn.item_list("Colognes", pkmn.game.XD)
+        self.__test_cologne_pocket(cologne_pocket, pkmn.game.XD)
 
     def test_xd_battle_cd_pocket(self):
-        battle_cd_pocket = pkmn.item_list("Battle CDs", "XD")
-        self.__test_battle_cd_pocket(battle_cd_pocket, "XD")
+        battle_cd_pocket = pkmn.item_list("Battle CDs", pkmn.game.XD)
+        self.__test_battle_cd_pocket(battle_cd_pocket, pkmn.game.XD)
 
     def test_xd_pc(self):
-        pc = pkmn.item_list("PC", "XD")
-        self.__test_pc(pc, "XD")
+        pc = pkmn.item_list("PC", pkmn.game.XD)
+        self.__test_pc(pc, pkmn.game.XD)
 
     def test_xd_bag(self):
-        bag = pkmn.item_bag("XD")
-        self.__test_item_bag(bag, "XD")
+        bag = pkmn.item_bag(pkmn.game.XD)
+        self.__test_item_bag(bag, pkmn.game.XD)

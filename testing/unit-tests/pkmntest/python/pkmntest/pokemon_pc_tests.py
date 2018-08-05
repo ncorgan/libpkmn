@@ -10,15 +10,12 @@ from . import *
 
 import pkmn
 
-import sys
 import unittest
 
 from nose_parameterized import parameterized
 
 def test_name_func(testcase_func, param_num, param):
     return "{0}_{1}".format(testcase_func.__name__, param.args[0])
-
-PYTHON_MAJOR_VERSION = sys.version_info[0]
 
 class pokemon_pc_tests(base_test):
 
@@ -32,11 +29,11 @@ class pokemon_pc_tests(base_test):
             box[len(box)]
 
         for pokemon in box:
-            self.assertEqual(pokemon.species, "None")
+            self.assertEqual(pokemon.species, pkmn.species.NONE)
             self.assertEqual(pokemon.game, box.game)
 
             for slot in pokemon.moves:
-                self.assertEqual(slot.move, "None")
+                self.assertEqual(slot.move, pkmn.species.NONE)
                 self.assertEqual(slot.pp, 0)
 
     def __test_box_name(self, box):
@@ -77,9 +74,9 @@ class pokemon_pc_tests(base_test):
 
         # Create Pokemon and place in box. The original variables should
         # have the same underlying Pokemon.
-        bulbasaur = pkmn.pokemon("Bulbasaur", game, "", 5)
-        charmander = pkmn.pokemon("Charmander", game, "", 5)
-        squirtle = pkmn.pokemon("Squirtle", game, "", 5)
+        bulbasaur = pkmn.pokemon(pkmn.species.BULBASAUR, game, "", 5)
+        charmander = pkmn.pokemon(pkmn.species.CHARMANDER, game, "", 5)
+        squirtle = pkmn.pokemon(pkmn.species.SQUIRTLE, game, "", 5)
 
         box[0] = bulbasaur
         box[1] = charmander
@@ -87,17 +84,13 @@ class pokemon_pc_tests(base_test):
         # Replace one of the new ones.
         box[0] = squirtle
 
-        # Make sure we can't copy a Pokemon to itself.
-        with self.assertRaises(ValueError):
-            box[1] = box[1]
-
-        # Copy a Pokemon whose memory is already part of the box.
+        # Copy a Pokemon already part of the box.
         box[2] = box[1]
 
         # We should always be able to clear the last contiguous Pokemon.
         box[2] = original_first
         self.assertEqual(box.num_pokemon, 2)
-        self.assertStringEqual(box[2].species, "None")
+        self.assertStringEqual(box[2].species, pkmn.species.NONE)
 
         # Put it back.
         box[2] = box[1]
@@ -108,37 +101,37 @@ class pokemon_pc_tests(base_test):
             with self.assertRaises(ValueError):
                 box[1] = original_first
             self.assertEqual(box.num_pokemon, 3)
-            self.assertStringEqual(box[1].species, "Charmander")
+            self.assertStringEqual(box[1].species, pkmn.species.CHARMANDER)
 
             with self.assertRaises(IndexError):
                 box[4] = bulbasaur
             self.assertEqual(box.num_pokemon, 3)
-            self.assertStringEqual(box[4].species, "None")
+            self.assertStringEqual(box[4].species, pkmn.species.NONE)
         else:
             box[1] = original_first
             self.assertEqual(box.num_pokemon, 2)
-            self.assertStringEqual(box[1].species, "None")
+            self.assertStringEqual(box[1].species, pkmn.species.NONE)
 
             box[4] = bulbasaur
             self.assertEqual(box.num_pokemon, 3)
-            self.assertStringEqual(box[4].species, "Bulbasaur")
+            self.assertStringEqual(box[4].species, pkmn.species.BULBASAUR)
 
             # Restore it to how it was.
             box[1] = charmander
             box[4] = original_first
-            self.assertStringEqual(box[1].species, "Charmander")
-            self.assertStringEqual(box[4].species, "None")
+            self.assertStringEqual(box[1].species, pkmn.species.CHARMANDER)
+            self.assertStringEqual(box[4].species, pkmn.species.NONE)
 
         # Now check everything we've created. Each variable should have
         # the same underlying Pokemon.
-        self.assertEqual(box[0].species, "Squirtle")
-        self.assertEqual(box[1].species, "Charmander")
-        self.assertEqual(box[2].species, "Charmander")
-        self.assertEqual(original_first.species, "None")
-        self.assertEqual(original_second.species, "None")
-        self.assertEqual(bulbasaur.species, "Bulbasaur")
-        self.assertEqual(charmander.species, "Charmander")
-        self.assertEqual(squirtle.species, "Squirtle")
+        self.assertEqual(box[0].species, pkmn.species.SQUIRTLE)
+        self.assertEqual(box[1].species, pkmn.species.CHARMANDER)
+        self.assertEqual(box[2].species, pkmn.species.CHARMANDER)
+        self.assertEqual(original_first.species, pkmn.species.NONE)
+        self.assertEqual(original_second.species, pkmn.species.NONE)
+        self.assertEqual(bulbasaur.species, pkmn.species.BULBASAUR)
+        self.assertEqual(charmander.species, pkmn.species.CHARMANDER)
+        self.assertEqual(squirtle.species, pkmn.species.SQUIRTLE)
 
     def __test_empty_pokemon_pc(self, pc):
         for box in pc:
@@ -163,20 +156,20 @@ class pokemon_pc_tests(base_test):
     def __test_setting_pokemon_in_boxes(self, pc):
         for box in pc:
             self.__test_setting_pokemon(box)
-            self.assertEqual(box[0].species, "Squirtle")
-            self.assertEqual(box[1].species, "Charmander")
+            self.assertEqual(box[0].species, pkmn.species.SQUIRTLE)
+            self.assertEqual(box[1].species, pkmn.species.CHARMANDER)
 
-    @parameterized.expand(ALL_GAMES, testcase_func_name=test_name_func)
-    def test_pokemon_box(self, game):
-        box = pkmn.pokemon_box(game)
+    @parameterized.expand(ALL_GAME_NAMES, testcase_func_name=test_name_func)
+    def test_pokemon_box(self, game_name):
+        box = pkmn.pokemon_box(pkmn.string_to_game(game_name))
 
         self.__test_empty_pokemon_box(box)
         self.__test_box_name(box)
         self.__test_setting_pokemon(box)
 
-    @parameterized.expand(ALL_GAMES, testcase_func_name=test_name_func)
-    def test_pokemon_pc(self, game):
-        pc = pkmn.pokemon_pc(game)
+    @parameterized.expand(ALL_GAME_NAMES, testcase_func_name=test_name_func)
+    def test_pokemon_pc(self, game_name):
+        pc = pkmn.pokemon_pc(pkmn.string_to_game(game_name))
 
         self.__test_empty_pokemon_pc(pc)
         self.__test_box_names(pc)

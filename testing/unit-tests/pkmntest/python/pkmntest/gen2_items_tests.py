@@ -15,9 +15,18 @@ import unittest
 class gen2_items_test(items_tests):
 
     def setUp(self):
-        self.__crystal_items = ["Clear Bell", "GS Ball", "Blue Card", "Egg Ticket"]
-        self.__wrong_generation_all_pocket_items = ["Black Sludge", "Poffin Items",
-                                                    "TM51", "Occa Berry"]
+        self.__crystal_items = [
+            pkmn.item.CLEAR_BELL,
+            pkmn.item.GS_BALL,
+            pkmn.item.BLUE_CARD,
+            pkmn.item.EGG_TICKET
+        ]
+        self.__wrong_generation_all_pocket_items = [
+            pkmn.item.BLACK_SLUDGE,
+            pkmn.item.POFFIN_CASE,
+            pkmn.item.TM51,
+            pkmn.item.OCCA_BERRY
+        ]
 
     #
     # Helper functions
@@ -34,30 +43,32 @@ class gen2_items_test(items_tests):
         self.item_list_test_empty_slot(item_pocket)
 
         # Confirm errors are thrown when expected.
-        self.item_list_test_out_of_range_error(item_pocket, "Potion")
+        self.item_list_test_out_of_range_error(item_pocket, pkmn.item.POTION)
 
         # Make sure we can't add items from other pockets.
         self.item_class_test_invalid_items(
             item_pocket,
-            ["Bicycle", "Master Ball", "HM01"]
+            [pkmn.item.BICYCLE, pkmn.item.MASTER_BALL, pkmn.item.HM01]
         )
 
         # Make sure we can't add items from later generations.
         self.item_class_test_invalid_items(
             item_pocket,
-            ["Black Flute", "Black Sludge", "Binding Band", "Beedrillite"]
+            [pkmn.item.BLACK_FLUTE, pkmn.item.BLACK_SLUDGE,
+             pkmn.item.BINDING_BAND, pkmn.item.BEEDRILLITE]
         )
 
         # Start adding and removing stuff, and make sure the numbers are accurate.
         self.item_list_test_add_remove(
             item_pocket,
-            [u"Potion", u"HP Up", u"Wht Apricorn", u"Lucky Egg",
-             u"Flower Mail", u"Burn Heal", u"PSNCureBerry", u"Stick"]
+            [pkmn.item.POTION, pkmn.item.HP_UP,
+             pkmn.item.WHITE_APRICORN, pkmn.item.LUCKY_EGG,
+             pkmn.item.FLOWER_MAIL, pkmn.item.BURN_HEAL,
+             pkmn.item.PSNCUREBERRY, pkmn.item.BERRY]
         )
 
-        valid_items = item_pocket.valid_items
-        self.assertGreater(len(valid_items), 0)
-        self.item_list_test_both_text_types(item_pocket)
+        self.assertGreater(len(item_pocket.valid_items), 0)
+        self.assertEqual(len(item_pocket.valid_items), len(item_pocket.valid_item_names))
 
     def __test_key_item_pocket(self, key_item_pocket, game):
         # Check unchanging and initial values.
@@ -70,22 +81,23 @@ class gen2_items_test(items_tests):
         self.item_list_test_empty_slot(key_item_pocket)
 
         # Confirm errors are thrown when expected.
-        self.item_list_test_out_of_range_error(key_item_pocket, "Bicycle")
+        self.item_list_test_out_of_range_error(key_item_pocket, pkmn.item.BICYCLE)
 
         # Make sure we can't add items from other pockets.
         self.item_class_test_invalid_items(
             key_item_pocket,
-            ["Potion", "Master Ball", "HM01"]
+            [pkmn.item.POTION, pkmn.item.MASTER_BALL, pkmn.item.HM01]
         )
 
         # Make sure we can't add items from later generations.
         self.item_class_test_invalid_items(
             key_item_pocket,
-            ["Mach Bike", "Jade Orb", "Light Stone", "Aqua Suit"]
+            [pkmn.item.MACH_BIKE, pkmn.item.JADE_ORB,
+             pkmn.item.LIGHT_STONE, pkmn.item.AQUA_SUIT]
         )
 
         # Crystal-specific items
-        if game == "Crystal":
+        if game == pkmn.game.CRYSTAL:
             for item in self.__crystal_items:
                 key_item_pocket.add(item, 1)
                 key_item_pocket.remove(item, 1)
@@ -98,26 +110,29 @@ class gen2_items_test(items_tests):
 
         # Make sure we can't add or remove more than a single item.
         with self.assertRaises(IndexError):
-            key_item_pocket.add("Bicycle", 5)
+            key_item_pocket.add(pkmn.item.BICYCLE, 5)
         with self.assertRaises(IndexError):
-            key_item_pocket.remove("Bicycle", 5)
+            key_item_pocket.remove(pkmn.item.BICYCLE, 5)
 
         # Start adding and removing stuff, and make sure the numbers are accurate.
-        item_names = [u"Bicycle", u"Basement Key", u"SecretPotion", u"Mystery Egg",
-                      u"Silver Wing", u"Lost Item", u"SquirtBottle", u"Rainbow Wing"]
-        for item_index in range(len(item_names)):
+        items = [pkmn.item.BICYCLE, pkmn.item.BASEMENT_KEY,
+                 pkmn.item.SECRETPOTION, pkmn.item.MYSTERY_EGG,
+                 pkmn.item.SILVER_WING, pkmn.item.LOST_ITEM,
+                 pkmn.item.SQUIRT_BOTTLE, pkmn.item.RAINBOW_WING]
+        for item_index in range(len(items)):
             if item_index < 4:
-                key_item_pocket.add(item_names[item_index], 1)
+                key_item_pocket.add(items[item_index], 1)
             else:
-                key_item_pocket[item_index].item = item_names[item_index]
+                key_item_pocket[item_index].item = items[item_index]
 
-        key_item_pocket.remove(item_names[2], 1)
-        key_item_pocket[2].item = "None"
+        key_item_pocket.remove(items[2], 1)
+        key_item_pocket[2].item = pkmn.item.NONE
 
-        while key_item_pocket[0].item != "None":
-            key_item_pocket[0].item = "None"
+        while key_item_pocket[0].item != pkmn.item.NONE:
+            key_item_pocket[0].item = pkmn.item.NONE
 
         self.assertGreater(len(key_item_pocket.valid_items), 0)
+        self.assertEqual(len(key_item_pocket.valid_items), len(key_item_pocket.valid_item_names))
 
     def __test_ball_pocket(self, ball_pocket, game):
         # Check unchanging and initial values.
@@ -130,31 +145,32 @@ class gen2_items_test(items_tests):
         self.item_list_test_empty_slot(ball_pocket)
 
         # Confirm errors are thrown when expected.
-        self.item_list_test_out_of_range_error(ball_pocket, "Master Ball")
+        self.item_list_test_out_of_range_error(ball_pocket, pkmn.item.MASTER_BALL)
 
         # Make sure we can't add items from other pockets.
         self.item_class_test_invalid_items(
             ball_pocket,
-            ["Potion", "Bicycle", "HM01"]
+            [pkmn.item.POTION, pkmn.item.BICYCLE, pkmn.item.HM01]
         )
 
         # Make sure we can't add items from later generations.
         self.item_class_test_invalid_items(
             ball_pocket,
-            ["Premier Ball", "Heal Ball", "Dream Ball"]
+            [pkmn.ball.PREMIER_BALL, pkmn.item.HEAL_BALL, pkmn.item.DREAM_BALL]
         )
 
         # Start adding and removing stuff, and make sure the numbers are accurate.
-        item_names = [u"Great Ball", u"Pok\u00e9 Ball", u"Park Ball", u"Fast Ball",
-                      u"Master Ball", u"Friend Ball", u"Love Ball", u"Level Ball"]
+        items = [pkmn.item.GREAT_BALL, pkmn.item.POKE_BALL,
+                 pkmn.item.PARK_BALL, pkmn.item.FAST_BALL,
+                 pkmn.item.MASTER_BALL, pkmn.item.FRIEND_BALL,
+                 pkmn.item.LOVE_BALL, pkmn.item.LEVEL_BALL]
         self.item_list_test_add_remove(
             ball_pocket,
-            item_names
+            items
         )
 
-        valid_items = ball_pocket.valid_items
-        self.assertGreater(len(valid_items), 0)
-        self.item_list_test_both_text_types(ball_pocket)
+        self.assertGreater(len(ball_pocket.valid_items), 0)
+        self.assertEqual(len(ball_pocket.valid_items), len(ball_pocket.valid_item_names))
 
     def __test_tmhm_pocket(self, tmhm_pocket, game):
         # Check unchanging and initial values.
@@ -164,66 +180,65 @@ class gen2_items_test(items_tests):
         self.assertEqual(tmhm_pocket.num_items, 0)
 
         # Make sure item slots start as correctly empty.
-        for i in range(1,51):
-            name = "TM{0}".format(str(i).zfill(2))
-            self.assertEqual(tmhm_pocket[i-1].item, name)
-            self.assertEqual(tmhm_pocket[i-1].amount, 0)
-        for i in range(1,8):
-            name = "HM{0}".format(str(i).zfill(2))
-            self.assertEqual(tmhm_pocket[50+i-1].item, name)
-            self.assertEqual(tmhm_pocket[50+i-1].amount, 0)
+        for i in range(50):
+            item = pkmn.item.TM01 + i
+            self.assertEqual(item, tmhm_pocket[i].item)
+            self.assertEqual(0, tmhm_pocket[i].amount)
+        for i in range(7):
+            item = pkmn.item.HM01 + i
+            self.assertEqual(item, tmhm_pocket[50+i].item)
+            self.assertEqual(0, tmhm_pocket[50+i].amount)
 
         # Confirm errors are thrown when expected.
         with self.assertRaises(IndexError):
-            tmhm_pocket.add("TM10", 0)
+            tmhm_pocket.add(pkmn.item.TM10, 0)
         with self.assertRaises(IndexError):
-            tmhm_pocket.add("TM10", 100)
+            tmhm_pocket.add(pkmn.item.TM10, 100)
         with self.assertRaises(IndexError):
-            tmhm_pocket.remove("TM10", 0)
+            tmhm_pocket.remove(pkmn.item.TM10, 0)
         with self.assertRaises(IndexError):
-            tmhm_pocket.remove("TM10", 100)
+            tmhm_pocket.remove(pkmn.item.TM10, 100)
 
         # Make sure we can't add items from other pockets.
         self.item_class_test_invalid_items(
             tmhm_pocket,
-            ["Potion", "Master Ball", "Bicycle"]
+            [pkmn.item.POTION, pkmn.item.MASTER_BALL, pkmn.item.BICYCLE]
         )
 
         # Make sure we can't add items from later generations.
         self.item_class_test_invalid_items(
             tmhm_pocket,
-            ["TM51"]
+            [pkmn.item.TM51]
         )
 
         # Start adding and removing stuff, and make sure the numbers are accurate.
-        for i in range(1,51):
-            name = "TM{0}".format(str(i).zfill(2))
-            tmhm_pocket.add(name, 50)
+        for i in range(50):
+            item = pkmn.item.TM01 + i
+            tmhm_pocket.add(item, 50)
+            self.assertEqual(tmhm_pocket.num_items, i+1)
+            self.assertEqual(tmhm_pocket[i].item, item)
+            self.assertEqual(tmhm_pocket[i].amount, 50)
+        for i in range(50)[::-1]:
+            item = pkmn.item.TM01 + i
+            tmhm_pocket.remove(item, 50)
             self.assertEqual(tmhm_pocket.num_items, i)
-            self.assertEqual(tmhm_pocket[i-1].item, name)
-            self.assertEqual(tmhm_pocket[i-1].amount, 50)
-        for i in range(1,51)[::-1]:
-            name = "TM{0}".format(str(i).zfill(2))
-            tmhm_pocket.remove(name, 50)
-            self.assertEqual(tmhm_pocket.num_items, i-1)
-            self.assertEqual(tmhm_pocket[i-1].item, name)
-            self.assertEqual(tmhm_pocket[i-1].amount, 0)
-        for i in range(1,8):
-            name = "HM{0}".format(str(i).zfill(2))
-            tmhm_pocket.add(name, 1)
+            self.assertEqual(tmhm_pocket[i].item, item)
+            self.assertEqual(tmhm_pocket[i].amount, 0)
+        for i in range(7):
+            item = pkmn.item.HM01 + i
+            tmhm_pocket.add(item, 1)
+            self.assertEqual(tmhm_pocket.num_items, i+1)
+            self.assertEqual(tmhm_pocket[50+i].item, item)
+            self.assertEqual(tmhm_pocket[50+i].amount, 1)
+        for i in range(7)[::-1]:
+            item = pkmn.item.HM01 + i
+            tmhm_pocket.remove(item, 1)
             self.assertEqual(tmhm_pocket.num_items, i)
-            self.assertEqual(tmhm_pocket[50+i-1].item, name)
-            self.assertEqual(tmhm_pocket[50+i-1].amount, 1)
-        for i in range(1,8)[::-1]:
-            name = "HM{0}".format(str(i).zfill(2))
-            tmhm_pocket.remove(name, 1)
-            self.assertEqual(tmhm_pocket.num_items, i-1)
-            self.assertEqual(tmhm_pocket[50+i-1].item, name)
-            self.assertEqual(tmhm_pocket[50+i-1].amount, 0)
+            self.assertEqual(tmhm_pocket[50+i].item, item)
+            self.assertEqual(tmhm_pocket[50+i].amount, 0)
 
-        valid_items = tmhm_pocket.valid_items
-        self.assertEqual(len(valid_items), 57)
-        self.item_list_test_both_text_types_with_strings(tmhm_pocket, "TM01", u"TM01")
+        self.assertEqual(len(tmhm_pocket.valid_items), 57)
+        self.assertEqual(len(tmhm_pocket.valid_item_names), 57)
 
     def __test_pc(self, pc, game):
         # Check unchanging and initial values.
@@ -236,10 +251,10 @@ class gen2_items_test(items_tests):
         self.item_list_test_empty_slot(pc)
 
         # Confirm errors are thrown when expected.
-        self.item_list_test_out_of_range_error(pc, "Potion")
+        self.item_list_test_out_of_range_error(pc, pkmn.item.POTION)
 
         # Crystal-specific items
-        if game == "Crystal":
+        if game == pkmn.game.CRYSTAL:
             for item in self.__crystal_items:
                 pc.add(item, 1)
                 pc.remove(item, 1)
@@ -259,14 +274,13 @@ class gen2_items_test(items_tests):
         # Start adding and removing stuff, and make sure the numbers are accurate.
         self.item_list_test_add_remove(
             pc,
-            [u"Potion", u"Bicycle", u"Great Ball", u"TM28",
-             u"Berry", u"SquirtBottle", u"Friend Ball", u"HM01"]
+            [pkmn.item.POTION, pkmn.item.BICYCLE, pkmn.item.GREAT_BALL, pkmn.item.TM28,
+             pkmn.item.BERRY, pkmn.item.SQUIRT_BOTTLE, pkmn.item.FRIEND_BALL, pkmn.item.HM01]
         )
 
-        valid_items = pc.valid_items
         full_item_list = pkmn.database.lists.get_item_list(game)
-        self.assertEqual(len(valid_items), len(full_item_list))
-        self.item_list_test_both_text_types(pc)
+        self.assertEqual(len(pc.valid_items), len(full_item_list))
+        self.assertEqual(len(pc.valid_items), len(pc.valid_item_names))
 
     def __test_item_bag(self, bag, game):
         # Check unchanging and initial values.
@@ -274,6 +288,7 @@ class gen2_items_test(items_tests):
 
         self.assertEqual(len(bag), 4)
         self.assertEqual(len(bag.pocket_names), 4)
+        self.item_bag_test_get_pockets_with_both_text_types(bag)
 
         self.assertTrue("Items" in bag.pocket_names)
         self.assertTrue("KeyItems" in bag.pocket_names)
@@ -284,10 +299,9 @@ class gen2_items_test(items_tests):
         self.__test_key_item_pocket(bag["KeyItems"], game)
         self.__test_ball_pocket(bag["Balls"], game)
         self.__test_tmhm_pocket(bag["TM/HM"], game)
-        self.item_bag_test_get_pockets_with_both_text_types(bag)
 
-        items = [u"Potion", u"Bicycle", u"Great Ball", u"TM28",
-                 u"Berry", u"SquirtBottle", u"Friend Ball", u"HM01"]
+        items = [pkmn.item.POTION, pkmn.item.BICYCLE, pkmn.item.GREAT_BALL, pkmn.item.TM28,
+                 pkmn.item.BERRY, pkmn.item.SQUIRT_BOTTLE, pkmn.item.FRIEND_BALL, pkmn.item.HM01]
 
         # Make sure adding items through the bag adds to the proper pockets.
         self.assertEqual(bag["Items"].num_items, 0)
@@ -297,68 +311,68 @@ class gen2_items_test(items_tests):
         for item in items:
             bag.add(item, 1)
 
-        self.assertEqual(bag["Items"][0].item, "Potion")
+        self.assertEqual(bag["Items"][0].item, pkmn.item.POTION)
         self.assertEqual(bag["Items"][0].amount, 1)
-        self.assertEqual(bag["Items"][1].item, "Berry")
+        self.assertEqual(bag["Items"][1].item, pkmn.item.BERRY)
         self.assertEqual(bag["Items"][1].amount, 1)
-        self.assertEqual(bag["Items"][2].item, "None")
+        self.assertEqual(bag["Items"][2].item, pkmn.item.NONE)
         self.assertEqual(bag["Items"][2].amount, 0)
 
-        self.assertEqual(bag["KeyItems"][0].item, "Bicycle")
+        self.assertEqual(bag["KeyItems"][0].item, pkmn.item.BICYCLE)
         self.assertEqual(bag["KeyItems"][0].amount, 1)
-        self.assertEqual(bag["KeyItems"][1].item, "SquirtBottle")
+        self.assertEqual(bag["KeyItems"][1].item, pkmn.item.SQUIRT_BOTTLE)
         self.assertEqual(bag["KeyItems"][1].amount, 1)
-        self.assertEqual(bag["KeyItems"][2].item, "None")
+        self.assertEqual(bag["KeyItems"][2].item, pkmn.item.NONE)
         self.assertEqual(bag["KeyItems"][2].amount, 0)
 
-        self.assertEqual(bag["Balls"][0].item, "Great Ball")
+        self.assertEqual(bag["Balls"][0].item, pkmn.item.GREAT_BALL)
         self.assertEqual(bag["Balls"][0].amount, 1)
-        self.assertEqual(bag["Balls"][1].item, "Friend Ball")
+        self.assertEqual(bag["Balls"][1].item, pkmn.item.FRIEND_BALL)
         self.assertEqual(bag["Balls"][1].amount, 1)
-        self.assertEqual(bag["Balls"][2].item, "None")
+        self.assertEqual(bag["Balls"][2].item, pkmn.item.NONE)
         self.assertEqual(bag["Balls"][2].amount, 0)
 
-        self.assertEqual(bag["TM/HM"][0].item, "TM01")
+        self.assertEqual(bag["TM/HM"][0].item, pkmn.item.TM01)
         self.assertEqual(bag["TM/HM"][0].amount, 0)
-        self.assertEqual(bag["TM/HM"][1].item, "TM02")
+        self.assertEqual(bag["TM/HM"][1].item, pkmn.item.TM02)
         self.assertEqual(bag["TM/HM"][1].amount, 0)
-        self.assertEqual(bag["TM/HM"][27].item, "TM28")
+        self.assertEqual(bag["TM/HM"][27].item, pkmn.item.TM28)
         self.assertEqual(bag["TM/HM"][27].amount, 1)
-        self.assertEqual(bag["TM/HM"][50].item, "HM01")
+        self.assertEqual(bag["TM/HM"][50].item, pkmn.item.HM01)
         self.assertEqual(bag["TM/HM"][50].amount, 1)
 
         # Make sure removing items through the bag removes from the proper pockets.
         for item in items:
             bag.remove(item, 1)
 
-        self.assertEqual(bag["Items"][0].item, "None")
+        self.assertEqual(bag["Items"][0].item, pkmn.item.NONE)
         self.assertEqual(bag["Items"][0].amount, 0)
-        self.assertEqual(bag["Items"][1].item, "None")
+        self.assertEqual(bag["Items"][1].item, pkmn.item.NONE)
         self.assertEqual(bag["Items"][1].amount, 0)
-        self.assertEqual(bag["Items"][2].item, "None")
+        self.assertEqual(bag["Items"][2].item, pkmn.item.NONE)
         self.assertEqual(bag["Items"][2].amount, 0)
 
-        self.assertEqual(bag["KeyItems"][0].item, "None")
+        self.assertEqual(bag["KeyItems"][0].item, pkmn.item.NONE)
         self.assertEqual(bag["KeyItems"][0].amount, 0)
-        self.assertEqual(bag["KeyItems"][1].item, "None")
+        self.assertEqual(bag["KeyItems"][1].item, pkmn.item.NONE)
         self.assertEqual(bag["KeyItems"][1].amount, 0)
-        self.assertEqual(bag["KeyItems"][2].item, "None")
+        self.assertEqual(bag["KeyItems"][2].item, pkmn.item.NONE)
         self.assertEqual(bag["KeyItems"][2].amount, 0)
 
-        self.assertEqual(bag["Balls"][0].item, "None")
+        self.assertEqual(bag["Balls"][0].item, pkmn.item.NONE)
         self.assertEqual(bag["Balls"][0].amount, 0)
-        self.assertEqual(bag["Balls"][1].item, "None")
+        self.assertEqual(bag["Balls"][1].item, pkmn.item.NONE)
         self.assertEqual(bag["Balls"][1].amount, 0)
-        self.assertEqual(bag["Balls"][2].item, "None")
+        self.assertEqual(bag["Balls"][2].item, pkmn.item.NONE)
         self.assertEqual(bag["Balls"][2].amount, 0)
 
-        self.assertEqual(bag["TM/HM"][0].item, "TM01")
+        self.assertEqual(bag["TM/HM"][0].item, pkmn.item.TM01)
         self.assertEqual(bag["TM/HM"][0].amount, 0)
-        self.assertEqual(bag["TM/HM"][1].item, "TM02")
+        self.assertEqual(bag["TM/HM"][1].item, pkmn.item.TM02)
         self.assertEqual(bag["TM/HM"][1].amount, 0)
-        self.assertEqual(bag["TM/HM"][27].item, "TM28")
+        self.assertEqual(bag["TM/HM"][27].item, pkmn.item.TM28)
         self.assertEqual(bag["TM/HM"][27].amount, 0)
-        self.assertEqual(bag["TM/HM"][50].item, "HM01")
+        self.assertEqual(bag["TM/HM"][50].item, pkmn.item.HM01)
         self.assertEqual(bag["TM/HM"][50].amount, 0)
 
         # Make sure we can't add items from later generations.
@@ -372,81 +386,81 @@ class gen2_items_test(items_tests):
     #
 
     def test_gold_item_pocket(self):
-        item_pocket = pkmn.item_list("Items", "Gold")
-        self.__test_item_pocket(item_pocket, "Gold")
+        item_pocket = pkmn.item_list("Items", pkmn.game.GOLD)
+        self.__test_item_pocket(item_pocket, pkmn.game.GOLD)
 
     def test_gold_key_item_pocket(self):
-        key_item_pocket = pkmn.item_list("KeyItems", "Gold")
-        self.__test_key_item_pocket(key_item_pocket, "Gold")
+        key_item_pocket = pkmn.item_list("KeyItems", pkmn.game.GOLD)
+        self.__test_key_item_pocket(key_item_pocket, pkmn.game.GOLD)
 
     def test_gold_ball_pocket(self):
-        ball_pocket = pkmn.item_list("Balls", "Gold")
-        self.__test_ball_pocket(ball_pocket, "Gold")
+        ball_pocket = pkmn.item_list("Balls", pkmn.game.GOLD)
+        self.__test_ball_pocket(ball_pocket, pkmn.game.GOLD)
 
     def test_gold_tmhm_pocket(self):
-        tmhm_pocket = pkmn.item_list("TM/HM", "Gold")
-        self.__test_tmhm_pocket(tmhm_pocket, "Gold")
+        tmhm_pocket = pkmn.item_list("TM/HM", pkmn.game.GOLD)
+        self.__test_tmhm_pocket(tmhm_pocket, pkmn.game.GOLD)
 
     def test_gold_item_bag(self):
-        bag = pkmn.item_bag("Gold")
-        self.__test_item_bag(bag, "Gold")
+        bag = pkmn.item_bag(pkmn.game.GOLD)
+        self.__test_item_bag(bag, pkmn.game.GOLD)
 
     def test_gold_pc(self):
-        pc = pkmn.item_list("PC", "Gold")
-        self.__test_pc(pc, "Gold")
+        pc = pkmn.item_list("PC", pkmn.game.GOLD)
+        self.__test_pc(pc, pkmn.game.GOLD)
 
     #
     # Silver
     #
 
     def test_silver_item_pocket(self):
-        item_pocket = pkmn.item_list("Items", "Silver")
-        self.__test_item_pocket(item_pocket, "Silver")
+        item_pocket = pkmn.item_list("Items", pkmn.game.SILVER)
+        self.__test_item_pocket(item_pocket, pkmn.game.SILVER)
 
     def test_silver_key_item_pocket(self):
-        key_item_pocket = pkmn.item_list("KeyItems", "Silver")
-        self.__test_key_item_pocket(key_item_pocket, "Silver")
+        key_item_pocket = pkmn.item_list("KeyItems", pkmn.game.SILVER)
+        self.__test_key_item_pocket(key_item_pocket, pkmn.game.SILVER)
 
     def test_silver_ball_pocket(self):
-        ball_pocket = pkmn.item_list("Balls", "Silver")
-        self.__test_ball_pocket(ball_pocket, "Silver")
+        ball_pocket = pkmn.item_list("Balls", pkmn.game.SILVER)
+        self.__test_ball_pocket(ball_pocket, pkmn.game.SILVER)
 
     def test_silver_tmhm_pocket(self):
-        tmhm_pocket = pkmn.item_list("TM/HM", "Silver")
-        self.__test_tmhm_pocket(tmhm_pocket, "Silver")
+        tmhm_pocket = pkmn.item_list("TM/HM", pkmn.game.SILVER)
+        self.__test_tmhm_pocket(tmhm_pocket, pkmn.game.SILVER)
 
     def test_silver_item_bag(self):
-        bag = pkmn.item_bag("Silver")
-        self.__test_item_bag(bag, "Silver")
+        bag = pkmn.item_bag(pkmn.game.SILVER)
+        self.__test_item_bag(bag, pkmn.game.SILVER)
 
     def test_silver_pc(self):
-        pc = pkmn.item_list("PC", "Silver")
-        self.__test_pc(pc, "Silver")
+        pc = pkmn.item_list("PC", pkmn.game.SILVER)
+        self.__test_pc(pc, pkmn.game.SILVER)
 
     #
     # Crystal
     #
 
     def test_crystal_item_pocket(self):
-        item_pocket = pkmn.item_list("Items", "Crystal")
-        self.__test_item_pocket(item_pocket, "Crystal")
+        item_pocket = pkmn.item_list("Items", pkmn.game.CRYSTAL)
+        self.__test_item_pocket(item_pocket, pkmn.game.CRYSTAL)
 
     def test_crystal_key_item_pocket(self):
-        key_item_pocket = pkmn.item_list("KeyItems", "Crystal")
-        self.__test_key_item_pocket(key_item_pocket, "Crystal")
+        key_item_pocket = pkmn.item_list("KeyItems", pkmn.game.CRYSTAL)
+        self.__test_key_item_pocket(key_item_pocket, pkmn.game.CRYSTAL)
 
     def test_crystal_ball_pocket(self):
-        ball_pocket = pkmn.item_list("Balls", "Crystal")
-        self.__test_ball_pocket(ball_pocket, "Crystal")
+        ball_pocket = pkmn.item_list("Balls", pkmn.game.CRYSTAL)
+        self.__test_ball_pocket(ball_pocket, pkmn.game.CRYSTAL)
 
     def test_crystal_tmhm_pocket(self):
-        tmhm_pocket = pkmn.item_list("TM/HM", "Crystal")
-        self.__test_tmhm_pocket(tmhm_pocket, "Crystal")
+        tmhm_pocket = pkmn.item_list("TM/HM", pkmn.game.CRYSTAL)
+        self.__test_tmhm_pocket(tmhm_pocket, pkmn.game.CRYSTAL)
 
     def test_crystal_item_bag(self):
-        bag = pkmn.item_bag("Crystal")
-        self.__test_item_bag(bag, "Crystal")
+        bag = pkmn.item_bag(pkmn.game.CRYSTAL)
+        self.__test_item_bag(bag, pkmn.game.CRYSTAL)
 
     def test_crystal_pc(self):
-        pc = pkmn.item_list("PC", "Crystal")
-        self.__test_pc(pc, "Crystal")
+        pc = pkmn.item_list("PC", pkmn.game.CRYSTAL)
+        self.__test_pc(pc, pkmn.game.CRYSTAL)

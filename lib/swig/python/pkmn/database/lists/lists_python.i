@@ -8,7 +8,8 @@
 %include <python/python_init.i>
 PKMN_PYTHON_INIT
 
-%import <stl_python.i>
+// Why don't we need to import stl_python? How does this get vectors?
+%import <enums_python.i>
 
 %{
     #include <pkmn/database/lists.hpp>

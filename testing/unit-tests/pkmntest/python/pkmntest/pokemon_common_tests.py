@@ -203,8 +203,10 @@ class pokemon_common_tests(base_test):
                 self.assertTrue(os.path.exists(deoxys.icon_filepath))
                 self.assertTrue(os.path.exists(deoxys.sprite_filepath))
 
-    @parameterized.expand(ALL_GAMES, testcase_func_name=test_name_func)
-    def test_forms(self, game):
+    @parameterized.expand(ALL_GAME_NAMES, testcase_func_name=test_name_func)
+    def test_forms(self, game_name):
+        game = pkmn.string_to_game(game_name)
+
         generation = GAME_TO_GENERATION[game]
 
         if generation >= 1:
@@ -214,45 +216,47 @@ class pokemon_common_tests(base_test):
         if generation >= 3:
             self.gen3_forms_test(game)
 
-    @parameterized.expand(ALL_GAMES[3:], testcase_func_name=test_name_func)
-    def test_gender(self, game):
+    @parameterized.expand(ALL_GAME_NAMES[3:], testcase_func_name=test_name_func)
+    def test_gender(self, game_name):
+        game = pkmn.string_to_game(game_name)
+
         # Single-gender
-        nidorina = pkmn.pokemon("Nidorina", game, "", 50)
-        self.assertEqual(nidorina.gender, "Female")
-        nidorina.gender = "Female"
+        nidorina = pkmn.pokemon(pkmn.species.NIDORINA, game, "", 50)
+        self.assertEqual(nidorina.gender, pkmn.gender.FEMALE)
+        nidorina.gender = pkmn.gender.FEMALE
         with self.assertRaises(ValueError):
-            nidorina.gender = "Male"
+            nidorina.gender = pkmn.gender.MALE
         with self.assertRaises(ValueError):
-            nidorina.gender = "Genderless"
+            nidorina.gender = pkmn.gender.GENDERLESS
 
-        nidorino = pkmn.pokemon("Nidorino", game, "", 50)
-        self.assertEqual(nidorino.gender, "Male")
-        nidorino.gender = "Male"
+        nidorino = pkmn.pokemon(pkmn.species.NIDORINO, game, "", 50)
+        self.assertEqual(nidorino.gender, pkmn.gender.MALE)
+        nidorino.gender = pkmn.gender.MALE
         with self.assertRaises(ValueError):
-            nidorino.gender = "Female"
+            nidorino.gender = pkmn.gender.FEMALE
         with self.assertRaises(ValueError):
-            nidorino.gender = "Genderless"
+            nidorino.gender = pkmn.gender.GENDERLESS
 
-        magnemite = pkmn.pokemon("Magnemite", game, "", 50)
-        self.assertEqual(magnemite.gender, "Genderless")
-        magnemite.gender = "Genderless"
+        magnemite = pkmn.pokemon(pkmn.species.MAGNEMITE, game, "", 50)
+        self.assertEqual(magnemite.gender, pkmn.gender.GENDERLESS)
+        magnemite.gender = pkmn.gender.GENDERLESS
         with self.assertRaises(ValueError):
-            magnemite.gender = "Male"
+            magnemite.gender = pkmn.gender.MALE
         with self.assertRaises(ValueError):
-            magnemite.gender = "Female"
+            magnemite.gender = pkmn.gender.FEMALE
 
         mixed_pokemon = [
-            "Charmander", # 87.5% male
-            "Growlithe",  # 75% male
-            "Pidgey",     # 50% male
-            "Vulpix"      # 25% male
+            pkmn.species.CHARMANDER, # 87.5% male
+            pkmn.species.GROWLITHE,  # 75% male
+            pkmn.species.PIDGEY,     # 50% male
+            pkmn.species.VULPIX      # 25% male
         ]
 
         for species in mixed_pokemon:
             pokemon = pkmn.pokemon(species, game, "", 50)
-            pokemon.gender = "Female"
-            self.assertEqual(pokemon.gender, "Female")
-            pokemon.gender = "Male"
-            self.assertEqual(pokemon.gender, "Male")
+            pokemon.gender = pkmn.gender.FEMALE
+            self.assertEqual(pokemon.gender, pkmn.gender.FEMALE)
+            pokemon.gender = pkmn.gender.MALE
+            self.assertEqual(pokemon.gender, pkmn.gender.MALE)
             with self.assertRaises(ValueError):
-                pokemon.gender = "Genderless"
+                pokemon.gender = pkmn.gender.GENDERLESS

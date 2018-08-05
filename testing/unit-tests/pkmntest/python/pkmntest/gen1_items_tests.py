@@ -59,6 +59,9 @@ class gen1_items_test(items_tests):
         full_item_list = pkmn.database.lists.get_item_list(game)
         self.assertEqual(len(items.valid_items), len(full_item_list))
 
+        full_item_name_list = pkmn.database.lists.get_item_name_list(game)
+        self.assertEqual(len(items.valid_items), len(full_item_name_list))
+
     def __test_item_list(self, items, game):
         # Check unchanging and initial values.
         self.assertEqual(items.name, "Items")
@@ -83,11 +86,11 @@ class gen1_items_test(items_tests):
 
         self.assertEqual(len(bag), 1)
         self.assertEqual(len(bag.pocket_names), 1)
+        self.item_bag_test_get_pockets_with_both_text_types(bag)
 
         self.assertTrue("Items" in bag.pocket_names)
 
         self.__test_item_list(bag["Items"], game)
-        self.item_bag_test_get_pockets_with_both_text_types(bag)
 
         # Confirm items from later generations can't be added.
         self.item_class_test_invalid_items(
@@ -121,7 +124,7 @@ class gen1_items_test(items_tests):
     def test_red_item_list(self):
         items = pkmn.item_list("Items", pkmn.game.RED)
         self.__test_item_list(items, pkmn.game.RED)
-'''
+
     def test_red_item_pc(self):
         pc = pkmn.item_list("PC", pkmn.game.RED)
         self.__test_item_pc(pc, pkmn.game.RED)
@@ -161,4 +164,3 @@ class gen1_items_test(items_tests):
     def test_yellow_item_bag(self):
         bag = pkmn.item_bag(pkmn.game.YELLOW)
         self.__test_item_bag(bag, pkmn.game.YELLOW)
-        '''

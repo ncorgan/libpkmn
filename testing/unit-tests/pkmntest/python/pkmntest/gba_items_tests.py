@@ -18,22 +18,36 @@ PYTHON_MAJOR_VERSION = sys.version_info[0]
 class gba_items_test(items_tests):
 
     def setUp(self):
-        self.__all_pocket_item_names = ["Potion", "Mach Bike", "Great Ball", "TM01",
-                                        "Aspear Berry", "Wailmer Pail", "Master Ball", "HM04"]
-        self.__wrong_game_all_pocket_items = ["Pink Bow", "Black Sludge",
-                                              "Ein File S", "Gonzap's Key",
-                                              "GS Ball", "Poffin Items",
-                                              "TM51",
-                                              "Berry", "Occa Berry"]
+        self.__all_pocket_items = [
+            pkmn.item.POTION,
+            pkmn.item.MACH_BIKE,
+            pkmn.item.GREAT_BALL,
+            pkmn.item.TM01,
+            pkmn.item.ASPEAR_BERRY,
+            pkmn.item.WAILMER_PAIL,
+            pkmn.item.MASTER_BALL,
+            pkmn.item.HM04
+        ]
+        self.__wrong_game_all_pocket_items = [
+            pkmn.item.PINK_BOW,
+            pkmn.item.BLACK_SLUDGE,
+            pkmn.item.EIN_FILE_S,
+            pkmn.item.GONZAPS_KEY,
+            pkmn.item.GS_BALL,
+            pkmn.item.POFFIN_CASE,
+            pkmn.item.TM51,
+            pkmn.item.BERRY,
+            pkmn.item.OCCA_BERRY
+        ]
 
     #
     # Helper functions
     #
 
     def __test_item_pocket(self, item_pocket, game):
-        if game in ["Ruby", "Sapphire"]:
+        if game in [pkmn.game.RUBY, pkmn.game.SAPPHIRE]:
             expected_capacity = 20
-        elif game == "Emerald":
+        elif game == pkmn.game.EMERALD:
             expected_capacity = 30
         else:
             expected_capacity = 42
@@ -48,41 +62,42 @@ class gba_items_test(items_tests):
         self.item_list_test_empty_slot(item_pocket)
 
         # Confirm errors are thrown when expected.
-        self.item_list_test_out_of_range_error(item_pocket, "Potion")
+        self.item_list_test_out_of_range_error(item_pocket, pkmn.item.POTION)
 
         # Make sure we can't add items from other pockets.
         self.item_class_test_invalid_items(
             item_pocket,
-            ["Bicycle", "Master Ball", "HM01", "Razz Berry"]
+            [pkmn.item.BICYCLE, pkmn.item.MASTER_BALL,
+             pkmn.item.HM01, pkmn.item.RAZZ_BERRY]
         )
 
         # Make sure we can't add items from other generations.
         self.item_class_test_invalid_items(
             item_pocket,
-            ["Pink Bow", "Black Sludge", "Binding Band", "Beedrillite"]
+            [pkmn.item.PINK_BOW, pkmn.item.BLACK_SLUDGE,
+             pkmn.item.BINDING_BAND, pkmn.item.BEEDRILLITE]
         )
 
         # Make sure we can't add items from Gamecube games.
         self.item_class_test_invalid_items(
             item_pocket,
-            ["Time Flute", u"Pok\u00e9 Snack"]
+            [pkmn.item.TIME_FLUTE, pkmn.item.POKE_SNACK]
         )
 
         # Start adding and removing stuff, and make sure the numbers are accurate.
         self.item_list_test_add_remove(
             item_pocket,
-            [u"Potion", u"Orange Mail", u"Lava Cookie", u"Stardust",
-             u"Shadow Mail", u"Pink Scarf", u"Antidote", u"Green Shard"]
+            [pkmn.item.POTION, pkmn.item.ORANGE_MAIL,
+             pkmn.item.LAVA_COOKIE, pkmn.item.STARDUST,
+             pkmn.item.SHADOW_MAIL, pkmn.item.PINK_SCARF,
+             pkmn.item.ANTIDOTE, pkmn.item.GREEN_SHARD]
         )
 
-        valid_items = item_pocket.valid_items
-        self.assertGreater(len(valid_items), 0)
-
-        # See TODO in item_entry.hpp
-        #self.item_list_test_both_text_types(item_pocket)
+        self.assertGreater(len(item_pocket.valid_items), 0)
+        self.assertEqual(len(item_pocket.valid_items), len(item_pocket.valid_item_names))
 
     def __test_key_item_pocket(self, key_item_pocket, game):
-        if game in ["Ruby", "Sapphire"]:
+        if game in [pkmn.game.RUBY, pkmn.game.SAPPHIRE]:
             expected_capacity = 20
         else:
             expected_capacity = 30
@@ -97,50 +112,53 @@ class gba_items_test(items_tests):
         self.item_list_test_empty_slot(key_item_pocket)
 
         # Confirm errors are thrown when expected.
-        self.item_list_test_out_of_range_error(key_item_pocket, "Basement Key")
+        self.item_list_test_out_of_range_error(key_item_pocket, pkmn.item.BASEMENT_KEY)
 
         # Make sure we can't add items from other pockets.
         self.item_class_test_invalid_items(
             key_item_pocket,
-            ["Potion", "Master Ball", "HM01", "Razz Berry"]
+            [pkmn.item.POTION, pkmn.item.MASTER_BALL,
+             pkmn.item.HM01, pkmn.item.RAZZ_BERRY]
         )
 
         # Make sure we can't add items from other generations.
         self.item_class_test_invalid_items(
             key_item_pocket,
-            ["GS Ball", "Poffin Items", "DNA Splicers", "Aqua Suit"]
+            [pkmn.item.GS_BALL, pkmn.item.POFFIN_CASE,
+             pkmn.item.DNA_SPLICERS, pkmn.item.AQUA_SUIT]
         )
 
         # Make sure we can't add items from Gamecube games.
         self.item_class_test_invalid_items(
             key_item_pocket,
-            ["Ein File S", "Powerup Part",
-             "Gonzap's Key", "Krane Memo 1"]
+            [pkmn.item.EIN_FILE_S, pkmn.item.POWERUP_PART,
+             pkmn.item.GONZAPS_KEY, pkmn.item.KRANE_MEMO_1]
         )
-        if game == "Ruby" or game == "Sapphire":
+        if game in [pkmn.game.RUBY, pkmn.game.SAPPHIRE]:
             self.item_class_test_invalid_items(
                 key_item_pocket,
-                ["Helix Fossil", "Tea", "Ruby"]
+                [pkmn.item.HELIX_FOSSIL, pkmn.item.TEA, pkmn.item.RUBY]
             )
-        if game != "Emerald":
+        if game != pkmn.game.EMERALD:
             self.item_class_test_invalid_items(
                 key_item_pocket,
-                ["Magma Emblem", "Old Sea Map"]
+                [pkmn.item.MAGMA_EMBLEM, pkmn.item.OLD_SEA_MAP]
             )
 
         # Start adding and removing stuff, and make sure the numbers are accurate.
         self.item_list_test_add_remove(
             key_item_pocket,
-            [u"Wailmer Pail", u"Basement Key", u"Meteorite", u"Old Rod",
-             u"Red Orb", u"Root Fossil", u"Contest Pass", u"Eon Ticket"]
+            [pkmn.item.WAILMER_PAIL, pkmn.item.BASEMENT_KEY,
+             pkmn.item.METEORITE, pkmn.item.OLD_ROD,
+             pkmn.item.RED_ORB, pkmn.item.ROOT_FOSSIL,
+             pkmn.item.CONTEST_PASS, pkmn.item.EON_TICKET]
         )
 
-        valid_items = key_item_pocket.valid_items
-        self.assertGreater(len(valid_items), 0)
-        self.item_list_test_both_text_types(key_item_pocket)
+        self.assertGreater(len(key_item_pocket.valid_items), 0)
+        self.assertEqual(len(key_item_pocket.valid_items), len(key_item_pocket.valid_item_names))
 
     def __test_ball_pocket(self, ball_pocket, game):
-        if game in ["FireRed", "LeafGreen"]:
+        if game in [pkmn.game.FIRERED, pkmn.game.LEAFGREEN]:
             expected_capacity = 13
         else:
             expected_capacity = 16
@@ -155,34 +173,38 @@ class gba_items_test(items_tests):
         self.item_list_test_empty_slot(ball_pocket)
 
         # Confirm errors are thrown when expected.
-        self.item_list_test_out_of_range_error(ball_pocket, "Master Ball")
+        self.item_list_test_out_of_range_error(ball_pocket, pkmn.item.MASTER_BALL)
 
         # Make sure we can't add items from other pockets.
         self.item_class_test_invalid_items(
             ball_pocket,
-            ["Potion", "Bicycle", "HM01", "Razz Berry"]
+            [pkmn.item.POTION, pkmn.item.BICYCLE,
+             pkmn.item.HM01, pkmn.item.RAZZ_BERRY]
         )
 
         # Make sure we can't add items from other generations.
         self.item_class_test_invalid_items(
             ball_pocket,
-            ["Moon Ball", "Heal Ball", "Dream Ball"]
+            [pkmn.item.MOON_BALL, pkmn.item.HEAL_BALL, pkmn.item.DREAM_BALL]
         )
 
         # Start adding and removing stuff, and make sure the numbers are accurate.
-        item_names = [u"Master Ball", u"Ultra Ball", u"Great Ball", u"Pok\u00e9 Ball",
-                      u"Safari Ball", u"Net Ball", u"Dive Ball", u"Nest Ball"]
+        items = [
+            pkmn.item.MASTER_BALL, pkmn.item.ULTRA_BALL,
+            pkmn.item.GREAT_BALL, pkmn.item.POKE_BALL,
+            pkmn.item.SAFARI_BALL, pkmn.item.NET_BALL,
+            pkmn.item.DIVE_BALL, pkmn.item.NEST_BALL
+        ]
         self.item_list_test_add_remove(
             ball_pocket,
-            item_names
+            items
         )
 
-        valid_items = ball_pocket.valid_items
-        self.assertGreater(len(valid_items), 0)
-        self.item_list_test_both_text_types(ball_pocket)
+        self.assertGreater(len(ball_pocket.valid_items), 0)
+        self.assertEqual(len(ball_pocket.valid_items), len(ball_pocket.valid_item_names))
 
     def __test_tmhm_pocket(self, tmhm_pocket, game):
-        if game in ["FireRed", "LeafGreen"]:
+        if game in [pkmn.game.FIRERED, pkmn.game.LEAFGREEN]:
             expected_capacity = 58
             pocket_name = "TM Case"
         else:
@@ -199,33 +221,34 @@ class gba_items_test(items_tests):
         self.item_list_test_empty_slot(tmhm_pocket)
 
         # Confirm errors are thrown when expected.
-        self.item_list_test_out_of_range_error(tmhm_pocket, "TM01")
+        self.item_list_test_out_of_range_error(tmhm_pocket, pkmn.item.TM01)
 
         # Make sure we can't add items from other pockets.
         self.item_class_test_invalid_items(
             tmhm_pocket,
-            ["Potion", "Master Ball", "Great Ball", "Razz Berry"]
+            [pkmn.item.POTION, pkmn.item.MASTER_BALL, pkmn.item.GREAT_BALL, pkmn.item.RAZZ_BERRY]
         )
 
         # Make sure we can't add items from other generations.
         self.item_class_test_invalid_items(
             tmhm_pocket,
-            ["TM51"]
+            [pkmn.item.TM51]
         )
 
         # Start adding and removing stuff, and make sure the numbers are accurate.
         self.item_list_test_add_remove(
             tmhm_pocket,
-            ["TM01", "HM01", "TM02", "HM02",
-             "TM03", "HM03", "TM04", "HM04"]
+            [pkmn.item.TM01, pkmn.item.HM01,
+             pkmn.item.TM02, pkmn.item.HM02,
+             pkmn.item.TM03, pkmn.item.HM03,
+             pkmn.item.TM04, pkmn.item.HM04]
         )
 
-        valid_items = tmhm_pocket.valid_items
-        self.assertGreater(len(valid_items), 0)
-        self.item_list_test_both_text_types(tmhm_pocket)
+        self.assertGreater(len(tmhm_pocket.valid_items), 0)
+        self.assertEqual(len(tmhm_pocket.valid_items), len(tmhm_pocket.valid_item_names))
 
     def __test_berry_pocket(self, berry_pocket, game):
-        if game in ["FireRed", "LeafGreen"]:
+        if game in [pkmn.game.FIRERED, pkmn.game.LEAFGREEN]:
             expected_capacity = 43
             pocket_name = "Berry Pouch"
         else:
@@ -242,30 +265,32 @@ class gba_items_test(items_tests):
         self.item_list_test_empty_slot(berry_pocket)
 
         # Confirm errors are thrown when expected.
-        self.item_list_test_out_of_range_error(berry_pocket, "Razz Berry")
+        self.item_list_test_out_of_range_error(berry_pocket, pkmn.item.RAZZ_BERRY)
 
         # Make sure we can't add items from other pockets.
         self.item_class_test_invalid_items(
             berry_pocket,
-            ["Potion", "Bicycle", "Great Ball", "HM02"]
+            [pkmn.item.POTION, pkmn.item.BICYCLE,
+             pkmn.item.GREAT_BALL, pkmn.item.HM02]
         )
 
         # Make sure we can't add items from other generations.
         self.item_class_test_invalid_items(
             berry_pocket,
-            ["Berry", "Occa Berry", "Roseli Berry"]
+            [pkmn.item.BERRY, pkmn.item.OCCA_BERRY, pkmn.item.ROSELI_BERRY]
         )
 
         # Start adding and removing stuff, and make sure the numbers are accurate.
         self.item_list_test_add_remove(
             berry_pocket,
-            [u"Cheri Berry", u"Razz Berry", u"Lum Berry", u"Pinap Berry",
-             u"Aspear Berry", u"Iapapa Berry", u"Wiki Berry", u"Apicot Berry"]
+            [pkmn.item.CHERI_BERRY, pkmn.item.RAZZ_BERRY,
+             pkmn.item.LUM_BERRY, pkmn.item.PINAP_BERRY,
+             pkmn.item.ASPEAR_BERRY, pkmn.item.IAPAPA_BERRY,
+             pkmn.item.WIKI_BERRY, pkmn.item.APICOT_BERRY]
         )
 
-        valid_items = berry_pocket.valid_items
-        self.assertGreater(len(valid_items), 0)
-        self.item_list_test_both_text_types(berry_pocket)
+        self.assertGreater(len(berry_pocket.valid_items), 0)
+        self.assertEqual(len(berry_pocket.valid_items), len(berry_pocket.valid_item_names))
 
     def __test_pc(self, pc, game):
         # Check unchanging and initial values.
@@ -278,7 +303,7 @@ class gba_items_test(items_tests):
         self.item_list_test_empty_slot(pc)
 
         # Confirm errors are thrown when expected.
-        self.item_list_test_out_of_range_error(pc, "Potion")
+        self.item_list_test_out_of_range_error(pc, pkmn.item.POTION)
 
         # Make sure we can't add items from other generations.
         self.item_class_test_invalid_items(
@@ -289,16 +314,17 @@ class gba_items_test(items_tests):
         # Start adding and removing stuff, and make sure the numbers are accurate.
         self.item_list_test_add_remove(
             pc,
-            [u"Potion", u"Mach Bike", u"Great Ball", u"TM01",
-             u"Aspear Berry", u"Wailmer Pail", u"Master Ball", u"HM04"]
+            [pkmn.item.POTION, pkmn.item.MACH_BIKE,
+             pkmn.item.GREAT_BALL, pkmn.item.TM01,
+             pkmn.item.ASPEAR_BERRY, pkmn.item.WAILMER_PAIL,
+             pkmn.item.MASTER_BALL, pkmn.item.HM04]
         )
 
-        valid_items = pc.valid_items
-        self.assertGreater(len(valid_items), 0)
-        self.item_list_test_both_text_types(pc)
+        self.assertGreater(len(pc.valid_items), 0)
+        self.assertEqual(len(pc.valid_items), len(pc.valid_item_names))
 
     def __test_item_bag(self, bag, game):
-        if game in ["FireRed", "LeafGreen"]:
+        if game in [pkmn.game.FIRERED, pkmn.game.LEAFGREEN]:
             tmhm_pocket_name = "TM Case"
             berry_pocket_name = "Berry Pouch"
         else:
@@ -311,6 +337,7 @@ class gba_items_test(items_tests):
 
         self.assertEqual(len(bag), 5)
         self.assertEqual(len(bag.pocket_names), 5)
+        self.item_bag_test_get_pockets_with_both_text_types(bag)
 
         unicode_pocket_names = []
         if PYTHON_MAJOR_VERSION == 2:
@@ -329,10 +356,13 @@ class gba_items_test(items_tests):
         self.__test_ball_pocket(bag[ball_pocket_name], game)
         self.__test_tmhm_pocket(bag[tmhm_pocket_name], game)
         self.__test_berry_pocket(bag[berry_pocket_name], game)
-        self.item_bag_test_get_pockets_with_both_text_types(bag)
 
-        items = [u"Potion", u"Mach Bike", u"Great Ball", u"TM01",
-                 u"Aspear Berry", u"Wailmer Pail", u"Master Ball", u"HM04"]
+        items = [
+            pkmn.item.POTION, pkmn.item.MACH_BIKE,
+            pkmn.item.GREAT_BALL, pkmn.item.TM01,
+            pkmn.item.ASPEAR_BERRY, pkmn.item.WAILMER_PAIL,
+            pkmn.item.MASTER_BALL, pkmn.item.HM04
+        ]
 
         # Make sure adding items through the bag adds to the proper pocket.
         self.assertEqual(bag["Items"].num_items, 0)
@@ -343,70 +373,70 @@ class gba_items_test(items_tests):
         for item in items:
             bag.add(item, 5)
 
-        self.assertEqual(bag["Items"][0].item, "Potion")
+        self.assertEqual(bag["Items"][0].item, pkmn.item.POTION)
         self.assertEqual(bag["Items"][0].amount, 5)
-        self.assertEqual(bag["Items"][1].item, "None")
+        self.assertEqual(bag["Items"][1].item, pkmn.item.NONE)
         self.assertEqual(bag["Items"][1].amount, 0)
 
-        self.assertEqual(bag["Key Items"][0].item, "Mach Bike")
+        self.assertEqual(bag["Key Items"][0].item, pkmn.item.MACH_BIKE)
         self.assertEqual(bag["Key Items"][0].amount, 5)
-        self.assertEqual(bag["Key Items"][1].item, "Wailmer Pail")
+        self.assertEqual(bag["Key Items"][1].item, pkmn.item.WAILMER_PAIL)
         self.assertEqual(bag["Key Items"][1].amount, 5)
-        self.assertEqual(bag["Key Items"][2].item, "None")
+        self.assertEqual(bag["Key Items"][2].item, pkmn.item.NONE)
         self.assertEqual(bag["Key Items"][2].amount, 0)
 
-        self.assertEqual(bag[ball_pocket_name][0].item, "Great Ball")
+        self.assertEqual(bag[ball_pocket_name][0].item, pkmn.item.GREAT_BALL)
         self.assertEqual(bag[ball_pocket_name][0].amount, 5)
-        self.assertEqual(bag[ball_pocket_name][1].item, "Master Ball")
+        self.assertEqual(bag[ball_pocket_name][1].item, pkmn.item.MASTER_BALL)
         self.assertEqual(bag[ball_pocket_name][1].amount, 5)
-        self.assertEqual(bag[ball_pocket_name][2].item, "None")
+        self.assertEqual(bag[ball_pocket_name][2].item, pkmn.item.NONE)
         self.assertEqual(bag[ball_pocket_name][2].amount, 0)
 
-        self.assertEqual(bag[tmhm_pocket_name][0].item, "TM01")
+        self.assertEqual(bag[tmhm_pocket_name][0].item, pkmn.item.TM01)
         self.assertEqual(bag[tmhm_pocket_name][0].amount, 5)
-        self.assertEqual(bag[tmhm_pocket_name][1].item, "HM04")
+        self.assertEqual(bag[tmhm_pocket_name][1].item, pkmn.item.HM04)
         self.assertEqual(bag[tmhm_pocket_name][1].amount, 5)
-        self.assertEqual(bag[tmhm_pocket_name][2].item, "None")
+        self.assertEqual(bag[tmhm_pocket_name][2].item, pkmn.item.NONE)
         self.assertEqual(bag[tmhm_pocket_name][2].amount, 0)
 
-        self.assertEqual(bag[berry_pocket_name][0].item, "Aspear Berry")
+        self.assertEqual(bag[berry_pocket_name][0].item, pkmn.item.ASPEAR_BERRY)
         self.assertEqual(bag[berry_pocket_name][0].amount, 5)
-        self.assertEqual(bag[berry_pocket_name][1].item, "None")
+        self.assertEqual(bag[berry_pocket_name][1].item, pkmn.item.NONE)
         self.assertEqual(bag[berry_pocket_name][1].amount, 0)
 
         # Make sure removing items through the bag removes from the proper pocket.
         for item in items:
             bag.remove(item, 5)
 
-        self.assertEqual(bag["Items"][0].item, "None")
+        self.assertEqual(bag["Items"][0].item, pkmn.item.NONE)
         self.assertEqual(bag["Items"][0].amount, 0)
-        self.assertEqual(bag["Items"][1].item, "None")
+        self.assertEqual(bag["Items"][1].item, pkmn.item.NONE)
         self.assertEqual(bag["Items"][1].amount, 0)
 
-        self.assertEqual(bag["Key Items"][0].item, "None")
+        self.assertEqual(bag["Key Items"][0].item, pkmn.item.NONE)
         self.assertEqual(bag["Key Items"][0].amount, 0)
-        self.assertEqual(bag["Key Items"][1].item, "None")
+        self.assertEqual(bag["Key Items"][1].item, pkmn.item.NONE)
         self.assertEqual(bag["Key Items"][1].amount, 0)
-        self.assertEqual(bag["Key Items"][2].item, "None")
+        self.assertEqual(bag["Key Items"][2].item, pkmn.item.NONE)
         self.assertEqual(bag["Key Items"][2].amount, 0)
 
-        self.assertEqual(bag[ball_pocket_name][0].item, "None")
+        self.assertEqual(bag[ball_pocket_name][0].item, pkmn.item.NONE)
         self.assertEqual(bag[ball_pocket_name][0].amount, 0)
-        self.assertEqual(bag[ball_pocket_name][1].item, "None")
+        self.assertEqual(bag[ball_pocket_name][1].item, pkmn.item.NONE)
         self.assertEqual(bag[ball_pocket_name][1].amount, 0)
-        self.assertEqual(bag[ball_pocket_name][2].item, "None")
+        self.assertEqual(bag[ball_pocket_name][2].item, pkmn.item.NONE)
         self.assertEqual(bag[ball_pocket_name][2].amount, 0)
 
-        self.assertEqual(bag[tmhm_pocket_name][0].item, "None")
+        self.assertEqual(bag[tmhm_pocket_name][0].item, pkmn.item.NONE)
         self.assertEqual(bag[tmhm_pocket_name][0].amount, 0)
-        self.assertEqual(bag[tmhm_pocket_name][1].item, "None")
+        self.assertEqual(bag[tmhm_pocket_name][1].item, pkmn.item.NONE)
         self.assertEqual(bag[tmhm_pocket_name][1].amount, 0)
-        self.assertEqual(bag[tmhm_pocket_name][2].item, "None")
+        self.assertEqual(bag[tmhm_pocket_name][2].item, pkmn.item.NONE)
         self.assertEqual(bag[tmhm_pocket_name][2].amount, 0)
 
-        self.assertEqual(bag[berry_pocket_name][0].item, "None")
+        self.assertEqual(bag[berry_pocket_name][0].item, pkmn.item.NONE)
         self.assertEqual(bag[berry_pocket_name][0].amount, 0)
-        self.assertEqual(bag[berry_pocket_name][1].item, "None")
+        self.assertEqual(bag[berry_pocket_name][1].item, pkmn.item.NONE)
         self.assertEqual(bag[berry_pocket_name][1].amount, 0)
 
         # Make sure we can't add items from other generations.
@@ -420,157 +450,157 @@ class gba_items_test(items_tests):
     #
 
     def test_ruby_item_pocket(self):
-        item_pocket = pkmn.item_list("Items", "Ruby")
-        self.__test_item_pocket(item_pocket, "Ruby")
+        item_pocket = pkmn.item_list("Items", pkmn.game.RUBY)
+        self.__test_item_pocket(item_pocket, pkmn.game.RUBY)
 
     def test_ruby_key_item_pocket(self):
-        key_item_pocket = pkmn.item_list("Key Items", "Ruby")
-        self.__test_key_item_pocket(key_item_pocket, "Ruby")
+        key_item_pocket = pkmn.item_list("Key Items", pkmn.game.RUBY)
+        self.__test_key_item_pocket(key_item_pocket, pkmn.game.RUBY)
 
     def test_ruby_ball_pocket(self):
-        ball_pocket = pkmn.item_list(u"Pok\u00e9 Balls", "Ruby")
-        self.__test_ball_pocket(ball_pocket, "Ruby")
+        ball_pocket = pkmn.item_list(u"Pok\u00e9 Balls", pkmn.game.RUBY)
+        self.__test_ball_pocket(ball_pocket, pkmn.game.RUBY)
 
     def test_ruby_tmhm_pocket(self):
-        tmhm_pocket = pkmn.item_list("TMs & HMs", "Ruby")
-        self.__test_tmhm_pocket(tmhm_pocket, "Ruby")
+        tmhm_pocket = pkmn.item_list("TMs & HMs", pkmn.game.RUBY)
+        self.__test_tmhm_pocket(tmhm_pocket, pkmn.game.RUBY)
 
     def test_ruby_berry_pocket(self):
-        berry_pocket = pkmn.item_list("Berries", "Ruby")
-        self.__test_berry_pocket(berry_pocket, "Ruby")
+        berry_pocket = pkmn.item_list("Berries", pkmn.game.RUBY)
+        self.__test_berry_pocket(berry_pocket, pkmn.game.RUBY)
 
     def test_ruby_pc(self):
-        pc = pkmn.item_list("PC", "Ruby")
-        self.__test_pc(pc, "Ruby")
+        pc = pkmn.item_list("PC", pkmn.game.RUBY)
+        self.__test_pc(pc, pkmn.game.RUBY)
 
     def test_ruby_item_bag(self):
-        item_bag = pkmn.item_bag("Ruby")
-        self.__test_item_bag(item_bag, "Ruby")
+        item_bag = pkmn.item_bag(pkmn.game.RUBY)
+        self.__test_item_bag(item_bag, pkmn.game.RUBY)
 
     #
     # Sapphire
     #
 
     def test_sapphire_item_pocket(self):
-        item_pocket = pkmn.item_list("Items", "Sapphire")
-        self.__test_item_pocket(item_pocket, "Sapphire")
+        item_pocket = pkmn.item_list("Items", pkmn.game.SAPPHIRE)
+        self.__test_item_pocket(item_pocket, pkmn.game.SAPPHIRE)
 
     def test_sapphire_key_item_pocket(self):
-        key_item_pocket = pkmn.item_list("Key Items", "Sapphire")
-        self.__test_key_item_pocket(key_item_pocket, "Sapphire")
+        key_item_pocket = pkmn.item_list("Key Items", pkmn.game.SAPPHIRE)
+        self.__test_key_item_pocket(key_item_pocket, pkmn.game.SAPPHIRE)
 
     def test_sapphire_ball_pocket(self):
-        ball_pocket = pkmn.item_list(u"Pok\u00e9 Balls", "Sapphire")
-        self.__test_ball_pocket(ball_pocket, "Sapphire")
+        ball_pocket = pkmn.item_list(u"Pok\u00e9 Balls", pkmn.game.SAPPHIRE)
+        self.__test_ball_pocket(ball_pocket, pkmn.game.SAPPHIRE)
 
     def test_sapphire_tmhm_pocket(self):
-        tmhm_pocket = pkmn.item_list("TMs & HMs", "Sapphire")
-        self.__test_tmhm_pocket(tmhm_pocket, "Sapphire")
+        tmhm_pocket = pkmn.item_list("TMs & HMs", pkmn.game.SAPPHIRE)
+        self.__test_tmhm_pocket(tmhm_pocket, pkmn.game.SAPPHIRE)
 
     def test_sapphire_berry_pocket(self):
-        berry_pocket = pkmn.item_list("Berries", "Sapphire")
-        self.__test_berry_pocket(berry_pocket, "Sapphire")
+        berry_pocket = pkmn.item_list("Berries", pkmn.game.SAPPHIRE)
+        self.__test_berry_pocket(berry_pocket, pkmn.game.SAPPHIRE)
 
     def test_sapphire_pc(self):
-        pc = pkmn.item_list("PC", "Sapphire")
-        self.__test_pc(pc, "Sapphire")
+        pc = pkmn.item_list("PC", pkmn.game.SAPPHIRE)
+        self.__test_pc(pc, pkmn.game.SAPPHIRE)
 
     def test_sapphire_item_bag(self):
-        item_bag = pkmn.item_bag("Sapphire")
-        self.__test_item_bag(item_bag, "Sapphire")
+        item_bag = pkmn.item_bag(pkmn.game.SAPPHIRE)
+        self.__test_item_bag(item_bag, pkmn.game.SAPPHIRE)
 
     #
     # Emerald
     #
 
     def test_emerald_item_pocket(self):
-        item_pocket = pkmn.item_list("Items", "Emerald")
-        self.__test_item_pocket(item_pocket, "Emerald")
+        item_pocket = pkmn.item_list("Items", pkmn.game.EMERALD)
+        self.__test_item_pocket(item_pocket, pkmn.game.EMERALD)
 
     def test_emerald_key_item_pocket(self):
-        key_item_pocket = pkmn.item_list("Key Items", "Emerald")
-        self.__test_key_item_pocket(key_item_pocket, "Emerald")
+        key_item_pocket = pkmn.item_list("Key Items", pkmn.game.EMERALD)
+        self.__test_key_item_pocket(key_item_pocket, pkmn.game.EMERALD)
 
     def test_emerald_ball_pocket(self):
-        ball_pocket = pkmn.item_list(u"Pok\u00e9 Balls", "Emerald")
-        self.__test_ball_pocket(ball_pocket, "Emerald")
+        ball_pocket = pkmn.item_list(u"Pok\u00e9 Balls", pkmn.game.EMERALD)
+        self.__test_ball_pocket(ball_pocket, pkmn.game.EMERALD)
 
     def test_emerald_tmhm_pocket(self):
-        tmhm_pocket = pkmn.item_list("TMs & HMs", "Emerald")
-        self.__test_tmhm_pocket(tmhm_pocket, "Emerald")
+        tmhm_pocket = pkmn.item_list("TMs & HMs", pkmn.game.EMERALD)
+        self.__test_tmhm_pocket(tmhm_pocket, pkmn.game.EMERALD)
 
     def test_emerald_berry_pocket(self):
-        berry_pocket = pkmn.item_list("Berries", "Emerald")
-        self.__test_berry_pocket(berry_pocket, "Emerald")
+        berry_pocket = pkmn.item_list("Berries", pkmn.game.EMERALD)
+        self.__test_berry_pocket(berry_pocket, pkmn.game.EMERALD)
 
     def test_emerald_pc(self):
-        pc = pkmn.item_list("PC", "Emerald")
-        self.__test_pc(pc, "Emerald")
+        pc = pkmn.item_list("PC", pkmn.game.EMERALD)
+        self.__test_pc(pc, pkmn.game.EMERALD)
 
     def test_emerald_item_bag(self):
-        item_bag = pkmn.item_bag("Emerald")
-        self.__test_item_bag(item_bag, "Emerald")
+        item_bag = pkmn.item_bag(pkmn.game.EMERALD)
+        self.__test_item_bag(item_bag, pkmn.game.EMERALD)
 
     #
     # FireRed
     #
 
     def test_firered_item_pocket(self):
-        item_pocket = pkmn.item_list("Items", "FireRed")
-        self.__test_item_pocket(item_pocket, "FireRed")
+        item_pocket = pkmn.item_list("Items", pkmn.game.FIRERED)
+        self.__test_item_pocket(item_pocket, pkmn.game.FIRERED)
 
     def test_firered_key_item_pocket(self):
-        key_item_pocket = pkmn.item_list("Key Items", "FireRed")
-        self.__test_key_item_pocket(key_item_pocket, "FireRed")
+        key_item_pocket = pkmn.item_list("Key Items", pkmn.game.FIRERED)
+        self.__test_key_item_pocket(key_item_pocket, pkmn.game.FIRERED)
 
     def test_firered_ball_pocket(self):
-        ball_pocket = pkmn.item_list(u"Pok\u00e9 Balls", "FireRed")
-        self.__test_ball_pocket(ball_pocket, "FireRed")
+        ball_pocket = pkmn.item_list(u"Pok\u00e9 Balls", pkmn.game.FIRERED)
+        self.__test_ball_pocket(ball_pocket, pkmn.game.FIRERED)
 
     def test_firered_tmhm_pocket(self):
-        tmhm_pocket = pkmn.item_list("TM Case", "FireRed")
-        self.__test_tmhm_pocket(tmhm_pocket, "FireRed")
+        tmhm_pocket = pkmn.item_list("TM Case", pkmn.game.FIRERED)
+        self.__test_tmhm_pocket(tmhm_pocket, pkmn.game.FIRERED)
 
     def test_firered_berry_pocket(self):
-        berry_pocket = pkmn.item_list("Berry Pouch", "FireRed")
-        self.__test_berry_pocket(berry_pocket, "FireRed")
+        berry_pocket = pkmn.item_list("Berry Pouch", pkmn.game.FIRERED)
+        self.__test_berry_pocket(berry_pocket, pkmn.game.FIRERED)
 
     def test_firered_pc(self):
-        pc = pkmn.item_list("PC", "FireRed")
-        self.__test_pc(pc, "FireRed")
+        pc = pkmn.item_list("PC", pkmn.game.FIRERED)
+        self.__test_pc(pc, pkmn.game.FIRERED)
 
     def test_firered_item_bag(self):
-        item_bag = pkmn.item_bag("FireRed")
-        self.__test_item_bag(item_bag, "FireRed")
+        item_bag = pkmn.item_bag(pkmn.game.FIRERED)
+        self.__test_item_bag(item_bag, pkmn.game.FIRERED)
 
     #
     # LeafGreen
     #
 
     def test_leafgreen_item_pocket(self):
-        item_pocket = pkmn.item_list("Items", "LeafGreen")
-        self.__test_item_pocket(item_pocket, "LeafGreen")
+        item_pocket = pkmn.item_list("Items", pkmn.game.LEAFGREEN)
+        self.__test_item_pocket(item_pocket, pkmn.game.LEAFGREEN)
 
     def test_leafgreen_key_item_pocket(self):
-        key_item_pocket = pkmn.item_list("Key Items", "LeafGreen")
-        self.__test_key_item_pocket(key_item_pocket, "LeafGreen")
+        key_item_pocket = pkmn.item_list("Key Items", pkmn.game.LEAFGREEN)
+        self.__test_key_item_pocket(key_item_pocket, pkmn.game.LEAFGREEN)
 
     def test_leafgreen_ball_pocket(self):
-        ball_pocket = pkmn.item_list(u"Pok\u00e9 Balls", "LeafGreen")
-        self.__test_ball_pocket(ball_pocket, "LeafGreen")
+        ball_pocket = pkmn.item_list(u"Pok\u00e9 Balls", pkmn.game.LEAFGREEN)
+        self.__test_ball_pocket(ball_pocket, pkmn.game.LEAFGREEN)
 
     def test_leafgreen_tmhm_pocket(self):
-        tmhm_pocket = pkmn.item_list("TM Case", "LeafGreen")
-        self.__test_tmhm_pocket(tmhm_pocket, "LeafGreen")
+        tmhm_pocket = pkmn.item_list("TM Case", pkmn.game.LEAFGREEN)
+        self.__test_tmhm_pocket(tmhm_pocket, pkmn.game.LEAFGREEN)
 
     def test_leafgreen_berry_pocket(self):
-        berry_pocket = pkmn.item_list("Berry Pouch", "LeafGreen")
-        self.__test_berry_pocket(berry_pocket, "LeafGreen")
+        berry_pocket = pkmn.item_list("Berry Pouch", pkmn.game.LEAFGREEN)
+        self.__test_berry_pocket(berry_pocket, pkmn.game.LEAFGREEN)
 
     def test_leafgreen_pc(self):
-        pc = pkmn.item_list("PC", "LeafGreen")
-        self.__test_pc(pc, "LeafGreen")
+        pc = pkmn.item_list("PC", pkmn.game.LEAFGREEN)
+        self.__test_pc(pc, pkmn.game.LEAFGREEN)
 
     def test_leafgreen_item_bag(self):
-        item_bag = pkmn.item_bag("LeafGreen")
-        self.__test_item_bag(item_bag, "LeafGreen")
+        item_bag = pkmn.item_bag(pkmn.game.LEAFGREEN)
+        self.__test_item_bag(item_bag, pkmn.game.LEAFGREEN)
