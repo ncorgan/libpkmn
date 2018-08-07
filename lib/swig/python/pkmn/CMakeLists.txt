@@ -56,7 +56,7 @@ SWIG_BUILD_PYTHON_MODULE_BUILD_ONLY(enums_python Enums pkmn TRUE)
 # Generate .py files with enums.
 SET(py_enums_deps
     ${PKMN_SOURCE_DIR}/include/pkmn/enums/CMakeLists.txt
-    ${PKMN_SOURCE_DIR}/scripts/generate_python_enums.py
+    ${PKMN_SOURCE_DIR}/scripts/generate_swig_enums.py
 )
 FOREACH(enum ${ENUM_LIST})
     LIST(APPEND py_enums
@@ -67,7 +67,7 @@ ENDFOREACH()
 ADD_CUSTOM_COMMAND(
     DEPENDS ${py_enums_deps}
     OUTPUT ${py_enums}
-    COMMAND ${PYTHON_EXECUTABLE} ${PKMN_SOURCE_DIR}/scripts/generate_python_enums.py --enum-dir=${PKMN_SOURCE_DIR}/include/pkmn/enums --output-dir=${CMAKE_CURRENT_BINARY_DIR}
+    COMMAND ${PYTHON_EXECUTABLE} ${PKMN_SOURCE_DIR}/scripts/generate_swig_enums.py --python --enum-dir=${PKMN_SOURCE_DIR}/include/pkmn/enums --output-dir=${CMAKE_CURRENT_BINARY_DIR}
     COMMENT "Generating Python enums"
 )
 ADD_CUSTOM_TARGET(
