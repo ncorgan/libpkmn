@@ -17,30 +17,8 @@ PKMN_LUA_INIT
 
 /*
  * This file contains STL containers with either pure STL types or with LibPKMN
- * enums. For convenience, the enums will be here as well.
+ * enums.
  */
-
-%include <pkmn/enums/stat.hpp>
-%include <pkmn/enums/ability.hpp>
-%include <pkmn/enums/ball.hpp>
-%include <pkmn/enums/condition.hpp>
-%include <pkmn/enums/contest_stat.hpp>
-%include <pkmn/enums/egg_group.hpp>
-%include <pkmn/enums/game.hpp>
-%include <pkmn/enums/gender.hpp>
-%include <pkmn/enums/item.hpp>
-%include <pkmn/enums/language.hpp>
-%include <pkmn/enums/marking.hpp>
-
-%rename(SING) SING_MOVE;
-%include <pkmn/enums/move.hpp>
-
-%include <pkmn/enums/move_damage_class.hpp>
-%include <pkmn/enums/move_target.hpp>
-%include <pkmn/enums/nature.hpp>
-%include <pkmn/enums/species.hpp>
-%include <pkmn/enums/stat.hpp>
-%include <pkmn/enums/type.hpp>
 
 %include <std_string.i>
 

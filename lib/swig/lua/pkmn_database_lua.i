@@ -8,6 +8,7 @@
 %include <lua/lua_init.i>
 PKMN_LUA_INIT
 
+%import <pkmn_enums_lua.i>
 %import <pkmn_stl_lua.i>
 
 %{
@@ -17,9 +18,6 @@ PKMN_LUA_INIT
     #include <pkmn/database/move_entry.hpp>
     #include <pkmn/database/pokemon_entry.hpp>
 %}
-
-%import <pkmn/enums/game.hpp>
-%import <pkmn/enums/stat.hpp>
 
 %include <lua/pkmn_item_entry.i>
 %include <lua/pkmn_move_entry.i>

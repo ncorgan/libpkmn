@@ -19,6 +19,7 @@ namespace pkmn { namespace priv {
 }}
 
 %import <pkmn_database_lua.i>
+%import <pkmn_enums_lua.i>
 %import <pkmn_stl_lua.i>
 
 // Attribute Maps

@@ -9,6 +9,7 @@
 PKMN_LUA_INIT
 
 %import <pkmn_core_lua.i>
+%import <pkmn_enums_lua.i>
 %import <pkmn_stl_lua.i>
 
 %{
@@ -17,11 +18,6 @@ PKMN_LUA_INIT
 
     #include "cpp_wrappers/breeding.hpp"
 %}
-
-%rename(gender) pkmn::e_gender;
-%rename(stat) pkmn::e_stat;
-%import <pkmn/enums/gender.hpp>
-%import <pkmn/enums/stat.hpp>
 
 %include <pkmn/breeding/child_info.hpp>
 %include <pkmn/breeding/compatibility.hpp>

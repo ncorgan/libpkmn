@@ -18,6 +18,8 @@ pkmn.stl = require("pkmn_stl_lua")
 pkmn.VERSION = "@PKMN_VERSION@"
 pkmn.buildinfo.SWIG_VERSION = "@SWIG_VERSION@"
 
+@ENUM_IMPORT@
+
 -- Initialize on import instead of on the first call. This adds a small
 -- amount of import time but increases overall application efficiency.
 pkmn.initialize_database_connection()

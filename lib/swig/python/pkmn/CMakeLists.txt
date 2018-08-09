@@ -10,7 +10,7 @@ INCLUDE(SWIGPython)
 # Get list of enum modules to add to dependencies, as well as the import
 # string.
 EXECUTE_PROCESS(
-    COMMAND ${PYTHON_EXECUTABLE} ${PKMN_SOURCE_DIR}/scripts/print_enum_names_for_cmake.py --enum-dir=${PKMN_SOURCE_DIR}/include/pkmn/enums --print-as-cmake-list
+    COMMAND ${PYTHON_EXECUTABLE} ${PKMN_SOURCE_DIR}/scripts/print_enum_names_for_cmake.py --enum-dir=${PKMN_SOURCE_DIR}/include/pkmn/enums --print-as-cmake-list-python
     OUTPUT_VARIABLE ENUM_LIST OUTPUT_STRIP_TRAILING_WHITESPACE
 )
 SET(ENUM_LIST ${ENUM_LIST} CACHE STRING "Enum list")
