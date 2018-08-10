@@ -162,19 +162,26 @@ function test_fling_power()
 
     -- Test expected results.
 
-    local item_names =
+    local items =
     {
-        "Oran Berry", "Health Wing", "Potion",
-        "Icy Rock", "Dubious Disc", "Damp Rock",
-        "Dragon Fang", "Dusk Stone", "Thick Club",
-        "Rare Bone", "Iron Ball"
+        pkmn.item.ORAN_BERRY,
+        pkmn.item.HEALTH_WING,
+        pkmn.item.POTION,
+        pkmn.item.ICY_ROCK,
+        pkmn.item.DUBIOUS_DISC,
+        pkmn.item.DAMP_ROCK,
+        pkmn.item.DRAGON_FANG,
+        pkmn.item.DUSK_STONE,
+        pkmn.item.THICK_CLUB,
+        pkmn.item.RARE_BONE,
+        pkmn.item.IRON_BALL
     }
     local expected_powers = {10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 130};
 
-    for test_case_index = 1, #item_names
+    for test_case_index = 1, #items
     do
         luaunit.assertEquals(
-            pkmn.calculations.fling_power(item_names[test_case_index]),
+            pkmn.calculations.fling_power(items[test_case_index]),
             expected_powers[test_case_index]
         )
     end
@@ -781,16 +788,29 @@ function test_type_damage_modifier()
     -- Invalid generation
     luaunit.assertError(
         pkmn.calculations.type_damage_modifier,
-        -1, "Normal", "Normal"
+        -1,
+        pkmn.type.NORMAL,
+        pkmn.type.NORMAL
     )
     luaunit.assertError(
         pkmn.calculations.type_damage_modifier,
-        8, "Normal", "Normal"
+        8,
+        pkmn.type.NORMAL,
+        pkmn.type.NORMAL
     )
 
     -- Invalid types for a given generation
     local generations = {1, 1, 5, 3, 5, 2, 4}
-    local types = {"Dark", "Steel", "Fairy", "???", "???", "Shadow", "Shadow"}
+    local types =
+    {
+        pkmn.type.DARK,
+        pkmn.type.STEEL,
+        pkmn.type.FAIRY,
+        pkmn.type.QUESTION_MARK,
+        pkmn.type.QUESTION_MARK,
+        pkmn.type.SHADOW,
+        pkmn.type.SHADOW
+    }
 
     for test_case_index = 1, #generations
     do
@@ -799,22 +819,38 @@ function test_type_damage_modifier()
             pkmn.calculations.type_damage_modifier,
             generations[test_case_index],
             types[test_case_index],
-            "Normal"
+            pkmn.type.NORMAL
         )
 
         -- Invalid defending type
         luaunit.assertError(
             pkmn.calculations.type_damage_modifier,
             generations[test_case_index],
-            "Normal",
+            pkmn.type.NORMAL,
             types[test_case_index]
         )
     end
 
     -- Check that changes between generations are properly implemented.
 
-    local attacking_types = {"Bug", "Poison", "Ghost", "Ice", "Ghost", "Dark"}
-    local defending_types = {"Poison", "Bug", "Psychic", "Fire", "Steel", "Steel"}
+    local attacking_types =
+    {
+        pkmn.type.BUG,
+        pkmn.type.POISON,
+        pkmn.type.GHOST,
+        pkmn.type.ICE,
+        pkmn.type.GHOST,
+        pkmn.type.DARK
+    }
+    local defending_types =
+    {
+        pkmn.type.POISON,
+        pkmn.type.BUG,
+        pkmn.type.PSYCHIC,
+        pkmn.type.FIRE,
+        pkmn.type.STEEL,
+        pkmn.type.STEEL
+    }
     local old_generations = {1, 1, 1, 1, 5, 5}
     local old_modifiers = {2.0, 2.0, 0.0, 1.0, 0.5, 0.5}
     local new_generations = {2, 2, 2, 2, 6, 6}
@@ -886,48 +922,112 @@ end
 
 function test_gen2_gender()
     -- Make sure expected errors are thrown.
-    luaunit.assertError(pkmn.calculations.gen2_pokemon_gender, "Not a species", 0)
-    luaunit.assertError(pkmn.calculations.gen2_pokemon_gender, "Bulbasaur", -1)
-    luaunit.assertError(pkmn.calculations.gen2_pokemon_gender, "Bulbasaur", 16)
+    luaunit.assertError(
+        pkmn.calculations.gen2_pokemon_gender,
+        pkmn.species.NONE,
+        0
+    )
+    luaunit.assertError(
+        pkmn.calculations.gen2_pokemon_gender,
+        pkmn.species.BULBASAUR,
+        -1
+    )
+    luaunit.assertError(
+        pkmn.calculations.gen2_pokemon_gender,
+        pkmn.species.BULBASAUR,
+        16
+    )
 
     -- Make sure known good inputs result in expected results.
 
     -- All male
-    luaunit.assertEquals(pkmn.calculations.gen2_pokemon_gender("Nidorino", 0), "Male")
-    luaunit.assertEquals(pkmn.calculations.gen2_pokemon_gender("Nidorino", 15), "Male")
+    luaunit.assertEquals(
+        pkmn.calculations.gen2_pokemon_gender(pkmn.species.NIDORINO, 0),
+        pkmn.gender.MALE
+    )
+    luaunit.assertEquals(
+        pkmn.calculations.gen2_pokemon_gender(pkmn.species.NIDORINO, 15),
+        pkmn.gender.MALE
+    )
 
     -- 25% male, 75% female
-    luaunit.assertEquals(pkmn.calculations.gen2_pokemon_gender("Vulpix", 11), "Female")
-    luaunit.assertEquals(pkmn.calculations.gen2_pokemon_gender("Vulpix", 12), "Male")
+    luaunit.assertEquals(
+        pkmn.calculations.gen2_pokemon_gender(pkmn.species.VULPIX, 11),
+        pkmn.gender.FEMALE
+    )
+    luaunit.assertEquals(
+        pkmn.calculations.gen2_pokemon_gender(pkmn.species.VULPIX, 12),
+        pkmn.gender.MALE
+    )
 
     -- All female
-    luaunit.assertEquals(pkmn.calculations.gen2_pokemon_gender("Nidorina", 0), "Female")
-    luaunit.assertEquals(pkmn.calculations.gen2_pokemon_gender("Nidorina", 15), "Female")
+    luaunit.assertEquals(
+        pkmn.calculations.gen2_pokemon_gender(pkmn.species.NIDORINA, 0),
+        pkmn.gender.FEMALE
+    )
+    luaunit.assertEquals(
+        pkmn.calculations.gen2_pokemon_gender(pkmn.species.NIDORINA, 15),
+        pkmn.gender.FEMALE
+    )
 
     -- Genderless
-    luaunit.assertEquals(pkmn.calculations.gen2_pokemon_gender("Magnemite", 0), "Genderless")
-    luaunit.assertEquals(pkmn.calculations.gen2_pokemon_gender("Magnemite", 15), "Genderless")
+    luaunit.assertEquals(
+        pkmn.calculations.gen2_pokemon_gender(pkmn.species.MAGNEMITE, 0),
+        pkmn.gender.GENDERLESS
+    )
+    luaunit.assertEquals(
+        pkmn.calculations.gen2_pokemon_gender(pkmn.species.MAGNEMITE, 15),
+        pkmn.gender.GENDERLESS
+    )
 end
 
 function test_modern_gender()
     -- Make sure expected errors are thrown.
-    luaunit.assertError(pkmn.calculations.modern_pokemon_gender, "Not a species", 0)
+    luaunit.assertError(
+        pkmn.calculations.modern_pokemon_gender,
+        pkmn.species.NONE,
+        0
+    )
 
     -- All male
-    luaunit.assertEquals(pkmn.calculations.modern_pokemon_gender("Nidorino", 0), "Male")
-    luaunit.assertEquals(pkmn.calculations.modern_pokemon_gender("Nidorino", 0xFFFFFFFF), "Male")
+    luaunit.assertEquals(
+        pkmn.calculations.modern_pokemon_gender(pkmn.species.NIDORINO, 0),
+        pkmn.gender.MALE
+    )
+    luaunit.assertEquals(
+        pkmn.calculations.modern_pokemon_gender(pkmn.species.NIDORINO, 0xFFFFFFFF),
+        pkmn.gender.MALE
+    )
 
     -- 25% male, 75% female
-    luaunit.assertEquals(pkmn.calculations.modern_pokemon_gender("Vulpix", 190), "Female")
-    luaunit.assertEquals(pkmn.calculations.modern_pokemon_gender("Vulpix", 191), "Male")
+    luaunit.assertEquals(
+        pkmn.calculations.modern_pokemon_gender(pkmn.species.VULPIX, 190),
+        pkmn.gender.FEMALE
+    )
+    luaunit.assertEquals(
+        pkmn.calculations.modern_pokemon_gender(pkmn.species.VULPIX, 191),
+        pkmn.gender.MALE
+    )
 
     -- All female
-    luaunit.assertEquals(pkmn.calculations.modern_pokemon_gender("Nidorina", 0), "Female")
-    luaunit.assertEquals(pkmn.calculations.modern_pokemon_gender("Nidorina", 0xFFFFFFFF), "Female")
+    luaunit.assertEquals(
+        pkmn.calculations.modern_pokemon_gender(pkmn.species.NIDORINA, 0),
+        pkmn.gender.FEMALE
+    )
+    luaunit.assertEquals(
+        pkmn.calculations.modern_pokemon_gender(pkmn.species.NIDORINA, 0xFFFFFFFF),
+        pkmn.gender.FEMALE
+    )
 
     -- Genderless
-    luaunit.assertEquals(pkmn.calculations.modern_pokemon_gender("Magnemite", 0), "Genderless")
-    luaunit.assertEquals(pkmn.calculations.modern_pokemon_gender("Magnemite", 0xFFFFFFFF), "Genderless")
+    luaunit.assertEquals(
+        pkmn.calculations.modern_pokemon_gender(pkmn.species.MAGNEMITE, 0),
+        pkmn.gender.GENDERLESS
+    )
+    luaunit.assertEquals(
+        pkmn.calculations.modern_pokemon_gender(pkmn.species.MAGNEMITE, 0xFFFFFFFF),
+        pkmn.gender.GENDERLESS
+    )
 end
 
 function test_gen2_hidden_power()
@@ -942,18 +1042,14 @@ function test_gen2_hidden_power()
     luaunit.assertError(pkmn.calculations.gen2_hidden_power, 0, 0, 0, 16)
 
     --
-    -- Make sure known good inputs result in expected results, and test (in)equality operators.
+    -- Make sure known good inputs result in expected results.
     --
     -- Source: http://bulbapedia.bulbagarden.net/wiki/Hidden_Power_(move)/Calculation#Generation_II
     --
-    expected_hidden_power = pkmn.calculations.hidden_power("Dark", 69)
-    hidden_power_different_type = pkmn.calculations.hidden_power("Normal", 69)
-    hidden_power_different_base_power = pkmn.calculations.hidden_power("Dark", 50)
+    expected_hidden_power = pkmn.calculations.hidden_power(pkmn.type.DARK, 69)
 
     hidden_power = pkmn.calculations.gen2_hidden_power(15, 15, 15, 14)
     luaunit.assertEquals(hidden_power, expected_hidden_power)
-    luaunit.assertNotEquals(hidden_power, hidden_power_different_type)
-    luaunit.assertNotEquals(hidden_power, hidden_power_different_base_power)
 end
 
 function test_modern_hidden_power()
@@ -976,28 +1072,46 @@ function test_modern_hidden_power()
     --
     -- Source: http://bulbapedia.bulbagarden.net/wiki/Hidden_Power_(move)/Calculation#Generation_III_to_VI
     --
-    expected_hidden_power = pkmn.calculations.hidden_power("Grass", 70)
-    hidden_power_different_type = pkmn.calculations.hidden_power("Steel", 70)
-    hidden_power_different_base_power = pkmn.calculations.hidden_power("Grass", 10)
+    expected_hidden_power = pkmn.calculations.hidden_power(pkmn.type.GRASS, 70)
 
     hidden_power = pkmn.calculations.modern_hidden_power(30, 31, 31, 31, 30, 31)
     luaunit.assertEquals(hidden_power, expected_hidden_power)
-    luaunit.assertNotEquals(hidden_power, hidden_power_different_type)
-    luaunit.assertNotEquals(hidden_power, hidden_power_different_base_power)
 end
 
 function test_natural_gift()
     -- Test invalid generations.
 
-    luaunit.assertError(pkmn.calculations.natural_gift_stats, "Cheri Berry", 3)
-    luaunit.assertError(pkmn.calculations.natural_gift_stats, "Cheri Berry", 10)
+    luaunit.assertError(
+        pkmn.calculations.natural_gift_stats,
+        pkmn.item.CHERI_BERRY,
+        3
+    )
+    luaunit.assertError(
+        pkmn.calculations.natural_gift_stats,
+        pkmn.item.CHERI_BERRY,
+        10
+    )
 
     -- Test invalid items.
 
-    luaunit.assertError(pkmn.calculations.natural_gift_stats, "Potion", 4)
+    luaunit.assertError(
+        pkmn.calculations.natural_gift_stats,
+        "Potion",
+        4
+    )
 
-    local items = {"Cheri Berry", "Nanab Berry", "Belue Berry"}
-    local types = {"Fire", "Water", "Electric"}
+    local items =
+    {
+        pkmn.item.CHERI_BERRY,
+        pkmn.item.NANAB_BERRY,
+        pkmn.item.BELUE_BERRY
+    }
+    local types =
+    {
+        pkmn.type.FIRE,
+        pkmn.type.WATER,
+        pkmn.type.ELECTRIC
+    }
     local gen4_powers = {60, 70, 80}
     local gen5_powers = {60, 70, 80}
     local gen6_powers = {80, 90, 100}
@@ -1032,12 +1146,33 @@ function test_nature()
     luaunit.assertError(pkmn.calculations.nature, -1)
     luaunit.assertError(pkmn.calculations.nature, 0xFFFFFFFF+1)
 
-    local natures = {
-        "Hardy", "Lonely", "Brave", "Adamant", "Naughty",
-        "Bold", "Docile", "Relaxed", "Impish", "Lax",
-        "Timid", "Hasty", "Serious", "Jolly", "Naive",
-        "Modest", "Mild", "Quiet", "Bashful", "Rash",
-        "Calm", "Gentle", "Sassy", "Careful", "Quirky",
+    local natures =
+    {
+        pkmn.nature.HARDY,
+        pkmn.nature.LONELY,
+        pkmn.nature.BRAVE,
+        pkmn.nature.ADAMANT,
+        pkmn.nature.NAUGHTY,
+        pkmn.nature.BOLD,
+        pkmn.nature.DOCILE,
+        pkmn.nature.RELAXED,
+        pkmn.nature.IMPISH,
+        pkmn.nature.LAX,
+        pkmn.nature.TIMID,
+        pkmn.nature.HASTY,
+        pkmn.nature.SERIOUS,
+        pkmn.nature.JOLLY,
+        pkmn.nature.NAIVE,
+        pkmn.nature.MODEST,
+        pkmn.nature.MILD,
+        pkmn.nature.QUIET,
+        pkmn.nature.BASHFUL,
+        pkmn.nature.RASH,
+        pkmn.nature.CALM,
+        pkmn.nature.GENTLE,
+        pkmn.nature.SASSY,
+        pkmn.nature.CAREFUL,
+        pkmn.nature.QUIRKY
     }
 
     for i = 1, #natures
@@ -1057,67 +1192,78 @@ function test_personality()
     -- Test invalid ability.
     luaunit.assertError(
         pkmn.calculations.generate_personality,
-        "Charmander",
+        pkmn.species.CHARMANDER,
         pkmn.DEFAULT_TRAINER_ID,
         true,
-        "Torrent",
-        "Male",
-        "Quiet"
+        pkmn.ability.TORRENT,
+        pkmn.gender.MALE,
+        pkmn.nature.QUIET
     )
 
     -- Test invalid gender.
     luaunit.assertError(
         pkmn.calculations.generate_personality,
-        "Charmander",
+        pkmn.species.CHARMANDER,
         pkmn.DEFAULT_TRAINER_ID,
         true,
-        "Blaze",
-        "Not a gender",
-        "Quiet"
+        pkmn.ability.BLAZE,
+        pkmn.gender.NONE,
+        pkmn.nature.QUIET
     )
 
     -- Test invalid nature.
     luaunit.assertError(
         pkmn.calculations.generate_personality,
-        "Charmander",
+        pkmn.species.CHARMANDER,
         pkmn.DEFAULT_TRAINER_ID,
         true,
-        "Blaze",
-        "Male",
-        "Not a nature"
+        pkmn.ability.BLAZE,
+        pkmn.gender.MALE,
+        pkmn.nature.NONE
     )
 
     -- Make sure Lua+SWIG catch invalid trainer IDs.
     luaunit.assertError(
         pkmn.calculations.generate_personality,
-        "Charmander",
+        pkmn.species.CHARMANDER,
         -1,
         true,
-        "Blaze",
-        "Male",
-        "Quiet"
+        pkmn.ability.BLAZE,
+        pkmn.gender.MALE,
+        pkmn.nature.QUIET
     )
     luaunit.assertError(
         pkmn.calculations.generate_personality,
-        "Charmander",
+        pkmn.species.CHARMANDER,
         0xFFFFFFFF+1,
         true,
-        "Blaze",
-        "Male",
-        "Quiet"
+        pkmn.ability.BLAZE,
+        pkmn.gender.MALE,
+        pkmn.nature.QUIET
     )
 
     -- Test and validate a valid call.
     local personality = pkmn.calculations.generate_personality(
-                            "Charmander",
+                            pkmn.species.CHARMANDER,
                             pkmn.pokemon.DEFAULT_TRAINER_ID,
                             true,
-                            "Blaze",
-                            "Male",
-                            "Quiet"
+                            pkmn.ability.BLAZE,
+                            pkmn.gender.MALE,
+                            pkmn.nature.QUIET
                         )
-    luaunit.assertEquals("Male", pkmn.calculations.modern_pokemon_gender("Charmander", personality))
-    luaunit.assertTrue(pkmn.calculations.modern_shiny(pkmn.pokemon.DEFAULT_TRAINER_ID, personality))
+    luaunit.assertEquals(
+        pkmn.gender.MALE,
+        pkmn.calculations.modern_pokemon_gender(
+            pkmn.species.CHARMANDER,
+            personality
+        )
+    )
+    luaunit.assertTrue(
+        pkmn.calculations.modern_shiny(
+            pkmn.pokemon.DEFAULT_TRAINER_ID,
+            personality
+        )
+    )
 end
 
 function test_gen2_shiny()
@@ -1153,38 +1299,95 @@ end
 
 function test_pokemon_size()
     -- Test input validation.
-    luaunit.assertError(pkmn.calculations.pokemon_size, "Magikarp", -1, 0, 0, 0, 0, 0, 0)
-    luaunit.assertError(pkmn.calculations.pokemon_size, "Magikarp", 0xFFFFFFFF+1, 0, 0, 0, 0, 0, 0)
-    luaunit.assertError(pkmn.calculations.pokemon_size, "Magikarp", 0, -1, 0, 0, 0, 0, 0)
-    luaunit.assertError(pkmn.calculations.pokemon_size, "Magikarp", 0, 32, 0, 0, 0, 0, 0)
-    luaunit.assertError(pkmn.calculations.pokemon_size, "Magikarp", 0, 0, -1, 0, 0, 0, 0)
-    luaunit.assertError(pkmn.calculations.pokemon_size, "Magikarp", 0, 0, 32, 0, 0, 0, 0)
-    luaunit.assertError(pkmn.calculations.pokemon_size, "Magikarp", 0, 0, 0, -1, 0, 0, 0)
-    luaunit.assertError(pkmn.calculations.pokemon_size, "Magikarp", 0, 0, 0, 32, 0, 0, 0)
-    luaunit.assertError(pkmn.calculations.pokemon_size, "Magikarp", 0, 0, 0, 0, -1, 0, 0)
-    luaunit.assertError(pkmn.calculations.pokemon_size, "Magikarp", 0, 0, 0, 0, 32, 0, 0)
-    luaunit.assertError(pkmn.calculations.pokemon_size, "Magikarp", 0, 0, 0, 0, 0, -1, 0)
-    luaunit.assertError(pkmn.calculations.pokemon_size, "Magikarp", 0, 0, 0, 0, 0, 32, 0)
-    luaunit.assertError(pkmn.calculations.pokemon_size, "Magikarp", 0, 0, 0, 0, 0, 0, -1)
-    luaunit.assertError(pkmn.calculations.pokemon_size, "Magikarp", 0, 0, 0, 0, 0, 0, 32)
+    luaunit.assertError(
+        pkmn.calculations.pokemon_size,
+        pkmn.species.MAGIKARP,
+        -1, 0, 0, 0, 0, 0, 0
+    )
+    luaunit.assertError(
+        pkmn.calculations.pokemon_size,
+        pkmn.species.MAGIKARP,
+        0xFFFFFFFF+1, 0, 0, 0, 0, 0, 0
+    )
+    luaunit.assertError(
+        pkmn.calculations.pokemon_size,
+        pkmn.species.MAGIKARP,
+        0, -1, 0, 0, 0, 0, 0
+    )
+    luaunit.assertError(
+        pkmn.calculations.pokemon_size,
+        pkmn.species.MAGIKARP,
+        0, 32, 0, 0, 0, 0, 0
+    )
+    luaunit.assertError(
+        pkmn.calculations.pokemon_size,
+        pkmn.species.MAGIKARP,
+        0, 0, -1, 0, 0, 0, 0
+    )
+    luaunit.assertError(
+        pkmn.calculations.pokemon_size,
+        pkmn.species.MAGIKARP,
+        0, 0, 32, 0, 0, 0, 0
+    )
+    luaunit.assertError(
+        pkmn.calculations.pokemon_size,
+        pkmn.species.MAGIKARP,
+        0, 0, 0, -1, 0, 0, 0
+    )
+    luaunit.assertError(
+        pkmn.calculations.pokemon_size,
+        pkmn.species.MAGIKARP,
+        0, 0, 0, 32, 0, 0, 0
+    )
+    luaunit.assertError(
+        pkmn.calculations.pokemon_size,
+        pkmn.species.MAGIKARP,
+        0, 0, 0, 0, -1, 0, 0
+    )
+    luaunit.assertError(
+        pkmn.calculations.pokemon_size,
+        pkmn.species.MAGIKARP,
+        0, 0, 0, 0, 32, 0, 0
+    )
+    luaunit.assertError(
+        pkmn.calculations.pokemon_size,
+        pkmn.species.MAGIKARP,
+        0, 0, 0, 0, 0, -1, 0
+    )
+    luaunit.assertError(
+        pkmn.calculations.pokemon_size,
+        pkmn.species.MAGIKARP,
+        0, 0, 0, 0, 0, 32, 0
+    )
+    luaunit.assertError(
+        pkmn.calculations.pokemon_size,
+        pkmn.species.MAGIKARP,
+        0, 0, 0, 0, 0, 0, -1
+    )
+    luaunit.assertError(
+        pkmn.calculations.pokemon_size,
+        pkmn.species.MAGIKARP,
+        0, 0, 0, 0, 0, 0, 32
+    )
 
     --
     -- There are no known good calculations, so just check for reasonable values
     -- for each relevant Pokémon.
     --
-    local pokemon_with_size_checks = {
-        pkmn.database.pokemon_entry("Barboach", "Ruby", ""),
-        pkmn.database.pokemon_entry("Shroomish", "Ruby", ""),
-        pkmn.database.pokemon_entry("Seedot", "Emerald", ""),
-        pkmn.database.pokemon_entry("Lotad", "Emerald", ""),
-        pkmn.database.pokemon_entry("Magikarp", "FireRed", ""),
-        pkmn.database.pokemon_entry("Heracross", "FireRed", "")
+    local pokemon_with_size_checks =
+    {
+        pkmn.database.pokemon_entry(pkmn.species.BARBOACH, pkmn.game.RUBY, ""),
+        pkmn.database.pokemon_entry(pkmn.species.SHROOMISH, pkmn.game.RUBY, ""),
+        pkmn.database.pokemon_entry(pkmn.species.SEEDOT, pkmn.game.EMERALD, ""),
+        pkmn.database.pokemon_entry(pkmn.species.LOTAD, pkmn.game.EMERALD, ""),
+        pkmn.database.pokemon_entry(pkmn.species.MAGIKARP, pkmn.game.FIRERED, ""),
+        pkmn.database.pokemon_entry(pkmn.species.HERACROSS, pkmn.game.FIRERED, "")
     }
 
     for i = 1, #pokemon_with_size_checks
     do
         local height = pokemon_with_size_checks[i].height
-        local species = pokemon_with_size_checks[i].name
+        local species = pokemon_with_size_checks[i].species
 
         for j = 1, 10
         do
@@ -1274,33 +1477,33 @@ end
 
 function test_gb_stats()
     -- Make sure expected errors are thrown.
-    luaunit.assertError(pkmn.calculations.get_gb_stat, "Attack", 1, 1, 123456, 1)
-    luaunit.assertError(pkmn.calculations.get_gb_stat, "Attack", 1, 1, 1, 12345)
+    luaunit.assertError(pkmn.calculations.get_gb_stat, pkmn.stat.ATTACK, 1, 1, 123456, 1)
+    luaunit.assertError(pkmn.calculations.get_gb_stat, pkmn.stat.ATTACK, 1, 1, 1, 12345)
 
     --
     -- Test with known good inputs.
     --
     -- Source: http://bulbapedia.bulbagarden.net/wiki/Statistic#In_Generations_I_and_II
     --
-    luaunit.assertAlmostEquals(pkmn.calculations.get_gb_stat("HP", 81, 35, 22850, 7), 189, 1)
-    luaunit.assertAlmostEquals(pkmn.calculations.get_gb_stat("Attack", 81, 55, 23140, 8), 137, 1)
+    luaunit.assertAlmostEquals(pkmn.calculations.get_gb_stat(pkmn.stat.HP, 81, 35, 22850, 7), 189, 1)
+    luaunit.assertAlmostEquals(pkmn.calculations.get_gb_stat(pkmn.stat.ATTACK, 81, 55, 23140, 8), 137, 1)
 end
 
 function test_modern_stats()
     -- Make sure expected errors are thrown.
-    luaunit.assertError(pkmn.calculations.get_modern_stat, "Not a stat", 1, 1.0, 1, 1, 1)
-    luaunit.assertError(pkmn.calculations.get_modern_stat, "Special", 1, 1.0, 1, 1, 1)
-    luaunit.assertError(pkmn.calculations.get_modern_stat, "Attack", 1, 0.666, 1, 1, 1)
-    luaunit.assertError(pkmn.calculations.get_modern_stat, "Attack", 1, 1.0, 1, 12345, 1)
-    luaunit.assertError(pkmn.calculations.get_modern_stat, "Attack", 1, 1.0, 1, 1, 12345)
+    luaunit.assertError(pkmn.calculations.get_modern_stat, pkmn.stat.NONE, 1, 1.0, 1, 1, 1)
+    luaunit.assertError(pkmn.calculations.get_modern_stat, pkmn.stat.SPECIAL, 1, 1.0, 1, 1, 1)
+    luaunit.assertError(pkmn.calculations.get_modern_stat, pkmn.stat.ATTACK, 1, 0.666, 1, 1, 1)
+    luaunit.assertError(pkmn.calculations.get_modern_stat, pkmn.stat.ATTACK, 1, 1.0, 1, 12345, 1)
+    luaunit.assertError(pkmn.calculations.get_modern_stat, pkmn.stat.ATTACK, 1, 1.0, 1, 1, 12345)
 
     --
     -- Test with known good inputs.
     --
     -- Source: http://bulbapedia.bulbagarden.net/wiki/Statistic#In_Generation_III_onward
     --
-    luaunit.assertAlmostEquals(pkmn.calculations.get_modern_stat("HP", 78, 1.0, 108, 74, 24), 289, 1)
-    luaunit.assertAlmostEquals(pkmn.calculations.get_modern_stat("Attack", 78, 1.1, 130, 195, 12), 280, 1)
+    luaunit.assertAlmostEquals(pkmn.calculations.get_modern_stat(pkmn.stat.HP, 78, 1.0, 108, 74, 24), 289, 1)
+    luaunit.assertAlmostEquals(pkmn.calculations.get_modern_stat(pkmn.stat.ATTACK, 78, 1.1, 130, 195, 12), 280, 1)
 end
 
 local runner = luaunit.LuaUnit.new()
