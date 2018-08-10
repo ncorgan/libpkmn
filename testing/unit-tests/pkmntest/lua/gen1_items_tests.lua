@@ -20,7 +20,7 @@ gen1_items_tests.invalid_generation_items =
 
 gen1_items_tests.valid_item_names =
 {
-    "Potion", "Great Ball", "Ether", "PP Up",
+    pkmn.item.POTION, "Great Ball", "Ether", "PP Up",
     "TM34", "Moon Stone", "Bicycle", "Full Heal"
 }
 
@@ -29,7 +29,7 @@ function gen1_items_tests.test_item_list_common(items, game)
     items_tests.item_list_test_empty_slot(items)
 
     -- Confirm errors are thrown when expected.
-    items_tests.item_list_test_out_of_range_error(items, "Potion")
+    items_tests.item_list_test_out_of_range_error(items, pkmn.item.POTION)
 
     -- Confirm items from later generations can't be added.
     items_tests.item_list_test_invalid_items(
@@ -87,7 +87,7 @@ function gen1_items_tests.test_item_bag(bag, game)
     -- Make sure adding items through the bag adds to the pocket.
     luaunit.assertEquals(bag["Items"].num_items, 0)
 
-    local items = {"Potion", "Great Ball", "Ether", "PP Up",
+    local items = {pkmn.item.POTION, "Great Ball", "Ether", "PP Up",
                    "TM34", "Moon Stone", "Bicycle", "Full Heal"}
     for i = 1, #items
     do
@@ -98,7 +98,7 @@ function gen1_items_tests.test_item_bag(bag, game)
         luaunit.assertEquals(bag["Items"][i].item, items[i])
         luaunit.assertEquals(bag["Items"][i].amount, i)
     end
-    luaunit.assertEquals(bag["Items"][9].item, "None")
+    luaunit.assertEquals(bag["Items"][9].item, pkmn.item.NONE)
     luaunit.assertEquals(bag["Items"][9].amount, 0)
 
     for i = 1, #items
@@ -107,7 +107,7 @@ function gen1_items_tests.test_item_bag(bag, game)
     end
     for i = 1, #items+1
     do
-        luaunit.assertEquals(bag["Items"][i].item, "None")
+        luaunit.assertEquals(bag["Items"][i].item, pkmn.item.NONE)
         luaunit.assertEquals(bag["Items"][i].amount, 0)
     end
 end
@@ -117,18 +117,18 @@ end
 --
 
 function test_red_item_list()
-    local items = pkmn.item_list("Items", "Red")
-    gen1_items_tests.test_item_list(items, "Red")
+    local items = pkmn.item_list("Items", pkmn.game.RED)
+    gen1_items_tests.test_item_list(items, pkmn.game.RED)
 end
 
 function test_red_item_pc()
-    local pc = pkmn.item_list("PC", "Red")
-    gen1_items_tests.test_item_pc(pc, "Red")
+    local pc = pkmn.item_list("PC", pkmn.game.RED)
+    gen1_items_tests.test_item_pc(pc, pkmn.game.RED)
 end
 
 function test_red_item_bag()
-    local bag = pkmn.item_bag("Red")
-    gen1_items_tests.test_item_bag(bag, "Red")
+    local bag = pkmn.item_bag(pkmn.game.RED)
+    gen1_items_tests.test_item_bag(bag, pkmn.game.RED)
 end
 
 --
@@ -136,18 +136,18 @@ end
 --
 
 function test_blue_item_list()
-    local items = pkmn.item_list("Items", "Blue")
-    gen1_items_tests.test_item_list(items, "Blue")
+    local items = pkmn.item_list("Items", pkmn.game.BLUE)
+    gen1_items_tests.test_item_list(items, pkmn.game.BLUE)
 end
 
 function test_blue_item_pc()
-    local pc = pkmn.item_list("PC", "Blue")
-    gen1_items_tests.test_item_pc(pc, "Blue")
+    local pc = pkmn.item_list("PC", pkmn.game.BLUE)
+    gen1_items_tests.test_item_pc(pc, pkmn.game.BLUE)
 end
 
 function test_blue_item_bag()
-    local bag = pkmn.item_bag("Blue")
-    gen1_items_tests.test_item_bag(bag, "Blue")
+    local bag = pkmn.item_bag(pkmn.game.BLUE)
+    gen1_items_tests.test_item_bag(bag, pkmn.game.BLUE)
 end
 
 --
@@ -155,16 +155,16 @@ end
 --
 
 function test_yellow_item_list()
-    local items = pkmn.item_list("Items", "Yellow")
-    gen1_items_tests.test_item_list(items, "Yellow")
+    local items = pkmn.item_list("Items", pkmn.game.YELLOW)
+    gen1_items_tests.test_item_list(items, pkmn.game.YELLOW)
 end
 
 function test_yellow_item_pc()
-    local pc = pkmn.item_list("PC", "Yellow")
-    gen1_items_tests.test_item_pc(pc, "Yellow")
+    local pc = pkmn.item_list("PC", pkmn.game.YELLOW)
+    gen1_items_tests.test_item_pc(pc, pkmn.game.YELLOW)
 end
 
 function test_yellow_item_bag()
-    local bag = pkmn.item_bag("Yellow")
-    gen1_items_tests.test_item_bag(bag, "Yellow")
+    local bag = pkmn.item_bag(pkmn.game.YELLOW)
+    gen1_items_tests.test_item_bag(bag, pkmn.game.YELLOW)
 end

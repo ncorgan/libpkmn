@@ -13,12 +13,12 @@ local gcn_items_tests = {}
 
 gcn_items_tests.colosseum_all_pocket_items =
 {
-    "Potion", "Ein File S", "Great Ball", "TM01",
+    pkmn.item.POTION, "Ein File S", "Great Ball", "TM01",
     "TM02", "Aspear Berry", "Joy Scent", "Excite Scent"
 }
 gcn_items_tests.xd_all_pocket_items =
 {
-    "Potion", "Gonzap's Key", "Great Ball", "TM01",
+    pkmn.item.POTION, "Gonzap's Key", "Great Ball", "TM01",
     "TM02", "Aspear Berry", "Joy Scent", "Battle CD 01"
 }
 gcn_items_tests.colosseum_wrong_game_all_pocket_items =
@@ -38,7 +38,7 @@ gcn_items_tests.xd_wrong_game_all_pocket_items =
 
 function gcn_items_tests.test_item_pocket(item_pocket, game)
     local expected_capacity = 0
-    if game == "Colosseum"
+    if game == pkmn.game.COLOSSEUM
     then
         expected_capacity = 20
     else
@@ -55,11 +55,11 @@ function gcn_items_tests.test_item_pocket(item_pocket, game)
     items_tests.item_list_test_empty_slot(item_pocket)
 
     -- Confirm errors are thrown when expected.
-    items_tests.item_list_test_out_of_range_error(item_pocket, "Potion")
+    items_tests.item_list_test_out_of_range_error(item_pocket, pkmn.item.POTION)
 
     -- Make sure we can't add items from other pockets.
     local wrong_pocket_items = {}
-    if game == "Colosseum"
+    if game == pkmn.game.COLOSSEUM
     then
         wrong_pocket_items = {"Ein File S", "Great Ball", "TM01", "Oran Berry", "Joy Scent"}
     else
@@ -78,7 +78,7 @@ function gcn_items_tests.test_item_pocket(item_pocket, game)
     -- Start adding and removing stuff, and make sure the numbers are accurate.
     local item_names =
     {
-        "Potion", "Orange Mail", "Lava Cookie", "Stardust",
+        pkmn.item.POTION, "Orange Mail", "Lava Cookie", "Stardust",
         "Shadow Mail", "Pink Scarf", "Antidote", "Green Shard"
     }
 
@@ -97,7 +97,7 @@ end
 function gcn_items_tests.test_key_item_pocket(key_item_pocket, game)
     local expected_capacity = 43
     local item_name = ""
-    if game == "Colosseum"
+    if game == pkmn.game.COLOSSEUM
     then
         item_name = "Ein File S"
     else
@@ -118,11 +118,11 @@ function gcn_items_tests.test_key_item_pocket(key_item_pocket, game)
 
     -- Make sure we can't add items from other pockets.
     local wrong_pocket_items = {}
-    if game == "Colosseum"
+    if game == pkmn.game.COLOSSEUM
     then
-        wrong_pocket_items = {"Potion", "Great Ball", "TM01", "Oran Berry", "Joy Scent"}
+        wrong_pocket_items = {pkmn.item.POTION, "Great Ball", "TM01", "Oran Berry", "Joy Scent"}
     else
-        wrong_pocket_items = {"Potion", "Great Ball", "TM01", "Oran Berry", "Joy Scent", "Battle CD 01"}
+        wrong_pocket_items = {pkmn.item.POTION, "Great Ball", "TM01", "Oran Berry", "Joy Scent", "Battle CD 01"}
     end
     items_tests.item_list_test_invalid_items(
         key_item_pocket, wrong_pocket_items
@@ -136,7 +136,7 @@ function gcn_items_tests.test_key_item_pocket(key_item_pocket, game)
 
     -- Start adding and removing stuff, and make sure the numbers are accurate.
     local items = {}
-    if game == "Colosseum"
+    if game == pkmn.game.COLOSSEUM
     then
         items = {"Jail Key", "Elevator Key", "Small Tablet", "F-Disk",
                  "R-Disk", "L-Disk", "D-Disk", "U-Disk"}
@@ -173,11 +173,11 @@ function gcn_items_tests.test_ball_pocket(ball_pocket, game)
 
     -- Make sure we can't add items from other pockets.
     local wrong_pocket_items = {}
-    if game == "Colosseum"
+    if game == pkmn.game.COLOSSEUM
     then
-        wrong_pocket_items = {"Ein File S", "Potion", "TM01", "Oran Berry", "Joy Scent"}
+        wrong_pocket_items = {"Ein File S", pkmn.item.POTION, "TM01", "Oran Berry", "Joy Scent"}
     else
-        wrong_pocket_items = {"Miror Radar", "Potion", "TM01", "Oran Berry", "Joy Scent", "Battle CD 01"}
+        wrong_pocket_items = {"Miror Radar", pkmn.item.POTION, "TM01", "Oran Berry", "Joy Scent", "Battle CD 01"}
     end
     items_tests.item_list_test_invalid_items(
         ball_pocket, wrong_pocket_items
@@ -192,7 +192,7 @@ function gcn_items_tests.test_ball_pocket(ball_pocket, game)
     -- Start adding and removing stuff, and make sure the numbers are accurate.
     local item_names =
     {
-        "Master Ball", "Ultra Ball", "Great Ball", "Poké Ball",
+        "Master Ball", "Ultra Ball", "Great Ball", pkmn.item.POKE_BALL,
         "Safari Ball", "Net Ball", "Dive Ball", "Nest Ball"
     }
 
@@ -225,11 +225,11 @@ function gcn_items_tests.test_tm_pocket(tm_pocket, game)
 
     -- Make sure we can't add items from other pockets.
     local wrong_pocket_items = {}
-    if game == "Colosseum"
+    if game == pkmn.game.COLOSSEUM
     then
-        wrong_pocket_items = {"Ein File S", "Potion", "Great Ball", "Oran Berry", "Joy Scent"}
+        wrong_pocket_items = {"Ein File S", pkmn.item.POTION, "Great Ball", "Oran Berry", "Joy Scent"}
     else
-        wrong_pocket_items = {"Miror Radar", "Potion", "Great Ball", "Oran Berry", "Joy Scent", "Battle CD 01"}
+        wrong_pocket_items = {"Miror Radar", pkmn.item.POTION, "Great Ball", "Oran Berry", "Joy Scent", "Battle CD 01"}
     end
     items_tests.item_list_test_invalid_items(
         tm_pocket, wrong_pocket_items
@@ -277,11 +277,11 @@ function gcn_items_tests.test_berry_pocket(berry_pocket, game)
 
     -- Make sure we can't add items from other pockets.
     local wrong_pocket_items = {}
-    if game == "Colosseum"
+    if game == pkmn.game.COLOSSEUM
     then
-        wrong_pocket_items = {"Ein File S", "Potion", "Great Ball", "TM01", "Joy Scent"}
+        wrong_pocket_items = {"Ein File S", pkmn.item.POTION, "Great Ball", "TM01", "Joy Scent"}
     else
-        wrong_pocket_items = {"Miror Radar", "Potion", "Great Ball", "TM01", "Joy Scent", "Battle CD 01"}
+        wrong_pocket_items = {"Miror Radar", pkmn.item.POTION, "Great Ball", "TM01", "Joy Scent", "Battle CD 01"}
     end
     items_tests.item_list_test_invalid_items(
         berry_pocket, wrong_pocket_items
@@ -329,11 +329,11 @@ function gcn_items_tests.test_cologne_pocket(cologne_pocket, game)
 
     -- Make sure we can't add items from other pockets.
     local wrong_pocket_items = {}
-    if game == "Colosseum"
+    if game == pkmn.game.COLOSSEUM
     then
-        wrong_pocket_items = {"Ein File S", "Potion", "Great Ball", "TM01", "Oran Berry"}
+        wrong_pocket_items = {"Ein File S", pkmn.item.POTION, "Great Ball", "TM01", "Oran Berry"}
     else
-        wrong_pocket_items = {"Miror Radar", "Potion", "Great Ball", "TM01", "Oran Berry", "Battle CD 01"}
+        wrong_pocket_items = {"Miror Radar", pkmn.item.POTION, "Great Ball", "TM01", "Oran Berry", "Battle CD 01"}
     end
     items_tests.item_list_test_invalid_items(
         cologne_pocket, wrong_pocket_items
@@ -350,16 +350,16 @@ function gcn_items_tests.test_cologne_pocket(cologne_pocket, game)
     luaunit.assertEquals(cologne_pocket[1].amount, 3)
     luaunit.assertEquals(cologne_pocket[2].item, "Vivid Scent")
     luaunit.assertEquals(cologne_pocket[2].amount, 2)
-    luaunit.assertEquals(cologne_pocket[3].item, "None")
+    luaunit.assertEquals(cologne_pocket[3].item, pkmn.item.NONE)
     luaunit.assertEquals(cologne_pocket[3].amount, 0)
 
     cologne_pocket:remove("Joy Scent", 3)
     cologne_pocket:remove("Vivid Scent", 2)
-    luaunit.assertEquals(cologne_pocket[1].item, "None")
+    luaunit.assertEquals(cologne_pocket[1].item, pkmn.item.NONE)
     luaunit.assertEquals(cologne_pocket[1].amount, 0)
-    luaunit.assertEquals(cologne_pocket[2].item, "None")
+    luaunit.assertEquals(cologne_pocket[2].item, pkmn.item.NONE)
     luaunit.assertEquals(cologne_pocket[2].amount, 0)
-    luaunit.assertEquals(cologne_pocket[3].item, "None")
+    luaunit.assertEquals(cologne_pocket[3].item, pkmn.item.NONE)
     luaunit.assertEquals(cologne_pocket[3].amount, 0)
 
     luaunit.assertTrue(#cologne_pocket.valid_items > 0)
@@ -383,7 +383,7 @@ function gcn_items_tests.test_battle_cd_pocket(battle_cd_pocket, game)
     -- Make sure we can't add items from other pockets.
     items_tests.item_list_test_invalid_items(
         battle_cd_pocket,
-        {"Miror Radar", "Potion", "Great Ball", "Oran Berry", "Joy Scent"}
+        {"Miror Radar", pkmn.item.POTION, "Great Ball", "Oran Berry", "Joy Scent"}
     )
 
     -- Start adding and removing stuff, and make sure the numbers are accurate.
@@ -416,11 +416,11 @@ function gcn_items_tests.test_pc(pc, game)
     items_tests.item_list_test_empty_slot(pc)
 
     -- Confirm errors are thrown when expected.
-    items_tests.item_list_test_out_of_range_error(pc, "Potion")
+    items_tests.item_list_test_out_of_range_error(pc, pkmn.item.POTION)
 
     -- Make sure we can't add items from other generations.
     local wrong_game_all_pocket_items = {}
-    if game == "Colosseum"
+    if game == pkmn.game.COLOSSEUM
     then
         wrong_game_all_pocket_items = gcn_items_tests.colosseum_wrong_game_all_pocket_items
     else
@@ -433,7 +433,7 @@ function gcn_items_tests.test_pc(pc, game)
 
     -- Start adding and removing stuff, and make sure the numbers are accurate.
     local all_pocket_items = {}
-    if game == "Colosseum"
+    if game == pkmn.game.COLOSSEUM
     then
         all_pocket_items = gcn_items_tests.colosseum_all_pocket_items
     else
@@ -450,7 +450,7 @@ end
 
 function gcn_items_tests.test_bag(bag, game)
     local num_pockets = ""
-    if game == "Colosseum"
+    if game == pkmn.game.COLOSSEUM
     then
         num_pockets = 6
     else
@@ -467,7 +467,7 @@ function gcn_items_tests.test_bag(bag, game)
     gcn_items_tests.test_tm_pocket(bag["TMs"], game)
     gcn_items_tests.test_berry_pocket(bag["Berries"], game)
     gcn_items_tests.test_cologne_pocket(bag["Colognes"], game)
-    if game == "XD"
+    if game == pkmn.game.XD
     then
         gcn_items_tests.test_battle_cd_pocket(bag["Battle CDs"], game)
     end
@@ -479,7 +479,7 @@ function gcn_items_tests.test_bag(bag, game)
     luaunit.assertEquals(bag["TMs"].num_items, 0)
     luaunit.assertEquals(bag["Berries"].num_items, 0)
     luaunit.assertEquals(bag["Colognes"].num_items, 0)
-    if game == "XD"
+    if game == pkmn.game.XD
     then
         luaunit.assertEquals(bag["Battle CDs"].num_items, 0)
     end
@@ -487,7 +487,7 @@ function gcn_items_tests.test_bag(bag, game)
     local all_pocket_items = {}
     local wrong_game_all_pocket_items = {}
     local key_item = ""
-    if game == "Colosseum"
+    if game == pkmn.game.COLOSSEUM
     then
         all_pocket_items = gcn_items_tests.colosseum_all_pocket_items
         wrong_game_all_pocket_items = gcn_items_tests.colosseum_wrong_game_all_pocket_items
@@ -509,48 +509,48 @@ function gcn_items_tests.test_bag(bag, game)
         bag:add(all_pocket_items[i], 5)
     end
 
-    luaunit.assertEquals(bag["Items"][1].item, "Potion")
+    luaunit.assertEquals(bag["Items"][1].item, pkmn.item.POTION)
     luaunit.assertEquals(bag["Items"][1].amount, 5)
-    luaunit.assertEquals(bag["Items"][2].item, "None")
+    luaunit.assertEquals(bag["Items"][2].item, pkmn.item.NONE)
     luaunit.assertEquals(bag["Items"][2].amount, 0)
 
     luaunit.assertEquals(bag["Key Items"][1].item, key_item)
     luaunit.assertEquals(bag["Key Items"][1].amount, 5)
-    luaunit.assertEquals(bag["Key Items"][2].item, "None")
+    luaunit.assertEquals(bag["Key Items"][2].item, pkmn.item.NONE)
     luaunit.assertEquals(bag["Key Items"][2].amount, 0)
 
     luaunit.assertEquals(bag["Poké Balls"][1].item, "Great Ball")
     luaunit.assertEquals(bag["Poké Balls"][1].amount, 5)
-    luaunit.assertEquals(bag["Poké Balls"][2].item, "None")
+    luaunit.assertEquals(bag["Poké Balls"][2].item, pkmn.item.NONE)
     luaunit.assertEquals(bag["Poké Balls"][2].amount, 0)
 
     luaunit.assertEquals(bag["TMs"][1].item, "TM01")
     luaunit.assertEquals(bag["TMs"][1].amount, 5)
     luaunit.assertEquals(bag["TMs"][2].item, "TM02")
     luaunit.assertEquals(bag["TMs"][2].amount, 5)
-    luaunit.assertEquals(bag["TMs"][3].item, "None")
+    luaunit.assertEquals(bag["TMs"][3].item, pkmn.item.NONE)
     luaunit.assertEquals(bag["TMs"][3].amount, 0)
 
     luaunit.assertEquals(bag["Berries"][1].item, "Aspear Berry")
     luaunit.assertEquals(bag["Berries"][1].amount, 5)
-    luaunit.assertEquals(bag["Berries"][2].item, "None")
+    luaunit.assertEquals(bag["Berries"][2].item, pkmn.item.NONE)
     luaunit.assertEquals(bag["Berries"][2].amount, 0)
 
     luaunit.assertEquals(bag["Colognes"][1].item, "Joy Scent")
     luaunit.assertEquals(bag["Colognes"][1].amount, 5)
-    if game == "Colosseum"
+    if game == pkmn.game.COLOSSEUM
     then
         luaunit.assertEquals(bag["Colognes"][2].item, "Excite Scent")
         luaunit.assertEquals(bag["Colognes"][2].amount, 5)
-        luaunit.assertEquals(bag["Colognes"][3].item, "None")
+        luaunit.assertEquals(bag["Colognes"][3].item, pkmn.item.NONE)
         luaunit.assertEquals(bag["Colognes"][3].amount, 0)
     else
-        luaunit.assertEquals(bag["Colognes"][2].item, "None")
+        luaunit.assertEquals(bag["Colognes"][2].item, pkmn.item.NONE)
         luaunit.assertEquals(bag["Colognes"][2].amount, 0)
 
         luaunit.assertEquals(bag["Battle CDs"][1].item, "Battle CD 01")
         luaunit.assertEquals(bag["Battle CDs"][1].amount, 5)
-        luaunit.assertEquals(bag["Battle CDs"][2].item, "None")
+        luaunit.assertEquals(bag["Battle CDs"][2].item, pkmn.item.NONE)
         luaunit.assertEquals(bag["Battle CDs"][2].amount, 0)
     end
 
@@ -560,47 +560,47 @@ function gcn_items_tests.test_bag(bag, game)
         bag:remove(all_pocket_items[i], 5)
     end
 
-    luaunit.assertEquals(bag["Items"][1].item, "None")
+    luaunit.assertEquals(bag["Items"][1].item, pkmn.item.NONE)
     luaunit.assertEquals(bag["Items"][1].amount, 0)
-    luaunit.assertEquals(bag["Items"][2].item, "None")
+    luaunit.assertEquals(bag["Items"][2].item, pkmn.item.NONE)
     luaunit.assertEquals(bag["Items"][2].amount, 0)
 
-    luaunit.assertEquals(bag["Key Items"][1].item, "None")
+    luaunit.assertEquals(bag["Key Items"][1].item, pkmn.item.NONE)
     luaunit.assertEquals(bag["Key Items"][1].amount, 0)
-    luaunit.assertEquals(bag["Key Items"][2].item, "None")
+    luaunit.assertEquals(bag["Key Items"][2].item, pkmn.item.NONE)
     luaunit.assertEquals(bag["Key Items"][2].amount, 0)
 
-    luaunit.assertEquals(bag["Poké Balls"][1].item, "None")
+    luaunit.assertEquals(bag["Poké Balls"][1].item, pkmn.item.NONE)
     luaunit.assertEquals(bag["Poké Balls"][1].amount, 0)
-    luaunit.assertEquals(bag["Poké Balls"][2].item, "None")
+    luaunit.assertEquals(bag["Poké Balls"][2].item, pkmn.item.NONE)
     luaunit.assertEquals(bag["Poké Balls"][2].amount, 0)
 
-    luaunit.assertEquals(bag["TMs"][1].item, "None")
+    luaunit.assertEquals(bag["TMs"][1].item, pkmn.item.NONE)
     luaunit.assertEquals(bag["TMs"][1].amount, 0)
-    luaunit.assertEquals(bag["TMs"][2].item, "None")
+    luaunit.assertEquals(bag["TMs"][2].item, pkmn.item.NONE)
     luaunit.assertEquals(bag["TMs"][2].amount, 0)
-    luaunit.assertEquals(bag["TMs"][3].item, "None")
+    luaunit.assertEquals(bag["TMs"][3].item, pkmn.item.NONE)
     luaunit.assertEquals(bag["TMs"][3].amount, 0)
 
-    luaunit.assertEquals(bag["Berries"][1].item, "None")
+    luaunit.assertEquals(bag["Berries"][1].item, pkmn.item.NONE)
     luaunit.assertEquals(bag["Berries"][1].amount, 0)
-    luaunit.assertEquals(bag["Berries"][2].item, "None")
+    luaunit.assertEquals(bag["Berries"][2].item, pkmn.item.NONE)
     luaunit.assertEquals(bag["Berries"][2].amount, 0)
 
-    luaunit.assertEquals(bag["Colognes"][1].item, "None")
+    luaunit.assertEquals(bag["Colognes"][1].item, pkmn.item.NONE)
     luaunit.assertEquals(bag["Colognes"][1].amount, 0)
-    luaunit.assertEquals(bag["Colognes"][2].item, "None")
+    luaunit.assertEquals(bag["Colognes"][2].item, pkmn.item.NONE)
     luaunit.assertEquals(bag["Colognes"][2].amount, 0)
-    luaunit.assertEquals(bag["Colognes"][3].item, "None")
+    luaunit.assertEquals(bag["Colognes"][3].item, pkmn.item.NONE)
     luaunit.assertEquals(bag["Colognes"][3].amount, 0)
-    if game == "XD"
+    if game == pkmn.game.XD
     then
-        luaunit.assertEquals(bag["Colognes"][2].item, "None")
+        luaunit.assertEquals(bag["Colognes"][2].item, pkmn.item.NONE)
         luaunit.assertEquals(bag["Colognes"][2].amount, 0)
 
-        luaunit.assertEquals(bag["Battle CDs"][1].item, "None")
+        luaunit.assertEquals(bag["Battle CDs"][1].item, pkmn.item.NONE)
         luaunit.assertEquals(bag["Battle CDs"][1].amount, 0)
-        luaunit.assertEquals(bag["Battle CDs"][2].item, "None")
+        luaunit.assertEquals(bag["Battle CDs"][2].item, pkmn.item.NONE)
         luaunit.assertEquals(bag["Battle CDs"][2].amount, 0)
     end
 end
@@ -610,43 +610,43 @@ end
 --
 
 function test_colosseum_item_pocket()
-    local item_pocket = pkmn.item_list("Items", "Colosseum")
-    gcn_items_tests.test_item_pocket(item_pocket, "Colosseum")
+    local item_pocket = pkmn.item_list("Items", pkmn.game.COLOSSEUM)
+    gcn_items_tests.test_item_pocket(item_pocket, pkmn.game.COLOSSEUM)
 end
 
 function test_colosseum_key_item_pocket()
-    local key_item_pocket = pkmn.item_list("Key Items", "Colosseum")
-    gcn_items_tests.test_key_item_pocket(key_item_pocket, "Colosseum")
+    local key_item_pocket = pkmn.item_list("Key Items", pkmn.game.COLOSSEUM)
+    gcn_items_tests.test_key_item_pocket(key_item_pocket, pkmn.game.COLOSSEUM)
 end
 
 function test_colosseum_ball_pocket()
-    local ball_pocket = pkmn.item_list("Poké Balls", "Colosseum")
-    gcn_items_tests.test_ball_pocket(ball_pocket, "Colosseum")
+    local ball_pocket = pkmn.item_list("Poké Balls", pkmn.game.COLOSSEUM)
+    gcn_items_tests.test_ball_pocket(ball_pocket, pkmn.game.COLOSSEUM)
 end
 
 function test_colosseum_tm_pocket()
-    local tm_pocket = pkmn.item_list("TMs", "Colosseum")
-    gcn_items_tests.test_tm_pocket(tm_pocket, "Colosseum")
+    local tm_pocket = pkmn.item_list("TMs", pkmn.game.COLOSSEUM)
+    gcn_items_tests.test_tm_pocket(tm_pocket, pkmn.game.COLOSSEUM)
 end
 
 function test_colosseum_berry_pocket()
-    local berry_pocket = pkmn.item_list("Berries", "Colosseum")
-    gcn_items_tests.test_berry_pocket(berry_pocket, "Colosseum")
+    local berry_pocket = pkmn.item_list("Berries", pkmn.game.COLOSSEUM)
+    gcn_items_tests.test_berry_pocket(berry_pocket, pkmn.game.COLOSSEUM)
 end
 
 function test_colosseum_cologne_pocket()
-    local cologne_pocket = pkmn.item_list("Colognes", "Colosseum")
-    gcn_items_tests.test_cologne_pocket(cologne_pocket, "Colosseum")
+    local cologne_pocket = pkmn.item_list("Colognes", pkmn.game.COLOSSEUM)
+    gcn_items_tests.test_cologne_pocket(cologne_pocket, pkmn.game.COLOSSEUM)
 end
 
 function test_colosseum_pc()
-    local pc = pkmn.item_list("PC", "Colosseum")
-    gcn_items_tests.test_pc(pc, "Colosseum")
+    local pc = pkmn.item_list("PC", pkmn.game.COLOSSEUM)
+    gcn_items_tests.test_pc(pc, pkmn.game.COLOSSEUM)
 end
 
 function test_colosseum_bag()
-    local bag = pkmn.item_bag("Colosseum")
-    gcn_items_tests.test_bag(bag, "Colosseum")
+    local bag = pkmn.item_bag(pkmn.game.COLOSSEUM)
+    gcn_items_tests.test_bag(bag, pkmn.game.COLOSSEUM)
 end
 
 --
@@ -654,46 +654,46 @@ end
 --
 
 function test_xd_item_pocket()
-    local item_pocket = pkmn.item_list("Items", "XD")
-    gcn_items_tests.test_item_pocket(item_pocket, "XD")
+    local item_pocket = pkmn.item_list("Items", pkmn.game.XD)
+    gcn_items_tests.test_item_pocket(item_pocket, pkmn.game.XD)
 end
 
 function test_xd_key_item_pocket()
-    local key_item_pocket = pkmn.item_list("Key Items", "XD")
-    gcn_items_tests.test_key_item_pocket(key_item_pocket, "XD")
+    local key_item_pocket = pkmn.item_list("Key Items", pkmn.game.XD)
+    gcn_items_tests.test_key_item_pocket(key_item_pocket, pkmn.game.XD)
 end
 
 function test_xd_ball_pocket()
-    local ball_pocket = pkmn.item_list("Poké Balls", "XD")
-    gcn_items_tests.test_ball_pocket(ball_pocket, "XD")
+    local ball_pocket = pkmn.item_list("Poké Balls", pkmn.game.XD)
+    gcn_items_tests.test_ball_pocket(ball_pocket, pkmn.game.XD)
 end
 
 function test_xd_tm_pocket()
-    local tm_pocket = pkmn.item_list("TMs", "XD")
-    gcn_items_tests.test_tm_pocket(tm_pocket, "XD")
+    local tm_pocket = pkmn.item_list("TMs", pkmn.game.XD)
+    gcn_items_tests.test_tm_pocket(tm_pocket, pkmn.game.XD)
 end
 
 function test_xd_berry_pocket()
-    local berry_pocket = pkmn.item_list("Berries", "XD")
-    gcn_items_tests.test_berry_pocket(berry_pocket, "XD")
+    local berry_pocket = pkmn.item_list("Berries", pkmn.game.XD)
+    gcn_items_tests.test_berry_pocket(berry_pocket, pkmn.game.XD)
 end
 
 function test_xd_cologne_pocket()
-    local cologne_pocket = pkmn.item_list("Colognes", "XD")
-    gcn_items_tests.test_cologne_pocket(cologne_pocket, "XD")
+    local cologne_pocket = pkmn.item_list("Colognes", pkmn.game.XD)
+    gcn_items_tests.test_cologne_pocket(cologne_pocket, pkmn.game.XD)
 end
 
 function test_xd_battle_cd_pocket()
-    local battle_cd_pocket = pkmn.item_list("Battle CDs", "XD")
-    gcn_items_tests.test_battle_cd_pocket(battle_cd_pocket, "XD")
+    local battle_cd_pocket = pkmn.item_list("Battle CDs", pkmn.game.XD)
+    gcn_items_tests.test_battle_cd_pocket(battle_cd_pocket, pkmn.game.XD)
 end
 
 function test_xd_pc()
-    local pc = pkmn.item_list("PC", "XD")
-    gcn_items_tests.test_pc(pc, "XD")
+    local pc = pkmn.item_list("PC", pkmn.game.XD)
+    gcn_items_tests.test_pc(pc, pkmn.game.XD)
 end
 
 function test_xd_bag()
-    local bag = pkmn.item_bag("XD")
-    gcn_items_tests.test_bag(bag, "XD")
+    local bag = pkmn.item_bag(pkmn.game.XD)
+    gcn_items_tests.test_bag(bag, pkmn.game.XD)
 end

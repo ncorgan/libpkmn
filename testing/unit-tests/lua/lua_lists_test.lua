@@ -24,8 +24,8 @@ function test_game_list()
 
     local game_list = pkmn.database.get_game_list(6, true)
     luaunit.assertEquals(#game_list, 26)
-    luaunit.assertEquals(game_list[1], "Red")
-    luaunit.assertEquals(game_list[26], "Alpha Sapphire")
+    luaunit.assertEquals(game_list[1], pkmn.game.RED)
+    luaunit.assertEquals(game_list[26], pkmn.game.ALPHA_SAPPHIRE)
 end
 
 function test_gamecube_shadow_pokemon_list()
@@ -38,9 +38,9 @@ end
 
 function test_hm_move_list()
     -- Make sure trying to create an invalid list results in an error
-    luaunit.assertError(pkmn.database.get_hm_move_list, "Not a game")
+    luaunit.assertError(pkmn.database.get_hm_move_list, pkmn.game.NONE)
 
-    local hm_move_list = pkmn.database.get_hm_move_list("Red")
+    local hm_move_list = pkmn.database.get_hm_move_list(pkmn.game.RED)
     luaunit.assertEquals(#hm_move_list, 5)
     luaunit.assertEquals(hm_move_list[1], "Cut")
     luaunit.assertEquals(hm_move_list[5], "Flash")
@@ -48,9 +48,9 @@ end
 
 function test_item_list()
     -- Make sure trying to create an invalid list results in an error
-    luaunit.assertError(pkmn.database.get_item_list, "Not a game")
+    luaunit.assertError(pkmn.database.get_item_list, pkmn.game.NONE)
 
-    local item_list = pkmn.database.get_item_list("HeartGold")
+    local item_list = pkmn.database.get_item_list(pkmn.game.HEARTGOLD)
     luaunit.assertEquals(#item_list, 513)
     luaunit.assertEquals(item_list[1], "Adamant Orb")
     luaunit.assertEquals(item_list[513], "Zoom Lens")
@@ -58,9 +58,9 @@ end
 
 function test_location_list()
     -- Make sure trying to create an invalid list results in an error
-    luaunit.assertError(pkmn.database.get_location_list, "Not a game", false)
+    luaunit.assertError(pkmn.database.get_location_list, pkmn.game.NONE, false)
 
-    local location_list = pkmn.database.get_location_list("Emerald", false)
+    local location_list = pkmn.database.get_location_list(pkmn.game.EMERALD, false)
     luaunit.assertEquals(#location_list, 106)
     luaunit.assertEquals(location_list[1], "Abandoned Ship")
     luaunit.assertEquals(location_list[106], "Victory Road")
@@ -68,9 +68,9 @@ end
 
 function test_move_list()
     -- Make sure trying to create an invalid list results in an error
-    luaunit.assertError(pkmn.database.get_move_list, "Not a game")
+    luaunit.assertError(pkmn.database.get_move_list, pkmn.game.NONE)
 
-    local move_list = pkmn.database.get_move_list("Red")
+    local move_list = pkmn.database.get_move_list(pkmn.game.RED)
     luaunit.assertEquals(#move_list, 165)
     luaunit.assertEquals(move_list[1], "Pound")
     luaunit.assertEquals(move_list[165], "Struggle")
@@ -113,9 +113,9 @@ end
 
 function test_tm_move_list()
     -- Make sure trying to create an invalid list results in an error
-    luaunit.assertError(pkmn.database.get_tm_move_list, "Not a game")
+    luaunit.assertError(pkmn.database.get_tm_move_list, pkmn.game.NONE)
 
-    local tm_move_list = pkmn.database.get_tm_move_list("Red")
+    local tm_move_list = pkmn.database.get_tm_move_list(pkmn.game.RED)
     luaunit.assertEquals(#tm_move_list, 50)
     luaunit.assertEquals(tm_move_list[1], "Mega Punch")
     luaunit.assertEquals(tm_move_list[50], "Substitute")
@@ -123,9 +123,9 @@ end
 
 function test_type_list()
     -- Make sure trying to create an invalid list results in an error
-    luaunit.assertError(pkmn.database.get_type_list, "Not a game")
+    luaunit.assertError(pkmn.database.get_type_list, pkmn.game.NONE)
 
-    local type_list = pkmn.database.get_type_list("Alpha Sapphire")
+    local type_list = pkmn.database.get_type_list(pkmn.game.ALPHA_SAPPHIRE)
     luaunit.assertEquals(#type_list, 18)
     luaunit.assertEquals(type_list[1], "Normal")
     luaunit.assertEquals(type_list[18], "Fairy")

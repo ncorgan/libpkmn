@@ -15,13 +15,13 @@ local pokemon_pc_tests = require("pokemon_pc_tests")
 ---
 
 function test_red_pokemon_box()
-    box = pkmn.pokemon_box("Red")
-    pokemon_pc_tests.test_pokemon_box(box, "Red")
+    box = pkmn.pokemon_box(pkmn.game.RED)
+    pokemon_pc_tests.test_pokemon_box(box, pkmn.game.RED)
 end
 
 function test_red_pokemon_pc()
-    pc = pkmn.pokemon_pc("Red")
-    pokemon_pc_tests.test_pokemon_pc(pc, "Red")
+    pc = pkmn.pokemon_pc(pkmn.game.RED)
+    pokemon_pc_tests.test_pokemon_pc(pc, pkmn.game.RED)
 end
 
 ---
@@ -29,13 +29,13 @@ end
 ---
 
 function test_blue_pokemon_box()
-    box = pkmn.pokemon_box("Blue")
-    pokemon_pc_tests.test_pokemon_box(box, "Blue")
+    box = pkmn.pokemon_box(pkmn.game.BLUE)
+    pokemon_pc_tests.test_pokemon_box(box, pkmn.game.BLUE)
 end
 
 function test_blue_pokemon_pc()
-    pc = pkmn.pokemon_pc("Blue")
-    pokemon_pc_tests.test_pokemon_pc(pc, "Blue")
+    pc = pkmn.pokemon_pc(pkmn.game.BLUE)
+    pokemon_pc_tests.test_pokemon_pc(pc, pkmn.game.BLUE)
 end
 
 ---
@@ -43,13 +43,13 @@ end
 ---
 
 function test_yellow_pokemon_box()
-    box = pkmn.pokemon_box("Yellow")
-    pokemon_pc_tests.test_pokemon_box(box, "Yellow")
+    box = pkmn.pokemon_box(pkmn.game.YELLOW)
+    pokemon_pc_tests.test_pokemon_box(box, pkmn.game.YELLOW)
 end
 
 function test_yellow_pokemon_pc()
-    pc = pkmn.pokemon_pc("Yellow")
-    pokemon_pc_tests.test_pokemon_pc(pc, "Yellow")
+    pc = pkmn.pokemon_pc(pkmn.game.YELLOW)
+    pokemon_pc_tests.test_pokemon_pc(pc, pkmn.game.YELLOW)
 end
 
 ---
@@ -57,13 +57,13 @@ end
 ---
 
 function test_gold_pokemon_box()
-    box = pkmn.pokemon_box("Gold")
-    pokemon_pc_tests.test_pokemon_box(box, "Gold")
+    box = pkmn.pokemon_box(pkmn.game.GOLD)
+    pokemon_pc_tests.test_pokemon_box(box, pkmn.game.GOLD)
 end
 
 function test_gold_pokemon_pc()
-    pc = pkmn.pokemon_pc("Gold")
-    pokemon_pc_tests.test_pokemon_pc(pc, "Gold")
+    pc = pkmn.pokemon_pc(pkmn.game.GOLD)
+    pokemon_pc_tests.test_pokemon_pc(pc, pkmn.game.GOLD)
 end
 
 ---
@@ -71,13 +71,13 @@ end
 ---
 
 function test_silver_pokemon_box()
-    box = pkmn.pokemon_box("Silver")
-    pokemon_pc_tests.test_pokemon_box(box, "Silver")
+    box = pkmn.pokemon_box(pkmn.game.SILVER)
+    pokemon_pc_tests.test_pokemon_box(box, pkmn.game.SILVER)
 end
 
 function test_silver_pokemon_pc()
-    pc = pkmn.pokemon_pc("Silver")
-    pokemon_pc_tests.test_pokemon_pc(pc, "Silver")
+    pc = pkmn.pokemon_pc(pkmn.game.SILVER)
+    pokemon_pc_tests.test_pokemon_pc(pc, pkmn.game.SILVER)
 end
 
 ---
@@ -85,13 +85,13 @@ end
 ---
 
 function test_crystal_pokemon_box()
-    box = pkmn.pokemon_box("Crystal")
-    pokemon_pc_tests.test_pokemon_box(box, "Crystal")
+    box = pkmn.pokemon_box(pkmn.game.CRYSTAL)
+    pokemon_pc_tests.test_pokemon_box(box, pkmn.game.CRYSTAL)
 end
 
 function test_crystal_pokemon_pc()
-    pc = pkmn.pokemon_pc("Crystal")
-    pokemon_pc_tests.test_pokemon_pc(pc, "Crystal")
+    pc = pkmn.pokemon_pc(pkmn.game.CRYSTAL)
+    pokemon_pc_tests.test_pokemon_pc(pc, pkmn.game.CRYSTAL)
 end
 
 ---
@@ -99,13 +99,13 @@ end
 ---
 
 function test_ruby_pokemon_box()
-    box = pkmn.pokemon_box("Ruby")
-    pokemon_pc_tests.test_pokemon_box(box, "Ruby")
+    box = pkmn.pokemon_box(pkmn.game.RUBY)
+    pokemon_pc_tests.test_pokemon_box(box, pkmn.game.RUBY)
 end
 
 function test_ruby_pokemon_pc()
-    pc = pkmn.pokemon_pc("Ruby")
-    pokemon_pc_tests.test_pokemon_pc(pc, "Ruby")
+    pc = pkmn.pokemon_pc(pkmn.game.RUBY)
+    pokemon_pc_tests.test_pokemon_pc(pc, pkmn.game.RUBY)
 end
 
 ---
@@ -113,13 +113,13 @@ end
 ---
 
 function test_sapphire_pokemon_box()
-    box = pkmn.pokemon_box("Sapphire")
-    pokemon_pc_tests.test_pokemon_box(box, "Sapphire")
+    box = pkmn.pokemon_box(pkmn.game.SAPPHIRE)
+    pokemon_pc_tests.test_pokemon_box(box, pkmn.game.SAPPHIRE)
 end
 
 function test_sapphire_pokemon_pc()
-    pc = pkmn.pokemon_pc("Sapphire")
-    pokemon_pc_tests.test_pokemon_pc(pc, "Sapphire")
+    pc = pkmn.pokemon_pc(pkmn.game.SAPPHIRE)
+    pokemon_pc_tests.test_pokemon_pc(pc, pkmn.game.SAPPHIRE)
 end
 
 ---
@@ -127,13 +127,13 @@ end
 ---
 
 function test_emerald_pokemon_box()
-    box = pkmn.pokemon_box("Emerald")
-    pokemon_pc_tests.test_pokemon_box(box, "Emerald")
+    box = pkmn.pokemon_box(pkmn.game.EMERALD)
+    pokemon_pc_tests.test_pokemon_box(box, pkmn.game.EMERALD)
 end
 
 function test_emerald_pokemon_pc()
-    pc = pkmn.pokemon_pc("Emerald")
-    pokemon_pc_tests.test_pokemon_pc(pc, "Emerald")
+    pc = pkmn.pokemon_pc(pkmn.game.EMERALD)
+    pokemon_pc_tests.test_pokemon_pc(pc, pkmn.game.EMERALD)
 end
 
 ---
@@ -141,13 +141,13 @@ end
 ---
 
 function test_firered_pokemon_box()
-    box = pkmn.pokemon_box("FireRed")
-    pokemon_pc_tests.test_pokemon_box(box, "FireRed")
+    box = pkmn.pokemon_box(pkmn.game.FIRERED)
+    pokemon_pc_tests.test_pokemon_box(box, pkmn.game.FIRERED)
 end
 
 function test_firered_pokemon_pc()
-    pc = pkmn.pokemon_pc("FireRed")
-    pokemon_pc_tests.test_pokemon_pc(pc, "FireRed")
+    pc = pkmn.pokemon_pc(pkmn.game.FIRERED)
+    pokemon_pc_tests.test_pokemon_pc(pc, pkmn.game.FIRERED)
 end
 
 ---
@@ -155,13 +155,13 @@ end
 ---
 
 function test_leafgreen_pokemon_box()
-    box = pkmn.pokemon_box("LeafGreen")
-    pokemon_pc_tests.test_pokemon_box(box, "LeafGreen")
+    box = pkmn.pokemon_box(pkmn.game.LEAFGREEN)
+    pokemon_pc_tests.test_pokemon_box(box, pkmn.game.LEAFGREEN)
 end
 
 function test_leafgreen_pokemon_pc()
-    pc = pkmn.pokemon_pc("LeafGreen")
-    pokemon_pc_tests.test_pokemon_pc(pc, "LeafGreen")
+    pc = pkmn.pokemon_pc(pkmn.game.LEAFGREEN)
+    pokemon_pc_tests.test_pokemon_pc(pc, pkmn.game.LEAFGREEN)
 end
 
 ---
@@ -169,13 +169,13 @@ end
 ---
 
 function test_colosseum_pokemon_box()
-    box = pkmn.pokemon_box("Colosseum")
-    pokemon_pc_tests.test_pokemon_box(box, "Colosseum")
+    box = pkmn.pokemon_box(pkmn.game.COLOSSEUM)
+    pokemon_pc_tests.test_pokemon_box(box, pkmn.game.COLOSSEUM)
 end
 
 function test_colosseum_pokemon_pc()
-    pc = pkmn.pokemon_pc("Colosseum")
-    pokemon_pc_tests.test_pokemon_pc(pc, "Colosseum")
+    pc = pkmn.pokemon_pc(pkmn.game.COLOSSEUM)
+    pokemon_pc_tests.test_pokemon_pc(pc, pkmn.game.COLOSSEUM)
 end
 
 ---
@@ -183,13 +183,13 @@ end
 ---
 
 function test_xd_pokemon_box()
-    box = pkmn.pokemon_box("XD")
-    pokemon_pc_tests.test_pokemon_box(box, "XD")
+    box = pkmn.pokemon_box(pkmn.game.XD)
+    pokemon_pc_tests.test_pokemon_box(box, pkmn.game.XD)
 end
 
 function test_xd_pokemon_pc()
-    pc = pkmn.pokemon_pc("XD")
-    pokemon_pc_tests.test_pokemon_pc(pc, "XD")
+    pc = pkmn.pokemon_pc(pkmn.game.XD)
+    pokemon_pc_tests.test_pokemon_pc(pc, pkmn.game.XD)
 end
 
 local runner = luaunit.LuaUnit.new()

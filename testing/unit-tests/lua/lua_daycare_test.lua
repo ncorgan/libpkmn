@@ -151,7 +151,7 @@ end
 ---
 
 function test_red_daycare()
-    daycare_test.test_daycare("Red", false)
+    daycare_test.test_daycare(pkmn.game.RED, false)
 end
 
 ---
@@ -159,7 +159,7 @@ end
 ---
 
 function test_blue_daycare()
-    daycare_test.test_daycare("Blue", false)
+    daycare_test.test_daycare(pkmn.game.BLUE, false)
 end
 
 ---
@@ -167,7 +167,7 @@ end
 ---
 
 function test_yellow_daycare()
-    daycare_test.test_daycare("Yellow", false)
+    daycare_test.test_daycare(pkmn.game.YELLOW, false)
 end
 
 ---
@@ -175,7 +175,7 @@ end
 ---
 
 function test_gold_daycare()
-    daycare_test.test_daycare("Gold", true)
+    daycare_test.test_daycare(pkmn.game.GOLD, true)
 end
 
 ---
@@ -183,7 +183,7 @@ end
 ---
 
 function test_silver_daycare()
-    daycare_test.test_daycare("Silver", true)
+    daycare_test.test_daycare(pkmn.game.SILVER, true)
 end
 
 ---
@@ -191,7 +191,7 @@ end
 ---
 
 function test_crystal_daycare()
-    daycare_test.test_daycare("Crystal", true)
+    daycare_test.test_daycare(pkmn.game.CRYSTAL, true)
 end
 
 --[[
@@ -201,7 +201,7 @@ end
 ---
 
 function test_ruby_daycare()
-    daycare_test.test_daycare("Ruby", true)
+    daycare_test.test_daycare(pkmn.game.RUBY, true)
 end
 
 ---
@@ -209,7 +209,7 @@ end
 ---
 
 function test_sapphire_daycare()
-    daycare_test.test_daycare("Sapphire", true)
+    daycare_test.test_daycare(pkmn.game.SAPPHIRE, true)
 end
 
 ---
@@ -217,7 +217,7 @@ end
 ---
 
 function test_emerald_daycare()
-    daycare_test.test_daycare("Emerald", true)
+    daycare_test.test_daycare(pkmn.game.EMERALD, true)
 end
 
 ---
@@ -225,7 +225,7 @@ end
 ---
 
 function test_firered_daycare()
-    daycare_test.test_daycare("FireRed", true)
+    daycare_test.test_daycare(pkmn.game.FIRERED, true)
 end
 
 ---
@@ -233,7 +233,7 @@ end
 ---
 
 function test_leafgreen_daycare()
-    daycare_test.test_daycare("LeafGreen", true)
+    daycare_test.test_daycare(pkmn.game.LEAFGREEN, true)
 end
 
 --]]
@@ -243,7 +243,7 @@ end
 ---
 
 function test_colosseum_daycare()
-    daycare_test.test_daycare("Colosseum", false)
+    daycare_test.test_daycare(pkmn.game.COLOSSEUM, false)
 end
 
 ---
@@ -251,7 +251,7 @@ end
 ---
 
 function test_xd_daycare()
-    daycare_test.test_daycare("XD", false)
+    daycare_test.test_daycare(pkmn.game.XD, false)
 end
 
 local runner = luaunit.LuaUnit.new()

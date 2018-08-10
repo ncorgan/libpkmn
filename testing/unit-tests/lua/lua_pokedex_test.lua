@@ -12,17 +12,17 @@ local pokemon_pc_tests = require("pokemon_pc_tests")
 
 GAME_TO_GENERATION =
 {
-    ["Red"] = 1,
-    ["Blue"] = 1,
-    ["Yellow"] = 1,
-    ["Gold"] = 2,
-    ["Silver"] = 2,
-    ["Crystal"] = 2,
-    ["Ruby"] = 3,
-    ["Sapphire"] = 3,
-    ["Emerald"] = 3,
-    ["FireRed"] = 3,
-    ["LeafGreen"] = 3
+    [pkmn.game.RED] = 1,
+    [pkmn.game.BLUE] = 1,
+    [pkmn.game.YELLOW] = 1,
+    [pkmn.game.GOLD] = 2,
+    [pkmn.game.SILVER] = 2,
+    [pkmn.game.CRYSTAL] = 2,
+    [pkmn.game.RUBY] = 3,
+    [pkmn.game.SAPPHIRE] = 3,
+    [pkmn.game.EMERALD] = 3,
+    [pkmn.game.FIRERED] = 3,
+    [pkmn.game.LEAFGREEN] = 3
 }
 
 function pokedex_test(pokedex)
@@ -82,7 +82,7 @@ end
 ---
 
 function test_red_pokedex()
-    pokedex = pkmn.pokedex("Red")
+    pokedex = pkmn.pokedex(pkmn.game.RED)
     pokedex_test(pokedex)
 end
 
@@ -91,7 +91,7 @@ end
 ---
 
 function test_blue_pokedex()
-    pokedex = pkmn.pokedex("Blue")
+    pokedex = pkmn.pokedex(pkmn.game.BLUE)
     pokedex_test(pokedex)
 end
 
@@ -100,7 +100,7 @@ end
 ---
 
 function test_yellow_pokedex()
-    pokedex = pkmn.pokedex("Yellow")
+    pokedex = pkmn.pokedex(pkmn.game.YELLOW)
     pokedex_test(pokedex)
 end
 
@@ -109,7 +109,7 @@ end
 ---
 
 function test_gold_pokedex()
-    pokedex = pkmn.pokedex("Gold")
+    pokedex = pkmn.pokedex(pkmn.game.GOLD)
     pokedex_test(pokedex)
 end
 
@@ -118,7 +118,7 @@ end
 ---
 
 function test_silver_pokedex()
-    pokedex = pkmn.pokedex("Silver")
+    pokedex = pkmn.pokedex(pkmn.game.SILVER)
     pokedex_test(pokedex)
 end
 
@@ -127,7 +127,7 @@ end
 ---
 
 function test_crystal_pokedex()
-    pokedex = pkmn.pokedex("Crystal")
+    pokedex = pkmn.pokedex(pkmn.game.CRYSTAL)
     pokedex_test(pokedex)
 end
 
@@ -136,7 +136,7 @@ end
 ---
 
 function test_ruby_pokedex()
-    pokedex = pkmn.pokedex("Ruby")
+    pokedex = pkmn.pokedex(pkmn.game.RUBY)
     pokedex_test(pokedex)
 end
 
@@ -145,7 +145,7 @@ end
 ---
 
 function test_sapphire_pokedex()
-    pokedex = pkmn.pokedex("Sapphire")
+    pokedex = pkmn.pokedex(pkmn.game.SAPPHIRE)
     pokedex_test(pokedex)
 end
 
@@ -154,7 +154,7 @@ end
 ---
 
 function test_emerald_pokedex()
-    pokedex = pkmn.pokedex("Emerald")
+    pokedex = pkmn.pokedex(pkmn.game.EMERALD)
     pokedex_test(pokedex)
 end
 
@@ -163,7 +163,7 @@ end
 ---
 
 function test_firered_pokedex()
-    pokedex = pkmn.pokedex("FireRed")
+    pokedex = pkmn.pokedex(pkmn.game.FIRERED)
     pokedex_test(pokedex)
 end
 
@@ -172,7 +172,7 @@ end
 ---
 
 function test_leafgreen_pokedex()
-    pokedex = pkmn.pokedex("LeafGreen")
+    pokedex = pkmn.pokedex(pkmn.game.LEAFGREEN)
     pokedex_test(pokedex)
 end
 

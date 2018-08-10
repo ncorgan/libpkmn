@@ -19,8 +19,8 @@ gen3_pokemon_tests.CONTEST_LEVELS = {"Super", "Hyper", "Master"}
 gen3_pokemon_tests.RIBBONS = {"Champion", "Winning", "Victory", "Artist",
                              "Effort", "Marine", "Land", "Sky",
                              "Country", "National", "Earth", "World"}
-gen3_pokemon_tests.STATS = {"HP", "Attack", "Defense", "Speed",
-                           "Special Attack", "Special Defense"}
+gen3_pokemon_tests.STATS = {pkmn.stat.HP, pkmn.stat.ATTACK, pkmn.stat.DEFENSE, pkmn.stat.SPEED,
+                           pkmn.stat.SPECIAL_ATTACK, pkmn.stat.SPECIAL_DEFENSE}
 
 function gen3_pokemon_tests.check_initial_ribbon_map(pokemon)
     for contest_type_index = 1, #gen3_pokemon_tests.CONTEST_TYPES
@@ -83,14 +83,14 @@ function gen3_pokemon_tests.test_ribbons(pokemon)
 end
 
 function gen3_pokemon_tests.unown_test(game)
-    local unown_entry = pkmn.database.pokemon_entry("Unown", game, "")
+    local unown_entry = pkmn.database.pokemon_entry(pkmn.species.UNOWN, game, "")
 
     local unown = nil
 
     local unown_forms = unown_entry.forms
     for form_index = 1, #unown_forms
     do
-        unown = pkmn.pokemon("Unown", game, unown_forms[form_index], 5)
+        unown = pkmn.pokemon(pkmn.species.UNOWN, game, unown_forms[form_index], 5)
         luaunit.assertEquals(unown.form, unown_forms[form_index])
 
         -- Make sure the personality properly set.
@@ -101,7 +101,7 @@ function gen3_pokemon_tests.unown_test(game)
         luaunit.assertTrue(pkmntest_utils.file_exists(unown.sprite_filepath))
     end
 
-    unown = pkmn.pokemon("Unown", game, "A", 5)
+    unown = pkmn.pokemon(pkmn.species.UNOWN, game, "A", 5)
 
     -- Make sure setting the form properly changes the IVs.
     for form_index = 1, #unown_forms
@@ -126,7 +126,7 @@ function gen3_pokemon_tests.common(game, species)
     local pokemon = pkmn.pokemon(species, game, "", 30)
 
     local test_params = nil
-    local is_game_gamecube = (game == "Colosseum" or game == "XD")
+    local is_game_gamecube = (game == pkmn.game.COLOSSEUM or game == pkmn.game.XD)
 
     if is_game_gamecube
     then
@@ -145,8 +145,8 @@ function gen3_pokemon_tests.common(game, species)
             valid_moves = {"Swallow", "Flamethrower", "Return", "Fire Blast"},
             invalid_moves = {"Roost", "Flame Burst"},
 
-            valid_original_games = {"Ruby", "Sapphire", "Emerald", "FireRed", "LeafGreen", "Colosseum/XD", "Colosseum", "XD"},
-            invalid_original_games = {"Gold", "HeartGold"}
+            valid_original_games = {pkmn.game.RUBY, pkmn.game.SAPPHIRE, pkmn.game.EMERALD, pkmn.game.FIRERED, pkmn.game.LEAFGREEN, "Colosseum/XD", pkmn.game.COLOSSEUM, pkmn.game.XD},
+            invalid_original_games = {pkmn.game.GOLD, pkmn.game.HEARTGOLD}
         }
     else
         test_params =
@@ -164,8 +164,8 @@ function gen3_pokemon_tests.common(game, species)
             valid_moves = {"Swallow", "Flamethrower", "Return", "Fire Blast"},
             invalid_moves = {"Shadow Sky", "Roost", "Flame Burst"},
 
-            valid_original_games = {"Ruby", "Sapphire", "Emerald", "FireRed", "LeafGreen", "Colosseum/XD", "Colosseum", "XD"},
-            invalid_original_games = {"Gold", "HeartGold"}
+            valid_original_games = {pkmn.game.RUBY, pkmn.game.SAPPHIRE, pkmn.game.EMERALD, pkmn.game.FIRERED, pkmn.game.LEAFGREEN, "Colosseum/XD", pkmn.game.COLOSSEUM, pkmn.game.XD},
+            invalid_original_games = {pkmn.game.GOLD, pkmn.game.HEARTGOLD}
         }
     end
 
@@ -194,7 +194,7 @@ function gen3_pokemon_tests.common(game, species)
     if is_game_gamecube
     then
         local shadow_species = nil
-        if game == "Colosseum"
+        if game == pkmn.game.COLOSSEUM
         then
             shadow_species = "Ledian"
         else
@@ -219,127 +219,127 @@ end
 -- Ruby
 
 function test_ruby_pokemon()
-    gen3_pokemon_tests.common("Ruby", "Torchic")
+    gen3_pokemon_tests.common(pkmn.game.RUBY, pkmn.species.TORCHIC)
 end
 
 function test_ruby_forms()
-    pokemon_tests.forms_test("Ruby")
+    pokemon_tests.forms_test(pkmn.game.RUBY)
 end
 
 function test_ruby_genders()
-    pokemon_tests.gender_test("Ruby")
+    pokemon_tests.gender_test(pkmn.game.RUBY)
 end
 
 function test_ruby_unown()
-    gen3_pokemon_tests.unown_test("Ruby")
+    gen3_pokemon_tests.unown_test(pkmn.game.RUBY)
 end
 
 -- Sapphire
 
 function test_sapphire_pokemon()
-    gen3_pokemon_tests.common("Sapphire", "Mudkip")
+    gen3_pokemon_tests.common(pkmn.game.SAPPHIRE, pkmn.species.MUDKIP)
 end
 
 function test_sapphire_forms()
-    pokemon_tests.forms_test("Sapphire")
+    pokemon_tests.forms_test(pkmn.game.SAPPHIRE)
 end
 
 function test_sapphire_genders()
-    pokemon_tests.gender_test("Sapphire")
+    pokemon_tests.gender_test(pkmn.game.SAPPHIRE)
 end
 
 function test_sapphire_unown()
-    gen3_pokemon_tests.unown_test("Sapphire")
+    gen3_pokemon_tests.unown_test(pkmn.game.SAPPHIRE)
 end
 
 -- Emerald
 
 function test_emerald_pokemon()
-    gen3_pokemon_tests.common("Emerald", "Treecko")
+    gen3_pokemon_tests.common(pkmn.game.EMERALD, pkmn.species.TREECKO)
 end
 
 function test_emerald_forms()
-    pokemon_tests.forms_test("Emerald")
+    pokemon_tests.forms_test(pkmn.game.EMERALD)
 end
 
 function test_emerald_genders()
-    pokemon_tests.gender_test("Emerald")
+    pokemon_tests.gender_test(pkmn.game.EMERALD)
 end
 
 function test_emerald_unown()
-    gen3_pokemon_tests.unown_test("Emerald")
+    gen3_pokemon_tests.unown_test(pkmn.game.EMERALD)
 end
 
 -- FireRed
 
 function test_firered_pokemon()
-    gen3_pokemon_tests.common("FireRed", "Charmander")
+    gen3_pokemon_tests.common(pkmn.game.FIRERED, pkmn.species.CHARMANDER)
 end
 
 function test_firered_forms()
-    pokemon_tests.forms_test("FireRed")
+    pokemon_tests.forms_test(pkmn.game.FIRERED)
 end
 
 function test_firered_genders()
-    pokemon_tests.gender_test("FireRed")
+    pokemon_tests.gender_test(pkmn.game.FIRERED)
 end
 
 function test_firered_unown()
-    gen3_pokemon_tests.unown_test("FireRed")
+    gen3_pokemon_tests.unown_test(pkmn.game.FIRERED)
 end
 
 -- LeafGreen
 
 function test_leafgreen_pokemon()
-    gen3_pokemon_tests.common("LeafGreen", "Bulbasaur")
+    gen3_pokemon_tests.common(pkmn.game.LEAFGREEN, pkmn.species.BULBASAUR)
 end
 
 function test_leafgreen_forms()
-    pokemon_tests.forms_test("LeafGreen")
+    pokemon_tests.forms_test(pkmn.game.LEAFGREEN)
 end
 
 function test_leafgreen_genders()
-    pokemon_tests.gender_test("LeafGreen")
+    pokemon_tests.gender_test(pkmn.game.LEAFGREEN)
 end
 
 function test_leafgreen_unown()
-    gen3_pokemon_tests.unown_test("LeafGreen")
+    gen3_pokemon_tests.unown_test(pkmn.game.LEAFGREEN)
 end
 
 -- Colosseum
 
 function test_colosseum_pokemon()
-    gen3_pokemon_tests.common("Colosseum", "Espeon")
+    gen3_pokemon_tests.common(pkmn.game.COLOSSEUM, "Espeon")
 end
 
 function test_colosseum_forms()
-    pokemon_tests.forms_test("Colosseum")
+    pokemon_tests.forms_test(pkmn.game.COLOSSEUM)
 end
 
 function test_colosseum_genders()
-    pokemon_tests.gender_test("Colosseum")
+    pokemon_tests.gender_test(pkmn.game.COLOSSEUM)
 end
 
 function test_colosseum_unown()
-    gen3_pokemon_tests.unown_test("Colosseum")
+    gen3_pokemon_tests.unown_test(pkmn.game.COLOSSEUM)
 end
 
 -- XD
 
 function test_xd_pokemon()
-    gen3_pokemon_tests.common("XD", "Umbreon")
+    gen3_pokemon_tests.common(pkmn.game.XD, "Umbreon")
 end
 
 function test_xd_forms()
-    pokemon_tests.forms_test("XD")
+    pokemon_tests.forms_test(pkmn.game.XD)
 end
 
 function test_xd_genders()
-    pokemon_tests.gender_test("XD")
+    pokemon_tests.gender_test(pkmn.game.XD)
 end
 
 function test_xd_unown()
-    gen3_pokemon_tests.unown_test("XD")
+    gen3_pokemon_tests.unown_test(pkmn.game.XD)
 end
 
 return gen3_pokemon_tests

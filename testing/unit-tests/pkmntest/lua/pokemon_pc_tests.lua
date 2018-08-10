@@ -1,11 +1,12 @@
 --
--- Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+-- Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
 --
 -- Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
 -- or copy at http://opensource.org/licenses/MIT)
 --
 
 local pkmn = require("pkmn")
+local pkmntest_utils = require("pkmntest_utils")
 local luaunit = require("luaunit")
 
 local pokemon_pc_tests = {}
@@ -32,37 +33,20 @@ end
 
 -- Actual test functions
 
-pokemon_pc_tests.GAME_TO_GENERATION =
-{
-    ["Red"] = 1,
-    ["Blue"] = 1,
-    ["Yellow"] = 1,
-    ["Gold"] = 2,
-    ["Silver"] = 2,
-    ["Crystal"] = 2,
-    ["Ruby"] = 3,
-    ["Sapphire"] = 3,
-    ["Emerald"] = 3,
-    ["FireRed"] = 3,
-    ["LeafGreen"] = 3,
-    ["Colosseum"] = 3,
-    ["XD"] = 3
-}
-
 function pokemon_pc_tests.test_empty_pokemon_box(box, game)
-    local generation = pokemon_pc_tests.GAME_TO_GENERATION[game]
+    local generation = pkmntest_utils.GAME_TO_GENERATION[game]
 
     luaunit.assertEquals(box.game, game)
     luaunit.assertEquals(box.name, "")
 
     for box_index = 1, #box
     do
-        luaunit.assertEquals(box[box_index].species, "None")
+        luaunit.assertEquals(box[box_index].species, pkmn.species.NONE)
         luaunit.assertEquals(box[box_index].game, game)
 
         for move_index = 1, #box[box_index].moves
         do
-            luaunit.assertEquals(box[box_index].moves[move_index].move, "None")
+            luaunit.assertEquals(box[box_index].moves[move_index].move, pkmn.move.NONE)
             luaunit.assertEquals(box[box_index].moves[move_index].pp, 0)
         end
     end
@@ -81,7 +65,7 @@ function pokemon_pc_tests.test_empty_pokemon_box(box, game)
 end
 
 function pokemon_pc_tests.test_box_name(box)
-    local generation = pokemon_pc_tests.GAME_TO_GENERATION[box.game]
+    local generation = pkmntest_utils.GAME_TO_GENERATION[box.game]
 
     if generation == 1
     then
@@ -105,7 +89,7 @@ end
 
 function pokemon_pc_tests.test_setting_pokemon(box)
     local game = box.game
-    local generation = pokemon_pc_tests.GAME_TO_GENERATION[game]
+    local generation = pkmntest_utils.GAME_TO_GENERATION[game]
 
     local original_first = box[1]
     local original_second = box[2]
@@ -126,9 +110,9 @@ function pokemon_pc_tests.test_setting_pokemon(box)
 
     -- Create Pokémon and place in box. The original variables should
     -- still have the same underlying Pokémon.
-    local bulbasaur = pkmn.pokemon("Bulbasaur", game, "", 5)
-    local charmander = pkmn.pokemon("Charmander", game, "", 5)
-    local squirtle = pkmn.pokemon("Squirtle", game, "", 5)
+    local bulbasaur = pkmn.pokemon(pkmn.species.BULBASAUR, game, "", 5)
+    local charmander = pkmn.pokemon(pkmn.species.CHARMANDER, game, "", 5)
+    local squirtle = pkmn.pokemon(pkmn.species.SQUIRTLE, game, "", 5)
 
     box[1] = bulbasaur
     luaunit.assertEquals(box.num_pokemon, 1)
@@ -155,7 +139,7 @@ function pokemon_pc_tests.test_setting_pokemon(box)
     -- We should always be able to clear the last contiguous Pokémon.
     box[3] = original_first
     luaunit.assertEquals(box.num_pokemon, 2)
-    luaunit.assertEquals(box[3].species, "None")
+    luaunit.assertEquals(box[3].species, pkmn.species.NONE)
 
     -- Put it back.
     box[3] = box[2]
@@ -171,7 +155,7 @@ function pokemon_pc_tests.test_setting_pokemon(box)
             original_first
         )
         luaunit.assertEquals(box.num_pokemon, 3)
-        luaunit.assertEquals(box[2].species, "Charmander")
+        luaunit.assertEquals(box[2].species, pkmn.species.CHARMANDER)
 
         luaunit.assertError(
             pokemon_pc_tests.pokemon_box.set_pokemon,
@@ -180,33 +164,33 @@ function pokemon_pc_tests.test_setting_pokemon(box)
             bulbasaur
         )
         luaunit.assertEquals(box.num_pokemon, 3)
-        luaunit.assertEquals(box[5].species, "None")
+        luaunit.assertEquals(box[5].species, pkmn.species.NONE)
     else
         box[2] = original_first
         luaunit.assertEquals(box.num_pokemon, 2)
-        luaunit.assertEquals(box[2].species, "None")
+        luaunit.assertEquals(box[2].species, pkmn.species.NONE)
 
         box[5] = bulbasaur
         luaunit.assertEquals(box.num_pokemon, 3)
-        luaunit.assertEquals(box[5].species, "Bulbasaur")
+        luaunit.assertEquals(box[5].species, pkmn.species.BULBASAUR)
 
         -- Restore it to how it was.
         box[2] = charmander
         box[5] = original_first
-        luaunit.assertEquals(box[2].species, "Charmander")
-        luaunit.assertEquals(box[5].species, "None")
+        luaunit.assertEquals(box[2].species, pkmn.species.CHARMANDER)
+        luaunit.assertEquals(box[5].species, pkmn.species.NONE)
     end
 
     -- Now check everything we've created. Each variable should have
     -- the same underlying Pokémon.
-    luaunit.assertEquals(box[1].species, "Squirtle")
-    luaunit.assertEquals(box[2].species, "Charmander")
-    luaunit.assertEquals(box[3].species, "Charmander")
-    luaunit.assertEquals(original_first.species, "None")
-    luaunit.assertEquals(original_second.species, "None")
-    luaunit.assertEquals(bulbasaur.species, "Bulbasaur")
-    luaunit.assertEquals(charmander.species, "Charmander")
-    luaunit.assertEquals(squirtle.species, "Squirtle")
+    luaunit.assertEquals(box[1].species, pkmn.species.SQUIRTLE)
+    luaunit.assertEquals(box[2].species, pkmn.species.CHARMANDER)
+    luaunit.assertEquals(box[3].species, pkmn.species.CHARMANDER)
+    luaunit.assertEquals(original_first.species, pkmn.species.NONE)
+    luaunit.assertEquals(original_second.species, pkmn.species.NONE)
+    luaunit.assertEquals(bulbasaur.species, pkmn.species.BULBASAUR)
+    luaunit.assertEquals(charmander.species, pkmn.species.CHARMANDER)
+    luaunit.assertEquals(squirtle.species, pkmn.species.SQUIRTLE)
 end
 
 function pokemon_pc_tests.test_pokemon_box(box, game)
@@ -225,7 +209,7 @@ function pokemon_pc_tests.test_empty_pokemon_pc(pc, game)
 end
 
 function pokemon_pc_tests.test_box_names(pc)
-    local generation = pokemon_pc_tests.GAME_TO_GENERATION[pc.game]
+    local generation = pkmntest_utils.GAME_TO_GENERATION[pc.game]
 
     if generation == 1
     then
@@ -253,8 +237,8 @@ function pokemon_pc_tests.test_setting_pokemon_in_boxes(pc)
     for i = 1, #pc
     do
         pokemon_pc_tests.test_setting_pokemon(pc[i])
-        luaunit.assertEquals(pc[i][1].species, "Squirtle")
-        luaunit.assertEquals(pc[i][2].species, "Charmander")
+        luaunit.assertEquals(pc[i][1].species, pkmn.species.SQUIRTLE)
+        luaunit.assertEquals(pc[i][2].species, pkmn.species.CHARMANDER)
     end
 end
 

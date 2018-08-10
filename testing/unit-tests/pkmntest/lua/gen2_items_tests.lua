@@ -25,7 +25,7 @@ function gen2_items_tests.test_item_pocket(item_pocket, game)
     items_tests.item_list_test_empty_slot(item_pocket)
 
     -- Confirms errors are thrown when expected.
-    items_tests.item_list_test_out_of_range_error(item_pocket, "Potion")
+    items_tests.item_list_test_out_of_range_error(item_pocket, pkmn.item.POTION)
 
     -- Make sure we can't add items from other pockets.
     items_tests.item_list_test_invalid_items(
@@ -38,7 +38,7 @@ function gen2_items_tests.test_item_pocket(item_pocket, game)
 
     local item_names =
     {
-        "Potion", "HP Up", "Wht Apricorn", "Lucky Egg",
+        pkmn.item.POTION, "HP Up", "Wht Apricorn", "Lucky Egg",
         "Flower Mail", "Burn Heal", "PSNCureBerry", "Stick"
     }
 
@@ -70,7 +70,7 @@ function gen2_items_tests.test_key_item_pocket(key_item_pocket, game)
     -- Make sure we can't add items from other pockets.
     items_tests.item_list_test_invalid_items(
         key_item_pocket,
-        {"Potion", "Master Ball", "HM01"}
+        {pkmn.item.POTION, "Master Ball", "HM01"}
     )
     luaunit.assertEquals(key_item_pocket.num_items, 0)
 
@@ -82,7 +82,7 @@ function gen2_items_tests.test_key_item_pocket(key_item_pocket, game)
     luaunit.assertEquals(key_item_pocket.num_items, 0)
 
     -- Crystal-specific items
-    if game == "Crystal"
+    if game == pkmn.game.CRYSTAL
     then
         for i = 1, #gen2_items_tests.crystal_items
         do
@@ -145,14 +145,14 @@ function gen2_items_tests.test_ball_pocket(ball_pocket, game)
     -- Make sure we can't add items from other pockets.
     items_tests.item_list_test_invalid_items(
         ball_pocket,
-        {"Potion", "Bicycle", "HM01"}
+        {pkmn.item.POTION, "Bicycle", "HM01"}
     )
     luaunit.assertEquals(ball_pocket.num_items, 0)
 
     -- Start adding and removing stuff, and make sure the numbers are accurate.
     local item_names =
     {
-        "Great Ball", "Poké Ball", "Park Ball", "Fast Ball",
+        "Great Ball", pkmn.item.POKE_BALL, "Park Ball", pkmn.item.FAST_BALL,
         "Master Ball", "Friend Ball", "Love Ball", "Level Ball"
     }
 
@@ -196,7 +196,7 @@ function gen2_items_tests.test_tmhm_pocket(tmhm_pocket, game)
     -- Make sure we can't add items from other pockets.
     items_tests.item_list_test_invalid_items(
         tmhm_pocket,
-        {"Potion", "Master Ball", "Bicycle"}
+        {pkmn.item.POTION, "Master Ball", "Bicycle"}
     )
     luaunit.assertEquals(tmhm_pocket.num_items, 0)
 
@@ -249,12 +249,12 @@ function gen2_items_tests.test_pc(pc, game)
     items_tests.item_list_test_empty_slot(pc)
 
     -- Confirms errors are thrown when expected.
-    items_tests.item_list_test_out_of_range_error(pc, "Potion")
+    items_tests.item_list_test_out_of_range_error(pc, pkmn.item.POTION)
 
     -- Start adding and removing stuff, and make sure the numbers are accurate.
     local item_names =
     {
-        "Potion", "Bicycle", "Great Ball", "TM28",
+        pkmn.item.POTION, "Bicycle", "Great Ball", "TM28",
         "Berry", "SquirtBottle", "Friend Ball", "HM01"
     }
 
@@ -282,7 +282,7 @@ function gen2_items_tests.test_item_bag(bag, game)
     gen2_items_tests.test_ball_pocket(bag["Balls"], game)
     gen2_items_tests.test_tmhm_pocket(bag["TM/HM"], game)
 
-    local items = {"Potion", "Bicycle", "Great Ball", "TM28",
+    local items = {pkmn.item.POTION, "Bicycle", "Great Ball", "TM28",
                    "Berry", "SquirtBottle", "Friend Ball", "HM01"}
 
     -- Make sure adding items through the bag adds to the proper pockets.
@@ -295,25 +295,25 @@ function gen2_items_tests.test_item_bag(bag, game)
         bag:add(items[i], 1)
     end
 
-    luaunit.assertEquals(bag["Items"][1].item, "Potion")
+    luaunit.assertEquals(bag["Items"][1].item, pkmn.item.POTION)
     luaunit.assertEquals(bag["Items"][1].amount, 1)
     luaunit.assertEquals(bag["Items"][2].item, "Berry")
     luaunit.assertEquals(bag["Items"][2].amount, 1)
-    luaunit.assertEquals(bag["Items"][3].item, "None")
+    luaunit.assertEquals(bag["Items"][3].item, pkmn.item.NONE)
     luaunit.assertEquals(bag["Items"][3].amount, 0)
 
     luaunit.assertEquals(bag["KeyItems"][1].item, "Bicycle")
     luaunit.assertEquals(bag["KeyItems"][1].amount, 1)
     luaunit.assertEquals(bag["KeyItems"][2].item, "SquirtBottle")
     luaunit.assertEquals(bag["KeyItems"][2].amount, 1)
-    luaunit.assertEquals(bag["KeyItems"][3].item, "None")
+    luaunit.assertEquals(bag["KeyItems"][3].item, pkmn.item.NONE)
     luaunit.assertEquals(bag["KeyItems"][3].amount, 0)
 
     luaunit.assertEquals(bag["Balls"][1].item, "Great Ball")
     luaunit.assertEquals(bag["Balls"][1].amount, 1)
     luaunit.assertEquals(bag["Balls"][2].item, "Friend Ball")
     luaunit.assertEquals(bag["Balls"][2].amount, 1)
-    luaunit.assertEquals(bag["Balls"][3].item, "None")
+    luaunit.assertEquals(bag["Balls"][3].item, pkmn.item.NONE)
     luaunit.assertEquals(bag["Balls"][3].amount, 0)
 
     luaunit.assertEquals(bag["TM/HM"][1].item, "TM01")
@@ -331,25 +331,25 @@ function gen2_items_tests.test_item_bag(bag, game)
         bag:remove(items[i], 1)
     end
 
-    luaunit.assertEquals(bag["Items"][1].item, "None")
+    luaunit.assertEquals(bag["Items"][1].item, pkmn.item.NONE)
     luaunit.assertEquals(bag["Items"][1].amount, 0)
-    luaunit.assertEquals(bag["Items"][2].item, "None")
+    luaunit.assertEquals(bag["Items"][2].item, pkmn.item.NONE)
     luaunit.assertEquals(bag["Items"][2].amount, 0)
-    luaunit.assertEquals(bag["Items"][3].item, "None")
+    luaunit.assertEquals(bag["Items"][3].item, pkmn.item.NONE)
     luaunit.assertEquals(bag["Items"][3].amount, 0)
 
-    luaunit.assertEquals(bag["KeyItems"][1].item, "None")
+    luaunit.assertEquals(bag["KeyItems"][1].item, pkmn.item.NONE)
     luaunit.assertEquals(bag["KeyItems"][1].amount, 0)
-    luaunit.assertEquals(bag["KeyItems"][2].item, "None")
+    luaunit.assertEquals(bag["KeyItems"][2].item, pkmn.item.NONE)
     luaunit.assertEquals(bag["KeyItems"][2].amount, 0)
-    luaunit.assertEquals(bag["KeyItems"][3].item, "None")
+    luaunit.assertEquals(bag["KeyItems"][3].item, pkmn.item.NONE)
     luaunit.assertEquals(bag["KeyItems"][3].amount, 0)
 
-    luaunit.assertEquals(bag["Balls"][1].item, "None")
+    luaunit.assertEquals(bag["Balls"][1].item, pkmn.item.NONE)
     luaunit.assertEquals(bag["Balls"][1].amount, 0)
-    luaunit.assertEquals(bag["Balls"][2].item, "None")
+    luaunit.assertEquals(bag["Balls"][2].item, pkmn.item.NONE)
     luaunit.assertEquals(bag["Balls"][2].amount, 0)
-    luaunit.assertEquals(bag["Balls"][3].item, "None")
+    luaunit.assertEquals(bag["Balls"][3].item, pkmn.item.NONE)
     luaunit.assertEquals(bag["Balls"][3].amount, 0)
 
     luaunit.assertEquals(bag["TM/HM"][1].item, "TM01")
@@ -373,33 +373,33 @@ end
 --
 
 function test_gold_item_pocket()
-    local items = pkmn.item_list("Items", "Gold")
-    gen2_items_tests.test_item_pocket(items, "Gold")
+    local items = pkmn.item_list("Items", pkmn.game.GOLD)
+    gen2_items_tests.test_item_pocket(items, pkmn.game.GOLD)
 end
 
 function test_gold_key_item_pocket()
-    local key_items = pkmn.item_list("KeyItems", "Gold")
-    gen2_items_tests.test_key_item_pocket(key_items, "Gold")
+    local key_items = pkmn.item_list("KeyItems", pkmn.game.GOLD)
+    gen2_items_tests.test_key_item_pocket(key_items, pkmn.game.GOLD)
 end
 
 function test_gold_ball_pocket()
-    local balls = pkmn.item_list("Balls", "Gold")
-    gen2_items_tests.test_ball_pocket(balls, "Gold")
+    local balls = pkmn.item_list("Balls", pkmn.game.GOLD)
+    gen2_items_tests.test_ball_pocket(balls, pkmn.game.GOLD)
 end
 
 function test_gold_tmhm_pocket()
-    local tmhm = pkmn.item_list("TM/HM", "Gold")
-    gen2_items_tests.test_tmhm_pocket(tmhm, "Gold")
+    local tmhm = pkmn.item_list("TM/HM", pkmn.game.GOLD)
+    gen2_items_tests.test_tmhm_pocket(tmhm, pkmn.game.GOLD)
 end
 
 function test_gold_pc()
-    local pc = pkmn.item_list("PC", "Gold")
-    gen2_items_tests.test_pc(pc, "Gold")
+    local pc = pkmn.item_list("PC", pkmn.game.GOLD)
+    gen2_items_tests.test_pc(pc, pkmn.game.GOLD)
 end
 
 function test_gold_item_bag()
-    local bag = pkmn.item_bag("Gold")
-    gen2_items_tests.test_item_bag(bag, "Gold")
+    local bag = pkmn.item_bag(pkmn.game.GOLD)
+    gen2_items_tests.test_item_bag(bag, pkmn.game.GOLD)
 end
 
 --
@@ -407,33 +407,33 @@ end
 --
 
 function test_silver_item_pocket()
-    local items = pkmn.item_list("Items", "Silver")
-    gen2_items_tests.test_item_pocket(items, "Silver")
+    local items = pkmn.item_list("Items", pkmn.game.SILVER)
+    gen2_items_tests.test_item_pocket(items, pkmn.game.SILVER)
 end
 
 function test_silver_key_item_pocket()
-    local key_items = pkmn.item_list("KeyItems", "Silver")
-    gen2_items_tests.test_key_item_pocket(key_items, "Silver")
+    local key_items = pkmn.item_list("KeyItems", pkmn.game.SILVER)
+    gen2_items_tests.test_key_item_pocket(key_items, pkmn.game.SILVER)
 end
 
 function test_silver_ball_pocket()
-    local balls = pkmn.item_list("Balls", "Silver")
-    gen2_items_tests.test_ball_pocket(balls, "Silver")
+    local balls = pkmn.item_list("Balls", pkmn.game.SILVER)
+    gen2_items_tests.test_ball_pocket(balls, pkmn.game.SILVER)
 end
 
 function test_silver_tmhm_pocket()
-    local tmhm = pkmn.item_list("TM/HM", "Silver")
-    gen2_items_tests.test_tmhm_pocket(tmhm, "Silver")
+    local tmhm = pkmn.item_list("TM/HM", pkmn.game.SILVER)
+    gen2_items_tests.test_tmhm_pocket(tmhm, pkmn.game.SILVER)
 end
 
 function test_silver_pc()
-    local pc = pkmn.item_list("PC", "Silver")
-    gen2_items_tests.test_pc(pc, "Silver")
+    local pc = pkmn.item_list("PC", pkmn.game.SILVER)
+    gen2_items_tests.test_pc(pc, pkmn.game.SILVER)
 end
 
 function test_silver_item_bag()
-    local bag = pkmn.item_bag("Silver")
-    gen2_items_tests.test_item_bag(bag, "Silver")
+    local bag = pkmn.item_bag(pkmn.game.SILVER)
+    gen2_items_tests.test_item_bag(bag, pkmn.game.SILVER)
 end
 
 --
@@ -441,31 +441,31 @@ end
 --
 
 function test_crystal_item_pocket()
-    local items = pkmn.item_list("Items", "Crystal")
-    gen2_items_tests.test_item_pocket(items, "Crystal")
+    local items = pkmn.item_list("Items", pkmn.game.CRYSTAL)
+    gen2_items_tests.test_item_pocket(items, pkmn.game.CRYSTAL)
 end
 
 function test_crystal_key_item_pocket()
-    local key_items = pkmn.item_list("KeyItems", "Crystal")
-    gen2_items_tests.test_key_item_pocket(key_items, "Crystal")
+    local key_items = pkmn.item_list("KeyItems", pkmn.game.CRYSTAL)
+    gen2_items_tests.test_key_item_pocket(key_items, pkmn.game.CRYSTAL)
 end
 
 function test_crystal_ball_pocket()
-    local balls = pkmn.item_list("Balls", "Crystal")
-    gen2_items_tests.test_ball_pocket(balls, "Crystal")
+    local balls = pkmn.item_list("Balls", pkmn.game.CRYSTAL)
+    gen2_items_tests.test_ball_pocket(balls, pkmn.game.CRYSTAL)
 end
 
 function test_crystal_tmhm_pocket()
-    local tmhm = pkmn.item_list("TM/HM", "Crystal")
-    gen2_items_tests.test_tmhm_pocket(tmhm, "Crystal")
+    local tmhm = pkmn.item_list("TM/HM", pkmn.game.CRYSTAL)
+    gen2_items_tests.test_tmhm_pocket(tmhm, pkmn.game.CRYSTAL)
 end
 
 function test_crystal_pc()
-    local pc = pkmn.item_list("PC", "Crystal")
-    gen2_items_tests.test_pc(pc, "Crystal")
+    local pc = pkmn.item_list("PC", pkmn.game.CRYSTAL)
+    gen2_items_tests.test_pc(pc, pkmn.game.CRYSTAL)
 end
 
 function test_crystal_item_bag()
-    local bag = pkmn.item_bag("Crystal")
-    gen2_items_tests.test_item_bag(bag, "Crystal")
+    local bag = pkmn.item_bag(pkmn.game.CRYSTAL)
+    gen2_items_tests.test_item_bag(bag, pkmn.game.CRYSTAL)
 end

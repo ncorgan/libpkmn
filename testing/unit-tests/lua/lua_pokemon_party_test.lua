@@ -15,8 +15,8 @@ local pokemon_party_tests = require("pokemon_party_tests")
 ---
 
 function test_red_pokemon_party()
-    party = pkmn.pokemon_party("Red")
-    pokemon_party_tests.test_pokemon_party(party, "Red")
+    party = pkmn.pokemon_party(pkmn.game.RED)
+    pokemon_party_tests.test_pokemon_party(party, pkmn.game.RED)
 end
 
 ---
@@ -24,8 +24,8 @@ end
 ---
 
 function test_blue_pokemon_party()
-    party = pkmn.pokemon_party("Blue")
-    pokemon_party_tests.test_pokemon_party(party, "Blue")
+    party = pkmn.pokemon_party(pkmn.game.BLUE)
+    pokemon_party_tests.test_pokemon_party(party, pkmn.game.BLUE)
 end
 
 ---
@@ -33,8 +33,8 @@ end
 ---
 
 function test_yellow_pokemon_party()
-    party = pkmn.pokemon_party("Yellow")
-    pokemon_party_tests.test_pokemon_party(party, "Yellow")
+    party = pkmn.pokemon_party(pkmn.game.YELLOW)
+    pokemon_party_tests.test_pokemon_party(party, pkmn.game.YELLOW)
 end
 
 ---
@@ -42,8 +42,8 @@ end
 ---
 
 function test_gold_pokemon_party()
-    party = pkmn.pokemon_party("Gold")
-    pokemon_party_tests.test_pokemon_party(party, "Gold")
+    party = pkmn.pokemon_party(pkmn.game.GOLD)
+    pokemon_party_tests.test_pokemon_party(party, pkmn.game.GOLD)
 end
 
 ---
@@ -51,8 +51,8 @@ end
 ---
 
 function test_silver_pokemon_party()
-    party = pkmn.pokemon_party("Silver")
-    pokemon_party_tests.test_pokemon_party(party, "Silver")
+    party = pkmn.pokemon_party(pkmn.game.SILVER)
+    pokemon_party_tests.test_pokemon_party(party, pkmn.game.SILVER)
 end
 
 ---
@@ -60,8 +60,8 @@ end
 ---
 
 function test_crystal_pokemon_party()
-    party = pkmn.pokemon_party("Crystal")
-    pokemon_party_tests.test_pokemon_party(party, "Crystal")
+    party = pkmn.pokemon_party(pkmn.game.CRYSTAL)
+    pokemon_party_tests.test_pokemon_party(party, pkmn.game.CRYSTAL)
 end
 
 ---
@@ -69,8 +69,8 @@ end
 ---
 
 function test_ruby_pokemon_party()
-    party = pkmn.pokemon_party("Ruby")
-    pokemon_party_tests.test_pokemon_party(party, "Ruby")
+    party = pkmn.pokemon_party(pkmn.game.RUBY)
+    pokemon_party_tests.test_pokemon_party(party, pkmn.game.RUBY)
 end
 
 ---
@@ -78,8 +78,8 @@ end
 ---
 
 function test_sapphire_pokemon_party()
-    party = pkmn.pokemon_party("Sapphire")
-    pokemon_party_tests.test_pokemon_party(party, "Sapphire")
+    party = pkmn.pokemon_party(pkmn.game.SAPPHIRE)
+    pokemon_party_tests.test_pokemon_party(party, pkmn.game.SAPPHIRE)
 end
 
 ---
@@ -87,8 +87,8 @@ end
 ---
 
 function test_emerald_pokemon_party()
-    party = pkmn.pokemon_party("Emerald")
-    pokemon_party_tests.test_pokemon_party(party, "Emerald")
+    party = pkmn.pokemon_party(pkmn.game.EMERALD)
+    pokemon_party_tests.test_pokemon_party(party, pkmn.game.EMERALD)
 end
 
 ---
@@ -96,8 +96,8 @@ end
 ---
 
 function test_firered_pokemon_party()
-    party = pkmn.pokemon_party("FireRed")
-    pokemon_party_tests.test_pokemon_party(party, "FireRed")
+    party = pkmn.pokemon_party(pkmn.game.FIRERED)
+    pokemon_party_tests.test_pokemon_party(party, pkmn.game.FIRERED)
 end
 
 ---
@@ -105,8 +105,8 @@ end
 ---
 
 function test_leafgreen_pokemon_party()
-    party = pkmn.pokemon_party("LeafGreen")
-    pokemon_party_tests.test_pokemon_party(party, "LeafGreen")
+    party = pkmn.pokemon_party(pkmn.game.LEAFGREEN)
+    pokemon_party_tests.test_pokemon_party(party, pkmn.game.LEAFGREEN)
 end
 
 ---
@@ -114,8 +114,8 @@ end
 ---
 
 function test_colosseum_pokemon_party()
-    party = pkmn.pokemon_party("Colosseum")
-    pokemon_party_tests.test_pokemon_party(party, "Colosseum")
+    party = pkmn.pokemon_party(pkmn.game.COLOSSEUM)
+    pokemon_party_tests.test_pokemon_party(party, pkmn.game.COLOSSEUM)
 end
 
 ---
@@ -123,8 +123,8 @@ end
 ---
 
 function test_xd_pokemon_party()
-    party = pkmn.pokemon_party("XD")
-    pokemon_party_tests.test_pokemon_party(party, "XD")
+    party = pkmn.pokemon_party(pkmn.game.XD)
+    pokemon_party_tests.test_pokemon_party(party, pkmn.game.XD)
 end
 
 local runner = luaunit.LuaUnit.new()

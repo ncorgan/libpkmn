@@ -158,7 +158,7 @@ end
 function test_fling_power()
     -- Test invalid parameters.
 
-    luaunit.assertError(pkmn.calculations.fling_power, "Not an item")
+    luaunit.assertError(pkmn.calculations.fling_power, pkmn.item.NONE)
 
     -- Test expected results.
 
@@ -1096,7 +1096,7 @@ function test_natural_gift()
 
     luaunit.assertError(
         pkmn.calculations.natural_gift_stats,
-        "Potion",
+        pkmn.item.POTION,
         4
     )
 
