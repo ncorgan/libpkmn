@@ -22,7 +22,7 @@ def generate_lua_enum(header_path, output_dir):
     for enum in header.enums:
         enum_name = enum["name"][2:]
         filename = "{0}.lua".format(enum_name)
-        output_text= """--
+        output_text = """--
 -- Copyright (c) 2018 Nicholas Corgan (n.corgan@gmail.com)
 --
 -- Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
@@ -54,7 +54,7 @@ def generate_python_enum(header_path, output_dir):
     for enum in header.enums:
         enum_name = enum["name"][2:]
         filename = "{0}.py".format(PYTHON_REPLACEMENT_FILENAMES.get(enum_name, enum_name))
-        output_text= """#!/usr/bin/env python
+        output_text = """#!/usr/bin/env python
 #
 # Copyright (c) 2018 Nicholas Corgan (n.corgan@gmail.com)
 #
@@ -69,11 +69,40 @@ def generate_python_enum(header_path, output_dir):
         with open(output_path, "w") as f:
             f.write(output_text)
 
+def generate_ruby_enum(header_path, output_dir):
+    header = CppHeaderParser.CppHeader(header_path)
+    for enum in header.enums:
+        enum_name = enum["name"][2:]
+        enum_name = enum_name[0].upper() + ''.join(x for x in enum_name.title()[1:] if not (x.isspace() or x == '_'))
+        filename = "{0}.rb".format(enum_name)
+        output_text = """#!/usr/bin/ruby
+#
+# Copyright (c) 2018 Nicholas Corgan (n.corgan@gmail.com)
+#
+# Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
+# or copy at http://opensource.org/licenses/MIT)
+#
+
+module PKMN
+    module {0}""".format(enum_name)
+
+        for value in enum["values"]:
+            output_text += "\n        {0} = {1}".format(value["name"], value["value"])
+
+        output_text += """
+    end
+end"""
+
+        output_path = os.path.join(output_dir, filename)
+        with open(output_path, "w") as f:
+            f.write(output_text)
+
 if __name__ == "__main__":
 
     parser = OptionParser()
     parser.add_option("--lua", action="store_true", default=False)
     parser.add_option("--python", action="store_true", default=False)
+    parser.add_option("--ruby", action="store_true", default=False)
     parser.add_option("--enum-dir", type="string", help="Enum directory")
     parser.add_option("--output-dir", type="string", help="Where in the build directory to output files")
     (options, args) = parser.parse_args()
@@ -93,3 +122,5 @@ if __name__ == "__main__":
                     generate_lua_enum(os.path.join(root, filename), output_dir)
                 if options.python:
                     generate_python_enum(os.path.join(root, filename), output_dir)
+                if options.ruby:
+                    generate_ruby_enum(os.path.join(root, filename), output_dir)

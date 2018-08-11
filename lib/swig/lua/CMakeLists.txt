@@ -5,6 +5,8 @@
 # or copy at http://opensource.org/licenses/MIT)
 #
 
+FILE(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/pkmn)
+
 INCLUDE(SWIGLua)
 
 # Get list of enum modules to add to dependencies, as well as the import
@@ -69,14 +71,14 @@ SET(lua_enums_deps
 )
 FOREACH(enum ${ENUM_LIST})
     LIST(APPEND lua_enums
-        "${CMAKE_CURRENT_BINARY_DIR}/${enum}.lua"
+        "${CMAKE_CURRENT_BINARY_DIR}/pkmn/${enum}.lua"
     )
 ENDFOREACH()
 
 ADD_CUSTOM_COMMAND(
     DEPENDS ${lua_enums_deps}
     OUTPUT ${lua_enums}
-    COMMAND ${PYTHON_EXECUTABLE} ${PKMN_SOURCE_DIR}/scripts/generate_swig_enums.py --lua --enum-dir=${PKMN_SOURCE_DIR}/include/pkmn/enums --output-dir=${CMAKE_CURRENT_BINARY_DIR}
+    COMMAND ${PYTHON_EXECUTABLE} ${PKMN_SOURCE_DIR}/scripts/generate_swig_enums.py --lua --enum-dir=${PKMN_SOURCE_DIR}/include/pkmn/enums --output-dir=${CMAKE_CURRENT_BINARY_DIR}/pkmn
     COMMENT "Generating Lua enums"
 )
 ADD_CUSTOM_TARGET(
@@ -86,6 +88,6 @@ ADD_CUSTOM_TARGET(
 
 INSTALL(
     FILES ${lua_enums}
-    DESTINATION ${LUA_SHARE_INSTALL_DIR}
+    DESTINATION ${LUA_SHARE_INSTALL_DIR}/pkmn
     COMPONENT Lua
 )

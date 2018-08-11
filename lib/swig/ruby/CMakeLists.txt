@@ -20,6 +20,19 @@ ADD_CUSTOM_TARGET(
     DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/ruby_CamelCase.i
 )
 
+# Get list of enum modules to add to dependencies, as well as the import
+# string.
+EXECUTE_PROCESS(
+    COMMAND ${PYTHON_EXECUTABLE} ${PKMN_SOURCE_DIR}/scripts/print_enum_names_for_cmake.py --enum-dir=${PKMN_SOURCE_DIR}/include/pkmn/enums --print-as-cmake-list-ruby
+    OUTPUT_VARIABLE ENUM_LIST OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+SET(ENUM_LIST ${ENUM_LIST} CACHE STRING "Enum list")
+EXECUTE_PROCESS(
+    COMMAND ${PYTHON_EXECUTABLE} ${PKMN_SOURCE_DIR}/scripts/print_enum_names_for_cmake.py --enum-dir=${PKMN_SOURCE_DIR}/include/pkmn/enums --print-as-ruby-imports
+    OUTPUT_VARIABLE ENUM_IMPORT OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+SET(ENUM_IMPORT ${ENUM_IMPORT} CACHE STRING "Enum import")
+
 INCLUDE(SWIGRuby)
 
 # Copy top-level .rb file for unit tests

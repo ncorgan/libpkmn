@@ -12,6 +12,7 @@ PKMN_RUBY_INIT
 
 %include <std_string.i>
 
+%import <Enums.i>
 %import <STL.i>
 
 %{

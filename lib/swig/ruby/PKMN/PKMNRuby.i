@@ -15,38 +15,18 @@ PKMN_RUBY_INIT
 %{
     #include "private_exports.hpp"
 
-    #include <pkmn/enums/game.hpp>
-    #include <pkmn/enums/gender.hpp>
-    #include <pkmn/enums/language.hpp>
-    #include <pkmn/enums/stat.hpp>
+    #include <pkmn/enums/enum_to_string.hpp>
 %}
 
 namespace pkmn { namespace priv {
     void initialize_database_connection();
 }}
 
+%import <Enums.i>
 %import <Database.i>
 %import <STL.i>
 
-// Enums
-// (TODO: this turns into PKMN::gender_MALE, add a script to put raw enums in
-// a struct and point SWIG at that
-%include <pkmn/enums/ability.hpp>
-%include <pkmn/enums/ball.hpp>
-%include <pkmn/enums/egg_group.hpp>
-%include <pkmn/enums/game.hpp>
-%include <pkmn/enums/gender.hpp>
-%include <pkmn/enums/item.hpp>
-%include <pkmn/enums/language.hpp>
-
-%rename(SING) SING_MOVE;
-%include <pkmn/enums/move.hpp>
-
-%include <pkmn/enums/move_damage_class.hpp>
-%include <pkmn/enums/nature.hpp>
-%include <pkmn/enums/species.hpp>
-%include <pkmn/enums/stat.hpp>
-%include <pkmn/enums/type.hpp>
+%include <pkmn/enums/enum_to_string.hpp>
 
 // Attribute Maps
 %include <ruby/pkmn_attribute_maps.i>

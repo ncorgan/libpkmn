@@ -10,6 +10,7 @@
 %include <ruby/ruby_init.i>
 PKMN_RUBY_INIT
 
+%import <Enums.i>
 %import <STL.i>
 %import <PKMNRuby.i>
 
