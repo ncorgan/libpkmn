@@ -103,7 +103,7 @@ function items_tests.item_list_test_setting_items(items, item_names)
         item_names[4]
     )
 
-    items[2].item = "None"
+    items[2].item = pkmn.item.NONE
 
     luaunit.assertEquals(items.num_items, 2)
     luaunit.assertEquals(items[1].item, item_names[1])
@@ -113,8 +113,8 @@ function items_tests.item_list_test_setting_items(items, item_names)
     luaunit.assertEquals(items[3].item, pkmn.item.NONE)
     luaunit.assertEquals(items[3].amount, 0)
 
-    items[1].item = "None"
-    items[1].item = "None"
+    items[1].item = pkmn.item.NONE
+    items[1].item = pkmn.item.NONE
 
     luaunit.assertEquals(items.num_items, 0)
     for item_index = 1, 3

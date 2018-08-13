@@ -69,18 +69,28 @@ function gen2_pokemon_tests.common(game, species)
     local pokemon = pkmn.pokemon(species, game, "", 30)
     local test_params =
     {
-        valid_ball = "Great Ball",
-        invalid_balls = {"Great Ball"},
+        valid_ball = pkmn.item.GREAT_BALL,
+        invalid_balls = {pkmn.item.GREAT_BALL},
 
-        valid_item = "Berry",
-        invalid_items = {"Razz Berry", "Bicycle"},
+        valid_item = pkmn.item.BERRY,
+        invalid_items = {pkmn.item.RAZZ_BERRY, pkmn.item.BICYCLE},
 
-        expected_original_location = pkmn.stat.SPECIAL,
+        expected_original_location = "Special",
         valid_locations = {"Sprout Tower", "Tohjo Falls"},
         invalid_locations = {"Littleroot Town", "Petalburg Woods"},
 
-        valid_moves = {"Slash", "Flamethrower", "Return", "Fire Blast"},
-        invalid_moves = {"Frenzy Plant", "Roost"},
+        valid_moves =
+        {
+            pkmn.move.SLASH,
+            pkmn.move.FLAMETHROWER,
+            pkmn.move.RETURN,
+            pkmn.move.FIRE_BLAST
+        },
+        invalid_moves =
+        {
+            pkmn.move.FRENZY_PLANT,
+            pkmn.move.ROOST
+        },
 
         valid_original_games = {pkmn.game.GOLD},
         invalid_original_games = {pkmn.game.GOLD}
@@ -90,15 +100,15 @@ function gen2_pokemon_tests.common(game, species)
 
     -- Gender is tied to IVs, so make sure the abstraction reflects that.
 
-    pokemon.gender = "Male"
+    pokemon.gender = pkmn.gender.MALE
     luaunit.assertEquals(pokemon.IVs[pkmn.stat.ATTACK], 15)
-    pokemon.gender = "Female"
+    pokemon.gender = pkmn.gender.FEMALE
     luaunit.assertTrue(pokemon.IVs[pkmn.stat.ATTACK] < 15)
 
     pokemon.IVs[pkmn.stat.ATTACK] = 0
-    luaunit.assertEquals(pokemon.gender, "Female")
+    luaunit.assertEquals(pokemon.gender, pkmn.gender.FEMALE)
     pokemon.IVs[pkmn.stat.ATTACK] = 15
-    luaunit.assertEquals(pokemon.gender, "Male")
+    luaunit.assertEquals(pokemon.gender, pkmn.gender.MALE)
 
     -- Shininess is tied to IVs, so make sure the abstraction reflects that.
 

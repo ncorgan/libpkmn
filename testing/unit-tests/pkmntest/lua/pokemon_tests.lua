@@ -14,30 +14,38 @@ local pokemon_tests = {}
 
 pokemon_tests.GEN1_POKEMON_WITH_XY_MEGA_FORMS =
 {
-    "Venusaur", "Blastoise", "Alakazam", "Gengar",
-    "Kangaskhan", "Pinsir", "Gyarados", "Aerodactyl"
+    pkmn.species.VENUSAUR, pkmn.species.BLASTOISE,
+    pkmn.species.ALAKAZAM, pkmn.species.GENGAR,
+    pkmn.species.KANGASKHAN, pkmn.species.PINSIR,
+    pkmn.species.GYARADOS, pkmn.species.AERODACTYL
 }
 
 pokemon_tests.GEN1_POKEMON_WITH_ORAS_MEGA_FORMS =
 {
-    "Beedrill", "Pidgeot", "Slowbro"
+    pkmn.species.BEEDRILL, pkmn.species.PIDGEOT, pkmn.species.SLOWBRO
 }
 
 pokemon_tests.GEN2_POKEMON_WITH_XY_MEGA_FORMS =
 {
-    "Ampharos", "Scizor", "Heracross", "Houndoom", "Tyranitar"
+    pkmn.species.AMPHAROS, pkmn.species.SCIZOR,
+    pkmn.species.HERACROSS, pkmn.species.HOUNDOOM, pkmn.species.TYRANITAR
 }
 
 pokemon_tests.GEN3_POKEMON_WITH_XY_MEGA_FORMS =
 {
-    "Blaziken", "Gardevoir", "Mawile", "Aggron", "Medicham",
-    "Manectric", "Banette", "Absol", "Latias", "Latios", "Garchomp"
+    pkmn.species.BLAZIKEN, pkmn.species.GARDEVOIR,
+    pkmn.species.MAWILE, pkmn.species.AGGRON, pkmn.species.MEDICHAM,
+    pkmn.species.MANECTRIC, pkmn.species.BANETTE,
+    pkmn.species.ABSOL, pkmn.species.LATIAS,
+    pkmn.species.LATIOS, pkmn.species.GARCHOMP
 }
 
 pokemon_tests.GEN3_POKEMON_WITH_ORAS_MEGA_FORMS =
 {
-    "Sceptile", "Swampert", "Sableye", "Sharpedo", "Camerupt",
-    "Altaria", "Glalie", "Salamence", "Metagross", "Rayquaza"
+    pkmn.species.SCEPTILE, pkmn.species.SWAMPERT,
+    pkmn.species.SABLEYE, pkmn.species.SHARPEDO, pkmn.species.CAMERUPT,
+    pkmn.species.ALTARIA, pkmn.species.GLALIE, pkmn.species.SALAMENCE,
+    pkmn.species.METAGROSS, pkmn.species.RAYQUAZA
 }
 
 -- Stupid hacky functions because Luaunit can't check setters.
@@ -214,7 +222,7 @@ function pokemon_tests.gen1_forms_test(game)
     end
 
     -- Hardcode Mega X/Y cases.
-    local species = {"Charizard", "Mewtwo"}
+    local species = {pkmn.species.CHARIZARD, pkmn.species.MEWTWO}
     local forms = {"Mega X", "Mega Y"}
     for species_index = 1, 2
     do
@@ -269,9 +277,9 @@ function pokemon_tests.gen2_forms_test(game)
     -- Check that Mega forms only work in their given games.
     if game == pkmn.game.OMEGA_RUBY or game == pkmn.game.ALPHA_SAPPHIRE
     then
-        pkmn.pokemon("Steelix", game, "Mega", 100)
+        pkmn.pokemon(pkmn.species.STEELIX, game, "Mega", 100)
     else
-        luaunit.assertError(pkmn.pokemon, "Steelix", game, "Mega", 100)
+        luaunit.assertError(pkmn.pokemon, pkmn.species.STEELIX, game, "Mega", 100)
     end
 
     -- Spiky-eared Pikchu should only work in HG/SS.
@@ -343,7 +351,7 @@ function pokemon_tests.gen3_forms_test(game)
 
     for pokemon_index = 1, #pokemon_tests.GEN3_POKEMON_WITH_ORAS_MEGA_FORMS
     do
-        if game == pkmn.game.OMEGA_RUBY or game == pkmn.game.ALPHA_SAPPHIRE
+        if (game == pkmn.game.OMEGA_RUBY) or (game == pkmn.game.ALPHA_SAPPHIRE)
         then
             pkmn.pokemon(
                 pokemon_tests.GEN3_POKEMON_WITH_ORAS_MEGA_FORMS[pokemon_index],
@@ -375,7 +383,7 @@ function pokemon_tests.gen3_forms_test(game)
     end
 
     -- Primal Reversion should only work in OR/AS.
-    local species = {"Groudon", "Kyogre"}
+    local species = {pkmn.species.GROUDON, pkmn.species.KYOGRE}
     for species_index = 1, 2
     do
         local pokemon = pkmn.pokemon(species[species_index], game, "", 70)
@@ -396,7 +404,8 @@ function pokemon_tests.gen3_forms_test(game)
     -- In Generation III, Deoxys's form is game-specific.
     if generation == 3
     then
-        if game == pkmn.game.RUBY or game == pkmn.game.SAPPHIRE or game == pkmn.game.COLOSSEUM or game == pkmn.game.XD
+        if (game == pkmn.game.RUBY) or (game == pkmn.game.SAPPHIRE) or
+           (game == pkmn.game.COLOSSEUM) or (game == pkmn.game.XD)
         then
             local deoxys = pkmn.pokemon(pkmn.species.DEOXYS, game, "Normal", 70)
             if game ~= pkmn.game.COLOSSEUM and game ~= pkmn.game.XD
@@ -410,29 +419,29 @@ function pokemon_tests.gen3_forms_test(game)
 
         if game == pkmn.game.FIRERED
         then
-            local deoxys = pkmn.pokemon(pkmn.species.DEOXYS, game, pkmn.stat.ATTACK, 70)
+            local deoxys = pkmn.pokemon(pkmn.species.DEOXYS, game, "Attack", 70)
             luaunit.assertTrue(pkmntest_utils.file_exists(deoxys.icon_filepath))
             luaunit.assertTrue(pkmntest_utils.file_exists(deoxys.sprite_filepath))
         else
-            luaunit.assertError(pkmn.pokemon, pkmn.species.DEOXYS, game, pkmn.stat.ATTACK, 70)
+            luaunit.assertError(pkmn.pokemon, pkmn.species.DEOXYS, game, "Attack", 70)
         end
 
         if game == pkmn.game.LEAFGREEN
         then
-            local deoxys = pkmn.pokemon(pkmn.species.DEOXYS, game, pkmn.stat.DEFENSE, 70)
+            local deoxys = pkmn.pokemon(pkmn.species.DEOXYS, game, "Defense", 70)
             luaunit.assertTrue(pkmntest_utils.file_exists(deoxys.icon_filepath))
             luaunit.assertTrue(pkmntest_utils.file_exists(deoxys.sprite_filepath))
         else
-            luaunit.assertError(pkmn.pokemon, pkmn.species.DEOXYS, game, pkmn.stat.DEFENSE, 70)
+            luaunit.assertError(pkmn.pokemon, pkmn.species.DEOXYS, game, "Defense", 70)
         end
 
         if game == pkmn.game.EMERALD
         then
-            local deoxys = pkmn.pokemon(pkmn.species.DEOXYS, game, pkmn.stat.SPEED, 70)
+            local deoxys = pkmn.pokemon(pkmn.species.DEOXYS, game, "Speed", 70)
             luaunit.assertTrue(pkmntest_utils.file_exists(deoxys.icon_filepath))
             luaunit.assertTrue(pkmntest_utils.file_exists(deoxys.sprite_filepath))
         else
-            luaunit.assertError(pkmn.pokemon, pkmn.species.DEOXYS, game, pkmn.stat.SPEED, 70)
+            luaunit.assertError(pkmn.pokemon, pkmn.species.DEOXYS, game, "Speed", 70)
         end
     else
         local deoxys_forms = pkmn.database.pokemon_entry(pkmn.species.DEOXYS, pkmn.game.OMEGA_RUBY, "").forms
@@ -464,30 +473,30 @@ end
 
 function pokemon_tests.gender_test(game)
     -- Single-gender Pokémon
-    local nidorina = pkmn.pokemon("Nidorina", game, "", 50)
-    luaunit.assertEquals(nidorina.gender, "Female")
-    nidorina.gender = "Female"
-    luaunit.assertError(pokemon_tests.pokemon_set_gender, nidorina, "Male")
-    luaunit.assertError(pokemon_tests.pokemon_set_gender, nidorina, "Genderless")
+    local nidorina = pkmn.pokemon(pkmn.species.NIDORINA, game, "", 50)
+    luaunit.assertEquals(nidorina.gender, pkmn.gender.FEMALE)
+    nidorina.gender = pkmn.gender.FEMALE
+    luaunit.assertError(pokemon_tests.pokemon_set_gender, nidorina, pkmn.gender.MALE)
+    luaunit.assertError(pokemon_tests.pokemon_set_gender, nidorina, pkmn.gender.GENDERLESS)
 
-    local nidorino = pkmn.pokemon("Nidorino", game, "", 50)
-    luaunit.assertEquals(nidorino.gender, "Male")
-    nidorino.gender = "Male"
-    luaunit.assertError(pokemon_tests.pokemon_set_gender, nidorino, "Female")
-    luaunit.assertError(pokemon_tests.pokemon_set_gender, nidorino, "Genderless")
+    local nidorino = pkmn.pokemon(pkmn.species.NIDORINO, game, "", 50)
+    luaunit.assertEquals(nidorino.gender, pkmn.gender.MALE)
+    nidorino.gender = pkmn.gender.MALE
+    luaunit.assertError(pokemon_tests.pokemon_set_gender, nidorino, pkmn.gender.FEMALE)
+    luaunit.assertError(pokemon_tests.pokemon_set_gender, nidorino, pkmn.gender.GENDERLESS)
 
-    local magnemite = pkmn.pokemon("Magnemite", game, "", 50)
-    luaunit.assertEquals(magnemite.gender, "Genderless")
-    magnemite.gender = "Genderless"
-    luaunit.assertError(pokemon_tests.pokemon_set_gender, magnemite, "Male")
-    luaunit.assertError(pokemon_tests.pokemon_set_gender, magnemite, "Female")
+    local magnemite = pkmn.pokemon(pkmn.species.MAGNEMITE, game, "", 50)
+    luaunit.assertEquals(magnemite.gender, pkmn.gender.GENDERLESS)
+    magnemite.gender = pkmn.gender.GENDERLESS
+    luaunit.assertError(pokemon_tests.pokemon_set_gender, magnemite, pkmn.gender.MALE)
+    luaunit.assertError(pokemon_tests.pokemon_set_gender, magnemite, pkmn.gender.FEMALE)
 
     local mixed_pokemon =
     {
         pkmn.species.CHARMANDER, -- 87.5% male
-        "Growlithe",  -- 75% male
-        "Pidgey",     -- 50% male
-        "Vulpix"      -- 25% male
+        pkmn.species.GROWLITHE,  -- 75% male
+        pkmn.species.PIDGEY,     -- 50% male
+        pkmn.species.VULPIX      -- 25% male
     }
     for pokemon_index = 1, #mixed_pokemon
     do
@@ -497,11 +506,11 @@ function pokemon_tests.gender_test(game)
                             "",
                             50
                         )
-        pokemon.gender = "Female"
-        luaunit.assertEquals(pokemon.gender, "Female")
-        pokemon.gender = "Male"
-        luaunit.assertEquals(pokemon.gender, "Male")
-        luaunit.assertError(pokemon_tests.pokemon_set_gender, pokemon, "Genderless")
+        pokemon.gender = pkmn.gender.FEMALE
+        luaunit.assertEquals(pokemon.gender, pkmn.gender.FEMALE)
+        pokemon.gender = pkmn.gender.MALE
+        luaunit.assertEquals(pokemon.gender, pkmn.gender.MALE)
+        luaunit.assertError(pokemon_tests.pokemon_set_gender, pokemon, pkmn.gender.GENDERLESS)
     end
 end
 
@@ -537,7 +546,7 @@ function pokemon_tests.check_initial_values(pokemon)
     if generation >= 2
     then
         luaunit.assertEquals(pokemon.held_item, pkmn.item.NONE)
-        luaunit.assertEquals(pokemon.original_trainer_gender, "Male")
+        luaunit.assertEquals(pokemon.original_trainer_gender, pkmn.gender.MALE)
         luaunit.assertEquals(
             pokemon.current_trainer_friendship,
             pokemon.database_entry.base_friendship
@@ -546,11 +555,11 @@ function pokemon_tests.check_initial_values(pokemon)
         luaunit.assertEquals(pokemon.level_met, 30)
     else
         -- Default values since accessing a Lua variable shouldn't throw an exception.
-        luaunit.assertEquals(pokemon.held_item, "")
-        luaunit.assertEquals(pokemon.original_trainer_gender, "")
+        luaunit.assertEquals(pokemon.held_item, pkmn.item.NONE)
+        luaunit.assertEquals(pokemon.original_trainer_gender, pkmn.gender.NONE)
         luaunit.assertEquals(pokemon.current_trainer_friendship, 0)
-        luaunit.assertEquals(pokemon.ball, "")
-        luaunit.assertEquals(pokemon.original_game, "")
+        luaunit.assertEquals(pokemon.ball, pkmn.ball.NONE)
+        luaunit.assertEquals(pokemon.original_game, pkmn.game.NONE)
     end
 
     if generation >= 3
@@ -563,12 +572,12 @@ function pokemon_tests.check_initial_values(pokemon)
             pokemon.original_trainer_id,
             pkmn.pokemon.DEFAULT_TRAINER_ID
         )
-        luaunit.assertEquals(pokemon.ball, pkmn.BALL.POKE_BALL)
+        luaunit.assertEquals(pokemon.ball, pkmn.ball.POKE_BALL)
 
         -- There is no distinction between Colosseum and XD in the game storage.
         if pokemon.game == pkmn.game.COLOSSEUM or pokemon.game == pkmn.game.XD
         then
-            luaunit.assertEquals(pokemon.original_game, "Colosseum/XD")
+            luaunit.assertEquals(pokemon.original_game, pkmn.game.COLOSSEUM)
         else
             luaunit.assertEquals(pokemon.original_game, pokemon.game)
         end
@@ -584,9 +593,9 @@ function pokemon_tests.check_initial_values(pokemon)
 
     if generation >= 5
     then
-        luaunit.assertEquals(pokemon.nickname, pokemon.species)
+        luaunit.assertEquals(pokemon.nickname, pokemon.database_entry.species_name)
     else
-        luaunit.assertEquals(pokemon.nickname, string.upper(pokemon.species))
+        luaunit.assertEquals(pokemon.nickname, string.upper(pokemon.database_entry.species_name))
     end
 end
 
@@ -684,16 +693,16 @@ function pokemon_tests.check_initial_maps(pokemon)
 
         luaunit.assertEquals(#pokemon.markings, #pokemon.markings.keys)
 
-        luaunit.assertTrue(pokemon.markings:has_key("Circle"))
-        luaunit.assertTrue(pokemon.markings:has_key("Triangle"))
-        luaunit.assertTrue(pokemon.markings:has_key("Square"))
-        luaunit.assertTrue(pokemon.markings:has_key("Heart"))
+        luaunit.assertTrue(pokemon.markings:has_key(pkmn.marking.CIRCLE))
+        luaunit.assertTrue(pokemon.markings:has_key(pkmn.marking.TRIANGLE))
+        luaunit.assertTrue(pokemon.markings:has_key(pkmn.marking.SQUARE))
+        luaunit.assertTrue(pokemon.markings:has_key(pkmn.marking.HEART))
         if generation >= 4
         then
-            luaunit.assertTrue(pokemon.markings:has_key("Star"))
+            luaunit.assertTrue(pokemon.markings:has_key(pkmn.marking.STAR))
             luaunit.assertTrue(pokemon.markings:has_key(pkmn.game.DIAMOND))
         else
-            luaunit.assertFalse(pokemon.markings:has_key("Star"))
+            luaunit.assertFalse(pokemon.markings:has_key(pkmn.marking.STAR))
             luaunit.assertFalse(pokemon.markings:has_key(pkmn.game.DIAMOND))
         end
 
@@ -730,7 +739,7 @@ function pokemon_tests.test_image_filepaths(pokemon)
 
     if generation >= 2
     then
-        local genders = {"Male", "Female"}
+        local genders = {pkmn.gender.MALE, pkmn.gender.FEMALE}
         local is_shiny_bools = {true, false}
 
         for gender_index = 1, #genders
@@ -752,12 +761,12 @@ function pokemon_tests.test_setting_ability(pokemon)
 
     if generation >= 3
     then
-        luaunit.assertNotEquals(pokemon.database_entry.abilities.first, "None")
+        luaunit.assertNotEquals(pokemon.database_entry.abilities.first, pkmn.ability.NONE)
 
         pokemon.ability = pokemon.database_entry.abilities.first
         luaunit.assertEquals(pokemon.ability, pokemon.database_entry.abilities.first)
 
-        if pokemon.database_entry.abilities.second ~= "None"
+        if pokemon.database_entry.abilities.second ~= pkmn.ability.NONE
         then
             pokemon.ability = pokemon.database_entry.abilities.second
             luaunit.assertEquals(pokemon.ability, pokemon.database_entry.abilities.second)
@@ -777,44 +786,44 @@ function pokemon_tests.test_setting_ability(pokemon)
         luaunit.assertError(
             pokemon_tests.pokemon_set_ability,
             pokemon,
-            "Wonder Guard"
+            pkmn.ability.WONDER_GUARD
         )
     else
         -- The getter has no error by convention.
-        luaunit.assertEquals(pokemon.ability, "")
+        luaunit.assertEquals(pokemon.ability, pkmn.ability.NONE)
 
         luaunit.assertError(
             pokemon_tests.pokemon_set_ability,
             pokemon,
-            "Wonder Guard"
+            pkmn.ability.WONDER_GUARD
         )
     end
 end
 
-function pokemon_tests.test_setting_ball(pokemon, valid_ball_name, invalid_ball_names)
+function pokemon_tests.test_setting_ball(pokemon, valid_ball, invalid_balls)
     local generation = pkmntest_utils.GAME_TO_GENERATION[pokemon.game]
 
     if generation >= 3
     then
-        pokemon.ball = valid_ball_name
-        luaunit.assertEquals(pokemon.ball, valid_ball_name)
+        pokemon.ball = valid_ball
+        luaunit.assertEquals(pokemon.ball, valid_ball)
 
-        for ball_index = 1, #invalid_ball_names
+        for ball_index = 1, #invalid_balls
         do
             luaunit.assertError(
                 pokemon_tests.pokemon_set_ball,
                 pokemon,
-                invalid_ball_names[ball_index]
+                invalid_balls[ball_index]
             )
         end
     else
         -- The getter shouldn't throw by convention, but the setter
         -- will.
-        luaunit.assertEquals(pokemon.ball, "")
+        luaunit.assertEquals(pokemon.ball, pkmn.ball.NONE)
         luaunit.assertError(
             pokemon_tests.pokemon_set_ball,
             pokemon,
-            "Great Ball"
+            pkmn.item.GREAT_BALL
         )
     end
 end
@@ -867,30 +876,30 @@ function pokemon_tests.test_setting_friendship(pokemon)
     end
 end
 
-function pokemon_tests.test_setting_item(pokemon, valid_item_name, invalid_item_names)
+function pokemon_tests.test_setting_item(pokemon, valid_item, invalid_items)
     local generation = pkmntest_utils.GAME_TO_GENERATION[pokemon.game]
 
     if generation >= 2
     then
-        pokemon.held_item = valid_item_name
-        luaunit.assertEquals(pokemon.held_item, valid_item_name)
+        pokemon.held_item = valid_item
+        luaunit.assertEquals(pokemon.held_item, valid_item)
 
-        for item_index = 1, #invalid_item_names
+        for item_index = 1, #invalid_items
         do
             luaunit.assertError(
                 pokemon_tests.pokemon_set_held_item,
                 pokemon,
-                invalid_item_names[item_index]
+                invalid_items[item_index]
             )
         end
     else
         -- The getter shouldn't throw by convention, but the setter
         -- will.
-        luaunit.assertEquals(pokemon.held_item, "")
+        luaunit.assertEquals(pokemon.held_item, pkmn.item.NONE)
         luaunit.assertError(
             pokemon_tests.pokemon_set_held_item,
             pokemon,
-            "Great item"
+            pkmn.item.GREAT_BALL
         )
     end
 end
@@ -1071,21 +1080,21 @@ function pokemon_tests.test_setting_markings(pokemon)
         luaunit.assertError(
             pokemon_tests.pokemon_set_marking,
             pokemon,
-            "Circle",
+            pkmn.marking.CIRCLE,
             true
         )
     end
 end
 
-function pokemon_tests.test_setting_moves(pokemon, valid_move_names, invalid_move_names)
-    luaunit.assertEquals(#valid_move_names, 4)
+function pokemon_tests.test_setting_moves(pokemon, valid_moves, invalid_moves)
+    luaunit.assertEquals(#valid_moves, 4)
 
-    for move_index = 1, #valid_move_names
+    for move_index = 1, #valid_moves
     do
-        pokemon.moves[move_index].move = valid_move_names[move_index]
-        luaunit.assertEquals(pokemon.moves[move_index].move, valid_move_names[move_index])
+        pokemon.moves[move_index].move = valid_moves[move_index]
+        luaunit.assertEquals(pokemon.moves[move_index].move, valid_moves[move_index])
 
-        local valid_move_entry = pkmn.database.move_entry(valid_move_names[move_index], pokemon.game)
+        local valid_move_entry = pkmn.database.move_entry(valid_moves[move_index], pokemon.game)
 
         pokemon.moves[move_index].pp = 0
         luaunit.assertEquals(pokemon.moves[move_index].pp, 0)
@@ -1094,13 +1103,13 @@ function pokemon_tests.test_setting_moves(pokemon, valid_move_names, invalid_mov
         pokemon.moves[move_index].pp = max_pp
         luaunit.assertEquals(pokemon.moves[move_index].pp, max_pp)
     end
-    for move_index = 1, #invalid_move_names
+    for move_index = 1, #invalid_moves
     do
         luaunit.assertError(
             pokemon_tests.pokemon_set_move,
             pokemon,
             1,
-            invalid_move_names[move_index]
+            invalid_moves[move_index]
         )
     end
 
@@ -1108,13 +1117,13 @@ function pokemon_tests.test_setting_moves(pokemon, valid_move_names, invalid_mov
         pokemon_tests.pokemon_set_move,
         pokemon,
         0,
-        valid_move_names[1]
+        valid_moves[1]
     )
     luaunit.assertError(
         pokemon_tests.pokemon_set_move,
         pokemon,
         6,
-        valid_move_names[1]
+        valid_moves[1]
     )
     luaunit.assertError(
         pokemon_tests.pokemon_set_move_pp,
@@ -1141,7 +1150,7 @@ function pokemon_tests.test_setting_original_game(pokemon, valid_games, invalid_
 
             if valid_games[game_index] == pkmn.game.COLOSSEUM or valid_games[game_index] == pkmn.game.XD
             then
-                luaunit.assertEquals(pokemon.original_game, "Colosseum/XD")
+                luaunit.assertEquals(pokemon.original_game, pkmn.game.COLOSSEUM)
             else
                 luaunit.assertEquals(pokemon.original_game, valid_games[game_index])
             end
@@ -1157,7 +1166,7 @@ function pokemon_tests.test_setting_original_game(pokemon, valid_games, invalid_
         end
     else
         -- The getter shouldn't throw by convention, but the setter will.
-        luaunit.assertEquals(pokemon.original_game, "")
+        luaunit.assertEquals(pokemon.original_game, pkmn.game.NONE)
         luaunit.assertError(
             pokemon_tests.pokemon_set_original_game,
             pokemon,
@@ -1301,22 +1310,22 @@ function pokemon_tests.test_setting_trainer_info(pokemon)
 
     if generation >= 2
     then
-        pokemon.original_trainer_gender = "Male"
-        luaunit.assertEquals(pokemon.original_trainer_gender, "Male")
+        pokemon.original_trainer_gender = pkmn.gender.MALE
+        luaunit.assertEquals(pokemon.original_trainer_gender, pkmn.gender.MALE)
 
-        pokemon.original_trainer_gender = "Female"
-        luaunit.assertEquals(pokemon.original_trainer_gender, "Female")
+        pokemon.original_trainer_gender = pkmn.gender.FEMALE
+        luaunit.assertEquals(pokemon.original_trainer_gender, pkmn.gender.FEMALE)
 
         luaunit.assertError(
             pokemon_tests.pokemon_set_original_trainer_gender,
             pokemon,
-            "Genderless"
+            pkmn.gender.GENDERLESS
         )
     else
         luaunit.assertError(
             pokemon_tests.pokemon_set_original_trainer_gender,
             pokemon,
-            "Male"
+            pkmn.gender.MALE
         )
     end
 

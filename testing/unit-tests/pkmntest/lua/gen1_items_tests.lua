@@ -1,5 +1,5 @@
 --
--- Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+-- Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
 --
 -- Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
 -- or copy at http://opensource.org/licenses/MIT)
@@ -13,15 +13,17 @@ local gen1_items_tests = {}
 
 gen1_items_tests.invalid_generation_items =
 {
-    "Amulet Coin", "Apicot Berry", "Air Mail",
-    "Air Balloon", "Aqua Suit"
+    pkmn.item.AMULET_COIN, pkmn.item.APICOT_BERRY, pkmn.item.AIR_MAIL,
+    pkmn.item.AIR_BALLOON, pkmn.item.AQUA_SUIT
 };
 
 
-gen1_items_tests.valid_item_names =
+gen1_items_tests.valid_items =
 {
-    pkmn.item.POTION, "Great Ball", "Ether", "PP Up",
-    "TM34", "Moon Stone", "Bicycle", "Full Heal"
+    pkmn.item.POTION, pkmn.item.GREAT_BALL,
+    pkmn.item.ETHER, pkmn.item.PP_UP,
+    pkmn.item.TM34, pkmn.item.MOON_STONE,
+    pkmn.item.BICYCLE, pkmn.item.FULL_HEAL
 }
 
 function gen1_items_tests.test_item_list_common(items, game)
@@ -40,15 +42,18 @@ function gen1_items_tests.test_item_list_common(items, game)
     -- Start adding and removing stuff, and make sure the numbers are accurate.
     items_tests.item_list_test_setting_items(
         items,
-        gen1_items_tests.valid_item_names
+        gen1_items_tests.valid_items
     )
     items_tests.item_list_test_add_remove(
         items,
-        gen1_items_tests.valid_item_names
+        gen1_items_tests.valid_items
     )
 
     local full_item_list = pkmn.database.get_item_list(game)
     luaunit.assertEquals(#items.valid_items, #full_item_list)
+
+    local full_item_name_list = pkmn.database.get_item_name_list(game)
+    luaunit.assertEquals(#items.valid_items, #full_item_name_list)
 end
 
 function gen1_items_tests.test_item_list(items, game)
@@ -87,15 +92,20 @@ function gen1_items_tests.test_item_bag(bag, game)
     -- Make sure adding items through the bag adds to the pocket.
     luaunit.assertEquals(bag["Items"].num_items, 0)
 
-    local items = {pkmn.item.POTION, "Great Ball", "Ether", "PP Up",
-                   "TM34", "Moon Stone", "Bicycle", "Full Heal"}
-    for i = 1, #items
+    local items =
+    {
+        pkmn.item.POTION, pkmn.item.GREAT_BALL,
+        pkmn.item.ETHER, pkmn.item.PP_UP,
+        pkmn.item.TM34, pkmn.item.MOON_STONE,
+        pkmn.item.BICYCLE, pkmn.item.FULL_HEAL
+    }
+    for i = 1, #gen1_items_tests.valid_items
     do
-        bag:add(items[i], i)
+        bag:add(gen1_items_tests.valid_items[i], i)
     end
-    for i = 1, #items
+    for i = 1, #gen1_items_tests.valid_items
     do
-        luaunit.assertEquals(bag["Items"][i].item, items[i])
+        luaunit.assertEquals(bag["Items"][i].item, gen1_items_tests.valid_items[i])
         luaunit.assertEquals(bag["Items"][i].amount, i)
     end
     luaunit.assertEquals(bag["Items"][9].item, pkmn.item.NONE)

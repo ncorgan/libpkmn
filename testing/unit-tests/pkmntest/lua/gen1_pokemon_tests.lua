@@ -15,8 +15,8 @@ function gen1_pokemon_tests.common(game, species)
     local pokemon = pkmn.pokemon(species, game, "", 30)
     local test_params =
     {
-        valid_ball = "Great Ball",
-        invalid_balls = {"Great Ball"},
+        valid_ball = pkmn.item.GREAT_BALL,
+        invalid_balls = {pkmn.item.GREAT_BALL},
 
         valid_item = pkmn.item.POTION,
         invalid_items = {pkmn.item.POTION},
@@ -25,8 +25,14 @@ function gen1_pokemon_tests.common(game, species)
         valid_locations = {"Route 1"},
         invalid_locations = {"Route 1"},
 
-        valid_moves = {"Slash", "Flamethrower", "Tail Whip", "Fire Blast"},
-        invalid_moves = {"Return"},
+        valid_moves =
+        {
+            pkmn.move.SLASH,
+            pkmn.move.FLAMETHROWER,
+            pkmn.move.TAIL_WHIP,
+            pkmn.move.FIRE_BLAST
+        },
+        invalid_moves = {pkmn.move.RETURN},
 
         valid_original_games = {pkmn.game.RED},
         invalid_original_games = {pkmn.game.RED}

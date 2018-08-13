@@ -19,6 +19,7 @@ PKMN_LUA_INIT
  * This file contains STL containers with either pure STL types or with LibPKMN
  * enums.
  */
+%import <pkmn_enums_lua.i>
 
 %include <std_string.i>
 

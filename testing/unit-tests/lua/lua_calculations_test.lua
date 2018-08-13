@@ -1485,8 +1485,14 @@ function test_gb_stats()
     --
     -- Source: http://bulbapedia.bulbagarden.net/wiki/Statistic#In_Generations_I_and_II
     --
-    luaunit.assertAlmostEquals(pkmn.calculations.get_gb_stat(pkmn.stat.HP, 81, 35, 22850, 7), 189, 1)
-    luaunit.assertAlmostEquals(pkmn.calculations.get_gb_stat(pkmn.stat.ATTACK, 81, 55, 23140, 8), 137, 1)
+    luaunit.assertAlmostEquals(
+        pkmn.calculations.get_gb_stat(pkmn.stat.HP, 81, 35, 22850, 7),
+        189, 1
+    )
+    luaunit.assertAlmostEquals(
+        pkmn.calculations.get_gb_stat(pkmn.stat.ATTACK, 81, 55, 23140, 8),
+        137, 1
+    )
 end
 
 function test_modern_stats()
@@ -1502,8 +1508,14 @@ function test_modern_stats()
     --
     -- Source: http://bulbapedia.bulbagarden.net/wiki/Statistic#In_Generation_III_onward
     --
-    luaunit.assertAlmostEquals(pkmn.calculations.get_modern_stat(pkmn.stat.HP, 78, 1.0, 108, 74, 24), 289, 1)
-    luaunit.assertAlmostEquals(pkmn.calculations.get_modern_stat(pkmn.stat.ATTACK, 78, 1.1, 130, 195, 12), 280, 1)
+    luaunit.assertAlmostEquals(
+        pkmn.calculations.get_modern_stat(pkmn.stat.HP, 78, 1.0, 108, 74, 24),
+        289, 1
+    )
+    luaunit.assertAlmostEquals(
+        pkmn.calculations.get_modern_stat(pkmn.stat.ATTACK, 78, 1.1, 130, 195, 12),
+        280, 1
+    )
 end
 
 local runner = luaunit.LuaUnit.new()

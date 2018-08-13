@@ -195,10 +195,10 @@ function pkmntest_utils.get_random_pokemon(game, pokemon_list, move_list, item_l
     local generation = pkmntest_utils.GAME_TO_GENERATION[game]
 
     -- Don't deal with Deoxys or Unown issues here.
-    local species = ""
+    local species = pkmn.species.NONE
     repeat
         species = pokemon_list[math.random(1, #pokemon_list)]
-    until (generation ~= 3) or (species ~= pkmn.species.DEOXYS) or (species ~= pkmn.species.UNOWN)
+    until (generation ~= 3) or ((species ~= pkmn.species.DEOXYS) and (species ~= pkmn.species.UNOWN))
 
     return pkmntest_utils.get_specific_random_pokemon(game, species, "", move_list, item_list)
 end

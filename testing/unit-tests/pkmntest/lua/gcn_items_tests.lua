@@ -1,5 +1,5 @@
 --
--- Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+-- Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
 --
 -- Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
 -- or copy at http://opensource.org/licenses/MIT)
@@ -13,27 +13,31 @@ local gcn_items_tests = {}
 
 gcn_items_tests.colosseum_all_pocket_items =
 {
-    pkmn.item.POTION, "Ein File S", "Great Ball", "TM01",
-    "TM02", "Aspear Berry", "Joy Scent", "Excite Scent"
+    pkmn.item.POTION, pkmn.item.EIN_FILE_S,
+    pkmn.item.GREAT_BALL, pkmn.item.TM01,
+    pkmn.item.TM02, pkmn.item.ASPEAR_BERRY,
+    pkmn.item.JOY_SCENT, pkmn.item.VIVID_SCENT
 }
 gcn_items_tests.xd_all_pocket_items =
 {
-    pkmn.item.POTION, "Gonzap's Key", "Great Ball", "TM01",
-    "TM02", "Aspear Berry", "Joy Scent", "Battle CD 01"
+    pkmn.item.POTION, pkmn.item.GONZAPS_KEY,
+    pkmn.item.GREAT_BALL, pkmn.item.TM01,
+    pkmn.item.TM02, pkmn.item.ASPEAR_BERRY,
+    pkmn.item.JOY_SCENT, pkmn.item.BATTLE_CD_01
 }
 gcn_items_tests.colosseum_wrong_game_all_pocket_items =
 {
-    "Pink Bow", "Black Sludge",
-    "GS Ball", "Gonzap's Key", "Poffin Items",
-    "TM51", "HM01",
-    "Berry", "Occa Berry"
+    pkmn.item.PINK_BOW, pkmn.item.BLACK_SLUDGE,
+    pkmn.item.GS_BALL, pkmn.item.GONZAPS_KEY, pkmn.item.POFFIN_CASE,
+    pkmn.item.TM51, pkmn.item.HM01,
+    pkmn.item.BERRY, pkmn.item.OCCA_BERRY
 }
 gcn_items_tests.xd_wrong_game_all_pocket_items =
 {
-    "Pink Bow", "Black Sludge",
-    "GS Ball", "Ein File S", "Poffin Items",
-    "TM51", "HM01",
-    "Berry", "Occa Berry"
+    pkmn.item.PINK_BOW, pkmn.item.BLACK_SLUDGE,
+    pkmn.item.GS_BALL, pkmn.item.EIN_FILE_S, pkmn.item.POFFIN_CASE,
+    pkmn.item.TM51, pkmn.item.HM01,
+    pkmn.item.BERRY, pkmn.item.OCCA_BERRY
 }
 
 function gcn_items_tests.test_item_pocket(item_pocket, game)
@@ -61,9 +65,19 @@ function gcn_items_tests.test_item_pocket(item_pocket, game)
     local wrong_pocket_items = {}
     if game == pkmn.game.COLOSSEUM
     then
-        wrong_pocket_items = {"Ein File S", "Great Ball", "TM01", "Oran Berry", "Joy Scent"}
+        wrong_pocket_items =
+        {
+            pkmn.item.EIN_FILE_S, pkmn.item.GREAT_BALL,
+            pkmn.item.TM01, pkmn.item.ORAN_BERRY,
+            pkmn.item.JOY_SCENT
+        }
     else
-        wrong_pocket_items = {"Miror Radar", "Great Ball", "TM01", "Oran Berry", "Joy Scent", "Battle CD 01"}
+        wrong_pocket_items =
+        {
+            pkmn.item.MIROR_RADAR, pkmn.item.GREAT_BALL,
+            pkmn.item.TM01, pkmn.item.ORAN_BERRY,
+            pkmn.item.JOY_SCENT, pkmn.item.BATTLE_CD_01
+        }
     end
     items_tests.item_list_test_invalid_items(
         item_pocket, wrong_pocket_items
@@ -72,26 +86,33 @@ function gcn_items_tests.test_item_pocket(item_pocket, game)
     -- Make sure we can't add items from other generations.
     items_tests.item_list_test_invalid_items(
         item_pocket,
-        {"Pink Bow", "Black Sludge", "Binding Band", "Beedrillite"}
+        {pkmn.item.PINK_BOW, pkmn.item.BLACK_SLUDGE,
+         pkmn.item.BINDING_BAND, pkmn.item.BEEDRILLITE}
     )
 
     -- Start adding and removing stuff, and make sure the numbers are accurate.
-    local item_names =
+    local items =
     {
-        pkmn.item.POTION, "Orange Mail", "Lava Cookie", "Stardust",
-        "Shadow Mail", "Pink Scarf", "Antidote", "Green Shard"
+        pkmn.item.POTION, pkmn.item.ORANGE_MAIL,
+        pkmn.item.LAVA_COOKIE, pkmn.item.STARDUST,
+        pkmn.item.SHADOW_MAIL, pkmn.item.PINK_SCARF,
+        pkmn.item.ANTIDOTE, pkmn.item.GREEN_SHARD
     }
 
     items_tests.item_list_test_setting_items(
         item_pocket,
-        item_names
+        items
     )
     items_tests.item_list_test_add_remove(
         item_pocket,
-        item_names
+        items
     )
 
     luaunit.assertTrue(#item_pocket.valid_items > 0)
+    luaunit.assertEquals(
+        #item_pocket.valid_items,
+        #item_pocket.valid_item_names
+    )
 end
 
 function gcn_items_tests.test_key_item_pocket(key_item_pocket, game)
@@ -99,9 +120,9 @@ function gcn_items_tests.test_key_item_pocket(key_item_pocket, game)
     local item_name = ""
     if game == pkmn.game.COLOSSEUM
     then
-        item_name = "Ein File S"
+        item_name = pkmn.item.EIN_FILE_S
     else
-        item_name = "Miror Radar"
+        item_name = pkmn.item.MIROR_RADAR
     end
 
     -- Check unchanging and initial values.
@@ -120,9 +141,18 @@ function gcn_items_tests.test_key_item_pocket(key_item_pocket, game)
     local wrong_pocket_items = {}
     if game == pkmn.game.COLOSSEUM
     then
-        wrong_pocket_items = {pkmn.item.POTION, "Great Ball", "TM01", "Oran Berry", "Joy Scent"}
+        wrong_pocket_items =
+        {
+            pkmn.item.POTION, pkmn.item.GREAT_BALL,
+            pkmn.item.TM01, pkmn.item.ORAN_BERRY, pkmn.item.JOY_SCENT
+        }
     else
-        wrong_pocket_items = {pkmn.item.POTION, "Great Ball", "TM01", "Oran Berry", "Joy Scent", "Battle CD 01"}
+        wrong_pocket_items =
+        {
+            pkmn.item.POTION, pkmn.item.GREAT_BALL,
+            pkmn.item.TM01, pkmn.item.ORAN_BERRY,
+            pkmn.item.JOY_SCENT, pkmn.item.BATTLE_CD_01
+        }
     end
     items_tests.item_list_test_invalid_items(
         key_item_pocket, wrong_pocket_items
@@ -131,18 +161,29 @@ function gcn_items_tests.test_key_item_pocket(key_item_pocket, game)
     -- Make sure we can't add items from other generations.
     items_tests.item_list_test_invalid_items(
         key_item_pocket,
-        {"GS Ball", "Poffin Items", "DNA Splicers", "Aqua Suit"}
+        {pkmn.item.GS_BALL, pkmn.item.POFFIN_CASE,
+         pkmn.item.DNA_SPLICERS, pkmn.item.AQUA_SUIT}
     )
 
     -- Start adding and removing stuff, and make sure the numbers are accurate.
     local items = {}
     if game == pkmn.game.COLOSSEUM
     then
-        items = {"Jail Key", "Elevator Key", "Small Tablet", "F-Disk",
-                 "R-Disk", "L-Disk", "D-Disk", "U-Disk"}
+        items =
+        {
+            pkmn.item.JAIL_KEY, pkmn.item.ELEVATOR_KEY,
+            pkmn.item.SMALL_TABLET, pkmn.item.F_DISK,
+            pkmn.item.R_DISK, pkmn.item.L_DISK,
+            pkmn.item.D_DISK, pkmn.item.U_DISK
+        }
     else
-        items = {"Krane Memo 1", "Krane Memo 2", "Krane Memo 3", "Krane Memo 4",
-                 "Krane Memo 5", "Voice Case 1", "Voice Case 2", "Voice Case 3"}
+        items =
+        {
+            pkmn.item.KRANE_MEMO_1, pkmn.item.KRANE_MEMO_2,
+            pkmn.item.KRANE_MEMO_3, pkmn.item.KRANE_MEMO_4,
+            pkmn.item.KRANE_MEMO_5, pkmn.item.VOICE_CASE_1,
+            pkmn.item.VOICE_CASE_2, pkmn.item.VOICE_CASE_3
+        }
     end
     items_tests.item_list_test_setting_items(
         key_item_pocket,
@@ -154,6 +195,10 @@ function gcn_items_tests.test_key_item_pocket(key_item_pocket, game)
     )
 
     luaunit.assertTrue(#key_item_pocket.valid_items > 0)
+    luaunit.assertEquals(
+        #key_item_pocket.valid_items,
+        #key_item_pocket.valid_item_names
+    )
 end
 
 function gcn_items_tests.test_ball_pocket(ball_pocket, game)
@@ -169,15 +214,24 @@ function gcn_items_tests.test_ball_pocket(ball_pocket, game)
     items_tests.item_list_test_empty_slot(ball_pocket)
 
     -- Confirm errors are thrown when expected.
-    items_tests.item_list_test_out_of_range_error(ball_pocket, "Great Ball")
+    items_tests.item_list_test_out_of_range_error(ball_pocket, pkmn.item.GREAT_BALL)
 
     -- Make sure we can't add items from other pockets.
     local wrong_pocket_items = {}
     if game == pkmn.game.COLOSSEUM
     then
-        wrong_pocket_items = {"Ein File S", pkmn.item.POTION, "TM01", "Oran Berry", "Joy Scent"}
+        wrong_pocket_items =
+        {
+            pkmn.item.EIN_FILE_S, pkmn.item.POTION,
+            pkmn.item.TM01, pkmn.item.ORAN_BERRY, pkmn.item.JOY_SCENT
+        }
     else
-        wrong_pocket_items = {"Miror Radar", pkmn.item.POTION, "TM01", "Oran Berry", "Joy Scent", "Battle CD 01"}
+        wrong_pocket_items =
+        {
+            pkmn.item.MIROR_RADAR, pkmn.item.POTION,
+            pkmn.item.TM01, pkmn.item.ORAN_BERRY,
+            pkmn.item.JOY_SCENT, pkmn.item.BATTLE_CD_01
+        }
     end
     items_tests.item_list_test_invalid_items(
         ball_pocket, wrong_pocket_items
@@ -186,26 +240,32 @@ function gcn_items_tests.test_ball_pocket(ball_pocket, game)
     -- Make sure we can't add items from other generations.
     items_tests.item_list_test_invalid_items(
         ball_pocket,
-        {"Moon Ball", "Heal Ball", "Dream Ball"}
+        {pkmn.item.MOON_BALL, pkmn.item.HEAL_BALL, pkmn.item.DREAM_BALL}
     )
 
     -- Start adding and removing stuff, and make sure the numbers are accurate.
-    local item_names =
+    local items =
     {
-        "Master Ball", "Ultra Ball", "Great Ball", pkmn.item.POKE_BALL,
-        "Safari Ball", "Net Ball", "Dive Ball", "Nest Ball"
+        pkmn.item.MASTER_BALL, pkmn.item.ULTRA_BALL,
+        pkmn.item.GREAT_BALL, pkmn.item.POKE_BALL,
+        pkmn.item.SAFARI_BALL, pkmn.item.NET_BALL,
+        pkmn.item.DIVE_BALL, pkmn.item.NEST_BALL
     }
 
     items_tests.item_list_test_setting_items(
         ball_pocket,
-        item_names
+        items
     )
     items_tests.item_list_test_add_remove(
         ball_pocket,
-        item_names
+        items
     )
 
     luaunit.assertTrue(#ball_pocket.valid_items > 0)
+    luaunit.assertEquals(
+        #ball_pocket.valid_items,
+        #ball_pocket.valid_item_names
+    )
 end
 
 function gcn_items_tests.test_tm_pocket(tm_pocket, game)
@@ -221,15 +281,24 @@ function gcn_items_tests.test_tm_pocket(tm_pocket, game)
     items_tests.item_list_test_empty_slot(tm_pocket)
 
     -- Confirm errors are thrown when expected.
-    items_tests.item_list_test_out_of_range_error(tm_pocket, "TM01")
+    items_tests.item_list_test_out_of_range_error(tm_pocket, pkmn.item.TM01)
 
     -- Make sure we can't add items from other pockets.
     local wrong_pocket_items = {}
     if game == pkmn.game.COLOSSEUM
     then
-        wrong_pocket_items = {"Ein File S", pkmn.item.POTION, "Great Ball", "Oran Berry", "Joy Scent"}
+        wrong_pocket_items =
+        {
+            pkmn.item.EIN_FILE_S, pkmn.item.POTION,
+            pkmn.item.GREAT_BALL, pkmn.item.ORAN_BERRY, pkmn.item.JOY_SCENT
+        }
     else
-        wrong_pocket_items = {"Miror Radar", pkmn.item.POTION, "Great Ball", "Oran Berry", "Joy Scent", "Battle CD 01"}
+        wrong_pocket_items =
+        {
+            pkmn.item.MIROR_RADAR, pkmn.item.POTION,
+            pkmn.item.GREAT_BALL, pkmn.item.ORAN_BERRY,
+            pkmn.item.JOY_SCENT, pkmn.item.BATTLE_CD_01
+        }
     end
     items_tests.item_list_test_invalid_items(
         tm_pocket, wrong_pocket_items
@@ -238,26 +307,30 @@ function gcn_items_tests.test_tm_pocket(tm_pocket, game)
     -- Make sure we can't add items from other generations.
     items_tests.item_list_test_invalid_items(
         tm_pocket,
-        {"TM51", "HM01"}
+        {pkmn.item.TM51, pkmn.item.HM01}
     )
 
     -- Start adding and removing stuff, and make sure the numbers are accurate.
-    local item_names =
+    local items =
     {
-        "TM01", "TM02", "TM03", "TM04",
-        "TM05", "TM06", "TM07", "TM08"
+        pkmn.item.TM01, pkmn.item.TM02, pkmn.item.TM03, pkmn.item.TM04,
+        pkmn.item.TM05, pkmn.item.TM06, pkmn.item.TM07, pkmn.item.TM08
     }
 
     items_tests.item_list_test_setting_items(
         tm_pocket,
-        item_names
+        items
     )
     items_tests.item_list_test_add_remove(
         tm_pocket,
-        item_names
+        items
     )
 
     luaunit.assertTrue(#tm_pocket.valid_items > 0)
+    luaunit.assertEquals(
+        #tm_pocket.valid_items,
+        #tm_pocket.valid_item_names
+    )
 end
 
 function gcn_items_tests.test_berry_pocket(berry_pocket, game)
@@ -273,15 +346,24 @@ function gcn_items_tests.test_berry_pocket(berry_pocket, game)
     items_tests.item_list_test_empty_slot(berry_pocket)
 
     -- Confirm errors are thrown when expected.
-    items_tests.item_list_test_out_of_range_error(berry_pocket, "Oran Berry")
+    items_tests.item_list_test_out_of_range_error(berry_pocket, pkmn.item.ORAN_BERRY)
 
     -- Make sure we can't add items from other pockets.
     local wrong_pocket_items = {}
     if game == pkmn.game.COLOSSEUM
     then
-        wrong_pocket_items = {"Ein File S", pkmn.item.POTION, "Great Ball", "TM01", "Joy Scent"}
+        wrong_pocket_items =
+        {
+            pkmn.item.EIN_FILE_S, pkmn.item.POTION,
+            pkmn.item.GREAT_BALL, pkmn.item.TM01, pkmn.item.JOY_SCENT
+        }
     else
-        wrong_pocket_items = {"Miror Radar", pkmn.item.POTION, "Great Ball", "TM01", "Joy Scent", "Battle CD 01"}
+        wrong_pocket_items =
+        {
+            pkmn.item.MIROR_RADAR, pkmn.item.POTION,
+            pkmn.item.GREAT_BALL, pkmn.item.TM01,
+            pkmn.item.JOY_SCENT, pkmn.item.BATTLE_CD_01
+        }
     end
     items_tests.item_list_test_invalid_items(
         berry_pocket, wrong_pocket_items
@@ -290,26 +372,32 @@ function gcn_items_tests.test_berry_pocket(berry_pocket, game)
     -- Make sure we can't add items from other generations.
     items_tests.item_list_test_invalid_items(
         berry_pocket,
-        {"Berry", "Occa Berry", "Roseli Berry"}
+        {pkmn.item.BERRY, pkmn.item.OCCA_BERRY, pkmn.item.ROSELI_BERRY}
     )
 
     -- Start adding and removing stuff, and make sure the numbers are accurate.
-    local item_names =
+    local items =
     {
-        "Cheri Berry", "Razz Berry", "Lum Berry", "Pinap Berry",
-        "Aspear Berry", "Iapapa Berry", "Wiki Berry", "Apicot Berry"
+        pkmn.item.CHERI_BERRY, pkmn.item.RAZZ_BERRY,
+        pkmn.item.LUM_BERRY, pkmn.item.PINAP_BERRY,
+        pkmn.item.ASPEAR_BERRY, pkmn.item.IAPAPA_BERRY,
+        pkmn.item.WIKI_BERRY, pkmn.item.APICOT_BERRY
     }
 
     items_tests.item_list_test_setting_items(
         berry_pocket,
-        item_names
+        items
     )
     items_tests.item_list_test_add_remove(
         berry_pocket,
-        item_names
+        items
     )
 
     luaunit.assertTrue(#berry_pocket.valid_items > 0)
+    luaunit.assertEquals(
+        #berry_pocket.valid_items,
+        #berry_pocket.valid_item_names
+    )
 end
 
 function gcn_items_tests.test_cologne_pocket(cologne_pocket, game)
@@ -325,36 +413,45 @@ function gcn_items_tests.test_cologne_pocket(cologne_pocket, game)
     items_tests.item_list_test_empty_slot(cologne_pocket)
 
     -- Confirm errors are thrown when expected.
-    items_tests.item_list_test_out_of_range_error(cologne_pocket, "Joy Scent")
+    items_tests.item_list_test_out_of_range_error(cologne_pocket, pkmn.item.JOY_SCENT)
 
     -- Make sure we can't add items from other pockets.
     local wrong_pocket_items = {}
     if game == pkmn.game.COLOSSEUM
     then
-        wrong_pocket_items = {"Ein File S", pkmn.item.POTION, "Great Ball", "TM01", "Oran Berry"}
+        wrong_pocket_items =
+        {
+            pkmn.item.EIN_FILE_S, pkmn.item.POTION,
+            pkmn.item.GREAT_BALL, pkmn.item.TM01, pkmn.item.ORAN_BERRY
+        }
     else
-        wrong_pocket_items = {"Miror Radar", pkmn.item.POTION, "Great Ball", "TM01", "Oran Berry", "Battle CD 01"}
+        wrong_pocket_items =
+        {
+            pkmn.item.MIROR_RADAR, pkmn.item.POTION,
+            pkmn.item.GREAT_BALL, pkmn.item.TM01,
+            pkmn.item.ORAN_BERRY, pkmn.item.BATTLE_CD_01
+        }
     end
     items_tests.item_list_test_invalid_items(
         cologne_pocket, wrong_pocket_items
     )
 
     -- Since this pocket can only have 3 items, we can't use our typical function, which requires 8.
-    cologne_pocket:add("Joy Scent", 3)
-    cologne_pocket:add("Excite Scent", 3)
-    cologne_pocket:add("Vivid Scent", 3)
-    cologne_pocket:remove("Excite Scent", 3)
-    cologne_pocket:remove("Vivid Scent", 1)
+    cologne_pocket:add(pkmn.item.JOY_SCENT, 3)
+    cologne_pocket:add(pkmn.item.VIVID_SCENT, 3)
+    cologne_pocket:add(pkmn.item.VIVID_SCENT, 3)
+    cologne_pocket:remove(pkmn.item.VIVID_SCENT, 3)
+    cologne_pocket:remove(pkmn.item.VIVID_SCENT, 1)
 
-    luaunit.assertEquals(cologne_pocket[1].item, "Joy Scent")
+    luaunit.assertEquals(cologne_pocket[1].item, pkmn.item.JOY_SCENT)
     luaunit.assertEquals(cologne_pocket[1].amount, 3)
-    luaunit.assertEquals(cologne_pocket[2].item, "Vivid Scent")
+    luaunit.assertEquals(cologne_pocket[2].item, pkmn.item.VIVID_SCENT)
     luaunit.assertEquals(cologne_pocket[2].amount, 2)
     luaunit.assertEquals(cologne_pocket[3].item, pkmn.item.NONE)
     luaunit.assertEquals(cologne_pocket[3].amount, 0)
 
-    cologne_pocket:remove("Joy Scent", 3)
-    cologne_pocket:remove("Vivid Scent", 2)
+    cologne_pocket:remove(pkmn.item.JOY_SCENT, 3)
+    cologne_pocket:remove(pkmn.item.VIVID_SCENT, 2)
     luaunit.assertEquals(cologne_pocket[1].item, pkmn.item.NONE)
     luaunit.assertEquals(cologne_pocket[1].amount, 0)
     luaunit.assertEquals(cologne_pocket[2].item, pkmn.item.NONE)
@@ -363,6 +460,10 @@ function gcn_items_tests.test_cologne_pocket(cologne_pocket, game)
     luaunit.assertEquals(cologne_pocket[3].amount, 0)
 
     luaunit.assertTrue(#cologne_pocket.valid_items > 0)
+    luaunit.assertEquals(
+        #cologne_pocket.valid_items,
+        #cologne_pocket.valid_item_names
+    )
 end
 
 function gcn_items_tests.test_battle_cd_pocket(battle_cd_pocket, game)
@@ -378,31 +479,35 @@ function gcn_items_tests.test_battle_cd_pocket(battle_cd_pocket, game)
     items_tests.item_list_test_empty_slot(battle_cd_pocket)
 
     -- Confirm errors are thrown when expected.
-    items_tests.item_list_test_out_of_range_error(battle_cd_pocket, "TM01")
+    items_tests.item_list_test_out_of_range_error(battle_cd_pocket, pkmn.item.TM01)
 
     -- Make sure we can't add items from other pockets.
     items_tests.item_list_test_invalid_items(
         battle_cd_pocket,
-        {"Miror Radar", pkmn.item.POTION, "Great Ball", "Oran Berry", "Joy Scent"}
+        {pkmn.item.MIROR_RADAR, pkmn.item.POTION,
+         pkmn.item.GREAT_BALL, pkmn.item.ORAN_BERRY, pkmn.item.JOY_SCENT}
     )
 
     -- Start adding and removing stuff, and make sure the numbers are accurate.
-    local item_names =
+    local items =
     {
-        "Battle CD 01", "Battle CD 02", "Battle CD 03", "Battle CD 04",
-        "Battle CD 05", "Battle CD 06", "Battle CD 07", "Battle CD 08"
+        pkmn.item.BATTLE_CD_01, pkmn.item.BATTLE_CD_02,
+        pkmn.item.BATTLE_CD_03, pkmn.item.BATTLE_CD_04,
+        pkmn.item.BATTLE_CD_05, pkmn.item.BATTLE_CD_06,
+        pkmn.item.BATTLE_CD_07, pkmn.item.BATTLE_CD_08
     }
 
     items_tests.item_list_test_setting_items(
         battle_cd_pocket,
-        item_names
+        items
     )
     items_tests.item_list_test_add_remove(
         battle_cd_pocket,
-        item_names
+        items
     )
 
     luaunit.assertEquals(#battle_cd_pocket.valid_items, 60)
+    luaunit.assertEquals(#battle_cd_pocket.valid_item_names, 60)
 end
 
 function gcn_items_tests.test_pc(pc, game)
@@ -444,8 +549,11 @@ function gcn_items_tests.test_pc(pc, game)
         all_pocket_items
     )
 
-    local valid_items = pc.valid_items
-    luaunit.assertTrue(#valid_items > 0)
+    luaunit.assertTrue(#pc.valid_items > 0)
+    luaunit.assertEquals(
+        #pc.valid_items,
+        #pc.valid_item_names
+    )
 end
 
 function gcn_items_tests.test_bag(bag, game)
@@ -491,11 +599,11 @@ function gcn_items_tests.test_bag(bag, game)
     then
         all_pocket_items = gcn_items_tests.colosseum_all_pocket_items
         wrong_game_all_pocket_items = gcn_items_tests.colosseum_wrong_game_all_pocket_items
-        key_item = "Ein File S"
+        key_item = pkmn.item.EIN_FILE_S
     else
         all_pocket_items = gcn_items_tests.xd_all_pocket_items
         wrong_game_all_pocket_items = gcn_items_tests.xd_wrong_game_all_pocket_items
-        key_item = "Gonzap's Key"
+        key_item = pkmn.item.GONZAPS_KEY
     end
 
     -- Make sure we can't add items from other generations.
@@ -519,28 +627,28 @@ function gcn_items_tests.test_bag(bag, game)
     luaunit.assertEquals(bag["Key Items"][2].item, pkmn.item.NONE)
     luaunit.assertEquals(bag["Key Items"][2].amount, 0)
 
-    luaunit.assertEquals(bag["Poké Balls"][1].item, "Great Ball")
+    luaunit.assertEquals(bag["Poké Balls"][1].item, pkmn.item.GREAT_BALL)
     luaunit.assertEquals(bag["Poké Balls"][1].amount, 5)
     luaunit.assertEquals(bag["Poké Balls"][2].item, pkmn.item.NONE)
     luaunit.assertEquals(bag["Poké Balls"][2].amount, 0)
 
-    luaunit.assertEquals(bag["TMs"][1].item, "TM01")
+    luaunit.assertEquals(bag["TMs"][1].item, pkmn.item.TM01)
     luaunit.assertEquals(bag["TMs"][1].amount, 5)
-    luaunit.assertEquals(bag["TMs"][2].item, "TM02")
+    luaunit.assertEquals(bag["TMs"][2].item, pkmn.item.TM02)
     luaunit.assertEquals(bag["TMs"][2].amount, 5)
     luaunit.assertEquals(bag["TMs"][3].item, pkmn.item.NONE)
     luaunit.assertEquals(bag["TMs"][3].amount, 0)
 
-    luaunit.assertEquals(bag["Berries"][1].item, "Aspear Berry")
+    luaunit.assertEquals(bag["Berries"][1].item, pkmn.item.ASPEAR_BERRY)
     luaunit.assertEquals(bag["Berries"][1].amount, 5)
     luaunit.assertEquals(bag["Berries"][2].item, pkmn.item.NONE)
     luaunit.assertEquals(bag["Berries"][2].amount, 0)
 
-    luaunit.assertEquals(bag["Colognes"][1].item, "Joy Scent")
+    luaunit.assertEquals(bag["Colognes"][1].item, pkmn.item.JOY_SCENT)
     luaunit.assertEquals(bag["Colognes"][1].amount, 5)
     if game == pkmn.game.COLOSSEUM
     then
-        luaunit.assertEquals(bag["Colognes"][2].item, "Excite Scent")
+        luaunit.assertEquals(bag["Colognes"][2].item, pkmn.item.VIVID_SCENT)
         luaunit.assertEquals(bag["Colognes"][2].amount, 5)
         luaunit.assertEquals(bag["Colognes"][3].item, pkmn.item.NONE)
         luaunit.assertEquals(bag["Colognes"][3].amount, 0)
@@ -548,7 +656,7 @@ function gcn_items_tests.test_bag(bag, game)
         luaunit.assertEquals(bag["Colognes"][2].item, pkmn.item.NONE)
         luaunit.assertEquals(bag["Colognes"][2].amount, 0)
 
-        luaunit.assertEquals(bag["Battle CDs"][1].item, "Battle CD 01")
+        luaunit.assertEquals(bag["Battle CDs"][1].item, pkmn.item.BATTLE_CD_01)
         luaunit.assertEquals(bag["Battle CDs"][1].amount, 5)
         luaunit.assertEquals(bag["Battle CDs"][2].item, pkmn.item.NONE)
         luaunit.assertEquals(bag["Battle CDs"][2].amount, 0)

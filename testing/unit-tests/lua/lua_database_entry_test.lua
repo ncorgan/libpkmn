@@ -121,12 +121,12 @@ function test_pokemon_entry()
     luaunit.assertTrue(#entry.tutor_moves > 0)
     luaunit.assertEquals(#entry.evolutions, 0)
 
-    luaunit.assertTrue(file_exists(entry:get_icon_filepath(false)))
-    luaunit.assertTrue(file_exists(entry:get_icon_filepath(true)))
-    luaunit.assertTrue(file_exists(entry:get_sprite_filepath(false,false)))
-    luaunit.assertTrue(file_exists(entry:get_sprite_filepath(false,true)))
-    luaunit.assertTrue(file_exists(entry:get_sprite_filepath(true,false)))
-    luaunit.assertTrue(file_exists(entry:get_sprite_filepath(true,true)))
+    luaunit.assertTrue(pkmntest_utils.file_exists(entry:get_icon_filepath(false)))
+    luaunit.assertTrue(pkmntest_utils.file_exists(entry:get_icon_filepath(true)))
+    luaunit.assertTrue(pkmntest_utils.file_exists(entry:get_sprite_filepath(false,false)))
+    luaunit.assertTrue(pkmntest_utils.file_exists(entry:get_sprite_filepath(false,true)))
+    luaunit.assertTrue(pkmntest_utils.file_exists(entry:get_sprite_filepath(true,false)))
+    luaunit.assertTrue(pkmntest_utils.file_exists(entry:get_sprite_filepath(true,true)))
 end
 
 local runner = luaunit.LuaUnit.new()
