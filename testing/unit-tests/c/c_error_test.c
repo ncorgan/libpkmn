@@ -40,7 +40,7 @@ static struct pkmn_attribute_names dummy_attribute_names = {{NULL, 0}, {NULL, 0}
 static struct pkmn_pokemon dummy_pokemon = {NULL, NULL, NULL};
 static struct pkmn_pokemon_list dummy_pokemon_list = { NULL, 0 };
 
-static const char* null_pointer_error_format = "Null pointer passed into parameter \"%s\"";
+static const char* null_pointer_error_format = "Null pointer passed into parameter \"%s\".";
 
 static void populate_pksav_saves()
 {

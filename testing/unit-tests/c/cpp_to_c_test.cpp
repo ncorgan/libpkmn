@@ -53,53 +53,57 @@ class pkmn_test_exception: public std::exception {
  * Converting C++ exceptions to C error codes
  */
 
-enum pkmn_error throw_nothing() {
-    PKMN_CPP_TO_C()
+enum pkmn_error throw_nothing()
+{
+    return pkmn::c::handle_exceptions([](){});
 }
 
-enum pkmn_error throw_unknown() {
-    PKMN_CPP_TO_C(
-        throw 5;
-    )
+enum pkmn_error throw_unknown()
+{
+    auto impl = [](){throw 5;};
+
+    return pkmn::c::handle_exceptions(impl);
 }
 
 // The "enum" tag must be removed for MSVC to compile.
 template <typename exception_type>
 pkmn_error throw_exception(
     const std::string& msg
-) {
-    PKMN_CPP_TO_C(
-        throw exception_type(msg);
-    )
+)
+{
+    auto impl = [&](){throw exception_type(msg);};
+
+    return pkmn::c::handle_exceptions(impl);
 }
 
 enum pkmn_error throw_feature_not_in_game_error(
     const std::string& feature,
     const std::string& game
-) {
-    PKMN_CPP_TO_C(
-        throw pkmn::feature_not_in_game_error(
-                  feature,
-                  game
-              );
-    )
+)
+{
+    auto impl = [&](){throw pkmn::feature_not_in_game_error(feature, game);};
+
+    return pkmn::c::handle_exceptions(impl);
 }
 
 enum pkmn_error throw_pksav_error(
     pksav_error pksav_error_code
-) {
-    PKMN_CPP_TO_C(
-        PKSAV_CALL(pksav_error_code)
-    )
+)
+{
+    auto impl = [&](){PKSAV_CALL(pksav_error_code);};
+
+    return pkmn::c::handle_exceptions(impl);
 }
 
-enum pkmn_error throw_pkmn_unimplemented_error() {
-    PKMN_CPP_TO_C(
-        throw pkmn::unimplemented_error();
-    )
+enum pkmn_error throw_pkmn_unimplemented_error()
+{
+    auto impl = [](){throw pkmn::unimplemented_error();};
+
+    return pkmn::c::handle_exceptions(impl);
 }
 
-TEST(cpp_to_c_test, exception_to_error_code_test) {
+TEST(cpp_to_c_test, exception_to_error_code_test)
+{
     enum pkmn_error error = PKMN_ERROR_NONE;
 
     error = throw_nothing();
@@ -175,67 +179,69 @@ TEST(cpp_to_c_test, exception_to_error_code_test) {
  * Converting C++ exceptions to C error codes (with handle)
  */
 
-typedef struct {
-    boost::mutex error_mutex;
-    std::string last_error;
-} pkmn_test_handle_t;
+// Since we won't actually use the shared_ptr, this should be fine.
+using pkmn_test_handle_t = pkmn_c_internal_class_t<int>;
 
 enum pkmn_error throw_nothing_with_handle(
-    pkmn_test_handle_t* handle
-) {
-    PKMN_CPP_TO_C_WITH_HANDLE(handle,)
+    pkmn_test_handle_t* p_handle
+)
+{
+    return pkmn::c::handle_exceptions([](){}, p_handle);
 }
 
 enum pkmn_error throw_unknown_with_handle(
-    pkmn_test_handle_t* handle
-) {
-    PKMN_CPP_TO_C_WITH_HANDLE(handle,
-        throw 5;
-    )
+    pkmn_test_handle_t* p_handle
+)
+{
+    auto impl = [](){throw 5;};
+
+    return pkmn::c::handle_exceptions(impl, p_handle);
 }
 
 // The "enum" tag must be removed for MSVC to compile.
 template <typename exception_type>
 pkmn_error throw_exception_with_handle(
     const std::string& msg,
-    pkmn_test_handle_t* handle
-) {
-    PKMN_CPP_TO_C_WITH_HANDLE(handle,
-        throw exception_type(msg);
-    )
+    pkmn_test_handle_t* p_handle
+)
+{
+    auto impl = [&](){throw exception_type(msg);};
+
+    return pkmn::c::handle_exceptions(impl, p_handle);
 }
 
 enum pkmn_error throw_feature_not_in_game_error_with_handle(
     const std::string& feature,
     const std::string& game,
-    pkmn_test_handle_t* handle
-) {
-    PKMN_CPP_TO_C_WITH_HANDLE(handle,
-        throw pkmn::feature_not_in_game_error(
-                  feature,
-                  game
-              );
-    )
+    pkmn_test_handle_t* p_handle
+)
+{
+    auto impl = [&](){throw pkmn::feature_not_in_game_error(feature, game);};
+
+    return pkmn::c::handle_exceptions(impl, p_handle);
 }
 
 enum pkmn_error throw_pksav_error_with_handle(
     pksav_error pksav_error_code,
-    pkmn_test_handle_t* handle
-) {
-    PKMN_CPP_TO_C_WITH_HANDLE(handle,
-        PKSAV_CALL(pksav_error_code)
-    )
+    pkmn_test_handle_t* p_handle
+)
+{
+    auto impl = [&](){PKSAV_CALL(pksav_error_code);};
+
+    return pkmn::c::handle_exceptions(impl, p_handle);
 }
 
 enum pkmn_error throw_pkmn_unimplemented_error_with_handle(
-    pkmn_test_handle_t* handle
-) {
-    PKMN_CPP_TO_C_WITH_HANDLE(handle,
-        throw pkmn::unimplemented_error();
-    )
+    pkmn_test_handle_t* p_handle
+)
+{
+    auto impl = [](){throw pkmn::unimplemented_error();};
+
+    return pkmn::c::handle_exceptions(impl, p_handle);
 }
 
-TEST(cpp_to_c_test, exception_to_error_code_with_handle_test) {
+TEST(cpp_to_c_test, exception_to_error_code_with_handle_test)
+{
     enum pkmn_error error = PKMN_ERROR_NONE;
     pkmn_test_handle_t test_handle;
 

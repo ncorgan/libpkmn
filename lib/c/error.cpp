@@ -17,6 +17,8 @@
 
 #include <string>
 
+namespace pkmn { namespace c {
+
 struct error_struct
 {
     std::string error;
@@ -29,18 +31,39 @@ struct error_struct
 
 static struct error_struct global_error;
 
-void pkmn_set_error(
-    const std::string& error
-)
+void pkmn_set_error(const std::string& error)
 {
     boost::mutex::scoped_lock lock(global_error.error_mutex);
 
     global_error.error = error;
 }
 
+enum pkmn_error check_for_null_param(
+    const void* p_param,
+    const std::string& param_name
+)
+{
+    enum pkmn_error error = PKMN_ERROR_NONE;
+
+    if(p_param == nullptr)
+    {
+        std::string error_message("Null pointer passed into parameter \"");
+        error_message.append(param_name);
+        error_message.append("\".");
+
+        pkmn_set_error(error_message);
+
+        error = PKMN_ERROR_NULL_POINTER;
+    }
+
+    return error;
+}
+
+}}
+
 const char* pkmn_strerror()
 {
-    boost::mutex::scoped_lock lock(global_error.error_mutex);
+    boost::mutex::scoped_lock lock(pkmn::c::global_error.error_mutex);
 
-    return global_error.error.c_str();
+    return pkmn::c::global_error.error.c_str();
 }
