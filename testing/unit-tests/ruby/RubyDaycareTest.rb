@@ -14,7 +14,7 @@ class DaycareTest < MiniTest::Test
 
     def _test_empty_daycare(daycare)
         daycare.levelup_pokemon.each do |pokemon|
-            assert_equal("None", pokemon.species)
+            assert_equal(PKMN::Species::NONE, pokemon.species)
         end
 
         # Test invalid indices.
@@ -28,7 +28,7 @@ class DaycareTest < MiniTest::Test
         if daycare.can_breed_pokemon
         then
             daycare.breeding_pokemon.each do |pokemon|
-                assert_equal("None", pokemon.species)
+                assert_equal(PKMN::Species::NONE, pokemon.species)
             end
 
             # Test invalid indices.
@@ -43,23 +43,29 @@ class DaycareTest < MiniTest::Test
 
     def _test_setting_pokemon(daycare)
         daycare.levelup_pokemon[0] = PKMN::Pokemon.new(
-                                         "Venusaur",
+                                         PKMN::Species::VENUSAUR,
                                          daycare.game,
                                          "",
                                          50
                                      )
-        assert_equal("Venusaur", daycare.levelup_pokemon[0].species)
+        assert_equal(
+            PKMN::Species::VENUSAUR,
+            daycare.levelup_pokemon[0].species
+        )
         assert_equal(daycare.game, daycare.levelup_pokemon[0].game)
 
         if daycare.levelup_pokemon.length == 2
         then
             daycare.levelup_pokemon[1] = PKMN::Pokemon.new(
-                                             "Charizard",
+                                             PKMN::Species::CHARIZARD,
                                              daycare.game,
                                              "",
                                              50
                                          )
-            assert_equal("Charizard", daycare.levelup_pokemon[1].species)
+            assert_equal(
+                PKMN::Species::CHARIZARD,
+                daycare.levelup_pokemon[1].species
+            )
             assert_equal(daycare.game, daycare.levelup_pokemon[1].game)
         end
 
@@ -67,28 +73,40 @@ class DaycareTest < MiniTest::Test
         if daycare.can_breed_pokemon
         then
             daycare.breeding_pokemon[0] = PKMN::Pokemon.new(
-                                             "Blastoise",
+                                             PKMN::Species::BLASTOISE,
                                              daycare.game,
                                              "",
                                              50
                                          )
-            daycare.breeding_pokemon[0].gender = "Female"
+            daycare.breeding_pokemon[0].gender = PKMN::Gender::FEMALE
 
             assert_equal(daycare.game, daycare.breeding_pokemon[0].game)
-            assert_equal("Blastoise", daycare.breeding_pokemon[0].species)
-            assert_equal("Female", daycare.breeding_pokemon[0].gender)
+            assert_equal(
+                PKMN::Species::BLASTOISE,
+                daycare.breeding_pokemon[0].species
+            )
+            assert_equal(
+                PKMN::Gender::FEMALE,
+                daycare.breeding_pokemon[0].gender
+            )
 
             daycare.breeding_pokemon[1] = PKMN::Pokemon.new(
-                                             "Marowak",
+                                             PKMN::Species::MAROWAK,
                                              daycare.game,
                                              "",
                                              50
                                          )
-            daycare.breeding_pokemon[1].gender = "Male"
+            daycare.breeding_pokemon[1].gender = PKMN::Gender::MALE
 
             assert_equal(daycare.game, daycare.breeding_pokemon[1].game)
-            assert_equal("Marowak", daycare.breeding_pokemon[1].species)
-            assert_equal("Male", daycare.breeding_pokemon[1].gender)
+            assert_equal(
+                PKMN::Species::MAROWAK,
+                daycare.breeding_pokemon[1].species
+            )
+            assert_equal(
+                PKMN::Gender::MALE,
+                daycare.breeding_pokemon[1].gender
+            )
         end
     end
 
@@ -116,7 +134,10 @@ class DaycareTest < MiniTest::Test
 
      PARAMS.each do |game, expected_can_breed|
         define_method("test_daycare_#{game}") do
-            _daycare_test(game, expected_can_breed)
+            _daycare_test(
+                PKMN::string_to_game(game),
+                expected_can_breed
+            )
         end
     end
 end

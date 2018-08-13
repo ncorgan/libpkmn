@@ -180,17 +180,27 @@ class RubyCalculationsTest < Test::Unit::TestCase
         # Test invalid parameters.
 
         assert_raise ArgumentError do
-            PKMN::Calculations::fling_power("Not an item")
+            PKMN::Calculations::fling_power(PKMN::Item::NONE)
         end
 
         # Test expected results.
 
-        item_names = ["Oran Berry", "Health Wing", "Potion",
-                      "Icy Rock", "Dubious Disc", "Damp Rock",
-                      "Dragon Fang", "Dusk Stone", "Thick Club",
-                      "Rare Bone", "Iron Ball"]
+        items =
+        [
+            PKMN::Item::ORAN_BERRY,
+            PKMN::Item::HEALTH_WING,
+            PKMN::Item::POTION,
+            PKMN::Item::ICY_ROCK,
+            PKMN::Item::DUBIOUS_DISC,
+            PKMN::Item::DAMP_ROCK,
+            PKMN::Item::DRAGON_FANG,
+            PKMN::Item::DUSK_STONE,
+            PKMN::Item::THICK_CLUB,
+            PKMN::Item::RARE_BONE,
+            PKMN::Item::IRON_BALL
+        ]
         expected_powers = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 130]
-        test_cases = item_names.zip(expected_powers)
+        test_cases = items.zip(expected_powers)
 
         test_cases.each do |item_name, expected_power|
             assert_equal(
@@ -914,15 +924,32 @@ class RubyCalculationsTest < Test::Unit::TestCase
 
         # Invalid generation
         assert_raise IndexError do
-            PKMN::Calculations::type_damage_modifier(-1, "Normal", "Normal")
+            PKMN::Calculations::type_damage_modifier(
+                -1,
+                PKMN::Type::NORMAL,
+                PKMN::Type::NORMAL
+            )
         end
         assert_raise IndexError do
-            PKMN::Calculations::type_damage_modifier(8, "Normal", "Normal")
+            PKMN::Calculations::type_damage_modifier(
+                8,
+                PKMN::Type::NORMAL,
+                PKMN::Type::NORMAL
+            )
         end
 
         # Invalid types for a given generation
         generations = [1, 1, 5, 3, 5, 2, 4]
-        types = ["Dark", "Steel", "Fairy", "???", "???", "Shadow", "Shadow"]
+        types =
+        [
+            PKMN::Type::DARK,
+            PKMN::Type::STEEL,
+            PKMN::Type::FAIRY,
+            PKMN::Type::QUESTION_MARK,
+            PKMN::Type::QUESTION_MARK,
+            PKMN::Type::SHADOW,
+            PKMN::Type::SHADOW
+        ]
         test_cases = generations.zip(types)
 
         test_cases.each do |generation, type|
@@ -931,7 +958,7 @@ class RubyCalculationsTest < Test::Unit::TestCase
                 PKMN::Calculations::type_damage_modifier(
                     generation,
                     type,
-                    "Normal"
+                    PKMN::Type::NORMAL
                 )
             end
 
@@ -939,7 +966,7 @@ class RubyCalculationsTest < Test::Unit::TestCase
             assert_raise ArgumentError do
                 PKMN::Calculations::type_damage_modifier(
                     generation,
-                    "Normal",
+                    PKMN::Type::NORMAL,
                     type
                 )
             end
@@ -947,8 +974,24 @@ class RubyCalculationsTest < Test::Unit::TestCase
 
         # Check that changes between generations are properly implemented.
 
-        attacking_types = ["Bug", "Poison", "Ghost", "Ice", "Ghost", "Dark"]
-        defending_types = ["Poison", "Bug", "Psychic", "Fire", "Steel", "Steel"]
+        attacking_types =
+        [
+            PKMN::Type::BUG,
+            PKMN::Type::POISON,
+            PKMN::Type::GHOST,
+            PKMN::Type::ICE,
+            PKMN::Type::GHOST,
+            PKMN::Type::DARK
+        ]
+        defending_types =
+        [
+            PKMN::Type::POISON,
+            PKMN::Type::BUG,
+            PKMN::Type::PSYCHIC,
+            PKMN::Type::FIRE,
+            PKMN::Type::STEEL,
+            PKMN::Type::STEEL
+        ]
         old_generations = [1, 1, 1, 1, 5, 5]
         old_modifiers = [2.0, 2.0, 0.0, 1.0, 0.5, 0.5]
         new_generations = [2, 2, 2, 2, 6, 6]
@@ -1055,63 +1098,147 @@ class RubyCalculationsTest < Test::Unit::TestCase
     def test_gen2_gender
         # Make sure expected errors are raised.
         assert_raise ArgumentError do
-            PKMN::Calculations::gen2_pokemon_gender("Not a species", 0)
+            PKMN::Calculations::gen2_pokemon_gender(
+                PKMN::Species::NONE,
+                0
+            )
         end
         assert_raise IndexError do
-            PKMN::Calculations::gen2_pokemon_gender("Bulbasaur", -1)
+            PKMN::Calculations::gen2_pokemon_gender(
+                PKMN::Species::BULBASAUR,
+                -1
+            )
         end
         assert_raise IndexError do
-            PKMN::Calculations::gen2_pokemon_gender("Bulbasaur", 16)
+            PKMN::Calculations::gen2_pokemon_gender(
+                PKMN::Species::BULBASAUR,
+                16
+            )
         end
 
         # Make sure known good inputs result in expected results.
 
         # All male
-        assert_equal("Male", PKMN::Calculations::gen2_pokemon_gender("Nidorino", 0))
-        assert_equal("Male", PKMN::Calculations::gen2_pokemon_gender("Nidorino", 15))
+        assert_equal(
+            PKMN::Gender::MALE,
+            PKMN::Calculations::gen2_pokemon_gender(PKMN::Species::NIDORINO, 0)
+        )
+        assert_equal(
+            PKMN::Gender::MALE,
+            PKMN::Calculations::gen2_pokemon_gender(PKMN::Species::NIDORINO, 15)
+        )
 
         # 25% male, 75% female
-        assert_equal("Female", PKMN::Calculations::gen2_pokemon_gender("Vulpix", 11))
-        assert_equal("Male", PKMN::Calculations::gen2_pokemon_gender("Vulpix", 12))
+        assert_equal(
+            PKMN::Gender::FEMALE,
+            PKMN::Calculations::gen2_pokemon_gender(PKMN::Species::VULPIX, 11)
+        )
+        assert_equal(
+            PKMN::Gender::MALE,
+            PKMN::Calculations::gen2_pokemon_gender(PKMN::Species::VULPIX, 12)
+        )
 
         # All female
-        assert_equal("Female", PKMN::Calculations::gen2_pokemon_gender("Nidorina", 0))
-        assert_equal("Female", PKMN::Calculations::gen2_pokemon_gender("Nidorina", 15))
+        assert_equal(
+            PKMN::Gender::FEMALE,
+            PKMN::Calculations::gen2_pokemon_gender(PKMN::Species::NIDORINA, 0)
+        )
+        assert_equal(
+            PKMN::Gender::FEMALE,
+            PKMN::Calculations::gen2_pokemon_gender(PKMN::Species::NIDORINA, 15)
+        )
 
         # Genderless
-        assert_equal("Genderless", PKMN::Calculations::gen2_pokemon_gender("Magnemite", 0))
-        assert_equal("Genderless", PKMN::Calculations::gen2_pokemon_gender("Magnemite", 15))
+        assert_equal(
+            PKMN::Gender::GENDERLESS,
+            PKMN::Calculations::gen2_pokemon_gender(PKMN::Species::MAGNEMITE, 0)
+        )
+        assert_equal(
+            PKMN::Gender::GENDERLESS,
+            PKMN::Calculations::gen2_pokemon_gender(PKMN::Species::MAGNEMITE, 15)
+        )
     end
 
     def test_modern_gender
         # Make sure expected errors are raised.
         assert_raise ArgumentError do
-            PKMN::Calculations::modern_pokemon_gender("Not a species", 0)
+            PKMN::Calculations::modern_pokemon_gender(PKMN::Species::NONE, 0)
         end
 
         # Make sure SWIG+Ruby catches values outside the uint32_t bounds.
         assert_raise RangeError do
-            PKMN::Calculations::modern_pokemon_gender("Bulbasaur", -1)
+            PKMN::Calculations::modern_pokemon_gender(PKMN::Species::BULBASAUR, -1)
         end
         assert_raise RangeError do
-            PKMN::Calculations::modern_pokemon_gender("Bulbasaur", 0xFFFFFFFF+1)
+            PKMN::Calculations::modern_pokemon_gender(
+                PKMN::Species::BULBASAUR,
+                0xFFFFFFFF+1
+            )
         end
 
         # All male
-        assert_equal("Male", PKMN::Calculations::modern_pokemon_gender("Nidorino", 0))
-        assert_equal("Male", PKMN::Calculations::modern_pokemon_gender("Nidorino", 0xFFFFFFFF))
+        assert_equal(
+            PKMN::Gender::MALE,
+            PKMN::Calculations::modern_pokemon_gender(
+                PKMN::Species::NIDORINO,
+                0
+            )
+        )
+        assert_equal(
+            PKMN::Gender::MALE,
+            PKMN::Calculations::modern_pokemon_gender(
+                PKMN::Species::NIDORINO,
+                0xFFFFFFFF
+            )
+        )
 
         # 25% male, 75% female
-        assert_equal("Female", PKMN::Calculations::modern_pokemon_gender("Vulpix", 190))
-        assert_equal("Male", PKMN::Calculations::modern_pokemon_gender("Vulpix", 191))
+        assert_equal(
+            PKMN::Gender::FEMALE,
+            PKMN::Calculations::modern_pokemon_gender(
+                PKMN::Species::VULPIX,
+                190
+            )
+        )
+        assert_equal(
+            PKMN::Gender::MALE,
+            PKMN::Calculations::modern_pokemon_gender(
+                PKMN::Species::VULPIX,
+                191
+            )
+        )
 
         # All female
-        assert_equal("Female", PKMN::Calculations::modern_pokemon_gender("Nidorina", 0))
-        assert_equal("Female", PKMN::Calculations::modern_pokemon_gender("Nidorina", 0xFFFFFFFF))
+        assert_equal(
+            PKMN::Gender::FEMALE,
+            PKMN::Calculations::modern_pokemon_gender(
+                PKMN::Species::NIDORINA,
+                0
+            )
+        )
+        assert_equal(
+            PKMN::Gender::FEMALE,
+            PKMN::Calculations::modern_pokemon_gender(
+                PKMN::Species::NIDORINA,
+                0xFFFFFFFF
+            )
+        )
 
         # Genderless
-        assert_equal("Genderless", PKMN::Calculations::modern_pokemon_gender("Magnemite", 0))
-        assert_equal("Genderless", PKMN::Calculations::modern_pokemon_gender("Magnemite", 0xFFFFFFFF))
+        assert_equal(
+            PKMN::Gender::GENDERLESS,
+            PKMN::Calculations::modern_pokemon_gender(
+                PKMN::Species::MAGNEMITE,
+                0
+            )
+        )
+        assert_equal(
+            PKMN::Gender::GENDERLESS,
+            PKMN::Calculations::modern_pokemon_gender(
+                PKMN::Species::MAGNEMITE,
+                0xFFFFFFFF
+            )
+        )
     end
 
     def test_gen2_hidden_power
@@ -1142,18 +1269,16 @@ class RubyCalculationsTest < Test::Unit::TestCase
         end
 
         #
-        # Make sure known good inputs result in expected results, and test (in)equality operators.
+        # Make sure known good inputs result in expected results.
         #
         # Source: http://bulbapedia.bulbagarden.net/wiki/Hidden_Power_(move)/Calculation#Generation_II
         #
-        expected_hidden_power = PKMN::Calculations::HiddenPower.new("Dark", 69)
-        hidden_power_different_type = PKMN::Calculations::HiddenPower.new("Normal", 69)
-        hidden_power_different_base_power = PKMN::Calculations::HiddenPower.new("Dark", 50)
-
+        expected_hidden_power = PKMN::Calculations::HiddenPower.new(
+                                    PKMN::Type::DARK,
+                                    69
+                                )
         hidden_power = PKMN::Calculations::gen2_hidden_power(15, 15, 15, 14)
         assert_equal(expected_hidden_power, hidden_power)
-        assert_not_equal(hidden_power_different_type, hidden_power)
-        assert_not_equal(hidden_power_different_base_power, hidden_power)
     end
 
     def test_modern_hidden_power
@@ -1200,36 +1325,34 @@ class RubyCalculationsTest < Test::Unit::TestCase
         #
         # Source: http://bulbapedia.bulbagarden.net/wiki/Hidden_Power_(move)/Calculation#Generation_III_to_VI
         #
-        expected_hidden_power = PKMN::Calculations::HiddenPower.new("Grass", 70)
-        hidden_power_different_type = PKMN::Calculations::HiddenPower.new("Steel", 70)
-        hidden_power_different_base_power = PKMN::Calculations::HiddenPower.new("Grass", 10)
-
+        expected_hidden_power = PKMN::Calculations::HiddenPower.new(
+                                    PKMN::Type::GRASS,
+                                    70
+                                )
         hidden_power = PKMN::Calculations::modern_hidden_power(30, 31, 31, 31, 30, 31)
         assert_equal(expected_hidden_power, hidden_power)
-        assert_not_equal(hidden_power_different_type, hidden_power)
-        assert_not_equal(hidden_power_different_base_power, hidden_power)
     end
 
     def test_natural_gift
         # Test invalid generations.
 
         assert_raise IndexError do
-            PKMN::Calculations::natural_gift_stats("Cheri Berry", 3)
+            PKMN::Calculations::natural_gift_stats(PKMN::Item::CHERI_BERRY, 3)
         end
         assert_raise IndexError do
-            PKMN::Calculations::natural_gift_stats("Cheri Berry", 10)
+            PKMN::Calculations::natural_gift_stats(PKMN::Item::CHERI_BERRY, 10)
         end
 
         # Test invalid items.
 
         assert_raise ArgumentError do
-            PKMN::Calculations::natural_gift_stats("Potion", 4)
+            PKMN::Calculations::natural_gift_stats(PKMN::Item::POTION, 4)
         end
 
         # Test expected values.
 
-        items = ["Cheri Berry", "Nanab Berry", "Belue Berry"]
-        types = ["Fire", "Water", "Electric"]
+        items = [PKMN::Item::CHERI_BERRY, PKMN::Item::NANAB_BERRY, PKMN::Item::BELUE_BERRY]
+        types = [PKMN::Type::FIRE, PKMN::Type::WATER, PKMN::Type::ELECTRIC]
         gen4_powers = [60, 70, 80]
         gen5_powers = [60, 70, 80]
         gen6_powers = [80, 90, 100]
@@ -1251,12 +1374,33 @@ class RubyCalculationsTest < Test::Unit::TestCase
     end
 
     def test_nature
-        natures = [
-            "Hardy", "Lonely", "Brave", "Adamant", "Naughty",
-            "Bold", "Docile", "Relaxed", "Impish", "Lax",
-            "Timid", "Hasty", "Serious", "Jolly", "Naive",
-            "Modest", "Mild", "Quiet", "Bashful", "Rash",
-            "Calm", "Gentle", "Sassy", "Careful", "Quirky",
+        natures =
+        [
+            PKMN::Nature::HARDY,
+            PKMN::Nature::LONELY,
+            PKMN::Nature::BRAVE,
+            PKMN::Nature::ADAMANT,
+            PKMN::Nature::NAUGHTY,
+            PKMN::Nature::BOLD,
+            PKMN::Nature::DOCILE,
+            PKMN::Nature::RELAXED,
+            PKMN::Nature::IMPISH,
+            PKMN::Nature::LAX,
+            PKMN::Nature::TIMID,
+            PKMN::Nature::HASTY,
+            PKMN::Nature::SERIOUS,
+            PKMN::Nature::JOLLY,
+            PKMN::Nature::NAIVE,
+            PKMN::Nature::MODEST,
+            PKMN::Nature::MILD,
+            PKMN::Nature::QUIET,
+            PKMN::Nature::BASHFUL,
+            PKMN::Nature::RASH,
+            PKMN::Nature::CALM,
+            PKMN::Nature::GENTLE,
+            PKMN::Nature::SASSY,
+            PKMN::Nature::CAREFUL,
+            PKMN::Nature::QUIRKY
         ]
 
         # Make sure SWIG+Ruby catches values outside the uint32_t bounds.
@@ -1283,69 +1427,69 @@ class RubyCalculationsTest < Test::Unit::TestCase
         # Test invalid ability.
         assert_raise ArgumentError do
             PKMN::Calculations::generate_personality(
-                "Charmander",
+                PKMN::Species::CHARMANDER,
                 PKMN::Pokemon.DEFAULT_TRAINER_ID,
                 true,
-                "Torrent",
-                "Male",
-                "Quiet"
+                PKMN::Ability::TORRENT,
+                PKMN::Gender::MALE,
+                PKMN::Nature::QUIET
             )
         end
 
         # Test invalid gender.
         assert_raise ArgumentError do
             PKMN::Calculations::generate_personality(
-                "Charmander",
+                PKMN::Species::CHARMANDER,
                 PKMN::Pokemon.DEFAULT_TRAINER_ID,
                 true,
-                "Blaze",
-                "Not a gender",
-                "Quiet"
+                PKMN::Ability::BLAZE,
+                PKMN::Gender::NONE,
+                PKMN::Nature::QUIET
             )
         end
 
         # Test invalid nature.
         assert_raise ArgumentError do
             PKMN::Calculations::generate_personality(
-                "Charmander",
+                PKMN::Species::CHARMANDER,
                 PKMN::Pokemon.DEFAULT_TRAINER_ID,
                 true,
-                "Blaze",
-                "Male",
-                "Not a nature"
+                PKMN::Ability::BLAZE,
+                PKMN::Gender::MALE,
+                PKMN::Nature::NONE
             )
         end
 
         # Make sure SWIG+Ruby catches values outside the uint32_t bounds.
         assert_raise RangeError do
             PKMN::Calculations::generate_personality(
-                "Charmander",
+                PKMN::Species::CHARMANDER,
                 -1,
                 true,
-                "Blaze",
-                "Male",
-                "Quiet"
+                PKMN::Ability::BLAZE,
+                PKMN::Gender::MALE,
+                PKMN::Nature::QUIET
             )
         end
         assert_raise RangeError do
             PKMN::Calculations::generate_personality(
-                "Charmander",
+                PKMN::Species::CHARMANDER,
                 0xFFFFFFFF+1,
                 true,
-                "Blaze",
-                "Male",
-                "Quiet"
+                PKMN::Ability::BLAZE,
+                PKMN::Gender::MALE,
+                PKMN::Nature::QUIET
             )
         end
 
         # Test and validate a valid call.
         personality = PKMN::Calculations::generate_personality(
-                          "Charmander",
+                          PKMN::Species::CHARMANDER,
                           PKMN::Pokemon.DEFAULT_TRAINER_ID,
                           true,
-                          "Blaze",
-                          "Male",
-                          "Quiet"
+                          PKMN::Ability::BLAZE,
+                          PKMN::Gender::MALE,
+                          PKMN::Nature::QUIET
                       )
         assert(
             PKMN::Calculations::modern_shiny(
@@ -1353,9 +1497,9 @@ class RubyCalculationsTest < Test::Unit::TestCase
             )
         )
         assert_equal(
-            "Male",
+            PKMN::Gender::MALE,
             PKMN::Calculations::modern_pokemon_gender(
-                "Charmander",
+                PKMN::Species::CHARMANDER,
                 personality
             )
         )
@@ -1426,91 +1570,129 @@ class RubyCalculationsTest < Test::Unit::TestCase
         # Make sure SWIG+Ruby catches values outside the uint32_t bounds.
         assert_raise RangeError do
             PKMN::Calculations::pokemon_size(
-                "Magikarp", -1, 0, 0, 0, 0, 0, 0
+                PKMN::Species::MAGIKARP,
+                -1, 0, 0, 0, 0, 0, 0
             )
         end
         assert_raise RangeError do
             PKMN::Calculations::pokemon_size(
-                "Magikarp", 0xFFFFFFFF+1, 0, 0, 0, 0, 0, 0
+                PKMN::Species::MAGIKARP,
+                0xFFFFFFFF+1, 0, 0, 0, 0, 0, 0
             )
         end
 
         # Test input validation.
         assert_raise IndexError do
             PKMN::Calculations::pokemon_size(
-                "Magikarp", 0, -1, 0, 0, 0, 0, 0
+                PKMN::Species::MAGIKARP,
+                0, -1, 0, 0, 0, 0, 0
             )
         end
         assert_raise IndexError do
             PKMN::Calculations::pokemon_size(
-                "Magikarp", 0, 32, 0, 0, 0, 0, 0
+                PKMN::Species::MAGIKARP,
+                0, 32, 0, 0, 0, 0, 0
             )
         end
         assert_raise IndexError do
             PKMN::Calculations::pokemon_size(
-                "Magikarp", 0, 0, -1, 0, 0, 0, 0
+                PKMN::Species::MAGIKARP,
+                0, 0, -1, 0, 0, 0, 0
             )
         end
         assert_raise IndexError do
             PKMN::Calculations::pokemon_size(
-                "Magikarp", 0, 0, 32, 0, 0, 0, 0
+                PKMN::Species::MAGIKARP,
+                0, 0, 32, 0, 0, 0, 0
             )
         end
         assert_raise IndexError do
             PKMN::Calculations::pokemon_size(
-                "Magikarp", 0, 0, 0, -1, 0, 0, 0
+                PKMN::Species::MAGIKARP,
+                0, 0, 0, -1, 0, 0, 0
             )
         end
         assert_raise IndexError do
             PKMN::Calculations::pokemon_size(
-                "Magikarp", 0, 0, 0, 32, 0, 0, 0
+                PKMN::Species::MAGIKARP,
+                0, 0, 0, 32, 0, 0, 0
             )
         end
         assert_raise IndexError do
             PKMN::Calculations::pokemon_size(
-                "Magikarp", 0, 0, 0, 0, -1, 0, 0
+                PKMN::Species::MAGIKARP,
+                0, 0, 0, 0, -1, 0, 0
             )
         end
         assert_raise IndexError do
             PKMN::Calculations::pokemon_size(
-                "Magikarp", 0, 0, 0, 0, 32, 0, 0
+                PKMN::Species::MAGIKARP,
+                0, 0, 0, 0, 32, 0, 0
             )
         end
         assert_raise IndexError do
             PKMN::Calculations::pokemon_size(
-                "Magikarp", 0, 0, 0, 0, 0, -1, 0
+                PKMN::Species::MAGIKARP,
+                0, 0, 0, 0, 0, -1, 0
             )
         end
         assert_raise IndexError do
             PKMN::Calculations::pokemon_size(
-                "Magikarp", 0, 0, 0, 0, 0, 32, 0
+                PKMN::Species::MAGIKARP,
+                0, 0, 0, 0, 0, 32, 0
             )
         end
         assert_raise IndexError do
             PKMN::Calculations::pokemon_size(
-                "Magikarp", 0, 0, 0, 0, 0, 0, -1
+                PKMN::Species::MAGIKARP,
+                0, 0, 0, 0, 0, 0, -1
             )
         end
         assert_raise IndexError do
             PKMN::Calculations::pokemon_size(
-                "Magikarp", 0, 0, 0, 0, 0, 0, 32
+                PKMN::Species::MAGIKARP,
+                0, 0, 0, 0, 0, 0, 32
             )
         end
 
         # There are no known good calculations, so just check for reasonable values
         # for each relevant Pokemon.
         pokemon_with_size_checks = [
-            PKMN::Database::PokemonEntry.new("Barboach", "Ruby", ""),
-            PKMN::Database::PokemonEntry.new("Shroomish", "Ruby", ""),
-            PKMN::Database::PokemonEntry.new("Seedot", "Emerald", ""),
-            PKMN::Database::PokemonEntry.new("Lotad", "Emerald", ""),
-            PKMN::Database::PokemonEntry.new("Magikarp", "FireRed", ""),
-            PKMN::Database::PokemonEntry.new("Heracross", "FireRed", "")
+            PKMN::Database::PokemonEntry.new(
+                PKMN::Species::BARBOACH,
+                PKMN::Game::RUBY,
+                ""
+            ),
+            PKMN::Database::PokemonEntry.new(
+                PKMN::Species::SHROOMISH,
+                PKMN::Game::RUBY,
+                ""
+            ),
+            PKMN::Database::PokemonEntry.new(
+                PKMN::Species::SEEDOT,
+                PKMN::Game::EMERALD,
+                ""
+            ),
+            PKMN::Database::PokemonEntry.new(
+                PKMN::Species::LOTAD,
+                PKMN::Game::EMERALD,
+                ""
+            ),
+            PKMN::Database::PokemonEntry.new(
+                PKMN::Species::MAGIKARP,
+                PKMN::Game::FIRERED,
+                ""
+            ),
+            PKMN::Database::PokemonEntry.new(
+                PKMN::Species::HERACROSS,
+                PKMN::Game::FIRERED,
+                ""
+            )
         ]
 
         (0..pokemon_with_size_checks.length-1).each do |i|
             height = pokemon_with_size_checks[i].height
-            species = pokemon_with_size_checks[i].name
+            species = pokemon_with_size_checks[i].species
 
             (0..9).each do
                 size = PKMN::Calculations::pokemon_size(
@@ -1577,13 +1759,22 @@ class RubyCalculationsTest < Test::Unit::TestCase
     def test_gb_stats
         # Make sure expected errors are raised.
         assert_raise ArgumentError do
-            PKMN::Calculations::get_gb_stat("Not a stat", 1, 1, 1, 1)
+            PKMN::Calculations::get_gb_stat(
+                PKMN::Stat::NONE,
+                1, 1, 1, 1
+            )
         end
         assert_raise IndexError do
-            PKMN::Calculations::get_gb_stat("Attack", 1, 1, 123456, 1)
+            PKMN::Calculations::get_gb_stat(
+                PKMN::Stat::ATTACK,
+                1, 1, 123456, 1
+            )
         end
         assert_raise IndexError do
-            PKMN::Calculations::get_gb_stat("Attack", 1, 1, 1, 12345)
+            PKMN::Calculations::get_gb_stat(
+                PKMN::Stat::ATTACK,
+                1, 1, 1, 12345
+            )
         end
 
         #
@@ -1591,28 +1782,49 @@ class RubyCalculationsTest < Test::Unit::TestCase
         #
         # Source: http://bulbapedia.bulbagarden.net/wiki/Statistic#In_Generations_I_and_II
         #
-        stat = PKMN::Calculations::get_gb_stat("HP", 81, 35, 22850, 7)
+        stat = PKMN::Calculations::get_gb_stat(
+            PKMN::Stat::HP,
+            81, 35, 22850, 7
+        )
         assert_ints_almost_equal(stat, 189)
-        stat = PKMN::Calculations::get_gb_stat("Attack", 81, 55, 23140, 8)
+        stat = PKMN::Calculations::get_gb_stat(
+            PKMN::Stat::ATTACK,
+            81, 55, 23140, 8
+        )
         assert_ints_almost_equal(stat, 137)
     end
 
     def test_modern_stats
         # Make sure expected errors are raised.
         assert_raise ArgumentError do
-            PKMN::Calculations::get_modern_stat("Not a stat", 1, 1.0, 1, 1, 1)
+            PKMN::Calculations::get_modern_stat(
+                PKMN::Stat::NONE,
+                1, 1.0, 1, 1, 1
+            )
         end
         assert_raise ArgumentError do
-            PKMN::Calculations::get_modern_stat("Special", 1, 1.0, 1, 1, 1)
+            PKMN::Calculations::get_modern_stat(
+                PKMN::Stat::SPECIAL,
+                1, 1.0, 1, 1, 1
+            )
         end
         assert_raise ArgumentError do
-            PKMN::Calculations::get_modern_stat("Attack", 1, 0.666, 1, 1, 1)
+            PKMN::Calculations::get_modern_stat(
+                PKMN::Stat::ATTACK,
+                1, 0.666, 1, 1, 1
+            )
         end
         assert_raise IndexError do
-            PKMN::Calculations::get_modern_stat("Attack", 1, 1.0, 1, 12345, 1)
+            PKMN::Calculations::get_modern_stat(
+                PKMN::Stat::ATTACK,
+                1, 1.0, 1, 12345, 1
+            )
         end
         assert_raise IndexError do
-            PKMN::Calculations::get_modern_stat("Attack", 1, 1.0, 1, 1, 12345)
+            PKMN::Calculations::get_modern_stat(
+                PKMN::Stat::ATTACK,
+                1, 1.0, 1, 1, 12345
+            )
         end
 
         #
@@ -1620,9 +1832,15 @@ class RubyCalculationsTest < Test::Unit::TestCase
         #
         # Source: http://bulbapedia.bulbagarden.net/wiki/Statistic#In_Generation_III_onward
         #
-        stat = PKMN::Calculations::get_modern_stat("HP", 78, 1.0, 108, 74, 24)
+        stat = PKMN::Calculations::get_modern_stat(
+                   PKMN::Stat::HP,
+                   78, 1.0, 108, 74, 24
+               )
         assert_ints_almost_equal(stat, 289)
-        stat = PKMN::Calculations::get_modern_stat("Attack", 78, 1.1, 130, 195, 12)
+        stat = PKMN::Calculations::get_modern_stat(
+                   PKMN::Stat::ATTACK,
+                   78, 1.1, 130, 195, 12
+               )
         assert_ints_almost_equal(stat, 280)
     end
 end
