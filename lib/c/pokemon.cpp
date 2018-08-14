@@ -92,7 +92,7 @@ enum pkmn_error pkmn_pokemon_free(
 
     PKMN_CPP_TO_C(
         pkmn::c::delete_pointer_and_set_to_null(
-            reinterpret_cast<pkmn_pokemon_internal_t**>(&p_pokemon->p_internal)
+            reinterpret_cast<pkmn::c::pokemon_internal_t**>(&p_pokemon->p_internal)
         );
     )
 }
@@ -111,7 +111,7 @@ enum pkmn_error pkmn_pokemon_to_game(
 )
 {
     PKMN_CHECK_NULL_PARAM(p_pokemon);
-    pkmn_pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
+    pkmn::c::pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_game, p_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_new_pokemon_out, p_internal);
 
@@ -131,7 +131,7 @@ enum pkmn_error pkmn_pokemon_export_to_file(
 )
 {
     PKMN_CHECK_NULL_PARAM(p_pokemon);
-    pkmn_pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
+    pkmn::c::pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_filepath, p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
@@ -147,7 +147,7 @@ enum pkmn_error pkmn_pokemon_get_form(
 )
 {
     PKMN_CHECK_NULL_PARAM(p_pokemon);
-    pkmn_pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
+    pkmn::c::pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(form_buffer, p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
@@ -166,7 +166,7 @@ enum pkmn_error pkmn_pokemon_set_form(
 )
 {
     PKMN_CHECK_NULL_PARAM(p_pokemon);
-    pkmn_pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
+    pkmn::c::pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_form, p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
@@ -180,7 +180,7 @@ enum pkmn_error pkmn_pokemon_is_egg(
 )
 {
     PKMN_CHECK_NULL_PARAM(p_pokemon);
-    pkmn_pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
+    pkmn::c::pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_is_egg_out, p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
@@ -194,7 +194,7 @@ enum pkmn_error pkmn_pokemon_set_is_egg(
 )
 {
     PKMN_CHECK_NULL_PARAM(p_pokemon);
-    pkmn_pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
+    pkmn::c::pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
         p_internal->cpp->set_is_egg(is_egg);
@@ -207,7 +207,7 @@ enum pkmn_error pkmn_pokemon_get_database_entry(
 )
 {
     PKMN_CHECK_NULL_PARAM(p_pokemon);
-    pkmn_pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
+    pkmn::c::pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_database_entry_out, p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
@@ -224,7 +224,7 @@ enum pkmn_error pkmn_pokemon_get_condition(
 )
 {
     PKMN_CHECK_NULL_PARAM(p_pokemon);
-    pkmn_pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
+    pkmn::c::pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_condition_out, p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
@@ -242,7 +242,7 @@ enum pkmn_error pkmn_pokemon_set_condition(
 )
 {
     PKMN_CHECK_NULL_PARAM(p_pokemon);
-    pkmn_pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
+    pkmn::c::pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
         const pkmn::c::condition_bimap_t& condition_bimap = pkmn::c::get_condition_bimap();
@@ -267,7 +267,7 @@ enum pkmn_error pkmn_pokemon_get_nickname(
 )
 {
     PKMN_CHECK_NULL_PARAM(p_pokemon);
-    pkmn_pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
+    pkmn::c::pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_nickname_out, p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
@@ -286,7 +286,7 @@ enum pkmn_error pkmn_pokemon_set_nickname(
 )
 {
     PKMN_CHECK_NULL_PARAM(p_pokemon);
-    pkmn_pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
+    pkmn::c::pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_nickname, p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
@@ -300,7 +300,7 @@ enum pkmn_error pkmn_pokemon_get_gender(
 )
 {
     PKMN_CHECK_NULL_PARAM(p_pokemon);
-    pkmn_pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
+    pkmn::c::pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_gender_out, p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
@@ -318,7 +318,7 @@ enum pkmn_error pkmn_pokemon_set_gender(
 )
 {
     PKMN_CHECK_NULL_PARAM(p_pokemon);
-    pkmn_pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
+    pkmn::c::pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
         const pkmn::c::gender_bimap_t& gender_bimap = pkmn::c::get_gender_bimap();
@@ -341,7 +341,7 @@ enum pkmn_error pkmn_pokemon_is_shiny(
 )
 {
     PKMN_CHECK_NULL_PARAM(p_pokemon);
-    pkmn_pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
+    pkmn::c::pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_is_shiny_out, p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
@@ -355,7 +355,7 @@ enum pkmn_error pkmn_pokemon_set_is_shiny(
 )
 {
     PKMN_CHECK_NULL_PARAM(p_pokemon);
-    pkmn_pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
+    pkmn::c::pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
         p_internal->cpp->set_shininess(is_shiny);
@@ -370,7 +370,7 @@ enum pkmn_error pkmn_pokemon_get_held_item(
 )
 {
     PKMN_CHECK_NULL_PARAM(p_pokemon);
-    pkmn_pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
+    pkmn::c::pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_held_item_out, p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
@@ -389,7 +389,7 @@ enum pkmn_error pkmn_pokemon_set_held_item(
 )
 {
     PKMN_CHECK_NULL_PARAM(p_pokemon);
-    pkmn_pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
+    pkmn::c::pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_held_item, p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
@@ -403,7 +403,7 @@ enum pkmn_error pkmn_pokemon_get_pokerus_duration(
 )
 {
     PKMN_CHECK_NULL_PARAM(p_pokemon);
-    pkmn_pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
+    pkmn::c::pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_pokerus_duration_out, p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
@@ -417,7 +417,7 @@ enum pkmn_error pkmn_pokemon_set_pokerus_duration(
 )
 {
     PKMN_CHECK_NULL_PARAM(p_pokemon);
-    pkmn_pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
+    pkmn::c::pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
         p_internal->cpp->set_pokerus_duration(pokerus_duration);
@@ -430,7 +430,7 @@ enum pkmn_error pkmn_pokemon_get_original_trainer_info(
 )
 {
     PKMN_CHECK_NULL_PARAM(p_pokemon);
-    pkmn_pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
+    pkmn::c::pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_original_trainer_info_out, p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
@@ -463,7 +463,7 @@ enum pkmn_error pkmn_pokemon_set_original_trainer_name(
 )
 {
     PKMN_CHECK_NULL_PARAM(p_pokemon);
-    pkmn_pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
+    pkmn::c::pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_original_trainer_name, p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
@@ -477,7 +477,7 @@ enum pkmn_error pkmn_pokemon_set_original_trainer_public_id(
 )
 {
     PKMN_CHECK_NULL_PARAM(p_pokemon);
-    pkmn_pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
+    pkmn::c::pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
         p_internal->cpp->set_original_trainer_public_id(
@@ -492,7 +492,7 @@ enum pkmn_error pkmn_pokemon_set_original_trainer_secret_id(
 )
 {
     PKMN_CHECK_NULL_PARAM(p_pokemon);
-    pkmn_pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
+    pkmn::c::pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
         p_internal->cpp->set_original_trainer_secret_id(
@@ -507,7 +507,7 @@ enum pkmn_error pkmn_pokemon_set_original_trainer_id(
 )
 {
     PKMN_CHECK_NULL_PARAM(p_pokemon);
-    pkmn_pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
+    pkmn::c::pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
         p_internal->cpp->set_original_trainer_id(original_trainer_id);
@@ -520,7 +520,7 @@ enum pkmn_error pkmn_pokemon_set_original_trainer_gender(
 )
 {
     PKMN_CHECK_NULL_PARAM(p_pokemon);
-    pkmn_pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
+    pkmn::c::pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
         const pkmn::c::gender_bimap_t& gender_bimap = pkmn::c::get_gender_bimap();
@@ -543,7 +543,7 @@ enum pkmn_error pkmn_pokemon_get_current_trainer_friendship(
 )
 {
     PKMN_CHECK_NULL_PARAM(p_pokemon);
-    pkmn_pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
+    pkmn::c::pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_current_trainer_friendship_out, p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
@@ -557,7 +557,7 @@ enum pkmn_error pkmn_pokemon_set_current_trainer_friendship(
 )
 {
     PKMN_CHECK_NULL_PARAM(p_pokemon);
-    pkmn_pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
+    pkmn::c::pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
         p_internal->cpp->set_current_trainer_friendship(current_trainer_friendship);
@@ -572,7 +572,7 @@ enum pkmn_error pkmn_pokemon_get_ability(
 )
 {
     PKMN_CHECK_NULL_PARAM(p_pokemon);
-    pkmn_pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
+    pkmn::c::pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_ability_out, p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
@@ -591,7 +591,7 @@ enum pkmn_error pkmn_pokemon_set_ability(
 )
 {
     PKMN_CHECK_NULL_PARAM(p_pokemon);
-    pkmn_pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
+    pkmn::c::pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_ability, p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
@@ -607,7 +607,7 @@ enum pkmn_error pkmn_pokemon_get_ball(
 )
 {
     PKMN_CHECK_NULL_PARAM(p_pokemon);
-    pkmn_pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
+    pkmn::c::pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_ball_out, p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
@@ -626,7 +626,7 @@ enum pkmn_error pkmn_pokemon_set_ball(
 )
 {
     PKMN_CHECK_NULL_PARAM(p_pokemon);
-    pkmn_pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
+    pkmn::c::pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_ball, p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
@@ -640,7 +640,7 @@ enum pkmn_error pkmn_pokemon_get_level_met(
 )
 {
     PKMN_CHECK_NULL_PARAM(p_pokemon);
-    pkmn_pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
+    pkmn::c::pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_level_met_out, p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
@@ -654,7 +654,7 @@ enum pkmn_error pkmn_pokemon_set_level_met(
 )
 {
     PKMN_CHECK_NULL_PARAM(p_pokemon);
-    pkmn_pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
+    pkmn::c::pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
         p_internal->cpp->set_level_met(level_met);
@@ -670,7 +670,7 @@ enum pkmn_error pkmn_pokemon_get_location_met(
 )
 {
     PKMN_CHECK_NULL_PARAM(p_pokemon);
-    pkmn_pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
+    pkmn::c::pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_location_met_out, p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
@@ -690,7 +690,7 @@ enum pkmn_error pkmn_pokemon_set_location_met(
 )
 {
     PKMN_CHECK_NULL_PARAM(p_pokemon);
-    pkmn_pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
+    pkmn::c::pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_location_met, p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
@@ -706,7 +706,7 @@ enum pkmn_error pkmn_pokemon_get_original_game(
 )
 {
     PKMN_CHECK_NULL_PARAM(p_pokemon);
-    pkmn_pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
+    pkmn::c::pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_original_game_out, p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
@@ -725,7 +725,7 @@ enum pkmn_error pkmn_pokemon_set_original_game(
 )
 {
     PKMN_CHECK_NULL_PARAM(p_pokemon);
-    pkmn_pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
+    pkmn::c::pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_game, p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
@@ -739,7 +739,7 @@ enum pkmn_error pkmn_pokemon_get_personality(
 )
 {
     PKMN_CHECK_NULL_PARAM(p_pokemon);
-    pkmn_pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
+    pkmn::c::pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_personality_out, p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
@@ -753,7 +753,7 @@ enum pkmn_error pkmn_pokemon_set_personality(
 )
 {
     PKMN_CHECK_NULL_PARAM(p_pokemon);
-    pkmn_pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
+    pkmn::c::pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
         p_internal->cpp->set_personality(personality);
@@ -766,7 +766,7 @@ enum pkmn_error pkmn_pokemon_get_experience(
 )
 {
     PKMN_CHECK_NULL_PARAM(p_pokemon);
-    pkmn_pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
+    pkmn::c::pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_experience_out, p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
@@ -780,7 +780,7 @@ enum pkmn_error pkmn_pokemon_set_experience(
 )
 {
     PKMN_CHECK_NULL_PARAM(p_pokemon);
-    pkmn_pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
+    pkmn::c::pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
         p_internal->cpp->set_experience(experience);
@@ -793,7 +793,7 @@ enum pkmn_error pkmn_pokemon_get_level(
 )
 {
     PKMN_CHECK_NULL_PARAM(p_pokemon);
-    pkmn_pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
+    pkmn::c::pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_level_out, p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
@@ -807,7 +807,7 @@ enum pkmn_error pkmn_pokemon_set_level(
 )
 {
     PKMN_CHECK_NULL_PARAM(p_pokemon);
-    pkmn_pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
+    pkmn::c::pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
         p_internal->cpp->set_level(level);
@@ -824,7 +824,7 @@ enum pkmn_error pkmn_pokemon_get_markings(
 )
 {
     PKMN_CHECK_NULL_PARAM(p_pokemon);
-    pkmn_pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
+    pkmn::c::pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_has_markings_buffer_out, p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
@@ -849,7 +849,7 @@ enum pkmn_error pkmn_pokemon_set_has_marking(
 )
 {
     PKMN_CHECK_NULL_PARAM(p_pokemon);
-    pkmn_pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
+    pkmn::c::pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
         const pkmn::c::marking_bimap_t& marking_bimap = (p_internal->generation == 3) ?
@@ -875,7 +875,7 @@ enum pkmn_error pkmn_pokemon_has_ribbon(
 )
 {
     PKMN_CHECK_NULL_PARAM(p_pokemon);
-    pkmn_pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
+    pkmn::c::pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_ribbon_name, p_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_has_ribbon_out, p_internal);
 
@@ -899,7 +899,7 @@ enum pkmn_error pkmn_pokemon_set_has_ribbon(
 )
 {
     PKMN_CHECK_NULL_PARAM(p_pokemon);
-    pkmn_pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
+    pkmn::c::pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_ribbon_name, p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
@@ -921,7 +921,7 @@ enum pkmn_error pkmn_pokemon_get_ribbon_names(
 )
 {
     PKMN_CHECK_NULL_PARAM(p_pokemon);
-    pkmn_pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
+    pkmn::c::pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_ribbon_names_out, p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
@@ -940,7 +940,7 @@ enum pkmn_error pkmn_pokemon_get_contest_stats(
 )
 {
     PKMN_CHECK_NULL_PARAM(p_pokemon);
-    pkmn_pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
+    pkmn::c::pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_contest_stats_buffer_out, p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
@@ -962,7 +962,7 @@ enum pkmn_error pkmn_pokemon_set_contest_stat(
 )
 {
     PKMN_CHECK_NULL_PARAM(p_pokemon);
-    pkmn_pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
+    pkmn::c::pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
         const pkmn::c::contest_stat_bimap_t& contest_stat_bimap = pkmn::c::get_contest_stat_bimap();
@@ -988,7 +988,7 @@ enum pkmn_error pkmn_pokemon_get_moves(
 )
 {
     PKMN_CHECK_NULL_PARAM(p_pokemon);
-    pkmn_pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
+    pkmn::c::pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_move_slots_out, p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
@@ -1006,7 +1006,7 @@ enum pkmn_error pkmn_pokemon_set_move(
 )
 {
     PKMN_CHECK_NULL_PARAM(p_pokemon);
-    pkmn_pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
+    pkmn::c::pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_move, p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
@@ -1021,7 +1021,7 @@ enum pkmn_error pkmn_pokemon_set_move_pp(
 )
 {
     PKMN_CHECK_NULL_PARAM(p_pokemon);
-    pkmn_pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
+    pkmn::c::pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
         p_internal->cpp->set_move_pp(int(index), pp);
@@ -1038,7 +1038,7 @@ enum pkmn_error pkmn_pokemon_get_EVs(
 )
 {
     PKMN_CHECK_NULL_PARAM(p_pokemon);
-    pkmn_pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
+    pkmn::c::pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_EVs_buffer_out, p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
@@ -1060,7 +1060,7 @@ enum pkmn_error pkmn_pokemon_set_EV(
 )
 {
     PKMN_CHECK_NULL_PARAM(p_pokemon);
-    pkmn_pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
+    pkmn::c::pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
         const pkmn::c::stat_bimap_t& stat_bimap = pkmn::c::get_stat_bimap();
@@ -1086,7 +1086,7 @@ enum pkmn_error pkmn_pokemon_get_IVs(
 )
 {
     PKMN_CHECK_NULL_PARAM(p_pokemon);
-    pkmn_pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
+    pkmn::c::pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_IVs_buffer_out, p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
@@ -1108,7 +1108,7 @@ enum pkmn_error pkmn_pokemon_set_IV(
 )
 {
     PKMN_CHECK_NULL_PARAM(p_pokemon);
-    pkmn_pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
+    pkmn::c::pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
         const pkmn::c::stat_bimap_t& stat_bimap = pkmn::c::get_stat_bimap();
@@ -1134,7 +1134,7 @@ enum pkmn_error pkmn_pokemon_get_stats(
 )
 {
     PKMN_CHECK_NULL_PARAM(p_pokemon);
-    pkmn_pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
+    pkmn::c::pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_stats_buffer_out, p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
@@ -1155,7 +1155,7 @@ enum pkmn_error pkmn_pokemon_get_current_hp(
 )
 {
     PKMN_CHECK_NULL_PARAM(p_pokemon);
-    pkmn_pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
+    pkmn::c::pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_current_hp_out, p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
@@ -1169,7 +1169,7 @@ enum pkmn_error pkmn_pokemon_set_current_hp(
 )
 {
     PKMN_CHECK_NULL_PARAM(p_pokemon);
-    pkmn_pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
+    pkmn::c::pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
         p_internal->cpp->set_current_hp(current_hp);
@@ -1184,7 +1184,7 @@ enum pkmn_error pkmn_pokemon_get_icon_filepath(
 )
 {
     PKMN_CHECK_NULL_PARAM(p_pokemon);
-    pkmn_pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
+    pkmn::c::pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_icon_filepath_out, p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
@@ -1205,7 +1205,7 @@ enum pkmn_error pkmn_pokemon_get_sprite_filepath(
 )
 {
     PKMN_CHECK_NULL_PARAM(p_pokemon);
-    pkmn_pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
+    pkmn::c::pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_sprite_filepath_out, p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,

@@ -79,7 +79,7 @@ enum pkmn_error pkmn_game_save_free(
 
     PKMN_CPP_TO_C(
         pkmn::c::delete_pointer_and_set_to_null(
-            reinterpret_cast<pkmn_game_save_internal_t**>(&p_game_save->p_internal)
+            reinterpret_cast<pkmn::c::game_save_internal_t**>(&p_game_save->p_internal)
         );
     )
 }
@@ -95,7 +95,7 @@ const char* pkmn_game_save_strerror(
 
     try
     {
-        pkmn_game_save_internal_t* p_internal = GAME_SAVE_INTERNAL_RCAST(p_game_save->p_internal);
+        pkmn::c::game_save_internal_t* p_internal = GAME_SAVE_INTERNAL_RCAST(p_game_save->p_internal);
         if(!p_internal)
         {
             return nullptr;
@@ -120,7 +120,7 @@ PKMN_C_API enum pkmn_error pkmn_game_save_get_filepath(
 )
 {
     PKMN_CHECK_NULL_PARAM(p_game_save);
-    pkmn_game_save_internal_t* p_internal = GAME_SAVE_INTERNAL_RCAST(p_game_save->p_internal);
+    pkmn::c::game_save_internal_t* p_internal = GAME_SAVE_INTERNAL_RCAST(p_game_save->p_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_filepath_buffer, p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
@@ -138,7 +138,7 @@ enum pkmn_error pkmn_game_save_save(
 )
 {
     PKMN_CHECK_NULL_PARAM(p_game_save);
-    pkmn_game_save_internal_t* p_internal = GAME_SAVE_INTERNAL_RCAST(p_game_save->p_internal);
+    pkmn::c::game_save_internal_t* p_internal = GAME_SAVE_INTERNAL_RCAST(p_game_save->p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
         p_internal->cpp->save();
@@ -151,7 +151,7 @@ enum pkmn_error pkmn_game_save_save_as(
 )
 {
     PKMN_CHECK_NULL_PARAM(p_game_save);
-    pkmn_game_save_internal_t* p_internal = GAME_SAVE_INTERNAL_RCAST(p_game_save->p_internal);
+    pkmn::c::game_save_internal_t* p_internal = GAME_SAVE_INTERNAL_RCAST(p_game_save->p_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_filepath, p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
@@ -167,7 +167,7 @@ enum pkmn_error pkmn_game_save_get_trainer_info(
 )
 {
     PKMN_CHECK_NULL_PARAM(p_game_save);
-    pkmn_game_save_internal_t* p_internal = GAME_SAVE_INTERNAL_RCAST(p_game_save->p_internal);
+    pkmn::c::game_save_internal_t* p_internal = GAME_SAVE_INTERNAL_RCAST(p_game_save->p_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_trainer_info_out, p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
@@ -204,7 +204,7 @@ enum pkmn_error pkmn_game_save_set_trainer_name(
 )
 {
     PKMN_CHECK_NULL_PARAM(p_game_save);
-    pkmn_game_save_internal_t* p_internal = GAME_SAVE_INTERNAL_RCAST(p_game_save->p_internal);
+    pkmn::c::game_save_internal_t* p_internal = GAME_SAVE_INTERNAL_RCAST(p_game_save->p_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_trainer_name, p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
@@ -218,7 +218,7 @@ enum pkmn_error pkmn_game_save_set_trainer_id(
 )
 {
     PKMN_CHECK_NULL_PARAM(p_game_save);
-    pkmn_game_save_internal_t* p_internal = GAME_SAVE_INTERNAL_RCAST(p_game_save->p_internal);
+    pkmn::c::game_save_internal_t* p_internal = GAME_SAVE_INTERNAL_RCAST(p_game_save->p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
         p_internal->cpp->set_trainer_id(trainer_id);
@@ -231,7 +231,7 @@ PKMN_C_API enum pkmn_error pkmn_game_save_set_trainer_public_id(
 )
 {
     PKMN_CHECK_NULL_PARAM(p_game_save);
-    pkmn_game_save_internal_t* p_internal = GAME_SAVE_INTERNAL_RCAST(p_game_save->p_internal);
+    pkmn::c::game_save_internal_t* p_internal = GAME_SAVE_INTERNAL_RCAST(p_game_save->p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
         p_internal->cpp->set_trainer_public_id(trainer_public_id);
@@ -244,7 +244,7 @@ PKMN_C_API enum pkmn_error pkmn_game_save_set_trainer_secret_id(
 )
 {
     PKMN_CHECK_NULL_PARAM(p_game_save);
-    pkmn_game_save_internal_t* p_internal = GAME_SAVE_INTERNAL_RCAST(p_game_save->p_internal);
+    pkmn::c::game_save_internal_t* p_internal = GAME_SAVE_INTERNAL_RCAST(p_game_save->p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
         p_internal->cpp->set_trainer_secret_id(trainer_secret_id);
@@ -257,7 +257,7 @@ enum pkmn_error pkmn_game_save_set_trainer_gender(
 )
 {
     PKMN_CHECK_NULL_PARAM(p_game_save);
-    pkmn_game_save_internal_t* p_internal = GAME_SAVE_INTERNAL_RCAST(p_game_save->p_internal);
+    pkmn::c::game_save_internal_t* p_internal = GAME_SAVE_INTERNAL_RCAST(p_game_save->p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
         pkmn::enforce_value_in_vector(
@@ -282,7 +282,7 @@ enum pkmn_error pkmn_game_save_get_time_played(
 )
 {
     PKMN_CHECK_NULL_PARAM(p_game_save);
-    pkmn_game_save_internal_t* p_internal = GAME_SAVE_INTERNAL_RCAST(p_game_save->p_internal);
+    pkmn::c::game_save_internal_t* p_internal = GAME_SAVE_INTERNAL_RCAST(p_game_save->p_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_time_played_out, p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
@@ -299,7 +299,7 @@ enum pkmn_error pkmn_game_save_set_time_played(
 )
 {
     PKMN_CHECK_NULL_PARAM(p_game_save);
-    pkmn_game_save_internal_t* p_internal = GAME_SAVE_INTERNAL_RCAST(p_game_save->p_internal);
+    pkmn::c::game_save_internal_t* p_internal = GAME_SAVE_INTERNAL_RCAST(p_game_save->p_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_time_played, p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
@@ -317,7 +317,7 @@ enum pkmn_error pkmn_game_save_get_rival_name(
 )
 {
     PKMN_CHECK_NULL_PARAM(p_game_save);
-    pkmn_game_save_internal_t* p_internal = GAME_SAVE_INTERNAL_RCAST(p_game_save->p_internal);
+    pkmn::c::game_save_internal_t* p_internal = GAME_SAVE_INTERNAL_RCAST(p_game_save->p_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_rival_name_buffer, p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
@@ -336,7 +336,7 @@ enum pkmn_error pkmn_game_save_set_rival_name(
 )
 {
     PKMN_CHECK_NULL_PARAM(p_game_save);
-    pkmn_game_save_internal_t* p_internal = GAME_SAVE_INTERNAL_RCAST(p_game_save->p_internal);
+    pkmn::c::game_save_internal_t* p_internal = GAME_SAVE_INTERNAL_RCAST(p_game_save->p_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_rival_name, p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
@@ -350,7 +350,7 @@ enum pkmn_error pkmn_game_save_get_money(
 )
 {
     PKMN_CHECK_NULL_PARAM(p_game_save);
-    pkmn_game_save_internal_t* p_internal = GAME_SAVE_INTERNAL_RCAST(p_game_save->p_internal);
+    pkmn::c::game_save_internal_t* p_internal = GAME_SAVE_INTERNAL_RCAST(p_game_save->p_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_money_out, p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
@@ -364,7 +364,7 @@ enum pkmn_error pkmn_game_save_set_money(
 )
 {
     PKMN_CHECK_NULL_PARAM(p_game_save);
-    pkmn_game_save_internal_t* p_internal = GAME_SAVE_INTERNAL_RCAST(p_game_save->p_internal);
+    pkmn::c::game_save_internal_t* p_internal = GAME_SAVE_INTERNAL_RCAST(p_game_save->p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
         p_internal->cpp->set_money(money);
@@ -379,7 +379,7 @@ enum pkmn_error pkmn_game_save_get_pokedex(
 )
 {
     PKMN_CHECK_NULL_PARAM(p_game_save);
-    pkmn_game_save_internal_t* p_internal = GAME_SAVE_INTERNAL_RCAST(p_game_save->p_internal);
+    pkmn::c::game_save_internal_t* p_internal = GAME_SAVE_INTERNAL_RCAST(p_game_save->p_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_pokedex_out, p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
@@ -396,7 +396,7 @@ enum pkmn_error pkmn_game_save_get_pokemon_party(
 )
 {
     PKMN_CHECK_NULL_PARAM(p_game_save);
-    pkmn_game_save_internal_t* p_internal = GAME_SAVE_INTERNAL_RCAST(p_game_save->p_internal);
+    pkmn::c::game_save_internal_t* p_internal = GAME_SAVE_INTERNAL_RCAST(p_game_save->p_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_pokemon_party_out, p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
@@ -413,7 +413,7 @@ enum pkmn_error pkmn_game_save_get_pokemon_pc(
 )
 {
     PKMN_CHECK_NULL_PARAM(p_game_save);
-    pkmn_game_save_internal_t* p_internal = GAME_SAVE_INTERNAL_RCAST(p_game_save->p_internal);
+    pkmn::c::game_save_internal_t* p_internal = GAME_SAVE_INTERNAL_RCAST(p_game_save->p_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_pokemon_pc_out, p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
@@ -430,7 +430,7 @@ enum pkmn_error pkmn_game_save_get_item_bag(
 )
 {
     PKMN_CHECK_NULL_PARAM(p_game_save);
-    pkmn_game_save_internal_t* p_internal = GAME_SAVE_INTERNAL_RCAST(p_game_save->p_internal);
+    pkmn::c::game_save_internal_t* p_internal = GAME_SAVE_INTERNAL_RCAST(p_game_save->p_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_item_bag_out, p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
@@ -447,7 +447,7 @@ enum pkmn_error pkmn_game_save_get_item_pc(
 )
 {
     PKMN_CHECK_NULL_PARAM(p_game_save);
-    pkmn_game_save_internal_t* p_internal = GAME_SAVE_INTERNAL_RCAST(p_game_save->p_internal);
+    pkmn::c::game_save_internal_t* p_internal = GAME_SAVE_INTERNAL_RCAST(p_game_save->p_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_item_pc_out, p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,

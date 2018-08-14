@@ -54,7 +54,7 @@ enum pkmn_error pkmn_daycare_free(
         {
             pkmn::c::free_pointer_and_set_to_null(&p_daycare->p_game);
             pkmn::c::delete_pointer_and_set_to_null(
-                reinterpret_cast<pkmn_daycare_internal_t**>(&p_daycare->p_internal)
+                reinterpret_cast<pkmn::c::daycare_internal_t**>(&p_daycare->p_internal)
             );
 
             std::memset(p_daycare, 0, sizeof(*p_daycare));
@@ -85,7 +85,7 @@ enum pkmn_error pkmn_daycare_get_levelup_pokemon(
                             );
     if(!error)
     {
-        pkmn_daycare_internal_t* p_internal = DAYCARE_INTERNAL_RCAST(
+        pkmn::c::daycare_internal_t* p_internal = DAYCARE_INTERNAL_RCAST(
                                                   p_daycare->p_internal
                                               );
         BOOST_ASSERT(p_internal != nullptr);
@@ -126,7 +126,7 @@ enum pkmn_error pkmn_daycare_set_levelup_pokemon(
                             );
     if(!error)
     {
-        pkmn_daycare_internal_t* p_internal = DAYCARE_INTERNAL_RCAST(
+        pkmn::c::daycare_internal_t* p_internal = DAYCARE_INTERNAL_RCAST(
                                                   p_daycare->p_internal
                                               );
         BOOST_ASSERT(p_internal != nullptr);
@@ -140,7 +140,7 @@ enum pkmn_error pkmn_daycare_set_levelup_pokemon(
         {
             auto impl = [&]()
             {
-                pkmn_pokemon_internal_t* p_pokemon_internal = POKEMON_INTERNAL_RCAST(
+                pkmn::c::pokemon_internal_t* p_pokemon_internal = POKEMON_INTERNAL_RCAST(
                                                                   p_pokemon->p_internal
                                                               );
                 BOOST_ASSERT(p_pokemon_internal != nullptr);
@@ -169,7 +169,7 @@ enum pkmn_error pkmn_daycare_get_levelup_pokemon_as_list(
                             );
     if(!error)
     {
-        pkmn_daycare_internal_t* p_internal = DAYCARE_INTERNAL_RCAST(
+        pkmn::c::daycare_internal_t* p_internal = DAYCARE_INTERNAL_RCAST(
                                                   p_daycare->p_internal
                                               );
         BOOST_ASSERT(p_internal != nullptr);
@@ -208,7 +208,7 @@ enum pkmn_error pkmn_daycare_get_breeding_pokemon(
                             );
     if(!error)
     {
-        pkmn_daycare_internal_t* p_internal = DAYCARE_INTERNAL_RCAST(
+        pkmn::c::daycare_internal_t* p_internal = DAYCARE_INTERNAL_RCAST(
                                                   p_daycare->p_internal
                                               );
         BOOST_ASSERT(p_internal != nullptr);
@@ -249,7 +249,7 @@ enum pkmn_error pkmn_daycare_set_breeding_pokemon(
                             );
     if(!error)
     {
-        pkmn_daycare_internal_t* p_internal = DAYCARE_INTERNAL_RCAST(
+        pkmn::c::daycare_internal_t* p_internal = DAYCARE_INTERNAL_RCAST(
                                                   p_daycare->p_internal
                                               );
         BOOST_ASSERT(p_internal != nullptr);
@@ -263,7 +263,7 @@ enum pkmn_error pkmn_daycare_set_breeding_pokemon(
         {
             auto impl = [&]()
             {
-                pkmn_pokemon_internal_t* p_pokemon_internal = POKEMON_INTERNAL_RCAST(
+                pkmn::c::pokemon_internal_t* p_pokemon_internal = POKEMON_INTERNAL_RCAST(
                                                                   p_pokemon->p_internal
                                                               );
                 BOOST_ASSERT(p_pokemon_internal != nullptr);
@@ -292,7 +292,7 @@ enum pkmn_error pkmn_daycare_get_breeding_pokemon_as_list(
                             );
     if(!error)
     {
-        pkmn_daycare_internal_t* p_internal = DAYCARE_INTERNAL_RCAST(
+        pkmn::c::daycare_internal_t* p_internal = DAYCARE_INTERNAL_RCAST(
                                                   p_daycare->p_internal
                                               );
         BOOST_ASSERT(p_internal != nullptr);
@@ -330,7 +330,7 @@ enum pkmn_error pkmn_daycare_get_egg(
                             );
     if(!error)
     {
-        pkmn_daycare_internal_t* p_internal = DAYCARE_INTERNAL_RCAST(
+        pkmn::c::daycare_internal_t* p_internal = DAYCARE_INTERNAL_RCAST(
                                                   p_daycare->p_internal
                                               );
         BOOST_ASSERT(p_internal != nullptr);

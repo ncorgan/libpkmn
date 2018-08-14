@@ -74,39 +74,39 @@
 #include <pkmn-c/pokemon_party.h>
 #include <pkmn-c/pokemon_pc.h>
 
-// Internal representations
-
-template <typename libpkmn_type>
-struct pkmn_c_internal_class_t
-{
-    std::shared_ptr<libpkmn_type> cpp;
-    boost::mutex error_mutex;
-    std::string last_error;
-
-    int generation;
-};
-
-typedef pkmn_c_internal_class_t<pkmn::daycare> pkmn_daycare_internal_t;
-typedef pkmn_c_internal_class_t<pkmn::game_save> pkmn_game_save_internal_t;
-typedef pkmn_c_internal_class_t<pkmn::item_bag> pkmn_item_bag_internal_t;
-typedef pkmn_c_internal_class_t<pkmn::item_list> pkmn_item_list_internal_t;
-typedef pkmn_c_internal_class_t<pkmn::pokedex> pkmn_pokedex_internal_t;
-typedef pkmn_c_internal_class_t<pkmn::pokemon> pkmn_pokemon_internal_t;
-typedef pkmn_c_internal_class_t<pkmn::pokemon_box> pkmn_pokemon_box_internal_t;
-typedef pkmn_c_internal_class_t<pkmn::pokemon_party> pkmn_pokemon_party_internal_t;
-typedef pkmn_c_internal_class_t<pkmn::pokemon_pc> pkmn_pokemon_pc_internal_t;
-
-#define DAYCARE_INTERNAL_RCAST(ptr)       (reinterpret_cast<pkmn_daycare_internal_t*>(ptr))
-#define ITEM_BAG_INTERNAL_RCAST(ptr)      (reinterpret_cast<pkmn_item_bag_internal_t*>(ptr))
-#define ITEM_LIST_INTERNAL_RCAST(ptr)     (reinterpret_cast<pkmn_item_list_internal_t*>(ptr))
-#define POKEDEX_INTERNAL_RCAST(ptr)       (reinterpret_cast<pkmn_pokedex_internal_t*>(ptr))
-#define POKEMON_INTERNAL_RCAST(ptr)       (reinterpret_cast<pkmn_pokemon_internal_t*>(ptr))
-#define POKEMON_BOX_INTERNAL_RCAST(ptr)   (reinterpret_cast<pkmn_pokemon_box_internal_t*>(ptr))
-#define POKEMON_PARTY_INTERNAL_RCAST(ptr) (reinterpret_cast<pkmn_pokemon_party_internal_t*>(ptr))
-#define POKEMON_PC_INTERNAL_RCAST(ptr)    (reinterpret_cast<pkmn_pokemon_pc_internal_t*>(ptr))
-#define GAME_SAVE_INTERNAL_RCAST(ptr)     (reinterpret_cast<pkmn_game_save_internal_t*>(ptr))
-
 namespace pkmn { namespace c {
+
+    // Internal representations
+
+    template <typename libpkmn_type>
+    struct internal_t
+    {
+        std::shared_ptr<libpkmn_type> cpp;
+        boost::mutex error_mutex;
+        std::string last_error;
+
+        int generation;
+    };
+
+    using daycare_internal_t = internal_t<pkmn::daycare>;
+    using game_save_internal_t = internal_t<pkmn::game_save>;
+    using item_bag_internal_t = internal_t<pkmn::item_bag>;
+    using item_list_internal_t = internal_t<pkmn::item_list>;
+    using pokedex_internal_t = internal_t<pkmn::pokedex>;
+    using pokemon_internal_t = internal_t<pkmn::pokemon>;
+    using pokemon_box_internal_t = internal_t<pkmn::pokemon_box>;
+    using pokemon_party_internal_t = internal_t<pkmn::pokemon_party>;
+    using pokemon_pc_internal_t = internal_t<pkmn::pokemon_pc>;
+
+    #define DAYCARE_INTERNAL_RCAST(ptr)       (reinterpret_cast<pkmn::c::daycare_internal_t*>(ptr))
+    #define ITEM_BAG_INTERNAL_RCAST(ptr)      (reinterpret_cast<pkmn::c::item_bag_internal_t*>(ptr))
+    #define ITEM_LIST_INTERNAL_RCAST(ptr)     (reinterpret_cast<pkmn::c::item_list_internal_t*>(ptr))
+    #define POKEDEX_INTERNAL_RCAST(ptr)       (reinterpret_cast<pkmn::c::pokedex_internal_t*>(ptr))
+    #define POKEMON_INTERNAL_RCAST(ptr)       (reinterpret_cast<pkmn::c::pokemon_internal_t*>(ptr))
+    #define POKEMON_BOX_INTERNAL_RCAST(ptr)   (reinterpret_cast<pkmn::c::pokemon_box_internal_t*>(ptr))
+    #define POKEMON_PARTY_INTERNAL_RCAST(ptr) (reinterpret_cast<pkmn::c::pokemon_party_internal_t*>(ptr))
+    #define POKEMON_PC_INTERNAL_RCAST(ptr)    (reinterpret_cast<pkmn::c::pokemon_pc_internal_t*>(ptr))
+    #define GAME_SAVE_INTERNAL_RCAST(ptr)     (reinterpret_cast<pkmn::c::game_save_internal_t*>(ptr))
 
     // Calls to initialize internal representations.
     void init_daycare(

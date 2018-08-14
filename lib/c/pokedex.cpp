@@ -56,7 +56,7 @@ enum pkmn_error pkmn_pokedex_free(
         {
             pkmn::c::free_pointer_and_set_to_null(&p_pokedex->p_game);
             pkmn::c::delete_pointer_and_set_to_null(
-                reinterpret_cast<pkmn_pokedex_internal_t**>(&p_pokedex->p_internal)
+                reinterpret_cast<pkmn::c::pokedex_internal_t**>(&p_pokedex->p_internal)
             );
         };
 
@@ -85,7 +85,7 @@ enum pkmn_error pkmn_pokedex_has_seen(
                             );
     if(!error)
     {
-        pkmn_pokedex_internal_t* p_internal = POKEDEX_INTERNAL_RCAST(
+        pkmn::c::pokedex_internal_t* p_internal = POKEDEX_INTERNAL_RCAST(
                                                   p_pokedex->p_internal
                                               );
         BOOST_ASSERT(p_internal != nullptr);
@@ -129,7 +129,7 @@ enum pkmn_error pkmn_pokedex_set_has_seen_species(
                             );
     if(!error)
     {
-        pkmn_pokedex_internal_t* p_internal = POKEDEX_INTERNAL_RCAST(
+        pkmn::c::pokedex_internal_t* p_internal = POKEDEX_INTERNAL_RCAST(
                                                   p_pokedex->p_internal
                                               );
         BOOST_ASSERT(p_internal != nullptr);
@@ -164,7 +164,7 @@ enum pkmn_error pkmn_pokedex_get_all_seen(
                             );
     if(!error)
     {
-        pkmn_pokedex_internal_t* p_internal = POKEDEX_INTERNAL_RCAST(
+        pkmn::c::pokedex_internal_t* p_internal = POKEDEX_INTERNAL_RCAST(
                                                   p_pokedex->p_internal
                                               );
         BOOST_ASSERT(p_internal != nullptr);
@@ -202,7 +202,7 @@ enum pkmn_error pkmn_pokedex_get_num_seen(
                             );
     if(!error)
     {
-        pkmn_pokedex_internal_t* p_internal = POKEDEX_INTERNAL_RCAST(
+        pkmn::c::pokedex_internal_t* p_internal = POKEDEX_INTERNAL_RCAST(
                                                   p_pokedex->p_internal
                                               );
         BOOST_ASSERT(p_internal != nullptr);
@@ -240,7 +240,7 @@ enum pkmn_error pkmn_pokedex_has_caught(
                             );
     if(!error)
     {
-        pkmn_pokedex_internal_t* p_internal = POKEDEX_INTERNAL_RCAST(
+        pkmn::c::pokedex_internal_t* p_internal = POKEDEX_INTERNAL_RCAST(
                                                   p_pokedex->p_internal
                                               );
         BOOST_ASSERT(p_internal != nullptr);
@@ -284,7 +284,7 @@ enum pkmn_error pkmn_pokedex_set_has_caught_species(
                             );
     if(!error)
     {
-        pkmn_pokedex_internal_t* p_internal = POKEDEX_INTERNAL_RCAST(
+        pkmn::c::pokedex_internal_t* p_internal = POKEDEX_INTERNAL_RCAST(
                                                   p_pokedex->p_internal
                                               );
         BOOST_ASSERT(p_internal != nullptr);
@@ -319,7 +319,7 @@ enum pkmn_error pkmn_pokedex_get_all_caught(
                             );
     if(!error)
     {
-        pkmn_pokedex_internal_t* p_internal = POKEDEX_INTERNAL_RCAST(
+        pkmn::c::pokedex_internal_t* p_internal = POKEDEX_INTERNAL_RCAST(
                                                   p_pokedex->p_internal
                                               );
         BOOST_ASSERT(p_internal != nullptr);
@@ -357,7 +357,7 @@ enum pkmn_error pkmn_pokedex_get_num_caught(
                             );
     if(!error)
     {
-        pkmn_pokedex_internal_t* p_internal = POKEDEX_INTERNAL_RCAST(
+        pkmn::c::pokedex_internal_t* p_internal = POKEDEX_INTERNAL_RCAST(
                                                   p_pokedex->p_internal
                                               );
         BOOST_ASSERT(p_internal != nullptr);

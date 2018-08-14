@@ -45,7 +45,7 @@ enum pkmn_error pkmn_item_bag_free(
 
     PKMN_CPP_TO_C(
         pkmn::c::delete_pointer_and_set_to_null(
-            reinterpret_cast<pkmn_item_bag_internal_t**>(&p_item_bag->p_internal)
+            reinterpret_cast<pkmn::c::item_bag_internal_t**>(&p_item_bag->p_internal)
         );
     )
 }
@@ -64,7 +64,7 @@ enum pkmn_error pkmn_item_bag_get_pocket(
 )
 {
     PKMN_CHECK_NULL_WRAPPER_PARAM(p_item_bag);
-    pkmn_item_bag_internal_t* p_internal = ITEM_BAG_INTERNAL_RCAST(p_item_bag->p_internal);
+    pkmn::c::item_bag_internal_t* p_internal = ITEM_BAG_INTERNAL_RCAST(p_item_bag->p_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_pocket_name, p_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_item_list_out, p_internal);
 
@@ -87,7 +87,7 @@ enum pkmn_error pkmn_item_bag_add(
 )
 {
     PKMN_CHECK_NULL_WRAPPER_PARAM(p_item_bag);
-    pkmn_item_bag_internal_t* p_internal = ITEM_BAG_INTERNAL_RCAST(p_item_bag->p_internal);
+    pkmn::c::item_bag_internal_t* p_internal = ITEM_BAG_INTERNAL_RCAST(p_item_bag->p_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_item, p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
@@ -107,7 +107,7 @@ enum pkmn_error pkmn_item_bag_remove(
 )
 {
     PKMN_CHECK_NULL_WRAPPER_PARAM(p_item_bag);
-    pkmn_item_bag_internal_t* p_internal = ITEM_BAG_INTERNAL_RCAST(p_item_bag->p_internal);
+    pkmn::c::item_bag_internal_t* p_internal = ITEM_BAG_INTERNAL_RCAST(p_item_bag->p_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_item, p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,

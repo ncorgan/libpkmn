@@ -24,7 +24,7 @@ namespace pkmn { namespace c {
         {
             try
             {
-                using internal_type_t = pkmn_c_internal_class_t<libpkmn_type>;
+                using internal_type_t = internal_t<libpkmn_type>;
 
                 internal_type_t* p_internal = static_cast<internal_type_t*>(
                                                   p_c_struct->p_internal

@@ -21,11 +21,11 @@
 #include <stdexcept>
 #include <string>
 
+namespace pkmn { namespace c {
+
 // Forward-declaration, since cpp_to_c.hpp includes this file
 template <typename libpkmn_type>
-struct pkmn_c_internal_class_t;
-
-namespace pkmn { namespace c {
+struct internal_t;
 
 void pkmn_set_error(const std::string& error);
 
@@ -125,7 +125,7 @@ static enum pkmn_error handle_exceptions(functor func)
 template <typename functor, typename libpkmn_type>
 static enum pkmn_error handle_exceptions(
     functor func,
-    pkmn_c_internal_class_t<libpkmn_type>* p_libpkmn_c_struct
+    internal_t<libpkmn_type>* p_libpkmn_c_struct
 )
 {
     BOOST_ASSERT(func != nullptr);
@@ -148,7 +148,7 @@ template <typename libpkmn_type>
 static enum pkmn_error check_for_null_param(
     const void* p_param,
     const std::string& param_name,
-    pkmn_c_internal_class_t<libpkmn_type>* p_libpkmn_c_struct
+    internal_t<libpkmn_type>* p_libpkmn_c_struct
 )
 {
     BOOST_ASSERT(p_libpkmn_c_struct != nullptr);
@@ -188,7 +188,7 @@ template <typename libpkmn_param_type, typename libpkmn_output_type>
 static enum pkmn_error check_for_null_wrapper_param(
     const libpkmn_param_type* p_param,
     const std::string& param_name,
-    pkmn_c_internal_class_t<libpkmn_output_type>* p_output_struct
+    internal_t<libpkmn_output_type>* p_output_struct
 )
 {
     BOOST_ASSERT(p_output_struct != nullptr);

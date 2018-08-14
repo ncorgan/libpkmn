@@ -29,9 +29,9 @@ namespace pkmn { namespace c {
         BOOST_ASSERT(libpkmn_sptr.get() != nullptr);
         BOOST_ASSERT(libpkmn_c_struct_out != nullptr);
 
-        libpkmn_c_struct_out->p_internal = new pkmn_c_internal_class_t<libpkmn_cpp_type>;
-        pkmn_c_internal_class_t<libpkmn_cpp_type>* p_internal =
-            reinterpret_cast<pkmn_c_internal_class_t<libpkmn_cpp_type>*>(
+        libpkmn_c_struct_out->p_internal = new internal_t<libpkmn_cpp_type>;
+        internal_t<libpkmn_cpp_type>* p_internal =
+            reinterpret_cast<internal_t<libpkmn_cpp_type>*>(
                 libpkmn_c_struct_out->p_internal
             );
 

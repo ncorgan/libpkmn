@@ -180,7 +180,7 @@ TEST(cpp_to_c_test, exception_to_error_code_test)
  */
 
 // Since we won't actually use the shared_ptr, this should be fine.
-using pkmn_test_handle_t = pkmn_c_internal_class_t<int>;
+using pkmn_test_handle_t = pkmn::c::internal_t<int>;
 
 enum pkmn_error throw_nothing_with_handle(
     pkmn_test_handle_t* p_handle
