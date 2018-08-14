@@ -10,6 +10,8 @@
 #include "cpp_to_c.hpp"
 #include "error_internal.hpp"
 
+#include "common/misc.hpp"
+
 enum pkmn_error pkmn_string_list_free(
     struct pkmn_string_list* p_string_list
 )

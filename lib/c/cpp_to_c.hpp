@@ -154,24 +154,6 @@ namespace pkmn { namespace c {
         struct pkmn_game_save* p_game_save_c_out
     );
 
-    template <typename pointer_type>
-    inline void delete_pointer_and_set_to_null(pointer_type** p_pointer)
-    {
-        BOOST_ASSERT(p_pointer != nullptr);
-
-        delete (*p_pointer);
-        *p_pointer = nullptr;
-    }
-
-    template <typename pointer_type>
-    inline void free_pointer_and_set_to_null(pointer_type** p_pointer)
-    {
-        BOOST_ASSERT(p_pointer != nullptr);
-
-        std::free(*p_pointer);
-        *p_pointer = nullptr;
-    }
-
     template <typename T>
     void list_cpp_to_c(
         const std::vector<T>& list_cpp,

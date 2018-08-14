@@ -1,5 +1,5 @@
 /*
- * p_Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * p_Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * p_Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * p_or copy at http://opensource.org/licenses/MIT)
@@ -7,6 +7,8 @@
 
 #include "cpp_to_c.hpp"
 #include "error_internal.hpp"
+
+#include "common/misc.hpp"
 
 #include <pkmn-c/database/pokemon_entry.h>
 

@@ -8,6 +8,8 @@
 #include "cpp_to_c.hpp"
 #include "error_internal.hpp"
 
+#include "common/misc.hpp"
+
 #include <boost/assert.hpp>
 #include <boost/thread/mutex.hpp>
 

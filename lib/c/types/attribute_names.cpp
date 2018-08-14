@@ -9,6 +9,8 @@
 
 #include "error_internal.hpp"
 
+#include "common/misc.hpp"
+
 enum pkmn_error pkmn_attribute_names_free(
     struct pkmn_attribute_names* p_attribute_names
 )

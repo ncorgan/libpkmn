@@ -6,6 +6,7 @@
  */
 
 #include "common/attributes.hpp"
+#include "common/misc.hpp"
 
 #include "cpp_to_c.hpp"
 #include "enum_maps.hpp"

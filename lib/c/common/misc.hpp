@@ -39,6 +39,24 @@ namespace pkmn { namespace c {
 
         return p_error;
     }
+
+    template <typename pointer_type>
+    inline void delete_pointer_and_set_to_null(pointer_type** p_pointer)
+    {
+        BOOST_ASSERT(p_pointer != nullptr);
+
+        delete (*p_pointer);
+        *p_pointer = nullptr;
+    }
+
+    template <typename pointer_type>
+    inline void free_pointer_and_set_to_null(pointer_type** p_pointer)
+    {
+        BOOST_ASSERT(p_pointer != nullptr);
+
+        std::free(*p_pointer);
+        *p_pointer = nullptr;
+    }
 }}
 
 #endif /* PKMN_C_COMMON_MISC_HPP */
