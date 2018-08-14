@@ -5,6 +5,9 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
+#include "common/attributes.hpp"
+#include "common/misc.hpp"
+
 #include "enum_maps.hpp"
 #include "cpp_to_c.hpp"
 #include "error_internal.hpp"
@@ -98,26 +101,7 @@ const char* pkmn_pokemon_strerror(
     const struct pkmn_pokemon* p_pokemon
 )
 {
-    if(!p_pokemon)
-    {
-        return nullptr;
-    }
-
-    try
-    {
-        pkmn_pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
-        if(!p_internal)
-        {
-            return nullptr;
-        }
-
-        boost::mutex::scoped_lock lock(p_internal->error_mutex);
-        return p_internal->last_error.c_str();
-    }
-    catch(...)
-    {
-        return nullptr;
-    }
+    return pkmn::c::strerror<struct pkmn_pokemon, pkmn::pokemon>(p_pokemon);
 }
 
 enum pkmn_error pkmn_pokemon_to_game(
@@ -1242,14 +1226,12 @@ enum pkmn_error pkmn_pokemon_get_numeric_attribute(
     int* p_value_out
 )
 {
-    PKMN_CHECK_NULL_PARAM(p_pokemon);
-    pkmn_pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
-    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_attribute_name, p_internal);
-    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_value_out, p_internal);
-
-    PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
-        *p_value_out = p_internal->cpp->get_numeric_attribute(p_attribute_name);
-    )
+    return pkmn::c::get_numeric_attribute<struct pkmn_pokemon, pkmn::pokemon>(
+               p_pokemon,
+               p_attribute_name,
+               p_value_out,
+               "p_pokemon"
+           );
 }
 
 enum pkmn_error pkmn_pokemon_set_numeric_attribute(
@@ -1258,13 +1240,12 @@ enum pkmn_error pkmn_pokemon_set_numeric_attribute(
     int value
 )
 {
-    PKMN_CHECK_NULL_PARAM(p_pokemon);
-    pkmn_pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
-    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_attribute_name, p_internal);
-
-    PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
-        p_internal->cpp->set_numeric_attribute(p_attribute_name, value);
-    )
+    return pkmn::c::set_numeric_attribute<struct pkmn_pokemon, pkmn::pokemon>(
+               p_pokemon,
+               p_attribute_name,
+               value,
+               "p_pokemon"
+           );
 }
 
 enum pkmn_error pkmn_pokemon_get_string_attribute(
@@ -1275,19 +1256,14 @@ enum pkmn_error pkmn_pokemon_get_string_attribute(
     size_t* p_actual_value_len_out
 )
 {
-    PKMN_CHECK_NULL_PARAM(p_pokemon);
-    pkmn_pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
-    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_attribute_name, p_internal);
-    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_value_out, p_internal);
-
-    PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
-        pkmn::c::string_cpp_to_c(
-            p_internal->cpp->get_string_attribute(p_attribute_name),
-            p_value_out,
-            value_buffer_len,
-            p_actual_value_len_out
-        );
-    )
+    return pkmn::c::get_string_attribute<struct pkmn_pokemon, pkmn::pokemon>(
+               p_pokemon,
+               p_attribute_name,
+               p_value_out,
+               value_buffer_len,
+               p_actual_value_len_out,
+               "p_pokemon"
+           );
 }
 
 enum pkmn_error pkmn_pokemon_set_string_attribute(
@@ -1296,14 +1272,12 @@ enum pkmn_error pkmn_pokemon_set_string_attribute(
     const char* p_value
 )
 {
-    PKMN_CHECK_NULL_PARAM(p_pokemon);
-    pkmn_pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
-    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_attribute_name, p_internal);
-    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_value, p_internal);
-
-    PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
-        p_internal->cpp->set_string_attribute(p_attribute_name, p_value);
-    )
+    return pkmn::c::set_string_attribute<struct pkmn_pokemon, pkmn::pokemon>(
+               p_pokemon,
+               p_attribute_name,
+               p_value,
+               "p_pokemon"
+           );
 }
 
 enum pkmn_error pkmn_pokemon_get_boolean_attribute(
@@ -1312,14 +1286,12 @@ enum pkmn_error pkmn_pokemon_get_boolean_attribute(
     bool* p_value_out
 )
 {
-    PKMN_CHECK_NULL_PARAM(p_pokemon);
-    pkmn_pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
-    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_attribute_name, p_internal);
-    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_value_out, p_internal);
-
-    PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
-        *p_value_out = p_internal->cpp->get_boolean_attribute(p_attribute_name);
-    )
+    return pkmn::c::get_boolean_attribute<struct pkmn_pokemon, pkmn::pokemon>(
+               p_pokemon,
+               p_attribute_name,
+               p_value_out,
+               "p_pokemon"
+           );
 }
 
 enum pkmn_error pkmn_pokemon_set_boolean_attribute(
@@ -1328,13 +1300,12 @@ enum pkmn_error pkmn_pokemon_set_boolean_attribute(
     bool value
 )
 {
-    PKMN_CHECK_NULL_PARAM(p_pokemon);
-    pkmn_pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
-    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_attribute_name, p_internal);
-
-    PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
-        p_internal->cpp->set_boolean_attribute(p_attribute_name, value);
-    )
+    return pkmn::c::set_boolean_attribute<struct pkmn_pokemon, pkmn::pokemon>(
+               p_pokemon,
+               p_attribute_name,
+               value,
+               "p_pokemon"
+           );
 }
 
 enum pkmn_error pkmn_pokemon_get_attribute_names(
@@ -1342,14 +1313,9 @@ enum pkmn_error pkmn_pokemon_get_attribute_names(
     struct pkmn_attribute_names* p_attribute_names_out
 )
 {
-    PKMN_CHECK_NULL_PARAM(p_pokemon);
-    pkmn_pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
-    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_attribute_names_out, p_internal);
-
-    PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
-        pkmn::c::get_attribute_names_from_sptr(
-            p_internal->cpp,
-            p_attribute_names_out
-        );
-    )
+    return pkmn::c::get_attribute_names<struct pkmn_pokemon, pkmn::pokemon>(
+               p_pokemon,
+               p_attribute_names_out,
+               "p_pokemon"
+           );
 }

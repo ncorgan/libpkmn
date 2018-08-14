@@ -5,6 +5,8 @@
  * p_or copy at http://opensource.org/licenses/MIT)
  */
 
+#include "common/misc.hpp"
+
 #include "cpp_to_c.hpp"
 #include "error_internal.hpp"
 
@@ -54,26 +56,7 @@ const char* pkmn_item_list_strerror(
     const struct pkmn_item_list* p_item_list
 )
 {
-    if(!p_item_list)
-    {
-        return nullptr;
-    }
-
-    try
-    {
-        pkmn_item_list_internal_t* p_internal = ITEM_LIST_INTERNAL_RCAST(p_item_list->p_internal);
-        if(!p_internal)
-        {
-            return nullptr;
-        }
-
-        boost::mutex::scoped_lock lock(p_internal->error_mutex);
-        return p_internal->last_error.c_str();
-    }
-    catch(...)
-    {
-        return nullptr;
-    }
+    return pkmn::c::strerror<struct pkmn_item_list, pkmn::item_list>(p_item_list);
 }
 
 enum pkmn_error pkmn_item_list_get_num_items(

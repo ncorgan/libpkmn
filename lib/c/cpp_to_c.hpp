@@ -453,56 +453,6 @@ namespace pkmn { namespace c {
                 p_time_duration_c->frames};
     }
 
-    template <typename sptr_type>
-    void get_attribute_names_from_sptr(
-        const std::shared_ptr<sptr_type>& libpkmn_sptr,
-        struct pkmn_attribute_names* p_attribute_names_out
-    )
-    {
-        BOOST_ASSERT(libpkmn_sptr.get() != nullptr);
-        BOOST_ASSERT(p_attribute_names_out != nullptr);
-
-        // Make all C++ calls and operate on a second struct until we
-        // know everything succeeds before changing any user output.
-        // If this fails, we'll leak, but it's small enough to not be
-        // a concern.
-        struct pkmn_attribute_names temp_attribute_names_c =
-        {
-            // numeric_attribute_names
-            {
-                nullptr, // pp_strings
-                0ULL     // length
-            },
-            // string_attribute_names
-            {
-                nullptr, // pp_strings
-                0ULL     // length
-            },
-            // boolean_attribute_names
-            {
-                nullptr, // pp_strings
-                0ULL     // length
-            }
-        };
-
-        string_list_cpp_to_c(
-            libpkmn_sptr->get_numeric_attribute_names(),
-            &temp_attribute_names_c.numeric_attribute_names
-        );
-        string_list_cpp_to_c(
-            libpkmn_sptr->get_string_attribute_names(),
-            &temp_attribute_names_c.string_attribute_names
-        );
-        string_list_cpp_to_c(
-            libpkmn_sptr->get_boolean_attribute_names(),
-            &temp_attribute_names_c.boolean_attribute_names
-        );
-
-        // Everything succeeded, so move it into the pointer the caller
-        // provided.
-        *p_attribute_names_out = std::move(temp_attribute_names_c);
-    }
-
     template <typename enum_type, typename buffer_type>
     static void copy_map_to_buffer(
         const std::map<std::string, buffer_type>& value_map,
@@ -510,7 +460,7 @@ namespace pkmn { namespace c {
         buffer_type* p_values_buffer_out,
         size_t value_buffer_size,
         size_t p_actual_num_values,
-        size_t* p_p_actual_num_values_out
+        size_t* p_actual_num_values_out
     )
     {
         BOOST_ASSERT(p_values_buffer_out != nullptr);
@@ -546,9 +496,9 @@ namespace pkmn { namespace c {
         }
 
         // Optional parameter
-        if(p_p_actual_num_values_out)
+        if(p_actual_num_values_out)
         {
-            *p_p_actual_num_values_out = p_actual_num_values;
+            *p_actual_num_values_out = p_actual_num_values;
         }
     }
 }

@@ -5,6 +5,8 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
+#include "common/misc.hpp"
+
 #include "cpp_to_c.hpp"
 #include "error_internal.hpp"
 
@@ -51,26 +53,7 @@ const char* pkmn_pokemon_party_strerror(
     const struct pkmn_pokemon_party* p_pokemon_party
 )
 {
-    if(!p_pokemon_party)
-    {
-        return nullptr;
-    }
-
-    try
-    {
-        pkmn_pokemon_party_internal_t* p_internal = POKEMON_PARTY_INTERNAL_RCAST(p_pokemon_party->p_internal);
-        if(!p_internal)
-        {
-            return nullptr;
-        }
-
-        boost::mutex::scoped_lock lock(p_internal->error_mutex);
-        return p_internal->last_error.c_str();
-    }
-    catch(...)
-    {
-        return nullptr;
-    }
+    return pkmn::c::strerror<struct pkmn_pokemon_party, pkmn::pokemon_party>(p_pokemon_party);
 }
 
 enum pkmn_error pkmn_pokemon_party_get_num_pokemon(

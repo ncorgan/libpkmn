@@ -5,6 +5,8 @@
  * p_or copy at http://opensource.org/licenses/MIT)
  */
 
+#include "common/attributes.hpp"
+
 #include "cpp_to_c.hpp"
 #include "enum_maps.hpp"
 #include "error_internal.hpp"
@@ -14,6 +16,10 @@
 #include <boost/thread/mutex.hpp>
 
 #include <pkmn-c/game_save.h>
+
+#include <pkmn/game_save.hpp>
+
+#include <unordered_map>
 
 static const std::unordered_map<std::string, enum pkmn_game_save_type> GAME_SAVE_TYPES =
 {
@@ -459,14 +465,12 @@ enum pkmn_error pkmn_game_save_get_numeric_attribute(
     int* p_value_out
 )
 {
-    PKMN_CHECK_NULL_PARAM(p_game_save);
-    pkmn_game_save_internal_t* p_internal = GAME_SAVE_INTERNAL_RCAST(p_game_save->p_internal);
-    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_attribute_name, p_internal);
-    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_value_out, p_internal);
-
-    PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
-        *p_value_out = p_internal->cpp->get_numeric_attribute(p_attribute_name);
-    )
+    return pkmn::c::get_numeric_attribute<struct pkmn_game_save, pkmn::game_save>(
+               p_game_save,
+               p_attribute_name,
+               p_value_out,
+               "p_game_save"
+           );
 }
 
 enum pkmn_error pkmn_game_save_set_numeric_attribute(
@@ -475,13 +479,12 @@ enum pkmn_error pkmn_game_save_set_numeric_attribute(
     int value
 )
 {
-    PKMN_CHECK_NULL_PARAM(p_game_save);
-    pkmn_game_save_internal_t* p_internal = GAME_SAVE_INTERNAL_RCAST(p_game_save->p_internal);
-    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_attribute_name, p_internal);
-
-    PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
-        p_internal->cpp->set_numeric_attribute(p_attribute_name, value);
-    )
+    return pkmn::c::set_numeric_attribute<struct pkmn_game_save, pkmn::game_save>(
+               p_game_save,
+               p_attribute_name,
+               value,
+               "p_game_save"
+           );
 }
 
 enum pkmn_error pkmn_game_save_get_string_attribute(
@@ -492,19 +495,14 @@ enum pkmn_error pkmn_game_save_get_string_attribute(
     size_t* p_actual_value_len_out
 )
 {
-    PKMN_CHECK_NULL_PARAM(p_game_save);
-    pkmn_game_save_internal_t* p_internal = GAME_SAVE_INTERNAL_RCAST(p_game_save->p_internal);
-    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_attribute_name, p_internal);
-    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_value_out, p_internal);
-
-    PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
-        pkmn::c::string_cpp_to_c(
-            p_internal->cpp->get_string_attribute(p_attribute_name),
-            p_value_out,
-            value_buffer_len,
-            p_actual_value_len_out
-        );
-    )
+    return pkmn::c::get_string_attribute<struct pkmn_game_save, pkmn::game_save>(
+               p_game_save,
+               p_attribute_name,
+               p_value_out,
+               value_buffer_len,
+               p_actual_value_len_out,
+               "p_game_save"
+           );
 }
 
 enum pkmn_error pkmn_game_save_set_string_attribute(
@@ -513,14 +511,12 @@ enum pkmn_error pkmn_game_save_set_string_attribute(
     const char* p_value
 )
 {
-    PKMN_CHECK_NULL_PARAM(p_game_save);
-    pkmn_game_save_internal_t* p_internal = GAME_SAVE_INTERNAL_RCAST(p_game_save->p_internal);
-    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_attribute_name, p_internal);
-    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_value, p_internal);
-
-    PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
-        p_internal->cpp->set_string_attribute(p_attribute_name, p_value);
-    )
+    return pkmn::c::set_string_attribute<struct pkmn_game_save, pkmn::game_save>(
+               p_game_save,
+               p_attribute_name,
+               p_value,
+               "p_game_save"
+           );
 }
 
 enum pkmn_error pkmn_game_save_get_boolean_attribute(
@@ -529,14 +525,12 @@ enum pkmn_error pkmn_game_save_get_boolean_attribute(
     bool* p_value_out
 )
 {
-    PKMN_CHECK_NULL_PARAM(p_game_save);
-    pkmn_game_save_internal_t* p_internal = GAME_SAVE_INTERNAL_RCAST(p_game_save->p_internal);
-    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_attribute_name, p_internal);
-    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_value_out, p_internal);
-
-    PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
-        *p_value_out = p_internal->cpp->get_boolean_attribute(p_attribute_name);
-    )
+    return pkmn::c::get_boolean_attribute<struct pkmn_game_save, pkmn::game_save>(
+               p_game_save,
+               p_attribute_name,
+               p_value_out,
+               "p_game_save"
+           );
 }
 
 enum pkmn_error pkmn_game_save_set_boolean_attribute(
@@ -545,13 +539,12 @@ enum pkmn_error pkmn_game_save_set_boolean_attribute(
     bool value
 )
 {
-    PKMN_CHECK_NULL_PARAM(p_game_save);
-    pkmn_game_save_internal_t* p_internal = GAME_SAVE_INTERNAL_RCAST(p_game_save->p_internal);
-    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_attribute_name, p_internal);
-
-    PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
-        p_internal->cpp->set_boolean_attribute(p_attribute_name, value);
-    )
+    return pkmn::c::set_boolean_attribute<struct pkmn_game_save, pkmn::game_save>(
+               p_game_save,
+               p_attribute_name,
+               value,
+               "p_game_save"
+           );
 }
 
 enum pkmn_error pkmn_game_save_get_attribute_names(
@@ -559,14 +552,9 @@ enum pkmn_error pkmn_game_save_get_attribute_names(
     struct pkmn_attribute_names* p_attribute_names_out
 )
 {
-    PKMN_CHECK_NULL_PARAM(p_game_save);
-    pkmn_game_save_internal_t* p_internal = GAME_SAVE_INTERNAL_RCAST(p_game_save->p_internal);
-    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_attribute_names_out, p_internal);
-
-    PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
-        pkmn::c::get_attribute_names_from_sptr(
-            p_internal->cpp,
-            p_attribute_names_out
-        );
-    )
+    return pkmn::c::get_attribute_names<struct pkmn_game_save, pkmn::game_save>(
+               p_game_save,
+               p_attribute_names_out,
+               "p_game_save"
+           );
 }

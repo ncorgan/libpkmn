@@ -29,8 +29,8 @@ namespace pkmn { namespace c {
 
 void pkmn_set_error(const std::string& error);
 
-template <typename functor_t>
-static enum pkmn_error handle_exceptions(functor_t func)
+template <typename functor>
+static enum pkmn_error handle_exceptions(functor func)
 {
     BOOST_ASSERT(func != nullptr);
 
@@ -188,7 +188,7 @@ template <typename libpkmn_param_type, typename libpkmn_output_type>
 static enum pkmn_error check_for_null_wrapper_param(
     const libpkmn_param_type* p_param,
     const std::string& param_name,
-    const pkmn_c_internal_class_t<libpkmn_output_type>* p_output_struct
+    pkmn_c_internal_class_t<libpkmn_output_type>* p_output_struct
 )
 {
     BOOST_ASSERT(p_output_struct != nullptr);

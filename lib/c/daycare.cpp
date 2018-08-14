@@ -5,6 +5,8 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
+#include "common/misc.hpp"
+
 #include "cpp_to_c.hpp"
 #include "error_internal.hpp"
 
@@ -68,26 +70,7 @@ const char* pkmn_daycare_strerror(
     struct pkmn_daycare* p_daycare
 )
 {
-    if(!p_daycare)
-    {
-        return nullptr;
-    }
-
-    try
-    {
-        pkmn_daycare_internal_t* p_internal = DAYCARE_INTERNAL_RCAST(p_daycare->p_internal);
-        if(!p_internal)
-        {
-            return nullptr;
-        }
-
-        boost::mutex::scoped_lock lock(p_internal->error_mutex);
-        return p_internal->last_error.c_str();
-    }
-    catch(...)
-    {
-        return nullptr;
-    }
+    return pkmn::c::strerror<struct pkmn_daycare, pkmn::daycare>(p_daycare);
 }
 
 enum pkmn_error pkmn_daycare_get_levelup_pokemon(
