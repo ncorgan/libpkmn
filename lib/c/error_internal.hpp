@@ -215,7 +215,7 @@ static enum pkmn_error check_for_null_wrapper_param(
     } \
     else \
     { \
-        pkmn::c::pkmn_set_error("Null pointer passed into parameter \"" #param "\""); \
+        pkmn::c::pkmn_set_error("Null pointer passed into parameter \"" #param "\"."); \
         return PKMN_ERROR_NULL_POINTER; \
     } \
 }
@@ -223,7 +223,7 @@ static enum pkmn_error check_for_null_wrapper_param(
 #define PKMN_CHECK_NULL_PARAM(param) \
 { \
     if(!param) { \
-        pkmn::c::pkmn_set_error("Null pointer passed into parameter \"" #param "\""); \
+        pkmn::c::pkmn_set_error("Null pointer passed into parameter \"" #param "\"."); \
         return PKMN_ERROR_NULL_POINTER; \
     } \
 }
@@ -243,8 +243,8 @@ static enum pkmn_error check_for_null_wrapper_param(
     else \
     { \
         boost::mutex::scoped_lock lock(handle->error_mutex); \
-        pkmn::c::pkmn_set_error("Null pointer passed into parameter \"" #param "\""); \
-        handle->last_error = "Null pointer passed into parameter \"" #param "\""; \
+        pkmn::c::pkmn_set_error("Null pointer passed into parameter \"" #param "\"."); \
+        handle->last_error = "Null pointer passed into parameter \"" #param "\"."; \
         return PKMN_ERROR_NULL_POINTER; \
     } \
 }
@@ -253,8 +253,8 @@ static enum pkmn_error check_for_null_wrapper_param(
 { \
     if(!param) { \
         boost::mutex::scoped_lock lock(handle->error_mutex); \
-        pkmn::c::pkmn_set_error("Null pointer passed into parameter \"" #param "\""); \
-        handle->last_error = "Null pointer passed into parameter \"" #param "\""; \
+        pkmn::c::pkmn_set_error("Null pointer passed into parameter \"" #param "\"."); \
+        handle->last_error = "Null pointer passed into parameter \"" #param "\"."; \
         return PKMN_ERROR_NULL_POINTER; \
     } \
 }
