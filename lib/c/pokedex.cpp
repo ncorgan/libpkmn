@@ -47,7 +47,7 @@ enum pkmn_error pkmn_pokedex_free(
     struct pkmn_pokedex* p_pokedex
 )
 {
-    enum pkmn_error error = pkmn::c::check_for_null_param(p_pokedex, "p_pokedex");
+    enum pkmn_error error = pkmn::c::check_for_null_wrapper_param(p_pokedex, "p_pokedex");
     if(!error)
     {
         auto impl = [&]()

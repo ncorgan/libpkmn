@@ -1,8 +1,8 @@
 /*
- * p_Copyright (c) 2018 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2018 Nicholas Corgan (n.corgan@gmail.com)
  *
- * p_Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
- * p_or copy at http://opensource.org/licenses/MIT)
+ * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
+ * or copy at http://opensource.org/licenses/MIT)
  */
 
 #include "cpp_to_c.hpp"
@@ -18,35 +18,50 @@ enum pkmn_error pkmn_daycare_init(
     struct pkmn_daycare* p_daycare_out
 )
 {
-    PKMN_CHECK_NULL_PARAM(p_game);
-    PKMN_CHECK_NULL_PARAM(p_daycare_out);
+    enum pkmn_error error = pkmn::c::check_for_null_param(p_game, "p_game");
+    if(!error)
+    {
+        error = pkmn::c::check_for_null_param(p_daycare_out, "p_daycare_out");
+    }
+    if(!error)
+    {
+        auto impl = [&]()
+        {
+            pkmn::daycare::sptr cpp = pkmn::daycare::make(p_game);
 
-    PKMN_CPP_TO_C(
-        pkmn::daycare::sptr cpp = pkmn::daycare::make(p_game);
+            pkmn::c::init_daycare(
+                cpp,
+                p_daycare_out
+            );
+        };
 
-        pkmn::c::init_daycare(
-            cpp,
-            p_daycare_out
-        );
-    )
+        error = pkmn::c::handle_exceptions(impl);
+    }
+
+    return error;
 }
 
 enum pkmn_error pkmn_daycare_free(
     struct pkmn_daycare* p_daycare
 )
 {
-    PKMN_CHECK_NULL_PARAM(p_daycare);
+    enum pkmn_error error = pkmn::c::check_for_null_wrapper_param(p_daycare, "p_daycare");
+    if(!error)
+    {
+        auto impl = [&]()
+        {
+            pkmn::c::free_pointer_and_set_to_null(&p_daycare->p_game);
+            pkmn::c::delete_pointer_and_set_to_null(
+                reinterpret_cast<pkmn_daycare_internal_t**>(&p_daycare->p_internal)
+            );
 
-    pkmn::c::free_pointer_and_set_to_null(&p_daycare->p_game);
-    p_daycare->can_breed_pokemon = false;
-    p_daycare->levelup_pokemon_capacity = 0;
-    p_daycare->breeding_pokemon_capacity = 0;
+            std::memset(p_daycare, 0, sizeof(*p_daycare));
+        };
 
-    PKMN_CPP_TO_C(
-        pkmn::c::delete_pointer_and_set_to_null(
-            reinterpret_cast<pkmn_daycare_internal_t**>(&p_daycare->p_internal)
-        );
-    )
+        error = pkmn::c::handle_exceptions(impl);
+    }
+
+    return error;
 }
 
 const char* pkmn_daycare_strerror(
@@ -81,18 +96,39 @@ enum pkmn_error pkmn_daycare_get_levelup_pokemon(
     struct pkmn_pokemon* p_levelup_pokemon_out
 )
 {
-    PKMN_CHECK_NULL_PARAM(p_daycare);
-    pkmn_daycare_internal_t* p_internal = DAYCARE_INTERNAL_RCAST(p_daycare->p_internal);
-    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_levelup_pokemon_out, p_internal);
+    enum pkmn_error error = pkmn::c::check_for_null_wrapper_param(
+                                p_daycare,
+                                "p_daycare"
+                            );
+    if(!error)
+    {
+        pkmn_daycare_internal_t* p_internal = DAYCARE_INTERNAL_RCAST(
+                                                  p_daycare->p_internal
+                                              );
+        BOOST_ASSERT(p_internal != nullptr);
 
-    PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
-        pkmn::c::init_pokemon(
-            p_internal->cpp->get_levelup_pokemon(
-                static_cast<int>(index)
-            ),
-            p_levelup_pokemon_out
-        );
-    )
+        error = pkmn::c::check_for_null_param(
+                    p_levelup_pokemon_out,
+                    "p_levelup_pokemon_out",
+                    p_internal
+                );
+        if(!error)
+        {
+            auto impl = [&]()
+            {
+                pkmn::c::init_pokemon(
+                    p_internal->cpp->get_levelup_pokemon(
+                        static_cast<int>(index)
+                    ),
+                    p_levelup_pokemon_out
+                );
+            };
+
+            error = pkmn::c::handle_exceptions(impl, p_internal);
+        }
+    }
+
+    return error;
 }
 
 enum pkmn_error pkmn_daycare_set_levelup_pokemon(
@@ -101,18 +137,42 @@ enum pkmn_error pkmn_daycare_set_levelup_pokemon(
     const struct pkmn_pokemon* p_pokemon
 )
 {
-    PKMN_CHECK_NULL_PARAM(p_daycare);
-    pkmn_daycare_internal_t* p_internal = DAYCARE_INTERNAL_RCAST(p_daycare->p_internal);
-    PKMN_CHECK_NULL_WRAPPER_PARAM_WITH_HANDLE(p_pokemon, p_internal);
+    enum pkmn_error error = pkmn::c::check_for_null_wrapper_param(
+                                p_daycare,
+                                "p_daycare"
+                            );
+    if(!error)
+    {
+        pkmn_daycare_internal_t* p_internal = DAYCARE_INTERNAL_RCAST(
+                                                  p_daycare->p_internal
+                                              );
+        BOOST_ASSERT(p_internal != nullptr);
 
-    pkmn_pokemon_internal_t* p_pokemon_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
+        error = pkmn::c::check_for_null_wrapper_param(
+                    p_pokemon,
+                    "p_pokemon",
+                    p_internal
+                );
+        if(!error)
+        {
+            auto impl = [&]()
+            {
+                pkmn_pokemon_internal_t* p_pokemon_internal = POKEMON_INTERNAL_RCAST(
+                                                                  p_pokemon->p_internal
+                                                              );
+                BOOST_ASSERT(p_pokemon_internal != nullptr);
 
-    PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
-        p_internal->cpp->set_levelup_pokemon(
-            static_cast<int>(index),
-            p_pokemon_internal->cpp
-        );
-    )
+                p_internal->cpp->set_levelup_pokemon(
+                    static_cast<int>(index),
+                    p_pokemon_internal->cpp
+                );
+            };
+
+            error = pkmn::c::handle_exceptions(impl, p_internal);
+        }
+    }
+
+    return error;
 }
 
 enum pkmn_error pkmn_daycare_get_levelup_pokemon_as_list(
@@ -120,16 +180,37 @@ enum pkmn_error pkmn_daycare_get_levelup_pokemon_as_list(
     struct pkmn_pokemon_list* p_levelup_pokemon_list_out
 )
 {
-    PKMN_CHECK_NULL_PARAM(p_daycare);
-    pkmn_daycare_internal_t* p_internal = DAYCARE_INTERNAL_RCAST(p_daycare->p_internal);
-    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_levelup_pokemon_list_out, p_internal);
+    enum pkmn_error error = pkmn::c::check_for_null_wrapper_param(
+                                p_daycare,
+                                "p_daycare"
+                            );
+    if(!error)
+    {
+        pkmn_daycare_internal_t* p_internal = DAYCARE_INTERNAL_RCAST(
+                                                  p_daycare->p_internal
+                                              );
+        BOOST_ASSERT(p_internal != nullptr);
 
-    PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
-        pkmn::c::pokemon_list_cpp_to_c(
-            p_internal->cpp->get_levelup_pokemon_as_vector(),
-            p_levelup_pokemon_list_out
-        );
-    )
+        error = pkmn::c::check_for_null_param(
+                    p_levelup_pokemon_list_out,
+                    "p_levelup_pokemon_list_out",
+                    p_internal
+                );
+        if(!error)
+        {
+            auto impl = [&]()
+            {
+                pkmn::c::pokemon_list_cpp_to_c(
+                    p_internal->cpp->get_levelup_pokemon_as_vector(),
+                    p_levelup_pokemon_list_out
+                );
+            };
+
+            error = pkmn::c::handle_exceptions(impl, p_internal);
+        }
+    }
+
+    return error;
 }
 
 enum pkmn_error pkmn_daycare_get_breeding_pokemon(
@@ -138,18 +219,39 @@ enum pkmn_error pkmn_daycare_get_breeding_pokemon(
     struct pkmn_pokemon* p_breeding_pokemon_out
 )
 {
-    PKMN_CHECK_NULL_PARAM(p_daycare);
-    pkmn_daycare_internal_t* p_internal = DAYCARE_INTERNAL_RCAST(p_daycare->p_internal);
-    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_breeding_pokemon_out, p_internal);
+    enum pkmn_error error = pkmn::c::check_for_null_wrapper_param(
+                                p_daycare,
+                                "p_daycare"
+                            );
+    if(!error)
+    {
+        pkmn_daycare_internal_t* p_internal = DAYCARE_INTERNAL_RCAST(
+                                                  p_daycare->p_internal
+                                              );
+        BOOST_ASSERT(p_internal != nullptr);
 
-    PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
-        pkmn::c::init_pokemon(
-            p_internal->cpp->get_breeding_pokemon(
-                static_cast<int>(index)
-            ),
-            p_breeding_pokemon_out
-        );
-    )
+        error = pkmn::c::check_for_null_param(
+                    p_breeding_pokemon_out,
+                    "p_breeding_pokemon_out",
+                    p_internal
+                );
+        if(!error)
+        {
+            auto impl = [&]()
+            {
+                pkmn::c::init_pokemon(
+                    p_internal->cpp->get_breeding_pokemon(
+                        static_cast<int>(index)
+                    ),
+                    p_breeding_pokemon_out
+                );
+            };
+
+            error = pkmn::c::handle_exceptions(impl, p_internal);
+        }
+    }
+
+    return error;
 }
 
 enum pkmn_error pkmn_daycare_set_breeding_pokemon(
@@ -158,18 +260,42 @@ enum pkmn_error pkmn_daycare_set_breeding_pokemon(
     const struct pkmn_pokemon* p_pokemon
 )
 {
-    PKMN_CHECK_NULL_PARAM(p_daycare);
-    pkmn_daycare_internal_t* p_internal = DAYCARE_INTERNAL_RCAST(p_daycare->p_internal);
-    PKMN_CHECK_NULL_WRAPPER_PARAM_WITH_HANDLE(p_pokemon, p_internal);
+    enum pkmn_error error = pkmn::c::check_for_null_wrapper_param(
+                                p_daycare,
+                                "p_daycare"
+                            );
+    if(!error)
+    {
+        pkmn_daycare_internal_t* p_internal = DAYCARE_INTERNAL_RCAST(
+                                                  p_daycare->p_internal
+                                              );
+        BOOST_ASSERT(p_internal != nullptr);
 
-    pkmn_pokemon_internal_t* p_pokemon_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
+        error = pkmn::c::check_for_null_wrapper_param(
+                    p_pokemon,
+                    "p_pokemon",
+                    p_internal
+                );
+        if(!error)
+        {
+            auto impl = [&]()
+            {
+                pkmn_pokemon_internal_t* p_pokemon_internal = POKEMON_INTERNAL_RCAST(
+                                                                  p_pokemon->p_internal
+                                                              );
+                BOOST_ASSERT(p_pokemon_internal != nullptr);
 
-    PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
-        p_internal->cpp->set_breeding_pokemon(
-            static_cast<int>(index),
-            p_pokemon_internal->cpp
-        );
-    )
+                p_internal->cpp->set_breeding_pokemon(
+                    static_cast<int>(index),
+                    p_pokemon_internal->cpp
+                );
+            };
+
+            error = pkmn::c::handle_exceptions(impl, p_internal);
+        }
+    }
+
+    return error;
 }
 
 enum pkmn_error pkmn_daycare_get_breeding_pokemon_as_list(
@@ -177,16 +303,37 @@ enum pkmn_error pkmn_daycare_get_breeding_pokemon_as_list(
     struct pkmn_pokemon_list* p_breeding_pokemon_list_out
 )
 {
-    PKMN_CHECK_NULL_PARAM(p_daycare);
-    pkmn_daycare_internal_t* p_internal = DAYCARE_INTERNAL_RCAST(p_daycare->p_internal);
-    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_breeding_pokemon_list_out, p_internal);
+    enum pkmn_error error = pkmn::c::check_for_null_wrapper_param(
+                                p_daycare,
+                                "p_daycare"
+                            );
+    if(!error)
+    {
+        pkmn_daycare_internal_t* p_internal = DAYCARE_INTERNAL_RCAST(
+                                                  p_daycare->p_internal
+                                              );
+        BOOST_ASSERT(p_internal != nullptr);
 
-    PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
-        pkmn::c::pokemon_list_cpp_to_c(
-            p_internal->cpp->get_breeding_pokemon_as_vector(),
-            p_breeding_pokemon_list_out
-        );
-    )
+        error = pkmn::c::check_for_null_param(
+                    p_breeding_pokemon_list_out,
+                    "p_breeding_pokemon_list_out",
+                    p_internal
+                );
+        if(!error)
+        {
+            auto impl = [&]()
+            {
+                pkmn::c::pokemon_list_cpp_to_c(
+                    p_internal->cpp->get_breeding_pokemon_as_vector(),
+                    p_breeding_pokemon_list_out
+                );
+            };
+
+            error = pkmn::c::handle_exceptions(impl, p_internal);
+        }
+    }
+
+    return error;
 }
 
 enum pkmn_error pkmn_daycare_get_egg(
@@ -194,14 +341,35 @@ enum pkmn_error pkmn_daycare_get_egg(
     struct pkmn_pokemon* p_egg_out
 )
 {
-    PKMN_CHECK_NULL_PARAM(p_daycare);
-    pkmn_daycare_internal_t* p_internal = DAYCARE_INTERNAL_RCAST(p_daycare->p_internal);
-    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_egg_out, p_internal);
+    enum pkmn_error error = pkmn::c::check_for_null_wrapper_param(
+                                p_daycare,
+                                "p_daycare"
+                            );
+    if(!error)
+    {
+        pkmn_daycare_internal_t* p_internal = DAYCARE_INTERNAL_RCAST(
+                                                  p_daycare->p_internal
+                                              );
+        BOOST_ASSERT(p_internal != nullptr);
 
-    PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
-        pkmn::c::init_pokemon(
-            p_internal->cpp->get_egg(),
-            p_egg_out
-        );
-    )
+        error = pkmn::c::check_for_null_param(
+                    p_egg_out,
+                    "p_egg_out",
+                    p_internal
+                );
+        if(!error)
+        {
+            auto impl = [&]()
+            {
+                pkmn::c::init_pokemon(
+                    p_internal->cpp->get_egg(),
+                    p_egg_out
+                );
+            };
+
+            error = pkmn::c::handle_exceptions(impl, p_internal);
+        }
+    }
+
+    return error;
 }
