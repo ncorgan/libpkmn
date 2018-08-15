@@ -5,6 +5,7 @@
  * p_or copy at http://opensource.org/licenses/MIT)
  */
 
+#include "common/item_container.hpp"
 #include "common/misc.hpp"
 
 #include "cpp_to_c.hpp"
@@ -101,18 +102,12 @@ enum pkmn_error pkmn_item_list_add(
     size_t amount
 )
 {
-    PKMN_CHECK_NULL_WRAPPER_PARAM(p_item_list);
-    pkmn::c::item_list_internal_t* p_internal = ITEM_LIST_INTERNAL_RCAST(p_item_list->p_internal);
-    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_item, p_internal);
-
-    PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
-        pkmn::item_list::sptr cpp = p_internal->cpp;
-
-        cpp->add(
-            p_item,
-            int(amount)
-        );
-    )
+    return pkmn::c::add_item<struct pkmn_item_list, pkmn::item_list>(
+               p_item_list,
+               p_item,
+               amount,
+               "p_item_list"
+           );
 }
 
 enum pkmn_error pkmn_item_list_remove(
@@ -121,18 +116,12 @@ enum pkmn_error pkmn_item_list_remove(
     size_t amount
 )
 {
-    PKMN_CHECK_NULL_WRAPPER_PARAM(p_item_list);
-    pkmn::c::item_list_internal_t* p_internal = ITEM_LIST_INTERNAL_RCAST(p_item_list->p_internal);
-    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_item, p_internal);
-
-    PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
-        pkmn::item_list::sptr cpp = p_internal->cpp;
-
-        cpp->remove(
-            p_item,
-            int(amount)
-        );
-    )
+    return pkmn::c::remove_item<struct pkmn_item_list, pkmn::item_list>(
+               p_item_list,
+               p_item,
+               amount,
+               "p_item_list"
+           );
 }
 
 enum pkmn_error pkmn_item_list_move(

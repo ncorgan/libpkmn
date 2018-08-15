@@ -85,9 +85,7 @@ enum pkmn_error pkmn_daycare_get_levelup_pokemon(
                             );
     if(!error)
     {
-        pkmn::c::daycare_internal_t* p_internal = DAYCARE_INTERNAL_RCAST(
-                                                  p_daycare->p_internal
-                                              );
+        auto* p_internal = pkmn::c::get_daycare_internal_ptr(p_daycare);
         BOOST_ASSERT(p_internal != nullptr);
 
         error = pkmn::c::check_for_null_param(
@@ -126,9 +124,7 @@ enum pkmn_error pkmn_daycare_set_levelup_pokemon(
                             );
     if(!error)
     {
-        pkmn::c::daycare_internal_t* p_internal = DAYCARE_INTERNAL_RCAST(
-                                                  p_daycare->p_internal
-                                              );
+        auto* p_internal = pkmn::c::get_daycare_internal_ptr(p_daycare);
         BOOST_ASSERT(p_internal != nullptr);
 
         error = pkmn::c::check_for_null_wrapper_param(
@@ -169,9 +165,7 @@ enum pkmn_error pkmn_daycare_get_levelup_pokemon_as_list(
                             );
     if(!error)
     {
-        pkmn::c::daycare_internal_t* p_internal = DAYCARE_INTERNAL_RCAST(
-                                                  p_daycare->p_internal
-                                              );
+        auto* p_internal = pkmn::c::get_daycare_internal_ptr(p_daycare);
         BOOST_ASSERT(p_internal != nullptr);
 
         error = pkmn::c::check_for_null_param(
@@ -208,9 +202,7 @@ enum pkmn_error pkmn_daycare_get_breeding_pokemon(
                             );
     if(!error)
     {
-        pkmn::c::daycare_internal_t* p_internal = DAYCARE_INTERNAL_RCAST(
-                                                  p_daycare->p_internal
-                                              );
+        auto* p_internal = pkmn::c::get_daycare_internal_ptr(p_daycare);
         BOOST_ASSERT(p_internal != nullptr);
 
         error = pkmn::c::check_for_null_param(
@@ -249,9 +241,7 @@ enum pkmn_error pkmn_daycare_set_breeding_pokemon(
                             );
     if(!error)
     {
-        pkmn::c::daycare_internal_t* p_internal = DAYCARE_INTERNAL_RCAST(
-                                                  p_daycare->p_internal
-                                              );
+        auto* p_internal = pkmn::c::get_daycare_internal_ptr(p_daycare);
         BOOST_ASSERT(p_internal != nullptr);
 
         error = pkmn::c::check_for_null_wrapper_param(
@@ -292,9 +282,7 @@ enum pkmn_error pkmn_daycare_get_breeding_pokemon_as_list(
                             );
     if(!error)
     {
-        pkmn::c::daycare_internal_t* p_internal = DAYCARE_INTERNAL_RCAST(
-                                                  p_daycare->p_internal
-                                              );
+        auto* p_internal = pkmn::c::get_daycare_internal_ptr(p_daycare);
         BOOST_ASSERT(p_internal != nullptr);
 
         error = pkmn::c::check_for_null_param(
@@ -330,9 +318,7 @@ enum pkmn_error pkmn_daycare_get_egg(
                             );
     if(!error)
     {
-        pkmn::c::daycare_internal_t* p_internal = DAYCARE_INTERNAL_RCAST(
-                                                  p_daycare->p_internal
-                                              );
+        auto* p_internal = pkmn::c::get_daycare_internal_ptr(p_daycare);
         BOOST_ASSERT(p_internal != nullptr);
 
         error = pkmn::c::check_for_null_param(

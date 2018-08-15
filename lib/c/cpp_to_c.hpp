@@ -45,6 +45,7 @@
 
 #include <boost/assert.hpp>
 #include <boost/bimap.hpp>
+#include <boost/config.hpp>
 #include <boost/thread/mutex.hpp>
 
 #include <cstdlib>
@@ -88,17 +89,37 @@ namespace pkmn { namespace c {
         int generation;
     };
 
-    using daycare_internal_t = internal_t<pkmn::daycare>;
-    using game_save_internal_t = internal_t<pkmn::game_save>;
-    using item_bag_internal_t = internal_t<pkmn::item_bag>;
-    using item_list_internal_t = internal_t<pkmn::item_list>;
-    using pokedex_internal_t = internal_t<pkmn::pokedex>;
-    using pokemon_internal_t = internal_t<pkmn::pokemon>;
-    using pokemon_box_internal_t = internal_t<pkmn::pokemon_box>;
+    using daycare_internal_t       = internal_t<pkmn::daycare>;
+    using game_save_internal_t     = internal_t<pkmn::game_save>;
+    using item_bag_internal_t      = internal_t<pkmn::item_bag>;
+    using item_list_internal_t     = internal_t<pkmn::item_list>;
+    using pokedex_internal_t       = internal_t<pkmn::pokedex>;
+    using pokemon_internal_t       = internal_t<pkmn::pokemon>;
+    using pokemon_box_internal_t   = internal_t<pkmn::pokemon_box>;
     using pokemon_party_internal_t = internal_t<pkmn::pokemon_party>;
-    using pokemon_pc_internal_t = internal_t<pkmn::pokemon_pc>;
+    using pokemon_pc_internal_t    = internal_t<pkmn::pokemon_pc>;
 
-    #define DAYCARE_INTERNAL_RCAST(ptr)       (reinterpret_cast<pkmn::c::daycare_internal_t*>(ptr))
+    template <typename c_struct_type, typename libpkmn_type>
+    inline struct internal_t<libpkmn_type>* get_internal_ptr(
+        const c_struct_type* p_c_struct
+    )
+    {
+        return static_cast<internal_t<libpkmn_type>*>(p_c_struct->p_internal);
+    }
+
+    /*
+     * The compiler can't auto-deduce libpkmn_type from c_struct_type, and since we
+     * can't alias functions, this is the best we can do.
+     */
+    BOOST_STATIC_CONSTEXPR auto& get_daycare_internal_ptr = get_internal_ptr<struct pkmn_daycare, pkmn::daycare>;
+    BOOST_STATIC_CONSTEXPR auto& get_game_save_internal_ptr = get_internal_ptr<struct pkmn_game_save, pkmn::game_save>;
+    BOOST_STATIC_CONSTEXPR auto& get_item_bag_internal_ptr = get_internal_ptr<struct pkmn_item_bag, pkmn::item_bag>;
+    BOOST_STATIC_CONSTEXPR auto& get_item_list_internal_ptr = get_internal_ptr<struct pkmn_item_list, pkmn::item_list>;
+    BOOST_STATIC_CONSTEXPR auto& get_pokedex_internal_ptr = get_internal_ptr<struct pkmn_pokedex, pkmn::pokedex>;
+    BOOST_STATIC_CONSTEXPR auto& get_pokemon_internal_ptr = get_internal_ptr<struct pkmn_pokemon, pkmn::pokemon>;
+    BOOST_STATIC_CONSTEXPR auto& get_pokemon_box_internal_ptr = get_internal_ptr<struct pkmn_pokemon_box, pkmn::pokemon_box>;
+    BOOST_STATIC_CONSTEXPR auto& get_pokemon_party_internal_ptr = get_internal_ptr<struct pkmn_pokemon_party, pkmn::pokemon_party>;
+
     #define ITEM_BAG_INTERNAL_RCAST(ptr)      (reinterpret_cast<pkmn::c::item_bag_internal_t*>(ptr))
     #define ITEM_LIST_INTERNAL_RCAST(ptr)     (reinterpret_cast<pkmn::c::item_list_internal_t*>(ptr))
     #define POKEDEX_INTERNAL_RCAST(ptr)       (reinterpret_cast<pkmn::c::pokedex_internal_t*>(ptr))

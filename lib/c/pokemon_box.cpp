@@ -1,11 +1,12 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
  */
 
 #include "common/misc.hpp"
+#include "common/pokemon_container.hpp"
 
 #include "cpp_to_c.hpp"
 #include "error_internal.hpp"
@@ -96,13 +97,11 @@ enum pkmn_error pkmn_pokemon_box_get_num_pokemon(
     size_t* p_num_pokemon_out
 )
 {
-    PKMN_CHECK_NULL_PARAM(p_pokemon_box);
-    pkmn::c::pokemon_box_internal_t* p_internal = POKEMON_BOX_INTERNAL_RCAST(p_pokemon_box->p_internal);
-    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_num_pokemon_out, p_internal);
-
-    PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
-        *p_num_pokemon_out = p_internal->cpp->get_num_pokemon();
-    )
+    return pkmn::c::get_num_pokemon_in_container<struct pkmn_pokemon_box, pkmn::pokemon_box>(
+               p_pokemon_box,
+               p_num_pokemon_out,
+               "p_pokemon_box"
+           );
 }
 
 enum pkmn_error pkmn_pokemon_box_get_pokemon(
@@ -111,16 +110,12 @@ enum pkmn_error pkmn_pokemon_box_get_pokemon(
     struct pkmn_pokemon* p_pokemon_out
 )
 {
-    PKMN_CHECK_NULL_PARAM(p_pokemon_box);
-    pkmn::c::pokemon_box_internal_t* p_internal = POKEMON_BOX_INTERNAL_RCAST(p_pokemon_box->p_internal);
-    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_pokemon_out, p_internal);
-
-    PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
-        pkmn::c::init_pokemon(
-            p_internal->cpp->get_pokemon(int(position)),
-            p_pokemon_out
-        );
-    )
+    return pkmn::c::get_pokemon_in_container<struct pkmn_pokemon_box, pkmn::pokemon_box>(
+               p_pokemon_box,
+               position,
+               p_pokemon_out,
+               "p_pokemon_box"
+           );
 }
 
 enum pkmn_error pkmn_pokemon_box_set_pokemon(
@@ -129,18 +124,12 @@ enum pkmn_error pkmn_pokemon_box_set_pokemon(
     struct pkmn_pokemon* p_pokemon
 )
 {
-    PKMN_CHECK_NULL_PARAM(p_pokemon_box);
-    pkmn::c::pokemon_box_internal_t* p_internal = POKEMON_BOX_INTERNAL_RCAST(p_pokemon_box->p_internal);
-    PKMN_CHECK_NULL_WRAPPER_PARAM_WITH_HANDLE(p_pokemon, p_internal);
-
-    PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
-        pkmn::c::pokemon_internal_t* p_new_pokemon_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
-
-        p_internal->cpp->set_pokemon(
-            int(position),
-            p_new_pokemon_internal->cpp
-        );
-    )
+    return pkmn::c::set_pokemon_in_container<struct pkmn_pokemon_box, pkmn::pokemon_box>(
+               p_pokemon_box,
+               position,
+               p_pokemon,
+               "p_pokemon_box"
+           );
 }
 
 enum pkmn_error pkmn_pokemon_box_as_list(
@@ -148,14 +137,9 @@ enum pkmn_error pkmn_pokemon_box_as_list(
     struct pkmn_pokemon_list* p_pokemon_list_out
 )
 {
-    PKMN_CHECK_NULL_PARAM(p_pokemon_box);
-    pkmn::c::pokemon_box_internal_t* p_internal = POKEMON_BOX_INTERNAL_RCAST(p_pokemon_box->p_internal);
-    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_pokemon_list_out, p_internal);
-
-    PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
-        pkmn::c::pokemon_list_cpp_to_c(
-            p_internal->cpp->as_vector(),
-            p_pokemon_list_out
-        );
-    )
+    return pkmn::c::pokemon_container_as_list<struct pkmn_pokemon_box, pkmn::pokemon_box>(
+               p_pokemon_box,
+               p_pokemon_list_out,
+               "p_pokemon_box"
+           );
 }
