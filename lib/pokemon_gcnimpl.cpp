@@ -1121,7 +1121,7 @@ namespace pkmn
         else
         {
             auto contest_stat_iter = CONTEST_STAT_BIMAP.right.find(stat);
-            BOOST_ASSERT(contest_stat_iter != CONTEST_STAT_BIMAP.end());
+            BOOST_ASSERT(contest_stat_iter != CONTEST_STAT_BIMAP.right.end());
 
             _libpkmgc_pokemon_uptr->contestStats[contest_stat_iter->second] = LibPkmGC::u8(value);
         }
