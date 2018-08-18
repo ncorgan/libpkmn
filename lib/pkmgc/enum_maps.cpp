@@ -17,13 +17,13 @@ const condition_bimap_t& get_condition_bimap()
 {
     static const condition_bimap_t CONDITION_BIMAP =
     boost::assign::list_of<condition_bimap_t::relation>
-        ("None",       LibPkmGC::NoStatus)
-        ("Asleep",     LibPkmGC::Asleep)
-        ("Poison",     LibPkmGC::Poisoned)
-        ("Burn",       LibPkmGC::Burnt)
-        ("Frozen",     LibPkmGC::Frozen)
-        ("Paralysis",  LibPkmGC::Paralyzed)
-        ("Bad Poison", LibPkmGC::BadlyPoisoned)
+        (pkmn::e_condition::NONE,       LibPkmGC::NoStatus)
+        (pkmn::e_condition::ASLEEP,     LibPkmGC::Asleep)
+        (pkmn::e_condition::POISON,     LibPkmGC::Poisoned)
+        (pkmn::e_condition::BURN,       LibPkmGC::Burnt)
+        (pkmn::e_condition::FROZEN,     LibPkmGC::Frozen)
+        (pkmn::e_condition::PARALYSIS,  LibPkmGC::Paralyzed)
+        (pkmn::e_condition::BAD_POISON, LibPkmGC::BadlyPoisoned)
     ;
 
     return CONDITION_BIMAP;

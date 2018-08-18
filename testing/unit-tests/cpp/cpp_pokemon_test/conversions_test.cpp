@@ -6,7 +6,9 @@
  */
 
 #include "private_exports.hpp"
+#include "pksav/enum_maps.hpp"
 #include "types/rng.hpp"
+#include "utils/misc.hpp"
 
 #include <pkmntest/util.hpp>
 
@@ -19,10 +21,10 @@
 #include <gtest/gtest.h>
 
 // Common to all generations
-static const std::vector<std::string> CONDITIONS =
-{
-    "None", "Asleep", "Poison", "Burn", "Frozen", "Paralysis"
-};
+static const std::vector<pkmn::e_condition> CONDITIONS =
+    pkmn::map_keys_to_vector<decltype(pksav::gb_condition_bimap_t::left), pkmn::e_condition>(
+        pksav::get_gb_condition_bimap().left
+    );
 
 template <typename T>
 static T random_value(const std::vector<T>& vec)

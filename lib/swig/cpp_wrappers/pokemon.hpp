@@ -134,7 +134,7 @@ namespace pkmn { namespace swig {
                 return _pokemon->get_database_entry();
             }
 
-            inline std::string get_condition()
+            inline pkmn::e_condition get_condition()
             {
                 BOOST_ASSERT(_pokemon.get() != nullptr);
 
@@ -142,7 +142,7 @@ namespace pkmn { namespace swig {
             }
 
             inline void set_condition(
-                const std::string& condition
+                pkmn::e_condition condition
             )
             {
                 BOOST_ASSERT(_pokemon.get() != nullptr);

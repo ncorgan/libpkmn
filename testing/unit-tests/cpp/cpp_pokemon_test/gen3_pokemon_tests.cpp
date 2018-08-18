@@ -16,6 +16,7 @@
 #include "private_exports.hpp"
 #include "pkmgc/enum_maps.hpp"
 #include "pkmgc/includes.hpp"
+#include "pksav/enum_maps.hpp"
 #include "pksav/pksav_call.hpp"
 
 #include <pksav/common/markings.h>
@@ -210,6 +211,7 @@ TEST_P(gba_pokemon_test, gba_pokemon_test) {
     const struct pksav_gba_pokemon_attacks_block* attacks = &native_pc_data->blocks.attacks;
     const struct pksav_gba_pokemon_effort_block* effort = &native_pc_data->blocks.effort;
     const struct pksav_gba_pokemon_misc_block* misc = &native_pc_data->blocks.misc;
+    static const pksav::condition_mask_bimap_t& CONDITION_MASK_BIMAP = pksav::get_condition_mask_bimap();
 
     EXPECT_EQ(pokemon->get_personality(), pksav_littleendian32(native_pc_data->personality));
     EXPECT_EQ(pokemon->get_original_trainer_id(), pksav_littleendian32(native_pc_data->ot_id.id));
@@ -323,7 +325,10 @@ TEST_P(gba_pokemon_test, gba_pokemon_test) {
     const struct pksav_gba_pokemon_party_data* native_party_data = reinterpret_cast<const struct pksav_gba_pokemon_party_data*>(
                                                                        pokemon->get_native_party_data()
                                                                    );
-    // TODO: condition
+    EXPECT_EQ(
+        uint8_t(CONDITION_MASK_BIMAP.left.at(pokemon->get_condition())),
+        native_party_data->condition
+    );
 
     EXPECT_EQ(pokemon->get_level(), int(native_party_data->level));
 
@@ -601,10 +606,16 @@ TEST_P(gcn_pokemon_test, gcn_pokemon_test) {
         native->hasSecondAbility()
     );
 
-    const pkmgc::gender_bimap_t& GENDER_BIMAP = pkmgc::get_gender_bimap();
+    static const pkmgc::gender_bimap_t& GENDER_BIMAP = pkmgc::get_gender_bimap();
     EXPECT_EQ(
         GENDER_BIMAP.left.at(pokemon->get_gender()),
         native->getGender()
+    );
+
+    static const pkmgc::condition_bimap_t& CONDITION_BIMAP = pkmgc::get_condition_bimap();
+    EXPECT_EQ(
+        CONDITION_BIMAP.left.at(pokemon->get_condition()),
+        native->partyData.status
     );
 
     EXPECT_EQ(

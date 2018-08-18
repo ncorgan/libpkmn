@@ -8,6 +8,7 @@
 #include "pokemon_test_common.hpp"
 
 #include <pkmn/exception.hpp>
+#include "pksav/enum_maps.hpp"
 #include "pksav/pksav_call.hpp"
 
 #include <pksav/common/stats.h>
@@ -59,6 +60,8 @@ TEST_P(gen1_pokemon_test, gen1_pokemon_test)
     const struct pksav_gen1_pokemon_party_data* native_party_data = reinterpret_cast<struct pksav_gen1_pokemon_party_data*>(
                                                                         pokemon->get_native_party_data()
                                                                     );
+    static const pksav::gb_condition_bimap_t& GB_CONDITION_BIMAP = pksav::get_gb_condition_bimap();
+
 
     /*
      * PC data
@@ -66,8 +69,11 @@ TEST_P(gen1_pokemon_test, gen1_pokemon_test)
     EXPECT_EQ(pokemon->get_database_entry().get_pokemon_index(), int(native_pc->species));
     EXPECT_EQ(pokemon->get_current_hp(), int(pksav_bigendian16(native_pc->current_hp)));
     EXPECT_EQ(pokemon->get_level(), int(native_pc->level));
-    // TODO: change condition and check
-    EXPECT_EQ(0, native_pc->condition);
+
+    EXPECT_EQ(
+        uint8_t(GB_CONDITION_BIMAP.left.at(pokemon->get_condition())),
+        native_pc->condition
+    );
     // TODO: programmatic check for types, catch rate
 
     const pkmn::move_slots_t& moves = pokemon->get_moves();

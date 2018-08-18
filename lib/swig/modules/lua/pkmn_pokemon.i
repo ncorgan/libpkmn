@@ -28,7 +28,7 @@
 %attribute(pkmn::swig::pokemon, bool, is_egg, is_egg, set_is_egg);
 %attributestring(pkmn::swig::pokemon, std::string, nickname, get_nickname, set_nickname);
 %attributeval(pkmn::swig::pokemon, pkmn::database::pokemon_entry, database_entry, get_database_entry);
-%attributestring(pkmn::swig::pokemon, std::string, condition, get_condition, set_condition);
+%attributestring(pkmn::swig::pokemon, pkmn::e_condition, condition, get_condition, set_condition);
 %attribute(pkmn::swig::pokemon, pkmn::e_gender, gender, get_gender, set_gender);
 %attribute(pkmn::swig::pokemon, bool, is_shiny, is_shiny, set_shininess);
 %attribute(pkmn::swig::pokemon, pkmn::e_item, held_item, get_held_item, set_held_item);

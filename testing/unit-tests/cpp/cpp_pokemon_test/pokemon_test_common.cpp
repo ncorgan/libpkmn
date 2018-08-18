@@ -43,7 +43,10 @@ static void check_initial_values(
     int generation = pkmn::priv::game_enum_to_generation(game);
     EXPECT_EQ("Standard", pokemon->get_form());
 
-    EXPECT_EQ("None", pokemon->get_condition());
+    EXPECT_EQ(
+        pkmn::e_condition::NONE,
+        pokemon->get_condition()
+    ) << pkmn::condition_to_string(pokemon->get_condition());
 
     if(generation >= 5)
     {
@@ -329,28 +332,38 @@ static void test_setting_condition(
     const pkmn::pokemon::sptr& pokemon
 )
 {
-    // TODO: add enum_maps to pkmntest library
-    /*int generation = pkmn::priv::game_enum_to_generation(pokemon->get_game());
+    int generation = pkmn::priv::game_enum_to_generation(pokemon->get_game());
 
     if(generation <= 2)
     {
-        for(const auto& condition: pksav::GB_CONDITION_BIMAP.left)
+        static const pksav::gb_condition_bimap_t& GB_CONDITION_BIMAP =
+            pksav::get_gb_condition_bimap();
+
+        for(const auto& condition_iter: GB_CONDITION_BIMAP.left)
         {
-            pokemon->set_condition(condition.first);
-            EXPECT_EQ(condition.first, pokemon->get_condition());
+            pokemon->set_condition(condition_iter.first);
+            EXPECT_EQ(
+                condition_iter.first,
+                pokemon->get_condition()
+            ) << pkmn::condition_to_string(condition_iter.first) << " "
+              << pkmn::condition_to_string(pokemon->get_condition());
         }
     }
     else
     {
-        for(const auto& condition: pksav::CONDITION_MASK_BIMAP.left)
-        {
-            pokemon->set_condition(condition.first);
-            EXPECT_EQ(condition.first, pokemon->get_condition());
-        }
-    }*/
+        static const pksav::condition_mask_bimap_t& CONDITION_MASK_BIMAP =
+            pksav::get_condition_mask_bimap();
 
-    pokemon->set_condition("None");
-    ASSERT_EQ("None", pokemon->get_condition());
+        for(const auto& condition_iter: CONDITION_MASK_BIMAP.left)
+        {
+            pokemon->set_condition(condition_iter.first);
+            EXPECT_EQ(
+                condition_iter.first,
+                pokemon->get_condition()
+            ) << pkmn::condition_to_string(condition_iter.first) << " "
+              << pkmn::condition_to_string(pokemon->get_condition());
+        }
+    }
 }
 
 static void test_setting_friendship(

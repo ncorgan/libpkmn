@@ -334,6 +334,7 @@ TEST(pokemon_io_test, test_outside_3gpkm) {
     EXPECT_EQ("Standard", mightyena->get_form());
     EXPECT_EQ("MIGHTYENA", mightyena->get_nickname());
     EXPECT_FALSE(mightyena->is_shiny());
+    EXPECT_EQ(pkmn::e_condition::NONE, mightyena->get_condition());
     EXPECT_EQ(pkmn::e_item::HEART_SCALE, mightyena->get_held_item());
     EXPECT_EQ("A", mightyena->get_original_trainer_name());
     EXPECT_EQ(61415, mightyena->get_original_trainer_public_id());

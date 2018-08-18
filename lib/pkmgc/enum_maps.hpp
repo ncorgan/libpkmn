@@ -10,6 +10,7 @@
 
 #include "pkmgc/includes.hpp"
 
+#include <pkmn/enums/condition.hpp>
 #include <pkmn/enums/contest_stat.hpp>
 #include <pkmn/enums/gender.hpp>
 #include <pkmn/enums/language.hpp>
@@ -61,7 +62,7 @@ namespace pkmgc
         WORLD
     };
 
-    using condition_bimap_t = boost::bimap<std::string, LibPkmGC::PokemonStatus>;
+    using condition_bimap_t = boost::bimap<pkmn::e_condition, LibPkmGC::PokemonStatus>;
     using contest_stat_bimap_t = boost::bimap<pkmn::e_contest_stat, pkmgc::e_contest_stat>;
     using gender_bimap_t = boost::bimap<pkmn::e_gender, LibPkmGC::Gender>;
     using language_bimap_t = boost::bimap<pkmn::e_language, LibPkmGC::LanguageIndex>;

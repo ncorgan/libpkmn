@@ -8,6 +8,7 @@
 #ifndef INCLUDED_PKMN_PKSAV_ENUM_MAPS_HPP
 #define INCLUDED_PKMN_PKSAV_ENUM_MAPS_HPP
 
+#include <pkmn/enums/condition.hpp>
 #include <pkmn/enums/gender.hpp>
 #include <pkmn/enums/language.hpp>
 #include <pkmn/enums/nature.hpp>
@@ -69,8 +70,8 @@ namespace pksav
     const gba_text_speed_bimap_t& get_gba_text_speed_bimap();
 
     // Status conditions
-    typedef boost::bimap<std::string, enum pksav_gb_condition> gb_condition_bimap_t;
-    typedef boost::bimap<std::string, enum pksav_condition_mask> condition_mask_bimap_t;
+    typedef boost::bimap<pkmn::e_condition, enum pksav_gb_condition> gb_condition_bimap_t;
+    typedef boost::bimap<pkmn::e_condition, enum pksav_condition_mask> condition_mask_bimap_t;
 
     const gb_condition_bimap_t& get_gb_condition_bimap();
     const condition_mask_bimap_t& get_condition_mask_bimap();

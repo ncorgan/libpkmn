@@ -53,10 +53,10 @@ namespace pkmn {
                 bool is_egg
             ) final;
 
-            std::string get_condition() final;
+            pkmn::e_condition get_condition() final;
 
             void set_condition(
-                const std::string& condition
+                pkmn::e_condition condition
             ) final;
 
             std::string get_nickname() final;

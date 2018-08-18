@@ -255,11 +255,11 @@ namespace pkmn
         throw pkmn::feature_not_in_game_error("Eggs", "Generation I games");
     }
 
-    std::string pokemon_gen1impl::get_condition()
+    pkmn::e_condition pokemon_gen1impl::get_condition()
     {
         boost::lock_guard<pokemon_gen1impl> lock(*this);
 
-        std::string ret = "None";
+        pkmn::e_condition ret = pkmn::e_condition::NONE;
         enum pksav_gb_condition gb_condition = static_cast<enum pksav_gb_condition>(_pksav_pokemon.pc_data.condition);
 
         const pksav::gb_condition_bimap_t& gb_condition_bimap = pksav::get_gb_condition_bimap();
@@ -275,7 +275,7 @@ namespace pkmn
     }
 
     void pokemon_gen1impl::set_condition(
-        const std::string& condition
+        pkmn::e_condition condition
     )
     {
         boost::lock_guard<pokemon_gen1impl> lock(*this);

@@ -139,12 +139,12 @@ const gb_condition_bimap_t& get_gb_condition_bimap()
 {
     static const gb_condition_bimap_t GB_CONDITION_BIMAP =
     boost::assign::list_of<gb_condition_bimap_t::relation>
-        ("None",      PKSAV_GB_CONDITION_NONE)
-        ("Asleep",    PKSAV_GB_CONDITION_ASLEEP)
-        ("Poison",    PKSAV_GB_CONDITION_POISON)
-        ("Burn",      PKSAV_GB_CONDITION_BURN)
-        ("Frozen",    PKSAV_GB_CONDITION_FROZEN)
-        ("Paralysis", PKSAV_GB_CONDITION_PARALYZ)
+        (pkmn::e_condition::NONE,      PKSAV_GB_CONDITION_NONE)
+        (pkmn::e_condition::ASLEEP,    PKSAV_GB_CONDITION_ASLEEP)
+        (pkmn::e_condition::POISON,    PKSAV_GB_CONDITION_POISON)
+        (pkmn::e_condition::BURN,      PKSAV_GB_CONDITION_BURN)
+        (pkmn::e_condition::FROZEN,    PKSAV_GB_CONDITION_FROZEN)
+        (pkmn::e_condition::PARALYSIS, PKSAV_GB_CONDITION_PARALYZ)
     ;
 
     return GB_CONDITION_BIMAP;
@@ -154,13 +154,13 @@ const condition_mask_bimap_t& get_condition_mask_bimap()
 {
     static const condition_mask_bimap_t CONDITION_MASK_BIMAP =
     boost::assign::list_of<condition_mask_bimap_t::relation>
-        ("None",       PKSAV_CONDITION_NONE)
-        ("Asleep",     PKSAV_CONDITION_SLEEP_MASK)
-        ("Poison",     PKSAV_CONDITION_POISON)
-        ("Burn",       PKSAV_CONDITION_BURN)
-        ("Frozen",     PKSAV_CONDITION_FROZEN)
-        ("Paralysis",  PKSAV_CONDITION_PARALYZ)
-        ("Bad Poison", PKSAV_CONDITION_BAD_POISON)
+        (pkmn::e_condition::NONE,       PKSAV_CONDITION_NONE)
+        (pkmn::e_condition::ASLEEP,     PKSAV_CONDITION_SLEEP_MASK)
+        (pkmn::e_condition::POISON,     PKSAV_CONDITION_POISON)
+        (pkmn::e_condition::BURN,       PKSAV_CONDITION_BURN)
+        (pkmn::e_condition::FROZEN,     PKSAV_CONDITION_FROZEN)
+        (pkmn::e_condition::PARALYSIS,  PKSAV_CONDITION_PARALYZ)
+        (pkmn::e_condition::BAD_POISON, PKSAV_CONDITION_BAD_POISON)
     ;
 
     return CONDITION_MASK_BIMAP;

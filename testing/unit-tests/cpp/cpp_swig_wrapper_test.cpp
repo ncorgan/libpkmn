@@ -406,8 +406,8 @@ TEST(cpp_swig_wrapper_test, test_pokemon)
     swig_pokemon.set_is_egg(true);
     EXPECT_TRUE(swig_pokemon.is_egg());
 
-    swig_pokemon.set_condition("Frozen");
-    EXPECT_EQ("Frozen", swig_pokemon.get_condition());
+    swig_pokemon.set_condition(pkmn::e_condition::FROZEN);
+    EXPECT_EQ(pkmn::e_condition::FROZEN, swig_pokemon.get_condition());
 
     swig_pokemon.set_nickname("12345");
     EXPECT_EQ("12345", swig_pokemon.get_nickname());

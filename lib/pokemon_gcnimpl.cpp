@@ -324,11 +324,11 @@ namespace pkmn
         _libpkmgc_pokemon_uptr->setEggFlag(is_egg);
     }
 
-    std::string pokemon_gcnimpl::get_condition()
+    pkmn::e_condition pokemon_gcnimpl::get_condition()
     {
         boost::lock_guard<pokemon_gcnimpl> lock(*this);
 
-        std::string ret = "None";
+        pkmn::e_condition ret = pkmn::e_condition::NONE;
         LibPkmGC::PokemonStatus status = _libpkmgc_pokemon_uptr->partyData.status;
 
         static const pkmgc::condition_bimap_t& CONDITION_BIMAP = pkmgc::get_condition_bimap();
@@ -343,7 +343,7 @@ namespace pkmn
     }
 
     void pokemon_gcnimpl::set_condition(
-        const std::string& condition
+        pkmn::e_condition condition
     )
     {
         static const pkmgc::condition_bimap_t& CONDITION_BIMAP = pkmgc::get_condition_bimap();
@@ -356,7 +356,7 @@ namespace pkmn
 
             _libpkmgc_pokemon_uptr->partyData.status = condition_iter->second;
 
-            if(condition == "Asleep")
+            if(condition == pkmn::e_condition::ASLEEP)
             {
                 // Sleep is stored as the number of turns asleep, so set a random value.
                 _libpkmgc_pokemon_uptr->partyData.turnsOfSleepRemaining = pkmn::rng<LibPkmGC::s8>().rand(1, 7);

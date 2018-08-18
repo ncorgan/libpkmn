@@ -265,11 +265,11 @@ namespace pkmn
         _is_egg = is_egg;
     }
 
-    std::string pokemon_gen2impl::get_condition()
+    pkmn::e_condition pokemon_gen2impl::get_condition()
     {
         boost::lock_guard<pokemon_gen2impl> lock(*this);
 
-        std::string ret = "None";
+        pkmn::e_condition ret = pkmn::e_condition::NONE;
         enum pksav_gb_condition gb_condition = static_cast<enum pksav_gb_condition>(_pksav_pokemon.party_data.condition);
 
         const pksav::gb_condition_bimap_t& gb_condition_bimap = pksav::get_gb_condition_bimap();
@@ -285,7 +285,7 @@ namespace pkmn
     }
 
     void pokemon_gen2impl::set_condition(
-        const std::string& condition
+        pkmn::e_condition condition
     )
     {
         boost::lock_guard<pokemon_gen2impl> lock(*this);

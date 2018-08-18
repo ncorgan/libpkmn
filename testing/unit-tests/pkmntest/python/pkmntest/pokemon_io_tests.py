@@ -94,6 +94,7 @@ class pokemon_io_test(base_test):
         self.assertEqual(mightyena.form, "Standard")
         self.assertEqual(mightyena.nickname, "MIGHTYENA")
         self.assertFalse(mightyena.is_shiny)
+        self.assertEqual(mightyena.condition, pkmn.condition.NONE)
         self.assertEqual(mightyena.held_item, pkmn.item.HEART_SCALE)
         self.assertEqual(mightyena.original_trainer_name, "A")
         self.assertEqual(mightyena.original_trainer_public_id, 61415)

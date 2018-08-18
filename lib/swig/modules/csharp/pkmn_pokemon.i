@@ -35,7 +35,7 @@ using Database;"
 %attribute(pkmn::swig::pokemon, bool, IsEgg, is_egg, set_is_egg);
 %attributestring(pkmn::swig::pokemon, std::string, Nickname, get_nickname, set_nickname);
 %attributeval(pkmn::swig::pokemon, pkmn::database::pokemon_entry, DatabaseEntry, get_database_entry);
-%attributestring(pkmn::swig::pokemon, std::string, Condition, get_condition, set_condition);
+%attributestring(pkmn::swig::pokemon, pkmn::e_condition, Condition, get_condition, set_condition);
 %attribute(pkmn::swig::pokemon, pkmn::e_gender, Gender, get_gender, set_gender);
 %attribute(pkmn::swig::pokemon, bool, IsShiny, is_shiny, set_shininess);
 %attribute(pkmn::swig::pokemon, pkmn::e_item, HeldItem, get_held_item, set_held_item);

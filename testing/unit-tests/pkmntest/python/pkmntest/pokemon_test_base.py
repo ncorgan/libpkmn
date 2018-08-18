@@ -46,7 +46,7 @@ class pokemon_test_base(base_test):
     def initial_values_test(self, pokemon):
         generation = GAME_TO_GENERATION[pokemon.game]
 
-        self.assertEqual(pokemon.condition, "None")
+        self.assertEqual(pokemon.condition, pkmn.condition.NONE)
 
         if generation >= 5:
             self.assertEqual(pokemon.nickname, pokemon.database_entry.species_name)
@@ -294,9 +294,16 @@ class pokemon_test_base(base_test):
     def condition_test(self, pokemon):
         generation = GAME_TO_GENERATION[pokemon.game]
 
-        conditions = ["None", "Asleep", "Poison", "Burn", "Frozen", "Paralysis"]
+        conditions = [
+            pkmn.condition.NONE,
+            pkmn.condition.ASLEEP,
+            pkmn.condition.POISON,
+            pkmn.condition.BURN,
+            pkmn.condition.FROZEN,
+            pkmn.condition.PARALYSIS
+        ]
         if generation >= 3:
-            conditions += ["Bad Poison"]
+            conditions += [pkmn.condition.BAD_POISON]
 
         for condition in conditions:
             pokemon.condition = condition

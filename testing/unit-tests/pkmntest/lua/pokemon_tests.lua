@@ -517,7 +517,7 @@ end
 function pokemon_tests.check_initial_values(pokemon)
     local generation = pkmntest_utils.GAME_TO_GENERATION[pokemon.game]
 
-    luaunit.assertEquals(pokemon.condition, "None")
+    luaunit.assertEquals(pokemon.condition, pkmn.condition.NONE)
     luaunit.assertEquals(
         pokemon.original_trainer_name,
         pkmn.pokemon.DEFAULT_TRAINER_NAME
@@ -831,10 +831,19 @@ end
 function pokemon_tests.test_setting_condition(pokemon)
     local generation = pkmntest_utils.GAME_TO_GENERATION[pokemon.game]
 
-    local conditions = {"None", "Asleep", "Poison", "Burn", "Frozen", "Paralysis"}
+    local conditions =
+    {
+        pkmn.condition.NONE,
+        pkmn.condition.ASLEEP,
+        pkmn.condition.POISON,
+        pkmn.condition.BURN,
+        pkmn.condition.FROZEN,
+        pkmn.condition.PARALYSIS
+    }
+
     if generation >= 3
     then
-        conditions[#conditions] = "Bad Poison"
+        conditions[#conditions] = pkmn.condition.BAD_POISON
     end
 
     for condition_index = 1, #conditions

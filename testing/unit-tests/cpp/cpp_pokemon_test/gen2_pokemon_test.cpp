@@ -11,6 +11,7 @@
 #include <pkmn/calculations/form.hpp>
 #include <pkmn/database/item_entry.hpp>
 
+#include "pksav/enum_maps.hpp"
 #include "pksav/pksav_call.hpp"
 
 #include <pksav/common/pokerus.h>
@@ -193,6 +194,11 @@ TEST_P(gen2_pokemon_test, gen2_pokemon_test) {
     /*
      * Party data
      */
+    static const pksav::gb_condition_bimap_t& GB_CONDITION_BIMAP = pksav::get_gb_condition_bimap();
+    EXPECT_EQ(
+        uint8_t(GB_CONDITION_BIMAP.left.at(pokemon->get_condition())),
+        native_party_data->condition
+    );
     EXPECT_EQ(pokemon->get_stats().at(pkmn::e_stat::HP), int(pksav_bigendian16(native_party_data->max_hp)));
     EXPECT_EQ(pokemon->get_current_hp(), int(pksav_bigendian16(native_party_data->current_hp)));
     EXPECT_EQ(pokemon->get_stats().at(pkmn::e_stat::ATTACK), int(pksav_bigendian16(native_party_data->atk)));

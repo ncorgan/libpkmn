@@ -15,6 +15,7 @@
 
 #include <pkmn/enums/ability.hpp>
 #include <pkmn/enums/ball.hpp>
+#include <pkmn/enums/condition.hpp>
 #include <pkmn/enums/contest_stat.hpp>
 #include <pkmn/enums/game.hpp>
 #include <pkmn/enums/gender.hpp>
@@ -82,10 +83,10 @@ namespace pkmn {
 
             virtual const pkmn::database::pokemon_entry& get_database_entry() = 0;
 
-            virtual std::string get_condition() = 0;
+            virtual pkmn::e_condition get_condition() = 0;
 
             virtual void set_condition(
-                const std::string& condition
+                pkmn::e_condition condition
             ) = 0;
 
             virtual std::string get_nickname() = 0;

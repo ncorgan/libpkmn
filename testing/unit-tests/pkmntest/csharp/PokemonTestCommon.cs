@@ -562,7 +562,7 @@ public class PokemonTestCommon
     {
         int generation = Util.GameToGeneration(pokemon.Game);
 
-        Assert.AreEqual("None", pokemon.Condition);
+        Assert.AreEqual(PKMN.Condition.NONE, pokemon.Condition);
 
         if(generation >= 5)
         {
@@ -929,17 +929,24 @@ public class PokemonTestCommon
         PKMN.Pokemon pokemon
     )
     {
-        System.Collections.Generic.List<string> conditions =
-        new System.Collections.Generic.List<string>(
-            new string[]{"None", "Asleep", "Poison", "Burn", "Frozen", "Paralysis"}
+        System.Collections.Generic.List<PKMN.Condition> conditions =
+        new System.Collections.Generic.List<PKMN.Condition>(
+            new PKMN.Condition[]{
+                PKMN.Condition.NONE,
+                PKMN.Condition.ASLEEP,
+                PKMN.Condition.POISON,
+                PKMN.Condition.BURN,
+                PKMN.Condition.FROZEN,
+                PKMN.Condition.PARALYSIS
+            }
         );
 
         if(Util.GameToGeneration(pokemon.Game) >= 3)
         {
-            conditions.Add("Bad Poison");
+            conditions.Add(PKMN.Condition.BAD_POISON);
         }
 
-        foreach(string condition in conditions)
+        foreach(PKMN.Condition condition in conditions)
         {
             pokemon.Condition = condition;
             Assert.AreEqual(condition, pokemon.Condition);
