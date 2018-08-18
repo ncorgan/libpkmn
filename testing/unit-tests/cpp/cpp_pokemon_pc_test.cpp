@@ -15,7 +15,7 @@
 
 #include "pksav/pksav_call.hpp"
 
-#include "libpkmgc_includes.hpp"
+#include "pkmgc/includes.hpp"
 
 #include <pksav/gen1.h>
 #include <pksav/gen2.h>

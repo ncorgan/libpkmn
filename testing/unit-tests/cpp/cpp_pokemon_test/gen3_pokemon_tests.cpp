@@ -11,8 +11,11 @@
 #include <pkmn/calculations/form.hpp>
 #include <pkmn/calculations/shininess.hpp>
 #include <pkmn/database/item_entry.hpp>
+#include <pkmn/enums/enum_to_string.hpp>
 
 #include "private_exports.hpp"
+#include "pkmgc/enum_maps.hpp"
+#include "pkmgc/includes.hpp"
 #include "pksav/pksav_call.hpp"
 
 #include <pksav/common/markings.h>
@@ -21,8 +24,6 @@
 #include <pksav/gba/pokemon.h>
 #include <pksav/gba/text.h>
 #include <pksav/math/endian.h>
-
-#include "libpkmgc_includes.hpp"
 
 #include <gtest/gtest.h>
 
@@ -49,23 +50,19 @@ class gcn_pokemon_test: public pokemon_test {};
 
 static void check_initial_ribbons_map(
     const std::map<std::string, bool>& ribbons_map
-) {
-    for(auto contest_type_iter = contest_types.begin();
-        contest_type_iter != contest_types.end();
-        ++contest_type_iter)
+)
+{
+    for(const std::string& contest_type: contest_types)
     {
-        std::string ribbon_name = (*contest_type_iter);
+        std::string ribbon_name = contest_type;
         EXPECT_EQ(1, ribbons_map.count(ribbon_name));
         EXPECT_FALSE(ribbons_map.at(ribbon_name));
 
-        for(auto contest_level_iter = contest_levels.begin();
-            contest_level_iter != contest_levels.end();
-            ++contest_level_iter)
+        for(const std::string& contest_level: contest_levels)
         {
-            ribbon_name = str(boost::format("%s %s")
-                              % contest_type_iter->c_str()
-                              % contest_level_iter->c_str());
-            EXPECT_EQ(1, ribbons_map.count(ribbon_name));
+            ribbon_name = contest_type + " " + contest_level;
+
+            ASSERT_EQ(1, ribbons_map.count(ribbon_name));
             EXPECT_FALSE(ribbons_map.at(ribbon_name));
         }
     }
@@ -74,7 +71,7 @@ static void check_initial_ribbons_map(
         ribbon_iter != ribbons.end();
         ++ribbon_iter)
     {
-        EXPECT_EQ(1, ribbons_map.count(*ribbon_iter));
+        ASSERT_EQ(1, ribbons_map.count(*ribbon_iter));
         EXPECT_FALSE(ribbons_map.at(*ribbon_iter));
     }
 }
@@ -342,55 +339,13 @@ TEST_P(gba_pokemon_test, gba_pokemon_test) {
     EXPECT_EQ(stats.at(pkmn::e_stat::SPECIAL_DEFENSE), int(pksav_littleendian16(native_party_data->spdef)));
 }
 
-typedef boost::bimap<libpkmgc_contest_stat_t, std::string> contest_stat_bimap_t;
-static const contest_stat_bimap_t CONTEST_STAT_BIMAP = boost::assign::list_of<contest_stat_bimap_t::relation>
-    (LIBPKMGC_CONTEST_STAT_COOL,   "Cool")
-    (LIBPKMGC_CONTEST_STAT_BEAUTY, "Beauty")
-    (LIBPKMGC_CONTEST_STAT_CUTE,   "Cute")
-    (LIBPKMGC_CONTEST_STAT_SMART,  "Smart")
-    (LIBPKMGC_CONTEST_STAT_TOUGH,  "Tough")
-;
-
-static const std::map<std::string, LibPkmGC::ContestAchievementLevel> CONTEST_LEVEL_MAP =
-boost::assign::map_list_of<std::string, LibPkmGC::ContestAchievementLevel>
-    ("",       LibPkmGC::NormalContestWon)
-    ("Super",  LibPkmGC::SuperContestWon)
-    ("Hyper",  LibPkmGC::HyperContestWon)
-    ("Master", LibPkmGC::MasterContestWon)
-;
-
-typedef boost::bimap<LibPkmGC::Gender, pkmn::e_gender> gender_bimap_t;
-static const gender_bimap_t GENDER_BIMAP = boost::assign::list_of<gender_bimap_t::relation>
-    (LibPkmGC::Male,       pkmn::e_gender::MALE)
-    (LibPkmGC::Female,     pkmn::e_gender::FEMALE)
-    (LibPkmGC::Genderless, pkmn::e_gender::GENDERLESS)
-;
-
-typedef boost::bimap<libpkmgc_ribbon_t, std::string> ribbon_bimap_t;
-static const ribbon_bimap_t RIBBON_BIMAP = boost::assign::list_of<ribbon_bimap_t::relation>
-    (LIBPKMGC_RIBBON_CHAMPION, "Champion")
-    (LIBPKMGC_RIBBON_WINNING,  "Winning")
-    (LIBPKMGC_RIBBON_VICTORY,  "Victory")
-    (LIBPKMGC_RIBBON_ARTIST,   "Artist")
-    (LIBPKMGC_RIBBON_EFFORT,   "Effort")
-    (LIBPKMGC_RIBBON_MARINE,   "Marine")
-    (LIBPKMGC_RIBBON_LAND,     "Land")
-    (LIBPKMGC_RIBBON_SKY,      "Sky")
-    (LIBPKMGC_RIBBON_COUNTRY,  "Country")
-    (LIBPKMGC_RIBBON_NATIONAL, "National")
-    (LIBPKMGC_RIBBON_EARTH,    "Earth")
-    (LIBPKMGC_RIBBON_WORLD,    "World")
-;
-
-typedef boost::bimap<libpkmgc_stat_t, pkmn::e_stat> stat_bimap_t;
-static const stat_bimap_t STAT_BIMAP = boost::assign::list_of<stat_bimap_t::relation>
-    (LIBPKMGC_STAT_HP,      pkmn::e_stat::HP)
-    (LIBPKMGC_STAT_ATTACK,  pkmn::e_stat::ATTACK)
-    (LIBPKMGC_STAT_DEFENSE, pkmn::e_stat::DEFENSE)
-    (LIBPKMGC_STAT_SPATK,   pkmn::e_stat::SPECIAL_ATTACK)
-    (LIBPKMGC_STAT_SPDEF,   pkmn::e_stat::SPECIAL_DEFENSE)
-    (LIBPKMGC_STAT_SPEED,   pkmn::e_stat::SPEED)
-;
+static const std::unordered_map<std::string, LibPkmGC::ContestAchievementLevel> CONTEST_LEVEL_MAP =
+{
+    {"",       LibPkmGC::NormalContestWon},
+    {"Super",  LibPkmGC::SuperContestWon},
+    {"Hyper",  LibPkmGC::HyperContestWon},
+    {"Master", LibPkmGC::MasterContestWon}
+};
 
 TEST_P(gcn_pokemon_test, gcn_pokemon_test) {
     pkmn::pokemon::sptr pokemon = get_pokemon();
@@ -501,23 +456,23 @@ TEST_P(gcn_pokemon_test, gcn_pokemon_test) {
     const std::map<pkmn::e_contest_stat, int>& contest_stats = pokemon->get_contest_stats();
     EXPECT_EQ(
         contest_stats.at(pkmn::e_contest_stat::COOL),
-        int(native->contestStats[LIBPKMGC_CONTEST_STAT_COOL])
+        int(native->contestStats[int(pkmgc::e_contest_stat::COOL)])
     );
     EXPECT_EQ(
         contest_stats.at(pkmn::e_contest_stat::CUTE),
-        int(native->contestStats[LIBPKMGC_CONTEST_STAT_CUTE])
+        int(native->contestStats[int(pkmgc::e_contest_stat::CUTE)])
     );
     EXPECT_EQ(
         contest_stats.at(pkmn::e_contest_stat::BEAUTY),
-        int(native->contestStats[LIBPKMGC_CONTEST_STAT_BEAUTY])
+        int(native->contestStats[int(pkmgc::e_contest_stat::BEAUTY)])
     );
     EXPECT_EQ(
         contest_stats.at(pkmn::e_contest_stat::SMART),
-        int(native->contestStats[LIBPKMGC_CONTEST_STAT_SMART])
+        int(native->contestStats[int(pkmgc::e_contest_stat::SMART)])
     );
     EXPECT_EQ(
         contest_stats.at(pkmn::e_contest_stat::TOUGH),
-        int(native->contestStats[LIBPKMGC_CONTEST_STAT_TOUGH])
+        int(native->contestStats[int(pkmgc::e_contest_stat::TOUGH)])
     );
 
     EXPECT_EQ(contest_stats.at(pkmn::e_contest_stat::FEEL), int(native->contestLuster));
@@ -556,42 +511,78 @@ TEST_P(gcn_pokemon_test, gcn_pokemon_test) {
     const std::map<pkmn::e_stat, int>& EVs = pokemon->get_EVs();
     const std::map<pkmn::e_stat, int>& IVs = pokemon->get_IVs();
     const std::map<pkmn::e_stat, int>& stats = pokemon->get_stats();
-    for(auto iter = STAT_BIMAP.right.begin(); iter != STAT_BIMAP.right.end(); ++iter) {
-        EXPECT_EQ(EVs.at(iter->first), int(native->EVs[iter->second]));
-        EXPECT_EQ(IVs.at(iter->first), int(native->IVs[iter->second]));
-        EXPECT_EQ(stats.at(iter->first), int(native->partyData.stats[iter->second]));
+
+    static const pkmgc::stat_bimap_t& STAT_BIMAP = pkmgc::get_stat_bimap();
+    for(const auto& stat_iter: STAT_BIMAP.left)
+    {
+        EXPECT_EQ(
+            EVs.at(stat_iter.first),
+            int(native->EVs[int(stat_iter.second)])
+        ) << pkmn::stat_to_string(stat_iter.first);
+        EXPECT_EQ(
+            IVs.at(stat_iter.first),
+            int(native->IVs[int(stat_iter.second)])
+        ) << pkmn::stat_to_string(stat_iter.first);
+        EXPECT_EQ(
+            stats.at(stat_iter.first),
+            int(native->partyData.stats[int(stat_iter.second)])
+        ) << pkmn::stat_to_string(stat_iter.first);
     }
 
     EXPECT_EQ(pokemon->get_current_hp(), int(native->partyData.currentHP));
 
     const std::map<std::string, bool>& ribbons = pokemon->get_ribbons();
-    for(auto iter = RIBBON_BIMAP.right.begin(); iter != RIBBON_BIMAP.right.end(); ++iter) {
-        EXPECT_EQ(ribbons.at(iter->first), native->specialRibbons[iter->second]);
+
+    static const pkmgc::ribbon_bimap_t& RIBBON_BIMAP = pkmgc::get_ribbon_bimap();
+    for(const auto& ribbon_iter: RIBBON_BIMAP.left)
+    {
+        const std::string& ribbon_name = ribbon_iter.first;
+        pkmgc::e_ribbon libpkmgc_ribbon = ribbon_iter.second;
+
+        EXPECT_EQ(
+            ribbons.at(ribbon_name),
+            native->specialRibbons[int(libpkmgc_ribbon)]
+        ) << ribbon_iter.first;
     }
 
-    for(auto type_iter = contest_types.begin(); type_iter != contest_types.end(); ++type_iter) {
-        if(ribbons.at(*type_iter)) {
+    static const pkmgc::contest_stat_bimap_t& CONTEST_STAT_BIMAP = pkmgc::get_contest_stat_bimap();
+
+    for(const auto& contest_stat_iter: CONTEST_STAT_BIMAP.left)
+    {
+        pkmn::e_contest_stat libpkmn_contest_type = contest_stat_iter.first;
+        pkmgc::e_contest_stat libpkmgc_contest_type = contest_stat_iter.second;
+        std::string contest_type_name = pkmn::contest_stat_to_string(libpkmn_contest_type);
+
+        if(ribbons.at(contest_type_name))
+        {
             EXPECT_GE(
-                native->contestAchievements[CONTEST_STAT_BIMAP.right.at(*type_iter)],
-                CONTEST_LEVEL_MAP.at("")
-            );
-        } else {
-            EXPECT_LT(
-                native->contestAchievements[CONTEST_STAT_BIMAP.right.at(*type_iter)],
+                native->contestAchievements[int(libpkmgc_contest_type)],
                 CONTEST_LEVEL_MAP.at("")
             );
         }
-        for(auto level_iter = contest_levels.begin(); level_iter != contest_levels.end(); ++level_iter) {
-            std::string ribbon_name = (*type_iter) + " " + (*level_iter);
-            if(ribbons.at(ribbon_name)) {
+        else
+        {
+            EXPECT_LT(
+                native->contestAchievements[int(libpkmgc_contest_type)],
+                CONTEST_LEVEL_MAP.at("")
+            );
+        }
+
+        for(const std::string& contest_level: contest_levels)
+        {
+            std::string ribbon_name = contest_type_name + " " + contest_level;
+            if(ribbons.at(ribbon_name))
+            {
                 EXPECT_GE(
-                    native->contestAchievements[CONTEST_STAT_BIMAP.right.at(*type_iter)],
-                    CONTEST_LEVEL_MAP.at(*level_iter)
+                    native->contestAchievements[int(libpkmgc_contest_type)],
+                    CONTEST_LEVEL_MAP.at(contest_level)
                 );
-            } else {
+            }
+            else
+            {
                 EXPECT_LT(
-                    native->contestAchievements[CONTEST_STAT_BIMAP.right.at(*type_iter)],
-                    CONTEST_LEVEL_MAP.at(*level_iter)
+                    native->contestAchievements[int(libpkmgc_contest_type)],
+                    CONTEST_LEVEL_MAP.at(contest_level)
                 );
             }
         }
@@ -599,17 +590,23 @@ TEST_P(gcn_pokemon_test, gcn_pokemon_test) {
     EXPECT_EQ(pokemon->get_level(), int(native->partyData.level));
 
     EXPECT_EQ(
-        pkmn::calculations::modern_shiny(pokemon->get_personality(), pokemon->get_original_trainer_id()),
+        pkmn::calculations::modern_shiny(
+            pokemon->get_personality(),
+            pokemon->get_original_trainer_id()
+        ),
         native->isShiny()
     );
     EXPECT_NE(
         (pokemon->get_ability() == pokemon->get_database_entry().get_abilities().first),
         native->hasSecondAbility()
     );
+
+    const pkmgc::gender_bimap_t& GENDER_BIMAP = pkmgc::get_gender_bimap();
     EXPECT_EQ(
-        GENDER_BIMAP.right.at(pokemon->get_gender()),
+        GENDER_BIMAP.left.at(pokemon->get_gender()),
         native->getGender()
     );
+
     EXPECT_EQ(
         pokemon->get_level(),
         int(native->calculateLevelFromExp())

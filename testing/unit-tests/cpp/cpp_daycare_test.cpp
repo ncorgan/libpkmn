@@ -18,7 +18,7 @@
 #include "private_exports.hpp"
 #include "pksav/pksav_call.hpp"
 
-#include "libpkmgc_includes.hpp"
+#include "pkmgc/includes.hpp"
 
 #include <gtest/gtest.h>
 

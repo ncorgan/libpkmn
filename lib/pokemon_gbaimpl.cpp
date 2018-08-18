@@ -17,7 +17,7 @@
 #include "database/id_to_string.hpp"
 #include "database/index_to_string.hpp"
 
-#include "libpkmgc_includes.hpp"
+#include "pkmgc/includes.hpp"
 
 #include "pksav/enum_maps.hpp"
 #include "pksav/party_data.hpp"

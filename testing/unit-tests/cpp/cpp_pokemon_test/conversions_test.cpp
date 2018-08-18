@@ -14,6 +14,7 @@
 
 #include <pkmn/database/item_entry.hpp>
 #include <pkmn/database/lists.hpp>
+#include <pkmn/enums/enum_to_string.hpp>
 
 #include <gtest/gtest.h>
 

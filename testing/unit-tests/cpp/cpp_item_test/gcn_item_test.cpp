@@ -14,7 +14,7 @@
 #include <pkmn/enums/enum_to_string.hpp>
 #include "pksav/pksav_call.hpp"
 
-#include "libpkmgc_includes.hpp"
+#include "pkmgc/includes.hpp"
 
 #include <boost/assign.hpp>
 #include <boost/algorithm/string.hpp>

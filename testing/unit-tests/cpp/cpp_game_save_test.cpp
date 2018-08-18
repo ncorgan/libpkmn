@@ -24,7 +24,7 @@
 #include <pksav/gen2.h>
 #include <pksav/gba.h>
 
-#include "libpkmgc_includes.hpp"
+#include "pkmgc/includes.hpp"
 
 #include <gtest/gtest.h>
 

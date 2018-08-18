@@ -39,6 +39,7 @@ ADD_SUBDIRECTORY(conversions)
 ADD_SUBDIRECTORY(database)
 ADD_SUBDIRECTORY(enums)
 ADD_SUBDIRECTORY(io)
+ADD_SUBDIRECTORY(pkmgc)
 ADD_SUBDIRECTORY(pksav)
 ADD_SUBDIRECTORY(utils)
 
@@ -67,6 +68,7 @@ SET(pkmn_sources
     ${pkmn_database_sources}
     ${pkmn_enums_sources}
     ${pkmn_io_sources}
+    ${pkmn_pkmgc_sources}
     ${pkmn_pksav_sources}
     ${pkmn_qt_sources}
     ${pkmn_utils_sources}
