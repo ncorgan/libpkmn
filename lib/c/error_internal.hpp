@@ -8,6 +8,8 @@
 #ifndef PKMN_C_ERROR_INTERNAL_HPP
 #define PKMN_C_ERROR_INTERNAL_HPP
 
+#include "cpp_to_c.hpp"
+
 #include <pkmn-c/error.h>
 
 #include <pkmn/exception.hpp>
@@ -22,10 +24,6 @@
 #include <string>
 
 namespace pkmn { namespace c {
-
-// Forward-declaration, since cpp_to_c.hpp includes this file
-template <typename libpkmn_type>
-struct internal_t;
 
 void pkmn_set_error(const std::string& error);
 
