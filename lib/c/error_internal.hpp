@@ -30,10 +30,8 @@ struct internal_t;
 void pkmn_set_error(const std::string& error);
 
 template <typename functor>
-static enum pkmn_error handle_exceptions(functor func)
+static enum pkmn_error handle_exceptions(const functor& func)
 {
-    BOOST_ASSERT(func != nullptr);
-
     enum pkmn_error error = PKMN_ERROR_NONE;
 
     try
@@ -124,11 +122,10 @@ static enum pkmn_error handle_exceptions(functor func)
 
 template <typename functor, typename libpkmn_type>
 static enum pkmn_error handle_exceptions(
-    functor func,
+    const functor& func,
     internal_t<libpkmn_type>* p_libpkmn_c_struct
 )
 {
-    BOOST_ASSERT(func != nullptr);
     BOOST_ASSERT(p_libpkmn_c_struct != nullptr);
 
     boost::mutex::scoped_lock lock(p_libpkmn_c_struct->error_mutex);
