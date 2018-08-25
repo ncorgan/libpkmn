@@ -119,15 +119,6 @@ namespace pkmn { namespace c {
     BOOST_STATIC_CONSTEXPR auto& get_pokemon_party_internal_ptr = get_internal_ptr<struct pkmn_pokemon_party, pkmn::pokemon_party>;
     BOOST_STATIC_CONSTEXPR auto& get_pokemon_pc_internal_ptr = get_internal_ptr<struct pkmn_pokemon_pc, pkmn::pokemon_pc>;
 
-    #define ITEM_BAG_INTERNAL_RCAST(ptr)      (reinterpret_cast<pkmn::c::item_bag_internal_t*>(ptr))
-    #define ITEM_LIST_INTERNAL_RCAST(ptr)     (reinterpret_cast<pkmn::c::item_list_internal_t*>(ptr))
-    #define POKEDEX_INTERNAL_RCAST(ptr)       (reinterpret_cast<pkmn::c::pokedex_internal_t*>(ptr))
-    #define POKEMON_INTERNAL_RCAST(ptr)       (reinterpret_cast<pkmn::c::pokemon_internal_t*>(ptr))
-    #define POKEMON_BOX_INTERNAL_RCAST(ptr)   (reinterpret_cast<pkmn::c::pokemon_box_internal_t*>(ptr))
-    #define POKEMON_PARTY_INTERNAL_RCAST(ptr) (reinterpret_cast<pkmn::c::pokemon_party_internal_t*>(ptr))
-    #define POKEMON_PC_INTERNAL_RCAST(ptr)    (reinterpret_cast<pkmn::c::pokemon_pc_internal_t*>(ptr))
-    #define GAME_SAVE_INTERNAL_RCAST(ptr)     (reinterpret_cast<pkmn::c::game_save_internal_t*>(ptr))
-
     // Calls to initialize internal representations.
     void init_daycare(
         const pkmn::daycare::sptr& daycare_cpp,

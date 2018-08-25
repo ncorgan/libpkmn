@@ -16,23 +16,29 @@ enum pkmn_error pkmn_item_slot_free(
     struct pkmn_item_slot* p_item_slot
 )
 {
-    PKMN_CHECK_NULL_PARAM(p_item_slot);
+    enum pkmn_error error = pkmn::c::check_for_null_param(
+                                p_item_slot,
+                                "p_item_slot"
+                            );
+    if(!error)
+    {
+        pkmn::c::free_pointer_and_set_to_null(&p_item_slot->p_item);
+        p_item_slot->amount = 0;
+    }
 
-    pkmn::c::free_pointer_and_set_to_null(&p_item_slot->p_item);
-    p_item_slot->amount = 0;
-
-    return PKMN_ERROR_NONE;
+    return error;
 }
 
 enum pkmn_error pkmn_item_slots_free(
     struct pkmn_item_slots* p_item_slots
 )
 {
-    PKMN_CHECK_NULL_PARAM(p_item_slots);
+    enum pkmn_error error = pkmn::c::check_for_null_param(
+                                p_item_slots,
+                                "p_item_slots"
+                            );
 
-    enum pkmn_error error = PKMN_ERROR_NONE;
-
-    if(p_item_slots->length > 0)
+    if(!error && (p_item_slots->length > 0))
     {
         for(size_t item_index = 0;
             (item_index < p_item_slots->length) && !error;

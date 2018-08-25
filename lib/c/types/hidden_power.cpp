@@ -16,10 +16,17 @@ enum pkmn_error pkmn_hidden_power_free(
     struct pkmn_hidden_power* p_hidden_power
 )
 {
-    PKMN_CHECK_NULL_PARAM(p_hidden_power);
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
-    pkmn::c::free_pointer_and_set_to_null(&p_hidden_power->p_type);
-    p_hidden_power->base_power = 0;
+    error = pkmn::c::check_for_null_param(
+                p_hidden_power,
+                "p_hidden_power"
+            );
+    if(!error)
+    {
+        pkmn::c::free_pointer_and_set_to_null(&p_hidden_power->p_type);
+        p_hidden_power->base_power = 0;
+    }
 
-    return PKMN_ERROR_NONE;
+    return error;
 }

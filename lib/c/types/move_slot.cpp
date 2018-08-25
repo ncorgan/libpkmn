@@ -16,23 +16,29 @@ enum pkmn_error pkmn_move_slot_free(
     struct pkmn_move_slot* p_move_slot
 )
 {
-    PKMN_CHECK_NULL_PARAM(p_move_slot);
+    enum pkmn_error error = pkmn::c::check_for_null_param(
+                                p_move_slot,
+                                "p_move_slot"
+                            );
+    if(!error)
+    {
+        pkmn::c::free_pointer_and_set_to_null(&p_move_slot->p_move);
+        p_move_slot->pp = 0;
+    }
 
-    pkmn::c::free_pointer_and_set_to_null(&p_move_slot->p_move);
-    p_move_slot->pp = 0;
-
-    return PKMN_ERROR_NONE;
+    return error;
 }
 
 enum pkmn_error pkmn_move_slots_free(
     struct pkmn_move_slots* p_move_slots
 )
 {
-    PKMN_CHECK_NULL_PARAM(p_move_slots);
+    enum pkmn_error error = pkmn::c::check_for_null_param(
+                                p_move_slots,
+                                "p_move_slots"
+                            );
 
-    enum pkmn_error error = PKMN_ERROR_NONE;
-
-    if(p_move_slots->length > 0)
+    if(!error && (p_move_slots->length > 0))
     {
         for(size_t move_index = 0;
             (move_index < p_move_slots->length) && !error;

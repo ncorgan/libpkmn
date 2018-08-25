@@ -16,10 +16,15 @@ enum pkmn_error pkmn_natural_gift_free(
     struct pkmn_natural_gift* p_natural_gift
 )
 {
-    PKMN_CHECK_NULL_PARAM(p_natural_gift);
+    enum pkmn_error error = pkmn::c::check_for_null_param(
+                                p_natural_gift,
+                                "p_natural_gift"
+                            );
+    if(!error)
+    {
+        pkmn::c::free_pointer_and_set_to_null(&p_natural_gift->p_type);
+        p_natural_gift->base_power = 0;
+    }
 
-    pkmn::c::free_pointer_and_set_to_null(&p_natural_gift->p_type);
-    p_natural_gift->base_power = 0;
-
-    return PKMN_ERROR_NONE;
+    return error;
 }

@@ -16,11 +16,16 @@ enum pkmn_error pkmn_trainer_info_free(
     struct pkmn_trainer_info* p_trainer_info
 )
 {
-    PKMN_CHECK_NULL_PARAM(p_trainer_info);
+    enum pkmn_error error = pkmn::c::check_for_null_param(
+                                p_trainer_info,
+                                "p_trainer_info"
+                            );
+    if(!error)
+    {
+        pkmn::c::free_pointer_and_set_to_null(&p_trainer_info->p_name);
+        p_trainer_info->id.id = 0U;
+        p_trainer_info->gender = PKMN_GENDER_GENDERLESS;
+    }
 
-    pkmn::c::free_pointer_and_set_to_null(&p_trainer_info->p_name);
-    p_trainer_info->id.id = 0U;
-    p_trainer_info->gender = PKMN_GENDER_GENDERLESS;
-
-    return PKMN_ERROR_NONE;
+    return error;
 }
