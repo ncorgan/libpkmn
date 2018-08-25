@@ -12,7 +12,10 @@
 
 enum pkmn_error pkmn_priv_initialize_database_connection()
 {
-    PKMN_CPP_TO_C(
+    auto impl = [&]()
+    {
         pkmn::priv::initialize_database_connection();
-    )
+    };
+
+    return pkmn::c::handle_exceptions(impl);
 }

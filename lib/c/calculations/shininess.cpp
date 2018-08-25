@@ -19,14 +19,28 @@ enum pkmn_error pkmn_calculations_gen2_shiny(
     bool* p_is_shiny_out
 )
 {
-    PKMN_CHECK_NULL_PARAM(p_is_shiny_out);
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
-    PKMN_CPP_TO_C(
-        *p_is_shiny_out = pkmn::calculations::gen2_shiny(
-                              IV_attack, IV_defense,
-                              IV_speed, IV_special
-                          );
-    )
+    error = pkmn::c::check_for_null_param(
+                p_is_shiny_out,
+                "p_is_shiny_out"
+            );
+    if(!error)
+    {
+        auto impl = [&]()
+        {
+            *p_is_shiny_out = pkmn::calculations::gen2_shiny(
+                                  IV_attack,
+                                  IV_defense,
+                                  IV_speed,
+                                  IV_special
+                              );
+        };
+
+        error = pkmn::c::handle_exceptions(impl);
+    }
+
+    return error;
 }
 
 enum pkmn_error pkmn_calculations_modern_shiny(
@@ -35,12 +49,24 @@ enum pkmn_error pkmn_calculations_modern_shiny(
     bool* p_is_shiny_out
 )
 {
-    PKMN_CHECK_NULL_PARAM(p_is_shiny_out);
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
-    PKMN_CPP_TO_C(
-        *p_is_shiny_out = pkmn::calculations::modern_shiny(
-                              personality,
-                              trainer_id
-                          );
-    )
+    error = pkmn::c::check_for_null_param(
+                p_is_shiny_out,
+                "p_is_shiny_out"
+            );
+    if(!error)
+    {
+        auto impl = [&]()
+        {
+            *p_is_shiny_out = pkmn::calculations::modern_shiny(
+                                  personality,
+                                  trainer_id
+                              );
+        };
+
+        error = pkmn::c::handle_exceptions(impl);
+    }
+
+    return error;
 }

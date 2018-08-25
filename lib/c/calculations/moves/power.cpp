@@ -18,14 +18,26 @@ enum pkmn_error pkmn_calculations_brine_power(
     int* p_brine_power_out
 )
 {
-    PKMN_CHECK_NULL_PARAM(p_brine_power_out);
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
-    PKMN_CPP_TO_C(
-        *p_brine_power_out = pkmn::calculations::brine_power(
-                                 target_current_hp,
-                                 target_max_hp
-                             );
-    )
+    error = pkmn::c::check_for_null_param(
+                p_brine_power_out,
+                "p_brine_power_out"
+            );
+    if(!error)
+    {
+        auto impl = [&]()
+        {
+            *p_brine_power_out = pkmn::calculations::brine_power(
+                                     target_current_hp,
+                                     target_max_hp
+                                 );
+        };
+
+        error = pkmn::c::handle_exceptions(impl);
+    }
+
+    return error;
 }
 
 enum pkmn_error pkmn_calculations_crush_grip_power(
@@ -35,15 +47,27 @@ enum pkmn_error pkmn_calculations_crush_grip_power(
     int* p_crush_grip_power_out
 )
 {
-    PKMN_CHECK_NULL_PARAM(p_crush_grip_power_out);
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
-    PKMN_CPP_TO_C(
-        *p_crush_grip_power_out = pkmn::calculations::crush_grip_power(
-                                      target_current_hp,
-                                      target_max_hp,
-                                      generation
-                                  );
-    )
+    error = pkmn::c::check_for_null_param(
+                p_crush_grip_power_out,
+                "p_crush_grip_power_out"
+            );
+    if(!error)
+    {
+        auto impl = [&]()
+        {
+            *p_crush_grip_power_out = pkmn::calculations::crush_grip_power(
+                                          target_current_hp,
+                                          target_max_hp,
+                                          generation
+                                      );
+        };
+
+        error = pkmn::c::handle_exceptions(impl);
+    }
+
+    return error;
 }
 
 enum pkmn_error pkmn_calculations_echoed_voice_powers(
@@ -52,17 +76,30 @@ enum pkmn_error pkmn_calculations_echoed_voice_powers(
     size_t* p_num_powers_out
 )
 {
-    PKMN_CHECK_NULL_PARAM(p_powers_buffer);
+    enum pkmn_error error = PKMN_ERROR_NONE;
+
     // p_num_powers_out can be NULL
 
-    PKMN_CPP_TO_C(
-        pkmn::c::list_cpp_to_c(
-            pkmn::calculations::echoed_voice_powers(),
-            p_powers_buffer,
-            buffer_len,
-            p_num_powers_out
-        );
-    )
+    error = pkmn::c::check_for_null_param(
+                p_powers_buffer,
+                "p_powers_buffer"
+            );
+    if(!error)
+    {
+        auto impl = [&]()
+        {
+            pkmn::c::list_cpp_to_c(
+                pkmn::calculations::echoed_voice_powers(),
+                p_powers_buffer,
+                buffer_len,
+                p_num_powers_out
+            );
+        };
+
+        error = pkmn::c::handle_exceptions(impl);
+    }
+
+    return error;
 }
 
 enum pkmn_error pkmn_calculations_electro_ball_power(
@@ -71,14 +108,26 @@ enum pkmn_error pkmn_calculations_electro_ball_power(
     int* p_electro_ball_power_out
 )
 {
-    PKMN_CHECK_NULL_PARAM(p_electro_ball_power_out);
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
-    PKMN_CPP_TO_C(
-        *p_electro_ball_power_out = pkmn::calculations::electro_ball_power(
-                                        attacker_speed,
-                                        target_speed
-                                    );
-    )
+    error = pkmn::c::check_for_null_param(
+                p_electro_ball_power_out,
+                "p_electro_ball_power_out"
+            );
+    if(!error)
+    {
+        auto impl = [&]()
+        {
+            *p_electro_ball_power_out = pkmn::calculations::electro_ball_power(
+                                            attacker_speed,
+                                            target_speed
+                                        );
+        };
+
+        error = pkmn::c::handle_exceptions(impl);
+    }
+
+    return error;
 }
 
 enum pkmn_error pkmn_calculations_eruption_power(
@@ -87,14 +136,26 @@ enum pkmn_error pkmn_calculations_eruption_power(
     int* p_eruption_power_out
 )
 {
-    PKMN_CHECK_NULL_PARAM(p_eruption_power_out);
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
-    PKMN_CPP_TO_C(
-        *p_eruption_power_out = pkmn::calculations::eruption_power(
-                                    attacker_hp,
-                                    target_hp
-                                );
-    )
+    error = pkmn::c::check_for_null_param(
+                p_eruption_power_out,
+                "p_eruption_power_out"
+            );
+    if(!error)
+    {
+        auto impl = [&]()
+        {
+            *p_eruption_power_out = pkmn::calculations::eruption_power(
+                                        attacker_hp,
+                                        target_hp
+                                    );
+        };
+
+        error = pkmn::c::handle_exceptions(impl);
+    }
+
+    return error;
 }
 
 enum pkmn_error pkmn_calculations_fury_cutter_powers(
@@ -104,17 +165,30 @@ enum pkmn_error pkmn_calculations_fury_cutter_powers(
     size_t* p_num_powers_out
 )
 {
-    PKMN_CHECK_NULL_PARAM(p_powers_buffer);
+    enum pkmn_error error = PKMN_ERROR_NONE;
+
     // num_powers_out can be NULL
 
-    PKMN_CPP_TO_C(
-        pkmn::c::list_cpp_to_c(
-            pkmn::calculations::fury_cutter_powers(generation),
-            p_powers_buffer,
-            buffer_len,
-            p_num_powers_out
-        );
-    )
+    error = pkmn::c::check_for_null_param(
+                p_powers_buffer,
+                "p_powers_buffer"
+            );
+    if(!error)
+    {
+        auto impl = [&]()
+        {
+            pkmn::c::list_cpp_to_c(
+                pkmn::calculations::fury_cutter_powers(generation),
+                p_powers_buffer,
+                buffer_len,
+                p_num_powers_out
+            );
+        };
+
+        error = pkmn::c::handle_exceptions(impl);
+    }
+
+    return error;
 }
 
 enum pkmn_error pkmn_calculations_flail_power(
@@ -123,14 +197,26 @@ enum pkmn_error pkmn_calculations_flail_power(
     int* p_flail_power_out
 )
 {
-    PKMN_CHECK_NULL_PARAM(p_flail_power_out);
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
-    PKMN_CPP_TO_C(
-        *p_flail_power_out = pkmn::calculations::flail_power(
-                                 attacker_current_hp,
-                                 attacker_max_hp
-                             );
-    )
+    error = pkmn::c::check_for_null_param(
+                p_flail_power_out,
+                "p_flail_power_out"
+            );
+    if(!error)
+    {
+        auto impl = [&]()
+        {
+            *p_flail_power_out = pkmn::calculations::flail_power(
+                                     attacker_current_hp,
+                                     attacker_max_hp
+                                 );
+        };
+
+        error = pkmn::c::handle_exceptions(impl);
+    }
+
+    return error;
 }
 
 enum pkmn_error pkmn_calculations_fling_power(
@@ -138,14 +224,32 @@ enum pkmn_error pkmn_calculations_fling_power(
     int* p_fling_power_out
 )
 {
-    PKMN_CHECK_NULL_PARAM(p_held_item);
-    PKMN_CHECK_NULL_PARAM(p_fling_power_out);
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
-    PKMN_CPP_TO_C(
-        *p_fling_power_out = pkmn::calculations::fling_power(
-                                 p_held_item
-                             );
-    )
+    error = pkmn::c::check_for_null_param(
+                p_held_item,
+                "p_held_item"
+            );
+    if(!error)
+    {
+        error = pkmn::c::check_for_null_param(
+                    p_fling_power_out,
+                    "p_fling_power_out"
+                );
+    }
+    if(!error)
+    {
+        auto impl = [&]()
+        {
+            *p_fling_power_out = pkmn::calculations::fling_power(
+                                     p_held_item
+                                 );
+            };
+
+        error = pkmn::c::handle_exceptions(impl);
+    }
+
+    return error;
 }
 
 enum pkmn_error pkmn_calculations_frustration_power(
@@ -153,13 +257,25 @@ enum pkmn_error pkmn_calculations_frustration_power(
     int* p_frustration_power_out
 )
 {
-    PKMN_CHECK_NULL_PARAM(p_frustration_power_out);
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
-    PKMN_CPP_TO_C(
-        *p_frustration_power_out = pkmn::calculations::frustration_power(
-                                       friendship
-                                   );
-    )
+    error = pkmn::c::check_for_null_param(
+                p_frustration_power_out,
+                "p_frustration_power_out"
+            );
+    if(!error)
+    {
+        auto impl = [&]()
+        {
+            *p_frustration_power_out = pkmn::calculations::frustration_power(
+                                           friendship
+                                       );
+        };
+
+        error = pkmn::c::handle_exceptions(impl);
+    }
+
+    return error;
 }
 
 enum pkmn_error pkmn_calculations_grass_knot_power(
@@ -167,13 +283,25 @@ enum pkmn_error pkmn_calculations_grass_knot_power(
     int* p_grass_knot_power_out
 )
 {
-    PKMN_CHECK_NULL_PARAM(p_grass_knot_power_out);
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
-    PKMN_CPP_TO_C(
-        *p_grass_knot_power_out = pkmn::calculations::grass_knot_power(
-                                      target_weight
-                                  );
-    )
+    error = pkmn::c::check_for_null_param(
+                p_grass_knot_power_out,
+                "p_grass_knot_power_out"
+            );
+    if(!error)
+    {
+        auto impl = [&]()
+        {
+            *p_grass_knot_power_out = pkmn::calculations::grass_knot_power(
+                                          target_weight
+                                      );
+        };
+
+        error = pkmn::c::handle_exceptions(impl);
+    }
+
+    return error;
 }
 
 enum pkmn_error pkmn_calculations_gyro_ball_power(
@@ -182,14 +310,26 @@ enum pkmn_error pkmn_calculations_gyro_ball_power(
     int* p_gyro_ball_power_out
 )
 {
-    PKMN_CHECK_NULL_PARAM(p_gyro_ball_power_out);
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
-    PKMN_CPP_TO_C(
-        *p_gyro_ball_power_out = pkmn::calculations::gyro_ball_power(
-                                     attacker_speed,
-                                     target_speed
-                                 );
-    )
+    error = pkmn::c::check_for_null_param(
+                p_gyro_ball_power_out,
+                "p_gyro_ball_power_out"
+            );
+    if(!error)
+    {
+        auto impl = [&]()
+        {
+            *p_gyro_ball_power_out = pkmn::calculations::gyro_ball_power(
+                                         attacker_speed,
+                                         target_speed
+                                     );
+        };
+
+        error = pkmn::c::handle_exceptions(impl);
+    }
+
+    return error;
 }
 
 enum pkmn_error pkmn_calculations_ice_ball_powers(
@@ -198,17 +338,30 @@ enum pkmn_error pkmn_calculations_ice_ball_powers(
     size_t* p_num_powers_out
 )
 {
-    PKMN_CHECK_NULL_PARAM(p_powers_buffer);
+    enum pkmn_error error = PKMN_ERROR_NONE;
+
     // p_num_powers_out can be NULL
 
-    PKMN_CPP_TO_C(
-        pkmn::c::list_cpp_to_c(
-            pkmn::calculations::ice_ball_powers(),
-            p_powers_buffer,
-            buffer_len,
-            p_num_powers_out
-        );
-    )
+    error = pkmn::c::check_for_null_param(
+                p_powers_buffer,
+                "p_powers_buffer"
+            );
+    if(!error)
+    {
+        auto impl = [&]()
+        {
+            pkmn::c::list_cpp_to_c(
+                pkmn::calculations::ice_ball_powers(),
+                p_powers_buffer,
+                buffer_len,
+                p_num_powers_out
+            );
+        };
+
+        error = pkmn::c::handle_exceptions(impl);
+    }
+
+    return error;
 }
 
 enum pkmn_error pkmn_calculations_low_kick_power(
@@ -217,14 +370,26 @@ enum pkmn_error pkmn_calculations_low_kick_power(
     int* p_low_kick_power_out
 )
 {
-    PKMN_CHECK_NULL_PARAM(p_low_kick_power_out);
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
-    PKMN_CPP_TO_C(
-        *p_low_kick_power_out = pkmn::calculations::low_kick_power(
-                                    target_weight,
-                                    generation
-                                );
-    )
+    error = pkmn::c::check_for_null_param(
+                p_low_kick_power_out,
+                "p_low_kick_power_out"
+            );
+    if(!error)
+    {
+        auto impl = [&]()
+        {
+            *p_low_kick_power_out = pkmn::calculations::low_kick_power(
+                                        target_weight,
+                                        generation
+                                    );
+        };
+
+        error = pkmn::c::handle_exceptions(impl);
+    }
+
+    return error;
 }
 
 enum pkmn_error pkmn_calculations_heat_crash_power(
@@ -233,14 +398,26 @@ enum pkmn_error pkmn_calculations_heat_crash_power(
     int* p_heat_crash_power_out
 )
 {
-    PKMN_CHECK_NULL_PARAM(p_heat_crash_power_out);
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
-    PKMN_CPP_TO_C(
-        *p_heat_crash_power_out = pkmn::calculations::heat_crash_power(
-                                      attacker_weight,
-                                      target_weight
-                                  );
-    )
+    error = pkmn::c::check_for_null_param(
+                p_heat_crash_power_out,
+                "p_heat_crash_power_out"
+            );
+    if(!error)
+    {
+        auto impl = [&]()
+        {
+            *p_heat_crash_power_out = pkmn::calculations::heat_crash_power(
+                                          attacker_weight,
+                                          target_weight
+                                      );
+        };
+
+        error = pkmn::c::handle_exceptions(impl);
+    }
+
+    return error;
 }
 
 enum pkmn_error pkmn_calculations_heavy_slam_power(
@@ -249,14 +426,26 @@ enum pkmn_error pkmn_calculations_heavy_slam_power(
     int* p_heavy_slam_power_out
 )
 {
-    PKMN_CHECK_NULL_PARAM(p_heavy_slam_power_out);
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
-    PKMN_CPP_TO_C(
-        *p_heavy_slam_power_out = pkmn::calculations::heavy_slam_power(
-                                      attacker_weight,
-                                      target_weight
-                                  );
-    )
+    error = pkmn::c::check_for_null_param(
+                p_heavy_slam_power_out,
+                "p_heavy_slam_power_out"
+            );
+    if(!error)
+    {
+        auto impl = [&]()
+        {
+            *p_heavy_slam_power_out = pkmn::calculations::heavy_slam_power(
+                                          attacker_weight,
+                                          target_weight
+                                      );
+        };
+
+        error = pkmn::c::handle_exceptions(impl);
+    }
+
+    return error;
 }
 
 enum pkmn_error pkmn_calculations_power_trip_power(
@@ -270,19 +459,31 @@ enum pkmn_error pkmn_calculations_power_trip_power(
     int* p_power_trip_power_out
 )
 {
-    PKMN_CHECK_NULL_PARAM(p_power_trip_power_out);
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
-    PKMN_CPP_TO_C(
-        *p_power_trip_power_out = pkmn::calculations::power_trip_power(
-                                      attack_stat_stage,
-                                      defense_stat_stage,
-                                      special_attack_stat_stage,
-                                      special_defense_stat_stage,
-                                      speed_stat_stage,
-                                      evasion_stat_stage,
-                                      accuracy_stat_stage
-                                  );
-    )
+    error = pkmn::c::check_for_null_param(
+                p_power_trip_power_out,
+                "p_power_trip_power_out"
+            );
+    if(!error)
+    {
+        auto impl = [&]()
+        {
+            *p_power_trip_power_out = pkmn::calculations::power_trip_power(
+                                          attack_stat_stage,
+                                          defense_stat_stage,
+                                          special_attack_stat_stage,
+                                          special_defense_stat_stage,
+                                          speed_stat_stage,
+                                          evasion_stat_stage,
+                                          accuracy_stat_stage
+                                      );
+        };
+
+        error = pkmn::c::handle_exceptions(impl);
+    }
+
+    return error;
 }
 
 enum pkmn_error pkmn_calculations_punishment_power(
@@ -296,19 +497,31 @@ enum pkmn_error pkmn_calculations_punishment_power(
     int* p_punishment_power_out
 )
 {
-    PKMN_CHECK_NULL_PARAM(p_punishment_power_out);
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
-    PKMN_CPP_TO_C(
-        *p_punishment_power_out = pkmn::calculations::punishment_power(
-                                      attack_stat_stage,
-                                      defense_stat_stage,
-                                      special_attack_stat_stage,
-                                      special_defense_stat_stage,
-                                      speed_stat_stage,
-                                      evasion_stat_stage,
-                                      accuracy_stat_stage
-                                  );
-    )
+    error = pkmn::c::check_for_null_param(
+                p_punishment_power_out,
+                "p_punishment_power_out"
+            );
+    if(!error)
+    {
+        auto impl = [&]()
+        {
+            *p_punishment_power_out = pkmn::calculations::punishment_power(
+                                          attack_stat_stage,
+                                          defense_stat_stage,
+                                          special_attack_stat_stage,
+                                          special_defense_stat_stage,
+                                          speed_stat_stage,
+                                          evasion_stat_stage,
+                                          accuracy_stat_stage
+                                      );
+        };
+
+        error = pkmn::c::handle_exceptions(impl);
+    }
+
+    return error;
 }
 
 enum pkmn_error pkmn_calculations_return_power(
@@ -316,13 +529,25 @@ enum pkmn_error pkmn_calculations_return_power(
     int* p_return_power_out
 )
 {
-    PKMN_CHECK_NULL_PARAM(p_return_power_out);
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
-    PKMN_CPP_TO_C(
-        *p_return_power_out = pkmn::calculations::return_power(
-                                  friendship
-                              );
-    )
+    error = pkmn::c::check_for_null_param(
+                p_return_power_out,
+                "p_return_power_out"
+            );
+    if(!error)
+    {
+        auto impl = [&]()
+        {
+            *p_return_power_out = pkmn::calculations::return_power(
+                                      friendship
+                                  );
+            };
+
+        error = pkmn::c::handle_exceptions(impl);
+    }
+
+    return error;
 }
 
 enum pkmn_error pkmn_calculations_reversal_power(
@@ -331,14 +556,26 @@ enum pkmn_error pkmn_calculations_reversal_power(
     int* p_reversal_power_out
 )
 {
-    PKMN_CHECK_NULL_PARAM(p_reversal_power_out);
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
-    PKMN_CPP_TO_C(
-        *p_reversal_power_out = pkmn::calculations::reversal_power(
-                                    attacker_current_hp,
-                                    attacker_max_hp
-                                );
-    )
+    error = pkmn::c::check_for_null_param(
+                p_reversal_power_out,
+                "p_reversal_power_out"
+            );
+    if(!error)
+    {
+        auto impl = [&]()
+        {
+            *p_reversal_power_out = pkmn::calculations::reversal_power(
+                                        attacker_current_hp,
+                                        attacker_max_hp
+                                    );
+        };
+
+        error = pkmn::c::handle_exceptions(impl);
+    }
+
+    return error;
 }
 
 enum pkmn_error pkmn_calculations_rollout_powers(
@@ -347,17 +584,30 @@ enum pkmn_error pkmn_calculations_rollout_powers(
     size_t* p_num_powers_out
 )
 {
-    PKMN_CHECK_NULL_PARAM(p_powers_buffer);
+    enum pkmn_error error = PKMN_ERROR_NONE;
+
     // p_num_powers_out can be NULL
 
-    PKMN_CPP_TO_C(
-        pkmn::c::list_cpp_to_c(
-            pkmn::calculations::rollout_powers(),
-            p_powers_buffer,
-            buffer_len,
-            p_num_powers_out
-        );
-    )
+    error = pkmn::c::check_for_null_param(
+                p_powers_buffer,
+                "p_powers_buffer"
+            );
+    if(!error)
+    {
+        auto impl = [&]()
+        {
+            pkmn::c::list_cpp_to_c(
+                pkmn::calculations::rollout_powers(),
+                p_powers_buffer,
+                buffer_len,
+                p_num_powers_out
+            );
+        };
+
+        error = pkmn::c::handle_exceptions(impl);
+    }
+
+    return error;
 }
 
 enum pkmn_error pkmn_calculations_spit_up_power(
@@ -365,13 +615,25 @@ enum pkmn_error pkmn_calculations_spit_up_power(
     int* p_spit_up_power_out
 )
 {
-    PKMN_CHECK_NULL_PARAM(p_spit_up_power_out);
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
-    PKMN_CPP_TO_C(
-        *p_spit_up_power_out = pkmn::calculations::spit_up_power(
-                                   stockpile_amount
-                               );
-    )
+    error = pkmn::c::check_for_null_param(
+                p_spit_up_power_out,
+                "p_spit_up_power_out"
+            );
+    if(!error)
+    {
+        auto impl = [&]()
+        {
+            *p_spit_up_power_out = pkmn::calculations::spit_up_power(
+                                       stockpile_amount
+                                   );
+        };
+
+        error = pkmn::c::handle_exceptions(impl);
+    }
+
+    return error;
 }
 
 enum pkmn_error pkmn_calculations_stored_power_power(
@@ -385,19 +647,31 @@ enum pkmn_error pkmn_calculations_stored_power_power(
     int* p_stored_power_power_out
 )
 {
-    PKMN_CHECK_NULL_PARAM(p_stored_power_power_out);
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
-    PKMN_CPP_TO_C(
-        *p_stored_power_power_out = pkmn::calculations::stored_power_power(
-                                        attack_stat_stage,
-                                        defense_stat_stage,
-                                        special_attack_stat_stage,
-                                        special_defense_stat_stage,
-                                        speed_stat_stage,
-                                        evasion_stat_stage,
-                                        accuracy_stat_stage
-                                    );
-    )
+    error = pkmn::c::check_for_null_param(
+                p_stored_power_power_out,
+                "p_stored_power_power_out"
+            );
+    if(!error)
+    {
+        auto impl = [&]()
+        {
+            *p_stored_power_power_out = pkmn::calculations::stored_power_power(
+                                            attack_stat_stage,
+                                            defense_stat_stage,
+                                            special_attack_stat_stage,
+                                            special_defense_stat_stage,
+                                            speed_stat_stage,
+                                            evasion_stat_stage,
+                                            accuracy_stat_stage
+                                        );
+        };
+
+        error = pkmn::c::handle_exceptions(impl);
+    }
+
+    return error;
 }
 
 enum pkmn_error pkmn_calculations_triple_kick_powers(
@@ -406,17 +680,30 @@ enum pkmn_error pkmn_calculations_triple_kick_powers(
     size_t* p_num_powers_out
 )
 {
-    PKMN_CHECK_NULL_PARAM(p_powers_buffer);
+    enum pkmn_error error = PKMN_ERROR_NONE;
+
     // p_num_powers_out can be NULL
 
-    PKMN_CPP_TO_C(
-        pkmn::c::list_cpp_to_c(
-            pkmn::calculations::triple_kick_powers(),
-            p_powers_buffer,
-            buffer_len,
-            p_num_powers_out
-        );
-    )
+    error = pkmn::c::check_for_null_param(
+                p_powers_buffer,
+                "p_powers_buffer"
+            );
+    if(!error)
+    {
+        auto impl = [&]()
+        {
+            pkmn::c::list_cpp_to_c(
+                pkmn::calculations::triple_kick_powers(),
+                p_powers_buffer,
+                buffer_len,
+                p_num_powers_out
+            );
+        };
+
+        error = pkmn::c::handle_exceptions(impl);
+    }
+
+    return error;
 }
 
 enum pkmn_error pkmn_calculations_trump_card_power(
@@ -424,13 +711,25 @@ enum pkmn_error pkmn_calculations_trump_card_power(
     int* p_trump_card_power_out
 )
 {
-    PKMN_CHECK_NULL_PARAM(p_trump_card_power_out);
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
-    PKMN_CPP_TO_C(
-        *p_trump_card_power_out = pkmn::calculations::trump_card_power(
-                                      pp_remaining_after_use
-                                  );
-    )
+    error = pkmn::c::check_for_null_param(
+                p_trump_card_power_out,
+                "p_trump_card_power_out"
+            );
+    if(!error)
+    {
+        auto impl = [&]()
+        {
+            *p_trump_card_power_out = pkmn::calculations::trump_card_power(
+                                          pp_remaining_after_use
+                                      );
+        };
+
+        error = pkmn::c::handle_exceptions(impl);
+    }
+
+    return error;
 }
 
 enum pkmn_error pkmn_calculations_water_spout_power(
@@ -439,14 +738,26 @@ enum pkmn_error pkmn_calculations_water_spout_power(
     int* p_water_spout_power_out
 )
 {
-    PKMN_CHECK_NULL_PARAM(p_water_spout_power_out);
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
-    PKMN_CPP_TO_C(
-        *p_water_spout_power_out = pkmn::calculations::water_spout_power(
-                                       attacker_current_hp,
-                                       attacker_max_hp
-                                   );
-    )
+    error = pkmn::c::check_for_null_param(
+                p_water_spout_power_out,
+                "p_water_spout_power_out"
+            );
+    if(!error)
+    {
+        auto impl = [&]()
+        {
+            *p_water_spout_power_out = pkmn::calculations::water_spout_power(
+                                           attacker_current_hp,
+                                           attacker_max_hp
+                                       );
+        };
+
+        error = pkmn::c::handle_exceptions(impl);
+    }
+
+    return error;
 }
 
 enum pkmn_error pkmn_calculations_wring_out_power(
@@ -456,13 +767,25 @@ enum pkmn_error pkmn_calculations_wring_out_power(
     int* p_wring_out_power_out
 )
 {
-    PKMN_CHECK_NULL_PARAM(p_wring_out_power_out);
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
-    PKMN_CPP_TO_C(
-        *p_wring_out_power_out = pkmn::calculations::wring_out_power(
-                                     target_current_hp,
-                                     target_max_hp,
-                                     generation
-                                 );
-    )
+    error = pkmn::c::check_for_null_param(
+                p_wring_out_power_out,
+                "p_wring_out_power_out"
+            );
+    if(!error)
+    {
+        auto impl = [&]()
+        {
+            *p_wring_out_power_out = pkmn::calculations::wring_out_power(
+                                         target_current_hp,
+                                         target_max_hp,
+                                         generation
+                                     );
+        };
+
+        error = pkmn::c::handle_exceptions(impl);
+    }
+
+    return error;
 }

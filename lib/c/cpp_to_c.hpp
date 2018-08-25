@@ -119,6 +119,7 @@ namespace pkmn { namespace c {
     BOOST_STATIC_CONSTEXPR auto& get_pokemon_internal_ptr = get_internal_ptr<struct pkmn_pokemon, pkmn::pokemon>;
     BOOST_STATIC_CONSTEXPR auto& get_pokemon_box_internal_ptr = get_internal_ptr<struct pkmn_pokemon_box, pkmn::pokemon_box>;
     BOOST_STATIC_CONSTEXPR auto& get_pokemon_party_internal_ptr = get_internal_ptr<struct pkmn_pokemon_party, pkmn::pokemon_party>;
+    BOOST_STATIC_CONSTEXPR auto& get_pokemon_pc_internal_ptr = get_internal_ptr<struct pkmn_pokemon_pc, pkmn::pokemon_pc>;
 
     #define ITEM_BAG_INTERNAL_RCAST(ptr)      (reinterpret_cast<pkmn::c::item_bag_internal_t*>(ptr))
     #define ITEM_LIST_INTERNAL_RCAST(ptr)     (reinterpret_cast<pkmn::c::item_list_internal_t*>(ptr))

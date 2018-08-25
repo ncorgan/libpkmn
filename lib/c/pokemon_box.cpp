@@ -21,33 +21,59 @@ enum pkmn_error pkmn_pokemon_box_init(
     struct pkmn_pokemon_box* p_pokemon_box_out
 )
 {
-    PKMN_CHECK_NULL_PARAM(p_game);
-    PKMN_CHECK_NULL_PARAM(p_pokemon_box_out);
+    enum pkmn_error error = pkmn::c::check_for_null_param(
+                                p_game,
+                                "p_game"
+                            );
+    if(!error)
+    {
+        error = pkmn::c::check_for_null_param(
+                    p_pokemon_box_out,
+                    "p_pokemon_box_out"
+                );
+    }
+    if(!error)
+    {
+        auto impl = [&]()
+        {
+            pkmn::pokemon_box::sptr cpp = pkmn::pokemon_box::make(p_game);
 
-    PKMN_CPP_TO_C(
-        pkmn::pokemon_box::sptr cpp = pkmn::pokemon_box::make(p_game);
+            pkmn::c::init_pokemon_box(
+                cpp,
+                p_pokemon_box_out
+            );
+        };
 
-        pkmn::c::init_pokemon_box(
-            cpp,
-            p_pokemon_box_out
-        );
-    )
+        error = pkmn::c::handle_exceptions(impl);
+    }
+
+    return error;
 }
 
 enum pkmn_error pkmn_pokemon_box_free(
     struct pkmn_pokemon_box* p_pokemon_box
 )
 {
-    PKMN_CHECK_NULL_PARAM(p_pokemon_box);
+    enum pkmn_error error = pkmn::c::check_for_null_wrapper_param(
+                                p_pokemon_box,
+                                "p_pokemon_box"
+                            );
+    if(!error)
+    {
+        auto impl = [&]()
+        {
+            pkmn::c::free_pointer_and_set_to_null(&p_pokemon_box->p_game);
+            pkmn::c::delete_pointer_and_set_to_null(
+                reinterpret_cast<pkmn::c::pokemon_box_internal_t**>(&p_pokemon_box->p_internal)
+            );
 
-    pkmn::c::free_pointer_and_set_to_null(&p_pokemon_box->p_game);
-    p_pokemon_box->capacity = 0;
+            std::memset(p_pokemon_box, 0, sizeof(*p_pokemon_box));
+        };
 
-    PKMN_CPP_TO_C(
-        pkmn::c::delete_pointer_and_set_to_null(
-            reinterpret_cast<pkmn::c::pokemon_box_internal_t**>(&p_pokemon_box->p_internal)
-        );
-    )
+        error = pkmn::c::handle_exceptions(impl);
+    }
+
+    return error;
 }
 
 const char* pkmn_pokemon_box_strerror(
@@ -64,18 +90,37 @@ enum pkmn_error pkmn_pokemon_box_get_name(
     size_t* p_actual_name_length_out
 )
 {
-    PKMN_CHECK_NULL_PARAM(p_pokemon_box);
-    pkmn::c::pokemon_box_internal_t* p_internal = POKEMON_BOX_INTERNAL_RCAST(p_pokemon_box->p_internal);
-    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_name_buffer_out, p_internal);
+    enum pkmn_error error = pkmn::c::check_for_null_wrapper_param(
+                                p_pokemon_box,
+                                "p_pokemon_box"
+                            );
+    if(!error)
+    {
+        auto* p_internal = pkmn::c::get_pokemon_box_internal_ptr(p_pokemon_box);
+        BOOST_ASSERT(p_internal != nullptr);
 
-    PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
-        pkmn::c::string_cpp_to_c(
-            p_internal->cpp->get_name(),
-            p_name_buffer_out,
-            name_buffer_length,
-            p_actual_name_length_out
-        );
-    )
+        error = pkmn::c::check_for_null_param(
+                    p_name_buffer_out,
+                    "p_name_buffer_out",
+                    p_internal
+                );
+        if(!error)
+        {
+            auto impl = [&]()
+            {
+                pkmn::c::string_cpp_to_c(
+                    p_internal->cpp->get_name(),
+                    p_name_buffer_out,
+                    name_buffer_length,
+                    p_actual_name_length_out
+                );
+            };
+
+            error = pkmn::c::handle_exceptions(impl, p_internal);
+        }
+    }
+
+    return error;
 }
 
 enum pkmn_error pkmn_pokemon_box_set_name(
@@ -83,13 +128,32 @@ enum pkmn_error pkmn_pokemon_box_set_name(
     const char* p_name
 )
 {
-    PKMN_CHECK_NULL_PARAM(p_pokemon_box);
-    pkmn::c::pokemon_box_internal_t* p_internal = POKEMON_BOX_INTERNAL_RCAST(p_pokemon_box->p_internal);
-    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_name, p_internal);
+    enum pkmn_error error = pkmn::c::check_for_null_wrapper_param(
+                                p_pokemon_box,
+                                "p_pokemon_box"
+                            );
+    if(!error)
+    {
+        auto* p_internal = pkmn::c::get_pokemon_box_internal_ptr(p_pokemon_box);
+        BOOST_ASSERT(p_internal != nullptr);
 
-    PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
-        p_internal->cpp->set_name(p_name);
-    )
+        error = pkmn::c::check_for_null_param(
+                    p_name,
+                    "p_name",
+                    p_internal
+                );
+        if(!error)
+        {
+            auto impl = [&]()
+            {
+                p_internal->cpp->set_name(p_name);
+            };
+
+            error = pkmn::c::handle_exceptions(impl, p_internal);
+        }
+    }
+
+    return error;
 }
 
 enum pkmn_error pkmn_pokemon_box_get_num_pokemon(

@@ -20,10 +20,16 @@ enum pkmn_error pkmn_daycare_init(
     struct pkmn_daycare* p_daycare_out
 )
 {
-    enum pkmn_error error = pkmn::c::check_for_null_param(p_game, "p_game");
+    enum pkmn_error error = pkmn::c::check_for_null_param(
+                                p_game,
+                                "p_game"
+                            );
     if(!error)
     {
-        error = pkmn::c::check_for_null_param(p_daycare_out, "p_daycare_out");
+        error = pkmn::c::check_for_null_param(
+                    p_daycare_out,
+                    "p_daycare_out"
+                );
     }
     if(!error)
     {
@@ -47,7 +53,10 @@ enum pkmn_error pkmn_daycare_free(
     struct pkmn_daycare* p_daycare
 )
 {
-    enum pkmn_error error = pkmn::c::check_for_null_wrapper_param(p_daycare, "p_daycare");
+    enum pkmn_error error = pkmn::c::check_for_null_wrapper_param(
+                                p_daycare,
+                                "p_daycare"
+                            );
     if(!error)
     {
         auto impl = [&]()
@@ -136,9 +145,7 @@ enum pkmn_error pkmn_daycare_set_levelup_pokemon(
         {
             auto impl = [&]()
             {
-                pkmn::c::pokemon_internal_t* p_pokemon_internal = POKEMON_INTERNAL_RCAST(
-                                                                  p_pokemon->p_internal
-                                                              );
+                auto* p_pokemon_internal = pkmn::c::get_pokemon_internal_ptr(p_pokemon);
                 BOOST_ASSERT(p_pokemon_internal != nullptr);
 
                 p_internal->cpp->set_levelup_pokemon(
@@ -253,9 +260,7 @@ enum pkmn_error pkmn_daycare_set_breeding_pokemon(
         {
             auto impl = [&]()
             {
-                pkmn::c::pokemon_internal_t* p_pokemon_internal = POKEMON_INTERNAL_RCAST(
-                                                                  p_pokemon->p_internal
-                                                              );
+                auto* p_pokemon_internal = pkmn::c::get_pokemon_internal_ptr(p_pokemon);
                 BOOST_ASSERT(p_pokemon_internal != nullptr);
 
                 p_internal->cpp->set_breeding_pokemon(

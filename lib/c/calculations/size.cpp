@@ -23,19 +23,37 @@ enum pkmn_error pkmn_calculations_pokemon_size(
     float* p_size_out
 )
 {
-    PKMN_CHECK_NULL_PARAM(p_species);
-    PKMN_CHECK_NULL_PARAM(p_size_out);
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
-    PKMN_CPP_TO_C(
-        *p_size_out = pkmn::calculations::pokemon_size(
-                          p_species,
-                          personality,
-                          IV_HP,
-                          IV_attack,
-                          IV_defense,
-                          IV_speed,
-                          IV_spatk,
-                          IV_spdef
-                      );
-    )
+    error = pkmn::c::check_for_null_param(
+                p_species,
+                "p_species"
+            );
+    if(!error)
+    {
+        error = pkmn::c::check_for_null_param(
+                    p_size_out,
+                    "p_size_out"
+                );
+    }
+    if(!error)
+    {
+        auto impl = [&]()
+        {
+            *p_size_out = pkmn::calculations::pokemon_size(
+                              p_species,
+                              personality,
+                              IV_HP,
+                              IV_attack,
+                              IV_defense,
+                              IV_speed,
+                              IV_spatk,
+                              IV_spdef
+                          );
+        };
+
+        error = pkmn::c::handle_exceptions(impl);
+    }
+
+    return error;
 }

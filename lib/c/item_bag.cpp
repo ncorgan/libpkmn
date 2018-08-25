@@ -22,33 +22,59 @@ enum pkmn_error pkmn_item_bag_init(
     struct pkmn_item_bag* p_item_bag_out
 )
 {
-    PKMN_CHECK_NULL_PARAM(p_game);
-    PKMN_CHECK_NULL_PARAM(p_item_bag_out);
+    enum pkmn_error error = pkmn::c::check_for_null_param(
+                                p_game,
+                                "p_game"
+                            );
+    if(!error)
+    {
+        error = pkmn::c::check_for_null_param(
+                    p_item_bag_out,
+                    "p_item_bag_out"
+                );
+    }
+    if(!error)
+    {
+        auto impl = [&]()
+        {
+            pkmn::item_bag::sptr cpp = pkmn::item_bag::make(p_game);
 
-    PKMN_CPP_TO_C(
-        pkmn::item_bag::sptr cpp = pkmn::item_bag::make(p_game);
+            pkmn::c::init_item_bag(
+                cpp,
+                p_item_bag_out
+            );
+        };
 
-        pkmn::c::init_item_bag(
-            cpp,
-            p_item_bag_out
-        );
-    )
+        error = pkmn::c::handle_exceptions(impl);
+    }
+
+    return error;
 }
 
 enum pkmn_error pkmn_item_bag_free(
     struct pkmn_item_bag* p_item_bag
 )
 {
-    PKMN_CHECK_NULL_PARAM(p_item_bag);
+    enum pkmn_error error = pkmn::c::check_for_null_wrapper_param(
+                                p_item_bag,
+                                "p_item_bag"
+                            );
+    if(!error)
+    {
+        auto impl = [&]()
+        {
+            pkmn::c::free_pointer_and_set_to_null(&p_item_bag->p_game);
+            pkmn::c::delete_pointer_and_set_to_null(
+                reinterpret_cast<pkmn::c::item_bag_internal_t**>(&p_item_bag->p_internal)
+            );
 
-    pkmn::c::free_pointer_and_set_to_null(&p_item_bag->p_game);
-    pkmn_string_list_free(&p_item_bag->pocket_names);
+            std::memset(p_item_bag, 0, sizeof(*p_item_bag));
+        };
 
-    PKMN_CPP_TO_C(
-        pkmn::c::delete_pointer_and_set_to_null(
-            reinterpret_cast<pkmn::c::item_bag_internal_t**>(&p_item_bag->p_internal)
-        );
-    )
+        error = pkmn::c::handle_exceptions(impl);
+    }
+
+    return error;
 }
 
 const char* pkmn_item_bag_strerror(
@@ -64,21 +90,43 @@ enum pkmn_error pkmn_item_bag_get_pocket(
     struct pkmn_item_list* p_item_list_out
 )
 {
-    PKMN_CHECK_NULL_WRAPPER_PARAM(p_item_bag);
-    pkmn::c::item_bag_internal_t* p_internal = ITEM_BAG_INTERNAL_RCAST(p_item_bag->p_internal);
-    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_pocket_name, p_internal);
-    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_item_list_out, p_internal);
+    enum pkmn_error error = pkmn::c::check_for_null_wrapper_param(
+                                p_item_bag,
+                                "p_item_bag"
+                            );
+    if(!error)
+    {
+        auto* p_internal = pkmn::c::get_item_bag_internal_ptr(p_item_bag);
+        BOOST_ASSERT(p_internal != nullptr);
 
-    PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
-        pkmn::item_bag::sptr cpp = p_internal->cpp;
+        error = pkmn::c::check_for_null_param(
+                    p_pocket_name,
+                    "p_pocket_name",
+                    p_internal
+                );
+        if(!error)
+        {
+            error = pkmn::c::check_for_null_param(
+                        p_item_list_out,
+                        "p_item_list_out",
+                        p_internal
+                    );
+        }
+        if(!error)
+        {
+            auto impl = [&]()
+            {
+                pkmn::c::init_item_list(
+                    p_internal->cpp->get_pocket(p_pocket_name),
+                    p_item_list_out
+                );
+            };
 
-        pkmn::item_list::sptr cpp_pocket = cpp->get_pocket(p_pocket_name);
+            error = pkmn::c::handle_exceptions(impl, p_internal);
+        }
+    }
 
-        pkmn::c::init_item_list(
-            cpp_pocket,
-            p_item_list_out
-        );
-    )
+    return error;
 }
 
 enum pkmn_error pkmn_item_bag_add(

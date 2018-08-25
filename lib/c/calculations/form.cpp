@@ -22,19 +22,31 @@ enum pkmn_error pkmn_calculations_gen2_unown_form(
     size_t* p_form_length_out
 )
 {
-    PKMN_CHECK_NULL_PARAM(p_form_out);
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
-    PKMN_CPP_TO_C(
-        pkmn::c::string_cpp_to_c(
-            pkmn::calculations::gen2_unown_form(
-                IV_attack, IV_defense,
-                IV_speed, IV_special
-            ),
-            p_form_out,
-            buffer_len,
-            p_form_length_out
-        );
-    )
+    error = pkmn::c::check_for_null_param(
+                p_form_out,
+                "p_form_out"
+            );
+    if(!error)
+    {
+        auto impl = [&]()
+        {
+            pkmn::c::string_cpp_to_c(
+                pkmn::calculations::gen2_unown_form(
+                    IV_attack, IV_defense,
+                    IV_speed, IV_special
+                ),
+                p_form_out,
+                buffer_len,
+                p_form_length_out
+            );
+        };
+
+        error = pkmn::c::handle_exceptions(impl);
+    }
+
+    return error;
 }
 
 enum pkmn_error pkmn_calculations_gen3_unown_form(
@@ -44,28 +56,53 @@ enum pkmn_error pkmn_calculations_gen3_unown_form(
     size_t* p_form_length_out
 )
 {
-    PKMN_CHECK_NULL_PARAM(p_form_out);
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
-    PKMN_CPP_TO_C(
-        pkmn::c::string_cpp_to_c(
-            pkmn::calculations::gen3_unown_form(personality),
-            p_form_out,
-            buffer_len,
-            p_form_length_out
-        );
-    )
+    error = pkmn::c::check_for_null_param(
+                p_form_out,
+                "p_form_out"
+            );
+    if(!error)
+    {
+        auto impl = [&]()
+        {
+            pkmn::c::string_cpp_to_c(
+                pkmn::calculations::gen3_unown_form(personality),
+                p_form_out,
+                buffer_len,
+                p_form_length_out
+            );
+        };
+
+        error = pkmn::c::handle_exceptions(impl);
+    }
+
+    return error;
 }
 
 enum pkmn_error pkmn_calculations_wurmple_becomes_silcoon(
     uint32_t personality,
     bool before_gen5,
     bool* p_evolves_out
-) {
-    PKMN_CHECK_NULL_PARAM(p_evolves_out);
+)
+{
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
-    PKMN_CPP_TO_C(
-        *p_evolves_out = pkmn::calculations::wurmple_becomes_silcoon(
-                           personality, before_gen5
-                       );
-    )
+    error = pkmn::c::check_for_null_param(
+                p_evolves_out,
+                "p_evolves_out"
+            );
+    if(!error)
+    {
+        auto impl = [&]()
+        {
+            *p_evolves_out = pkmn::calculations::wurmple_becomes_silcoon(
+                               personality, before_gen5
+                           );
+        };
+
+        error = pkmn::c::handle_exceptions(impl);
+    }
+
+    return error;
 }

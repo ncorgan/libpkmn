@@ -21,33 +21,59 @@ enum pkmn_error pkmn_pokemon_party_init(
     struct pkmn_pokemon_party* p_pokemon_party_out
 )
 {
-    PKMN_CHECK_NULL_PARAM(p_game);
-    PKMN_CHECK_NULL_PARAM(p_pokemon_party_out);
+    enum pkmn_error error = pkmn::c::check_for_null_param(
+                                p_game,
+                                "p_game"
+                            );
+    if(!error)
+    {
+        error = pkmn::c::check_for_null_param(
+                    p_pokemon_party_out,
+                    "p_pokemon_party_out"
+                );
+    }
+    if(!error)
+    {
+        auto impl = [&]()
+        {
+            pkmn::pokemon_party::sptr cpp = pkmn::pokemon_party::make(p_game);
 
-    PKMN_CPP_TO_C(
-        pkmn::pokemon_party::sptr cpp = pkmn::pokemon_party::make(p_game);
+            pkmn::c::init_pokemon_party(
+                cpp,
+                p_pokemon_party_out
+            );
+        };
 
-        pkmn::c::init_pokemon_party(
-            cpp,
-            p_pokemon_party_out
-        );
-    )
+        error = pkmn::c::handle_exceptions(impl);
+    }
+
+    return error;
 }
 
 enum pkmn_error pkmn_pokemon_party_free(
     struct pkmn_pokemon_party* p_pokemon_party
 )
 {
-    PKMN_CHECK_NULL_PARAM(p_pokemon_party);
+    enum pkmn_error error = pkmn::c::check_for_null_wrapper_param(
+                                p_pokemon_party,
+                                "p_pokemon_party"
+                            );
+    if(!error)
+    {
+        auto impl = [&]()
+        {
+            pkmn::c::free_pointer_and_set_to_null(&p_pokemon_party->p_game);
+            pkmn::c::delete_pointer_and_set_to_null(
+                reinterpret_cast<pkmn::c::pokemon_party_internal_t**>(&p_pokemon_party->p_internal)
+            );
 
-    pkmn::c::free_pointer_and_set_to_null(&p_pokemon_party->p_game);
-    p_pokemon_party->capacity = 0;
+            std::memset(p_pokemon_party, 0, sizeof(*p_pokemon_party));
+        };
 
-    PKMN_CPP_TO_C(
-        pkmn::c::delete_pointer_and_set_to_null(
-            reinterpret_cast<pkmn::c::pokemon_party_internal_t**>(&p_pokemon_party->p_internal)
-        );
-    )
+        error = pkmn::c::handle_exceptions(impl);
+    }
+
+    return error;
 }
 
 const char* pkmn_pokemon_party_strerror(

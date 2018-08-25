@@ -19,14 +19,21 @@ enum pkmn_error pkmn_calculations_nature(
     size_t* p_nature_length_out
 )
 {
-    PKMN_CHECK_NULL_PARAM(p_nature_out);
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
-    PKMN_CPP_TO_C(
+    error = pkmn::c::check_for_null_param(
+                p_nature_out,
+                "p_nature_out"
+            );
+    if(!error)
+    {
         pkmn::c::string_cpp_to_c(
             pkmn::calculations::nature(personality),
             p_nature_out,
             buffer_len,
             p_nature_length_out
         );
-    )
+    }
+
+    return error;
 }

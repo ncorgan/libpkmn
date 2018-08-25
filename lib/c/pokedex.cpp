@@ -22,10 +22,16 @@ enum pkmn_error pkmn_pokedex_init(
     struct pkmn_pokedex* p_pokedex_out
 )
 {
-    enum pkmn_error error = pkmn::c::check_for_null_param(p_game, "p_game");
+    enum pkmn_error error = pkmn::c::check_for_null_param(
+                                p_game,
+                                "p_game"
+                            );
     if(!error)
     {
-        error = pkmn::c::check_for_null_param(p_pokedex_out, "p_pokedex_out");
+        error = pkmn::c::check_for_null_param(
+                    p_pokedex_out,
+                    "p_pokedex_out"
+                );
     }
     if(!error)
     {
@@ -49,7 +55,10 @@ enum pkmn_error pkmn_pokedex_free(
     struct pkmn_pokedex* p_pokedex
 )
 {
-    enum pkmn_error error = pkmn::c::check_for_null_wrapper_param(p_pokedex, "p_pokedex");
+    enum pkmn_error error = pkmn::c::check_for_null_wrapper_param(
+                                p_pokedex,
+                                "p_pokedex"
+                            );
     if(!error)
     {
         auto impl = [&]()

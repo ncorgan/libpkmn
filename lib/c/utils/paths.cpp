@@ -18,17 +18,28 @@ enum pkmn_error pkmn_get_appdata_dir(
     size_t* p_appdata_dir_length_out
 )
 {
-    PKMN_CHECK_NULL_PARAM(p_appdata_dir_out);
-    // p_appdata_dir_length_out can be NULL
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
-    PKMN_CPP_TO_C(
-        pkmn::c::string_cpp_to_c(
-            pkmn::get_appdata_dir(),
-            p_appdata_dir_out,
-            buffer_len,
-            p_appdata_dir_length_out
-        );
-    )
+    error = pkmn::c::check_for_null_param(
+                p_appdata_dir_out,
+                "p_appdata_dir_out"
+            );
+    if(!error)
+    {
+        auto impl = [&]()
+        {
+            pkmn::c::string_cpp_to_c(
+                pkmn::get_appdata_dir(),
+                p_appdata_dir_out,
+                buffer_len,
+                p_appdata_dir_length_out
+            );
+        };
+
+        error = pkmn::c::handle_exceptions(impl);
+    }
+
+    return error;
 }
 
 enum pkmn_error pkmn_get_database_path(
@@ -37,17 +48,28 @@ enum pkmn_error pkmn_get_database_path(
     size_t* p_database_path_length_out
 )
 {
-    PKMN_CHECK_NULL_PARAM(p_database_path_out);
-    // p_database_path_length_out can be NULL
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
-    PKMN_CPP_TO_C(
-        pkmn::c::string_cpp_to_c(
-            pkmn::get_database_path(),
-            p_database_path_out,
-            buffer_len,
-            p_database_path_length_out
-        );
-    )
+    error = pkmn::c::check_for_null_param(
+                p_database_path_out,
+                "p_database_path_out"
+            );
+    if(!error)
+    {
+        auto impl = [&]()
+        {
+            pkmn::c::string_cpp_to_c(
+                pkmn::get_database_path(),
+                p_database_path_out,
+                buffer_len,
+                p_database_path_length_out
+            );
+        };
+
+        error = pkmn::c::handle_exceptions(impl);
+    }
+
+    return error;
 }
 
 enum pkmn_error pkmn_get_images_dir(
@@ -56,17 +78,28 @@ enum pkmn_error pkmn_get_images_dir(
     size_t* p_images_dir_length_out
 )
 {
-    PKMN_CHECK_NULL_PARAM(p_images_dir_out);
-    // p_images_dir_length_out can be NULL
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
-    PKMN_CPP_TO_C(
-        pkmn::c::string_cpp_to_c(
-            pkmn::get_images_dir(),
-            p_images_dir_out,
-            buffer_len,
-            p_images_dir_length_out
-        );
-    )
+    error = pkmn::c::check_for_null_param(
+                p_images_dir_out,
+                "p_images_dir_out"
+            );
+    if(!error)
+    {
+        auto impl = [&]()
+        {
+            pkmn::c::string_cpp_to_c(
+                pkmn::get_images_dir(),
+                p_images_dir_out,
+                buffer_len,
+                p_images_dir_length_out
+            );
+        };
+
+        error = pkmn::c::handle_exceptions(impl);
+    }
+
+    return error;
 }
 
 enum pkmn_error pkmn_get_tmp_dir(
@@ -75,15 +108,26 @@ enum pkmn_error pkmn_get_tmp_dir(
     size_t* p_tmp_dir_length_out
 )
 {
-    PKMN_CHECK_NULL_PARAM(p_tmp_dir_out);
-    // p_tmp_dir_length_out can be NULL
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
-    PKMN_CPP_TO_C(
-        pkmn::c::string_cpp_to_c(
-            pkmn::get_tmp_dir(),
-            p_tmp_dir_out,
-            buffer_len,
-            p_tmp_dir_length_out
-        );
-    )
+    error = pkmn::c::check_for_null_param(
+                p_tmp_dir_out,
+                "p_tmp_dir_out"
+            );
+    if(!error)
+    {
+        auto impl = [&]()
+        {
+            pkmn::c::string_cpp_to_c(
+                pkmn::get_tmp_dir(),
+                p_tmp_dir_out,
+                buffer_len,
+                p_tmp_dir_length_out
+            );
+        };
+
+        error = pkmn::c::handle_exceptions(impl);
+    }
+
+    return error;
 }

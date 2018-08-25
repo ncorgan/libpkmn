@@ -20,14 +20,26 @@ enum pkmn_error pkmn_gui_generate_spinda_sprite_at_filepath(
     const char* p_filepath
 )
 {
-    PKMN_CHECK_NULL_PARAM(p_filepath);
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
-    PKMN_CPP_TO_C(
-        pkmn::qt::GenerateSpindaSpriteAtFilepath(
-            generation,
-            personality,
-            shiny,
-            p_filepath
-        );
-    )
+    error = pkmn::c::check_for_null_param(
+                p_filepath,
+                "p_filepath"
+            );
+    if(!error)
+    {
+        auto impl = [&]()
+        {
+            pkmn::qt::GenerateSpindaSpriteAtFilepath(
+                generation,
+                personality,
+                shiny,
+                p_filepath
+            );
+        };
+
+        error = pkmn::c::handle_exceptions(impl);
+    }
+
+    return error;
 }

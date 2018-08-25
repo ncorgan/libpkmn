@@ -19,15 +19,27 @@ enum pkmn_error pkmn_calculations_gen1_critical_hit_chance(
     float* p_critical_hit_chance_out
 )
 {
-    PKMN_CHECK_NULL_PARAM(p_critical_hit_chance_out);
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
-    PKMN_CPP_TO_C(
-        *p_critical_hit_chance_out = pkmn::calculations::gen1_critical_hit_chance(
-                                         speed,
-                                         rate_increased,
-                                         high_rate_move
-                                     );
-    )
+    error = pkmn::c::check_for_null_param(
+                p_critical_hit_chance_out,
+                "p_critical_hit_chance_out"
+            );
+    if(!error)
+    {
+        auto impl = [&]()
+        {
+            *p_critical_hit_chance_out = pkmn::calculations::gen1_critical_hit_chance(
+                                             speed,
+                                             rate_increased,
+                                             high_rate_move
+                                         );
+        };
+
+        error = pkmn::c::handle_exceptions(impl);
+    }
+
+    return error;
 }
 
 enum pkmn_error pkmn_calculations_critical_hit_chance(
@@ -36,14 +48,26 @@ enum pkmn_error pkmn_calculations_critical_hit_chance(
     float* p_critical_hit_chance_out
 )
 {
-    PKMN_CHECK_NULL_PARAM(p_critical_hit_chance_out);
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
-    PKMN_CPP_TO_C(
-        *p_critical_hit_chance_out = pkmn::calculations::critical_hit_chance(
-                                         generation,
-                                         critical_hit_stage
-                                     );
-    )
+    error = pkmn::c::check_for_null_param(
+                p_critical_hit_chance_out,
+                "p_critical_hit_chance_out"
+            );
+    if(!error)
+    {
+        auto impl = [&]()
+        {
+            *p_critical_hit_chance_out = pkmn::calculations::critical_hit_chance(
+                                             generation,
+                                             critical_hit_stage
+                                         );
+        };
+
+        error = pkmn::c::handle_exceptions(impl);
+    }
+
+    return error;
 }
 
 enum pkmn_error pkmn_calculations_gen1_critical_hit_modifier(
@@ -51,13 +75,25 @@ enum pkmn_error pkmn_calculations_gen1_critical_hit_modifier(
     float* p_critical_hit_modifier_out
 )
 {
-    PKMN_CHECK_NULL_PARAM(p_critical_hit_modifier_out);
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
-    PKMN_CPP_TO_C(
-        *p_critical_hit_modifier_out = pkmn::calculations::gen1_critical_hit_modifier(
-                                           attacker_level
-                                       );
-    )
+    error = pkmn::c::check_for_null_param(
+                p_critical_hit_modifier_out,
+                "p_critical_hit_modifier_out"
+            );
+    if(!error)
+    {
+        auto impl = [&]()
+        {
+            *p_critical_hit_modifier_out = pkmn::calculations::gen1_critical_hit_modifier(
+                                               attacker_level
+                                           );
+        };
+
+        error = pkmn::c::handle_exceptions(impl);
+    }
+
+    return error;
 }
 
 enum pkmn_error pkmn_calculations_critical_hit_modifier(
@@ -65,11 +101,23 @@ enum pkmn_error pkmn_calculations_critical_hit_modifier(
     float* p_critical_hit_modifier_out
 )
 {
-    PKMN_CHECK_NULL_PARAM(p_critical_hit_modifier_out);
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
-    PKMN_CPP_TO_C(
-        *p_critical_hit_modifier_out = pkmn::calculations::critical_hit_modifier(
-                                           generation
-                                       );
-    )
+    error = pkmn::c::check_for_null_param(
+                p_critical_hit_modifier_out,
+                "p_critical_hit_modifier_out"
+            );
+    if(!error)
+    {
+        auto impl = [&]()
+        {
+            *p_critical_hit_modifier_out = pkmn::calculations::critical_hit_modifier(
+                                               generation
+                                           );
+        };
+
+        error = pkmn::c::handle_exceptions(impl);
+    }
+
+    return error;
 }

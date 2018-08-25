@@ -378,10 +378,6 @@ static void test_setting_pokemon_in_box(
         PKMN_TEST_ASSERT_SUCCESS(error);
         TEST_ASSERT_EQUAL_STRING("Charmander", second_in_box.p_species);
 
-        error = pkmn_pokemon_free(&second_in_box);
-        PKMN_TEST_ASSERT_SUCCESS(error);
-        TEST_ASSERT_NULL(second_in_box.p_internal);
-
         error = pkmn_pokemon_box_set_pokemon(
                     p_box,
                     4,
@@ -396,10 +392,6 @@ static void test_setting_pokemon_in_box(
                 );
         PKMN_TEST_ASSERT_SUCCESS(error);
         TEST_ASSERT_EQUAL_STRING("None", fifth_in_box.p_species);
-
-        error = pkmn_pokemon_free(&fifth_in_box);
-        PKMN_TEST_ASSERT_SUCCESS(error);
-        TEST_ASSERT_NULL(fifth_in_box.p_internal);
     }
     else
     {
@@ -423,10 +415,6 @@ static void test_setting_pokemon_in_box(
                 );
         PKMN_TEST_ASSERT_SUCCESS(error);
         TEST_ASSERT_EQUAL_STRING("None", second_in_box.p_species);
-
-        error = pkmn_pokemon_free(&second_in_box);
-        PKMN_TEST_ASSERT_SUCCESS(error);
-        TEST_ASSERT_NULL(second_in_box.p_internal);
 
         error = pkmn_pokemon_box_set_pokemon(
                     p_box,

@@ -21,15 +21,27 @@ enum pkmn_error pkmn_calculations_damage(
     int* p_damage_out
 )
 {
-    PKMN_CHECK_NULL_PARAM(p_damage_out);
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
-    PKMN_CPP_TO_C(
-        *p_damage_out = pkmn::calculations::damage(
-                            attacker_level,
-                            move_base_power,
-                            attack_stat,
-                            defense_stat,
-                            modifier
-                        );
-    )
+    error = pkmn::c::check_for_null_param(
+                p_damage_out,
+                "p_damage_out"
+            );
+    if(!error)
+    {
+        auto impl = [&]()
+        {
+            *p_damage_out = pkmn::calculations::damage(
+                                attacker_level,
+                                move_base_power,
+                                attack_stat,
+                                defense_stat,
+                                modifier
+                            );
+        };
+
+        error = pkmn::c::handle_exceptions(impl);
+    }
+
+    return error;
 }

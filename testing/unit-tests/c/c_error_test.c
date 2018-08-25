@@ -1089,7 +1089,7 @@ static void pokemon_error_test()
                 0,
                 &dummy_size_t
             );
-    TEST_POKEMON_NULL_POINTER_RETURN(pokemon, "form_buffer");
+    TEST_POKEMON_NULL_POINTER_RETURN(pokemon, "p_form_buffer");
 
     /*
      * pkmn_pokemon_set_form

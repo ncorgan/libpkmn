@@ -20,17 +20,29 @@ enum pkmn_error pkmn_calculations_gen2_hidden_power(
     struct pkmn_hidden_power* p_hidden_power_out
 )
 {
-    PKMN_CHECK_NULL_PARAM(p_hidden_power_out);
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
-    PKMN_CPP_TO_C(
-        pkmn::c::hidden_power_cpp_to_c(
-            pkmn::calculations::gen2_hidden_power(
-                IV_attack, IV_defense,
-                IV_speed, IV_special
-            ),
-            p_hidden_power_out
-        );
-    )
+    error = pkmn::c::check_for_null_param(
+                p_hidden_power_out,
+                "p_hidden_power_out"
+            );
+    if(!error)
+    {
+        auto impl = [&]()
+        {
+            pkmn::c::hidden_power_cpp_to_c(
+                pkmn::calculations::gen2_hidden_power(
+                    IV_attack, IV_defense,
+                    IV_speed, IV_special
+                ),
+                p_hidden_power_out
+            );
+        };
+
+        error = pkmn::c::handle_exceptions(impl);
+    }
+
+    return error;
 }
 
 enum pkmn_error pkmn_calculations_modern_hidden_power(
@@ -43,16 +55,28 @@ enum pkmn_error pkmn_calculations_modern_hidden_power(
     struct pkmn_hidden_power* p_hidden_power_out
 )
 {
-    PKMN_CHECK_NULL_PARAM(p_hidden_power_out);
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
-    PKMN_CPP_TO_C(
-        pkmn::c::hidden_power_cpp_to_c(
-            pkmn::calculations::modern_hidden_power(
-                IV_HP, IV_attack,
-                IV_defense, IV_speed,
-                IV_spatk, IV_spdef
-            ),
-            p_hidden_power_out
-        );
-    )
+    error = pkmn::c::check_for_null_param(
+                p_hidden_power_out,
+                "p_hidden_power_out"
+            );
+    if(!error)
+    {
+        auto impl = [&]()
+        {
+            pkmn::c::hidden_power_cpp_to_c(
+                pkmn::calculations::modern_hidden_power(
+                    IV_HP, IV_attack,
+                    IV_defense, IV_speed,
+                    IV_spatk, IV_spdef
+                ),
+                p_hidden_power_out
+            );
+        };
+
+        error = pkmn::c::handle_exceptions(impl);
+    }
+
+    return error;
 }

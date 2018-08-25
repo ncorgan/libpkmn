@@ -19,15 +19,39 @@ enum pkmn_error pkmn_calculations_type_damage_modifier(
     float* p_type_damage_modifier_out
 )
 {
-    PKMN_CHECK_NULL_PARAM(p_attacking_type);
-    PKMN_CHECK_NULL_PARAM(p_defending_type);
-    PKMN_CHECK_NULL_PARAM(p_type_damage_modifier_out);
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
-    PKMN_CPP_TO_C(
-        *p_type_damage_modifier_out = pkmn::calculations::type_damage_modifier(
-                                          generation,
-                                          p_attacking_type,
-                                          p_defending_type
-                                      );
-    )
+    error = pkmn::c::check_for_null_param(
+                p_attacking_type,
+                "p_attacking_type"
+            );
+    if(!error)
+    {
+        error = pkmn::c::check_for_null_param(
+                    p_defending_type,
+                    "p_defending_type"
+                );
+    }
+    if(!error)
+    {
+        error = pkmn::c::check_for_null_param(
+                    p_type_damage_modifier_out,
+                    "p_type_damage_modifier_out"
+                );
+    }
+    if(!error)
+    {
+        auto impl = [&]()
+        {
+            *p_type_damage_modifier_out = pkmn::calculations::type_damage_modifier(
+                                              generation,
+                                              p_attacking_type,
+                                              p_defending_type
+                                          );
+        };
+
+        error = pkmn::c::handle_exceptions(impl);
+    }
+
+    return error;
 }

@@ -18,16 +18,34 @@ enum pkmn_error pkmn_calculations_natural_gift_stats(
     struct pkmn_natural_gift* p_natural_gift_stats_out
 )
 {
-    PKMN_CHECK_NULL_PARAM(p_item_name);
-    PKMN_CHECK_NULL_PARAM(p_natural_gift_stats_out);
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
-    PKMN_CPP_TO_C(
-        pkmn::c::natural_gift_cpp_to_c(
-            pkmn::calculations::natural_gift_stats(
+    error = pkmn::c::check_for_null_param(
                 p_item_name,
-                generation
-            ),
-            p_natural_gift_stats_out
-        );
-    )
+                "p_item_name"
+            );
+    if(!error)
+    {
+        error = pkmn::c::check_for_null_param(
+                    p_natural_gift_stats_out,
+                    "p_natural_gift_stats_out"
+                );
+    }
+    if(!error)
+    {
+        auto impl = [&]()
+        {
+            pkmn::c::natural_gift_cpp_to_c(
+                pkmn::calculations::natural_gift_stats(
+                    p_item_name,
+                    generation
+                ),
+                p_natural_gift_stats_out
+            );
+        };
+
+        error = pkmn::c::handle_exceptions(impl);
+    }
+
+    return error;
 }
