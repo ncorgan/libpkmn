@@ -31,12 +31,22 @@ struct pkmn_contest_stat_enum_list
     size_t length;
 };
 
+struct pkmn_contest_stat_enum_map
+{
+    int* p_values;
+    size_t length;
+};
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 PKMN_C_API enum pkmn_error pkmn_contest_stat_enum_list_free(
     struct pkmn_contest_stat_enum_list* p_contest_stat_enum_list
+);
+
+PKMN_C_API enum pkmn_error pkmn_contest_stat_enum_map_free(
+    struct pkmn_contest_stat_enum_map* p_contest_stat_enum_map
 );
 
 #ifdef __cplusplus

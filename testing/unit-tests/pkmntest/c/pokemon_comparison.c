@@ -163,19 +163,20 @@ void get_random_pokemon(
 
     // Get the EVs first to see which are valid. The same values
     // will be valid for IVs, so set both here.
-    int EVs[PKMN_NUM_STATS] = {0};
+    struct pkmn_stat_enum_map EVs = {NULL, 0};
     error = pkmn_pokemon_get_EVs(
                 p_pokemon,
-                EVs,
-                PKMN_NUM_STATS,
-                NULL
+                &EVs
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
+    TEST_ASSERT_NOT_NULL(EVs.p_values);
+
+    PKMN_TEST_ASSERT_SUCCESS(error);
     for(enum pkmn_stat stat = PKMN_STAT_HP;
-        stat <= PKMN_STAT_SPDEF;
+        stat <= PKMN_STAT_SPECIAL_DEFENSE;
         ++stat)
     {
-        if(EVs[stat] != -1)
+        if(EVs.p_values[stat] != -1)
         {
             error = pkmn_pokemon_set_EV(
                         p_pokemon,
@@ -192,6 +193,9 @@ void get_random_pokemon(
             PKMN_TEST_ASSERT_SUCCESS(error);
         }
     }
+
+    error = pkmn_stat_enum_map_free(&EVs);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 
     if(generation >= 2)
     {
@@ -403,6 +407,43 @@ void compare_pokemon_bools(
     TEST_ASSERT_EQUAL_MESSAGE(bool1, bool2, error_message);
 }
 
+void compare_pokemon_stat_maps(
+    const struct pkmn_pokemon* p_pokemon1,
+    const struct pkmn_pokemon* p_pokemon2,
+    const char* field,
+    pokemon_stat_map_getter_fcn_t getter_fcn
+)
+{
+    TEST_ASSERT_NOT_NULL(p_pokemon1);
+    TEST_ASSERT_NOT_NULL(p_pokemon2);
+    TEST_ASSERT_NOT_NULL(getter_fcn);
+
+    enum pkmn_error error = PKMN_ERROR_NONE;
+
+    struct pkmn_stat_enum_map stat_map1 = {NULL, 0};
+    struct pkmn_stat_enum_map stat_map2 = {NULL, 0};
+
+    error = getter_fcn(p_pokemon1, &stat_map1);
+    PKMN_TEST_ASSERT_SUCCESS(error);
+    error = getter_fcn(p_pokemon2, &stat_map2);
+    PKMN_TEST_ASSERT_SUCCESS(error);
+
+    char error_message[STRBUFFER_LEN] = {0};
+    snprintf(error_message, sizeof(error_message), "Mismatched %s", field);
+
+    TEST_ASSERT_EQUAL_MESSAGE(
+        stat_map1.length,
+        stat_map2.length,
+        error_message
+    );
+    TEST_ASSERT_EQUAL_MEMORY_MESSAGE(
+        stat_map1.p_values,
+        stat_map2.p_values,
+        (stat_map1.length * sizeof(int)),
+        error_message
+    );
+}
+
 void compare_pokemon_int_buffers(
     const struct pkmn_pokemon* p_pokemon1,
     const struct pkmn_pokemon* p_pokemon2,
@@ -573,6 +614,37 @@ void compare_pokemon_balls(
     TEST_ASSERT_EQUAL(pokemon1_ball, pokemon2_ball);
 }
 
+void compare_pokemon_contest_stats(
+    const struct pkmn_pokemon* p_pokemon1,
+    const struct pkmn_pokemon* p_pokemon2
+)
+{
+    TEST_ASSERT_NOT_NULL(p_pokemon1);
+    TEST_ASSERT_NOT_NULL(p_pokemon2);
+
+    enum pkmn_error error = PKMN_ERROR_NONE;
+
+    struct pkmn_contest_stat_enum_map stat_map1 = {NULL, 0};
+    struct pkmn_contest_stat_enum_map stat_map2 = {NULL, 0};
+
+    error = pkmn_pokemon_get_contest_stats(p_pokemon1, &stat_map1);
+    PKMN_TEST_ASSERT_SUCCESS(error);
+    error = pkmn_pokemon_get_contest_stats(p_pokemon2, &stat_map2);
+    PKMN_TEST_ASSERT_SUCCESS(error);
+
+    TEST_ASSERT_EQUAL_MESSAGE(
+        stat_map1.length,
+        stat_map2.length,
+        "Mismatched contest stats"
+    );
+    TEST_ASSERT_EQUAL_MEMORY_MESSAGE(
+        stat_map1.p_values,
+        stat_map2.p_values,
+        (stat_map1.length * sizeof(int)),
+        "Mismatched contest stats"
+    );
+}
+
 void compare_pokemon_held_items(
     const struct pkmn_pokemon* p_pokemon1,
     const struct pkmn_pokemon* p_pokemon2
@@ -676,6 +748,43 @@ void compare_pokemon_locations_met(
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_EQUAL_STRING(strbuffer1, strbuffer2);
+}
+
+void compare_pokemon_markings(
+    const struct pkmn_pokemon* p_pokemon1,
+    const struct pkmn_pokemon* p_pokemon2
+)
+{
+    TEST_ASSERT_NOT_NULL(p_pokemon1);
+    TEST_ASSERT_NOT_NULL(p_pokemon2);
+
+    enum pkmn_error error = PKMN_ERROR_NONE;
+
+    struct pkmn_marking_enum_map markings1 = {NULL, 0};
+    struct pkmn_marking_enum_map markings2 = {NULL, 0};
+
+    error = pkmn_pokemon_get_markings(
+                p_pokemon1,
+                &markings1
+            );
+    PKMN_TEST_ASSERT_SUCCESS(error);
+    error = pkmn_pokemon_get_markings(
+                p_pokemon2,
+                &markings2
+            );
+    PKMN_TEST_ASSERT_SUCCESS(error);
+
+    TEST_ASSERT_EQUAL_MESSAGE(
+        markings1.length,
+        markings2.length,
+        "Mismatched markings"
+    );
+    TEST_ASSERT_EQUAL_MEMORY_MESSAGE(
+        markings1.p_values,
+        markings2.p_values,
+        (markings1.length * sizeof(bool)),
+        "Mismatched markings"
+    );
 }
 
 void compare_pokemon_ribbons(
@@ -785,24 +894,21 @@ void compare_pokemon(
         "Nickname",
         pkmn_pokemon_get_nickname
     );
-    compare_pokemon_int_buffers(
+    compare_pokemon_stat_maps(
         p_pokemon1,
         p_pokemon2,
-        PKMN_NUM_STATS,
         "EVs",
         pkmn_pokemon_get_EVs
     );
-    compare_pokemon_int_buffers(
+    compare_pokemon_stat_maps(
         p_pokemon1,
         p_pokemon2,
-        PKMN_NUM_STATS,
         "IVs",
         pkmn_pokemon_get_IVs
     );
-    compare_pokemon_int_buffers(
+    compare_pokemon_stat_maps(
         p_pokemon1,
         p_pokemon2,
-        PKMN_NUM_STATS,
         "Stats",
         pkmn_pokemon_get_stats
     );
@@ -847,22 +953,10 @@ void compare_pokemon(
             "Personality",
             pkmn_pokemon_get_personality
         );
-        compare_pokemon_bool_buffers(
-            p_pokemon1,
-            p_pokemon2,
-            PKMN_NUM_MARKINGS,
-            "Markings",
-            pkmn_pokemon_get_markings
-        );
-        compare_pokemon_int_buffers(
-            p_pokemon1,
-            p_pokemon2,
-            PKMN_NUM_CONTEST_STATS,
-            "Contest stats",
-            pkmn_pokemon_get_contest_stats
-        );
         compare_pokemon_abilities(p_pokemon1, p_pokemon2);
         compare_pokemon_balls(p_pokemon1, p_pokemon2);
+        compare_pokemon_contest_stats(p_pokemon1, p_pokemon2);
+        compare_pokemon_markings(p_pokemon1, p_pokemon2);
         compare_pokemon_ribbons(p_pokemon1, p_pokemon2);
     }
     if(generation >= 4)

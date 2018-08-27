@@ -30,12 +30,22 @@ struct pkmn_marking_enum_list
     size_t length;
 };
 
+struct pkmn_marking_enum_map
+{
+    bool* p_values;
+    size_t length;
+};
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 PKMN_C_API enum pkmn_error pkmn_marking_enum_list_free(
     struct pkmn_marking_enum_list* p_marking_enum_list
+);
+
+PKMN_C_API enum pkmn_error pkmn_marking_enum_map_free(
+    struct pkmn_marking_enum_map* p_marking_enum_map
 );
 
 #ifdef __cplusplus

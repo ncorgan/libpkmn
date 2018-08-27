@@ -185,6 +185,20 @@ def get_species(c):
 
     return species
 
+def get_stats():
+    stats = [
+        "NONE = 0",
+        "HP = 1",
+        "ATTACK = 2",
+        "DEFENSE = 3",
+        "SPEED = 4",
+        "SPECIAL = 5",
+        "SPECIAL_ATTACK = 6",
+        "SPECIAL_DEFENSE = 7"
+    ]
+
+    return stats
+
 def get_types(c):
     c.execute("SELECT type_id,name FROM type_names WHERE local_language_id=9 ORDER BY type_id")
     db_responses = c.fetchall()
@@ -241,7 +255,7 @@ def generate_cpp_enum_file(enum_name, enum_values, has_pair_using = False):
     with open("{0}.hpp".format(enum_name), "w") as output:
         output.write(file_contents)
 
-def generate_c_enum_file(enum_name, enum_values, has_pair_struct = False):
+def generate_c_enum_file(enum_name, enum_values, has_pair_struct = False, has_map = False, map_value_type = "int"):
     file_contents = """/*
  * Copyright (c) 2018 Nicholas Corgan (n.corgan@gmail.com)
  *
@@ -282,6 +296,15 @@ struct pkmn_{0}_enum_pair
     enum pkmn_{0} second;
 }};""".format(enum_name)
 
+    if has_map:
+        file_contents += """
+
+struct pkmn_{0}_enum_map
+{{
+    {1}* p_values;
+    size_t length;
+}};""".format(enum_name, map_value_type)
+
     file_contents += """
 
 #ifdef __cplusplus
@@ -290,14 +313,23 @@ extern \"C\" {{
 
 PKMN_C_API enum pkmn_error pkmn_{0}_enum_list_free(
     struct pkmn_{0}_enum_list* p_{0}_enum_list
-);
+);""".format(enum_name)
+
+    if has_map:
+        file_contents += """
+
+PKMN_C_API enum pkmn_error pkmn_{0}_enum_map_free(
+    struct pkmn_{0}_enum_map* p_{0}_enum_map
+);""".format(enum_name)
+
+    file_contents += """
 
 #ifdef __cplusplus
 }}
 #endif
 
-#endif /* PKMN_C_ENUMS_{1}_H */
-""".format(enum_name, enum_name.upper())
+#endif /* PKMN_C_ENUMS_{0}_H */
+""".format(enum_name.upper())
 
     with open("{0}.h".format(enum_name), "w") as output:
         output.write(file_contents)
@@ -334,6 +366,7 @@ if __name__ == "__main__":
     move_targets = get_move_targets(c)
     natures = get_natures(c)
     species = get_species(c)
+    stats = get_stats()
     types = get_types(c)
 
     if options.cpp or options.all:
@@ -351,6 +384,7 @@ if __name__ == "__main__":
         generate_cpp_enum_file("move_target", move_targets)
         generate_cpp_enum_file("nature", natures)
         generate_cpp_enum_file("species", species)
+        generate_cpp_enum_file("stat", stats)
         generate_cpp_enum_file("type", types, True)
 
     if options.c or options.all:
@@ -358,14 +392,15 @@ if __name__ == "__main__":
 
         generate_c_enum_file("ability", abilities, True)
         generate_c_enum_file("ball", balls)
-        generate_c_enum_file("contest_stat", contest_stats)
+        generate_c_enum_file("contest_stat", contest_stats, has_map=True)
         generate_c_enum_file("egg_group", egg_groups, True)
         generate_c_enum_file("game_save_type", game_save_types)
         generate_c_enum_file("item", items)
-        generate_c_enum_file("marking", markings)
+        generate_c_enum_file("marking", markings, has_map = True, map_value_type = "bool")
         generate_c_enum_file("move", moves)
         generate_c_enum_file("move_damage_class", move_damage_classes)
         generate_c_enum_file("move_target", move_targets)
         generate_c_enum_file("nature", natures)
         generate_c_enum_file("species", species)
+        generate_c_enum_file("stat", stats, has_map=True)
         generate_c_enum_file("type", types, True)

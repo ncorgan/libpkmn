@@ -40,13 +40,13 @@ struct pkmn_database_pokemon_entry
     struct pkmn_ability_enum_pair abilities;
     enum pkmn_ability hidden_ability;
     struct pkmn_egg_group_enum_pair egg_groups;
-    int base_stats[PKMN_NUM_STATS];
-    int EV_yields[PKMN_NUM_STATS];
+    struct pkmn_stat_enum_map base_stats;
+    struct pkmn_stat_enum_map EV_yields;
     int experience_yield;
     struct pkmn_levelup_moves levelup_moves;
-    struct pkmn_string_list tm_hm_moves;
-    struct pkmn_string_list egg_moves;
-    struct pkmn_string_list tutor_moves;
+    struct pkmn_move_enum_list tm_hm_moves;
+    struct pkmn_move_enum_list egg_moves;
+    struct pkmn_move_enum_list tutor_moves;
     struct pkmn_string_list forms;
     struct pkmn_string_list evolutions;
 };

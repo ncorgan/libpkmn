@@ -204,7 +204,7 @@ enum pkmn_error pkmn_item_list_get_valid_items(
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
         pkmn::item_list::sptr cpp = p_internal->cpp;
 
-        pkmn::c::list_cpp_to_c<pkmn::e_item, enum pkmn_item, struct pkmn_item_enum_list>(
+        pkmn::c::item_enum_list_cpp_to_c(
             cpp->get_valid_items(),
             p_valid_items_out
         );

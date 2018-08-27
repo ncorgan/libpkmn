@@ -201,19 +201,13 @@ static void conversions_test(
 
         if(origin_generation == dest_generation)
         {
-            compare_pokemon_bool_buffers(
+            compare_pokemon_markings(
                 &first_pokemon,
-                &second_pokemon,
-                PKMN_NUM_MARKINGS,
-                "Markings",
-                pkmn_pokemon_get_markings
+                &second_pokemon
             );
-            compare_pokemon_int_buffers(
+            compare_pokemon_contest_stats(
                 &first_pokemon,
-                &second_pokemon,
-                PKMN_NUM_CONTEST_STATS,
-                "Contest stats",
-                pkmn_pokemon_get_contest_stats
+                &second_pokemon
             );
             compare_pokemon_ribbons(
                 &first_pokemon,

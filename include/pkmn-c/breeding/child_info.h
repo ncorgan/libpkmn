@@ -15,6 +15,7 @@
 #include <pkmn-c/enums/gender.h>
 #include <pkmn-c/enums/move.h>
 #include <pkmn-c/enums/species.h>
+#include <pkmn-c/enums/stat.h>
 
 #include <pkmn-c/types/string_types.h>
 
@@ -42,9 +43,7 @@ PKMN_C_API enum pkmn_error pkmn_breeding_get_ideal_child_IVs(
     const struct pkmn_pokemon* p_mother,
     const struct pkmn_pokemon* p_father,
     enum pkmn_gender gender,
-    int* p_IVs_buffer_out,
-    size_t IV_buffer_size,
-    size_t* p_actual_num_IVs_out
+    struct pkmn_stat_enum_map* p_ideal_child_IVs_out
 );
 
 #ifdef __cplusplus

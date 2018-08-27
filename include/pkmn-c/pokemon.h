@@ -315,9 +315,7 @@ PKMN_C_API enum pkmn_error pkmn_pokemon_set_level(
 
 PKMN_C_API enum pkmn_error pkmn_pokemon_get_markings(
     const struct pkmn_pokemon* p_pokemon,
-    bool* p_has_markings_buffer_out,
-    size_t has_marking_buffer_size,
-    size_t* p_actual_num_markings_out
+    struct pkmn_marking_enum_map* p_markings_out
 );
 
 PKMN_C_API enum pkmn_error pkmn_pokemon_set_has_marking(
@@ -345,9 +343,7 @@ PKMN_C_API enum pkmn_error pkmn_pokemon_get_ribbon_names(
 
 PKMN_C_API enum pkmn_error pkmn_pokemon_get_contest_stats(
     const struct pkmn_pokemon* p_pokemon,
-    int* p_contest_stats_buffer_out,
-    size_t contest_stat_buffer_size,
-    size_t* p_actual_num_contest_stats_out
+    struct pkmn_contest_stat_enum_map* p_contest_stats_out
 );
 
 PKMN_C_API enum pkmn_error pkmn_pokemon_set_contest_stat(
@@ -375,9 +371,7 @@ PKMN_C_API enum pkmn_error pkmn_pokemon_set_move_pp(
 
 PKMN_C_API enum pkmn_error pkmn_pokemon_get_EVs(
     const struct pkmn_pokemon* p_pokemon,
-    int* p_EVs_buffer_out,
-    size_t stat_buffer_size,
-    size_t* p_actual_num_EVs_out
+    struct pkmn_stat_enum_map* p_EVs_out
 );
 
 PKMN_C_API enum pkmn_error pkmn_pokemon_set_EV(
@@ -388,9 +382,7 @@ PKMN_C_API enum pkmn_error pkmn_pokemon_set_EV(
 
 PKMN_C_API enum pkmn_error pkmn_pokemon_get_IVs(
     const struct pkmn_pokemon* p_pokemon,
-    int* p_IVs_buffer_out,
-    size_t stat_buffer_size,
-    size_t* p_actual_num_IVs_out
+    struct pkmn_stat_enum_map* p_IVs_out
 );
 
 PKMN_C_API enum pkmn_error pkmn_pokemon_set_IV(
@@ -401,9 +393,7 @@ PKMN_C_API enum pkmn_error pkmn_pokemon_set_IV(
 
 PKMN_C_API enum pkmn_error pkmn_pokemon_get_stats(
     const struct pkmn_pokemon* p_pokemon,
-    int* p_stats_buffer_out,
-    size_t stat_buffer_size,
-    size_t* p_actual_num_stats_out
+    struct pkmn_stat_enum_map* p_stats_out
 );
 
 PKMN_C_API enum pkmn_error pkmn_pokemon_get_current_hp(

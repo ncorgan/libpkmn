@@ -243,11 +243,9 @@ enum pkmn_error pkmn_pokemon_get_condition(
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_condition_out, p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
-        std::string condition = p_internal->cpp->get_condition();
-
-        const pkmn::c::condition_bimap_t& condition_bimap = pkmn::c::get_condition_bimap();
-        BOOST_ASSERT(condition_bimap.left.count(condition) > 0);
-        *p_condition_out = condition_bimap.left.at(condition);
+        *p_condition_out = static_cast<enum pkmn_condition>(
+                               p_internal->cpp->get_condition()
+                           );
     )
 }
 
@@ -268,9 +266,7 @@ enum pkmn_error pkmn_pokemon_set_condition(
             condition_bimap.right
         );
 
-        p_internal->cpp->set_condition(
-            condition_bimap.right.at(condition)
-        );
+        p_internal->cpp->set_condition(static_cast<pkmn::e_condition>(condition));
     )
 }
 
@@ -851,26 +847,17 @@ enum pkmn_error pkmn_pokemon_set_level(
 
 enum pkmn_error pkmn_pokemon_get_markings(
     const struct pkmn_pokemon* p_pokemon,
-    bool* p_has_markings_buffer_out,
-    size_t has_marking_buffer_size,
-    size_t* p_actual_num_markings_out
+    struct pkmn_marking_enum_map* p_markings_out
 )
 {
     PKMN_CHECK_NULL_PARAM(p_pokemon);
     pkmn_pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
-    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_has_markings_buffer_out, p_internal);
+    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_markings_out, p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
-        const pkmn::c::marking_bimap_t& marking_bimap = (p_internal->generation == 3) ?
-            pkmn::c::get_gen3_marking_bimap() : pkmn::c::get_marking_bimap();
-
-        pkmn::c::copy_map_to_buffer(
+        pkmn::c::marking_enum_map_cpp_to_c(
             p_internal->cpp->get_markings(),
-            marking_bimap,
-            p_has_markings_buffer_out,
-            has_marking_buffer_size,
-            marking_bimap.size(),
-            p_actual_num_markings_out
+            p_markings_out
         );
     )
 }
@@ -885,17 +872,8 @@ enum pkmn_error pkmn_pokemon_set_has_marking(
     pkmn_pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
-        const pkmn::c::marking_bimap_t& marking_bimap = (p_internal->generation == 3) ?
-            pkmn::c::get_gen3_marking_bimap() : pkmn::c::get_marking_bimap();
-
-        pkmn::enforce_value_in_map_keys(
-            "Marking",
-            marking,
-            marking_bimap.right
-        );
-
         p_internal->cpp->set_marking(
-            marking_bimap.right.at(marking),
+            static_cast<pkmn::e_marking>(marking),
             has_marking
         );
     )
@@ -967,23 +945,17 @@ enum pkmn_error pkmn_pokemon_get_ribbon_names(
 
 enum pkmn_error pkmn_pokemon_get_contest_stats(
     const struct pkmn_pokemon* p_pokemon,
-    int* p_contest_stats_buffer_out,
-    size_t contest_stat_buffer_size,
-    size_t* p_actual_num_contest_stats_out
+    struct pkmn_contest_stat_enum_map* p_contest_stats_out
 )
 {
     PKMN_CHECK_NULL_PARAM(p_pokemon);
     pkmn_pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
-    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_contest_stats_buffer_out, p_internal);
+    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_contest_stats_out, p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
-        pkmn::c::copy_map_to_buffer(
+        pkmn::c::contest_stat_enum_map_cpp_to_c(
             p_internal->cpp->get_contest_stats(),
-            pkmn::c::get_contest_stat_bimap(),
-            p_contest_stats_buffer_out,
-            contest_stat_buffer_size,
-            PKMN_NUM_CONTEST_STATS,
-            p_actual_num_contest_stats_out
+            p_contest_stats_out
         );
     )
 }
@@ -1067,23 +1039,17 @@ enum pkmn_error pkmn_pokemon_set_move_pp(
 
 enum pkmn_error pkmn_pokemon_get_EVs(
     const struct pkmn_pokemon* p_pokemon,
-    int* p_EVs_buffer_out,
-    size_t stat_buffer_size,
-    size_t* p_actual_num_EVs_out
+    struct pkmn_stat_enum_map* p_EVs_out
 )
 {
     PKMN_CHECK_NULL_PARAM(p_pokemon);
     pkmn_pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
-    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_EVs_buffer_out, p_internal);
+    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_EVs_out, p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
-        pkmn::c::copy_map_to_buffer(
+        pkmn::c::stat_enum_map_cpp_to_c(
             p_internal->cpp->get_EVs(),
-            pkmn::c::get_stat_bimap(),
-            p_EVs_buffer_out,
-            stat_buffer_size,
-            PKMN_NUM_STATS,
-            p_actual_num_EVs_out
+            p_EVs_out
         );
     )
 }
@@ -1115,23 +1081,17 @@ enum pkmn_error pkmn_pokemon_set_EV(
 
 enum pkmn_error pkmn_pokemon_get_IVs(
     const struct pkmn_pokemon* p_pokemon,
-    int* p_IVs_buffer_out,
-    size_t stat_buffer_size,
-    size_t* p_actual_num_IVs_out
+    struct pkmn_stat_enum_map* p_IVs_out
 )
 {
     PKMN_CHECK_NULL_PARAM(p_pokemon);
     pkmn_pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
-    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_IVs_buffer_out, p_internal);
+    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_IVs_out, p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
-        pkmn::c::copy_map_to_buffer(
+        pkmn::c::stat_enum_map_cpp_to_c(
             p_internal->cpp->get_IVs(),
-            pkmn::c::get_stat_bimap(),
-            p_IVs_buffer_out,
-            stat_buffer_size,
-            PKMN_NUM_STATS,
-            p_actual_num_IVs_out
+            p_IVs_out
         );
     )
 }
@@ -1163,23 +1123,17 @@ enum pkmn_error pkmn_pokemon_set_IV(
 
 enum pkmn_error pkmn_pokemon_get_stats(
     const struct pkmn_pokemon* p_pokemon,
-    int* p_stats_buffer_out,
-    size_t stat_buffer_size,
-    size_t* p_actual_num_stats_out
+    struct pkmn_stat_enum_map* p_stats_out
 )
 {
     PKMN_CHECK_NULL_PARAM(p_pokemon);
     pkmn_pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
-    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_stats_buffer_out, p_internal);
+    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_stats_out, p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
-        pkmn::c::copy_map_to_buffer(
+        pkmn::c::stat_enum_map_cpp_to_c(
             p_internal->cpp->get_stats(),
-            pkmn::c::get_stat_bimap(),
-            p_stats_buffer_out,
-            stat_buffer_size,
-            PKMN_NUM_STATS,
-            p_actual_num_stats_out
+            p_stats_out
         );
     )
 }

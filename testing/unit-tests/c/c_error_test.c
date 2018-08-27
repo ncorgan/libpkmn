@@ -887,7 +887,11 @@ static void pokemon_error_test()
     struct pkmn_database_pokemon_entry dummy_pokemon_entry;
     enum pkmn_condition dummy_condition = PKMN_CONDITION_NONE;
     enum pkmn_gender dummy_gender = PKMN_GENDER_GENDERLESS;
-    struct pkmn_move_slots dummy_move_slots = { NULL, 0 };
+    struct pkmn_move_slots dummy_move_slots = {NULL, 0};
+
+    struct pkmn_contest_stat_enum_map dummy_contest_stats = {NULL, 0};
+    struct pkmn_marking_enum_map dummy_markings = {NULL, 0};
+    struct pkmn_stat_enum_map dummy_stats = {NULL, 0};
 
     error = pkmn_pokemon_init(
                 PKMN_SPECIES_BULBASAUR,
@@ -1538,19 +1542,15 @@ static void pokemon_error_test()
 
     error = pkmn_pokemon_get_markings(
                 NULL,
-                &dummy_bool,
-                0,
-                &dummy_size_t
+                &dummy_markings
             );
     TEST_NULL_POINTER_RETURN("p_pokemon");
 
     error = pkmn_pokemon_get_markings(
                 &pokemon,
-                NULL,
-                0,
-                &dummy_size_t
+                NULL
             );
-    TEST_POKEMON_NULL_POINTER_RETURN(pokemon, "p_has_markings_buffer_out");
+    TEST_POKEMON_NULL_POINTER_RETURN(pokemon, "p_markings_out");
 
     /*
      * pkmn_pokemon_set_has_marking
@@ -1628,19 +1628,15 @@ static void pokemon_error_test()
 
     error = pkmn_pokemon_get_contest_stats(
                 NULL,
-                &dummy_int,
-                0,
-                &dummy_size_t
+                &dummy_contest_stats
             );
     TEST_NULL_POINTER_RETURN("p_pokemon");
 
     error = pkmn_pokemon_get_contest_stats(
                 &pokemon,
-                NULL,
-                0,
-                &dummy_size_t
+                NULL
             );
-    TEST_POKEMON_NULL_POINTER_RETURN(pokemon, "p_contest_stats_buffer_out");
+    TEST_POKEMON_NULL_POINTER_RETURN(pokemon, "p_contest_stats_out");
 
     /*
      * pkmn_pokemon_set_contest_stat
@@ -1697,19 +1693,15 @@ static void pokemon_error_test()
 
     error = pkmn_pokemon_get_EVs(
                 NULL,
-                &dummy_int,
-                0,
-                &dummy_size_t
+                &dummy_stats
             );
     TEST_NULL_POINTER_RETURN("p_pokemon");
 
     error = pkmn_pokemon_get_EVs(
                 &pokemon,
-                NULL,
-                0,
-                &dummy_size_t
+                NULL
             );
-    TEST_POKEMON_NULL_POINTER_RETURN(pokemon, "p_EVs_buffer_out");
+    TEST_POKEMON_NULL_POINTER_RETURN(pokemon, "p_EVs_out");
 
     /*
      * pkmn_pokemon_set_EV
@@ -1728,19 +1720,15 @@ static void pokemon_error_test()
 
     error = pkmn_pokemon_get_IVs(
                 NULL,
-                &dummy_int,
-                0,
-                &dummy_size_t
+                &dummy_stats
             );
     TEST_NULL_POINTER_RETURN("p_pokemon");
 
     error = pkmn_pokemon_get_IVs(
                 &pokemon,
-                NULL,
-                0,
-                &dummy_size_t
+                NULL
             );
-    TEST_POKEMON_NULL_POINTER_RETURN(pokemon, "p_IVs_buffer_out");
+    TEST_POKEMON_NULL_POINTER_RETURN(pokemon, "p_IVs_out");
 
     /*
      * pkmn_pokemon_set_IV
@@ -1759,19 +1747,15 @@ static void pokemon_error_test()
 
     error = pkmn_pokemon_get_stats(
                 NULL,
-                &dummy_int,
-                0,
-                &dummy_size_t
+                &dummy_stats
             );
     TEST_NULL_POINTER_RETURN("p_pokemon");
 
     error = pkmn_pokemon_get_stats(
                 &pokemon,
-                NULL,
-                0,
-                &dummy_size_t
+                NULL
             );
-    TEST_POKEMON_NULL_POINTER_RETURN(pokemon, "p_stats_buffer_out");
+    TEST_POKEMON_NULL_POINTER_RETURN(pokemon, "p_stats_out");
 
     /*
      * pkmn_pokemon_get_current_hp

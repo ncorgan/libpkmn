@@ -8,4 +8,5 @@
 SET(pkmn_c_enums_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/enum_to_string.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/list_frees.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/map_frees.cpp
 PARENT_SCOPE)

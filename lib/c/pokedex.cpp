@@ -117,7 +117,7 @@ enum pkmn_error pkmn_pokedex_get_all_seen(
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_all_seen_out, p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
-        pkmn::c::list_cpp_to_c<pkmn::e_species, enum pkmn_species, struct pkmn_species_enum_list>(
+        pkmn::c::species_enum_list_cpp_to_c(
             p_internal->cpp->get_all_seen(),
             p_all_seen_out
         );
@@ -184,7 +184,7 @@ enum pkmn_error pkmn_pokedex_get_all_caught(
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_all_caught_out, p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
-        pkmn::c::list_cpp_to_c<pkmn::e_species, enum pkmn_species, struct pkmn_species_enum_list>(
+        pkmn::c::species_enum_list_cpp_to_c(
             p_internal->cpp->get_all_caught(),
             p_all_caught_out
         );

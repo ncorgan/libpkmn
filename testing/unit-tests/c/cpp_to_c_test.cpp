@@ -479,7 +479,7 @@ TEST(cpp_to_c_test, enum_list_cpp_to_c_test)
         0
     };
 
-    pkmn::c::list_cpp_to_c<cpp_enum, enum c_enum, c_test_enum_list>(
+    pkmn::c::enum_list_cpp_to_c<cpp_enum, enum c_enum, c_test_enum_list>(
         cpp_enum_vector,
         &c_enum_list
     );
@@ -490,6 +490,48 @@ TEST(cpp_to_c_test, enum_list_cpp_to_c_test)
     EXPECT_EQ(C_ENUM_VALUE2, c_enum_list.p_enums[0]);
     EXPECT_EQ(C_ENUM_VALUE1, c_enum_list.p_enums[1]);
     EXPECT_EQ(C_ENUM_VALUE3, c_enum_list.p_enums[2]);
+}
+
+struct c_test_enum_map
+{
+    int* p_values;
+    size_t length;
+};
+
+TEST(cpp_to_c_test, enum_map_cpp_to_c)
+{
+    const std::map<cpp_enum, int> cpp_enum_map =
+    {
+        {cpp_enum::VALUE1, rand()},
+        {cpp_enum::VALUE2, rand()},
+        {cpp_enum::VALUE3, rand()}
+    };
+    struct c_test_enum_map c_enum_map =
+    {
+        nullptr,
+        0ULL
+    };
+
+    pkmn::c::enum_map_cpp_to_c<cpp_enum, c_enum, c_test_enum_map, int>(
+        cpp_enum_map,
+        &c_enum_map
+    );
+
+    ASSERT_NE(nullptr, c_enum_map.p_values);
+    EXPECT_EQ(3ULL, c_enum_map.length);
+
+    EXPECT_EQ(
+        cpp_enum_map.at(cpp_enum::VALUE1),
+        c_enum_map.p_values[C_ENUM_VALUE1]
+    );
+    EXPECT_EQ(
+        cpp_enum_map.at(cpp_enum::VALUE2),
+        c_enum_map.p_values[C_ENUM_VALUE2]
+    );
+    EXPECT_EQ(
+        cpp_enum_map.at(cpp_enum::VALUE3),
+        c_enum_map.p_values[C_ENUM_VALUE3]
+    );
 }
 
 TEST(cpp_to_c_test, hidden_power_cpp_to_c_test)
@@ -575,7 +617,7 @@ TEST(cpp_to_c_test, item_slots_cpp_to_c_test)
 TEST(cpp_to_c_test, levelup_move_cpp_to_c_test)
 {
     pkmn::database::levelup_move levelup_move_cpp(
-        pkmn::database::move_entry(pkmn::e_move::SCRATCH, pkmn::e_game::RED),
+        pkmn::e_move::SCRATCH,
         50
     );
 
@@ -595,15 +637,15 @@ TEST(cpp_to_c_test, levelup_moves_cpp_to_c_test)
     pkmn::database::levelup_moves_t levelup_moves_cpp =
     {
         pkmn::database::levelup_move(
-            pkmn::database::move_entry(pkmn::e_move::SCRATCH, pkmn::e_game::RED),
+            pkmn::e_move::SCRATCH,
             50
         ),
         pkmn::database::levelup_move(
-            pkmn::database::move_entry(pkmn::e_move::SYNTHESIS, pkmn::e_game::SILVER),
+            pkmn::e_move::SYNTHESIS,
             5
         ),
         pkmn::database::levelup_move(
-            pkmn::database::move_entry(pkmn::e_move::FRENZY_PLANT, pkmn::e_game::EMERALD),
+            pkmn::e_move::FRENZY_PLANT,
             37
         )
     };

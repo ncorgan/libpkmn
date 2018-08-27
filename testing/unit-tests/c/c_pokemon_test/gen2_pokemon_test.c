@@ -75,7 +75,7 @@ static void gen2_pokemon_test(
     );
 
     enum pkmn_gender gender = PKMN_GENDER_GENDERLESS;
-    int IVs[PKMN_NUM_STATS] = {0};
+    struct pkmn_stat_enum_map IVs = {NULL, 0};
     bool is_shiny = false;
 
     // Gender affects IVs, so make sure the abstraction reflects that.
@@ -86,12 +86,10 @@ static void gen2_pokemon_test(
     PKMN_TEST_ASSERT_SUCCESS(error);
     error = pkmn_pokemon_get_IVs(
                 &pokemon,
-                IVs,
-                PKMN_NUM_STATS,
-                NULL
+                &IVs
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
-    TEST_ASSERT_EQUAL(15, IVs[PKMN_STAT_ATTACK]);
+    TEST_ASSERT_EQUAL(15, IVs.p_values[PKMN_STAT_ATTACK]);
 
     error = pkmn_pokemon_set_IV(
                 &pokemon,
@@ -118,6 +116,9 @@ static void gen2_pokemon_test(
     PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_EQUAL(PKMN_GENDER_MALE, gender);
 
+    error = pkmn_stat_enum_map_free(&IVs);
+    PKMN_TEST_ASSERT_SUCCESS(error);
+
     // Shininess affects IVs, so make sure the abstraction reflects that.
     error = pkmn_pokemon_set_is_shiny(
                 &pokemon,
@@ -132,12 +133,13 @@ static void gen2_pokemon_test(
     TEST_ASSERT_FALSE(is_shiny);
     error = pkmn_pokemon_get_IVs(
                 &pokemon,
-                IVs,
-                PKMN_NUM_STATS,
-                NULL
+                &IVs
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
-    TEST_ASSERT_EQUAL(13, IVs[PKMN_STAT_ATTACK]);
+    TEST_ASSERT_EQUAL(13, IVs.p_values[PKMN_STAT_ATTACK]);
+
+    error = pkmn_stat_enum_map_free(&IVs);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 
     error = pkmn_pokemon_set_is_shiny(
                 &pokemon,
@@ -152,16 +154,17 @@ static void gen2_pokemon_test(
     TEST_ASSERT_TRUE(is_shiny);
     error = pkmn_pokemon_get_IVs(
                 &pokemon,
-                IVs,
-                PKMN_NUM_STATS,
-                NULL
+                &IVs
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
 
-    TEST_ASSERT_EQUAL(15, IVs[PKMN_STAT_ATTACK]);
-    TEST_ASSERT_EQUAL(10, IVs[PKMN_STAT_DEFENSE]);
-    TEST_ASSERT_EQUAL(10, IVs[PKMN_STAT_SPEED]);
-    TEST_ASSERT_EQUAL(10, IVs[PKMN_STAT_SPECIAL]);
+    TEST_ASSERT_EQUAL(15, IVs.p_values[PKMN_STAT_ATTACK]);
+    TEST_ASSERT_EQUAL(10, IVs.p_values[PKMN_STAT_DEFENSE]);
+    TEST_ASSERT_EQUAL(10, IVs.p_values[PKMN_STAT_SPEED]);
+    TEST_ASSERT_EQUAL(10, IVs.p_values[PKMN_STAT_SPECIAL]);
+
+    error = pkmn_stat_enum_map_free(&IVs);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 
     error = pkmn_pokemon_free(&pokemon);
     PKMN_TEST_ASSERT_SUCCESS(error);

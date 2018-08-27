@@ -20,7 +20,7 @@ enum pkmn_error pkmn_database_ability_list(
     PKMN_CHECK_NULL_PARAM(p_ability_enum_list_out);
 
     PKMN_CPP_TO_C(
-        pkmn::c::list_cpp_to_c<pkmn::e_ability, enum pkmn_ability, struct pkmn_ability_enum_list>(
+        pkmn::c::ability_enum_list_cpp_to_c(
             pkmn::database::get_ability_list(generation),
             p_ability_enum_list_out
         );
@@ -53,7 +53,7 @@ enum pkmn_error pkmn_database_game_list(
     PKMN_CHECK_NULL_PARAM(p_game_enum_list_out);
 
     PKMN_CPP_TO_C(
-        pkmn::c::list_cpp_to_c<pkmn::e_game, enum pkmn_game, struct pkmn_game_enum_list>(
+        pkmn::c::game_enum_list_cpp_to_c(
             pkmn::database::get_game_list(
                 generation,
                 include_previous
@@ -89,7 +89,7 @@ enum pkmn_error pkmn_database_gamecube_shadow_pokemon_list(
     PKMN_CHECK_NULL_PARAM(p_gamecube_shadow_pokemon_enum_list_out);
 
     PKMN_CPP_TO_C(
-        pkmn::c::list_cpp_to_c<pkmn::e_species, enum pkmn_species, struct pkmn_species_enum_list>(
+        pkmn::c::species_enum_list_cpp_to_c(
             pkmn::database::get_gamecube_shadow_pokemon_list(colosseum),
             p_gamecube_shadow_pokemon_enum_list_out
         );
@@ -119,7 +119,7 @@ enum pkmn_error pkmn_database_hm_move_list(
     PKMN_CHECK_NULL_PARAM(p_hm_move_enum_list_out);
 
     PKMN_CPP_TO_C(
-        pkmn::c::list_cpp_to_c<pkmn::e_move, enum pkmn_move, struct pkmn_move_enum_list>(
+        pkmn::c::move_enum_list_cpp_to_c(
             pkmn::database::get_hm_move_list(static_cast<pkmn::e_game>(game)),
             p_hm_move_enum_list_out
         );
@@ -149,7 +149,7 @@ enum pkmn_error pkmn_database_item_list(
     PKMN_CHECK_NULL_PARAM(p_item_enum_list_out);
 
     PKMN_CPP_TO_C(
-        pkmn::c::list_cpp_to_c<pkmn::e_item, enum pkmn_item, struct pkmn_item_enum_list>(
+        pkmn::c::item_enum_list_cpp_to_c(
             pkmn::database::get_item_list(static_cast<pkmn::e_game>(game)),
             p_item_enum_list_out
         );
@@ -198,7 +198,7 @@ enum pkmn_error pkmn_database_move_list(
     PKMN_CHECK_NULL_PARAM(p_move_enum_list_out);
 
     PKMN_CPP_TO_C(
-        pkmn::c::list_cpp_to_c<pkmn::e_move, enum pkmn_move, struct pkmn_move_enum_list>(
+        pkmn::c::move_enum_list_cpp_to_c(
             pkmn::database::get_move_list(static_cast<pkmn::e_game>(game)),
             p_move_enum_list_out
         );
@@ -227,7 +227,7 @@ enum pkmn_error pkmn_database_nature_list(
     PKMN_CHECK_NULL_PARAM(p_nature_enum_list_out);
 
     PKMN_CPP_TO_C(
-        pkmn::c::list_cpp_to_c<pkmn::e_nature, enum pkmn_nature, struct pkmn_nature_enum_list>(
+        pkmn::c::nature_enum_list_cpp_to_c(
             pkmn::database::get_nature_list(),
             p_nature_enum_list_out
         );
@@ -257,7 +257,7 @@ enum pkmn_error pkmn_database_pokemon_list(
     PKMN_CHECK_NULL_PARAM(p_pokemon_enum_list_out);
 
     PKMN_CPP_TO_C(
-        pkmn::c::list_cpp_to_c<pkmn::e_species, enum pkmn_species, struct pkmn_species_enum_list>(
+        pkmn::c::species_enum_list_cpp_to_c(
             pkmn::database::get_pokemon_list(
                 generation,
                 include_previous
@@ -338,7 +338,7 @@ enum pkmn_error pkmn_database_tm_move_list(
     PKMN_CHECK_NULL_PARAM(p_tm_move_enum_list_out);
 
     PKMN_CPP_TO_C(
-        pkmn::c::list_cpp_to_c<pkmn::e_move, enum pkmn_move, struct pkmn_move_enum_list>(
+        pkmn::c::move_enum_list_cpp_to_c(
             pkmn::database::get_tm_move_list(static_cast<pkmn::e_game>(game)),
             p_tm_move_enum_list_out
         );
@@ -368,7 +368,7 @@ enum pkmn_error pkmn_database_type_list(
     PKMN_CHECK_NULL_PARAM(p_type_enum_list_out);
 
     PKMN_CPP_TO_C(
-        pkmn::c::list_cpp_to_c<pkmn::e_type, enum pkmn_type, struct pkmn_type_enum_list>(
+        pkmn::c::type_enum_list_cpp_to_c(
             pkmn::database::get_type_list(static_cast<pkmn::e_game>(game)),
             p_type_enum_list_out
         );

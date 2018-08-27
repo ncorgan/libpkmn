@@ -777,8 +777,16 @@ namespace pkmn { namespace c {
                 PKMN_EGG_GROUP_NONE, // first
                 PKMN_EGG_GROUP_NONE, // second
             },
-            {0}, // base_stats
-            {0}, // EV_yields
+            // base_stats
+            {
+                nullptr, // values
+                0ULL     // length
+            },
+            // EV_yields 
+            {
+                nullptr, // values
+                0ULL     // length
+            },
             0, // experience_yield
             // levelup_moves
             {
@@ -854,56 +862,29 @@ namespace pkmn { namespace c {
         temp_pokemon_entry_c.base_friendship = pokemon_entry_cpp.get_base_friendship();
         temp_pokemon_entry_c.experience_yield = pokemon_entry_cpp.get_experience_yield();
 
-        std::map<pkmn::e_stat, int> base_stats = pokemon_entry_cpp.get_base_stats();
-        temp_pokemon_entry_c.base_stats[PKMN_STAT_HP] = base_stats.at(pkmn::e_stat::HP);
-        temp_pokemon_entry_c.base_stats[PKMN_STAT_ATTACK] = base_stats.at(pkmn::e_stat::ATTACK);
-        temp_pokemon_entry_c.base_stats[PKMN_STAT_DEFENSE] = base_stats.at(pkmn::e_stat::DEFENSE);
-        temp_pokemon_entry_c.base_stats[PKMN_STAT_SPEED] = base_stats.at(pkmn::e_stat::SPEED);
-        if(base_stats.count(pkmn::e_stat::SPECIAL) > 0)
-        {
-            temp_pokemon_entry_c.base_stats[PKMN_STAT_SPECIAL] = base_stats.at(pkmn::e_stat::SPECIAL);
-            temp_pokemon_entry_c.base_stats[PKMN_STAT_SPATK] = -1;
-            temp_pokemon_entry_c.base_stats[PKMN_STAT_SPDEF] = -1;
-        }
-        else
-        {
-            temp_pokemon_entry_c.base_stats[PKMN_STAT_SPECIAL] = -1;
-            temp_pokemon_entry_c.base_stats[PKMN_STAT_SPATK] = base_stats.at(pkmn::e_stat::SPECIAL_ATTACK);
-            temp_pokemon_entry_c.base_stats[PKMN_STAT_SPDEF] = base_stats.at(pkmn::e_stat::SPECIAL_DEFENSE);
-        }
-
-        std::map<pkmn::e_stat, int> EV_yields = pokemon_entry_cpp.get_EV_yields();
-        temp_pokemon_entry_c.EV_yields[PKMN_STAT_HP] = EV_yields.at(pkmn::e_stat::HP);
-        temp_pokemon_entry_c.EV_yields[PKMN_STAT_ATTACK] = EV_yields.at(pkmn::e_stat::ATTACK);
-        temp_pokemon_entry_c.EV_yields[PKMN_STAT_DEFENSE] = EV_yields.at(pkmn::e_stat::DEFENSE);
-        temp_pokemon_entry_c.EV_yields[PKMN_STAT_SPEED] = EV_yields.at(pkmn::e_stat::SPEED);
-        if(EV_yields.count(pkmn::e_stat::SPECIAL) > 0)
-        {
-            temp_pokemon_entry_c.EV_yields[PKMN_STAT_SPECIAL] = EV_yields.at(pkmn::e_stat::SPECIAL);
-            temp_pokemon_entry_c.EV_yields[PKMN_STAT_SPATK] = -1;
-            temp_pokemon_entry_c.EV_yields[PKMN_STAT_SPDEF] = -1;
-        }
-        else
-        {
-            temp_pokemon_entry_c.EV_yields[PKMN_STAT_SPECIAL] = -1;
-            temp_pokemon_entry_c.EV_yields[PKMN_STAT_SPATK] = EV_yields.at(pkmn::e_stat::SPECIAL_ATTACK);
-            temp_pokemon_entry_c.EV_yields[PKMN_STAT_SPDEF] = EV_yields.at(pkmn::e_stat::SPECIAL_DEFENSE);
-        }
+        stat_enum_map_cpp_to_c(
+            pokemon_entry_cpp.get_base_stats(),
+            &temp_pokemon_entry_c.base_stats
+        );
+        stat_enum_map_cpp_to_c(
+            pokemon_entry_cpp.get_EV_yields(),
+            &temp_pokemon_entry_c.EV_yields
+        );
 
         levelup_moves_cpp_to_c(
             pokemon_entry_cpp.get_levelup_moves(),
             &temp_pokemon_entry_c.levelup_moves
         );
 
-        move_list_to_string_list(
+        move_enum_list_cpp_to_c(
             pokemon_entry_cpp.get_tm_hm_moves(),
             &temp_pokemon_entry_c.tm_hm_moves
         );
-        move_list_to_string_list(
+        move_enum_list_cpp_to_c(
             pokemon_entry_cpp.get_egg_moves(),
             &temp_pokemon_entry_c.egg_moves
         );
-        move_list_to_string_list(
+        move_enum_list_cpp_to_c(
             pokemon_entry_cpp.get_tutor_moves(),
             &temp_pokemon_entry_c.tutor_moves
         );

@@ -243,18 +243,19 @@ static void assert_pokemon_entry_uninitialized(
     TEST_ASSERT_EQUAL(PKMN_ABILITY_NONE, p_pokemon_entry->hidden_ability);
     TEST_ASSERT_EQUAL(PKMN_EGG_GROUP_NONE, p_pokemon_entry->egg_groups.first);
     TEST_ASSERT_EQUAL(PKMN_EGG_GROUP_NONE, p_pokemon_entry->egg_groups.second);
-    for(int i = 0; i < 7; ++i) {
-        TEST_ASSERT_EQUAL(p_pokemon_entry->base_stats[i], 0);
-        TEST_ASSERT_EQUAL(p_pokemon_entry->EV_yields[i], 0);
+    for(int i = 0; i < 7; ++i)
+    {
+        TEST_ASSERT_EQUAL(p_pokemon_entry->base_stats.p_values[i], 0);
+        TEST_ASSERT_EQUAL(p_pokemon_entry->EV_yields.p_values[i], 0);
     }
     TEST_ASSERT_EQUAL(p_pokemon_entry->experience_yield, 0);
     TEST_ASSERT_NULL(p_pokemon_entry->levelup_moves.p_levelup_moves);
     TEST_ASSERT_EQUAL(p_pokemon_entry->levelup_moves.length, 0);
-    TEST_ASSERT_NULL(p_pokemon_entry->tm_hm_moves.pp_strings);
+    TEST_ASSERT_NULL(p_pokemon_entry->tm_hm_moves.p_enums);
     TEST_ASSERT_EQUAL(p_pokemon_entry->tm_hm_moves.length, 0);
-    TEST_ASSERT_NULL(p_pokemon_entry->egg_moves.pp_strings);
+    TEST_ASSERT_NULL(p_pokemon_entry->egg_moves.p_enums);
     TEST_ASSERT_EQUAL(p_pokemon_entry->egg_moves.length, 0);
-    TEST_ASSERT_NULL(p_pokemon_entry->tutor_moves.pp_strings);
+    TEST_ASSERT_NULL(p_pokemon_entry->tutor_moves.p_enums);
     TEST_ASSERT_EQUAL(p_pokemon_entry->tutor_moves.length, 0);
     TEST_ASSERT_NULL(p_pokemon_entry->forms.pp_strings);
     TEST_ASSERT_EQUAL(p_pokemon_entry->forms.length, 0);
@@ -302,23 +303,23 @@ static void pokemon_entry_test()
             .first = PKMN_EGG_GROUP_NONE,
             .second = PKMN_EGG_GROUP_NONE
         },
-        .base_stats = {0,0,0,0,0,0,0},
-        .EV_yields = {0,0,0,0,0,0,0},
+        .base_stats = {NULL,0},
+        .EV_yields = {NULL,0},
         .experience_yield = 0,
         .levelup_moves = {
             .p_levelup_moves = NULL,
             .length = 0
         },
         .tm_hm_moves = {
-            .pp_strings = NULL,
+            .p_enums = NULL,
             .length = 0
         },
         .egg_moves = {
-            .pp_strings = NULL,
+            .p_enums = NULL,
             .length = 0
         },
         .tutor_moves = {
-            .pp_strings = NULL,
+            .p_enums = NULL,
             .length = 0
         },
         .forms = {
@@ -388,20 +389,20 @@ static void pokemon_entry_test()
     TEST_ASSERT_EQUAL(PKMN_ABILITY_SAND_VEIL, pokemon_entry.hidden_ability);
     TEST_ASSERT_EQUAL(PKMN_EGG_GROUP_WATER1, pokemon_entry.egg_groups.first);
     TEST_ASSERT_EQUAL(PKMN_EGG_GROUP_INDETERMINATE, pokemon_entry.egg_groups.second);
-    TEST_ASSERT_EQUAL(109, pokemon_entry.base_stats[PKMN_STAT_HP]);
-    TEST_ASSERT_EQUAL(66, pokemon_entry.base_stats[PKMN_STAT_ATTACK]);
-    TEST_ASSERT_EQUAL(84, pokemon_entry.base_stats[PKMN_STAT_DEFENSE]);
-    TEST_ASSERT_EQUAL(32, pokemon_entry.base_stats[PKMN_STAT_SPEED]);
-    TEST_ASSERT_EQUAL(-1, pokemon_entry.base_stats[PKMN_STAT_SPECIAL]);
-    TEST_ASSERT_EQUAL(81, pokemon_entry.base_stats[PKMN_STAT_SPATK]);
-    TEST_ASSERT_EQUAL(99, pokemon_entry.base_stats[PKMN_STAT_SPDEF]);
-    TEST_ASSERT_EQUAL(2, pokemon_entry.EV_yields[PKMN_STAT_HP]);
-    TEST_ASSERT_EQUAL(0, pokemon_entry.EV_yields[PKMN_STAT_ATTACK]);
-    TEST_ASSERT_EQUAL(0, pokemon_entry.EV_yields[PKMN_STAT_DEFENSE]);
-    TEST_ASSERT_EQUAL(0, pokemon_entry.EV_yields[PKMN_STAT_SPEED]);
-    TEST_ASSERT_EQUAL(-1, pokemon_entry.EV_yields[PKMN_STAT_SPECIAL]);
-    TEST_ASSERT_EQUAL(0, pokemon_entry.EV_yields[PKMN_STAT_SPATK]);
-    TEST_ASSERT_EQUAL(0, pokemon_entry.EV_yields[PKMN_STAT_SPDEF]);
+    TEST_ASSERT_EQUAL(109, pokemon_entry.base_stats.p_values[PKMN_STAT_HP]);
+    TEST_ASSERT_EQUAL(66, pokemon_entry.base_stats.p_values[PKMN_STAT_ATTACK]);
+    TEST_ASSERT_EQUAL(84, pokemon_entry.base_stats.p_values[PKMN_STAT_DEFENSE]);
+    TEST_ASSERT_EQUAL(32, pokemon_entry.base_stats.p_values[PKMN_STAT_SPEED]);
+    TEST_ASSERT_EQUAL(-1, pokemon_entry.base_stats.p_values[PKMN_STAT_SPECIAL]);
+    TEST_ASSERT_EQUAL(81, pokemon_entry.base_stats.p_values[PKMN_STAT_SPECIAL_ATTACK]);
+    TEST_ASSERT_EQUAL(99, pokemon_entry.base_stats.p_values[PKMN_STAT_SPECIAL_DEFENSE]);
+    TEST_ASSERT_EQUAL(2, pokemon_entry.EV_yields.p_values[PKMN_STAT_HP]);
+    TEST_ASSERT_EQUAL(0, pokemon_entry.EV_yields.p_values[PKMN_STAT_ATTACK]);
+    TEST_ASSERT_EQUAL(0, pokemon_entry.EV_yields.p_values[PKMN_STAT_DEFENSE]);
+    TEST_ASSERT_EQUAL(0, pokemon_entry.EV_yields.p_values[PKMN_STAT_SPEED]);
+    TEST_ASSERT_EQUAL(-1, pokemon_entry.EV_yields.p_values[PKMN_STAT_SPECIAL]);
+    TEST_ASSERT_EQUAL(0, pokemon_entry.EV_yields.p_values[PKMN_STAT_SPECIAL_ATTACK]);
+    TEST_ASSERT_EQUAL(0, pokemon_entry.EV_yields.p_values[PKMN_STAT_SPECIAL_DEFENSE]);
     TEST_ASSERT_EQUAL(165, pokemon_entry.experience_yield);
 
     int experience = 0;
@@ -457,11 +458,11 @@ static void pokemon_entry_test()
 
     TEST_ASSERT_NOT_NULL(pokemon_entry.levelup_moves.p_levelup_moves);
     TEST_ASSERT(pokemon_entry.levelup_moves.length > 0);
-    TEST_ASSERT_NOT_NULL(pokemon_entry.tm_hm_moves.pp_strings);
+    TEST_ASSERT_NOT_NULL(pokemon_entry.tm_hm_moves.p_enums);
     TEST_ASSERT(pokemon_entry.tm_hm_moves.length > 0);
-    TEST_ASSERT_NOT_NULL(pokemon_entry.egg_moves.pp_strings);
+    TEST_ASSERT_NOT_NULL(pokemon_entry.egg_moves.p_enums);
     TEST_ASSERT(pokemon_entry.egg_moves.length > 0);
-    TEST_ASSERT_NOT_NULL(pokemon_entry.tutor_moves.pp_strings);
+    TEST_ASSERT_NOT_NULL(pokemon_entry.tutor_moves.p_enums);
     TEST_ASSERT(pokemon_entry.tutor_moves.length > 0);
     TEST_ASSERT_NOT_NULL(pokemon_entry.forms.pp_strings);
     TEST_ASSERT(pokemon_entry.forms.length > 0);

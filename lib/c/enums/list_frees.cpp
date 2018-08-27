@@ -9,14 +9,17 @@
 
 #include <pkmn-c/enums/ability.h>
 #include <pkmn-c/enums/ball.h>
+#include <pkmn-c/enums/contest_stat.h>
 #include <pkmn-c/enums/egg_group.h>
 #include <pkmn-c/enums/game.h>
 #include <pkmn-c/enums/item.h>
+#include <pkmn-c/enums/marking.h>
 #include <pkmn-c/enums/move.h>
 #include <pkmn-c/enums/move_damage_class.h>
 #include <pkmn-c/enums/move_target.h>
 #include <pkmn-c/enums/nature.h>
 #include <pkmn-c/enums/species.h>
+#include <pkmn-c/enums/stat.h>
 #include <pkmn-c/enums/type.h>
 
 #include <cstdlib>
@@ -54,4 +57,5 @@ PKMN_C_ENUM_LIST_FREE_FCN(move_damage_class)
 PKMN_C_ENUM_LIST_FREE_FCN(move_target)
 PKMN_C_ENUM_LIST_FREE_FCN(nature)
 PKMN_C_ENUM_LIST_FREE_FCN(species)
+PKMN_C_ENUM_LIST_FREE_FCN(stat)
 PKMN_C_ENUM_LIST_FREE_FCN(type)

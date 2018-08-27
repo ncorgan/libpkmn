@@ -39,7 +39,7 @@ static void gen2_unown_test(enum pkmn_game game)
     PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_EQUAL(26, unown_entry.forms.length);
 
-    int IVs[PKMN_NUM_STATS] = {0};
+    struct pkmn_stat_enum_map IVs = {NULL, 0};
 
     for(size_t form_index = 0; form_index < unown_entry.forms.length; ++form_index)
     {
@@ -68,17 +68,15 @@ static void gen2_unown_test(enum pkmn_game game)
         // Make sure IVs are properly set.
         error = pkmn_pokemon_get_IVs(
                     &unown,
-                    IVs,
-                    PKMN_NUM_STATS,
-                    NULL
+                    &IVs
                 );
         PKMN_TEST_ASSERT_SUCCESS(error);
 
         error = pkmn_calculations_gen2_unown_form(
-                    IVs[PKMN_STAT_ATTACK],
-                    IVs[PKMN_STAT_DEFENSE],
-                    IVs[PKMN_STAT_SPEED],
-                    IVs[PKMN_STAT_SPECIAL],
+                    IVs.p_values[PKMN_STAT_ATTACK],
+                    IVs.p_values[PKMN_STAT_DEFENSE],
+                    IVs.p_values[PKMN_STAT_SPEED],
+                    IVs.p_values[PKMN_STAT_SPECIAL],
                     strbuffer,
                     sizeof(strbuffer),
                     NULL
@@ -106,6 +104,9 @@ static void gen2_unown_test(enum pkmn_game game)
                 );
         PKMN_TEST_ASSERT_SUCCESS(error);
         TEST_ASSERT_TRUE(file_exists(strbuffer));
+
+        error = pkmn_stat_enum_map_free(&IVs);
+        PKMN_TEST_ASSERT_SUCCESS(error);
 
         error = pkmn_pokemon_free(&unown);
         PKMN_TEST_ASSERT_SUCCESS(error);
@@ -180,20 +181,18 @@ static void gen2_unown_test(enum pkmn_game game)
             strbuffer
         );
 
-        // Make sure IVs are properly set
+        // Make sure IVs are properly set.
         error = pkmn_pokemon_get_IVs(
                     &unown,
-                    IVs,
-                    PKMN_NUM_STATS,
-                    NULL
+                    &IVs
                 );
         PKMN_TEST_ASSERT_SUCCESS(error);
 
         error = pkmn_calculations_gen2_unown_form(
-                    IVs[PKMN_STAT_ATTACK],
-                    IVs[PKMN_STAT_DEFENSE],
-                    IVs[PKMN_STAT_SPEED],
-                    IVs[PKMN_STAT_SPECIAL],
+                    IVs.p_values[PKMN_STAT_ATTACK],
+                    IVs.p_values[PKMN_STAT_DEFENSE],
+                    IVs.p_values[PKMN_STAT_SPEED],
+                    IVs.p_values[PKMN_STAT_SPECIAL],
                     strbuffer,
                     sizeof(strbuffer),
                     NULL
@@ -203,6 +202,9 @@ static void gen2_unown_test(enum pkmn_game game)
             unown_entry.forms.pp_strings[form_index],
             strbuffer
         );
+
+        error = pkmn_stat_enum_map_free(&IVs);
+        PKMN_TEST_ASSERT_SUCCESS(error);
     }
 
     error = pkmn_pokemon_free(&unown);

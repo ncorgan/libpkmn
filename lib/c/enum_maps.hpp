@@ -11,6 +11,7 @@
 #include <pkmn-c/game_save.h>
 
 #include <pkmn-c/enums/condition.h>
+#include <pkmn-c/enums/contest_stat.h>
 #include <pkmn-c/enums/game.h>
 #include <pkmn-c/enums/gender.h>
 #include <pkmn-c/enums/language.h>
@@ -19,9 +20,12 @@
 
 #include <pkmn/game_save.hpp>
 
+#include <pkmn/enums/condition.hpp>
+#include <pkmn/enums/contest_stat.hpp>
 #include <pkmn/enums/game.hpp>
 #include <pkmn/enums/gender.hpp>
 #include <pkmn/enums/language.hpp>
+#include <pkmn/enums/marking.hpp>
 #include <pkmn/enums/stat.hpp>
 
 #include <boost/assign.hpp>
@@ -31,11 +35,10 @@
 
 namespace pkmn { namespace c {
 
+    typedef boost::bimap<pkmn::e_condition, enum pkmn_condition> condition_bimap_t;
+    typedef boost::bimap<pkmn::e_contest_stat, enum pkmn_contest_stat> contest_stat_bimap_t;
+    typedef boost::bimap<pkmn::e_marking, enum pkmn_marking> marking_bimap_t;
     typedef boost::bimap<pkmn::e_stat, enum pkmn_stat> stat_bimap_t;
-
-    typedef boost::bimap<std::string, enum pkmn_contest_stat> contest_stat_bimap_t;
-    typedef boost::bimap<std::string, enum pkmn_condition> condition_bimap_t;
-    typedef boost::bimap<std::string, enum pkmn_marking> marking_bimap_t;
 
     const stat_bimap_t& get_stat_bimap();
     const contest_stat_bimap_t& get_contest_stat_bimap();

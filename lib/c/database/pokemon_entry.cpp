@@ -161,9 +161,12 @@ enum pkmn_error pkmn_database_pokemon_entry_free(
     pkmn::c::free_pointer_and_set_to_null(&p_pokemon_entry->p_form);
     pkmn::c::free_pointer_and_set_to_null(&p_pokemon_entry->p_pokedex_entry);
 
-    pkmn_string_list_free(&p_pokemon_entry->tm_hm_moves);
-    pkmn_string_list_free(&p_pokemon_entry->egg_moves);
-    pkmn_string_list_free(&p_pokemon_entry->tutor_moves);
+    pkmn_stat_enum_map_free(&p_pokemon_entry->base_stats);
+    pkmn_stat_enum_map_free(&p_pokemon_entry->EV_yields);
+
+    pkmn_move_enum_list_free(&p_pokemon_entry->tm_hm_moves);
+    pkmn_move_enum_list_free(&p_pokemon_entry->egg_moves);
+    pkmn_move_enum_list_free(&p_pokemon_entry->tutor_moves);
     pkmn_string_list_free(&p_pokemon_entry->forms);
     pkmn_string_list_free(&p_pokemon_entry->evolutions);
 
