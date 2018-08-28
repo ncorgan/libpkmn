@@ -503,7 +503,6 @@ TEST(cpp_to_c_test, enum_map_cpp_to_c)
     const std::map<cpp_enum, int> cpp_enum_map =
     {
         {cpp_enum::VALUE1, rand()},
-        {cpp_enum::VALUE2, rand()},
         {cpp_enum::VALUE3, rand()}
     };
     struct c_test_enum_map c_enum_map =
@@ -512,7 +511,7 @@ TEST(cpp_to_c_test, enum_map_cpp_to_c)
         0ULL
     };
 
-    pkmn::c::enum_map_cpp_to_c<cpp_enum, c_enum, c_test_enum_map, int>(
+    pkmn::c::enum_map_cpp_to_c<cpp_enum, c_enum, c_test_enum_map, int, cpp_enum::VALUE3>(
         cpp_enum_map,
         &c_enum_map
     );
@@ -523,10 +522,6 @@ TEST(cpp_to_c_test, enum_map_cpp_to_c)
     EXPECT_EQ(
         cpp_enum_map.at(cpp_enum::VALUE1),
         c_enum_map.p_values[C_ENUM_VALUE1]
-    );
-    EXPECT_EQ(
-        cpp_enum_map.at(cpp_enum::VALUE2),
-        c_enum_map.p_values[C_ENUM_VALUE2]
     );
     EXPECT_EQ(
         cpp_enum_map.at(cpp_enum::VALUE3),

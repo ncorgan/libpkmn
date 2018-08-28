@@ -243,11 +243,10 @@ static void assert_pokemon_entry_uninitialized(
     TEST_ASSERT_EQUAL(PKMN_ABILITY_NONE, p_pokemon_entry->hidden_ability);
     TEST_ASSERT_EQUAL(PKMN_EGG_GROUP_NONE, p_pokemon_entry->egg_groups.first);
     TEST_ASSERT_EQUAL(PKMN_EGG_GROUP_NONE, p_pokemon_entry->egg_groups.second);
-    for(int i = 0; i < 7; ++i)
-    {
-        TEST_ASSERT_EQUAL(p_pokemon_entry->base_stats.p_values[i], 0);
-        TEST_ASSERT_EQUAL(p_pokemon_entry->EV_yields.p_values[i], 0);
-    }
+    TEST_ASSERT_NULL(p_pokemon_entry->base_stats.p_values);
+    TEST_ASSERT_EQUAL(p_pokemon_entry->base_stats.length, 0);
+    TEST_ASSERT_NULL(p_pokemon_entry->EV_yields.p_values);
+    TEST_ASSERT_EQUAL(p_pokemon_entry->EV_yields.length, 0);
     TEST_ASSERT_EQUAL(p_pokemon_entry->experience_yield, 0);
     TEST_ASSERT_NULL(p_pokemon_entry->levelup_moves.p_levelup_moves);
     TEST_ASSERT_EQUAL(p_pokemon_entry->levelup_moves.length, 0);

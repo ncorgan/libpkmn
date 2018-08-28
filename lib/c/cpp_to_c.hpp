@@ -261,7 +261,13 @@ namespace pkmn { namespace c {
     BOOST_STATIC_CONSTEXPR auto& type_enum_list_cpp_to_c =
         enum_list_cpp_to_c<pkmn::e_type, enum pkmn_type, struct pkmn_type_enum_list>;
 
-    template <typename cpp_enum_type, typename c_enum_type, typename c_struct_type, typename map_value_type>
+    template <
+        typename cpp_enum_type,
+        typename c_enum_type,
+        typename c_struct_type,
+        typename map_value_type,
+        cpp_enum_type max_enum
+    >
     typename std::enable_if<std::is_enum<cpp_enum_type>::value && std::is_enum<c_enum_type>::value, void>::type
     enum_map_cpp_to_c(
         const std::map<cpp_enum_type, map_value_type>& cpp_enum_map,
@@ -272,14 +278,15 @@ namespace pkmn { namespace c {
 
         if(!cpp_enum_map.empty())
         {
-            p_c_struct_out->length = cpp_enum_map.size();
+            p_c_struct_out->length = static_cast<size_t>(max_enum) + 1;
+            BOOST_ASSERT(p_c_struct_out->length >= cpp_enum_map.size());
 
             // We're overriding default values anyway, but there's a warning
             // from CppCheck about using malloc instead of calloc.
             p_c_struct_out->p_values = static_cast<map_value_type*>(
                                            std::calloc(
                                                p_c_struct_out->length,
-                                               sizeof(c_enum_type)
+                                               sizeof(map_value_type)
                                            )
                                        );
             for(size_t value_index = 0;
@@ -313,11 +320,29 @@ namespace pkmn { namespace c {
      * can't alias functions, this is the best we can do.
      */
     BOOST_STATIC_CONSTEXPR auto& contest_stat_enum_map_cpp_to_c =
-        enum_map_cpp_to_c<pkmn::e_contest_stat, enum pkmn_contest_stat, struct pkmn_contest_stat_enum_map, int>;
+        enum_map_cpp_to_c<
+            pkmn::e_contest_stat,
+            enum pkmn_contest_stat,
+            struct pkmn_contest_stat_enum_map,
+            int,
+            pkmn::e_contest_stat::SHEEN
+        >;
     BOOST_STATIC_CONSTEXPR auto& marking_enum_map_cpp_to_c =
-        enum_map_cpp_to_c<pkmn::e_marking, enum pkmn_marking, struct pkmn_marking_enum_map, bool>;
+        enum_map_cpp_to_c<
+            pkmn::e_marking,
+            enum pkmn_marking,
+            struct pkmn_marking_enum_map,
+            bool,
+            pkmn::e_marking::DIAMOND
+        >;
     BOOST_STATIC_CONSTEXPR auto& stat_enum_map_cpp_to_c =
-        enum_map_cpp_to_c<pkmn::e_stat, enum pkmn_stat, struct pkmn_stat_enum_map, int>;
+        enum_map_cpp_to_c<
+            pkmn::e_stat,
+            enum pkmn_stat,
+            struct pkmn_stat_enum_map,
+            int,
+            pkmn::e_stat::SPECIAL_DEFENSE
+        >;
 
     inline void int_pair_cpp_to_c(
         const std::pair<int, int>& int_pair_cpp,

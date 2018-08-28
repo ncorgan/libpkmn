@@ -1627,17 +1627,18 @@ static void test_setting_stats(
     int generation = game_to_generation(p_pokemon->game);
 
     struct pkmn_stat_enum_map EVs = {NULL, 0};
-    error = pkmn_pokemon_get_EVs(
-                p_pokemon,
-                &EVs
-            );
-    PKMN_TEST_ASSERT_SUCCESS(error);
     const int max_EV_value = (generation >= 3) ? MODERN_EV_MAX : GB_EV_MAX;
 
     for(enum pkmn_stat stat = PKMN_STAT_HP;
         stat <= PKMN_STAT_SPECIAL_DEFENSE;
         ++stat)
     {
+        error = pkmn_pokemon_get_EVs(
+                    p_pokemon,
+                    &EVs
+                );
+        PKMN_TEST_ASSERT_SUCCESS(error);
+
         // Only set random stats.
         if(EVs.p_values[stat] != -1)
         {
@@ -1647,6 +1648,9 @@ static void test_setting_stats(
                         stat,
                         new_EV_value
                     );
+            PKMN_TEST_ASSERT_SUCCESS(error);
+
+            error = pkmn_stat_enum_map_free(&EVs);
             PKMN_TEST_ASSERT_SUCCESS(error);
 
             error = pkmn_pokemon_get_EVs(
@@ -1671,17 +1675,18 @@ static void test_setting_stats(
     }
 
     struct pkmn_stat_enum_map IVs = {NULL, 0};
-    error = pkmn_pokemon_get_IVs(
-                p_pokemon,
-                &IVs
-            );
-    PKMN_TEST_ASSERT_SUCCESS(error);
     const int max_IV_value = (generation >= 3) ? MODERN_IV_MAX : GB_IV_MAX;
 
     for(enum pkmn_stat stat = PKMN_STAT_HP;
         stat <= PKMN_STAT_SPECIAL_DEFENSE;
         ++stat)
     {
+        error = pkmn_pokemon_get_IVs(
+                    p_pokemon,
+                    &IVs
+                );
+        PKMN_TEST_ASSERT_SUCCESS(error);
+
         if(IVs.p_values[stat] != -1)
         {
             int new_IV_value = rand() % (max_IV_value + 1);
@@ -1690,6 +1695,9 @@ static void test_setting_stats(
                         stat,
                         new_IV_value
                     );
+            PKMN_TEST_ASSERT_SUCCESS(error);
+
+            error = pkmn_stat_enum_map_free(&IVs);
             PKMN_TEST_ASSERT_SUCCESS(error);
 
             error = pkmn_pokemon_get_IVs(
@@ -1718,16 +1726,17 @@ static void test_setting_stats(
         const int max_contest_stat_value = 255;
 
         struct pkmn_contest_stat_enum_map contest_stats = {NULL, 0};
-        error = pkmn_pokemon_get_contest_stats(
-                    p_pokemon,
-                    &contest_stats
-                );
-        PKMN_TEST_ASSERT_SUCCESS(error);
 
         for(enum pkmn_contest_stat contest_stat = PKMN_CONTEST_STAT_COOL;
             contest_stat <= PKMN_CONTEST_STAT_SHEEN;
             ++contest_stat)
         {
+            error = pkmn_pokemon_get_contest_stats(
+                        p_pokemon,
+                        &contest_stats
+                    );
+            PKMN_TEST_ASSERT_SUCCESS(error);
+
             if(contest_stats.p_values[contest_stat] != -1)
             {
                 int new_contest_stat_value = rand() % (max_contest_stat_value + 1);
@@ -1736,6 +1745,9 @@ static void test_setting_stats(
                             contest_stat,
                             new_contest_stat_value
                         );
+                PKMN_TEST_ASSERT_SUCCESS(error);
+
+                error = pkmn_contest_stat_enum_map_free(&contest_stats);
                 PKMN_TEST_ASSERT_SUCCESS(error);
 
                 error = pkmn_pokemon_get_contest_stats(
