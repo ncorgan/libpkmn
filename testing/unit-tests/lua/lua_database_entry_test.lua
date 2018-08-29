@@ -62,7 +62,7 @@ function test_move_entry()
     -- Just make sure it works.
     local effect = entry.effect
 
-    luaunit.assertEquals(entry.contest_type, "None")
+    luaunit.assertEquals(entry.contest_type, pkmn.contest_stat.NONE)
     luaunit.assertEquals(entry.contest_effect, "None")
     luaunit.assertEquals(entry.super_contest_effect, "None")
 end

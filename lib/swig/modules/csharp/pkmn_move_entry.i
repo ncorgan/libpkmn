@@ -24,7 +24,7 @@
 %attribute(pkmn::database::move_entry, float, Accuracy, get_accuracy);
 %attribute(pkmn::database::move_entry, int, Priority, get_priority);
 %attributestring(pkmn::database::move_entry, std::string, Effect, get_effect);
-%attributestring(pkmn::database::move_entry, std::string, ContestType, get_contest_type);
+%attribute(pkmn::database::move_entry, pkmn::e_contest_stat, ContestType, get_contest_type);
 %attributestring(pkmn::database::move_entry, std::string, ContestEffect, get_contest_effect);
 %attributestring(pkmn::database::move_entry, std::string, SuperContestEffect, get_super_contest_effect);
 

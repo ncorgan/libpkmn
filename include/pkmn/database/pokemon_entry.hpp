@@ -26,15 +26,6 @@
 
 namespace pkmn { namespace database {
 
-    /*
-     * We need this forward declaration to use the typedef
-     * in the class itself.
-     */
-    class pokemon_entry;
-
-    //! List of Pokémon entries.
-    typedef std::vector<pokemon_entry> pokemon_entries_t;
-
     /*!
      * @brief Class representing a database entry for a Pokémon.
      *
@@ -353,10 +344,10 @@ namespace pkmn { namespace database {
             std::vector<std::string> get_forms() const;
 
             /*!
-             * @brief Returns entries for all Pokémon this Pokémon can evolve
+             * @brief Returns a list of all Pokémon this Pokémon can evolve
              *        into in the game this entry corresponds to.
              */
-            pkmn::database::pokemon_entries_t get_evolutions() const;
+            std::vector<pkmn::e_species> get_evolutions() const;
 
             /*!
              * @brief Sets the Pokémon form this entry corresponds to.

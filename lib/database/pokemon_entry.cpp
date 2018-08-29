@@ -1121,9 +1121,9 @@ namespace pkmn { namespace database {
         return ret;
     }
 
-    pkmn::database::pokemon_entries_t pokemon_entry::get_evolutions() const
+    std::vector<pkmn::e_species> pokemon_entry::get_evolutions() const
     {
-        pkmn::database::pokemon_entries_t ret;
+        std::vector<pkmn::e_species> ret;
 
         if(!_none && !_invalid)
         {
@@ -1131,18 +1131,13 @@ namespace pkmn { namespace database {
                 "SELECT id FROM pokemon_species WHERE evolves_from_species_id=? "
                 "AND generation_id<=?";
 
-            const pkmn::e_game game = this->get_game();
-
             SQLite::Statement stmt(get_connection(), query);
             stmt.bind(1, _species_id);
             stmt.bind(2, _generation);
             while(stmt.executeStep())
             {
                 ret.emplace_back(
-                    pokemon_entry(
-                        static_cast<pkmn::e_species>(int(stmt.getColumn(0))),
-                        game, ""
-                    )
+                    static_cast<pkmn::e_species>(int(stmt.getColumn(0)))
                 );
             }
         }

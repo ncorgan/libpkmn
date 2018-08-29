@@ -97,7 +97,7 @@ class database_entry_test(unittest.TestCase):
         # Just make sure it works
         effect = entry.effect
 
-        self.assertEqual(entry.contest_type, "None")
+        self.assertEqual(entry.contest_type, pkmn.contest_stat.NONE)
         self.assertEqual(entry.contest_effect, "None")
         self.assertEqual(entry.super_contest_effect, "None")
 

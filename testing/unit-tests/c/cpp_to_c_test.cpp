@@ -750,33 +750,6 @@ TEST(cpp_to_c_test, move_slots_cpp_to_c_test)
     EXPECT_EQ(0, move_slots_c.length);
 }
 
-TEST(cpp_to_c_test, pokemon_entries_cpp_to_c_test)
-{
-    pkmn::database::pokemon_entries_t pokemon_entries_cpp =
-    {
-        pkmn::database::pokemon_entry(pkmn::e_species::CHARMANDER, pkmn::e_game::RED, ""),
-        pkmn::database::pokemon_entry(pkmn::e_species::TOTODILE, pkmn::e_game::GOLD, ""),
-        pkmn::database::pokemon_entry(pkmn::e_species::TREECKO, pkmn::e_game::RUBY, "")
-    };
-
-    struct pkmn_string_list string_list_c = { NULL, 0 };
-    pkmn::c::pokemon_entries_to_string_list(
-        pokemon_entries_cpp,
-        &string_list_c
-    );
-
-    EXPECT_EQ(3, string_list_c.length);
-    EXPECT_STREQ("Charmander", string_list_c.pp_strings[0]);
-    EXPECT_STREQ("Totodile", string_list_c.pp_strings[1]);
-    EXPECT_STREQ("Treecko", string_list_c.pp_strings[2]);
-
-    pkmn_string_list_free(
-        &string_list_c
-    );
-    EXPECT_EQ(NULL, string_list_c.pp_strings);
-    EXPECT_EQ(0, string_list_c.length);
-}
-
 TEST(cpp_to_c_test, pokemon_list_cpp_to_c)
 {
     pkmn::pokemon_list_t pokemon_list_cpp =

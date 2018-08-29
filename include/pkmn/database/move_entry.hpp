@@ -9,6 +9,7 @@
 
 #include <pkmn/config.hpp>
 
+#include <pkmn/enums/contest_stat.hpp>
 #include <pkmn/enums/game.hpp>
 #include <pkmn/enums/move.hpp>
 #include <pkmn/enums/move_damage_class.hpp>
@@ -206,13 +207,10 @@ namespace pkmn { namespace database {
             /*!
              * @brief Return the move's type when used in a Contest.
              *
-             * If this entry corresponds to a "None" move, or this move's game is Generation I-II
-             * or Gamecube, this function will return the string "None".
-             *
-             * If this entry corresponds to an invalid move, this function will
-             * return the string "Unknown".
+             * If this entry corresponds to a "None" or unknown move, or if this
+             * move's game is Generation I-II or Gamecube, this function will return None.
              */
-            std::string get_contest_type() const;
+            pkmn::e_contest_stat get_contest_type() const;
 
             /*!
              * @brief Return the move's effect when used in a Contest.

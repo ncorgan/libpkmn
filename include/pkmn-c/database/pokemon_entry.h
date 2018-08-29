@@ -48,7 +48,7 @@ struct pkmn_database_pokemon_entry
     struct pkmn_move_enum_list egg_moves;
     struct pkmn_move_enum_list tutor_moves;
     struct pkmn_string_list forms;
-    struct pkmn_string_list evolutions;
+    struct pkmn_species_enum_list evolutions;
 };
 
 #ifdef __cplusplus

@@ -35,7 +35,7 @@
 %attributeval(pkmn::database::pokemon_entry, %arg(std::vector<pkmn::e_move>), EggMoves, get_egg_moves);
 %attributeval(pkmn::database::pokemon_entry, %arg(std::vector<pkmn::e_move>), TutorMoves, get_tutor_moves);
 %attributeval(pkmn::database::pokemon_entry, %arg(std::vector<std::string>), Forms, get_forms);
-%attributeval(pkmn::database::pokemon_entry, %arg(std::vector<pkmn::database::pokemon_entry>), Evolutions, get_evolutions);
+%attributeval(pkmn::database::pokemon_entry, %arg(std::vector<pkmn::e_species>), Evolutions, get_evolutions);
 
 %ignore pkmn::database::pokemon_entry::get_species_id;
 %ignore pkmn::database::pokemon_entry::get_pokemon_id;

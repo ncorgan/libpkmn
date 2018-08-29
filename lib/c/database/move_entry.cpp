@@ -45,7 +45,6 @@ enum pkmn_error pkmn_database_move_entry_free(
     pkmn::c::free_pointer_and_set_to_null(&p_move_entry->p_name);
     pkmn::c::free_pointer_and_set_to_null(&p_move_entry->p_description);
     pkmn::c::free_pointer_and_set_to_null(&p_move_entry->p_effect);
-    pkmn::c::free_pointer_and_set_to_null(&p_move_entry->p_contest_type);
     pkmn::c::free_pointer_and_set_to_null(&p_move_entry->p_contest_effect);
     pkmn::c::free_pointer_and_set_to_null(&p_move_entry->p_super_contest_effect);
 

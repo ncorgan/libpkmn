@@ -142,33 +142,43 @@ TEST_P(pokemon_entry_evolutions_test, pokemon_entry_evolutions_test)
     pkmn::database::pokemon_entry eevee_entry(pkmn::e_species::EEVEE, GetParam(), "");
     int generation = pkmn::priv::game_enum_to_generation(eevee_entry.get_game());
 
-    pkmn::database::pokemon_entries_t evolutions = eevee_entry.get_evolutions();
+    std::vector<pkmn::e_species> evolutions = eevee_entry.get_evolutions();
     EXPECT_GE(evolutions.size(), 3);
 
-    EXPECT_EQ("Vaporeon", evolutions.at(0).get_species_name());
-    EXPECT_EQ("Jolteon", evolutions.at(1).get_species_name());
-    EXPECT_EQ("Flareon", evolutions.at(2).get_species_name());
+    EXPECT_EQ(pkmn::e_species::VAPOREON, evolutions.at(0));
+    EXPECT_EQ(pkmn::e_species::JOLTEON, evolutions.at(1));
+    EXPECT_EQ(pkmn::e_species::FLAREON, evolutions.at(2));
 
-    if(generation >= 2) {
-        EXPECT_EQ("Espeon", evolutions.at(3).get_species_name());
-        EXPECT_EQ("Umbreon", evolutions.at(4).get_species_name());
-    } else {
+    if(generation >= 2)
+    {
+        EXPECT_EQ(pkmn::e_species::ESPEON, evolutions.at(3));
+        EXPECT_EQ(pkmn::e_species::UMBREON, evolutions.at(4));
+    }
+    else
+    {
         EXPECT_EQ(3, evolutions.size());
         return;
     }
 
-    if(generation >= 4) {
-        EXPECT_EQ("Leafeon", evolutions.at(5).get_species_name());
-        EXPECT_EQ("Glaceon", evolutions.at(6).get_species_name());
-    } else {
+    if(generation >= 4)
+    {
+        EXPECT_EQ(pkmn::e_species::LEAFEON, evolutions.at(5));
+        EXPECT_EQ(pkmn::e_species::GLACEON, evolutions.at(6));
+    }
+    else
+    {
         EXPECT_EQ(5, evolutions.size());
         return;
     }
 
-    if(generation >= 6) {
-        EXPECT_EQ("Sylveon", evolutions.at(7).get_species_name());
-    } else {
+    if(generation >= 6)
+    {
+        EXPECT_EQ(pkmn::e_species::SYLVEON, evolutions.at(7));
+    }
+    else
+    {
         EXPECT_EQ(7, evolutions.size());
+        return;
     }
 }
 

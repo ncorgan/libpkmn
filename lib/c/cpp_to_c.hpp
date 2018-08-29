@@ -562,11 +562,6 @@ namespace pkmn { namespace c {
         struct pkmn_move_slots* p_move_slots_c_out
     );
 
-    void pokemon_entries_to_string_list(
-        const pkmn::database::pokemon_entries_t& pokemon_entries_cpp,
-        struct pkmn_string_list* p_string_list_c_out
-    );
-
     void item_entry_cpp_to_c(
         const pkmn::database::item_entry& item_entry_cpp,
         struct pkmn_database_item_entry* p_item_entry_c_out

@@ -130,7 +130,7 @@ static void assert_move_entry_uninitialized(
     }
     TEST_ASSERT_EQUAL_FLOAT(p_move_entry->accuracy, 0.0f);
     TEST_ASSERT_NULL(p_move_entry->p_effect);
-    TEST_ASSERT_NULL(p_move_entry->p_contest_type);
+    TEST_ASSERT_EQUAL(PKMN_CONTEST_STAT_NONE, p_move_entry->contest_type);
     TEST_ASSERT_NULL(p_move_entry->p_contest_effect);
     TEST_ASSERT_NULL(p_move_entry->p_super_contest_effect);
 }
@@ -150,7 +150,7 @@ static void move_entry_test()
         .pp = {0,0,0,0},
         .accuracy = 0.0f,
         .p_effect = NULL,
-        .p_contest_type = NULL,
+        .contest_type = PKMN_CONTEST_STAT_NONE,
         .p_contest_effect = NULL,
         .p_super_contest_effect = NULL
     };
@@ -206,7 +206,7 @@ static void move_entry_test()
     TEST_ASSERT_EQUAL(16, move_entry.pp[3]);
     TEST_ASSERT_EQUAL_FLOAT(0.85f, move_entry.accuracy);
     TEST_ASSERT_NOT_NULL(move_entry.p_effect);
-    TEST_ASSERT_EQUAL_STRING("None", move_entry.p_contest_type);
+    TEST_ASSERT_EQUAL(PKMN_CONTEST_STAT_NONE, move_entry.contest_type);
     TEST_ASSERT_EQUAL_STRING("None", move_entry.p_contest_effect);
     TEST_ASSERT_EQUAL_STRING("None", move_entry.p_super_contest_effect);
 
@@ -258,7 +258,7 @@ static void assert_pokemon_entry_uninitialized(
     TEST_ASSERT_EQUAL(p_pokemon_entry->tutor_moves.length, 0);
     TEST_ASSERT_NULL(p_pokemon_entry->forms.pp_strings);
     TEST_ASSERT_EQUAL(p_pokemon_entry->forms.length, 0);
-    TEST_ASSERT_NULL(p_pokemon_entry->evolutions.pp_strings);
+    TEST_ASSERT_NULL(p_pokemon_entry->evolutions.p_enums);
     TEST_ASSERT_EQUAL(p_pokemon_entry->evolutions.length, 0);
 }
 
@@ -326,7 +326,7 @@ static void pokemon_entry_test()
             .length = 0
         },
         .evolutions = {
-            .pp_strings = NULL,
+            .p_enums = NULL,
             .length = 0
         }
     };

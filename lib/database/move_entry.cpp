@@ -561,25 +561,20 @@ namespace pkmn { namespace database {
         return ret;
     }
 
-    std::string move_entry::get_contest_type() const {
-        std::string ret;
+    pkmn::e_contest_stat move_entry::get_contest_type() const
+    {
+        pkmn::e_contest_stat ret = pkmn::e_contest_stat::NONE;
 
-        // Contests started in Generation III
-        if(_none or _generation < 3 or game_is_gamecube(_game_id)) {
-            ret = "None";
-        } else if(_invalid) {
-            ret = "Unknown";
-        } else {
-            static BOOST_CONSTEXPR const char* query = \
-                "SELECT name FROM contest_type_names WHERE contest_type_id="
-                "(SELECT contest_type_id FROM moves WHERE id=?) "
-                "AND local_language_id=9";
+        if(!_none && !_invalid && (_generation >= 3) && !game_is_gamecube(_game_id))
+        {
+            int contest_stat_as_int = 0;
 
-            if(not pkmn::database::maybe_query_db_bind1<std::string, int>(
-                       query, ret, _move_id
+            static const std::string query = "SELECT contest_type_id FROM moves WHERE id=?";
+            if(pkmn::database::maybe_query_db_bind1<int, int>(
+                   query.c_str(), contest_stat_as_int, _move_id
                ))
             {
-                ret = "None";
+                ret = static_cast<pkmn::e_contest_stat>(contest_stat_as_int);
             }
         }
 

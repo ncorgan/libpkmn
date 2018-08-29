@@ -29,7 +29,7 @@ TEST_P(move_entry_none_test, move_entry_none_test)
     EXPECT_FLOAT_EQ(-1.0f, none_entry.get_accuracy());
     EXPECT_EQ(-9, none_entry.get_priority());
     EXPECT_EQ("None", none_entry.get_effect());
-    EXPECT_EQ("None", none_entry.get_contest_type());
+    EXPECT_EQ(pkmn::e_contest_stat::NONE, none_entry.get_contest_type());
     EXPECT_EQ("None", none_entry.get_contest_effect());
     EXPECT_EQ("None", none_entry.get_super_contest_effect());
 }
@@ -136,7 +136,7 @@ static void _move_entry_test(
     EXPECT_FLOAT_EQ(1.0f, move_entry_gen1.get_accuracy());
     EXPECT_EQ(0, move_entry_gen1.get_priority());
     (void)move_entry_gen1.get_effect();
-    EXPECT_EQ("None", move_entry_gen1.get_contest_type());
+    EXPECT_EQ(pkmn::e_contest_stat::NONE, move_entry_gen1.get_contest_type());
     EXPECT_EQ("None", move_entry_gen1.get_contest_effect());
     EXPECT_EQ("None", move_entry_gen1.get_super_contest_effect());
 
@@ -156,7 +156,7 @@ static void _move_entry_test(
     EXPECT_FLOAT_EQ(0.85f, move_entry_gen2.get_accuracy());
     EXPECT_EQ(0, move_entry_gen2.get_priority());
     (void)move_entry_gen2.get_effect();
-    EXPECT_EQ("None", move_entry_gen2.get_contest_type());
+    EXPECT_EQ(pkmn::e_contest_stat::NONE, move_entry_gen2.get_contest_type());
     EXPECT_EQ("None", move_entry_gen2.get_contest_effect());
     EXPECT_EQ("None", move_entry_gen2.get_super_contest_effect());
 
@@ -176,7 +176,7 @@ static void _move_entry_test(
     EXPECT_FLOAT_EQ(1.0f, move_entry_gba.get_accuracy());
     EXPECT_EQ(0, move_entry_gba.get_priority());
     (void)move_entry_gba.get_effect();
-    EXPECT_EQ("Tough", move_entry_gba.get_contest_type());
+    EXPECT_EQ(pkmn::e_contest_stat::TOUGH, move_entry_gba.get_contest_type());
     EXPECT_NE("None", move_entry_gba.get_contest_effect());
     EXPECT_EQ("None", move_entry_gba.get_super_contest_effect());
 
@@ -196,7 +196,7 @@ static void _move_entry_test(
     EXPECT_FLOAT_EQ(1.0f, move_entry_gcn.get_accuracy());
     EXPECT_EQ(0, move_entry_gcn.get_priority());
     (void)move_entry_gcn.get_effect();
-    EXPECT_EQ("None", move_entry_gcn.get_contest_type());
+    EXPECT_EQ(pkmn::e_contest_stat::NONE, move_entry_gcn.get_contest_type());
     EXPECT_EQ("None", move_entry_gcn.get_contest_effect());
     EXPECT_EQ("None", move_entry_gcn.get_super_contest_effect());
 
@@ -216,8 +216,8 @@ static void _move_entry_test(
     EXPECT_FLOAT_EQ(1.0f, move_entry_gen4.get_accuracy());
     EXPECT_EQ(1, move_entry_gen4.get_priority());
     (void)move_entry_gen4.get_effect();
-    EXPECT_EQ("Smart", move_entry_gen4.get_contest_type());
-    EXPECT_EQ( "None", move_entry_gen4.get_contest_effect());
+    EXPECT_EQ(pkmn::e_contest_stat::SMART, move_entry_gen4.get_contest_type());
+    EXPECT_EQ("None", move_entry_gen4.get_contest_effect());
     EXPECT_NE("None", move_entry_gen4.get_super_contest_effect());
 
     // Generation V entry
@@ -236,7 +236,7 @@ static void _move_entry_test(
     EXPECT_FLOAT_EQ(0.9f, move_entry_gen5.get_accuracy());
     EXPECT_EQ(-6, move_entry_gen5.get_priority());
     (void)move_entry_gen5.get_effect();
-    EXPECT_EQ("None", move_entry_gen5.get_contest_type());
+    EXPECT_EQ(pkmn::e_contest_stat::NONE, move_entry_gen5.get_contest_type());
     EXPECT_EQ("None", move_entry_gen5.get_contest_effect());
     EXPECT_EQ("None", move_entry_gen5.get_super_contest_effect());
 
@@ -256,7 +256,7 @@ static void _move_entry_test(
     EXPECT_FLOAT_EQ(1.0f, move_entry_gen6.get_accuracy());
     EXPECT_EQ(0, move_entry_gen6.get_priority());
     (void)move_entry_gen6.get_effect();
-    EXPECT_EQ("None", move_entry_gen6.get_contest_type());
+    EXPECT_EQ(pkmn::e_contest_stat::NONE, move_entry_gen6.get_contest_type());
     EXPECT_EQ("None", move_entry_gen6.get_contest_effect());
     EXPECT_EQ("None", move_entry_gen6.get_super_contest_effect());
 }

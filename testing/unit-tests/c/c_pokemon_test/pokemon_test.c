@@ -48,7 +48,7 @@ static const struct pkmn_database_move_entry empty_move_entry =
     .pp = {0},
     .accuracy = 0.0f,
     .p_effect = NULL,
-    .p_contest_type = NULL,
+    .contest_type = PKMN_CONTEST_STAT_NONE,
     .p_contest_effect = NULL,
     .p_super_contest_effect = NULL
 };
@@ -113,7 +113,7 @@ static const struct pkmn_database_pokemon_entry empty_pokemon_entry =
     },
     .evolutions =
     {
-        .pp_strings = NULL,
+        .p_enums = NULL,
         .length = 0
     }
 };

@@ -87,7 +87,7 @@ public class CSharpDatabaseEntryTest {
         // Just make sure it works
         string effect = moveEntry.Effect;
 
-        Assert.AreEqual(moveEntry.ContestType, "None");
+        Assert.AreEqual(moveEntry.ContestType, PKMN.ContestStat.NONE);
         Assert.AreEqual(moveEntry.ContestEffect, "None");
         Assert.AreEqual(moveEntry.SuperContestEffect, "None");
     }

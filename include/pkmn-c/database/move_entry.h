@@ -10,6 +10,7 @@
 #include <pkmn-c/config.h>
 #include <pkmn-c/error.h>
 
+#include <pkmn-c/enums/contest_stat.h>
 #include <pkmn-c/enums/game.h>
 #include <pkmn-c/enums/move.h>
 #include <pkmn-c/enums/move_damage_class.h>
@@ -31,7 +32,7 @@ struct pkmn_database_move_entry
     int pp[4];
     float accuracy;
     char* p_effect;
-    char* p_contest_type;
+    enum pkmn_contest_stat contest_type;
     char* p_contest_effect;
     char* p_super_contest_effect;
 };

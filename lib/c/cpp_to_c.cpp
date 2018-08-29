@@ -571,45 +571,6 @@ namespace pkmn { namespace c {
         *p_move_slots_c_out = std::move(temp_move_slots_c);
     }
 
-    void pokemon_entries_to_string_list(
-        const pkmn::database::pokemon_entries_t& pokemon_entries_cpp,
-        struct pkmn_string_list* p_string_list_c_out
-    )
-    {
-        BOOST_ASSERT(p_string_list_c_out != nullptr);
-
-        // Make all C++ calls and operate on a second struct until we
-        // know everything succeeds before changing any user output.
-        // If this fails, we'll leak, but it's small enough to not be
-        // a concern.
-        struct pkmn_string_list temp_string_list_c =
-        {
-            nullptr,                   // pp_strings
-            pokemon_entries_cpp.size() // length
-        };
-
-        if(temp_string_list_c.length > 0)
-        {
-            temp_string_list_c.pp_strings = (char**)std::calloc(
-                                                        pokemon_entries_cpp.size(),
-                                                        sizeof(char*)
-                                                    );
-            for(size_t entry_index = 0;
-                entry_index < temp_string_list_c.length;
-                ++entry_index)
-            {
-                string_cpp_to_c_alloc(
-                    pokemon_entries_cpp[entry_index].get_species_name(),
-                    &temp_string_list_c.pp_strings[entry_index]
-                );
-            }
-        }
-
-        // Everything succeeded, so move it into the pointer the caller
-        // provided.
-        *p_string_list_c_out = std::move(temp_string_list_c);
-    }
-
     void item_entry_cpp_to_c(
         const pkmn::database::item_entry& item_entry_cpp,
         struct pkmn_database_item_entry* p_item_entry_c_out
@@ -692,7 +653,7 @@ namespace pkmn { namespace c {
             {0},     // pp
             0.0f,    // accuracy
             nullptr, // p_effect
-            nullptr, // p_contest_type
+            PKMN_CONTEST_STAT_NONE, // contest_type
             nullptr, // p_contest_effect
             nullptr, // p_super_contest_effect
         };
@@ -710,10 +671,6 @@ namespace pkmn { namespace c {
             &temp_move_entry_c.p_effect
         );
         string_cpp_to_c_alloc(
-            move_entry_cpp.get_contest_type(),
-            &temp_move_entry_c.p_contest_type
-        );
-        string_cpp_to_c_alloc(
             move_entry_cpp.get_contest_effect(),
             &temp_move_entry_c.p_contest_effect
         );
@@ -725,6 +682,7 @@ namespace pkmn { namespace c {
         temp_move_entry_c.move = static_cast<enum pkmn_move>(move_entry_cpp.get_move());
         temp_move_entry_c.game = static_cast<enum pkmn_game>(move_entry_cpp.get_game());
         temp_move_entry_c.type = static_cast<enum pkmn_type>(move_entry_cpp.get_type());
+        temp_move_entry_c.contest_type = static_cast<enum pkmn_contest_stat>(move_entry_cpp.get_contest_type());
         temp_move_entry_c.target = static_cast<enum pkmn_move_target>(move_entry_cpp.get_target());
         temp_move_entry_c.damage_class = static_cast<enum pkmn_move_damage_class>(move_entry_cpp.get_damage_class());
 
@@ -815,7 +773,7 @@ namespace pkmn { namespace c {
             },
             // evolutions
             {
-                nullptr, // pp_strings
+                nullptr, // p_enums
                 0ULL     // length
             },
         };
@@ -892,7 +850,7 @@ namespace pkmn { namespace c {
             pokemon_entry_cpp.get_forms(),
             &temp_pokemon_entry_c.forms
         );
-        pokemon_entries_to_string_list(
+        species_enum_list_cpp_to_c(
             pokemon_entry_cpp.get_evolutions(),
             &temp_pokemon_entry_c.evolutions
         );

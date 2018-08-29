@@ -168,7 +168,7 @@ enum pkmn_error pkmn_database_pokemon_entry_free(
     pkmn_move_enum_list_free(&p_pokemon_entry->egg_moves);
     pkmn_move_enum_list_free(&p_pokemon_entry->tutor_moves);
     pkmn_string_list_free(&p_pokemon_entry->forms);
-    pkmn_string_list_free(&p_pokemon_entry->evolutions);
+    pkmn_species_enum_list_free(&p_pokemon_entry->evolutions);
 
     pkmn_levelup_moves_free(&p_pokemon_entry->levelup_moves);
 

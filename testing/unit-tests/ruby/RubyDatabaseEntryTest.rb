@@ -96,7 +96,7 @@ class RubyDatabaseEntryTest < Test::Unit::TestCase
         # Just make sure it works
         entry.effect
 
-        assert_equal("None", entry.contest_type)
+        assert_equal(PKMN::ContestStat::NONE, entry.contest_type)
         assert_equal("None", entry.contest_effect)
         assert_equal("None", entry.super_contest_effect)
     end
