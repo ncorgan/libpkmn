@@ -65,7 +65,10 @@ namespace pkmn { namespace database {
         }
         else
         {
-            throw std::invalid_argument("Invalid game.");
+            std::string error_message = "Invalid game: ";
+            error_message += std::to_string(static_cast<int>(game));
+
+            throw std::invalid_argument(error_message);
         }
 
         return game_id;

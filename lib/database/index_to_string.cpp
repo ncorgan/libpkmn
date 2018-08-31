@@ -218,15 +218,23 @@ namespace pkmn { namespace database {
     }
 
     std::string nature_index_to_name(
-        int nature_index
+        int nature_index,
+        bool increment_error_message
     )
     {
         static BOOST_CONSTEXPR const char* query =
             "SELECT name FROM nature_names WHERE local_language_id=9 "
             "AND nature_id=(SELECT id FROM natures WHERE game_index=?)";
 
+        std::string error_message = "Invalid nature: ";
+        error_message += std::to_string(
+            increment_error_message ? (nature_index + 1) : nature_index
+        );
+
         return pkmn::database::query_db_bind1<std::string, int>(
-                   query, nature_index
+                   query,
+                   nature_index,
+                   error_message
                );
     }
 
@@ -242,7 +250,9 @@ namespace pkmn { namespace database {
         error_message += nature_name;
 
         return pkmn::database::query_db_bind1<int, const std::string&>(
-                   query, nature_name
+                   query,
+                   nature_name,
+                   error_message
                );
     }
 

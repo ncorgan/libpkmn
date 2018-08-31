@@ -231,8 +231,13 @@ namespace pkmn { namespace database {
             "SELECT name FROM item_names WHERE item_id=? AND "
             "local_language_id=9";
 
+        std::string error_message = "Invalid item: ";
+        error_message += std::to_string(item_id);
+
         return pkmn::database::query_db_bind1<std::string, int>(
-                   main_query, item_id
+                   main_query,
+                   item_id,
+                   error_message
                );
     }
 
@@ -362,8 +367,13 @@ namespace pkmn { namespace database {
             "SELECT name FROM move_names WHERE move_id=? AND "
             "local_language_id=9";
 
+        std::string error_message = "Invalid move: ";
+        error_message += std::to_string(move_id);
+
         return pkmn::database::query_db_bind1<std::string, int>(
-                   main_query, move_id
+                   main_query,
+                   move_id,
+                   error_message
                );
     }
 
@@ -437,7 +447,7 @@ namespace pkmn { namespace database {
         return pkmn::database::query_db_bind1<int, const std::string&>(
                    query.c_str(),
                    nature_name,
-                   query
+                   error_message
                );
     }
 

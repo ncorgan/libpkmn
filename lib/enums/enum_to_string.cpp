@@ -387,27 +387,48 @@ namespace pkmn {
 
     std::string move_target_to_string(pkmn::e_move_target move_target)
     {
-        static const std::string query =
-            "SELECT name FROM move_target_prose WHERE move_target_id=? AND "
-            "local_language_id=9";
+        std::string ret = "None";
 
-        return pkmn::database::query_db_bind1<std::string, int>(
-                   query.c_str(),
-                   static_cast<int>(move_target)
-               );
+        if(move_target != pkmn::e_move_target::NONE)
+        {
+            static const std::string query =
+                "SELECT name FROM move_target_prose WHERE move_target_id=? AND "
+                "local_language_id=9";
+
+            std::string error_message = "Invalid move target: ";
+            error_message += std::to_string(static_cast<int>(move_target));
+
+            ret = pkmn::database::query_db_bind1<std::string, int>(
+                      query.c_str(),
+                      static_cast<int>(move_target),
+                      error_message
+                  );
+        }
+
+        return ret;
     }
 
     pkmn::e_move_target string_to_move_target(const std::string& move_target_name)
     {
-        static const std::string query =
-            "SELECT move_target_id FOM move_target_prose WHERE name=?";
+        pkmn::e_move_target ret = pkmn::e_move_target::NONE;
 
-        return static_cast<pkmn::e_move_target>(
-                   pkmn::database::query_db_bind1<int, const std::string&>(
-                       query.c_str(),
-                       move_target_name
-                   )
-               );
+        if(move_target_name != "None")
+        {
+            static const std::string query =
+                "SELECT move_target_id FROM move_target_prose WHERE name=?";
+
+            std::string error_message = "Invalid move target: " + move_target_name;
+
+            ret = static_cast<pkmn::e_move_target>(
+                      pkmn::database::query_db_bind1<int, const std::string&>(
+                          query.c_str(),
+                          move_target_name,
+                          error_message
+                      )
+                  );
+        }
+
+        return ret;
     }
 
     std::string move_to_string(pkmn::e_move move)
@@ -435,16 +456,31 @@ namespace pkmn {
 
     std::string nature_to_string(pkmn::e_nature nature)
     {
-        return pkmn::database::nature_index_to_name(
-                   static_cast<int>(nature)-1
-               );
+        std::string ret = "None";
+
+        if(nature != pkmn::e_nature::NONE)
+        {
+            ret = pkmn::database::nature_index_to_name(
+                      static_cast<int>(nature)-1,
+                      true /*increment_error_message*/
+                  );
+        }
+
+        return ret;
     }
 
     pkmn::e_nature string_to_nature(const std::string& nature_name)
     {
-        return static_cast<pkmn::e_nature>(
-                   pkmn::database::nature_name_to_index(nature_name)+1
-               );
+        pkmn::e_nature ret = pkmn::e_nature::NONE;
+
+        if(nature_name != "None")
+        {
+            ret = static_cast<pkmn::e_nature>(
+                      pkmn::database::nature_name_to_index(nature_name)+1
+                  );
+        }
+
+        return ret;
     }
 
     std::string species_to_string(pkmn::e_species species)

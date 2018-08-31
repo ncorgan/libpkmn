@@ -217,9 +217,11 @@ TEST(cpp_enum_test, test_item_enum)
     static const std::vector<std::pair<pkmn::e_item, pkmn::e_item>> ITEM_ENUM_GROUPS =
     {
         {pkmn::e_item::NONE,         pkmn::e_item::GRAM_3},
-        {pkmn::e_item::DRAGON_GEM,   pkmn::e_item::TM100},
-        {pkmn::e_item::GOLD_BERRY,   pkmn::e_item::MEGA_CUFF},
-        {pkmn::e_item::SMALL_TABLET, pkmn::e_item::BATTLE_CD_60}
+        {pkmn::e_item::DRAGON_GEM,   pkmn::e_item::DNA_SPLICERS},
+        {pkmn::e_item::PERMIT,       pkmn::e_item::DROPPED_ITEM},
+        {pkmn::e_item::REVEAL_GLASS, pkmn::e_item::TM100},
+        {pkmn::e_item::BERRY,        pkmn::e_item::MEGA_CUFF},
+        {pkmn::e_item::JAIL_KEY,     pkmn::e_item::BATTLE_CD_60}
     };
     for(const std::pair<pkmn::e_item, pkmn::e_item>& item_enum_group: ITEM_ENUM_GROUPS)
     {
