@@ -83,8 +83,16 @@ static const struct pkmn_database_pokemon_entry empty_pokemon_entry =
         .first = PKMN_EGG_GROUP_NONE,
         .second = PKMN_EGG_GROUP_NONE
     },
-    .base_stats = {0},
-    .EV_yields = {0},
+    .base_stats =
+    {
+        .p_values = NULL,
+        .length = 0
+    },
+    .EV_yields =
+    {
+        .p_values = NULL,
+        .length = 0
+    },
     .experience_yield = 0,
     .levelup_moves =
     {

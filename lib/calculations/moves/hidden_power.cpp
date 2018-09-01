@@ -77,9 +77,9 @@ namespace pkmn { namespace calculations {
         uint8_t d, uint8_t e, uint8_t f
     )
     {
-         return static_cast<pkmn::e_type>(
+         return static_cast<pkmn::e_type>(static_cast<int>(
                     (std::floor<int>(((a + (b<<1) + (c<<2) + (d<<3) + (e<<4) + (f<<5)) * 15) / 63)) + 2
-                );
+                ));
     }
 
     inline int modern_hidden_power_base_power(
