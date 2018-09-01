@@ -138,7 +138,8 @@ TEST_P(conversions_test, conversions_test)
             held_item = items[size_rng.rand(0, items.size()-1)];
         }
         while(!pkmn::database::item_entry(held_item, params.origin_game).holdable() ||
-              (held_item == pkmn::e_item::JOY_SCENT) || (held_item == pkmn::e_item::VIVID_SCENT));
+              (held_item == pkmn::e_item::JOY_SCENT) || (held_item == pkmn::e_item::VIVID_SCENT) ||
+              (held_item == pkmn::e_item::EXCITE_SCENT));
 
         first_pokemon->set_held_item(held_item);
     }
