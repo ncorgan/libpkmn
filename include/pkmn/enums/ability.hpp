@@ -42,7 +42,7 @@ namespace pkmn
         WONDER_GUARD = 25,
         LEVITATE = 26,
         EFFECT_SPORE = 27,
-        SYNCHRONIZE = 28,
+        SYNCHRONIZE_ABILITY = 28,
         CLEAR_BODY = 29,
         NATURAL_CURE = 30,
         LIGHTNING_ROD = 31,

@@ -20,8 +20,9 @@ PKMN_CSHARP_INIT
  * enums. For convenience, the enums will be here as well.
  */
 
-%include <pkmn/enums/stat.hpp>
+%rename(SYNCHRONIZE) SYNCHRONIZE_ABILITY;
 %include <pkmn/enums/ability.hpp>
+
 %include <pkmn/enums/ball.hpp>
 %include <pkmn/enums/condition.hpp>
 %include <pkmn/enums/contest_stat.hpp>

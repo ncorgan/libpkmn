@@ -23,7 +23,7 @@ def get_abilities(c):
     abilities = ["NONE = 0"]
 
     for db_response in db_responses:
-        abilities += ["{0} = {1}".format(str(db_response[1]).replace("-","_").replace(" ","_").upper(), db_response[0])]
+        abilities += ["{0} = {1}".format(str(db_response[1]).replace("-","_").replace(" ","_").upper().replace("SYNCHRONIZE","SYNCHRONIZE_ABILITY"), db_response[0])]
 
     return abilities
 
