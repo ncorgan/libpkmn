@@ -120,6 +120,21 @@ typedef pkmn_c_internal_class_t<pkmn::pokemon_pc> pkmn_pokemon_pc_internal_t;
 
 namespace pkmn { namespace c {
 
+    template <typename value_type>
+    void set_to_value_for_invalid_enum(
+        value_type* p_value
+    )
+    {
+        BOOST_ASSERT(p_value != nullptr);
+
+        *p_value = static_cast<value_type>(-1);
+    }
+
+    template <>
+    void set_to_value_for_invalid_enum<bool>(
+        bool* p_value
+    );
+
     // Calls to initialize internal representations.
     void init_daycare(
         const pkmn::daycare::sptr& daycare_cpp,
@@ -293,14 +308,9 @@ namespace pkmn { namespace c {
                 value_index < p_c_struct_out->length;
                 ++value_index)
             {
-                if(std::is_same<map_value_type, bool>::value)
-                {
-                    p_c_struct_out->p_values[value_index] = false;
-                }
-                else
-                {
-                    p_c_struct_out->p_values[value_index] = -1;
-                }
+                set_to_value_for_invalid_enum<map_value_type>(
+                    &p_c_struct_out->p_values[value_index]
+                );
             }
 
             for(const auto& map_iter: cpp_enum_map)
@@ -694,14 +704,9 @@ namespace pkmn { namespace c {
             }
             else
             {
-                if(std::is_same<bool, buffer_type>::value)
-                {
-                    p_values_buffer_out[value] = false;
-                }
-                else
-                {
-                    p_values_buffer_out[value] = buffer_type(-1);
-                }
+                set_to_value_for_invalid_enum<buffer_type>(
+                    &p_values_buffer_out[value]
+                );
             }
         }
 

@@ -338,7 +338,17 @@ namespace pkmn { namespace c {
         *p_game_save_c_out = std::move(temp_game_save_c);
     }
 
-    // Helper classes
+    // Helper functions
+
+    template <>
+    void set_to_value_for_invalid_enum<bool>(
+        bool* p_value
+    )
+    {
+        BOOST_ASSERT(p_value != nullptr);
+
+        *p_value = false;
+    }
 
     void string_cpp_to_c(
         const std::string& string_cpp,
