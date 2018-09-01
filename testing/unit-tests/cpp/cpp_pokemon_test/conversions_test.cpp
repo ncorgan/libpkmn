@@ -92,7 +92,7 @@ TEST_P(conversions_test, conversions_test)
     std::vector<pkmn::e_item> items = pkmn::database::get_item_list(game_for_lists);
     std::vector<pkmn::e_move> moves = pkmn::database::get_move_list(game_for_lists);
 
-    for(size_t move_index = 0; move_index < 4; ++move_index)
+    for(int move_index = 0; move_index < 4; ++move_index)
     {
         pkmn::e_move move = pkmn::e_move::NONE;
         do
