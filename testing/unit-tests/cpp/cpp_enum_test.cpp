@@ -119,6 +119,8 @@ static void test_enum_string_conversions(
         expected_error_message += ": ";
         expected_error_message += invalid_string;
 
+        EXPECT_EQ(expected_error_message, e.what());
+
     }
     catch(...)
     {
