@@ -22,6 +22,9 @@ INCLUDE_DIRECTORIES(
 
 # Build our custom GTest main function.
 ADD_LIBRARY(pkmn_gtest_main STATIC pkmn_gtest_main.cpp)
+SET_SOURCE_FILES_PROPERTIES(pkmn_gtest_main.cpp
+    PROPERTIES COMPILE_FLAGS "${PKMN_CXX_FLAGS}"
+)
 TARGET_LINK_LIBRARIES(pkmn_gtest_main
     gtest
     pkmn

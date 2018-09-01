@@ -163,12 +163,14 @@ namespace pkmn {
 
     std::string condition_to_string(pkmn::e_condition condition)
     {
+        std::string ret;
+
         static const condition_bimap_t& CONDITION_BIMAP = get_condition_bimap();
 
         auto condition_iter = CONDITION_BIMAP.right.find(condition);
         if(condition_iter != CONDITION_BIMAP.right.end())
         {
-            return condition_iter->second;
+            ret = condition_iter->second;
         }
         else
         {
@@ -176,32 +178,40 @@ namespace pkmn {
                                             + std::to_string(static_cast<int>(condition));
             throw std::invalid_argument(error_message);
         }
+
+        return ret;
     }
 
     pkmn::e_condition string_to_condition(const std::string& condition_name)
     {
+        pkmn::e_condition ret = pkmn::e_condition::NONE;
+
         static const condition_bimap_t& CONDITION_BIMAP = get_condition_bimap();
 
         auto condition_name_iter = CONDITION_BIMAP.left.find(condition_name);
         if(condition_name_iter != CONDITION_BIMAP.left.end())
         {
-            return condition_name_iter->second;
+            ret = condition_name_iter->second;
         }
         else
         {
             const std::string error_message = "Invalid condition: " + condition_name;
             throw std::invalid_argument(error_message);
         }
+
+        return ret;
     }
 
     std::string contest_stat_to_string(pkmn::e_contest_stat contest_stat)
     {
+        std::string ret;
+
         static const contest_stat_bimap_t& CONTEST_STAT_BIMAP = get_contest_stat_bimap();
 
         auto contest_stat_iter = CONTEST_STAT_BIMAP.right.find(contest_stat);
         if(contest_stat_iter != CONTEST_STAT_BIMAP.right.end())
         {
-            return contest_stat_iter->second;
+            ret = contest_stat_iter->second;
         }
         else
         {
@@ -209,22 +219,28 @@ namespace pkmn {
                                             + std::to_string(static_cast<int>(contest_stat));
             throw std::invalid_argument(error_message);
         }
+
+        return ret;
     }
 
     pkmn::e_contest_stat string_to_contest_stat(const std::string& contest_stat_name)
     {
+        pkmn::e_contest_stat ret = pkmn::e_contest_stat::NONE;
+
         static const contest_stat_bimap_t& CONTEST_STAT_BIMAP = get_contest_stat_bimap();
 
         auto contest_stat_name_iter = CONTEST_STAT_BIMAP.left.find(contest_stat_name);
         if(contest_stat_name_iter != CONTEST_STAT_BIMAP.left.end())
         {
-            return contest_stat_name_iter->second;
+            ret = contest_stat_name_iter->second;
         }
         else
         {
             const std::string error_message = "Invalid contest_stat: " + contest_stat_name;
             throw std::invalid_argument(error_message);
         }
+
+        return ret;
     }
 
     std::string egg_group_to_string(pkmn::e_egg_group egg_group)
@@ -255,12 +271,14 @@ namespace pkmn {
 
     std::string gender_to_string(pkmn::e_gender gender)
     {
+        std::string ret;
+
         static const gender_bimap_t& GENDER_BIMAP = get_gender_bimap();
 
         auto gender_iter = GENDER_BIMAP.right.find(gender);
         if(gender_iter != GENDER_BIMAP.right.end())
         {
-            return gender_iter->second;
+            ret = gender_iter->second;
         }
         else
         {
@@ -268,22 +286,28 @@ namespace pkmn {
                                             + std::to_string(static_cast<int>(gender));
             throw std::invalid_argument(error_message);
         }
+
+        return ret;
     }
 
     pkmn::e_gender string_to_gender(const std::string& gender_name)
     {
+        pkmn::e_gender ret = pkmn::e_gender::NONE;
+
         static const gender_bimap_t& GENDER_BIMAP = get_gender_bimap();
 
         auto gender_name_iter = GENDER_BIMAP.left.find(gender_name);
         if(gender_name_iter != GENDER_BIMAP.left.end())
         {
-            return gender_name_iter->second;
+            ret = gender_name_iter->second;
         }
         else
         {
             const std::string error_message = "Invalid gender: " + gender_name;
             throw std::invalid_argument(error_message);
         }
+
+        return ret;
     }
 
     std::string item_to_string(pkmn::e_item item)
@@ -317,12 +341,14 @@ namespace pkmn {
 
     std::string language_to_string(pkmn::e_language language)
     {
+        std::string ret;
+
         static const language_bimap_t& LANGUAGE_BIMAP = get_language_bimap();
 
         auto language_iter = LANGUAGE_BIMAP.right.find(language);
         if(language_iter != LANGUAGE_BIMAP.right.end())
         {
-            return language_iter->second;
+            ret = language_iter->second;
         }
         else
         {
@@ -330,34 +356,42 @@ namespace pkmn {
                                             + std::to_string(static_cast<int>(language));
             throw std::invalid_argument(error_message);
         }
+
+        return ret;
     }
 
     pkmn::e_language string_to_language(const std::string& language_name)
     {
+        pkmn::e_language ret = pkmn::e_language::NONE;
+
         static const language_bimap_t& LANGUAGE_BIMAP = get_language_bimap();
 
         auto language_name_iter = LANGUAGE_BIMAP.left.find(language_name);
         if(language_name_iter != LANGUAGE_BIMAP.left.end())
         {
-            return language_name_iter->second;
+            ret = language_name_iter->second;
         }
         else
         {
             const std::string error_message = "Invalid language: " + language_name;
             throw std::invalid_argument(error_message);
         }
+
+        return ret;
     }
 
     std::string move_damage_class_to_string(
         pkmn::e_move_damage_class move_damage_class
     )
     {
+        std::string ret;
+
         static const move_damage_class_bimap_t& MOVE_DAMAGE_CLASS_BIMAP = get_move_damage_class_bimap();
 
         auto move_damage_class_iter = MOVE_DAMAGE_CLASS_BIMAP.right.find(move_damage_class);
         if(move_damage_class_iter != MOVE_DAMAGE_CLASS_BIMAP.right.end())
         {
-            return move_damage_class_iter->second;
+            ret = move_damage_class_iter->second;
         }
         else
         {
@@ -365,24 +399,30 @@ namespace pkmn {
                                             + std::to_string(static_cast<int>(move_damage_class));
             throw std::invalid_argument(error_message);
         }
+
+        return ret;
     }
 
     pkmn::e_move_damage_class string_to_move_damage_class(
         const std::string& move_damage_class_name
     )
     {
+        pkmn::e_move_damage_class ret = pkmn::e_move_damage_class::NONE;
+
         static const move_damage_class_bimap_t& MOVE_DAMAGE_CLASS_BIMAP = get_move_damage_class_bimap();
 
         auto move_damage_class_name_iter = MOVE_DAMAGE_CLASS_BIMAP.left.find(move_damage_class_name);
         if(move_damage_class_name_iter != MOVE_DAMAGE_CLASS_BIMAP.left.end())
         {
-            return move_damage_class_name_iter->second;
+            ret = move_damage_class_name_iter->second;
         }
         else
         {
             const std::string error_message = "Invalid move damage class: " + move_damage_class_name;
             throw std::invalid_argument(error_message);
         }
+
+        return ret;
     }
 
     std::string move_target_to_string(pkmn::e_move_target move_target)
@@ -499,12 +539,14 @@ namespace pkmn {
 
     std::string stat_to_string(pkmn::e_stat stat)
     {
+        std::string ret;
+
         static const stat_bimap_t& STAT_BIMAP = get_stat_bimap();
 
         auto stat_iter = STAT_BIMAP.right.find(stat);
         if(stat_iter != STAT_BIMAP.right.end())
         {
-            return stat_iter->second;
+            ret = stat_iter->second;
         }
         else
         {
@@ -512,22 +554,28 @@ namespace pkmn {
                                             + std::to_string(static_cast<int>(stat));
             throw std::invalid_argument(error_message);
         }
+
+        return ret;
     }
 
     pkmn::e_stat string_to_stat(const std::string& stat_name)
     {
+        pkmn::e_stat ret = pkmn::e_stat::NONE;
+
         static const stat_bimap_t& STAT_BIMAP = get_stat_bimap();
 
         auto stat_name_iter = STAT_BIMAP.left.find(stat_name);
         if(stat_name_iter != STAT_BIMAP.left.end())
         {
-            return stat_name_iter->second;
+            ret = stat_name_iter->second;
         }
         else
         {
             const std::string error_message = "Invalid stat: " + stat_name;
             throw std::invalid_argument(error_message);
         }
+
+        return ret;
     }
 
     std::string type_to_string(pkmn::e_type type)

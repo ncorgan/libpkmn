@@ -490,6 +490,9 @@ TEST(cpp_to_c_test, enum_list_cpp_to_c_test)
     EXPECT_EQ(C_ENUM_VALUE2, c_enum_list.p_enums[0]);
     EXPECT_EQ(C_ENUM_VALUE1, c_enum_list.p_enums[1]);
     EXPECT_EQ(C_ENUM_VALUE3, c_enum_list.p_enums[2]);
+
+    std::free(c_enum_list.p_enums);
+    c_enum_list.length = 0;
 }
 
 struct c_test_enum_map
@@ -527,6 +530,9 @@ TEST(cpp_to_c_test, enum_map_cpp_to_c)
         cpp_enum_map.at(cpp_enum::VALUE3),
         c_enum_map.p_values[C_ENUM_VALUE3]
     );
+
+    std::free(c_enum_map.p_values);
+    c_enum_map.length = 0;
 }
 
 TEST(cpp_to_c_test, hidden_power_cpp_to_c_test)
