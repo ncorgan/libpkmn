@@ -84,7 +84,7 @@ INCLUDE(PKMNPlatform)
 ########################################################################
 # Find other dependencies
 ########################################################################
-FIND_PACKAGE(SWIG)
+FIND_PACKAGE(SWIG 3.0)
 FIND_PACKAGE(CSharp)
 FIND_PACKAGE(Lua 5.1)
 FIND_PACKAGE(PythonInterp 2)
@@ -96,13 +96,6 @@ FIND_PACKAGE(Ruby)
 ########################################################################
 
 INCLUDE(VersionMacros)
-
-# Lua: fix some errors
-# See https://github.com/swig/swig/issues/92
-COMPARE_VERSION_STR(swig_check ${SWIG_VERSION} "2.0.12")
-IF(swig_check GREATER -1)
-    SET(SWIG_VERSION_CHECK_LUA TRUE)
-ENDIF()
 
 # Python: Python 2 requires support for a specific macro
 IF("${PYTHONLIBS_VERSION_STRING}" STRLESS "3.0.0")
@@ -173,7 +166,7 @@ PKMN_REGISTER_COMPONENT("C API"            PKMN_ENABLE_C ON "PKMN_ENABLE_CORELIB
 PKMN_REGISTER_COMPONENT("C# API"           PKMN_ENABLE_CSHARP  ON
     "PKMN_ENABLE_CORELIB;SWIG_FOUND;CSHARP_FOUND;PYTHONINTERP_FOUND;PYTHON_MODULES_FOUND" OFF)
 PKMN_REGISTER_COMPONENT("Lua API"          PKMN_ENABLE_LUA  ON
-    "PKMN_ENABLE_CORELIB;SWIG_FOUND;SWIG_VERSION_CHECK_LUA;LUA_FOUND;PYTHON_MODULES_FOUND" OFF)
+    "PKMN_ENABLE_CORELIB;SWIG_FOUND;LUA_FOUND;PYTHON_MODULES_FOUND" OFF)
 PKMN_REGISTER_COMPONENT("Python API"       PKMN_ENABLE_PYTHON  ON
     "PKMN_ENABLE_CORELIB;SWIG_FOUND;SWIG_VERSION_CHECK_PYTHON;PYTHONINTERP_FOUND;PYTHONLIBS_FOUND;PYTHON_MODULES_FOUND" OFF)
 PKMN_REGISTER_COMPONENT("Ruby API"         PKMN_ENABLE_RUBY  OFF

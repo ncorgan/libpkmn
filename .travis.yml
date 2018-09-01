@@ -5,12 +5,19 @@ dist: trusty
 matrix:
   include:
     - compiler: gcc
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+            - sourceline: 'ppa:rosmo/swig3.0.7'
+          packages:
+            - swig3.0
       env:
         - CC=gcc
         - CXX=g++
         - DESIRED_QT_VERSION=4
         - PYTHON_VERSION=2
-        - SWIG_VERSION=2
+        - SWIG_VERSION=3
     - compiler: gcc
       addons:
         apt:
@@ -64,12 +71,19 @@ matrix:
         - SWIG_VERSION=3
     # Default/older Clang, dependencies
     - compiler: clang
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+            - sourceline: 'ppa:rosmo/swig3.0.7'
+          packages:
+            - swig3.0
       env:
         - CC=clang
         - CXX=clang++
         - DESIRED_QT_VERSION=4
         - PYTHON_VERSION=2
-        - SWIG_VERSION=2
+        - SWIG_VERSION=3
     - compiler: clang
       addons:
         apt:

@@ -42,10 +42,9 @@ Build Dependencies
 * SWIG wrappers
   * Common dependencies
     * [SWIG](http://swig.org/)
-      * Lua support: 2.0.12+
       * Python 2 support: 3.0.8+
       * Ruby support: 3.0.3+
-      * Others: 2.0.11+
+      * Others: 3.0.0+
     * [CppHeaderParser](https://pypi.python.org/pypi/CppHeaderParser/)
     * [PLY](https://pypi.python.org/pypi/ply)
   * C# ([.NET](https://www.microsoft.com/net)/[Mono](http://www.mono-project.com/))
@@ -102,4 +101,4 @@ Acknowledgments
 
 This software is in no way affiliated with or endorsed by Nintendo, Creatures Inc. or Game Freak Inc, and is created for solely recreational and non-profit use. Pokémon © 2002- Pokémon. © 1995- Nintendo/Creatures Inc./GAME FREAK inc. TM, ® and Pokémon character names are trademarks of Nintendo.
 
-README last updated: 2018/06/03
+README last updated: 2018/08/31
