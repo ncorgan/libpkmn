@@ -85,7 +85,7 @@ def get_items(c):
         item_name = str(unidecode(db_response[1])).upper()
 
         tokens_to_replace_with_underscore = ["-","(",")"," "]
-        tokens_to_remove = [".","'"]
+        tokens_to_remove = [".","'",","]
 
         # Is there a nice way to do this that works in both Python 2+3?
         for token in tokens_to_replace_with_underscore:
@@ -93,8 +93,8 @@ def get_items(c):
         for token in tokens_to_remove:
             item_name = item_name.replace(token, "")
 
-        if item_name == "DNA_SAMPLE":
-            item_name += "_{0}".format(dna_sample_num)
+        if "DNA_SAMPLE" in item_name:
+            item_name = "DNA_SAMPLE_{0}".format(dna_sample_num)
             dna_sample_num += 1
 
         items += ["{0} = {1}".format(item_name, db_response[0])]
