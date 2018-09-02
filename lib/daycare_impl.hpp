@@ -31,10 +31,20 @@ namespace pkmn {
                 int index
             ) final;
 
+            void set_levelup_pokemon(
+                int index,
+                const pkmn::pokemon::sptr& new_pokemon
+            ) final;
+
             const pkmn::pokemon_list_t& get_levelup_pokemon_as_vector() final;
 
             const pkmn::pokemon::sptr& get_breeding_pokemon(
                 int index
+            ) final;
+
+            void set_breeding_pokemon(
+                int index,
+                const pkmn::pokemon::sptr& new_pokemon
             ) final;
 
             const pkmn::pokemon_list_t& get_breeding_pokemon_as_vector() final;
@@ -55,6 +65,16 @@ namespace pkmn {
 
             void* _p_native;
             bool _is_our_mem;
+
+            virtual void _set_levelup_pokemon(
+                int position,
+                const pkmn::pokemon::sptr& new_pokemon
+            ) = 0;
+
+            virtual void _set_breeding_pokemon(
+                int position,
+                const pkmn::pokemon::sptr& new_pokemon
+            ) = 0;
 
             pkmn::pokemon_list_t& _get_levelup_pokemon_ref();
 

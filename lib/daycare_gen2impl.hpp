@@ -19,19 +19,9 @@ namespace pkmn {
             daycare_gen2impl(int game_id, void* p_native = nullptr);
             ~daycare_gen2impl();
 
-            void set_levelup_pokemon(
-                int position,
-                const pkmn::pokemon::sptr& new_pokemon
-            ) final;
-
             int get_levelup_pokemon_capacity() final;
 
             bool can_breed_pokemon() final;
-
-            void set_breeding_pokemon(
-                int position,
-                const pkmn::pokemon::sptr& new_pokemon
-            ) final;
 
             int get_breeding_pokemon_capacity() final;
 
@@ -44,6 +34,17 @@ namespace pkmn {
             BOOST_STATIC_CONSTEXPR int  LEVELUP_CAPACITY = 2;
             BOOST_STATIC_CONSTEXPR int  BREEDING_CAPACITY = 2;
             BOOST_STATIC_CONSTEXPR bool CAN_BREED_POKEMON = true;
+
+        private:
+            void _set_levelup_pokemon(
+                int position,
+                const pkmn::pokemon::sptr& new_pokemon
+            ) final;
+
+            void _set_breeding_pokemon(
+                int position,
+                const pkmn::pokemon::sptr& new_pokemon
+            ) final;
     };
 }
 

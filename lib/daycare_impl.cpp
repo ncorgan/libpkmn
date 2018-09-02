@@ -16,6 +16,9 @@
 #include "database/enum_conversions.hpp"
 #include "database/id_to_string.hpp"
 
+#include "polymorphism/is_libpkmn_impl.hpp"
+#include "polymorphism/pokemon.hpp"
+
 #include <boost/assert.hpp>
 #include <boost/thread/lock_guard.hpp>
 
@@ -114,6 +117,61 @@ namespace pkmn {
         return this->_get_levelup_pokemon_ref().at(index);
     }
 
+    void daycare_impl::set_levelup_pokemon(
+        int index,
+        const pkmn::pokemon::sptr& new_pokemon
+    )
+    {
+        int levelup_capacity = this->get_levelup_pokemon_capacity();
+
+        // Same functionality, just better error messages for the given
+        // situation
+        if(levelup_capacity == 1)
+        {
+            pkmn::enforce_comparator(
+                "Index",
+                index,
+                0,
+                pkmn::value_comparator::EQ
+            );
+        }
+        else
+        {
+            pkmn::enforce_bounds(
+                "Index",
+                index,
+                0,
+                (levelup_capacity - 1)
+            );
+        }
+
+        boost::lock_guard<daycare_impl> lock(*this);
+
+        // Make sure we only proceed if the given Pokémon variable is a LibPKMN
+        // implementation of the correct game.
+        pkmn::pokemon::sptr actual_new_pokemon;
+        if(pkmn::polymorphism::is_pokemon_from_libpkmn(new_pokemon.get()))
+        {
+            actual_new_pokemon = new_pokemon;
+        }
+        else
+        {
+            actual_new_pokemon = pkmn::polymorphism::pokemon_to_libpkmn_impl(
+                                     new_pokemon
+                                 );
+        }
+
+        if(actual_new_pokemon->get_game() != get_game())
+        {
+            actual_new_pokemon = actual_new_pokemon->to_game(get_game());
+        }
+
+        // Actual implementation
+        BOOST_ASSERT(actual_new_pokemon.get() != nullptr);
+        BOOST_ASSERT(pkmn::polymorphism::is_pokemon_from_libpkmn(actual_new_pokemon.get()));
+        _set_levelup_pokemon(index, actual_new_pokemon);
+    }
+
     const pkmn::pokemon_list_t& daycare_impl::get_levelup_pokemon_as_vector()
     {
         boost::lock_guard<daycare_impl> lock(*this);
@@ -142,6 +200,52 @@ namespace pkmn {
         boost::lock_guard<daycare_impl> lock(*this);
 
         return this->_breeding_pokemon.at(index);
+    }
+
+    void daycare_impl::set_breeding_pokemon(
+        int index,
+        const pkmn::pokemon::sptr& new_pokemon
+    )
+    {
+        if(!this->can_breed_pokemon())
+        {
+            throw pkmn::feature_not_in_game_error(
+                      "Breeding",
+                      this->get_game()
+                  );
+        }
+        pkmn::enforce_bounds(
+            "Index",
+            index,
+            0,
+            (this->get_breeding_pokemon_capacity() - 1)
+        );
+
+        boost::lock_guard<daycare_impl> lock(*this);
+
+        // Make sure we only proceed if the given Pokémon variable is a LibPKMN
+        // implementation of the correct game.
+        pkmn::pokemon::sptr actual_new_pokemon;
+        if(pkmn::polymorphism::is_pokemon_from_libpkmn(new_pokemon.get()))
+        {
+            actual_new_pokemon = new_pokemon;
+        }
+        else
+        {
+            actual_new_pokemon = pkmn::polymorphism::pokemon_to_libpkmn_impl(
+                                     new_pokemon
+                                 );
+        }
+
+        if(actual_new_pokemon->get_game() != get_game())
+        {
+            actual_new_pokemon = actual_new_pokemon->to_game(get_game());
+        }
+
+        // Actual implementation
+        BOOST_ASSERT(actual_new_pokemon.get() != nullptr);
+        BOOST_ASSERT(pkmn::polymorphism::is_pokemon_from_libpkmn(actual_new_pokemon.get()));
+        _set_breeding_pokemon(index, actual_new_pokemon);
     }
 
     const pkmn::pokemon_list_t& daycare_impl::get_breeding_pokemon_as_vector()

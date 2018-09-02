@@ -69,7 +69,22 @@ namespace pkmn {
         }
     }
 
-    void daycare_gcnimpl::set_levelup_pokemon(
+    int daycare_gcnimpl::get_levelup_pokemon_capacity()
+    {
+        return LEVELUP_CAPACITY;
+    }
+
+    bool daycare_gcnimpl::can_breed_pokemon()
+    {
+        return CAN_BREED_POKEMON;
+    }
+
+    int daycare_gcnimpl::get_breeding_pokemon_capacity()
+    {
+        return BREEDING_CAPACITY;
+    }
+
+    void daycare_gcnimpl::_set_levelup_pokemon(
         int position,
         const pkmn::pokemon::sptr& new_pokemon
     )
@@ -134,17 +149,7 @@ namespace pkmn {
                                );
     }
 
-    int daycare_gcnimpl::get_levelup_pokemon_capacity()
-    {
-        return LEVELUP_CAPACITY;
-    }
-
-    bool daycare_gcnimpl::can_breed_pokemon()
-    {
-        return CAN_BREED_POKEMON;
-    }
-
-    void daycare_gcnimpl::set_breeding_pokemon(
+    void daycare_gcnimpl::_set_breeding_pokemon(
         int,
         const pkmn::pokemon::sptr&
     )
@@ -153,11 +158,6 @@ namespace pkmn {
                   "Breeding",
                   this->get_game()
               );
-    }
-
-    int daycare_gcnimpl::get_breeding_pokemon_capacity()
-    {
-        return BREEDING_CAPACITY;
     }
 
     void daycare_gcnimpl::_from_native_levelup()
