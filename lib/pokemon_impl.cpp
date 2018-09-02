@@ -118,7 +118,7 @@ namespace pkmn
         {
             ret =  pkmn::io::load_pk2(filepath);
         }
-        else if(extension == ".3gpkm")
+        else if((extension == ".3gpkm") || (extension == ".pk3"))
         {
             ret =  pkmn::io::load_3gpkm(filepath);
         }
