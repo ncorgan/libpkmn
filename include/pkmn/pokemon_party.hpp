@@ -25,7 +25,7 @@ namespace pkmn
      * a Pokémon party throughout the different games, providing a common API
      * for interacting with the party.
      */
-    class PKMN_API pokemon_party
+    class PKMN_API pokemon_party: public std::enable_shared_from_this<pokemon_party>
     {
         public:
             /*!

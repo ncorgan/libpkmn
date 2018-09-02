@@ -39,7 +39,8 @@
 
 namespace pkmn {
 
-    class PKMN_API pokemon: public class_with_attributes
+    class PKMN_API pokemon: public class_with_attributes,
+                            public std::enable_shared_from_this<pokemon>
     {
         public:
             typedef std::shared_ptr<pokemon> sptr;

@@ -22,7 +22,7 @@ namespace pkmn
      * @brief A class that represents an in-game Pokédex, which tracks what Pokémon
      *        have been seen and caught.
      */
-    class PKMN_API pokedex
+    class PKMN_API pokedex: public std::enable_shared_from_this<pokedex>
     {
         public:
             typedef std::shared_ptr<pokedex> sptr;

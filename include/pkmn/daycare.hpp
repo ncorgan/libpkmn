@@ -18,7 +18,7 @@
 
 namespace pkmn {
 
-    class PKMN_API daycare
+    class PKMN_API daycare: public std::enable_shared_from_this<daycare>
     {
         public:
             typedef std::shared_ptr<daycare> sptr;

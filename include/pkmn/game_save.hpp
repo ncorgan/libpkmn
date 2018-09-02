@@ -43,7 +43,8 @@ namespace pkmn {
      * Through this class, you can read and edit all trainer Pokémon, item
      * bag contents, and Pokédex stats, among other miscellaneous items.
      */
-    class PKMN_API game_save: public class_with_attributes
+    class PKMN_API game_save: public class_with_attributes,
+                              public std::enable_shared_from_this<game_save>
     {
         public:
             typedef std::shared_ptr<game_save> sptr;

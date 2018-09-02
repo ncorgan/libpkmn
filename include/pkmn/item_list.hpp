@@ -31,7 +31,7 @@ namespace pkmn {
      * in the given game. As such, this class will never represent an invalid in-game
      * state unless the original item list was already in an invalid state.
      */
-    class PKMN_API item_list
+    class PKMN_API item_list: public std::enable_shared_from_this<item_list>
     {
         public:
             /*!

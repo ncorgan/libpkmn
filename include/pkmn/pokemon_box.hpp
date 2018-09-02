@@ -25,7 +25,7 @@ namespace pkmn
      * a Pokémon box throughout the different games, providing a common API
      * for interacting with the box.
      */
-    class PKMN_API pokemon_box
+    class PKMN_API pokemon_box: public std::enable_shared_from_this<pokemon_box>
     {
         public:
             /*!

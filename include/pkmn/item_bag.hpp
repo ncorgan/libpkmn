@@ -29,7 +29,7 @@ namespace pkmn {
      * This class automatically creates item lists that correspond to the types and
      * capacities of the bag in the given game.
      */
-    class PKMN_API item_bag
+    class PKMN_API item_bag: public std::enable_shared_from_this<item_bag>
     {
         public:
             /*!

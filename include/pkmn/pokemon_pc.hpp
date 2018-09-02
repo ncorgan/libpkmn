@@ -25,7 +25,7 @@ namespace pkmn
      * a Pokémon PC throughout the different games, providing a common API
      * for interacting with the PC.
      */
-    class PKMN_API pokemon_pc
+    class PKMN_API pokemon_pc: public std::enable_shared_from_this<pokemon_pc>
     {
         public:
             /*!
