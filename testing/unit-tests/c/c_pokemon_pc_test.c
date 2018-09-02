@@ -461,10 +461,6 @@ static void test_setting_pokemon_in_box(
     PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_NULL(second_in_box.p_internal);
 
-    error = pkmn_pokemon_free(&fifth_in_box);
-    PKMN_TEST_ASSERT_SUCCESS(error);
-    TEST_ASSERT_NULL(fifth_in_box.p_internal);
-
     /*
      * Now check everything we've created. Each variable should have the
      * same Pokémon underneath, even if the pointer has changed.

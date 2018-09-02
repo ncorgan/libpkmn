@@ -651,14 +651,22 @@ enum pkmn_error pkmn_pokemon_get_held_item(
         auto* p_internal = pkmn::c::get_pokemon_internal_ptr(p_pokemon);
         BOOST_ASSERT(p_internal != nullptr);
 
-        auto impl = [&]()
+        error = pkmn::c::check_for_null_param(
+                    p_held_item_out,
+                    "p_held_item_out",
+                    p_internal
+                );
+        if(!error)
         {
-            *p_held_item_out = static_cast<enum pkmn_item>(
-                                   p_internal->cpp->get_held_item()
-                               );
-        };
+            auto impl = [&]()
+            {
+                *p_held_item_out = static_cast<enum pkmn_item>(
+                                       p_internal->cpp->get_held_item()
+                                   );
+            };
 
-        error = pkmn::c::handle_exceptions(impl, p_internal);
+            error = pkmn::c::handle_exceptions(impl, p_internal);
+        }
     }
 
     return error;

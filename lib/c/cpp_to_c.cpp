@@ -30,6 +30,10 @@ namespace pkmn { namespace c {
         BOOST_ASSERT(libpkmn_sptr.get() != nullptr);
         BOOST_ASSERT(p_libpkmn_c_struct_out != nullptr);
 
+        p_libpkmn_c_struct_out->game = static_cast<enum pkmn_game>(
+                                           libpkmn_sptr->get_game()
+                                       );
+
         p_libpkmn_c_struct_out->p_internal = new internal_t<libpkmn_cpp_type>;
         internal_t<libpkmn_cpp_type>* p_internal =
             reinterpret_cast<internal_t<libpkmn_cpp_type>*>(
