@@ -161,20 +161,9 @@ namespace pkmn {
 
         boost::lock_guard<pokemon_box_gbaimpl> lock(*this);
 
-        // If the given Pokémon isn't from this box's game, convert it if we can.
-        pkmn::pokemon::sptr actual_new_pokemon;
-        if(_game_id == new_pokemon->get_database_entry().get_game_id())
-        {
-            actual_new_pokemon = new_pokemon;
-        }
-        else
-        {
-            actual_new_pokemon = new_pokemon->to_game(get_game());
-        }
-
         // Make sure no one else is using the new Pokémon variable.
         pokemon_gbaimpl* p_new_pokemon = dynamic_cast<pokemon_gbaimpl*>(
-                                             actual_new_pokemon.get()
+                                             new_pokemon.get()
                                          );
         BOOST_ASSERT(p_new_pokemon != nullptr);
         boost::lock_guard<pokemon_gbaimpl> new_pokemon_lock(*p_new_pokemon);
@@ -186,7 +175,7 @@ namespace pkmn {
         // Note: as we control the implementation, we know the PC data points
         // to the whole Pokémon data structure.
         rcast_equal<struct pksav_gba_pc_pokemon>(
-            actual_new_pokemon->get_native_pc_data(),
+            new_pokemon->get_native_pc_data(),
             &_pksav_box.entries[index]
         );
         _pokemon_list[index] = std::make_shared<pokemon_gbaimpl>(

@@ -12,12 +12,19 @@
 
 #include <pkmn/pokemon.hpp>
 
+#include <pkmn/enums/game.hpp>
+
 #include "pokemon_impl.hpp"
 
 namespace pkmn { namespace polymorphism {
 
     pokemon::sptr pokemon_to_libpkmn_impl(
         const pokemon::sptr& input_pokemon
+    );
+
+    pokemon::sptr pokemon_to_libpkmn_impl_of_game(
+        const pokemon::sptr& input_pokemon,
+        pkmn::e_game game
     );
 }}
 

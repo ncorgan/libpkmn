@@ -87,20 +87,9 @@ namespace pkmn {
 
         pkmn::pokemon_list_t& r_levelup_pokemon = this->_get_levelup_pokemon_ref();
 
-        // If the given Pokémon isn't from this box's game, convert it if we can.
-        pkmn::pokemon::sptr actual_new_pokemon;
-        if(_game_id == new_pokemon->get_database_entry().get_game_id())
-        {
-            actual_new_pokemon = new_pokemon;
-        }
-        else
-        {
-            actual_new_pokemon = new_pokemon->to_game(get_game());
-        }
-
         // Make sure no one else is using the new Pokémon variable.
         pokemon_gen1impl* p_new_pokemon = dynamic_cast<pokemon_gen1impl*>(
-                                              actual_new_pokemon.get()
+                                              new_pokemon.get()
                                           );
         BOOST_ASSERT(p_new_pokemon != nullptr);
         boost::lock_guard<pokemon_gen1impl> new_pokemon_lock(*p_new_pokemon);
@@ -112,7 +101,7 @@ namespace pkmn {
         // Note: as we control the implementation, we know the PC data points
         // to the whole Pokémon data structure.
         rcast_equal<struct pksav_gen1_pc_pokemon>(
-            actual_new_pokemon->get_native_pc_data(),
+            new_pokemon->get_native_pc_data(),
             &NATIVE_RCAST(_p_native)->stored_pokemon
         );
         r_levelup_pokemon[position] = std::make_shared<pokemon_gen1impl>(
@@ -121,8 +110,8 @@ namespace pkmn {
                                       );
 
         // Don't set empty names.
-        std::string new_pokemon_nickname = actual_new_pokemon->get_nickname();
-        std::string new_pokemon_trainer_name = actual_new_pokemon->get_original_trainer_name();
+        std::string new_pokemon_nickname = new_pokemon->get_nickname();
+        std::string new_pokemon_trainer_name = new_pokemon->get_original_trainer_name();
         if(new_pokemon_nickname.size() == 0)
         {
             new_pokemon_nickname = "None";

@@ -84,20 +84,9 @@ namespace pkmn {
 
         boost::lock_guard<pokemon_party_gcnimpl> lock(*this);
 
-        // If the given Pokémon isn't from this party's game, convert it if we can.
-        pkmn::pokemon::sptr actual_new_pokemon;
-        if(_game_id == new_pokemon->get_database_entry().get_game_id())
-        {
-            actual_new_pokemon = new_pokemon;
-        }
-        else
-        {
-            actual_new_pokemon = new_pokemon->to_game(get_game());
-        }
-
         // Make sure no one else is using the new Pokémon variable.
         pokemon_gcnimpl* p_new_pokemon = dynamic_cast<pokemon_gcnimpl*>(
-                                             actual_new_pokemon.get()
+                                             new_pokemon.get()
                                          );
         BOOST_ASSERT(p_new_pokemon != nullptr);
         boost::lock_guard<pokemon_gcnimpl> new_pokemon_lock(*p_new_pokemon);
@@ -110,7 +99,7 @@ namespace pkmn {
         // to the whole Pokémon data structure.
         _libpkmgc_pokemon_uptrs[index].reset(
             static_cast<LibPkmGC::GC::Pokemon*>(
-                actual_new_pokemon->get_native_pc_data()
+                new_pokemon->get_native_pc_data()
             )->clone()
         );
         _pokemon_list[index] = std::make_shared<pokemon_gcnimpl>(

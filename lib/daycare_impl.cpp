@@ -147,29 +147,13 @@ namespace pkmn {
 
         boost::lock_guard<daycare_impl> lock(*this);
 
-        // Make sure we only proceed if the given Pokémon variable is a LibPKMN
-        // implementation of the correct game.
-        pkmn::pokemon::sptr actual_new_pokemon;
-        if(pkmn::polymorphism::is_pokemon_from_libpkmn(new_pokemon.get()))
-        {
-            actual_new_pokemon = new_pokemon;
-        }
-        else
-        {
-            actual_new_pokemon = pkmn::polymorphism::pokemon_to_libpkmn_impl(
-                                     new_pokemon
-                                 );
-        }
-
-        if(actual_new_pokemon->get_game() != get_game())
-        {
-            actual_new_pokemon = actual_new_pokemon->to_game(get_game());
-        }
-
-        // Actual implementation
-        BOOST_ASSERT(actual_new_pokemon.get() != nullptr);
-        BOOST_ASSERT(pkmn::polymorphism::is_pokemon_from_libpkmn(actual_new_pokemon.get()));
-        _set_levelup_pokemon(index, actual_new_pokemon);
+        _set_levelup_pokemon(
+            index,
+            pkmn::polymorphism::pokemon_to_libpkmn_impl_of_game(
+                new_pokemon,
+                get_game()
+            )
+        );
     }
 
     const pkmn::pokemon_list_t& daycare_impl::get_levelup_pokemon_as_vector()
@@ -223,29 +207,13 @@ namespace pkmn {
 
         boost::lock_guard<daycare_impl> lock(*this);
 
-        // Make sure we only proceed if the given Pokémon variable is a LibPKMN
-        // implementation of the correct game.
-        pkmn::pokemon::sptr actual_new_pokemon;
-        if(pkmn::polymorphism::is_pokemon_from_libpkmn(new_pokemon.get()))
-        {
-            actual_new_pokemon = new_pokemon;
-        }
-        else
-        {
-            actual_new_pokemon = pkmn::polymorphism::pokemon_to_libpkmn_impl(
-                                     new_pokemon
-                                 );
-        }
-
-        if(actual_new_pokemon->get_game() != get_game())
-        {
-            actual_new_pokemon = actual_new_pokemon->to_game(get_game());
-        }
-
-        // Actual implementation
-        BOOST_ASSERT(actual_new_pokemon.get() != nullptr);
-        BOOST_ASSERT(pkmn::polymorphism::is_pokemon_from_libpkmn(actual_new_pokemon.get()));
-        _set_breeding_pokemon(index, actual_new_pokemon);
+        _set_breeding_pokemon(
+            index,
+            pkmn::polymorphism::pokemon_to_libpkmn_impl_of_game(
+                new_pokemon,
+                get_game()
+            )
+        );
     }
 
     const pkmn::pokemon_list_t& daycare_impl::get_breeding_pokemon_as_vector()
