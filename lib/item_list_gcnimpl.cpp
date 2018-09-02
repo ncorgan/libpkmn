@@ -43,7 +43,7 @@ namespace pkmn {
         r_item_slot.item = pkmn::database::item_entry(
                                libpkmgc_item.index,
                                _game_id
-                           ).get_name();
+                           ).get_item();
         r_item_slot.amount = libpkmgc_item.quantity;
     }
 

@@ -42,9 +42,7 @@ namespace pkmn {
 
             ~pokemon_gen2impl() = default;
 
-            pokemon::sptr to_game(
-                const std::string& game
-            ) final;
+            pokemon::sptr to_game(pkmn::e_game game) final;
 
             void export_to_file(
                 const std::string& filepath
@@ -60,10 +58,10 @@ namespace pkmn {
                 bool is_egg
             ) final;
 
-            std::string get_condition() final;
+            pkmn::e_condition get_condition() final;
 
             void set_condition(
-                const std::string& condition
+                pkmn::e_condition condition
             ) final;
 
             std::string get_nickname() final;
@@ -72,10 +70,10 @@ namespace pkmn {
                 const std::string& nickname
             ) final;
 
-            std::string get_gender() final;
+            pkmn::e_gender get_gender() final;
 
             void set_gender(
-                const std::string& gender
+                pkmn::e_gender gender
             ) final;
 
             bool is_shiny() final;
@@ -84,17 +82,15 @@ namespace pkmn {
                 bool value
             ) final;
 
-            std::string get_held_item() final;
+            pkmn::e_item get_held_item() final;
 
             void set_held_item(
-                const std::string& held_item
+                pkmn::e_item held_item
             ) final;
 
-            std::string get_nature() final;
+            pkmn::e_nature get_nature() final;
 
-            void set_nature(
-                const std::string& nature
-            ) final;
+            void set_nature(pkmn::e_nature) final;
 
             int get_pokerus_duration() final;
 
@@ -126,16 +122,16 @@ namespace pkmn {
                 uint32_t id
             ) final;
 
-            std::string get_original_trainer_gender() final;
+            pkmn::e_gender get_original_trainer_gender() final;
 
             void set_original_trainer_gender(
-                const std::string& gender
+                pkmn::e_gender gender
             ) final;
 
-            std::string get_language() final;
+            pkmn::e_language get_language() final;
 
             void set_language(
-                const std::string& language
+                pkmn::e_language language
             ) final;
 
             int get_current_trainer_friendship() final;
@@ -144,16 +140,14 @@ namespace pkmn {
                 int friendship
             ) final;
 
-            std::string get_ability() final;
+            pkmn::e_ability get_ability() final;
 
-            void set_ability(
-                const std::string& ability
-            ) final;
+            void set_ability(pkmn::e_ability) final;
 
-            std::string get_ball() final;
+            pkmn::e_ball get_ball() final;
 
             void set_ball(
-                const std::string& ball
+                pkmn::e_ball ball
             ) final;
 
             int get_level_met() final;
@@ -171,11 +165,9 @@ namespace pkmn {
                 bool as_egg
             ) final;
 
-            std::string get_original_game() final;
+            pkmn::e_game get_original_game() final;
 
-            void set_original_game(
-                const std::string& game
-            ) final;
+            void set_original_game(pkmn::e_game) final;
 
             uint32_t get_personality() final;
 
@@ -196,27 +188,21 @@ namespace pkmn {
             ) final;
 
             void set_IV(
-                const std::string& stat,
+                pkmn::e_stat stat,
                 int value
             ) final;
 
-            void set_marking(
-                const std::string& marking,
-                bool value
-            ) final;
+            void set_marking(pkmn::e_marking, bool) final;
 
             void set_ribbon(
                 const std::string& ribbon,
                 bool value
             ) final;
 
-            void set_contest_stat(
-                const std::string& stat,
-                int value
-            ) final;
+            void set_contest_stat(pkmn::e_contest_stat, int) final;
 
             void set_move(
-                const std::string& move,
+                pkmn::e_move move,
                 int index
             ) final;
 
@@ -226,7 +212,7 @@ namespace pkmn {
             ) final;
 
             void set_EV(
-                const std::string& stat,
+                pkmn::e_stat stat,
                 int value
             ) final;
 

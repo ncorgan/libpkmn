@@ -10,6 +10,8 @@
 #include <pkmn-c/config.h>
 #include <pkmn-c/error.h>
 
+#include <pkmn-c/enums/species.h>
+
 #include <stdint.h>
 
 #ifdef __cplusplus
@@ -30,7 +32,7 @@ extern "C" {
  * \returns ::PKMN_ERROR_OUT_OF_RANGE if any IV parameter is not in the range [0-31]
  */
 PKMN_C_API enum pkmn_error pkmn_calculations_pokemon_size(
-    const char* p_species,
+    enum pkmn_species species,
     uint32_t personality,
     int IV_HP,
     int IV_attack,

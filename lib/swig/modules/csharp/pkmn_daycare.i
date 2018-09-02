@@ -26,7 +26,7 @@ using System.Runtime.InteropServices;"
 
 // Convert getter/setter functions into attributes for more idiomatic C#.
 
-%attributestring(pkmn::swig::daycare, std::string, Game, get_game);
+%attribute(pkmn::swig::daycare, pkmn::e_game, Game, get_game);
 %attribute(pkmn::swig::daycare, bool, CanBreedPokemon, can_breed_pokemon);
 %attributeval(pkmn::swig::daycare, pkmn::swig::daycare_levelup_pokemon, LevelupPokemon, get_levelup_pokemon);
 %attributeval(pkmn::swig::daycare, pkmn::swig::daycare_breeding_pokemon, BreedingPokemon, get_breeding_pokemon);

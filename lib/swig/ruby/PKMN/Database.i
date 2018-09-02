@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -12,12 +12,16 @@ PKMN_RUBY_INIT
 
 %include <std_string.i>
 
+%import <Enums.i>
 %import <STL.i>
 
 %{
     #include <pkmn/database/levelup_move.hpp>
     #include <pkmn/database/lists.hpp>
 %}
+
+%import <pkmn/enums/game.hpp>
+%import <pkmn/enums/stat.hpp>
 
 %include <pkmn/database/lists.hpp>
 %include <ruby/pkmn_item_entry.i>

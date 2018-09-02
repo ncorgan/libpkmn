@@ -9,6 +9,7 @@
 PKMN_LUA_INIT
 
 %import <pkmn_core_lua.i>
+%import <pkmn_enums_lua.i>
 %import <pkmn_stl_lua.i>
 
 %{

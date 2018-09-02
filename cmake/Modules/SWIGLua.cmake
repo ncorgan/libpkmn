@@ -46,9 +46,9 @@ SET(LUA_SHARE_INSTALL_DIR share/lua/${LUA_VERSION_MAJOR}.${LUA_VERSION_MINOR})
 SET(LUA_SHARE_INSTALL_DIR ${LUA_SHARE_INSTALL_DIR} CACHE FILEPATH "Lua .lua install directory")
 
 ########################################################################
-# Macro to build and install Lua SWIG modules
+# Macros to build and install Lua SWIG modules
 ########################################################################
-MACRO(SWIG_BUILD_LUA_MODULE module_name module_rc_name cplusplus)
+MACRO(SWIG_BUILD_LUA_MODULE_BUILD_ONLY module_name module_rc_name cplusplus)
     INCLUDE(UseSWIG)
 
     SET(SWIG_INCLUDE_DIRS
@@ -89,10 +89,14 @@ MACRO(SWIG_BUILD_LUA_MODULE module_name module_rc_name cplusplus)
     SWIG_ADD_MODULE(${module_name} lua ${CMAKE_CURRENT_BINARY_DIR}/${module_name}.i)
     SET_TARGET_PROPERTIES(${SWIG_MODULE_${module_name}_REAL_NAME} PROPERTIES PREFIX "")
     SWIG_LINK_LIBRARIES(${module_name} ${SWIG_LIBRARIES})
+ENDMACRO()
+
+MACRO(SWIG_BUILD_LUA_MODULE module_name module_rc_name cplusplus)
+    SWIG_BUILD_LUA_MODULE_BUILD_ONLY(${module_name} ${module_rc_name} ${cplusplus})
 
     INSTALL(
         TARGETS ${SWIG_MODULE_${module_name}_REAL_NAME}
         DESTINATION ${LUA_LIB_INSTALL_DIR}
         COMPONENT Lua
     )
-ENDMACRO(SWIG_BUILD_LUA_MODULE module_name cplusplus)
+ENDMACRO()

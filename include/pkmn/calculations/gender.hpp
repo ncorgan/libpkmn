@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -8,6 +8,9 @@
 #define PKMN_CALCULATIONS_GENDER_HPP
 
 #include <pkmn/config.hpp>
+
+#include <pkmn/enums/gender.hpp>
+#include <pkmn/enums/species.hpp>
 
 #include <cstdint>
 #include <string>
@@ -28,8 +31,8 @@ namespace pkmn { namespace calculations {
      * \throws std::out_of_range If IV_attack is out of range [0,15]
      * \returns Pokémon gender (possible values: Male, Female, Genderless)
      */
-    PKMN_API std::string gen2_pokemon_gender(
-        const std::string& species,
+    PKMN_API pkmn::e_gender gen2_pokemon_gender(
+        pkmn::e_species species,
         int IV_attack
     );
 
@@ -46,8 +49,8 @@ namespace pkmn { namespace calculations {
      * \throws std::runtime_error If Pokémon species is invalid
      * \returns Pokémon gender (possible values: Male, Female, Genderless)
      */
-    PKMN_API std::string modern_pokemon_gender(
-        const std::string& species,
+    PKMN_API pkmn::e_gender modern_pokemon_gender(
+        pkmn::e_species species,
         uint32_t personality
     );
 

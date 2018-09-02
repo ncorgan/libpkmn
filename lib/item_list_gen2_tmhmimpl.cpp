@@ -42,18 +42,21 @@ namespace pkmn {
         const struct pksav_gen2_tmhm_pocket* p_pksav_list
     ): item_list_impl(item_list_id, game_id)
     {
-        static const char* TM_FORMAT = "TM%02d";
-        static const char* HM_FORMAT = "HM%02d";
-        char name[5] = {0};
-        for(int tm_index = 1; tm_index <= PKSAV_GEN2_TM_COUNT; ++tm_index)
+        _item_slots.resize(PKSAV_GEN2_TM_COUNT + PKSAV_GEN2_HM_COUNT);
+
+        for(size_t tm_index = 0;
+            tm_index < PKSAV_GEN2_TM_COUNT;
+            ++tm_index)
         {
-            std::snprintf(name, sizeof(name), TM_FORMAT, tm_index);
-            _item_slots[tm_index-1].item = name;
+            _item_slots[tm_index].item =
+                pkmn::e_item(size_t(pkmn::e_item::TM01) + tm_index);
         }
-        for(int hm_index = 1; hm_index <= PKSAV_GEN2_HM_COUNT; ++hm_index)
+        for(size_t hm_index = 0;
+            hm_index < PKSAV_GEN2_HM_COUNT;
+            ++hm_index)
         {
-            std::snprintf(name, sizeof(name), HM_FORMAT, hm_index);
-            _item_slots[PKSAV_GEN2_TM_COUNT+hm_index-1].item = name;
+            _item_slots[50+hm_index].item =
+                pkmn::e_item(size_t(pkmn::e_item::HM01) + hm_index);
         }
 
         if(p_pksav_list != nullptr)
@@ -64,6 +67,8 @@ namespace pkmn {
         {
             std::memset(&_pksav_list, 0, sizeof(_pksav_list));
         }
+
+        _from_native();
 
         _p_native = &_pksav_list;
     }
@@ -78,21 +83,21 @@ namespace pkmn {
                        _pksav_list.tm_count + PKSAV_GEN2_TM_COUNT,
                        [](uint8_t tm_count)
                        {
-                           return tm_count > 0;
+                           return (tm_count > 0);
                        }));
         ret += int(std::count_if(
                        _pksav_list.hm_count,
                        _pksav_list.hm_count + PKSAV_GEN2_HM_COUNT,
                        [](uint8_t hm_count)
                        {
-                           return hm_count > 0;
+                           return (hm_count > 0);
                        }));
 
         return ret;
     }
 
     void item_list_gen2_tmhmimpl::add(
-        const std::string& name,
+        pkmn::e_item item,
         int amount
     )
     {
@@ -100,13 +105,13 @@ namespace pkmn {
 
         boost::lock_guard<item_list_gen2_tmhmimpl> lock(*this);
 
-        pkmn::database::item_entry item(name, get_game());
-        if(item.get_pocket() != get_name())
+        pkmn::database::item_entry entry(item, get_game());
+        if(entry.get_pocket() != get_name())
         {
             throw std::invalid_argument("This item is not valid for this list.");
         }
 
-        int item_id = item.get_item_id();
+        int item_id = entry.get_item_id();
         int position = -1;
         if(ITEM_ID_IS_TM(item_id))
         {
@@ -127,7 +132,7 @@ namespace pkmn {
     }
 
     void item_list_gen2_tmhmimpl::remove(
-        const std::string& name,
+        pkmn::e_item item,
         int amount
     )
     {
@@ -135,13 +140,13 @@ namespace pkmn {
 
         boost::lock_guard<item_list_gen2_tmhmimpl> lock(*this);
 
-        pkmn::database::item_entry item(name, get_game());
-        if(item.get_pocket() != get_name())
+        pkmn::database::item_entry entry(item, get_game());
+        if(entry.get_pocket() != get_name())
         {
             throw std::invalid_argument("This item is not valid for this list.");
         }
 
-        int item_id = item.get_item_id();
+        int item_id = entry.get_item_id();
         int position = -1;
         if(ITEM_ID_IS_TM(item_id))
         {
@@ -168,7 +173,7 @@ namespace pkmn {
 
     void item_list_gen2_tmhmimpl::set_item(
         int position,
-        const std::string& item_name,
+        pkmn::e_item item,
         int amount
     )
     {
@@ -178,8 +183,8 @@ namespace pkmn {
 
         boost::lock_guard<item_list_gen2_tmhmimpl> lock(*this);
 
-        pkmn::database::item_entry entry(item_name, get_game());
-        if(item_name != "None" and entry.get_pocket() != get_name())
+        pkmn::database::item_entry entry(item, get_game());
+        if((item != pkmn::e_item::NONE) && (entry.get_pocket() != get_name()))
         {
             throw std::invalid_argument("This item does not belong in this pocket.");
         }
@@ -187,7 +192,7 @@ namespace pkmn {
         pkmn::enforce_bounds("Amount", amount, 1, 99);
         pkmn::enforce_value_in_vector(
             "Item name",
-            item_name,
+            item,
             {_item_slots[position].item}
         );
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -7,39 +7,107 @@
 #ifndef PKMNTEST_UTIL_HPP
 #define PKMNTEST_UTIL_HPP
 
-#include <boost/assign.hpp>
-#include <boost/format.hpp>
+#include <pkmn/enums/game.hpp>
 
-#include <string>
-#include <unordered_map>
+#include <vector>
 
-static const std::unordered_map<std::string, int> game_generations = boost::assign::map_list_of
-    ("Red", 1)
-    ("Blue", 1)
-    ("Yellow", 1)
-    ("Gold", 2)
-    ("Silver", 2)
-    ("Crystal", 2)
-    ("Ruby", 3)
-    ("Sapphire", 3)
-    ("Emerald", 3)
-    ("FireRed", 3)
-    ("LeafGreen", 3)
-    ("Colosseum", 3)
-    ("XD", 3)
-    ("Diamond", 4)
-    ("Pearl", 4)
-    ("Platinum", 4)
-    ("HeartGold", 4)
-    ("SoulSilver", 4)
-    ("Black", 5)
-    ("White", 5)
-    ("Black 2", 5)
-    ("White 2", 5)
-    ("X", 6)
-    ("Y", 6)
-    ("Omega Ruby", 6)
-    ("Alpha Sapphire", 6)
-;
+namespace pkmntest
+{
+
+static const std::vector<pkmn::e_game> GEN1_GAMES =
+{
+    pkmn::e_game::RED,
+    pkmn::e_game::BLUE,
+    pkmn::e_game::YELLOW,
+};
+
+static const std::vector<pkmn::e_game> GEN2_GAMES =
+{
+    pkmn::e_game::GOLD,
+    pkmn::e_game::SILVER,
+    pkmn::e_game::CRYSTAL,
+};
+
+static const std::vector<pkmn::e_game> GEN3_GAMES =
+{
+    pkmn::e_game::RUBY,
+    pkmn::e_game::SAPPHIRE,
+    pkmn::e_game::EMERALD,
+    pkmn::e_game::FIRERED,
+    pkmn::e_game::LEAFGREEN,
+    pkmn::e_game::COLOSSEUM,
+    pkmn::e_game::XD,
+};
+
+static const std::vector<pkmn::e_game> GBA_GAMES =
+{
+    pkmn::e_game::RUBY,
+    pkmn::e_game::SAPPHIRE,
+    pkmn::e_game::EMERALD,
+    pkmn::e_game::FIRERED,
+};
+
+static const std::vector<pkmn::e_game> GCN_GAMES =
+{
+    pkmn::e_game::COLOSSEUM,
+    pkmn::e_game::XD,
+};
+
+static const std::vector<pkmn::e_game> GEN4_GAMES =
+{
+    pkmn::e_game::DIAMOND,
+    pkmn::e_game::PEARL,
+    pkmn::e_game::PLATINUM,
+    pkmn::e_game::HEARTGOLD,
+    pkmn::e_game::SOULSILVER,
+};
+
+static const std::vector<pkmn::e_game> GEN5_GAMES =
+{
+    pkmn::e_game::BLACK,
+    pkmn::e_game::WHITE,
+    pkmn::e_game::BLACK2,
+    pkmn::e_game::WHITE2,
+};
+
+static const std::vector<pkmn::e_game> GEN6_GAMES =
+{
+    pkmn::e_game::X,
+    pkmn::e_game::Y,
+    pkmn::e_game::OMEGA_RUBY,
+    pkmn::e_game::ALPHA_SAPPHIRE,
+};
+
+static const std::vector<pkmn::e_game> ALL_GAMES =
+{
+    pkmn::e_game::RED,
+    pkmn::e_game::BLUE,
+    pkmn::e_game::YELLOW,
+    pkmn::e_game::GOLD,
+    pkmn::e_game::SILVER,
+    pkmn::e_game::CRYSTAL,
+    pkmn::e_game::RUBY,
+    pkmn::e_game::SAPPHIRE,
+    pkmn::e_game::EMERALD,
+    pkmn::e_game::FIRERED,
+    pkmn::e_game::LEAFGREEN,
+    pkmn::e_game::COLOSSEUM,
+    pkmn::e_game::XD,
+    pkmn::e_game::DIAMOND,
+    pkmn::e_game::PEARL,
+    pkmn::e_game::PLATINUM,
+    pkmn::e_game::HEARTGOLD,
+    pkmn::e_game::SOULSILVER,
+    pkmn::e_game::BLACK,
+    pkmn::e_game::WHITE,
+    pkmn::e_game::BLACK2,
+    pkmn::e_game::WHITE2,
+    pkmn::e_game::X,
+    pkmn::e_game::Y,
+    pkmn::e_game::OMEGA_RUBY,
+    pkmn::e_game::ALPHA_SAPPHIRE,
+};
+
+}
 
 #endif /* PKMNTEST_UTIL_HPP */

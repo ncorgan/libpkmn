@@ -27,7 +27,9 @@ class pokemon_io_test(base_test):
     @parameterized.expand([
         "Red","Blue","Yellow"
     ], testcase_func_name=test_name_func)
-    def test_saving_and_loading_pk1(self, game):
+    def test_saving_and_loading_pk1(self, game_name):
+        game = pkmn.string_to_game(game_name)
+
         pk1_path = os.path.join(TMP_DIR, "{0}_{1}.pk1".format(game, random.randint(0, 1000)))
 
         item_list = pkmn.database.lists.get_item_list(game)
@@ -45,7 +47,9 @@ class pokemon_io_test(base_test):
     @parameterized.expand([
         "Gold", "Silver", "Crystal"
     ], testcase_func_name=test_name_func)
-    def test_saving_and_loading_pk2(self, game):
+    def test_saving_and_loading_pk2(self, game_name):
+        game = pkmn.string_to_game(game_name)
+
         pk2_path = os.path.join(TMP_DIR, "{0}_{1}.pk2".format(game, random.randint(0, 1000)))
 
         item_list = pkmn.database.lists.get_item_list(game)
@@ -63,7 +67,9 @@ class pokemon_io_test(base_test):
     @parameterized.expand([
         "Ruby", "Sapphire", "Emerald", "FireRed", "LeafGreen"
     ], testcase_func_name=test_name_func)
-    def test_saving_and_loading_3gpkm(self, game):
+    def test_saving_and_loading_3gpkm(self, game_name):
+        game = pkmn.string_to_game(game_name)
+
         _3gpkm_path = os.path.join(TMP_DIR, "{0}_{1}.3gpkm".format(game, random.randint(0, 1000)))
 
         item_list = pkmn.database.lists.get_item_list(game)
@@ -83,23 +89,24 @@ class pokemon_io_test(base_test):
         _3gpkm_dir = os.path.join(LIBPKMN_TEST_FILES, "3gpkm")
 
         mightyena = pkmn.pokemon(os.path.join(_3gpkm_dir, "MIGHTYENA.3gpkm"))
-        self.assertEqual(mightyena.species, "Mightyena")
-        self.assertEqual(mightyena.game, "Emerald")
+        self.assertEqual(mightyena.species, pkmn.species.MIGHTYENA)
+        self.assertEqual(mightyena.game, pkmn.game.EMERALD)
         self.assertEqual(mightyena.form, "Standard")
         self.assertEqual(mightyena.nickname, "MIGHTYENA")
         self.assertFalse(mightyena.is_shiny)
-        self.assertEqual(mightyena.held_item, "Heart Scale")
+        self.assertEqual(mightyena.condition, pkmn.condition.NONE)
+        self.assertEqual(mightyena.held_item, pkmn.item.HEART_SCALE)
         self.assertEqual(mightyena.original_trainer_name, "A")
         self.assertEqual(mightyena.original_trainer_public_id, 61415)
         self.assertEqual(mightyena.original_trainer_secret_id, 3417)
         self.assertEqual(mightyena.original_trainer_id, 223997927)
-        self.assertEqual(mightyena.original_trainer_gender, "Female")
+        self.assertEqual(mightyena.original_trainer_gender, pkmn.gender.FEMALE)
         self.assertEqual(mightyena.current_trainer_friendship, 254)
-        self.assertEqual(mightyena.ability, "Intimidate")
-        self.assertEqual(mightyena.ball, "Great Ball")
+        self.assertEqual(mightyena.ability, pkmn.ability.INTIMIDATE)
+        self.assertEqual(mightyena.ball, pkmn.ball.GREAT_BALL)
         self.assertEqual(mightyena.level_met, 25)
         self.assertEqual(mightyena.location_met, "Route 120")
-        self.assertEqual(mightyena.original_game, "Emerald")
+        self.assertEqual(mightyena.original_game, pkmn.game.EMERALD)
         self.assertEqual(mightyena.personality, 3557601241)
         self.assertEqual(mightyena.experience, 128734)
         self.assertEqual(mightyena.level, 50)
@@ -119,34 +126,39 @@ class pokemon_io_test(base_test):
         for contest_stat in mightyena.contest_stats.keys:
             self.assertEqual(mightyena.contest_stats[contest_stat], 0)
 
-        expected_move_names = ["Crunch", "Strength", "Shadow Ball", "Double-Edge"]
+        expected_moves = [
+            pkmn.move.CRUNCH,
+            pkmn.move.STRENGTH,
+            pkmn.move.SHADOW_BALL,
+            pkmn.move.DOUBLE_EDGE
+        ]
         self.assertEqual(len(mightyena.moves), 4)
         for move_index in range(4):
             self.assertEqual(
                 mightyena.moves[move_index].move,
-                expected_move_names[move_index]
+                expected_moves[move_index]
             )
 
         self.assertEqual(len(mightyena.EVs), 6)
-        self.assertEqual(mightyena.EVs["HP"], 30)
-        self.assertEqual(mightyena.EVs["Attack"], 110)
-        self.assertEqual(mightyena.EVs["Defense"], 32)
-        self.assertEqual(mightyena.EVs["Speed"], 48)
-        self.assertEqual(mightyena.EVs["Special Attack"], 17)
-        self.assertEqual(mightyena.EVs["Special Defense"], 83)
+        self.assertEqual(mightyena.EVs[pkmn.pokemon_stat.HP], 30)
+        self.assertEqual(mightyena.EVs[pkmn.pokemon_stat.ATTACK], 110)
+        self.assertEqual(mightyena.EVs[pkmn.pokemon_stat.DEFENSE], 32)
+        self.assertEqual(mightyena.EVs[pkmn.pokemon_stat.SPEED], 48)
+        self.assertEqual(mightyena.EVs[pkmn.pokemon_stat.SPECIAL_ATTACK], 17)
+        self.assertEqual(mightyena.EVs[pkmn.pokemon_stat.SPECIAL_DEFENSE], 83)
 
         self.assertEqual(len(mightyena.IVs), 6)
-        self.assertEqual(mightyena.IVs["HP"], 26)
-        self.assertEqual(mightyena.IVs["Attack"], 28)
-        self.assertEqual(mightyena.IVs["Defense"], 4)
-        self.assertEqual(mightyena.IVs["Speed"], 13)
-        self.assertEqual(mightyena.IVs["Special Attack"], 25)
-        self.assertEqual(mightyena.IVs["Special Defense"], 26)
+        self.assertEqual(mightyena.IVs[pkmn.pokemon_stat.HP], 26)
+        self.assertEqual(mightyena.IVs[pkmn.pokemon_stat.ATTACK], 28)
+        self.assertEqual(mightyena.IVs[pkmn.pokemon_stat.DEFENSE], 4)
+        self.assertEqual(mightyena.IVs[pkmn.pokemon_stat.SPEED], 13)
+        self.assertEqual(mightyena.IVs[pkmn.pokemon_stat.SPECIAL_ATTACK], 25)
+        self.assertEqual(mightyena.IVs[pkmn.pokemon_stat.SPECIAL_DEFENSE], 26)
 
         self.assertEqual(len(mightyena.stats), 6)
-        self.assertEqual(mightyena.stats["HP"], 146)
-        self.assertEqual(mightyena.stats["Attack"], 122)
-        self.assertEqual(mightyena.stats["Defense"], 81)
-        self.assertEqual(mightyena.stats["Speed"], 87)
-        self.assertEqual(mightyena.stats["Special Attack"], 79)
-        self.assertEqual(mightyena.stats["Special Defense"], 88)
+        self.assertEqual(mightyena.stats[pkmn.pokemon_stat.HP], 146)
+        self.assertEqual(mightyena.stats[pkmn.pokemon_stat.ATTACK], 122)
+        self.assertEqual(mightyena.stats[pkmn.pokemon_stat.DEFENSE], 81)
+        self.assertEqual(mightyena.stats[pkmn.pokemon_stat.SPEED], 87)
+        self.assertEqual(mightyena.stats[pkmn.pokemon_stat.SPECIAL_ATTACK], 79)
+        self.assertEqual(mightyena.stats[pkmn.pokemon_stat.SPECIAL_DEFENSE], 88)

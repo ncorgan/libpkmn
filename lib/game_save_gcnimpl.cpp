@@ -224,16 +224,16 @@ namespace pkmn {
         _current_slot->player->trainer->SID = trainer_secret_id;
     }
 
-    std::string game_save_gcnimpl::get_trainer_gender()
+    // TODO: conversion enum
+    pkmn::e_gender game_save_gcnimpl::get_trainer_gender()
     {
         boost::lock_guard<game_save_gcnimpl> lock(*this);
 
-        return (_current_slot->player->trainerGender == LibPkmGC::Male) ? "Male" : "Female";
+        return (_current_slot->player->trainerGender == LibPkmGC::Male) ? pkmn::e_gender::MALE
+                                                                        : pkmn::e_gender::FEMALE;
     }
 
-    void game_save_gcnimpl::set_trainer_gender(
-        PKMN_UNUSED(const std::string& trainer_gender)
-    )
+    void game_save_gcnimpl::set_trainer_gender(pkmn::e_gender)
     {
         throw pkmn::feature_not_in_game_error("All trainers are male in Gamecube games.");
     }

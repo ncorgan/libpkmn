@@ -13,6 +13,20 @@
 #include <pkmn/database/pokemon_entry.hpp>
 #include <pkmn/types/class_with_attributes.hpp>
 
+#include <pkmn/enums/ability.hpp>
+#include <pkmn/enums/ball.hpp>
+#include <pkmn/enums/condition.hpp>
+#include <pkmn/enums/contest_stat.hpp>
+#include <pkmn/enums/game.hpp>
+#include <pkmn/enums/gender.hpp>
+#include <pkmn/enums/item.hpp>
+#include <pkmn/enums/language.hpp>
+#include <pkmn/enums/marking.hpp>
+#include <pkmn/enums/move.hpp>
+#include <pkmn/enums/nature.hpp>
+#include <pkmn/enums/species.hpp>
+#include <pkmn/enums/stat.hpp>
+
 #include <cstdint>
 #include <memory>
 #include <map>
@@ -31,8 +45,8 @@ namespace pkmn {
             typedef std::shared_ptr<pokemon> sptr;
 
             static sptr make(
-                const std::string& species,
-                const std::string& game,
+                pkmn::e_species species,
+                pkmn::e_game game,
                 const std::string& form,
                 int level
             );
@@ -45,17 +59,15 @@ namespace pkmn {
 
             static const std::string DEFAULT_TRAINER_NAME;
 
-            virtual sptr to_game(
-                const std::string& game
-            ) = 0;
+            virtual sptr to_game(pkmn::e_game game) = 0;
 
             virtual void export_to_file(
                 const std::string& filepath
             ) = 0;
 
-            virtual std::string get_species() = 0;
+            virtual pkmn::e_species get_species() = 0;
 
-            virtual std::string get_game() = 0;
+            virtual pkmn::e_game get_game() = 0;
 
             virtual std::string get_form() = 0;
 
@@ -71,10 +83,10 @@ namespace pkmn {
 
             virtual const pkmn::database::pokemon_entry& get_database_entry() = 0;
 
-            virtual std::string get_condition() = 0;
+            virtual pkmn::e_condition get_condition() = 0;
 
             virtual void set_condition(
-                const std::string& condition
+                pkmn::e_condition condition
             ) = 0;
 
             virtual std::string get_nickname() = 0;
@@ -83,10 +95,10 @@ namespace pkmn {
                 const std::string& nickname
             ) = 0;
 
-            virtual std::string get_gender() = 0;
+            virtual pkmn::e_gender get_gender() = 0;
 
             virtual void set_gender(
-                const std::string& gender
+                pkmn::e_gender gender
             ) = 0;
 
             virtual bool is_shiny() = 0;
@@ -95,16 +107,16 @@ namespace pkmn {
                 bool value
             ) = 0;
 
-            virtual std::string get_held_item() = 0;
+            virtual pkmn::e_item get_held_item() = 0;
 
             virtual void set_held_item(
-                const std::string& held_item
+                pkmn::e_item held_item
             ) = 0;
 
-            virtual std::string get_nature() = 0;
+            virtual pkmn::e_nature get_nature() = 0;
 
             virtual void set_nature(
-                const std::string& nature
+                pkmn::e_nature nature
             ) = 0;
 
             virtual int get_pokerus_duration() = 0;
@@ -137,16 +149,16 @@ namespace pkmn {
                 uint32_t id
             ) = 0;
 
-            virtual std::string get_original_trainer_gender() = 0;
+            virtual pkmn::e_gender get_original_trainer_gender() = 0;
 
             virtual void set_original_trainer_gender(
-                const std::string& trainer_gender
+                pkmn::e_gender trainer_gender
             ) = 0;
 
-            virtual std::string get_language() = 0;
+            virtual pkmn::e_language get_language() = 0;
 
             virtual void set_language(
-                const std::string& language
+                pkmn::e_language language
             ) = 0;
 
             virtual int get_current_trainer_friendship() = 0;
@@ -155,16 +167,14 @@ namespace pkmn {
                 int friendship
             ) = 0;
 
-            virtual std::string get_ability() = 0;
+            virtual pkmn::e_ability get_ability() = 0;
 
-            virtual void set_ability(
-                const std::string& ability
-            ) = 0;
+            virtual void set_ability(pkmn::e_ability ability) = 0;
 
-            virtual std::string get_ball() = 0;
+            virtual pkmn::e_ball get_ball() = 0;
 
             virtual void set_ball(
-                const std::string& ball
+                pkmn::e_ball ball
             ) = 0;
 
             virtual int get_level_met() = 0;
@@ -182,11 +192,9 @@ namespace pkmn {
                 bool as_egg
             ) = 0;
 
-            virtual std::string get_original_game() = 0;
+            virtual pkmn::e_game get_original_game() = 0;
 
-            virtual void set_original_game(
-                const std::string& game
-            ) = 0;
+            virtual void set_original_game(pkmn::e_game game) = 0;
 
             virtual uint32_t get_personality() = 0;
 
@@ -206,10 +214,10 @@ namespace pkmn {
                 int level
             ) = 0;
 
-            virtual const std::map<std::string, bool>& get_markings() = 0;
+            virtual const std::map<pkmn::e_marking, bool>& get_markings() = 0;
 
             virtual void set_marking(
-                const std::string& marking,
+                pkmn::e_marking marking,
                 bool value
             ) = 0;
 
@@ -220,17 +228,17 @@ namespace pkmn {
                 bool value
             ) = 0;
 
-            virtual const std::map<std::string, int>& get_contest_stats() = 0;
+            virtual const std::map<pkmn::e_contest_stat, int>& get_contest_stats() = 0;
 
             virtual void set_contest_stat(
-                const std::string& stat,
+                pkmn::e_contest_stat stat,
                 int value
             ) = 0;
 
             virtual const pkmn::move_slots_t& get_moves() = 0;
 
             virtual void set_move(
-                const std::string& move,
+                pkmn::e_move move,
                 int index
             ) = 0;
 
@@ -239,17 +247,17 @@ namespace pkmn {
                 int pp
             ) = 0;
 
-            virtual const std::map<std::string, int>& get_EVs() = 0;
+            virtual const std::map<pkmn::e_stat, int>& get_EVs() = 0;
 
             virtual void set_EV(
-                const std::string& stat,
+                pkmn::e_stat stat,
                 int value
             ) = 0;
 
-            virtual const std::map<std::string, int>& get_IVs() = 0;
+            virtual const std::map<pkmn::e_stat, int>& get_IVs() = 0;
 
             virtual void set_IV(
-                const std::string& stat,
+                pkmn::e_stat stat,
                 int value
             ) = 0;
 
@@ -259,7 +267,7 @@ namespace pkmn {
                 int hp
             ) = 0;
 
-            virtual const std::map<std::string, int>& get_stats() = 0;
+            virtual const std::map<pkmn::e_stat, int>& get_stats() = 0;
 
             virtual std::string get_icon_filepath() = 0;
 

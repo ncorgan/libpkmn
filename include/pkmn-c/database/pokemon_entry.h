@@ -9,19 +9,25 @@
 
 #include <pkmn-c/config.h>
 #include <pkmn-c/error.h>
+
+#include <pkmn-c/enums/ability.h>
+#include <pkmn-c/enums/egg_group.h>
+#include <pkmn-c/enums/game.h>
+#include <pkmn-c/enums/species.h>
+#include <pkmn-c/enums/stat.h>
+#include <pkmn-c/enums/type.h>
+
 #include <pkmn-c/types/levelup_move.h>
-#include <pkmn-c/types/stats.h>
 #include <pkmn-c/types/string_types.h>
 
 #include <stdbool.h>
 
-#define PKMN_C_NUM_STATS 7
-
 struct pkmn_database_pokemon_entry
 {
-    char* p_name;
-    char* p_game;
-    char* p_species;
+    enum pkmn_species species;
+    char* p_species_name;
+    enum pkmn_game game;
+    char* p_category;
     char* p_form;
     char* p_pokedex_entry;
     float height;
@@ -30,19 +36,19 @@ struct pkmn_database_pokemon_entry
     float chance_female;
     bool has_gender_differences;
     int base_friendship;
-    struct pkmn_string_pair types;
-    struct pkmn_string_pair abilities;
-    char* p_hidden_ability;
-    struct pkmn_string_pair egg_groups;
-    int base_stats[PKMN_C_NUM_STATS];
-    int EV_yields[PKMN_C_NUM_STATS];
+    struct pkmn_type_enum_pair types;
+    struct pkmn_ability_enum_pair abilities;
+    enum pkmn_ability hidden_ability;
+    struct pkmn_egg_group_enum_pair egg_groups;
+    struct pkmn_stat_enum_map base_stats;
+    struct pkmn_stat_enum_map EV_yields;
     int experience_yield;
     struct pkmn_levelup_moves levelup_moves;
-    struct pkmn_string_list tm_hm_moves;
-    struct pkmn_string_list egg_moves;
-    struct pkmn_string_list tutor_moves;
+    struct pkmn_move_enum_list tm_hm_moves;
+    struct pkmn_move_enum_list egg_moves;
+    struct pkmn_move_enum_list tutor_moves;
     struct pkmn_string_list forms;
-    struct pkmn_string_list evolutions;
+    struct pkmn_species_enum_list evolutions;
 };
 
 #ifdef __cplusplus
@@ -50,8 +56,8 @@ extern "C" {
 #endif
 
 PKMN_C_API enum pkmn_error pkmn_database_get_pokemon_entry(
-    const char* p_species,
-    const char* p_game,
+    enum pkmn_species species,
+    enum pkmn_game game,
     const char* p_form,
     struct pkmn_database_pokemon_entry* p_pokemon_entry_out
 );

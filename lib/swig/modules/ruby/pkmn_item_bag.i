@@ -23,7 +23,7 @@
 
 // Convert getter/setter functions into attributes for more idiomatic Ruby.
 
-%attributestring(pkmn::swig::item_bag, std::string, game, get_game);
+%attribute(pkmn::swig::item_bag, pkmn::e_game, game, get_game);
 %attributeval(pkmn::swig::item_bag, %arg(std::vector<std::string>), pocket_names, get_pocket_names);
 
 %include "cpp_wrappers/item_bag.hpp"

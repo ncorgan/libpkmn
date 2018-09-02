@@ -13,6 +13,10 @@
 
 #include <pkmn-c/error.h>
 
+#include <pkmn-c/enums/item.h>
+
+#include <pkmn/enums/item.hpp>
+
 #include <boost/assert.hpp>
 #include <boost/thread/mutex.hpp>
 
@@ -21,7 +25,7 @@ namespace pkmn { namespace c {
     template <typename c_struct_type, typename libpkmn_type>
     enum pkmn_error add_item(
         const c_struct_type* p_c_struct,
-        const char* p_item,
+        enum pkmn_item item,
         size_t amount,
         const std::string& c_struct_param_name
     )
@@ -39,23 +43,15 @@ namespace pkmn { namespace c {
                                );
             BOOST_ASSERT(p_internal != nullptr);
 
-            error = check_for_null_param(
-                        p_item,
-                        "p_item",
-                        p_internal
-                    );
-            if(!error)
+            auto impl = [&]()
             {
-                auto impl = [&]()
-                {
-                    p_internal->cpp->add(
-                        p_item,
-                        static_cast<int>(amount)
-                    );
-                };
+                p_internal->cpp->add(
+                    static_cast<pkmn::e_item>(item),
+                    static_cast<int>(amount)
+                );
+            };
 
-                error = handle_exceptions(impl, p_internal);
-            }
+            error = handle_exceptions(impl, p_internal);
         }
 
         return error;
@@ -64,7 +60,7 @@ namespace pkmn { namespace c {
     template <typename c_struct_type, typename libpkmn_type>
     enum pkmn_error remove_item(
         const c_struct_type* p_c_struct,
-        const char* p_item,
+        enum pkmn_item item,
         size_t amount,
         const std::string& c_struct_param_name
     )
@@ -82,23 +78,15 @@ namespace pkmn { namespace c {
                                );
             BOOST_ASSERT(p_internal != nullptr);
 
-            error = check_for_null_param(
-                        p_item,
-                        "p_item",
-                        p_internal
-                    );
-            if(!error)
+            auto impl = [&]()
             {
-                auto impl = [&]()
-                {
-                    p_internal->cpp->remove(
-                        p_item,
-                        static_cast<int>(amount)
-                    );
-                };
+                p_internal->cpp->remove(
+                    static_cast<pkmn::e_item>(item),
+                    static_cast<int>(amount)
+                );
+            };
 
-                error = handle_exceptions(impl, p_internal);
-            }
+            error = handle_exceptions(impl, p_internal);
         }
 
         return error;

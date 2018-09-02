@@ -16,6 +16,8 @@ require_relative "PKMN/GUI"
 require_relative "PKMN/Paths"
 require_relative "PKMN/STL"
 
+@ENUM_IMPORT@
+
 module PKMN
     VERSION = "@PKMN_VERSION@"
 

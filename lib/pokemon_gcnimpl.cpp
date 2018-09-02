@@ -13,10 +13,12 @@
 #include "conversions/gen3_conversions.hpp"
 
 #include "database/database_common.hpp"
+#include "database/enum_conversions.hpp"
 #include "database/id_to_index.hpp"
 #include "database/id_to_string.hpp"
 #include "database/index_to_string.hpp"
 
+#include "pkmgc/enum_maps.hpp"
 #include "pksav/enum_maps.hpp"
 
 #include "types/rng.hpp"
@@ -29,6 +31,8 @@
 
 #include <pkmn/database/item_entry.hpp>
 
+#include <pkmn/enums/enum_to_string.hpp>
+
 #include <boost/algorithm/string.hpp>
 #include <boost/assign.hpp>
 #include <boost/format.hpp>
@@ -38,6 +42,7 @@
 
 #include <cstring>
 #include <stdexcept>
+#include <unordered_map>
 
 namespace pkmn
 {
@@ -45,57 +50,13 @@ namespace pkmn
     BOOST_STATIC_CONSTEXPR int UNOWN_ID  = 201;
     BOOST_STATIC_CONSTEXPR int DEOXYS_ID = 386;
 
-    // TODO: consistency in template order
-
-    typedef boost::bimap<libpkmgc_contest_stat_t, std::string> contest_stat_bimap_t;
-    static const contest_stat_bimap_t CONTEST_STAT_BIMAP = boost::assign::list_of<contest_stat_bimap_t::relation>
-        (LIBPKMGC_CONTEST_STAT_COOL,   "Cool")
-        (LIBPKMGC_CONTEST_STAT_BEAUTY, "Beauty")
-        (LIBPKMGC_CONTEST_STAT_CUTE,   "Cute")
-        (LIBPKMGC_CONTEST_STAT_SMART,  "Smart")
-        (LIBPKMGC_CONTEST_STAT_TOUGH,  "Tough")
-    ;
-
-    static const std::map<std::string, LibPkmGC::ContestAchievementLevel> CONTEST_LEVEL_MAP =
-    boost::assign::map_list_of<std::string, LibPkmGC::ContestAchievementLevel>
-        ("",       LibPkmGC::NormalContestWon)
-        ("Super",  LibPkmGC::SuperContestWon)
-        ("Hyper",  LibPkmGC::HyperContestWon)
-        ("Master", LibPkmGC::MasterContestWon)
-    ;
-
-    typedef boost::bimap<LibPkmGC::Gender, std::string> gender_bimap_t;
-    static const gender_bimap_t GENDER_BIMAP = boost::assign::list_of<gender_bimap_t::relation>
-        (LibPkmGC::Male,       "Male")
-        (LibPkmGC::Female,     "Female")
-        (LibPkmGC::Genderless, "Genderless")
-    ;
-
-    typedef boost::bimap<libpkmgc_ribbon_t, std::string> ribbon_bimap_t;
-    static const ribbon_bimap_t RIBBON_BIMAP = boost::assign::list_of<ribbon_bimap_t::relation>
-        (LIBPKMGC_RIBBON_CHAMPION, "Champion")
-        (LIBPKMGC_RIBBON_WINNING,  "Winning")
-        (LIBPKMGC_RIBBON_VICTORY,  "Victory")
-        (LIBPKMGC_RIBBON_ARTIST,   "Artist")
-        (LIBPKMGC_RIBBON_EFFORT,   "Effort")
-        (LIBPKMGC_RIBBON_MARINE,   "Marine")
-        (LIBPKMGC_RIBBON_LAND,     "Land")
-        (LIBPKMGC_RIBBON_SKY,      "Sky")
-        (LIBPKMGC_RIBBON_COUNTRY,  "Country")
-        (LIBPKMGC_RIBBON_NATIONAL, "National")
-        (LIBPKMGC_RIBBON_EARTH,    "Earth")
-        (LIBPKMGC_RIBBON_WORLD,    "World")
-    ;
-
-    typedef boost::bimap<std::string, LibPkmGC::LanguageIndex> language_bimap_t;
-    static const language_bimap_t& LANGUAGE_BIMAP = boost::assign::list_of<language_bimap_t::relation>
-        ("Japanese", LibPkmGC::Japanese)
-        ("English",  LibPkmGC::English)
-        ("German",   LibPkmGC::German)
-        ("French",   LibPkmGC::French)
-        ("Italian",  LibPkmGC::Italian)
-        ("Spanish",  LibPkmGC::Spanish)
-    ;
+    static const std::unordered_map<std::string, LibPkmGC::ContestAchievementLevel> CONTEST_LEVEL_MAP =
+    {
+        {"",       LibPkmGC::NormalContestWon},
+        {"Super",  LibPkmGC::SuperContestWon},
+        {"Hyper",  LibPkmGC::HyperContestWon},
+        {"Master", LibPkmGC::MasterContestWon}
+    };
 
     pokemon_gcnimpl::pokemon_gcnimpl(
         pkmn::database::pokemon_entry&& database_entry,
@@ -118,11 +79,11 @@ namespace pkmn
         _libpkmgc_pokemon_uptr->heldItem = LibPkmGC::NoItem;
         _libpkmgc_pokemon_uptr->friendship = LibPkmGC::u8(_database_entry.get_base_friendship());
         _libpkmgc_pokemon_uptr->locationCaught = 0; // Met in a distant land
-        _libpkmgc_pokemon_uptr->ballCaughtWith = LibPkmGC::PremierBall;
+        _libpkmgc_pokemon_uptr->ballCaughtWith = LibPkmGC::PokeBall;
         _libpkmgc_pokemon_uptr->levelMet = LibPkmGC::u8(level);
         _libpkmgc_pokemon_uptr->OTGender = LibPkmGC::Male;
         _libpkmgc_pokemon_uptr->OTName->fromUTF8(pkmn::pokemon::DEFAULT_TRAINER_NAME.c_str());
-        _libpkmgc_pokemon_uptr->name->fromUTF8(boost::algorithm::to_upper_copy(_database_entry.get_name()).c_str());
+        _libpkmgc_pokemon_uptr->name->fromUTF8(boost::algorithm::to_upper_copy(_database_entry.get_species_name()).c_str());
         _libpkmgc_pokemon_uptr->contestLuster = 0;
         _libpkmgc_pokemon_uptr->pokerusStatus = 0;
         _libpkmgc_pokemon_uptr->experience = LibPkmGC::u32(_database_entry.get_experience_at_level(level));
@@ -170,7 +131,8 @@ namespace pkmn
             _libpkmgc_pokemon_uptr->contestAchievements[i] = LibPkmGC::NoContestWon;
         }
 
-        set_original_game("Colosseum/XD");
+        // The in-game storage doesn't distinguish between Colosseum and XD.
+        set_original_game(pkmn::e_game::COLOSSEUM);
 
         // Populate abstractions
         _update_ribbons_map();
@@ -223,15 +185,13 @@ namespace pkmn
         _p_native_party = nullptr;
     }
 
-    pokemon::sptr pokemon_gcnimpl::to_game(
-        const std::string& game
-    )
+    pokemon::sptr pokemon_gcnimpl::to_game(pkmn::e_game game)
     {
         boost::lock_guard<pokemon_gcnimpl> lock(*this);
 
         pkmn::pokemon::sptr ret;
 
-        int game_id = pkmn::database::game_name_to_id(game);
+        int game_id = pkmn::database::game_enum_to_id(game);
         int generation = pkmn::database::game_id_to_generation(game_id);
         switch(generation)
         {
@@ -364,46 +324,39 @@ namespace pkmn
         _libpkmgc_pokemon_uptr->setEggFlag(is_egg);
     }
 
-    typedef boost::bimap<std::string, LibPkmGC::PokemonStatus> pokemon_status_bimap_t;
-    static const pokemon_status_bimap_t POKEMON_STATUS_BIMAP =
-    boost::assign::list_of<pokemon_status_bimap_t::relation>
-        ("None",       LibPkmGC::NoStatus)
-        ("Asleep",     LibPkmGC::Asleep)
-        ("Poison",     LibPkmGC::Poisoned)
-        ("Burn",       LibPkmGC::Burnt)
-        ("Frozen",     LibPkmGC::Frozen)
-        ("Paralysis",  LibPkmGC::Paralyzed)
-        ("Bad Poison", LibPkmGC::BadlyPoisoned)
-    ;
-
-    std::string pokemon_gcnimpl::get_condition()
+    pkmn::e_condition pokemon_gcnimpl::get_condition()
     {
         boost::lock_guard<pokemon_gcnimpl> lock(*this);
 
-        std::string ret = "None";
+        pkmn::e_condition ret = pkmn::e_condition::NONE;
         LibPkmGC::PokemonStatus status = _libpkmgc_pokemon_uptr->partyData.status;
 
-        if(POKEMON_STATUS_BIMAP.right.count(status) > 0)
+        static const pkmgc::condition_bimap_t& CONDITION_BIMAP = pkmgc::get_condition_bimap();
+
+        // Allow for a corrupted save.
+        if(CONDITION_BIMAP.right.count(status) > 0)
         {
-            ret = POKEMON_STATUS_BIMAP.right.at(status);
+            ret = CONDITION_BIMAP.right.at(status);
         }
 
         return ret;
     }
 
     void pokemon_gcnimpl::set_condition(
-        const std::string& condition
+        pkmn::e_condition condition
     )
     {
-        auto condition_iter = POKEMON_STATUS_BIMAP.left.find(condition);
+        static const pkmgc::condition_bimap_t& CONDITION_BIMAP = pkmgc::get_condition_bimap();
 
-        if(condition_iter != POKEMON_STATUS_BIMAP.left.end())
+        auto condition_iter = CONDITION_BIMAP.left.find(condition);
+
+        if(condition_iter != CONDITION_BIMAP.left.end())
         {
             boost::lock_guard<pokemon_gcnimpl> lock(*this);
 
             _libpkmgc_pokemon_uptr->partyData.status = condition_iter->second;
 
-            if(condition == "Asleep")
+            if(condition == pkmn::e_condition::ASLEEP)
             {
                 // Sleep is stored as the number of turns asleep, so set a random value.
                 _libpkmgc_pokemon_uptr->partyData.turnsOfSleepRemaining = pkmn::rng<LibPkmGC::s8>().rand(1, 7);
@@ -438,20 +391,26 @@ namespace pkmn
         _libpkmgc_pokemon_uptr->name->fromUTF8(nickname.c_str());
     }
 
-    std::string pokemon_gcnimpl::get_gender()
+    pkmn::e_gender pokemon_gcnimpl::get_gender()
     {
         boost::lock_guard<pokemon_gcnimpl> lock(*this);
 
         return pkmn::calculations::modern_pokemon_gender(
-                   _database_entry.get_name(),
+                   get_species(),
                    _libpkmgc_pokemon_uptr->PID
                );
     }
 
     void pokemon_gcnimpl::set_gender(
-        const std::string& gender
+        pkmn::e_gender gender
     )
     {
+        pkmn::enforce_value_in_vector(
+            "Gender",
+            gender,
+            {pkmn::e_gender::MALE, pkmn::e_gender::FEMALE, pkmn::e_gender::GENDERLESS}
+        );
+
         boost::lock_guard<pokemon_gcnimpl> lock(*this);
 
         _set_modern_gender(
@@ -490,18 +449,20 @@ namespace pkmn
         }
     }
 
-    std::string pokemon_gcnimpl::get_held_item()
+    pkmn::e_item pokemon_gcnimpl::get_held_item()
     {
         boost::lock_guard<pokemon_gcnimpl> lock(*this);
 
-        return pkmn::database::item_entry(
-                   _libpkmgc_pokemon_uptr->heldItem,
-                   _database_entry.get_game_id()
-               ).get_name();
+        return pkmn::e_item(
+                   pkmn::database::item_index_to_id(
+                       _libpkmgc_pokemon_uptr->heldItem,
+                       _database_entry.get_game_id()
+                   )
+               );
     }
 
     void pokemon_gcnimpl::set_held_item(
-        const std::string& held_item
+        pkmn::e_item held_item
     )
     {
         boost::lock_guard<pokemon_gcnimpl> lock(*this);
@@ -512,7 +473,7 @@ namespace pkmn
             get_game()
         );
 
-        if(not item.holdable() and (held_item != "None"))
+        if(!item.holdable() && (held_item != pkmn::e_item::NONE))
         {
             throw std::invalid_argument("This item is not holdable.");
         }
@@ -520,7 +481,7 @@ namespace pkmn
         _libpkmgc_pokemon_uptr->heldItem = LibPkmGC::ItemIndex(item.get_item_index());
     }
 
-    std::string pokemon_gcnimpl::get_nature()
+    pkmn::e_nature pokemon_gcnimpl::get_nature()
     {
         boost::lock_guard<pokemon_gcnimpl> lock(*this);
 
@@ -538,7 +499,7 @@ namespace pkmn
     }
 
     void pokemon_gcnimpl::set_nature(
-        const std::string& nature
+        pkmn::e_nature nature
     )
     {
         const pksav::nature_bimap_t& nature_bimap = pksav::get_nature_bimap();
@@ -551,7 +512,8 @@ namespace pkmn
         boost::lock_guard<pokemon_gcnimpl> lock(*this);
 
         // Nature is derived from personality, so we need to find a new
-        // one that preserves all other values.
+        // one that preserves all other values. Note that nature is not stored
+        // in the LibPkmGC class, so we just set the personality.
         set_personality(
             pkmn::calculations::generate_personality(
                 get_species(),
@@ -659,34 +621,41 @@ namespace pkmn
         _libpkmgc_pokemon_uptr->SID = uint16_t(id >> 16);
     }
 
-    std::string pokemon_gcnimpl::get_original_trainer_gender()
+    pkmn::e_gender pokemon_gcnimpl::get_original_trainer_gender()
     {
         boost::lock_guard<pokemon_gcnimpl> lock(*this);
 
-        return GENDER_BIMAP.left.at(_libpkmgc_pokemon_uptr->OTGender);
+        static const pkmgc::gender_bimap_t& GENDER_BIMAP = pkmgc::get_gender_bimap();
+        BOOST_ASSERT(GENDER_BIMAP.right.count(_libpkmgc_pokemon_uptr->OTGender) > 0);
+
+        return GENDER_BIMAP.right.at(_libpkmgc_pokemon_uptr->OTGender);
     }
 
     void pokemon_gcnimpl::set_original_trainer_gender(
-        const std::string& gender
+        pkmn::e_gender gender
     )
     {
-        if(gender == "Male" or gender == "Female")
-        {
-            boost::lock_guard<pokemon_gcnimpl> lock(*this);
+        pkmn::enforce_value_in_vector(
+            "Gender",
+            gender,
+            {pkmn::e_gender::MALE, pkmn::e_gender::FEMALE}
+        );
 
-            _libpkmgc_pokemon_uptr->OTGender = GENDER_BIMAP.right.at(gender);
-        }
-        else
-        {
-            throw std::invalid_argument("gender: valid values \"Male\", \"Female\"");
-        }
+        boost::lock_guard<pokemon_gcnimpl> lock(*this);
+
+        static const pkmgc::gender_bimap_t& GENDER_BIMAP = pkmgc::get_gender_bimap();
+        BOOST_ASSERT(GENDER_BIMAP.left.count(gender) > 0);
+
+        _libpkmgc_pokemon_uptr->OTGender = GENDER_BIMAP.left.at(gender);
     }
 
-    std::string pokemon_gcnimpl::get_language()
+    pkmn::e_language pokemon_gcnimpl::get_language()
     {
         boost::lock_guard<pokemon_gcnimpl> lock(*this);
 
-        std::string ret;
+        pkmn::e_language ret = pkmn::e_language::ENGLISH;
+
+        static const pkmgc::language_bimap_t& LANGUAGE_BIMAP = pkmgc::get_language_bimap();
 
         // Allow for other values in case of a corrupted save.
         auto language_bimap_iter = LANGUAGE_BIMAP.right.find(
@@ -696,19 +665,16 @@ namespace pkmn
         {
             ret = language_bimap_iter->second;
         }
-        else
-        {
-            // Sensible default
-            ret = "English";
-        }
 
         return ret;
     }
 
     void pokemon_gcnimpl::set_language(
-        const std::string& language
+        pkmn::e_language language
     )
     {
+        static const pkmgc::language_bimap_t& LANGUAGE_BIMAP = pkmgc::get_language_bimap();
+
         pkmn::enforce_value_in_map_keys(
             "Language",
             language,
@@ -738,29 +704,27 @@ namespace pkmn
         _libpkmgc_pokemon_uptr->friendship = LibPkmGC::u8(friendship);
     }
 
-    std::string pokemon_gcnimpl::get_ability()
+    pkmn::e_ability pokemon_gcnimpl::get_ability()
     {
         boost::lock_guard<pokemon_gcnimpl> lock(*this);
 
-        std::string ret;
+        pkmn::e_ability ret = pkmn::e_ability::NONE;
 
-        std::pair<std::string, std::string> abilities = _database_entry.get_abilities();
-        if(abilities.second == "None")
+        pkmn::ability_pair_t abilities = _database_entry.get_abilities();
+        if(abilities.second == pkmn::e_ability::NONE)
         {
             ret = abilities.first;
         }
         else
         {
-            // Don't use LibPkmGC's call, it has some mistakes.
+            // Don't use LibPkmGC's function to get the ability. It has some mistakes.
             ret = _libpkmgc_pokemon_uptr->hasSecondAbility() ? abilities.second : abilities.first;
         }
 
         return ret;
     }
 
-    void pokemon_gcnimpl::set_ability(
-        const std::string& ability
-    )
+    void pokemon_gcnimpl::set_ability(pkmn::e_ability ability)
     {
         boost::lock_guard<pokemon_gcnimpl> lock(*this);
 
@@ -776,23 +740,32 @@ namespace pkmn
                                       );
     }
 
-    std::string pokemon_gcnimpl::get_ball()
+    pkmn::e_ball pokemon_gcnimpl::get_ball()
     {
         boost::lock_guard<pokemon_gcnimpl> lock(*this);
 
-        return pkmn::database::ball_id_to_name(int(_libpkmgc_pokemon_uptr->ballCaughtWith));
+        pkmn::e_ball ball = pkmn::e_ball(_libpkmgc_pokemon_uptr->ballCaughtWith);
+        if((ball < pkmn::e_ball::NONE) || (ball > pkmn::e_ball::PREMIER_BALL))
+        {
+            ball = pkmn::e_ball::INVALID;
+        }
+
+        return ball;
     }
 
     void pokemon_gcnimpl::set_ball(
-        const std::string& ball
+        pkmn::e_ball ball
     )
     {
         boost::lock_guard<pokemon_gcnimpl> lock(*this);
 
         // Try and instantiate an item_entry to validate the ball.
-        pkmn::database::item_entry item(ball, get_game());
+        pkmn::database::item_entry item(
+            pkmn::database::ball_to_item(ball),
+            get_game()
+        );
 
-        _libpkmgc_pokemon_uptr->ballCaughtWith = LibPkmGC::ItemIndex(item.get_item_index());
+        _libpkmgc_pokemon_uptr->ballCaughtWith = LibPkmGC::ItemIndex(ball);
     }
 
 
@@ -853,41 +826,29 @@ namespace pkmn
         }
     }
 
-    std::string pokemon_gcnimpl::get_original_game()
+    pkmn::e_game pokemon_gcnimpl::get_original_game()
     {
         boost::lock_guard<pokemon_gcnimpl> lock(*this);
 
-        std::string ret;
+        pkmn::e_game ret = pkmn::e_game::NONE;
 
         if(_libpkmgc_pokemon_uptr->version.game == LibPkmGC::Colosseum_XD)
         {
-            ret = "Colosseum/XD";
+            ret = pkmn::e_game::COLOSSEUM;
         }
         else
         {
-            ret = pkmn::database::game_index_to_name(int(
-                       _libpkmgc_pokemon_uptr->version.game
-                   ));
+            ret = pkmn::database::game_index_to_enum(int(
+                      _libpkmgc_pokemon_uptr->version.game
+                  ));
         }
 
         return ret;
     }
 
-    void pokemon_gcnimpl::set_original_game(
-        const std::string& game
-    )
+    void pokemon_gcnimpl::set_original_game(pkmn::e_game game)
     {
-        std::string game_to_test;
-        if(game == "Colosseum/XD")
-        {
-            game_to_test = "Colosseum";
-        }
-        else
-        {
-            game_to_test = game;
-        }
-
-        int generation = pkmn::database::game_name_to_generation(game_to_test);
+        int generation = pkmn::database::game_enum_to_generation(game);
         if(generation != 3)
         {
             throw std::invalid_argument("Game must be from Generation III.");
@@ -895,14 +856,14 @@ namespace pkmn
 
         boost::lock_guard<pokemon_gcnimpl> lock(*this);
 
-        if(game == "Colosseum" or game == "XD" or game == "Colosseum/XD")
+        if((game == pkmn::e_game::COLOSSEUM) || (game == pkmn::e_game::XD))
         {
             _libpkmgc_pokemon_uptr->version.game = LibPkmGC::Colosseum_XD;
         }
         else
         {
             _libpkmgc_pokemon_uptr->version.game = LibPkmGC::GameIndex(
-                                         pkmn::database::game_name_to_index(game)
+                                         pkmn::database::game_enum_to_index(game)
                                      );
         }
     }
@@ -971,7 +932,7 @@ namespace pkmn
     }
 
     void pokemon_gcnimpl::set_IV(
-        const std::string& stat,
+        pkmn::e_stat stat,
         int value
     )
     {
@@ -984,30 +945,12 @@ namespace pkmn
 
         boost::lock_guard<pokemon_gcnimpl> lock(*this);
 
-        if(stat == "HP")
-        {
-            _libpkmgc_pokemon_uptr->IVs[LIBPKMGC_STAT_HP] = LibPkmGC::u8(value);
-        }
-        else if(stat == "Attack")
-        {
-            _libpkmgc_pokemon_uptr->IVs[LIBPKMGC_STAT_ATTACK] = LibPkmGC::u8(value);
-        }
-        else if(stat == "Defense")
-        {
-            _libpkmgc_pokemon_uptr->IVs[LIBPKMGC_STAT_DEFENSE] = LibPkmGC::u8(value);
-        }
-        else if(stat == "Speed")
-        {
-            _libpkmgc_pokemon_uptr->IVs[LIBPKMGC_STAT_SPEED] = LibPkmGC::u8(value);
-        }
-        else if(stat == "Special Attack")
-        {
-            _libpkmgc_pokemon_uptr->IVs[LIBPKMGC_STAT_SPATK] = LibPkmGC::u8(value);
-        }
-        else
-        {
-            _libpkmgc_pokemon_uptr->IVs[LIBPKMGC_STAT_SPDEF] = LibPkmGC::u8(value);
-        }
+        const pkmgc::stat_bimap_t& STAT_BIMAP = pkmgc::get_stat_bimap();
+
+        auto stat_bimap_iter = STAT_BIMAP.left.find(stat);
+        BOOST_ASSERT(stat_bimap_iter != STAT_BIMAP.left.end());
+
+        _libpkmgc_pokemon_uptr->IVs[int(stat_bimap_iter->second)] = LibPkmGC::u8(value);
 
         _IVs[stat] = value;
 
@@ -1015,31 +958,39 @@ namespace pkmn
     }
 
     void pokemon_gcnimpl::set_marking(
-        const std::string& marking,
+        pkmn::e_marking marking,
         bool value
     )
     {
+        pkmn::enforce_value_in_map_keys(
+            "Marking",
+            marking,
+            _markings
+        );
+
         boost::lock_guard<pokemon_gcnimpl> lock(*this);
 
-        if(marking == "Circle")
+        switch(marking)
         {
-            _libpkmgc_pokemon_uptr->markings.circle = value;
-        }
-        else if(marking == "Triangle")
-        {
-            _libpkmgc_pokemon_uptr->markings.triangle = value;
-        }
-        else if(marking == "Square")
-        {
-            _libpkmgc_pokemon_uptr->markings.square = value;
-        }
-        else if(marking == "Heart")
-        {
-            _libpkmgc_pokemon_uptr->markings.heart = value;
-        }
-        else
-        {
-            throw std::invalid_argument("Invalid marking.");
+            case pkmn::e_marking::CIRCLE:
+                _libpkmgc_pokemon_uptr->markings.circle = value;
+                break;
+
+            case pkmn::e_marking::TRIANGLE:
+                _libpkmgc_pokemon_uptr->markings.triangle = value;
+                break;
+
+            case pkmn::e_marking::SQUARE:
+                _libpkmgc_pokemon_uptr->markings.square = value;
+                break;
+
+            case pkmn::e_marking::HEART:
+                _libpkmgc_pokemon_uptr->markings.heart = value;
+                break;
+
+            default:
+                BOOST_ASSERT(false);
+                break;
         }
 
         _markings[marking] = value;
@@ -1050,88 +1001,87 @@ namespace pkmn
         bool value
     )
     {
+        pkmn::enforce_value_in_map_keys(
+            "Ribbon",
+            ribbon,
+            _ribbons
+        );
+
         boost::lock_guard<pokemon_gcnimpl> lock(*this);
 
-        if(_ribbons.find(ribbon) == _ribbons.end())
-        {
-            throw std::invalid_argument("Invalid ribbon.");
-        }
+        static const pkmgc::ribbon_bimap_t& RIBBON_BIMAP = pkmgc::get_ribbon_bimap();
 
         // Non-contest ribbon
-        if(RIBBON_BIMAP.right.count(ribbon) > 0)
+        if(RIBBON_BIMAP.left.count(ribbon) > 0)
         {
-            _libpkmgc_pokemon_uptr->specialRibbons[RIBBON_BIMAP.right.at(ribbon)] = value;
+            _libpkmgc_pokemon_uptr->specialRibbons[int(RIBBON_BIMAP.left.at(ribbon))] = value;
             _ribbons[ribbon] = value;
         }
         else
         {
+            static const pkmgc::contest_stat_bimap_t& CONTEST_STAT_BIMAP = pkmgc::get_contest_stat_bimap();
+
             std::vector<std::string> ribbon_parts;
             boost::split(ribbon_parts, ribbon, boost::is_any_of(" "));
-
-            // Validate input (which should already have been validated)
-            if((ribbon_parts.size() == 0 or ribbon_parts.size() > 2) or
-               (CONTEST_STAT_BIMAP.right.count(ribbon_parts.at(0)) == 0) or
-               (ribbon_parts.size() == 2 and
-                CONTEST_LEVEL_MAP.count(ribbon_parts.at(1)) == 0)
-              )
-            {
-                throw std::invalid_argument("Invalid ribbon.");
-            }
 
             if(ribbon_parts.size() == 1)
             {
                 ribbon_parts.emplace_back("");
             }
 
-            _libpkmgc_pokemon_uptr->contestAchievements[CONTEST_STAT_BIMAP.right.at(ribbon_parts[0])] =
-                value ? CONTEST_LEVEL_MAP.at(ribbon_parts[1])
-                      : LibPkmGC::ContestAchievementLevel(CONTEST_LEVEL_MAP.at(ribbon_parts[1])-1);
+            // This should succeed, as we've already validated the ribbon name.
+            auto contest_stat_iter = CONTEST_STAT_BIMAP.left.find(
+                                         pkmn::string_to_contest_stat(
+                                             ribbon_parts[0]
+                                         )
+                                     );
+            BOOST_ASSERT(contest_stat_iter != CONTEST_STAT_BIMAP.left.end());
 
+            LibPkmGC::ContestAchievementLevel contest_level = CONTEST_LEVEL_MAP.at(ribbon_parts[1]);
+
+            // If we're removing the given ribbon, we need the next-lowest level.
+            if(!value)
+            {
+                pkmn::decrement_enum(contest_level);
+            }
+
+            _libpkmgc_pokemon_uptr->contestAchievements[int(contest_stat_iter->second)] = contest_level;
             _update_ribbons_map();
         }
     }
 
     void pokemon_gcnimpl::set_contest_stat(
-        const std::string& stat,
+        pkmn::e_contest_stat stat,
         int value
     )
     {
+        pkmn::enforce_value_in_map_keys(
+            "Contest stat",
+            stat,
+            _contest_stats
+        );
         pkmn::enforce_bounds("Contest stat", value, 0, 255);
 
-        if(stat == "Cool")
-        {
-            _libpkmgc_pokemon_uptr->contestStats[LIBPKMGC_CONTEST_STAT_COOL] = LibPkmGC::u8(value);
-        }
-        else if(stat == "Beauty")
-        {
-            _libpkmgc_pokemon_uptr->contestStats[LIBPKMGC_CONTEST_STAT_BEAUTY] = LibPkmGC::u8(value);
-        }
-        else if(stat == "Cute")
-        {
-            _libpkmgc_pokemon_uptr->contestStats[LIBPKMGC_CONTEST_STAT_CUTE] = LibPkmGC::u8(value);
-        }
-        else if(stat == "Smart")
-        {
-            _libpkmgc_pokemon_uptr->contestStats[LIBPKMGC_CONTEST_STAT_SMART] = LibPkmGC::u8(value);
-        }
-        else if(stat == "Tough")
-        {
-            _libpkmgc_pokemon_uptr->contestStats[LIBPKMGC_CONTEST_STAT_TOUGH] = LibPkmGC::u8(value);
-        }
-        else if(stat == "Feel")
+        if(stat == pkmn::e_contest_stat::FEEL)
         {
             _libpkmgc_pokemon_uptr->contestLuster = LibPkmGC::u8(value);
         }
         else
         {
-            throw std::invalid_argument("Invalid contest stat.");
+            static const pkmgc::contest_stat_bimap_t& CONTEST_STAT_BIMAP = pkmgc::get_contest_stat_bimap();
+
+            // This should have been validated above.
+            auto contest_stat_iter = CONTEST_STAT_BIMAP.left.find(stat);
+            BOOST_ASSERT(contest_stat_iter != CONTEST_STAT_BIMAP.left.end());
+
+            _libpkmgc_pokemon_uptr->contestStats[int(contest_stat_iter->second)] = LibPkmGC::u8(value);
         }
 
         _contest_stats[stat] = value;
     }
 
     void pokemon_gcnimpl::set_move(
-        const std::string& move,
+        pkmn::e_move move,
         int index
     )
     {
@@ -1146,7 +1096,7 @@ namespace pkmn
          * move on demand, whether it be in-battle or on a stats screen. As such,
          * don't allow it to be set here.
          */
-        if(entry.get_type() == "Shadow")
+        if(entry.get_type() == pkmn::e_type::SHADOW)
         {
             throw std::invalid_argument("You cannot set Shadow moves.");
         }
@@ -1192,7 +1142,7 @@ namespace pkmn
     }
 
     void pokemon_gcnimpl::set_EV(
-        const std::string& stat,
+        pkmn::e_stat stat,
         int value
     )
     {
@@ -1205,31 +1155,13 @@ namespace pkmn
 
         boost::lock_guard<pokemon_gcnimpl> lock(*this);
 
-        if(stat == "HP")
-        {
-            _libpkmgc_pokemon_uptr->EVs[LIBPKMGC_STAT_HP] = LibPkmGC::u8(value);
-        }
-        else if(stat == "Attack")
-        {
-            _libpkmgc_pokemon_uptr->EVs[LIBPKMGC_STAT_ATTACK] = LibPkmGC::u8(value);
-        }
-        else if(stat == "Defense")
-        {
-            _libpkmgc_pokemon_uptr->EVs[LIBPKMGC_STAT_DEFENSE] = LibPkmGC::u8(value);
-        }
-        else if(stat == "Speed")
-        {
-            _libpkmgc_pokemon_uptr->EVs[LIBPKMGC_STAT_SPEED] = LibPkmGC::u8(value);
-        }
-        else if(stat == "Special Attack")
-        {
-            _libpkmgc_pokemon_uptr->EVs[LIBPKMGC_STAT_SPATK] = LibPkmGC::u8(value);
-        }
-        else
-        {
-            _libpkmgc_pokemon_uptr->EVs[LIBPKMGC_STAT_SPDEF] = LibPkmGC::u8(value);
-        }
+        static const pkmgc::stat_bimap_t& STAT_BIMAP = pkmgc::get_stat_bimap();
 
+        // This should have been validated above.
+        auto stat_iter = STAT_BIMAP.left.find(stat);
+        BOOST_ASSERT(stat_iter != STAT_BIMAP.left.end());
+
+        _libpkmgc_pokemon_uptr->EVs[int(stat_iter->second)] = LibPkmGC::u8(value);
         _EVs[stat] = value;
 
         _populate_party_data();
@@ -1250,7 +1182,7 @@ namespace pkmn
             "Current HP",
             hp,
             0,
-            _stats["HP"]
+            _stats[pkmn::e_stat::HP]
         );
 
         boost::lock_guard<pokemon_gcnimpl> lock(*this);
@@ -1287,11 +1219,9 @@ namespace pkmn
             case 1:
             case 2:
             case 3:
+                // TODO: figure out converting invalid indices
                 _moves[index] = pkmn::move_slot(
-                    pkmn::database::move_id_to_name(
-                        int(_libpkmgc_pokemon_uptr->moves[index].move),
-                        3
-                    ),
+                    static_cast<pkmn::e_move>(_libpkmgc_pokemon_uptr->moves[index].move),
                     _libpkmgc_pokemon_uptr->moves[index].currentPPs
                 );
                 break;
@@ -1304,67 +1234,102 @@ namespace pkmn
         }
     }
 
-    void pokemon_gcnimpl::_update_ribbons_map() {
+    void pokemon_gcnimpl::_update_ribbons_map()
+    {
+        static const pkmgc::contest_stat_bimap_t& CONTEST_STAT_BIMAP = pkmgc::get_contest_stat_bimap();
+
         // Contest ribbons
-        for(auto iter = CONTEST_STAT_BIMAP.right.begin(); iter != CONTEST_STAT_BIMAP.right.end(); ++iter) {
-            _ribbons[iter->first]             = (_libpkmgc_pokemon_uptr->contestAchievements[iter->second] >= LibPkmGC::NormalContestWon);
-            _ribbons[iter->first + " Super"]  = (_libpkmgc_pokemon_uptr->contestAchievements[iter->second] >= LibPkmGC::SuperContestWon);
-            _ribbons[iter->first + " Hyper"]  = (_libpkmgc_pokemon_uptr->contestAchievements[iter->second] >= LibPkmGC::HyperContestWon);
-            _ribbons[iter->first + " Master"] = (_libpkmgc_pokemon_uptr->contestAchievements[iter->second] >= LibPkmGC::MasterContestWon);
+        for(const auto& contest_stat_iter: CONTEST_STAT_BIMAP.left)
+        {
+            pkmn::e_contest_stat libpkmn_contest_stat = contest_stat_iter.first;
+            pkmgc::e_contest_stat libpkmgc_contest_stat = contest_stat_iter.second;
+
+            std::string contest_stat_name = pkmn::contest_stat_to_string(libpkmn_contest_stat);
+
+            for(const auto& contest_level_iter: CONTEST_LEVEL_MAP)
+            {
+                const std::string& contest_level_name = contest_level_iter.first;
+                LibPkmGC::ContestAchievementLevel contest_level_enum = contest_level_iter.second;
+
+                std::string ribbon_name = contest_stat_name;
+                if(!contest_level_name.empty())
+                {
+                    ribbon_name.append(" ");
+                    ribbon_name.append(contest_level_name);
+                }
+
+                _ribbons[ribbon_name] =
+                    (_libpkmgc_pokemon_uptr->contestAchievements[int(libpkmgc_contest_stat)] >= contest_level_enum);
+            }
         }
+
+        static const pkmgc::ribbon_bimap_t& RIBBON_BIMAP = pkmgc::get_ribbon_bimap();
 
         // Non-contest ribbons
-        for(auto iter = RIBBON_BIMAP.right.begin(); iter != RIBBON_BIMAP.right.end(); ++iter) {
-            _ribbons[iter->first] = _libpkmgc_pokemon_uptr->specialRibbons[iter->second];
+        for(const auto& ribbon_iter: RIBBON_BIMAP.left)
+        {
+            const std::string& ribbon_name = ribbon_iter.first;
+            pkmgc::e_ribbon libpkmgc_ribbon = ribbon_iter.second;
+
+            _ribbons[ribbon_name] = _libpkmgc_pokemon_uptr->specialRibbons[int(libpkmgc_ribbon)];
         }
     }
 
-    void pokemon_gcnimpl::_update_EV_map() {
-        _EVs["HP"]              = int(_libpkmgc_pokemon_uptr->EVs[LIBPKMGC_STAT_HP]);
-        _EVs["Attack"]          = int(_libpkmgc_pokemon_uptr->EVs[LIBPKMGC_STAT_ATTACK]);
-        _EVs["Defense"]         = int(_libpkmgc_pokemon_uptr->EVs[LIBPKMGC_STAT_DEFENSE]);
-        _EVs["Speed"]           = int(_libpkmgc_pokemon_uptr->EVs[LIBPKMGC_STAT_SPEED]);
-        _EVs["Special Attack"]  = int(_libpkmgc_pokemon_uptr->EVs[LIBPKMGC_STAT_SPATK]);
-        _EVs["Special Defense"] = int(_libpkmgc_pokemon_uptr->EVs[LIBPKMGC_STAT_SPDEF]);
-    }
-
-    void pokemon_gcnimpl::_update_stat_map() {
-        _stats["HP"]              = int(_libpkmgc_pokemon_uptr->partyData.stats[LIBPKMGC_STAT_HP]);
-        _stats["Attack"]          = int(_libpkmgc_pokemon_uptr->partyData.stats[LIBPKMGC_STAT_ATTACK]);
-        _stats["Defense"]         = int(_libpkmgc_pokemon_uptr->partyData.stats[LIBPKMGC_STAT_DEFENSE]);
-        _stats["Speed"]           = int(_libpkmgc_pokemon_uptr->partyData.stats[LIBPKMGC_STAT_SPEED]);
-        _stats["Special Attack"]  = int(_libpkmgc_pokemon_uptr->partyData.stats[LIBPKMGC_STAT_SPATK]);
-        _stats["Special Defense"] = int(_libpkmgc_pokemon_uptr->partyData.stats[LIBPKMGC_STAT_SPDEF]);
-    }
-
-    void pokemon_gcnimpl::_set_ability(const std::string& ability)
+    void pokemon_gcnimpl::_update_EV_map()
     {
-        std::pair<std::string, std::string> abilities = _database_entry.get_abilities();
-        if(ability == "None")
+        static const pkmgc::stat_bimap_t& STAT_BIMAP = pkmgc::get_stat_bimap();
+
+        for(const auto& stat_iter: STAT_BIMAP.left)
+        {
+            pkmn::e_stat libpkmn_stat = stat_iter.first;
+            pkmgc::e_stat libpkmgc_stat = stat_iter.second;
+
+            _EVs[libpkmn_stat] = int(_libpkmgc_pokemon_uptr->EVs[int(libpkmgc_stat)]);
+        }
+    }
+
+    void pokemon_gcnimpl::_update_stat_map()
+    {
+        static const pkmgc::stat_bimap_t& STAT_BIMAP = pkmgc::get_stat_bimap();
+
+        for(const auto& stat_iter: STAT_BIMAP.left)
+        {
+            pkmn::e_stat libpkmn_stat = stat_iter.first;
+            pkmgc::e_stat libpkmgc_stat = stat_iter.second;
+
+            _stats[libpkmn_stat] = int(_libpkmgc_pokemon_uptr->partyData.stats[int(libpkmgc_stat)]);
+        }
+    }
+
+    void pokemon_gcnimpl::_set_ability(pkmn::e_ability ability)
+    {
+        pkmn::ability_pair_t abilities = _database_entry.get_abilities();
+        if(ability == pkmn::e_ability::NONE)
         {
             throw std::invalid_argument("The ability cannot be set to None.");
         }
         else if(ability == abilities.first)
         {
-            _libpkmgc_pokemon_uptr->setSecondAbilityFlag(false);
+                _libpkmgc_pokemon_uptr->setSecondAbilityFlag(false);
         }
         else if(ability == abilities.second)
         {
+            BOOST_ASSERT(abilities.second != pkmn::e_ability::NONE);
             _libpkmgc_pokemon_uptr->setSecondAbilityFlag(true);
         }
         else
         {
             std::string error_message;
-            if(abilities.second == "None")
+            if(abilities.second == pkmn::e_ability::NONE)
             {
                 error_message = str(boost::format("ability: valid values \"%s\"")
-                                    % abilities.first.c_str());
+                                    % pkmn::ability_to_string(abilities.first).c_str());
             }
             else
             {
                 error_message = str(boost::format("ability: valid values \"%s\", \"%s\"")
-                                    % abilities.first.c_str()
-                                    % abilities.second.c_str());
+                                    % pkmn::ability_to_string(abilities.first).c_str()
+                                    % pkmn::ability_to_string(abilities.second).c_str());
             }
 
             throw std::invalid_argument(error_message.c_str());
@@ -1406,29 +1371,41 @@ namespace pkmn
         }
     }
 
-    void pokemon_gcnimpl::_init_IV_map() {
-        _IVs["HP"]              = int(_libpkmgc_pokemon_uptr->IVs[LIBPKMGC_STAT_HP]);
-        _IVs["Attack"]          = int(_libpkmgc_pokemon_uptr->IVs[LIBPKMGC_STAT_ATTACK]);
-        _IVs["Defense"]         = int(_libpkmgc_pokemon_uptr->IVs[LIBPKMGC_STAT_DEFENSE]);
-        _IVs["Speed"]           = int(_libpkmgc_pokemon_uptr->IVs[LIBPKMGC_STAT_SPEED]);
-        _IVs["Special Attack"]  = int(_libpkmgc_pokemon_uptr->IVs[LIBPKMGC_STAT_SPATK]);
-        _IVs["Special Defense"] = int(_libpkmgc_pokemon_uptr->IVs[LIBPKMGC_STAT_SPDEF]);
+    void pokemon_gcnimpl::_init_IV_map()
+    {
+        static const pkmgc::stat_bimap_t& STAT_BIMAP = pkmgc::get_stat_bimap();
+
+        for(const auto& stat_iter: STAT_BIMAP.left)
+        {
+            pkmn::e_stat libpkmn_stat = stat_iter.first;
+            pkmgc::e_stat libpkmgc_stat = stat_iter.second;
+
+            _IVs[libpkmn_stat] = int(_libpkmgc_pokemon_uptr->IVs[int(libpkmgc_stat)]);
+        }
     }
 
-    void pokemon_gcnimpl::_init_gcn_contest_stats_map() {
-        _contest_stats["Cool"]   = int(_libpkmgc_pokemon_uptr->contestStats[LIBPKMGC_CONTEST_STAT_COOL]);
-        _contest_stats["Beauty"] = int(_libpkmgc_pokemon_uptr->contestStats[LIBPKMGC_CONTEST_STAT_BEAUTY]);
-        _contest_stats["Cute"]   = int(_libpkmgc_pokemon_uptr->contestStats[LIBPKMGC_CONTEST_STAT_CUTE]);
-        _contest_stats["Smart"]  = int(_libpkmgc_pokemon_uptr->contestStats[LIBPKMGC_CONTEST_STAT_SMART]);
-        _contest_stats["Tough"]  = int(_libpkmgc_pokemon_uptr->contestStats[LIBPKMGC_CONTEST_STAT_TOUGH]);
-        _contest_stats["Feel"]   = int(_libpkmgc_pokemon_uptr->contestLuster);
+    void pokemon_gcnimpl::_init_gcn_contest_stats_map()
+    {
+        static const pkmgc::contest_stat_bimap_t& CONTEST_STAT_BIMAP = pkmgc::get_contest_stat_bimap();
+
+        for(const auto& contest_stat_iter: CONTEST_STAT_BIMAP.left)
+        {
+            pkmn::e_contest_stat libpkmn_contest_stat = contest_stat_iter.first;
+            pkmgc::e_contest_stat libpkmgc_contest_stat = contest_stat_iter.second;
+
+            _contest_stats[libpkmn_contest_stat] =
+                int(_libpkmgc_pokemon_uptr->contestStats[int(libpkmgc_contest_stat)]);
+        }
+
+        _contest_stats[pkmn::e_contest_stat::FEEL] = int(_libpkmgc_pokemon_uptr->contestLuster);
     }
 
-    void pokemon_gcnimpl::_init_markings_map() {
-        _markings["Circle"]   = _libpkmgc_pokemon_uptr->markings.circle;
-        _markings["Triangle"] = _libpkmgc_pokemon_uptr->markings.triangle;
-        _markings["Square"]   = _libpkmgc_pokemon_uptr->markings.square;
-        _markings["Heart"]    = _libpkmgc_pokemon_uptr->markings.heart;
+    void pokemon_gcnimpl::_init_markings_map()
+    {
+        _markings[pkmn::e_marking::CIRCLE]   = _libpkmgc_pokemon_uptr->markings.circle;
+        _markings[pkmn::e_marking::TRIANGLE] = _libpkmgc_pokemon_uptr->markings.triangle;
+        _markings[pkmn::e_marking::SQUARE]   = _libpkmgc_pokemon_uptr->markings.square;
+        _markings[pkmn::e_marking::HEART]    = _libpkmgc_pokemon_uptr->markings.heart;
     }
 
     // TODO: region, until 3DS support brings in functions

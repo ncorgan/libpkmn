@@ -13,31 +13,22 @@
 #include <pkmn/calculations/moves/natural_gift.hpp>
 
 enum pkmn_error pkmn_calculations_natural_gift_stats(
-    const char* p_item_name,
+    enum pkmn_item item,
     int generation,
     struct pkmn_natural_gift* p_natural_gift_stats_out
 )
 {
-    enum pkmn_error error = PKMN_ERROR_NONE;
-
-    error = pkmn::c::check_for_null_param(
-                p_item_name,
-                "p_item_name"
-            );
-    if(!error)
-    {
-        error = pkmn::c::check_for_null_param(
-                    p_natural_gift_stats_out,
-                    "p_natural_gift_stats_out"
-                );
-    }
+    enum pkmn_error error = pkmn::c::check_for_null_param(
+                                p_natural_gift_stats_out,
+                                "p_natural_gift_stats_out"
+                            );
     if(!error)
     {
         auto impl = [&]()
         {
             pkmn::c::natural_gift_cpp_to_c(
                 pkmn::calculations::natural_gift_stats(
-                    p_item_name,
+                    static_cast<pkmn::e_item>(item),
                     generation
                 ),
                 p_natural_gift_stats_out

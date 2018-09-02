@@ -18,38 +18,22 @@
 #include <cstring>
 
 enum pkmn_error pkmn_database_get_move_entry(
-    const char* p_move_name,
-    const char* p_move_game,
+    enum pkmn_move move,
+    enum pkmn_game game,
     struct pkmn_database_move_entry* p_move_entry_out
 )
 {
-    enum pkmn_error error = PKMN_ERROR_NONE;
-
-    error = pkmn::c::check_for_null_param(
-                p_move_name,
-                "p_move_name"
-            );
-    if(!error)
-    {
-        error = pkmn::c::check_for_null_param(
-                    p_move_game,
-                    "p_move_game"
-                );
-    }
-    if(!error)
-    {
-        error = pkmn::c::check_for_null_param(
-                    p_move_entry_out,
-                    "p_move_entry_out"
-                );
-    }
+    enum pkmn_error error = pkmn::c::check_for_null_param(
+                                p_move_entry_out,
+                                "p_move_entry_out"
+                            );
     if(!error)
     {
         auto impl = [&]()
         {
             pkmn::database::move_entry move_entry_cpp(
-                                           p_move_name,
-                                           p_move_game
+                                           static_cast<pkmn::e_move>(move),
+                                           static_cast<pkmn::e_game>(game)
                                        );
 
             pkmn::c::move_entry_cpp_to_c(
@@ -78,13 +62,8 @@ enum pkmn_error pkmn_database_move_entry_free(
     {
         auto impl = [&]()
         {
-            pkmn::c::free_pointer_and_set_to_null(&p_move_entry->p_name);
-            pkmn::c::free_pointer_and_set_to_null(&p_move_entry->p_game);
             pkmn::c::free_pointer_and_set_to_null(&p_move_entry->p_description);
-            pkmn::c::free_pointer_and_set_to_null(&p_move_entry->p_target);
-            pkmn::c::free_pointer_and_set_to_null(&p_move_entry->p_damage_class);
             pkmn::c::free_pointer_and_set_to_null(&p_move_entry->p_effect);
-            pkmn::c::free_pointer_and_set_to_null(&p_move_entry->p_contest_type);
             pkmn::c::free_pointer_and_set_to_null(&p_move_entry->p_contest_effect);
             pkmn::c::free_pointer_and_set_to_null(&p_move_entry->p_super_contest_effect);
 

@@ -14,14 +14,19 @@ PKMN_RUBY_INIT
 
 %{
     #include "private_exports.hpp"
+
+    #include <pkmn/enums/enum_to_string.hpp>
 %}
 
 namespace pkmn { namespace priv {
     void initialize_database_connection();
 }}
 
+%import <Enums.i>
 %import <Database.i>
 %import <STL.i>
+
+%include <pkmn/enums/enum_to_string.hpp>
 
 // Attribute Maps
 %include <ruby/pkmn_attribute_maps.i>

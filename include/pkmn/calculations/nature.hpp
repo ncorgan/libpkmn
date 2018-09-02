@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -9,13 +9,14 @@
 
 #include <pkmn/config.hpp>
 
+#include <pkmn/enums/nature.hpp>
+
 #include <cstdint>
-#include <string>
 
 namespace pkmn { namespace calculations {
 
     //! Returns the nature of a Pokémon with the given personality.
-    PKMN_API std::string nature(
+    PKMN_API pkmn::e_nature nature(
         uint32_t personality
     );
 

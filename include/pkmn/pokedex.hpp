@@ -9,6 +9,9 @@
 
 #include <pkmn/config.hpp>
 
+#include <pkmn/enums/game.hpp>
+#include <pkmn/enums/species.hpp>
+
 #include <memory>
 #include <string>
 #include <vector>
@@ -32,12 +35,10 @@ namespace pkmn
              * \param game Which game this Pokédex corresponds to
              * \throws pkmn::feature_not_in_game_error If game is a Gamecube game
              */
-            static sptr make(
-                const std::string& game
-            );
+            static sptr make(pkmn::e_game game);
 
             //! Returns the game this Pokédex corresponds to.
-            virtual std::string get_game() = 0;
+            virtual pkmn::e_game get_game() = 0;
 
             /*!
              * @brief Returns whether a given Pokémon is registered as seen.
@@ -46,9 +47,7 @@ namespace pkmn
              * \throws std::invalid_argument If the species is invalid or is not
              *                               present in the given game
              */
-            virtual bool has_seen(
-                const std::string& species
-            ) = 0;
+            virtual bool has_seen(pkmn::e_species species) = 0;
 
             /*!
              * @brief Set whether a given Pokémon has been seen.
@@ -59,7 +58,7 @@ namespace pkmn
              *                               present in the given game
              */
             virtual void set_has_seen(
-                const std::string& species,
+                pkmn::e_species species,
                 bool has_seen_value
             ) = 0;
 
@@ -67,7 +66,7 @@ namespace pkmn
              * @brief Returns a list of all Pokémon registered as seen, ordered
              *        by National Pokédex number.
              */
-            virtual const std::vector<std::string>& get_all_seen() = 0;
+            virtual const std::vector<pkmn::e_species>& get_all_seen() = 0;
 
             /*!
              * @brief Returns the number of Pokémon registered as seen.
@@ -82,7 +81,7 @@ namespace pkmn
              *                               present in the given game
              */
             virtual bool has_caught(
-                const std::string& species
+                pkmn::e_species species
             ) = 0;
 
             /*!
@@ -94,7 +93,7 @@ namespace pkmn
              *                               present in the given game
              */
             virtual void set_has_caught(
-                const std::string& species,
+                pkmn::e_species species,
                 bool has_caught_value
             ) = 0;
 
@@ -102,7 +101,7 @@ namespace pkmn
              * @brief Returns a list of all Pokémon registered as caught, ordered
              *        by National Pokédex number.
              */
-            virtual const std::vector<std::string>& get_all_caught() = 0;
+            virtual const std::vector<pkmn::e_species>& get_all_caught() = 0;
 
             /*!
              * @brief Returns the number of Pokémon registered as caught.

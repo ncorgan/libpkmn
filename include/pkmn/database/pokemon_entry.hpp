@@ -12,20 +12,19 @@
 #include <pkmn/database/levelup_move.hpp>
 #include <pkmn/database/move_entry.hpp>
 
+#include <pkmn/enums/ability.hpp>
+#include <pkmn/enums/egg_group.hpp>
+#include <pkmn/enums/game.hpp>
+#include <pkmn/enums/move.hpp>
+#include <pkmn/enums/species.hpp>
+#include <pkmn/enums/stat.hpp>
+#include <pkmn/enums/type.hpp>
+
 #include <map>
 #include <string>
 #include <vector>
 
 namespace pkmn { namespace database {
-
-    /*
-     * We need this forward declaration to use the typedef
-     * in the class itself.
-     */
-    class pokemon_entry;
-
-    //! List of Pokémon entries.
-    typedef std::vector<pokemon_entry> pokemon_entries_t;
 
     /*!
      * @brief Class representing a database entry for a Pokémon.
@@ -71,8 +70,8 @@ namespace pkmn { namespace database {
              * \throws std::invalid_argument If the form is invalid for the given Pokémon and game
              */
             pokemon_entry(
-                const std::string& species_name,
-                const std::string& game_name,
+                pkmn::e_species species,
+                pkmn::e_game game,
                 const std::string& form_name
             );
 
@@ -84,6 +83,12 @@ namespace pkmn { namespace database {
             pokemon_entry& operator=(pokemon_entry&&) = default;
 #endif
 
+            inline pkmn::e_species get_species() const
+            {
+                return _invalid ? pkmn::e_species::INVALID
+                                : static_cast<pkmn::e_species>(_species_id);
+            }
+
             /*!
              * @brief Returns the Pokémon's name.
              *
@@ -91,15 +96,15 @@ namespace pkmn { namespace database {
              * \returns For invalid Pokémon: "Invalid (0xXX)", where XX corresponds
              *          to the Pokémon's in-game index in hex.
              */
-            std::string get_name() const;
+            std::string get_species_name() const;
 
             /*!
              * @brief Returns the game this entry corresponds to.
              */
-            std::string get_game() const;
+            pkmn::e_game get_game() const;
 
             /*!
-             * @brief Returns the Pokémon's species.
+             * @brief Returns the Pokémon's category.
              *
              * This is the classification given in the Pokédex, not the name
              * of the Pokémon. For example, for a Pikachu entry, get_name()
@@ -108,7 +113,7 @@ namespace pkmn { namespace database {
              * \returns For "None" entries: "None"
              * \returns For invalid Pokémon: "Unknown"
              */
-            std::string get_species() const;
+            std::string get_category() const;
 
             /*!
              * @brief Returns this Pokémon's Pokédex entry for the given game.
@@ -199,28 +204,25 @@ namespace pkmn { namespace database {
              *
              * This value can vary between generations and between forms.
              *
-             * If the Pokémon has a single type, the second value will be "None".
+             * If the Pokémon has a single type, the second value will be NONE.
              *
-             * \returns For "None" entries: "None"/"None"
-             * \returns For invalid Pokémon: "Unknown"/"Unknown"
+             * \returns For None/Invalid entries: NONE/NONE
              */
-            std::pair<std::string, std::string> get_types() const;
+            pkmn::type_pair_t get_types() const;
 
             /*!
              * @brief Returns this Pokémon's types.
              *
              * Abilities were introduced in Generation III, so for entries from
-             * previous generations, this function will always return "None"/"None".
+             * previous generations, this function will always return NONE/NONE.
              *
-             * If the Pokémon has a single ability, the second value will be "None".
+             * If the Pokémon has a single ability, the second value will be NONE.
              *
              * This value can vary between forms.
              *
-             * \returns For Generation I-II entries: "None"/"None"
-             * \returns For "None" entries: "None"/"None"
-             * \returns For invalid Pokémon: "Unknown"/"Unknown"
+             * \returns For Generation I-II/None/Invalid entries: NONE/NONE
              */
-            std::pair<std::string, std::string> get_abilities() const;
+            pkmn::ability_pair_t get_abilities() const;
 
             /*!
              * @brief Returns this Pokémon's hidden ability.
@@ -229,11 +231,9 @@ namespace pkmn { namespace database {
              * corresponding to earlier games, this function will always return
              * "None".
              *
-             * \returns For Generation I-IV entries: "None"
-             * \returns For "None" entries: "None"
-             * \returns For invalid Pokémon: "Unknown"
+             * \returns For Generation I-IV/None/Invalid entries: NONE
              */
-            std::string get_hidden_ability() const;
+            pkmn::e_ability get_hidden_ability() const;
 
             /*!
              * @brief Returns this Pokémon's egg groups.
@@ -243,11 +243,9 @@ namespace pkmn { namespace database {
              *
              * If the Pokémon has a single egg group, the second value will be "None".
              *
-             * \returns For Generation I entries: "None"/"None"
-             * \returns For "None" entries: "None"/"None"
-             * \returns For invalid Pokémon: "Unknown"/"Unknown"
+             * \returns For Generation I/"None"/"Unknown" entries: NONE/NONE
              */
-            std::pair<std::string, std::string> get_egg_groups() const;
+            pkmn::egg_group_pair_t get_egg_groups() const;
 
             /*!
              * @brief Returns this Pokémon's base stats in the given game.
@@ -260,7 +258,7 @@ namespace pkmn { namespace database {
              *          the stats present in the given generation and whose values
              *          are all 0.
              */
-            std::map<std::string, int> get_base_stats() const;
+            std::map<pkmn::e_stat, int> get_base_stats() const;
 
             /*!
              * @brief Returns this Pokémon's EV yields for the given game.
@@ -277,7 +275,7 @@ namespace pkmn { namespace database {
              *          the stats present in the given generation and whose values
              *          are all 0.
              */
-            std::map<std::string, int> get_EV_yields() const;
+            std::map<pkmn::e_stat, int> get_EV_yields() const;
 
             /*!
              * @brief Returns this Pokémon's base experience yield.
@@ -323,19 +321,19 @@ namespace pkmn { namespace database {
             /*!
              * @brief Returns entries for the moves this Pokémon can learn via TM/HM.
              */
-            pkmn::database::move_list_t get_tm_hm_moves() const;
+            std::vector<pkmn::e_move> get_tm_hm_moves() const;
 
             /*!
              * @brief Returns entries for the moves this Pokémon can learn via
              *        breeding.
              */
-            pkmn::database::move_list_t get_egg_moves() const;
+            std::vector<pkmn::e_move> get_egg_moves() const;
 
             /*!
              * @brief Returns entries for the moves this Pokémon can learn via
              *        a Move Tutor in the game this entry corresponds to.
              */
-            pkmn::database::move_list_t get_tutor_moves() const;
+            std::vector<pkmn::e_move> get_tutor_moves() const;
 
             /*!
              * @brief Returns a list of this Pokémon's forms in the game this
@@ -346,10 +344,10 @@ namespace pkmn { namespace database {
             std::vector<std::string> get_forms() const;
 
             /*!
-             * @brief Returns entries for all Pokémon this Pokémon can evolve
+             * @brief Returns a list of all Pokémon this Pokémon can evolve
              *        into in the game this entry corresponds to.
              */
-            pkmn::database::pokemon_entries_t get_evolutions() const;
+            std::vector<pkmn::e_species> get_evolutions() const;
 
             /*!
              * @brief Sets the Pokémon form this entry corresponds to.

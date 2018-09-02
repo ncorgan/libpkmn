@@ -27,11 +27,11 @@ namespace pkmn
             ~pokedex_gbimpl() = default;
 
             bool has_seen(
-                const std::string& species
+                pkmn::e_species species
             ) final;
 
             bool has_caught(
-                const std::string& species
+                pkmn::e_species species
             ) final;
 
         private:

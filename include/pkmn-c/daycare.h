@@ -12,13 +12,15 @@
 
 #include <pkmn-c/pokemon.h>
 
+#include <pkmn-c/enums/game.h>
+
 #include <pkmn-c/types/pokemon_list.h>
 
 #include <stdbool.h>
 
 struct pkmn_daycare
 {
-    char* p_game;
+    enum pkmn_game game;
 
     bool can_breed_pokemon;
 
@@ -33,7 +35,7 @@ extern "C" {
 #endif
 
 PKMN_C_API enum pkmn_error pkmn_daycare_init(
-    const char* p_game,
+    enum pkmn_game game,
     struct pkmn_daycare* p_daycare_out
 );
 

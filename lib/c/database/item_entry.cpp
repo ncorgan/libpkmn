@@ -18,38 +18,22 @@
 #include <cstring>
 
 enum pkmn_error pkmn_database_get_item_entry(
-    const char* p_item_name,
-    const char* p_item_game,
+    enum pkmn_item item,
+    enum pkmn_game game,
     struct pkmn_database_item_entry* p_item_entry_out
 )
 {
-    enum pkmn_error error = PKMN_ERROR_NONE;
-
-    error = pkmn::c::check_for_null_param(
-                p_item_name,
-                "p_item_name"
-            );
-    if(!error)
-    {
-        error = pkmn::c::check_for_null_param(
-                    p_item_game,
-                    "p_item_game"
-                );
-    }
-    if(!error)
-    {
-        error = pkmn::c::check_for_null_param(
-                    p_item_entry_out,
-                    "p_item_entry_out"
-                );
-    }
+    enum pkmn_error error = pkmn::c::check_for_null_param(
+                                p_item_entry_out,
+                                "p_item_entry_out"
+                            );
     if(!error)
     {
         auto impl = [&]()
         {
             pkmn::database::item_entry item_entry_cpp(
-                                           p_item_name,
-                                           p_item_game
+                                           static_cast<pkmn::e_item>(item),
+                                           static_cast<pkmn::e_game>(game)
                                        );
             pkmn::c::item_entry_cpp_to_c(
                 item_entry_cpp,
@@ -78,7 +62,6 @@ enum pkmn_error pkmn_database_item_entry_free(
         auto impl = [&]()
         {
             pkmn::c::free_pointer_and_set_to_null(&p_item_entry->p_name);
-            pkmn::c::free_pointer_and_set_to_null(&p_item_entry->p_game);
             pkmn::c::free_pointer_and_set_to_null(&p_item_entry->p_category);
             pkmn::c::free_pointer_and_set_to_null(&p_item_entry->p_description);
             pkmn::c::free_pointer_and_set_to_null(&p_item_entry->p_pocket);

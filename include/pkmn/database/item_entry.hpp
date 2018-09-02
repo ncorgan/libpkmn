@@ -9,6 +9,9 @@
 
 #include <pkmn/config.hpp>
 
+#include <pkmn/enums/item.hpp>
+#include <pkmn/enums/game.hpp>
+
 #include <string>
 
 namespace pkmn { namespace database {
@@ -53,14 +56,14 @@ namespace pkmn { namespace database {
              * It accounts for differences between games, such as which pocket the item
              * corresponds to in a particular game.
              *
-             * \param item_name Item's name (does not need to match name in given game)
-             * \param game_name Which game this item is from
+             * \param item Which item
+             * \param game Which game this item is from
              * \throw std::invalid_argument If the item or game name is invalid
              * \throw std::invalid_argument If the given item was not in the given game
              */
             item_entry(
-                const std::string& item_name,
-                const std::string& game_name
+                pkmn::e_item item,
+                pkmn::e_game game
             );
 
             item_entry(const item_entry&) = default;
@@ -70,6 +73,12 @@ namespace pkmn { namespace database {
             item_entry(item_entry&&) = default;
             item_entry& operator=(item_entry&&) = default;
 #endif
+
+            inline pkmn::e_item get_item() const
+            {
+                return _invalid ? pkmn::e_item::INVALID
+                                : static_cast<pkmn::e_item>(_item_id);
+            }
 
             /*!
              * @brief Returns the item's name.
@@ -87,9 +96,9 @@ namespace pkmn { namespace database {
             std::string get_name() const;
 
             /*!
-             * @brief Returns the name of the game associated with this entry.
+             * @brief Returns the game associated with this entry.
              */
-            std::string get_game() const;
+            pkmn::e_game get_game() const;
 
             /*!
              * @brief Returns this item's category.

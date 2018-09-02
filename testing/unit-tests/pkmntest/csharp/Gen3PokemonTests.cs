@@ -80,45 +80,69 @@ public class Gen3PokemonTests
     }
 
     static public void PokemonTest(
-        string game,
-        string species
+        PKMN.Game game,
+        PKMN.Species species
     )
     {
         PKMN.Pokemon pokemon = new PKMN.Pokemon(species, game, "", 30);
 
         PokemonTestParams testParams;
-        bool isGamecube = (game.Equals("Colosseum") || game.Equals("XD"));
+        bool isGamecube = (game == PKMN.Game.COLOSSEUM) || (game == PKMN.Game.XD);
 
         if(isGamecube)
         {
             testParams = new PokemonTestParams(
-                                 "Great Ball",
-                                 new string[]{"Friend Ball", "Heal Ball"},
-                                 "Razz Berry",
-                                 new string[]{"Berry", "Mach Bike"},
+                                 PKMN.Ball.GREAT_BALL,
+                                 new PKMN.Ball[]{PKMN.Ball.FRIEND_BALL, PKMN.Ball.HEAL_BALL},
+                                 PKMN.Item.RAZZ_BERRY,
+                                 new PKMN.Item[]{PKMN.Item.BERRY, PKMN.Item.MACH_BIKE},
                                  "Distant land",
                                  new string[]{"Phenac City", "Orre Colosseum"},
                                  new string[]{"New Bark Town", "Twinleaf Town"},
-                                 new string[]{"Swallow", "Flamethrower", "Return", "Fire Blast"},
-                                 new string[]{"Roost", "Flame Burst"},
-                                 new string[]{"Ruby", "Sapphire", "Emerald", "FireRed", "LeafGreen", "Colosseum/XD", "Colosseum", "XD"},
-                                 new string[]{"Gold", "HeartGold"}
+                                 new PKMN.Move[]{
+                                     PKMN.Move.SWALLOW,
+                                     PKMN.Move.FLAMETHROWER,
+                                     PKMN.Move.RETURN,
+                                     PKMN.Move.FIRE_BLAST
+                                 },
+                                 new PKMN.Move[]{
+                                     PKMN.Move.ROOST,
+                                     PKMN.Move.FLAME_BURST
+                                 },
+                                 new PKMN.Game[]{
+                                         PKMN.Game.RUBY, PKMN.Game.SAPPHIRE, PKMN.Game.EMERALD,
+                                         PKMN.Game.FIRERED, PKMN.Game.LEAFGREEN,
+                                         PKMN.Game.COLOSSEUM, PKMN.Game.XD
+                                     },
+                                 new PKMN.Game[]{PKMN.Game.GOLD, PKMN.Game.HEARTGOLD}
                              );
         }
         else
         {
             testParams = new PokemonTestParams(
-                                 "Great Ball",
-                                 new string[]{"Friend Ball", "Heal Ball"},
-                                 "Razz Berry",
-                                 new string[]{"Berry", "Mach Bike"},
+                                 PKMN.Ball.GREAT_BALL,
+                                 new PKMN.Ball[]{PKMN.Ball.FRIEND_BALL, PKMN.Ball.HEAL_BALL},
+                                 PKMN.Item.RAZZ_BERRY,
+                                 new PKMN.Item[]{PKMN.Item.BERRY, PKMN.Item.MACH_BIKE},
                                  "Fateful encounter",
                                  new string[]{"Petalburg Woods", "Viridian Forest"},
                                  new string[]{"New Bark Town", "Twinleaf Town"},
-                                 new string[]{"Swallow", "Flamethrower", "Return", "Fire Blast"},
-                                 new string[]{"Shadow Sky", "Roost"},
-                                 new string[]{"Ruby", "Sapphire", "Emerald", "FireRed", "LeafGreen", "Colosseum/XD", "Colosseum", "XD"},
-                                 new string[]{"Gold", "HeartGold"}
+                                 new PKMN.Move[]{
+                                     PKMN.Move.SWALLOW,
+                                     PKMN.Move.FLAMETHROWER,
+                                     PKMN.Move.RETURN,
+                                     PKMN.Move.FIRE_BLAST
+                                 },
+                                 new PKMN.Move[]{
+                                     PKMN.Move.SHADOW_SKY,
+                                     PKMN.Move.ROOST
+                                 },
+                                 new PKMN.Game[]{
+                                         PKMN.Game.RUBY, PKMN.Game.SAPPHIRE, PKMN.Game.EMERALD,
+                                         PKMN.Game.FIRERED, PKMN.Game.LEAFGREEN,
+                                         PKMN.Game.COLOSSEUM, PKMN.Game.XD
+                                     },
+                                 new PKMN.Game[]{PKMN.Game.GOLD, PKMN.Game.HEARTGOLD}
                              );
         }
 
@@ -130,15 +154,15 @@ public class Gen3PokemonTests
 
         // Gender and personality are tied, so make sure they affect each other.
 
-        pokemon.Gender = "Female";
+        pokemon.Gender = PKMN.Gender.FEMALE;
         Assert.Less((pokemon.Personality & 0xFF), 0xFF);
-        pokemon.Gender = "Male";
+        pokemon.Gender = PKMN.Gender.MALE;
         Assert.AreEqual((pokemon.Personality & 0xFF), 0xFF);
 
         pokemon.Personality = 0x1234AB00;
-        Assert.AreEqual(pokemon.Gender, "Female");
+        Assert.AreEqual(pokemon.Gender, PKMN.Gender.FEMALE);
         pokemon.Personality = 0xCD5678FF;
-        Assert.AreEqual(pokemon.Gender, "Male");
+        Assert.AreEqual(pokemon.Gender, PKMN.Gender.MALE);
 
         // Setting shininess should affect personality.
 
@@ -152,7 +176,8 @@ public class Gen3PokemonTests
 
         if(isGamecube)
         {
-            string shadowSpecies = game.Equals("Colosseum") ? "Ledian" : "Ledyba";
+            PKMN.Species shadowSpecies = (game == PKMN.Game.COLOSSEUM) ? PKMN.Species.LEDIAN
+                                                                       : PKMN.Species.LEDYBA;
 
             PKMN.Pokemon shadowPokemon = new PKMN.Pokemon(shadowSpecies, game, "", 50);
             Assert.AreEqual(shadowPokemon.Form, "Standard");
@@ -164,7 +189,7 @@ public class Gen3PokemonTests
             Assert.Throws<ArgumentOutOfRangeException>(
                 delegate
                 {
-                    new PKMN.Pokemon("Ledyba", game, "Shadow", 50);
+                    new PKMN.Pokemon(PKMN.Species.LEDYBA, game, "Shadow", 50);
                 }
             );
         }

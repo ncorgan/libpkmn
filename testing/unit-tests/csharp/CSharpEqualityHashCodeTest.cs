@@ -18,11 +18,23 @@ public class CSharpEqualityHashCodeTest
     [Test]
     public void HiddenPowerTest()
     {
-        PKMN.HiddenPower hiddenPower = new PKMN.HiddenPower("Normal", 30);
+        PKMN.HiddenPower hiddenPower = new PKMN.HiddenPower(
+                                               PKMN.Type.NORMAL,
+                                               30
+                                           );
 
-        PKMN.HiddenPower hiddenPowerSame = new PKMN.HiddenPower("Normal", 30);
-        PKMN.HiddenPower hiddenPowerDifferentType = new PKMN.HiddenPower("Fire", 30);
-        PKMN.HiddenPower hiddenPowerDifferentBasePower = new PKMN.HiddenPower("Normal", 40);
+        PKMN.HiddenPower hiddenPowerSame = new PKMN.HiddenPower(
+                                                   PKMN.Type.NORMAL,
+                                                   30
+                                               );
+        PKMN.HiddenPower hiddenPowerDifferentType = new PKMN.HiddenPower(
+                                                            PKMN.Type.FIRE,
+                                                            30
+                                                        );
+        PKMN.HiddenPower hiddenPowerDifferentBasePower = new PKMN.HiddenPower(
+                                                                 PKMN.Type.NORMAL,
+                                                                 40
+                                                             );
 
         Assert.AreEqual(hiddenPower, hiddenPower);
         Assert.AreEqual(hiddenPower, hiddenPowerSame);
@@ -38,11 +50,11 @@ public class CSharpEqualityHashCodeTest
     [Test]
     public void ItemEntryTest()
     {
-        PKMN.Database.ItemEntry itemEntry = new PKMN.Database.ItemEntry("Potion", "Red");
+        PKMN.Database.ItemEntry itemEntry = new PKMN.Database.ItemEntry(PKMN.Item.POTION, PKMN.Game.RED);
 
-        PKMN.Database.ItemEntry itemEntrySame = new PKMN.Database.ItemEntry("Potion", "Red");
-        PKMN.Database.ItemEntry itemEntryDifferentItem = new PKMN.Database.ItemEntry("Great Ball", "Red");
-        PKMN.Database.ItemEntry itemEntryDifferentGame = new PKMN.Database.ItemEntry("Potion", "Blue");
+        PKMN.Database.ItemEntry itemEntrySame = new PKMN.Database.ItemEntry(PKMN.Item.POTION, PKMN.Game.RED);
+        PKMN.Database.ItemEntry itemEntryDifferentItem = new PKMN.Database.ItemEntry(PKMN.Item.GREAT_BALL, PKMN.Game.RED);
+        PKMN.Database.ItemEntry itemEntryDifferentGame = new PKMN.Database.ItemEntry(PKMN.Item.POTION, PKMN.Game.BLUE);
 
         Assert.AreEqual(itemEntry, itemEntry);
         Assert.AreEqual(itemEntry, itemEntrySame);
@@ -59,24 +71,20 @@ public class CSharpEqualityHashCodeTest
     public void LevelupMoveTest()
     {
         PKMN.Database.LevelupMove levelupMove = new PKMN.Database.LevelupMove(
-                                                        new PKMN.Database.MoveEntry("Scratch", "Red"),
+                                                        PKMN.Move.SCRATCH,
                                                         10
                                                     );
 
         PKMN.Database.LevelupMove levelupMoveSame = new PKMN.Database.LevelupMove(
-                                                            new PKMN.Database.MoveEntry("Scratch", "Red"),
+                                                            PKMN.Move.SCRATCH,
                                                             10
                                                         );
         PKMN.Database.LevelupMove levelupMoveDifferentMove = new PKMN.Database.LevelupMove(
-                                                                     new PKMN.Database.MoveEntry("Tackle", "Red"),
-                                                                     10
-                                                                 );
-        PKMN.Database.LevelupMove levelupMoveDifferentGame = new PKMN.Database.LevelupMove(
-                                                                     new PKMN.Database.MoveEntry("Scratch", "Blue"),
+                                                                     PKMN.Move.TACKLE,
                                                                      10
                                                                  );
         PKMN.Database.LevelupMove levelupMoveDifferentLevel = new PKMN.Database.LevelupMove(
-                                                                      new PKMN.Database.MoveEntry("Scratch", "Red"),
+                                                                      PKMN.Move.SCRATCH,
                                                                       5
                                                                   );
 
@@ -87,9 +95,6 @@ public class CSharpEqualityHashCodeTest
         Assert.AreNotEqual(levelupMove, levelupMoveDifferentMove);
         Assert.AreNotEqual(levelupMove.GetHashCode(), levelupMoveDifferentMove.GetHashCode());
 
-        Assert.AreNotEqual(levelupMove, levelupMoveDifferentGame);
-        Assert.AreNotEqual(levelupMove.GetHashCode(), levelupMoveDifferentGame.GetHashCode());
-
         Assert.AreNotEqual(levelupMove, levelupMoveDifferentLevel);
         Assert.AreNotEqual(levelupMove.GetHashCode(), levelupMoveDifferentLevel.GetHashCode());
     }
@@ -97,11 +102,23 @@ public class CSharpEqualityHashCodeTest
     [Test]
     public void MoveEntryTest()
     {
-        PKMN.Database.MoveEntry moveEntry = new PKMN.Database.MoveEntry("Scratch", "Red");
+        PKMN.Database.MoveEntry moveEntry = new PKMN.Database.MoveEntry(
+                                                    PKMN.Move.SCRATCH,
+                                                    PKMN.Game.RED
+                                                );
 
-        PKMN.Database.MoveEntry moveEntrySame = new PKMN.Database.MoveEntry("Scratch", "Red");
-        PKMN.Database.MoveEntry moveEntryDifferentMove = new PKMN.Database.MoveEntry("Tackle", "Red");
-        PKMN.Database.MoveEntry moveEntryDifferentGame = new PKMN.Database.MoveEntry("Scratch", "Blue");
+        PKMN.Database.MoveEntry moveEntrySame = new PKMN.Database.MoveEntry(
+                                                        PKMN.Move.SCRATCH,
+                                                        PKMN.Game.RED
+                                                    );
+        PKMN.Database.MoveEntry moveEntryDifferentMove = new PKMN.Database.MoveEntry(
+                                                                 PKMN.Move.TACKLE,
+                                                                 PKMN.Game.RED
+                                                             );
+        PKMN.Database.MoveEntry moveEntryDifferentGame = new PKMN.Database.MoveEntry(
+                                                                 PKMN.Move.SCRATCH,
+                                                                 PKMN.Game.BLUE
+                                                             );
 
         Assert.AreEqual(moveEntry, moveEntry);
         Assert.AreEqual(moveEntry, moveEntrySame);
@@ -117,11 +134,23 @@ public class CSharpEqualityHashCodeTest
     [Test]
     public void NaturalGiftTest()
     {
-        PKMN.NaturalGift naturalGift = new PKMN.NaturalGift("Normal", 30);
+        PKMN.NaturalGift naturalGift = new PKMN.NaturalGift(
+                                               PKMN.Type.NORMAL,
+                                               30
+                                           );
 
-        PKMN.NaturalGift naturalGiftSame = new PKMN.NaturalGift("Normal", 30);
-        PKMN.NaturalGift naturalGiftDifferentType = new PKMN.NaturalGift("Fire", 30);
-        PKMN.NaturalGift naturalGiftDifferentBasePower = new PKMN.NaturalGift("Normal", 40);
+        PKMN.NaturalGift naturalGiftSame = new PKMN.NaturalGift(
+                                                   PKMN.Type.NORMAL,
+                                                   30
+                                               );
+        PKMN.NaturalGift naturalGiftDifferentType = new PKMN.NaturalGift(
+                                                            PKMN.Type.FIRE,
+                                                            30
+                                                        );
+        PKMN.NaturalGift naturalGiftDifferentBasePower = new PKMN.NaturalGift(
+                                                                 PKMN.Type.NORMAL,
+                                                                 40
+                                                             );
 
         Assert.AreEqual(naturalGift, naturalGift);
         Assert.AreEqual(naturalGift, naturalGiftSame);
@@ -137,12 +166,32 @@ public class CSharpEqualityHashCodeTest
     [Test]
     public void PokemonEntryTest()
     {
-        PKMN.Database.PokemonEntry pokemonEntry = new PKMN.Database.PokemonEntry("Venusaur", "Omega Ruby", "");
+        PKMN.Database.PokemonEntry pokemonEntry = new PKMN.Database.PokemonEntry(
+                                                          PKMN.Species.VENUSAUR,
+                                                          PKMN.Game.OMEGA_RUBY,
+                                                          ""
+                                                      );
 
-        PKMN.Database.PokemonEntry pokemonEntrySame = new PKMN.Database.PokemonEntry("Venusaur", "Omega Ruby", "");
-        PKMN.Database.PokemonEntry pokemonEntryDifferentPokemon = new PKMN.Database.PokemonEntry("Charizard", "Omega Ruby", "");
-        PKMN.Database.PokemonEntry pokemonEntryDifferentGame = new PKMN.Database.PokemonEntry("Venusaur", "Ruby", "");
-        PKMN.Database.PokemonEntry pokemonEntryDifferentForm = new PKMN.Database.PokemonEntry("Venusaur", "Omega Ruby", "Mega");
+        PKMN.Database.PokemonEntry pokemonEntrySame = new PKMN.Database.PokemonEntry(
+                                                              PKMN.Species.VENUSAUR,
+                                                              PKMN.Game.OMEGA_RUBY,
+                                                              ""
+                                                          );
+        PKMN.Database.PokemonEntry pokemonEntryDifferentPokemon = new PKMN.Database.PokemonEntry(
+                                                                          PKMN.Species.CHARIZARD,
+                                                                          PKMN.Game.OMEGA_RUBY,
+                                                                          ""
+                                                                      );
+        PKMN.Database.PokemonEntry pokemonEntryDifferentGame = new PKMN.Database.PokemonEntry(
+                                                                       PKMN.Species.VENUSAUR,
+                                                                       PKMN.Game.RUBY,
+                                                                       ""
+                                                                   );
+        PKMN.Database.PokemonEntry pokemonEntryDifferentForm = new PKMN.Database.PokemonEntry(
+                                                                       PKMN.Species.VENUSAUR,
+                                                                       PKMN.Game.OMEGA_RUBY,
+                                                                       "Mega"
+                                                                   );
 
         Assert.AreEqual(pokemonEntry, pokemonEntry);
         Assert.AreEqual(pokemonEntry, pokemonEntrySame);
@@ -225,7 +274,7 @@ public class CSharpEqualityHashCodeTest
     [Test]
     public void PokedexHelpersTest()
     {
-        PKMN.Pokedex pokedex = new PKMN.Pokedex("Ruby");
+        PKMN.Pokedex pokedex = new PKMN.Pokedex(PKMN.Game.RUBY);
 
         // The Pokemon class and its helpers all use the underlying pointer
         // in generating their hash codes. Make sure these aren't equal.
@@ -238,7 +287,7 @@ public class CSharpEqualityHashCodeTest
     [Test]
     public void PokemonHelpersTest()
     {
-        PKMN.Pokemon pokemon = new PKMN.Pokemon("Mew", "Ruby", "", 70);
+        PKMN.Pokemon pokemon = new PKMN.Pokemon(PKMN.Species.MEW, PKMN.Game.RUBY, "", 70);
 
         // The Pokemon class and its helpers all use the underlying pointer
         // in generating their hash codes. Make sure these aren't equal.
@@ -306,7 +355,7 @@ public class CSharpEqualityHashCodeTest
     [Test]
     public void DaycareHelpersTest()
     {
-        PKMN.Daycare daycare = new PKMN.Daycare("Gold");
+        PKMN.Daycare daycare = new PKMN.Daycare(PKMN.Game.GOLD);
 
         Assert.AreNotEqual(daycare.GetHashCode(), daycare.LevelupPokemon.GetHashCode());
         Assert.AreNotEqual(daycare.GetHashCode(), daycare.BreedingPokemon.GetHashCode());
@@ -337,35 +386,35 @@ public class CSharpEqualityHashCodeTest
      */
 
     [Test]
-    public void StringIntDictTest()
+    public void StatIntDictTest()
     {
-        PKMN.StringIntDict stringIntDict = new PKMN.StringIntDict();
-        stringIntDict["key1"] = 12;
-        stringIntDict["key2"] = 34;
-        stringIntDict["key3"] = 56;
-        stringIntDict["key4"] = 78;
-        stringIntDict["key5"] = 90;
+        PKMN.StatDict statDict = new PKMN.StatDict();
+        statDict[PKMN.Stat.HP] = 12;
+        statDict[PKMN.Stat.ATTACK] = 34;
+        statDict[PKMN.Stat.DEFENSE] = 56;
+        statDict[PKMN.Stat.SPEED] = 78;
+        statDict[PKMN.Stat.SPECIAL] = 90;
 
-        PKMN.StringIntDict stringIntDictSame = new PKMN.StringIntDict();
-        stringIntDictSame["key5"] = 90;
-        stringIntDictSame["key4"] = 78;
-        stringIntDictSame["key3"] = 56;
-        stringIntDictSame["key2"] = 34;
-        stringIntDictSame["key1"] = 12;
+        PKMN.StatDict statDictSame = new PKMN.StatDict();
+        statDictSame[PKMN.Stat.SPECIAL] = 90;
+        statDictSame[PKMN.Stat.SPEED] = 78;
+        statDictSame[PKMN.Stat.DEFENSE] = 56;
+        statDictSame[PKMN.Stat.ATTACK] = 34;
+        statDictSame[PKMN.Stat.HP] = 12;
 
-        PKMN.StringIntDict stringIntDictShuffled = new PKMN.StringIntDict();
-        stringIntDictShuffled["key1"] = 78;
-        stringIntDictShuffled["key2"] = 12;
-        stringIntDictShuffled["key3"] = 90;
-        stringIntDictShuffled["key4"] = 34;
-        stringIntDictShuffled["key5"] = 56;
+        PKMN.StatDict statDictShuffled = new PKMN.StatDict();
+        statDictShuffled[PKMN.Stat.HP] = 78;
+        statDictShuffled[PKMN.Stat.ATTACK] = 12;
+        statDictShuffled[PKMN.Stat.DEFENSE] = 90;
+        statDictShuffled[PKMN.Stat.SPEED] = 34;
+        statDictShuffled[PKMN.Stat.SPECIAL] = 56;
 
-        Assert.AreEqual(stringIntDict, stringIntDict);
-        Assert.AreEqual(stringIntDict, stringIntDictSame);
-        Assert.AreEqual(stringIntDict.GetHashCode(), stringIntDictSame.GetHashCode());
+        Assert.AreEqual(statDict, statDict);
+        Assert.AreEqual(statDict, statDictSame);
+        Assert.AreEqual(statDict.GetHashCode(), statDictSame.GetHashCode());
 
-        Assert.AreNotEqual(stringIntDict, stringIntDictShuffled);
-        Assert.AreNotEqual(stringIntDict.GetHashCode(), stringIntDictShuffled.GetHashCode());
+        Assert.AreNotEqual(statDict, statDictShuffled);
+        Assert.AreNotEqual(statDict.GetHashCode(), statDictShuffled.GetHashCode());
     }
 
     [Test]
@@ -453,35 +502,35 @@ public class CSharpEqualityHashCodeTest
     {
         PKMN.Database.MoveEntryList moveEntryList = new PKMN.Database.MoveEntryList();
         moveEntryList.Add(
-            new PKMN.Database.MoveEntry("Scratch", "Red")
+            new PKMN.Database.MoveEntry(PKMN.Move.SCRATCH, PKMN.Game.RED)
         );
         moveEntryList.Add(
-            new PKMN.Database.MoveEntry("Synthesis", "Gold")
+            new PKMN.Database.MoveEntry(PKMN.Move.SYNTHESIS, PKMN.Game.GOLD)
         );
         moveEntryList.Add(
-            new PKMN.Database.MoveEntry("Swallow", "Ruby")
+            new PKMN.Database.MoveEntry(PKMN.Move.SWALLOW, PKMN.Game.RUBY)
         );
 
         PKMN.Database.MoveEntryList moveEntryListSame = new PKMN.Database.MoveEntryList();
         moveEntryListSame.Add(
-            new PKMN.Database.MoveEntry("Scratch", "Red")
+            new PKMN.Database.MoveEntry(PKMN.Move.SCRATCH, PKMN.Game.RED)
         );
         moveEntryListSame.Add(
-            new PKMN.Database.MoveEntry("Synthesis", "Gold")
+            new PKMN.Database.MoveEntry(PKMN.Move.SYNTHESIS, PKMN.Game.GOLD)
         );
         moveEntryListSame.Add(
-            new PKMN.Database.MoveEntry("Swallow", "Ruby")
+            new PKMN.Database.MoveEntry(PKMN.Move.SWALLOW, PKMN.Game.RUBY)
         );
 
         PKMN.Database.MoveEntryList moveEntryListReversed = new PKMN.Database.MoveEntryList();
         moveEntryListReversed.Add(
-            new PKMN.Database.MoveEntry("Swallow", "Ruby")
+            new PKMN.Database.MoveEntry(PKMN.Move.SWALLOW, PKMN.Game.RUBY)
         );
         moveEntryListReversed.Add(
-            new PKMN.Database.MoveEntry("Synthesis", "Gold")
+            new PKMN.Database.MoveEntry(PKMN.Move.SYNTHESIS, PKMN.Game.GOLD)
         );
         moveEntryListReversed.Add(
-            new PKMN.Database.MoveEntry("Scratch", "Red")
+            new PKMN.Database.MoveEntry(PKMN.Move.SCRATCH, PKMN.Game.RED)
         );
 
         Assert.AreEqual(moveEntryList, moveEntryList);
@@ -497,35 +546,35 @@ public class CSharpEqualityHashCodeTest
     {
         PKMN.Database.PokemonEntryList pokemonEntryList = new PKMN.Database.PokemonEntryList();
         pokemonEntryList.Add(
-            new PKMN.Database.PokemonEntry("Squirtle", "Blue", "")
+            new PKMN.Database.PokemonEntry(PKMN.Species.SQUIRTLE, PKMN.Game.BLUE, "")
         );
         pokemonEntryList.Add(
-            new PKMN.Database.PokemonEntry("Totodile", "Silver", "")
+            new PKMN.Database.PokemonEntry(PKMN.Species.TOTODILE, PKMN.Game.SILVER, "")
         );
         pokemonEntryList.Add(
-            new PKMN.Database.PokemonEntry("Mudkip", "Sapphire", "")
+            new PKMN.Database.PokemonEntry(PKMN.Species.MUDKIP, PKMN.Game.SAPPHIRE, "")
         );
 
         PKMN.Database.PokemonEntryList pokemonEntryListSame = new PKMN.Database.PokemonEntryList();
         pokemonEntryListSame.Add(
-            new PKMN.Database.PokemonEntry("Squirtle", "Blue", "")
+            new PKMN.Database.PokemonEntry(PKMN.Species.SQUIRTLE, PKMN.Game.BLUE, "")
         );
         pokemonEntryListSame.Add(
-            new PKMN.Database.PokemonEntry("Totodile", "Silver", "")
+            new PKMN.Database.PokemonEntry(PKMN.Species.TOTODILE, PKMN.Game.SILVER, "")
         );
         pokemonEntryListSame.Add(
-            new PKMN.Database.PokemonEntry("Mudkip", "Sapphire", "")
+            new PKMN.Database.PokemonEntry(PKMN.Species.MUDKIP, PKMN.Game.SAPPHIRE, "")
         );
 
         PKMN.Database.PokemonEntryList pokemonEntryListReversed = new PKMN.Database.PokemonEntryList();
         pokemonEntryListReversed.Add(
-            new PKMN.Database.PokemonEntry("Mudkip", "Sapphire", "")
+            new PKMN.Database.PokemonEntry(PKMN.Species.MUDKIP, PKMN.Game.SAPPHIRE, "")
         );
         pokemonEntryListReversed.Add(
-            new PKMN.Database.PokemonEntry("Totodile", "Silver", "")
+            new PKMN.Database.PokemonEntry(PKMN.Species.TOTODILE, PKMN.Game.SILVER, "")
         );
         pokemonEntryListReversed.Add(
-            new PKMN.Database.PokemonEntry("Squirtle", "Blue", "")
+            new PKMN.Database.PokemonEntry(PKMN.Species.SQUIRTLE, PKMN.Game.BLUE, "")
         );
 
         Assert.AreEqual(pokemonEntryList, pokemonEntryList);
@@ -534,5 +583,441 @@ public class CSharpEqualityHashCodeTest
 
         Assert.AreNotEqual(pokemonEntryList, pokemonEntryListReversed);
         Assert.AreNotEqual(pokemonEntryList.GetHashCode(), pokemonEntryListReversed.GetHashCode());
+    }
+
+    [Test]
+    public void AbilityEnumListTest()
+    {
+        PKMN.AbilityEnumList abilityEnumList = new PKMN.AbilityEnumList();
+        abilityEnumList.Add(PKMN.Ability.STENCH);
+        abilityEnumList.Add(PKMN.Ability.TANGLED_FEET);
+        abilityEnumList.Add(PKMN.Ability.SAP_SIPPER);
+        abilityEnumList.Add(PKMN.Ability.BULLETPROOF);
+        abilityEnumList.Add(PKMN.Ability.DELTA_STREAM);
+
+        PKMN.AbilityEnumList abilityEnumListSame = new PKMN.AbilityEnumList();
+        abilityEnumListSame.Add(PKMN.Ability.STENCH);
+        abilityEnumListSame.Add(PKMN.Ability.TANGLED_FEET);
+        abilityEnumListSame.Add(PKMN.Ability.SAP_SIPPER);
+        abilityEnumListSame.Add(PKMN.Ability.BULLETPROOF);
+        abilityEnumListSame.Add(PKMN.Ability.DELTA_STREAM);
+
+        PKMN.AbilityEnumList abilityEnumListReversed = new PKMN.AbilityEnumList();
+        abilityEnumListReversed.Add(PKMN.Ability.DELTA_STREAM);
+        abilityEnumListReversed.Add(PKMN.Ability.BULLETPROOF);
+        abilityEnumListReversed.Add(PKMN.Ability.SAP_SIPPER);
+        abilityEnumListReversed.Add(PKMN.Ability.TANGLED_FEET);
+        abilityEnumListReversed.Add(PKMN.Ability.STENCH);
+
+        Assert.AreEqual(abilityEnumList, abilityEnumList);
+        Assert.AreEqual(abilityEnumList, abilityEnumListSame);
+        Assert.AreEqual(abilityEnumList.GetHashCode(), abilityEnumListSame.GetHashCode());
+
+        Assert.AreNotEqual(abilityEnumList, abilityEnumListReversed);
+        Assert.AreNotEqual(abilityEnumList.GetHashCode(), abilityEnumListReversed.GetHashCode());
+    }
+
+    [Test]
+    public void BallEnumListTest()
+    {
+        PKMN.BallEnumList ballEnumList = new PKMN.BallEnumList();
+        ballEnumList.Add(PKMN.Ball.POKE_BALL);
+        ballEnumList.Add(PKMN.Ball.NET_BALL);
+        ballEnumList.Add(PKMN.Ball.LUXURY_BALL);
+        ballEnumList.Add(PKMN.Ball.HEAVY_BALL);
+        ballEnumList.Add(PKMN.Ball.DREAM_BALL);
+
+        PKMN.BallEnumList ballEnumListSame = new PKMN.BallEnumList();
+        ballEnumListSame.Add(PKMN.Ball.POKE_BALL);
+        ballEnumListSame.Add(PKMN.Ball.NET_BALL);
+        ballEnumListSame.Add(PKMN.Ball.LUXURY_BALL);
+        ballEnumListSame.Add(PKMN.Ball.HEAVY_BALL);
+        ballEnumListSame.Add(PKMN.Ball.DREAM_BALL);
+
+        PKMN.BallEnumList ballEnumListReversed = new PKMN.BallEnumList();
+        ballEnumListReversed.Add(PKMN.Ball.DREAM_BALL);
+        ballEnumListReversed.Add(PKMN.Ball.HEAVY_BALL);
+        ballEnumListReversed.Add(PKMN.Ball.LUXURY_BALL);
+        ballEnumListReversed.Add(PKMN.Ball.NET_BALL);
+        ballEnumListReversed.Add(PKMN.Ball.POKE_BALL);
+
+        Assert.AreEqual(ballEnumList, ballEnumList);
+        Assert.AreEqual(ballEnumList, ballEnumListSame);
+        Assert.AreEqual(ballEnumList.GetHashCode(), ballEnumListSame.GetHashCode());
+
+        Assert.AreNotEqual(ballEnumList, ballEnumListReversed);
+        Assert.AreNotEqual(ballEnumList.GetHashCode(), ballEnumListReversed.GetHashCode());
+    }
+
+    [Test]
+    public void ConditionEnumListTest()
+    {
+        PKMN.ConditionEnumList conditionEnumList = new PKMN.ConditionEnumList();
+        conditionEnumList.Add(PKMN.Condition.NONE);
+        conditionEnumList.Add(PKMN.Condition.ASLEEP);
+        conditionEnumList.Add(PKMN.Condition.POISON);
+        conditionEnumList.Add(PKMN.Condition.BURN);
+        conditionEnumList.Add(PKMN.Condition.FROZEN);
+
+        PKMN.ConditionEnumList conditionEnumListSame = new PKMN.ConditionEnumList();
+        conditionEnumListSame.Add(PKMN.Condition.NONE);
+        conditionEnumListSame.Add(PKMN.Condition.ASLEEP);
+        conditionEnumListSame.Add(PKMN.Condition.POISON);
+        conditionEnumListSame.Add(PKMN.Condition.BURN);
+        conditionEnumListSame.Add(PKMN.Condition.FROZEN);
+
+        PKMN.ConditionEnumList conditionEnumListReversed = new PKMN.ConditionEnumList();
+        conditionEnumListReversed.Add(PKMN.Condition.FROZEN);
+        conditionEnumListReversed.Add(PKMN.Condition.BURN);
+        conditionEnumListReversed.Add(PKMN.Condition.POISON);
+        conditionEnumListReversed.Add(PKMN.Condition.ASLEEP);
+        conditionEnumListReversed.Add(PKMN.Condition.NONE);
+
+        Assert.AreEqual(conditionEnumList, conditionEnumList);
+        Assert.AreEqual(conditionEnumList, conditionEnumListSame);
+        Assert.AreEqual(conditionEnumList.GetHashCode(), conditionEnumListSame.GetHashCode());
+
+        Assert.AreNotEqual(conditionEnumList, conditionEnumListReversed);
+        Assert.AreNotEqual(conditionEnumList.GetHashCode(), conditionEnumListReversed.GetHashCode());
+    }
+
+    [Test]
+    public void EggGroupEnumListTest()
+    {
+        PKMN.EggGroupEnumList eggGroupEnumList = new PKMN.EggGroupEnumList();
+        eggGroupEnumList.Add(PKMN.EggGroup.NONE);
+        eggGroupEnumList.Add(PKMN.EggGroup.MONSTER);
+        eggGroupEnumList.Add(PKMN.EggGroup.BUG);
+        eggGroupEnumList.Add(PKMN.EggGroup.GROUND);
+        eggGroupEnumList.Add(PKMN.EggGroup.PLANT);
+
+        PKMN.EggGroupEnumList eggGroupEnumListSame = new PKMN.EggGroupEnumList();
+        eggGroupEnumListSame.Add(PKMN.EggGroup.NONE);
+        eggGroupEnumListSame.Add(PKMN.EggGroup.MONSTER);
+        eggGroupEnumListSame.Add(PKMN.EggGroup.BUG);
+        eggGroupEnumListSame.Add(PKMN.EggGroup.GROUND);
+        eggGroupEnumListSame.Add(PKMN.EggGroup.PLANT);
+
+        PKMN.EggGroupEnumList eggGroupEnumListReversed = new PKMN.EggGroupEnumList();
+        eggGroupEnumListReversed.Add(PKMN.EggGroup.PLANT);
+        eggGroupEnumListReversed.Add(PKMN.EggGroup.GROUND);
+        eggGroupEnumListReversed.Add(PKMN.EggGroup.BUG);
+        eggGroupEnumListReversed.Add(PKMN.EggGroup.MONSTER);
+        eggGroupEnumListReversed.Add(PKMN.EggGroup.NONE);
+
+        Assert.AreEqual(eggGroupEnumList, eggGroupEnumList);
+        Assert.AreEqual(eggGroupEnumList, eggGroupEnumListSame);
+        Assert.AreEqual(eggGroupEnumList.GetHashCode(), eggGroupEnumListSame.GetHashCode());
+
+        Assert.AreNotEqual(eggGroupEnumList, eggGroupEnumListReversed);
+        Assert.AreNotEqual(eggGroupEnumList.GetHashCode(), eggGroupEnumListReversed.GetHashCode());
+    }
+
+    [Test]
+    public void GameEnumListTest()
+    {
+        PKMN.GameEnumList gameEnumList = new PKMN.GameEnumList();
+        gameEnumList.Add(PKMN.Game.RED);
+        gameEnumList.Add(PKMN.Game.GOLD);
+        gameEnumList.Add(PKMN.Game.RUBY);
+        gameEnumList.Add(PKMN.Game.DIAMOND);
+        gameEnumList.Add(PKMN.Game.BLACK);
+
+        PKMN.GameEnumList gameEnumListSame = new PKMN.GameEnumList();
+        gameEnumListSame.Add(PKMN.Game.RED);
+        gameEnumListSame.Add(PKMN.Game.GOLD);
+        gameEnumListSame.Add(PKMN.Game.RUBY);
+        gameEnumListSame.Add(PKMN.Game.DIAMOND);
+        gameEnumListSame.Add(PKMN.Game.BLACK);
+
+        PKMN.GameEnumList gameEnumListReversed = new PKMN.GameEnumList();
+        gameEnumListReversed.Add(PKMN.Game.BLACK);
+        gameEnumListReversed.Add(PKMN.Game.DIAMOND);
+        gameEnumListReversed.Add(PKMN.Game.RUBY);
+        gameEnumListReversed.Add(PKMN.Game.GOLD);
+        gameEnumListReversed.Add(PKMN.Game.RED);
+
+        Assert.AreEqual(gameEnumList, gameEnumList);
+        Assert.AreEqual(gameEnumList, gameEnumListSame);
+        Assert.AreEqual(gameEnumList.GetHashCode(), gameEnumListSame.GetHashCode());
+
+        Assert.AreNotEqual(gameEnumList, gameEnumListReversed);
+        Assert.AreNotEqual(gameEnumList.GetHashCode(), gameEnumListReversed.GetHashCode());
+    }
+
+    [Test]
+    public void GenderEnumListTest()
+    {
+        PKMN.GenderEnumList genderEnumList = new PKMN.GenderEnumList();
+        genderEnumList.Add(PKMN.Gender.MALE);
+        genderEnumList.Add(PKMN.Gender.FEMALE);
+        genderEnumList.Add(PKMN.Gender.GENDERLESS);
+
+        PKMN.GenderEnumList genderEnumListSender = new PKMN.GenderEnumList();
+        genderEnumListSender.Add(PKMN.Gender.MALE);
+        genderEnumListSender.Add(PKMN.Gender.FEMALE);
+        genderEnumListSender.Add(PKMN.Gender.GENDERLESS);
+
+        PKMN.GenderEnumList genderEnumListReversed = new PKMN.GenderEnumList();
+        genderEnumListReversed.Add(PKMN.Gender.GENDERLESS);
+        genderEnumListReversed.Add(PKMN.Gender.FEMALE);
+        genderEnumListReversed.Add(PKMN.Gender.MALE);
+
+        Assert.AreEqual(genderEnumList, genderEnumList);
+        Assert.AreEqual(genderEnumList, genderEnumListSender);
+        Assert.AreEqual(genderEnumList.GetHashCode(), genderEnumListSender.GetHashCode());
+
+        Assert.AreNotEqual(genderEnumList, genderEnumListReversed);
+        Assert.AreNotEqual(genderEnumList.GetHashCode(), genderEnumListReversed.GetHashCode());
+    }
+
+    [Test]
+    public void ItemEnumListTest()
+    {
+        PKMN.ItemEnumList itemEnumList = new PKMN.ItemEnumList();
+        itemEnumList.Add(PKMN.Item.POKE_BALL);
+        itemEnumList.Add(PKMN.Item.NET_BALL);
+        itemEnumList.Add(PKMN.Item.LUXURY_BALL);
+        itemEnumList.Add(PKMN.Item.HEAVY_BALL);
+        itemEnumList.Add(PKMN.Item.DREAM_BALL);
+
+        PKMN.ItemEnumList itemEnumListSame = new PKMN.ItemEnumList();
+        itemEnumListSame.Add(PKMN.Item.POKE_BALL);
+        itemEnumListSame.Add(PKMN.Item.NET_BALL);
+        itemEnumListSame.Add(PKMN.Item.LUXURY_BALL);
+        itemEnumListSame.Add(PKMN.Item.HEAVY_BALL);
+        itemEnumListSame.Add(PKMN.Item.DREAM_BALL);
+
+        PKMN.ItemEnumList itemEnumListReversed = new PKMN.ItemEnumList();
+        itemEnumListReversed.Add(PKMN.Item.DREAM_BALL);
+        itemEnumListReversed.Add(PKMN.Item.HEAVY_BALL);
+        itemEnumListReversed.Add(PKMN.Item.LUXURY_BALL);
+        itemEnumListReversed.Add(PKMN.Item.NET_BALL);
+        itemEnumListReversed.Add(PKMN.Item.POKE_BALL);
+
+        Assert.AreEqual(itemEnumList, itemEnumList);
+        Assert.AreEqual(itemEnumList, itemEnumListSame);
+        Assert.AreEqual(itemEnumList.GetHashCode(), itemEnumListSame.GetHashCode());
+
+        Assert.AreNotEqual(itemEnumList, itemEnumListReversed);
+        Assert.AreNotEqual(itemEnumList.GetHashCode(), itemEnumListReversed.GetHashCode());
+    }
+
+    [Test]
+    public void LanguageEnumListTest()
+    {
+        PKMN.LanguageEnumList languageEnumList = new PKMN.LanguageEnumList();
+        languageEnumList.Add(PKMN.Language.JAPANESE);
+        languageEnumList.Add(PKMN.Language.ENGLISH);
+        languageEnumList.Add(PKMN.Language.GERMAN);
+        languageEnumList.Add(PKMN.Language.FRENCH);
+        languageEnumList.Add(PKMN.Language.ITALIAN);
+
+        PKMN.LanguageEnumList languageEnumListSame = new PKMN.LanguageEnumList();
+        languageEnumListSame.Add(PKMN.Language.JAPANESE);
+        languageEnumListSame.Add(PKMN.Language.ENGLISH);
+        languageEnumListSame.Add(PKMN.Language.GERMAN);
+        languageEnumListSame.Add(PKMN.Language.FRENCH);
+        languageEnumListSame.Add(PKMN.Language.ITALIAN);
+
+        PKMN.LanguageEnumList languageEnumListReversed = new PKMN.LanguageEnumList();
+        languageEnumListReversed.Add(PKMN.Language.ITALIAN);
+        languageEnumListReversed.Add(PKMN.Language.FRENCH);
+        languageEnumListReversed.Add(PKMN.Language.GERMAN);
+        languageEnumListReversed.Add(PKMN.Language.ENGLISH);
+        languageEnumListReversed.Add(PKMN.Language.JAPANESE);
+
+        Assert.AreEqual(languageEnumList, languageEnumList);
+        Assert.AreEqual(languageEnumList, languageEnumListSame);
+        Assert.AreEqual(languageEnumList.GetHashCode(), languageEnumListSame.GetHashCode());
+
+        Assert.AreNotEqual(languageEnumList, languageEnumListReversed);
+        Assert.AreNotEqual(languageEnumList.GetHashCode(), languageEnumListReversed.GetHashCode());
+    }
+
+    [Test]
+    public void MoveDamageClassEnumListTest()
+    {
+        PKMN.MoveDamageClassEnumList moveDamageClassEnumList = new PKMN.MoveDamageClassEnumList();
+        moveDamageClassEnumList.Add(PKMN.MoveDamageClass.PHYSICAL);
+        moveDamageClassEnumList.Add(PKMN.MoveDamageClass.SPECIAL);
+        moveDamageClassEnumList.Add(PKMN.MoveDamageClass.STATUS);
+
+        PKMN.MoveDamageClassEnumList moveDamageClassEnumListSender = new PKMN.MoveDamageClassEnumList();
+        moveDamageClassEnumListSender.Add(PKMN.MoveDamageClass.PHYSICAL);
+        moveDamageClassEnumListSender.Add(PKMN.MoveDamageClass.SPECIAL);
+        moveDamageClassEnumListSender.Add(PKMN.MoveDamageClass.STATUS);
+
+        PKMN.MoveDamageClassEnumList moveDamageClassEnumListReversed = new PKMN.MoveDamageClassEnumList();
+        moveDamageClassEnumListReversed.Add(PKMN.MoveDamageClass.STATUS);
+        moveDamageClassEnumListReversed.Add(PKMN.MoveDamageClass.SPECIAL);
+        moveDamageClassEnumListReversed.Add(PKMN.MoveDamageClass.PHYSICAL);
+
+        Assert.AreEqual(moveDamageClassEnumList, moveDamageClassEnumList);
+        Assert.AreEqual(moveDamageClassEnumList, moveDamageClassEnumListSender);
+        Assert.AreEqual(moveDamageClassEnumList.GetHashCode(), moveDamageClassEnumListSender.GetHashCode());
+
+        Assert.AreNotEqual(moveDamageClassEnumList, moveDamageClassEnumListReversed);
+        Assert.AreNotEqual(moveDamageClassEnumList.GetHashCode(), moveDamageClassEnumListReversed.GetHashCode());
+    }
+
+    [Test]
+    public void MoveEnumListTest()
+    {
+        PKMN.MoveEnumList moveEnumList = new PKMN.MoveEnumList();
+        moveEnumList.Add(PKMN.Move.CUT);
+        moveEnumList.Add(PKMN.Move.FLY);
+        moveEnumList.Add(PKMN.Move.SURF);
+        moveEnumList.Add(PKMN.Move.STRENGTH);
+        moveEnumList.Add(PKMN.Move.FLASH);
+
+        PKMN.MoveEnumList moveEnumListSame = new PKMN.MoveEnumList();
+        moveEnumListSame.Add(PKMN.Move.CUT);
+        moveEnumListSame.Add(PKMN.Move.FLY);
+        moveEnumListSame.Add(PKMN.Move.SURF);
+        moveEnumListSame.Add(PKMN.Move.STRENGTH);
+        moveEnumListSame.Add(PKMN.Move.FLASH);
+
+        PKMN.MoveEnumList moveEnumListReversed = new PKMN.MoveEnumList();
+        moveEnumListReversed.Add(PKMN.Move.FLASH);
+        moveEnumListReversed.Add(PKMN.Move.STRENGTH);
+        moveEnumListReversed.Add(PKMN.Move.SURF);
+        moveEnumListReversed.Add(PKMN.Move.FLY);
+        moveEnumListReversed.Add(PKMN.Move.CUT);
+
+        Assert.AreEqual(moveEnumList, moveEnumList);
+        Assert.AreEqual(moveEnumList, moveEnumListSame);
+        Assert.AreEqual(moveEnumList.GetHashCode(), moveEnumListSame.GetHashCode());
+
+        Assert.AreNotEqual(moveEnumList, moveEnumListReversed);
+        Assert.AreNotEqual(moveEnumList.GetHashCode(), moveEnumListReversed.GetHashCode());
+    }
+
+    [Test]
+    public void NatureEnumListTest()
+    {
+        PKMN.NatureEnumList natureEnumList = new PKMN.NatureEnumList();
+        natureEnumList.Add(PKMN.Nature.HARDY);
+        natureEnumList.Add(PKMN.Nature.QUIRKY);
+        natureEnumList.Add(PKMN.Nature.LONELY);
+        natureEnumList.Add(PKMN.Nature.BASHFUL);
+        natureEnumList.Add(PKMN.Nature.QUIET);
+
+        PKMN.NatureEnumList natureEnumListSame = new PKMN.NatureEnumList();
+        natureEnumListSame.Add(PKMN.Nature.HARDY);
+        natureEnumListSame.Add(PKMN.Nature.QUIRKY);
+        natureEnumListSame.Add(PKMN.Nature.LONELY);
+        natureEnumListSame.Add(PKMN.Nature.BASHFUL);
+        natureEnumListSame.Add(PKMN.Nature.QUIET);
+
+        PKMN.NatureEnumList natureEnumListReversed = new PKMN.NatureEnumList();
+        natureEnumListReversed.Add(PKMN.Nature.QUIET);
+        natureEnumListReversed.Add(PKMN.Nature.BASHFUL);
+        natureEnumListReversed.Add(PKMN.Nature.LONELY);
+        natureEnumListReversed.Add(PKMN.Nature.QUIRKY);
+        natureEnumListReversed.Add(PKMN.Nature.HARDY);
+
+        Assert.AreEqual(natureEnumList, natureEnumList);
+        Assert.AreEqual(natureEnumList, natureEnumListSame);
+        Assert.AreEqual(natureEnumList.GetHashCode(), natureEnumListSame.GetHashCode());
+
+        Assert.AreNotEqual(natureEnumList, natureEnumListReversed);
+        Assert.AreNotEqual(natureEnumList.GetHashCode(), natureEnumListReversed.GetHashCode());
+    }
+
+    [Test]
+    public void SpeciesEnumListTest()
+    {
+        PKMN.SpeciesEnumList speciesEnumList = new PKMN.SpeciesEnumList();
+        speciesEnumList.Add(PKMN.Species.SQUIRTLE);
+        speciesEnumList.Add(PKMN.Species.TOTODILE);
+        speciesEnumList.Add(PKMN.Species.MUDKIP);
+        speciesEnumList.Add(PKMN.Species.PIPLUP);
+        speciesEnumList.Add(PKMN.Species.OSHAWOTT);
+
+        PKMN.SpeciesEnumList speciesEnumListSame = new PKMN.SpeciesEnumList();
+        speciesEnumListSame.Add(PKMN.Species.SQUIRTLE);
+        speciesEnumListSame.Add(PKMN.Species.TOTODILE);
+        speciesEnumListSame.Add(PKMN.Species.MUDKIP);
+        speciesEnumListSame.Add(PKMN.Species.PIPLUP);
+        speciesEnumListSame.Add(PKMN.Species.OSHAWOTT);
+
+        PKMN.SpeciesEnumList speciesEnumListReversed = new PKMN.SpeciesEnumList();
+        speciesEnumListReversed.Add(PKMN.Species.OSHAWOTT);
+        speciesEnumListReversed.Add(PKMN.Species.PIPLUP);
+        speciesEnumListReversed.Add(PKMN.Species.MUDKIP);
+        speciesEnumListReversed.Add(PKMN.Species.TOTODILE);
+        speciesEnumListReversed.Add(PKMN.Species.SQUIRTLE);
+
+        Assert.AreEqual(speciesEnumList, speciesEnumList);
+        Assert.AreEqual(speciesEnumList, speciesEnumListSame);
+        Assert.AreEqual(speciesEnumList.GetHashCode(), speciesEnumListSame.GetHashCode());
+
+        Assert.AreNotEqual(speciesEnumList, speciesEnumListReversed);
+        Assert.AreNotEqual(speciesEnumList.GetHashCode(), speciesEnumListReversed.GetHashCode());
+    }
+
+    [Test]
+    public void StatEnumListTest()
+    {
+        PKMN.StatEnumList statEnumList = new PKMN.StatEnumList();
+        statEnumList.Add(PKMN.Stat.HP);
+        statEnumList.Add(PKMN.Stat.ATTACK);
+        statEnumList.Add(PKMN.Stat.DEFENSE);
+        statEnumList.Add(PKMN.Stat.SPEED);
+        statEnumList.Add(PKMN.Stat.SPECIAL);
+
+        PKMN.StatEnumList statEnumListSame = new PKMN.StatEnumList();
+        statEnumListSame.Add(PKMN.Stat.HP);
+        statEnumListSame.Add(PKMN.Stat.ATTACK);
+        statEnumListSame.Add(PKMN.Stat.DEFENSE);
+        statEnumListSame.Add(PKMN.Stat.SPEED);
+        statEnumListSame.Add(PKMN.Stat.SPECIAL);
+
+        PKMN.StatEnumList statEnumListReversed = new PKMN.StatEnumList();
+        statEnumListReversed.Add(PKMN.Stat.SPECIAL);
+        statEnumListReversed.Add(PKMN.Stat.SPEED);
+        statEnumListReversed.Add(PKMN.Stat.DEFENSE);
+        statEnumListReversed.Add(PKMN.Stat.ATTACK);
+        statEnumListReversed.Add(PKMN.Stat.HP);
+
+        Assert.AreEqual(statEnumList, statEnumList);
+        Assert.AreEqual(statEnumList, statEnumListSame);
+        Assert.AreEqual(statEnumList.GetHashCode(), statEnumListSame.GetHashCode());
+
+        Assert.AreNotEqual(statEnumList, statEnumListReversed);
+        Assert.AreNotEqual(statEnumList.GetHashCode(), statEnumListReversed.GetHashCode());
+    }
+
+    [Test]
+    public void TypeEnumListTest()
+    {
+        PKMN.TypeEnumList typeEnumList = new PKMN.TypeEnumList();
+        typeEnumList.Add(PKMN.Type.NORMAL);
+        typeEnumList.Add(PKMN.Type.SHADOW);
+        typeEnumList.Add(PKMN.Type.FAIRY);
+        typeEnumList.Add(PKMN.Type.QUESTION_MARK);
+        typeEnumList.Add(PKMN.Type.STEEL);
+
+        PKMN.TypeEnumList typeEnumListSame = new PKMN.TypeEnumList();
+        typeEnumListSame.Add(PKMN.Type.NORMAL);
+        typeEnumListSame.Add(PKMN.Type.SHADOW);
+        typeEnumListSame.Add(PKMN.Type.FAIRY);
+        typeEnumListSame.Add(PKMN.Type.QUESTION_MARK);
+        typeEnumListSame.Add(PKMN.Type.STEEL);
+
+        PKMN.TypeEnumList typeEnumListReversed = new PKMN.TypeEnumList();
+        typeEnumListReversed.Add(PKMN.Type.STEEL);
+        typeEnumListReversed.Add(PKMN.Type.QUESTION_MARK);
+        typeEnumListReversed.Add(PKMN.Type.FAIRY);
+        typeEnumListReversed.Add(PKMN.Type.SHADOW);
+        typeEnumListReversed.Add(PKMN.Type.NORMAL);
+
+        Assert.AreEqual(typeEnumList, typeEnumList);
+        Assert.AreEqual(typeEnumList, typeEnumListSame);
+        Assert.AreEqual(typeEnumList.GetHashCode(), typeEnumListSame.GetHashCode());
+
+        Assert.AreNotEqual(typeEnumList, typeEnumListReversed);
+        Assert.AreNotEqual(typeEnumList.GetHashCode(), typeEnumListReversed.GetHashCode());
     }
 }

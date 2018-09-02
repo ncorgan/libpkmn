@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -25,23 +25,23 @@ namespace pkmn
 
             virtual ~pokedex_impl() {};
 
-            std::string get_game() final;
+            pkmn::e_game get_game() final;
 
             void set_has_seen(
-                const std::string& species,
+                pkmn::e_species species,
                 bool has_seen_value
             ) final;
 
-            const std::vector<std::string>& get_all_seen() final;
+            const std::vector<pkmn::e_species>& get_all_seen() final;
 
             int get_num_seen() final;
 
             void set_has_caught(
-                const std::string& species,
+                pkmn::e_species species,
                 bool has_caught_value
             ) final;
 
-            const std::vector<std::string>& get_all_caught() final;
+            const std::vector<pkmn::e_species>& get_all_caught() final;
 
             int get_num_caught() final;
 
@@ -52,17 +52,17 @@ namespace pkmn
             int _generation;
             size_t _num_pokemon;
 
-            std::vector<std::string> _all_seen;
+            std::vector<pkmn::e_species> _all_seen;
             bool _dirty_seen;
 
-            std::vector<std::string> _all_caught;
+            std::vector<pkmn::e_species> _all_caught;
             bool _dirty_caught;
 
             void* _p_native;
 
             void _update_member_vector_with_pksav(
                 const uint8_t* native_list,
-                std::vector<std::string>& member_vector
+                std::vector<pkmn::e_species>& member_vector
             );
 
             virtual void _set_has_seen(

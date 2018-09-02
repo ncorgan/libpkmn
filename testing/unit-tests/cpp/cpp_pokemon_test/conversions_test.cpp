@@ -5,7 +5,10 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
+#include "private_exports.hpp"
+#include "pksav/enum_maps.hpp"
 #include "types/rng.hpp"
+#include "utils/misc.hpp"
 
 #include <pkmntest/util.hpp>
 
@@ -13,14 +16,15 @@
 
 #include <pkmn/database/item_entry.hpp>
 #include <pkmn/database/lists.hpp>
+#include <pkmn/enums/enum_to_string.hpp>
 
 #include <gtest/gtest.h>
 
 // Common to all generations
-static const std::vector<std::string> CONDITIONS =
-{
-    "None", "Asleep", "Poison", "Burn", "Frozen", "Paralysis"
-};
+static const std::vector<pkmn::e_condition> CONDITIONS =
+    pkmn::map_keys_to_vector<decltype(pksav::gb_condition_bimap_t::left), pkmn::e_condition>(
+        pksav::get_gb_condition_bimap().left
+    );
 
 template <typename T>
 static T random_value(const std::vector<T>& vec)
@@ -33,7 +37,7 @@ static std::string random_string(
     size_t len
 )
 {
-    std::string ret = "";
+    std::string ret;
     pkmn::rng<char> char_rng;
 
     for(size_t i = 0; i < len; ++i)
@@ -52,11 +56,11 @@ bool random_bool()
 
 typedef struct
 {
-    std::string species;
+    pkmn::e_species species;
     std::string form;
 
-    std::string origin_game;
-    std::string dest_game;
+    pkmn::e_game origin_game;
+    pkmn::e_game dest_game;
 } conversions_test_params_t;
 
 class conversions_test: public ::testing::TestWithParam<conversions_test_params_t> {};
@@ -73,10 +77,10 @@ TEST_P(conversions_test, conversions_test)
                                             50
                                         );
 
-    int origin_generation = game_generations.at(params.origin_game);
-    int dest_generation = game_generations.at(params.dest_game);
+    int origin_generation = pkmn::priv::game_enum_to_generation(params.origin_game);
+    int dest_generation = pkmn::priv::game_enum_to_generation(params.dest_game);
     int min_generation = std::min<int>(origin_generation, dest_generation);
-    std::string game_for_lists = (min_generation == origin_generation) ? params.origin_game : params.dest_game;
+    pkmn::e_game game_for_lists = (min_generation == origin_generation) ? params.origin_game : params.dest_game;
 
     // Set random values. TODO: EVs, IVs
     pkmn::rng<int> int_rng;
@@ -85,25 +89,21 @@ TEST_P(conversions_test, conversions_test)
     pkmn::rng<uint32_t> uint32_rng;
     pkmn::rng<size_t> size_rng;
 
-    std::vector<std::string> items = pkmn::database::get_item_list(game_for_lists);
-    std::vector<std::string> moves = pkmn::database::get_move_list(game_for_lists);
+    std::vector<pkmn::e_item> items = pkmn::database::get_item_list(game_for_lists);
+    std::vector<pkmn::e_move> moves = pkmn::database::get_move_list(game_for_lists);
 
-    for(int i = 0; i < 4; ++i)
+    for(int move_index = 0; move_index < 4; ++move_index)
     {
-        /*
-         * This will get rid of some legitimate moves, like Shadow Ball, but not
-         * enough to cause an issue.
-         */
-        std::string move_name;
+        pkmn::e_move move = pkmn::e_move::NONE;
         do
         {
-            move_name = moves[size_rng.rand(0, moves.size()-1)];
+            move = moves[size_rng.rand(0, moves.size()-1)];
         }
-        while(move_name.find("Shadow") == 0);
+        while(move >= pkmn::e_move::SHADOW_RUSH);
 
         first_pokemon->set_move(
-            move_name,
-            i
+            move,
+            move_index
         );
     }
 
@@ -111,8 +111,8 @@ TEST_P(conversions_test, conversions_test)
     {
         first_pokemon->set_original_trainer_id(uint32_rng.rand());
 
-        std::pair<std::string, std::string> abilities = first_pokemon->get_database_entry().get_abilities();
-        if(abilities.second != "None")
+        pkmn::ability_pair_t abilities = first_pokemon->get_database_entry().get_abilities();
+        if(abilities.second != pkmn::e_ability::NONE)
         {
             first_pokemon->set_ability(random_bool() ? abilities.first : abilities.second);
         }
@@ -132,24 +132,26 @@ TEST_P(conversions_test, conversions_test)
          * Make sure the item is holdable. For Generation III, no GCN-exclusive items appear
          * to be holdable.
          */
-        std::string held_item = "";
+        pkmn::e_item held_item = pkmn::e_item::NONE;
         do
         {
             held_item = items[size_rng.rand(0, items.size()-1)];
-        } while(not pkmn::database::item_entry(held_item, params.origin_game).holdable() or
-                (held_item.find("Scent") != std::string::npos));
+        }
+        while(!pkmn::database::item_entry(held_item, params.origin_game).holdable() ||
+              (held_item == pkmn::e_item::JOY_SCENT) || (held_item == pkmn::e_item::VIVID_SCENT) ||
+              (held_item == pkmn::e_item::EXCITE_SCENT));
 
         first_pokemon->set_held_item(held_item);
     }
     if(origin_generation >= 2)
     {
-        first_pokemon->set_gender(random_bool() ? "Male" : "Female");
+        first_pokemon->set_gender(random_bool() ? pkmn::e_gender::MALE : pkmn::e_gender::FEMALE);
         first_pokemon->set_shininess(random_bool());
         first_pokemon->set_current_trainer_friendship(uint8_rng.rand());
 
-        if(params.origin_game != "Gold" and params.origin_game != "Silver")
+        if((params.origin_game != pkmn::e_game::GOLD) and (params.origin_game != pkmn::e_game::SILVER))
         {
-            first_pokemon->set_original_trainer_gender(random_bool() ? "Male" : "Female");
+            first_pokemon->set_original_trainer_gender(random_bool() ? pkmn::e_gender::MALE : pkmn::e_gender::FEMALE);
         }
 
         // The max level met value in Generation II is 63.
@@ -158,20 +160,26 @@ TEST_P(conversions_test, conversions_test)
     if(origin_generation >= 3)
     {
         // Randomize markings, ribbons, and contest stats.
-        const std::map<std::string, bool>& markings = first_pokemon->get_markings();
-        for(auto iter = markings.begin(); iter != markings.end(); ++iter)
+        for(const auto& markings_iter: first_pokemon->get_markings())
         {
-            first_pokemon->set_marking(iter->first, random_bool());
+            first_pokemon->set_marking(
+                markings_iter.first,
+                random_bool()
+            );
         }
-        const std::map<std::string, bool>& ribbons = first_pokemon->get_ribbons();
-        for(auto iter = ribbons.begin(); iter != ribbons.end(); ++iter)
+        for(const auto& ribbons_iter: first_pokemon->get_ribbons())
         {
-            first_pokemon->set_ribbon(iter->first, random_bool());
+            first_pokemon->set_ribbon(
+                ribbons_iter.first,
+                random_bool()
+            );
         }
-        const std::map<std::string, int>& contest_stats = first_pokemon->get_contest_stats();
-        for(auto iter = contest_stats.begin(); iter != contest_stats.end(); ++iter)
+        for(const auto& contest_stats_iter: first_pokemon->get_contest_stats())
         {
-            first_pokemon->set_contest_stat(iter->first, int_rng.rand(0, 255));
+            first_pokemon->set_contest_stat(
+                contest_stats_iter.first,
+                int_rng.rand(0, 255)
+            );
         }
 
         first_pokemon->set_pokerus_duration(int_rng.rand(0, 15));
@@ -218,9 +226,9 @@ TEST_P(conversions_test, conversions_test)
 
         if(origin_generation == dest_generation)
         {
-            EXPECT_TRUE(first_pokemon->get_markings() == second_pokemon->get_markings());
-            EXPECT_TRUE(first_pokemon->get_ribbons() == second_pokemon->get_ribbons());
-            EXPECT_TRUE(first_pokemon->get_contest_stats() == second_pokemon->get_contest_stats());
+            EXPECT_EQ(first_pokemon->get_markings(), second_pokemon->get_markings());
+            EXPECT_EQ(first_pokemon->get_ribbons(), second_pokemon->get_ribbons());
+            EXPECT_EQ(first_pokemon->get_contest_stats(), second_pokemon->get_contest_stats());
         }
         // TODO: else specific functions to check
     }
@@ -238,50 +246,50 @@ TEST_P(conversions_test, conversions_test)
 static const conversions_test_params_t TEST_PARAMS[] =
 {
     // Generation I -> Generation I
-    {"Bulbasaur", "", "Red", "Yellow"},
+    {pkmn::e_species::BULBASAUR, "", pkmn::e_game::RED, pkmn::e_game::YELLOW},
 
     // Generation I -> Generation II
-    {"Squirtle", "", "Blue", "Gold"},
+    {pkmn::e_species::SQUIRTLE, "", pkmn::e_game::BLUE, pkmn::e_game::GOLD},
 
     // Generation II -> Generation II
-    {"Cyndaquil", "", "Gold", "Crystal"},
-    {"Totodile", "", "Crystal", "Gold"},
+    {pkmn::e_species::CYNDAQUIL, "", pkmn::e_game::GOLD, pkmn::e_game::CRYSTAL},
+    {pkmn::e_species::TOTODILE, "", pkmn::e_game::CRYSTAL, pkmn::e_game::GOLD},
 
     // Generation II -> Generation I
-    {"Charmander", "", "Silver", "Blue"},
+    {pkmn::e_species::CHARMANDER, "", pkmn::e_game::SILVER, pkmn::e_game::BLUE},
 
     // GBA -> GBA
-    {"Torchic", "", "Ruby", "Sapphire"},
-    {"Mudkip", "", "Ruby", "Emerald"},
-    {"Treecko", "", "Ruby", "FireRed"},
-    {"Torchic", "", "Emerald", "Sapphire"},
-    {"Mudkip", "", "Emerald", "Emerald"},
-    {"Treecko", "", "Emerald", "FireRed"},
-    {"Charmander", "", "FireRed", "Sapphire"},
-    {"Squirtle", "", "FireRed", "Emerald"},
-    {"Bulbasaur", "", "FireRed", "FireRed"},
+    {pkmn::e_species::TORCHIC, "", pkmn::e_game::RUBY, pkmn::e_game::SAPPHIRE},
+    {pkmn::e_species::MUDKIP, "", pkmn::e_game::RUBY, pkmn::e_game::EMERALD},
+    {pkmn::e_species::TREECKO, "", pkmn::e_game::RUBY, pkmn::e_game::FIRERED},
+    {pkmn::e_species::TORCHIC, "", pkmn::e_game::EMERALD, pkmn::e_game::SAPPHIRE},
+    {pkmn::e_species::MUDKIP, "", pkmn::e_game::EMERALD, pkmn::e_game::EMERALD},
+    {pkmn::e_species::TREECKO, "", pkmn::e_game::EMERALD, pkmn::e_game::FIRERED},
+    {pkmn::e_species::CHARMANDER, "", pkmn::e_game::FIRERED, pkmn::e_game::SAPPHIRE},
+    {pkmn::e_species::SQUIRTLE, "", pkmn::e_game::FIRERED, pkmn::e_game::EMERALD},
+    {pkmn::e_species::BULBASAUR, "", pkmn::e_game::FIRERED, pkmn::e_game::FIRERED},
 
     // GBA -> GCN
-    {"Eevee", "", "Ruby", "Colosseum"},
-    {"Espeon", "", "Emerald", "Colosseum"},
-    {"Umbreon", "", "FireRed", "Colosseum"},
-    {"Eevee", "", "Ruby", "XD"},
-    {"Espeon", "", "Emerald", "XD"},
-    {"Umbreon", "", "FireRed", "XD"},
+    {pkmn::e_species::EEVEE, "", pkmn::e_game::RUBY, pkmn::e_game::COLOSSEUM},
+    {pkmn::e_species::ESPEON, "", pkmn::e_game::EMERALD, pkmn::e_game::COLOSSEUM},
+    {pkmn::e_species::UMBREON, "", pkmn::e_game::FIRERED, pkmn::e_game::COLOSSEUM},
+    {pkmn::e_species::EEVEE, "", pkmn::e_game::RUBY, pkmn::e_game::XD},
+    {pkmn::e_species::ESPEON, "", pkmn::e_game::EMERALD, pkmn::e_game::XD},
+    {pkmn::e_species::UMBREON, "", pkmn::e_game::FIRERED, pkmn::e_game::XD},
 
     // GCN -> GBA
-    {"Eevee", "", "Colosseum", "Sapphire"},
-    {"Espeon", "", "Colosseum", "Emerald"},
-    {"Umbreon", "", "Colosseum", "LeafGreen"},
-    {"Eevee", "", "XD", "Sapphire"},
-    {"Espeon", "", "XD", "Emerald"},
-    {"Umbreon", "", "XD", "LeafGreen"},
+    {pkmn::e_species::EEVEE, "", pkmn::e_game::COLOSSEUM, pkmn::e_game::SAPPHIRE},
+    {pkmn::e_species::ESPEON, "", pkmn::e_game::COLOSSEUM, pkmn::e_game::EMERALD},
+    {pkmn::e_species::UMBREON, "", pkmn::e_game::COLOSSEUM, pkmn::e_game::LEAFGREEN},
+    {pkmn::e_species::EEVEE, "", pkmn::e_game::XD, pkmn::e_game::SAPPHIRE},
+    {pkmn::e_species::ESPEON, "", pkmn::e_game::XD, pkmn::e_game::EMERALD},
+    {pkmn::e_species::UMBREON, "", pkmn::e_game::XD, pkmn::e_game::LEAFGREEN},
 
     // GCN -> GCN
-    {"Vaporeon", "", "Colosseum", "Colosseum"},
-    {"Jolteon", "", "Colosseum", "XD"},
-    {"Vaporeon", "", "XD", "XD"},
-    {"Jolteon", "", "XD", "Colosseum"}
+    {pkmn::e_species::VAPOREON, "", pkmn::e_game::COLOSSEUM, pkmn::e_game::COLOSSEUM},
+    {pkmn::e_species::JOLTEON, "", pkmn::e_game::COLOSSEUM, pkmn::e_game::XD},
+    {pkmn::e_species::VAPOREON, "", pkmn::e_game::XD, pkmn::e_game::XD},
+    {pkmn::e_species::JOLTEON, "", pkmn::e_game::XD, pkmn::e_game::COLOSSEUM}
 };
 
 INSTANTIATE_TEST_CASE_P(

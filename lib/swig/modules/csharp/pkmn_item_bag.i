@@ -26,7 +26,7 @@ using System.Runtime.InteropServices;"
 
 // Convert getter/setter functions into attributes for more idiomatic C#.
 
-%attributestring(pkmn::swig::item_bag, std::string, Game, get_game);
+%attribute(pkmn::swig::item_bag, pkmn::e_game, Game, get_game);
 %attributeval(pkmn::swig::item_bag, %arg(std::vector<std::string>), PocketNames, get_pocket_names);
 
 %typemap(cscode) pkmn::swig::item_bag

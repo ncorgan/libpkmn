@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -17,11 +17,12 @@ namespace pkmn { namespace qt {
         QWidget* parent
     ): QComboBox(parent)
     {
-        std::vector<std::string> games = pkmn::database::get_game_list(
+        std::vector<std::string> games = pkmn::database::get_game_name_list(
                                              generation,
                                              includePrevious
                                          );
-        for(const std::string& game: games) {
+        for(const std::string& game: games)
+        {
             addItem(QString::fromStdString(game));
         }
 

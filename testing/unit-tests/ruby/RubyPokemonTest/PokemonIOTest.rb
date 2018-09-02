@@ -95,7 +95,7 @@ class PokemonIO < PokemonTest
         assert_equal(61415, mightyena.original_trainer_public_id)
         assert_equal(3417, mightyena.original_trainer_secret_id)
         assert_equal(223997927, mightyena.original_trainer_id)
-        assert_equal("Female", mightyena.original_trainer_gender)
+        assert_equal(PKMN::Gender::FEMALE, mightyena.original_trainer_gender)
         assert_equal(254, mightyena.current_trainer_friendship)
         assert_equal("Intimidate", mightyena.ability)
         assert_equal("Great Ball", mightyena.ball)

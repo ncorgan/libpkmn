@@ -22,7 +22,7 @@
 #=============================================================================
 # Copyright 2004-2009 Kitware, Inc.
 # Copyright 2009 Mathieu Malaterre <mathieu.malaterre@gmail.com>
-# Copyright 2016-2017 Nicholas Corgan <n.corgan@gmail.com>
+# Copyright 2016-2018 Nicholas Corgan <n.corgan@gmail.com>
 #
 # Distributed under the OSI-approved BSD License (the "License");
 # see accompanying file Copyright.txt for details.
@@ -180,7 +180,8 @@ MACRO(SWIG_ADD_SOURCE_TO_MODULE name outfiles infile)
         ${swig_include_dirs}
         -o "${swig_generated_file_fullname}"
         "${swig_source_file_fullname}"
-        COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_SOURCE_DIR}/scripts/fix_${swig_lowercase_language}_files.py --${swig_lowercase_language}-dir=${swig_outdir}
+        COMMAND ${PYTHON_EXECUTABLE} ${PKMN_SOURCE_DIR}/scripts/fix_${swig_lowercase_language}_files.py --${swig_lowercase_language}-dir=${swig_outdir}
+        COMMAND ${PYTHON_EXECUTABLE} ${PKMN_SOURCE_DIR}/scripts/fix_swig_cxx_files.py --source-file=${swig_generated_file_fullname}
         MAIN_DEPENDENCY "${swig_source_file_fullname}"
         DEPENDS ${SWIG_MODULE_${name}_EXTRA_DEPS}
         COMMENT "Generating files for SWIG module ${name}")
@@ -203,6 +204,7 @@ MACRO(SWIG_ADD_SOURCE_TO_MODULE name outfiles infile)
         -o "${swig_generated_file_fullname}"
         "${swig_source_file_fullname}"
         MAIN_DEPENDENCY "${swig_source_file_fullname}"
+        COMMAND ${PYTHON_EXECUTABLE} ${PKMN_SOURCE_DIR}/scripts/fix_swig_cxx_files.py --source-file=${swig_generated_file_fullname}
         DEPENDS ${SWIG_MODULE_${name}_EXTRA_DEPS}
         COMMENT "Generating files for SWIG module ${name}")
       SET_SOURCE_FILES_PROPERTIES("${swig_generated_file_fullname}" ${swig_extra_generated_files}

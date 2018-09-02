@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -19,14 +19,14 @@ public class PokemonIOTests
     private static string TmpDir = PKMN.Paths.GetTmpDir();
 
     public static void TestLoadingAndSavingPK1(
-        string game
+        PKMN.Game game
     )
     {
         string pk1Path = System.IO.Path.Combine(TmpDir, String.Format("{0}_{1}.pk1", game, rng.Next()));
 
-        PKMN.StringList itemList = PKMN.Database.Lists.ItemList(game);
-        PKMN.StringList moveList = PKMN.Database.Lists.MoveList(game);
-        PKMN.StringList pokemonList = PKMN.Database.Lists.PokemonList(1, true);
+        PKMN.ItemEnumList itemList = PKMN.Database.Lists.ItemList(game);
+        PKMN.MoveEnumList moveList = PKMN.Database.Lists.MoveList(game);
+        PKMN.SpeciesEnumList pokemonList = PKMN.Database.Lists.PokemonList(1, true);
 
         PKMN.Pokemon randomPokemon = Util.GetRandomPokemon(game, itemList, moveList, pokemonList);
         randomPokemon.ExportToFile(pk1Path);
@@ -38,14 +38,14 @@ public class PokemonIOTests
     }
 
     public static void TestLoadingAndSavingPK2(
-        string game
+        PKMN.Game game
     )
     {
         string pk2Path = System.IO.Path.Combine(TmpDir, String.Format("{0}_{1}.pk2", game, rng.Next()));
 
-        PKMN.StringList itemList = PKMN.Database.Lists.ItemList(game);
-        PKMN.StringList moveList = PKMN.Database.Lists.MoveList(game);
-        PKMN.StringList pokemonList = PKMN.Database.Lists.PokemonList(2, true);
+        PKMN.ItemEnumList itemList = PKMN.Database.Lists.ItemList(game);
+        PKMN.MoveEnumList moveList = PKMN.Database.Lists.MoveList(game);
+        PKMN.SpeciesEnumList pokemonList = PKMN.Database.Lists.PokemonList(2, true);
 
         PKMN.Pokemon randomPokemon = Util.GetRandomPokemon(game, itemList, moveList, pokemonList);
         randomPokemon.ExportToFile(pk2Path);
@@ -57,14 +57,14 @@ public class PokemonIOTests
     }
 
     public static void TestLoadingAndSaving3GPKM(
-        string game
+        PKMN.Game game
     )
     {
         string _3gpkmPath = System.IO.Path.Combine(TmpDir, String.Format("{0}_{1}.3gpkm", game, rng.Next()));
 
-        PKMN.StringList itemList = PKMN.Database.Lists.ItemList(game);
-        PKMN.StringList moveList = PKMN.Database.Lists.MoveList(game);
-        PKMN.StringList pokemonList = PKMN.Database.Lists.PokemonList(3, true);
+        PKMN.ItemEnumList itemList = PKMN.Database.Lists.ItemList(game);
+        PKMN.MoveEnumList moveList = PKMN.Database.Lists.MoveList(game);
+        PKMN.SpeciesEnumList pokemonList = PKMN.Database.Lists.PokemonList(3, true);
 
         PKMN.Pokemon randomPokemon = Util.GetRandomPokemon(game, itemList, moveList, pokemonList);
         randomPokemon.ExportToFile(_3gpkmPath);
@@ -85,29 +85,30 @@ public class PokemonIOTests
         PKMN.Pokemon mightyena = new PKMN.Pokemon(
                                           System.IO.Path.Combine(_3GPKMDir, "MIGHTYENA.3gpkm")
                                       );
-        Assert.AreEqual(mightyena.Species, "Mightyena");
-        Assert.AreEqual(mightyena.Game, "Emerald");
+        Assert.AreEqual(mightyena.Species, PKMN.Species.MIGHTYENA);
+        Assert.AreEqual(mightyena.Game, PKMN.Game.EMERALD);
         Assert.AreEqual(mightyena.Form, "Standard");
         Assert.AreEqual(mightyena.Nickname, "MIGHTYENA");
         Assert.IsFalse(mightyena.IsShiny);
-        Assert.AreEqual(mightyena.HeldItem, "Heart Scale");
+        Assert.AreEqual(mightyena.HeldItem, PKMN.Item.HEART_SCALE);
+        Assert.AreEqual(mightyena.Condition, PKMN.Condition.NONE);
         Assert.AreEqual(mightyena.OriginalTrainerName, "A");
         Assert.AreEqual(mightyena.OriginalTrainerPublicID, 61415);
         Assert.AreEqual(mightyena.OriginalTrainerSecretID, 3417);
         Assert.AreEqual(mightyena.OriginalTrainerID, 223997927);
-        Assert.AreEqual(mightyena.OriginalTrainerGender, "Female");
+        Assert.AreEqual(mightyena.OriginalTrainerGender, PKMN.Gender.FEMALE);
         Assert.AreEqual(mightyena.CurrentTrainerFriendship, 254);
-        Assert.AreEqual(mightyena.Ability, "Intimidate");
-        Assert.AreEqual(mightyena.Ball, "Great Ball");
+        Assert.AreEqual(mightyena.Ability, PKMN.Ability.INTIMIDATE);
+        Assert.AreEqual(mightyena.Ball, PKMN.Ball.GREAT_BALL);
         Assert.AreEqual(mightyena.LevelMet, 25);
         Assert.AreEqual(mightyena.LocationMet, "Route 120");
-        Assert.AreEqual(mightyena.OriginalGame, "Emerald");
+        Assert.AreEqual(mightyena.OriginalGame, PKMN.Game.EMERALD);
         Assert.AreEqual(mightyena.Personality, 3557601241);
         Assert.AreEqual(mightyena.Experience, 128734);
         Assert.AreEqual(mightyena.Level, 50);
 
         Assert.AreEqual(mightyena.Markings.Count, 4);
-        foreach(string marking in mightyena.Markings.Keys)
+        foreach(PKMN.Marking marking in mightyena.Markings.Keys)
         {
             Assert.IsFalse(mightyena.Markings[marking]);
         }
@@ -123,14 +124,17 @@ public class PokemonIOTests
         }
 
         Assert.AreEqual(mightyena.ContestStats.Count, 6);
-        foreach(string contestStat in mightyena.ContestStats.Keys)
+        foreach(PKMN.ContestStat contestStat in mightyena.ContestStats.Keys)
         {
             Assert.AreEqual(mightyena.ContestStats[contestStat], 0);
         }
 
-        string[] expectedMightyenaMoves =
+        PKMN.Move[] expectedMightyenaMoves =
         {
-            "Crunch", "Strength", "Shadow Ball", "Double-Edge"
+            PKMN.Move.CRUNCH,
+            PKMN.Move.STRENGTH,
+            PKMN.Move.SHADOW_BALL,
+            PKMN.Move.DOUBLE_EDGE
         };
         Assert.AreEqual(mightyena.Moves.Count, 4);
         for(int i = 0; i < 4; ++i)
@@ -139,28 +143,28 @@ public class PokemonIOTests
         }
 
         Assert.AreEqual(mightyena.EVs.Count, 6);
-        Assert.AreEqual(mightyena.EVs["HP"], 30);
-        Assert.AreEqual(mightyena.EVs["Attack"], 110);
-        Assert.AreEqual(mightyena.EVs["Defense"], 32);
-        Assert.AreEqual(mightyena.EVs["Speed"], 48);
-        Assert.AreEqual(mightyena.EVs["Special Attack"], 17);
-        Assert.AreEqual(mightyena.EVs["Special Defense"], 83);
+        Assert.AreEqual(mightyena.EVs[PKMN.Stat.HP], 30);
+        Assert.AreEqual(mightyena.EVs[PKMN.Stat.ATTACK], 110);
+        Assert.AreEqual(mightyena.EVs[PKMN.Stat.DEFENSE], 32);
+        Assert.AreEqual(mightyena.EVs[PKMN.Stat.SPEED], 48);
+        Assert.AreEqual(mightyena.EVs[PKMN.Stat.SPECIAL_ATTACK], 17);
+        Assert.AreEqual(mightyena.EVs[PKMN.Stat.SPECIAL_DEFENSE], 83);
 
         Assert.AreEqual(mightyena.IVs.Count, 6);
-        Assert.AreEqual(mightyena.IVs["HP"], 26);
-        Assert.AreEqual(mightyena.IVs["Attack"], 28);
-        Assert.AreEqual(mightyena.IVs["Defense"], 4);
-        Assert.AreEqual(mightyena.IVs["Speed"], 13);
-        Assert.AreEqual(mightyena.IVs["Special Attack"], 25);
-        Assert.AreEqual(mightyena.IVs["Special Defense"], 26);
+        Assert.AreEqual(mightyena.IVs[PKMN.Stat.HP], 26);
+        Assert.AreEqual(mightyena.IVs[PKMN.Stat.ATTACK], 28);
+        Assert.AreEqual(mightyena.IVs[PKMN.Stat.DEFENSE], 4);
+        Assert.AreEqual(mightyena.IVs[PKMN.Stat.SPEED], 13);
+        Assert.AreEqual(mightyena.IVs[PKMN.Stat.SPECIAL_ATTACK], 25);
+        Assert.AreEqual(mightyena.IVs[PKMN.Stat.SPECIAL_DEFENSE], 26);
 
         Assert.AreEqual(mightyena.Stats.Count, 6);
-        Assert.AreEqual(mightyena.Stats["HP"], 146);
-        Assert.AreEqual(mightyena.Stats["Attack"], 122);
-        Assert.AreEqual(mightyena.Stats["Defense"], 81);
-        Assert.AreEqual(mightyena.Stats["Speed"], 87);
-        Assert.AreEqual(mightyena.Stats["Special Attack"], 79);
-        Assert.AreEqual(mightyena.Stats["Special Defense"], 88);
+        Assert.AreEqual(mightyena.Stats[PKMN.Stat.HP], 146);
+        Assert.AreEqual(mightyena.Stats[PKMN.Stat.ATTACK], 122);
+        Assert.AreEqual(mightyena.Stats[PKMN.Stat.DEFENSE], 81);
+        Assert.AreEqual(mightyena.Stats[PKMN.Stat.SPEED], 87);
+        Assert.AreEqual(mightyena.Stats[PKMN.Stat.SPECIAL_ATTACK], 79);
+        Assert.AreEqual(mightyena.Stats[PKMN.Stat.SPECIAL_DEFENSE], 88);
     }
 }
 

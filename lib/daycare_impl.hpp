@@ -25,7 +25,7 @@ namespace pkmn {
             explicit daycare_impl(int game_id);
             ~daycare_impl();
 
-            std::string get_game() final;
+            pkmn::e_game get_game() final;
 
             const pkmn::pokemon::sptr& get_levelup_pokemon(
                 int index

@@ -18,12 +18,12 @@ public class PokemonPCTests
     {
         for(int i = 0; i < box.Length; ++i)
         {
-            Assert.AreEqual(box[i].Species, "None");
+            Assert.AreEqual(box[i].Species, PKMN.Species.NONE);
             Assert.AreEqual(box[i].Game, box.Game);
 
             for(int j = 0; j < box[i].Moves.Count; ++j)
             {
-                Assert.AreEqual(box[i].Moves[j].Move, "None");
+                Assert.AreEqual(box[i].Moves[j].Move, PKMN.Move.NONE);
                 Assert.AreEqual(box[i].Moves[j].PP, 0);
             }
         }
@@ -78,8 +78,8 @@ public class PokemonPCTests
 
     private static void TestSettingPokemon(
         PKMN.PokemonBox box,
-        string[] validOtherGames,
-        string invalidOtherGame
+        PKMN.Game[] validOtherGames,
+        PKMN.Game invalidOtherGame
     )
     {
         int generation = Util.GameToGeneration(box.Game);
@@ -103,9 +103,9 @@ public class PokemonPCTests
 
         // Create Pokémon and place in box. The original variables should
         // still have the same underlying Pokémon.
-        PKMN.Pokemon bulbasaur = new PKMN.Pokemon("Bulbasaur", box.Game, "", 5);
-        PKMN.Pokemon charmander = new PKMN.Pokemon("Charmander", box.Game, "", 5);
-        PKMN.Pokemon squirtle = new PKMN.Pokemon("Squirtle", box.Game, "", 5);
+        PKMN.Pokemon bulbasaur = new PKMN.Pokemon(PKMN.Species.BULBASAUR, box.Game, "", 5);
+        PKMN.Pokemon charmander = new PKMN.Pokemon(PKMN.Species.CHARMANDER, box.Game, "", 5);
+        PKMN.Pokemon squirtle = new PKMN.Pokemon(PKMN.Species.SQUIRTLE, box.Game, "", 5);
 
         box[0] = bulbasaur;
         Assert.AreEqual(box.NumPokemon, 1);
@@ -123,7 +123,7 @@ public class PokemonPCTests
         // We should always be able to clear the last contiguous Pokémon.
         box[2] = originalFirst;
         Assert.AreEqual(box.NumPokemon, 2);
-        Assert.AreEqual(box[2].Species, "None");
+        Assert.AreEqual(box[2].Species, PKMN.Species.NONE);
 
         // Put it back.
         box[2] = box[1];
@@ -139,7 +139,7 @@ public class PokemonPCTests
                 }
             );
             Assert.AreEqual(box.NumPokemon, 3);
-            Assert.AreEqual(box[1].Species, "Charmander");
+            Assert.AreEqual(box[1].Species, PKMN.Species.CHARMANDER);
 
             Assert.Throws<IndexOutOfRangeException>(
                 delegate
@@ -148,51 +148,61 @@ public class PokemonPCTests
                 }
             );
             Assert.AreEqual(box.NumPokemon, 3);
-            Assert.AreEqual(box[4].Species, "None");
+            Assert.AreEqual(box[4].Species, PKMN.Species.NONE);
         }
         else
         {
             box[1] = originalFirst;
             Assert.AreEqual(box.NumPokemon, 2);
-            Assert.AreEqual(box[1].Species, "None");
+            Assert.AreEqual(box[1].Species, PKMN.Species.NONE);
 
             box[4] = bulbasaur;
             Assert.AreEqual(box.NumPokemon, 3);
-            Assert.AreEqual(box[4].Species, "Bulbasaur");
+            Assert.AreEqual(box[4].Species, PKMN.Species.BULBASAUR);
 
             // Restore it to how it was.
             box[1] = charmander;
             box[4] = originalFirst;
             Assert.AreEqual(box.NumPokemon, 3);
-            Assert.AreEqual(box[1].Species, "Charmander");
-            Assert.AreEqual(box[4].Species, "None");
+            Assert.AreEqual(box[1].Species, PKMN.Species.CHARMANDER);
+            Assert.AreEqual(box[4].Species, PKMN.Species.NONE);
         }
 
         // Now check everything we've created. Each variable should have
         // the same underlying Pokémon.
-        Assert.AreEqual(box[0].Species, "Squirtle");
-        Assert.AreEqual(box[1].Species, "Charmander");
-        Assert.AreEqual(box[2].Species, "Charmander");
-        Assert.AreEqual(originalFirst.Species, "None");
-        Assert.AreEqual(originalSecond.Species, "None");
-        Assert.AreEqual(bulbasaur.Species, "Bulbasaur");
-        Assert.AreEqual(charmander.Species, "Charmander");
-        Assert.AreEqual(squirtle.Species, "Squirtle");
+        Assert.AreEqual(box[0].Species, PKMN.Species.SQUIRTLE);
+        Assert.AreEqual(box[1].Species, PKMN.Species.CHARMANDER);
+        Assert.AreEqual(box[2].Species, PKMN.Species.CHARMANDER);
+        Assert.AreEqual(originalFirst.Species, PKMN.Species.NONE);
+        Assert.AreEqual(originalSecond.Species, PKMN.Species.NONE);
+        Assert.AreEqual(bulbasaur.Species, PKMN.Species.BULBASAUR);
+        Assert.AreEqual(charmander.Species, PKMN.Species.CHARMANDER);
+        Assert.AreEqual(squirtle.Species, PKMN.Species.SQUIRTLE);
 
         // Make sure converting Pokémon before putting them in the box works (or doesn't)
         // as expected.
-        foreach(string validGame in validOtherGames)
+        foreach(PKMN.Game validGame in validOtherGames)
         {
-            PKMN.Pokemon pikachu = new PKMN.Pokemon("Pikachu", validGame, "", 50);
+            PKMN.Pokemon pikachu = new PKMN.Pokemon(
+                                           PKMN.Species.PIKACHU,
+                                           validGame,
+                                           "",
+                                           50
+                                       );
             Assert.AreEqual(validGame, pikachu.Game);
 
             box[3] = pikachu;
-            Assert.AreEqual("Pikachu", box[3].Species);
+            Assert.AreEqual(PKMN.Species.PIKACHU, box[3].Species);
             Assert.AreEqual(box.Game, box[3].Game);
             Assert.AreEqual(50, box[3].Level);
         }
 
-        PKMN.Pokemon invalidPikachu = new PKMN.Pokemon("Pikachu", invalidOtherGame, "", 50);
+        PKMN.Pokemon invalidPikachu = new PKMN.Pokemon(
+                                              PKMN.Species.PIKACHU,
+                                              invalidOtherGame,
+                                              "",
+                                              50
+                                          );
         Assert.Throws<ArgumentOutOfRangeException>(
             delegate
             {
@@ -203,8 +213,8 @@ public class PokemonPCTests
 
     public static void TestPokemonBox(
         PKMN.PokemonBox box,
-        string[] validOtherGames,
-        string invalidOtherGame
+        PKMN.Game[] validOtherGames,
+        PKMN.Game invalidOtherGame
     )
     {
         TestEmptyPokemonBox(box);
@@ -258,22 +268,22 @@ public class PokemonPCTests
 
     private static void TestSettingPokemonInBoxes(
         PKMN.PokemonPC PC,
-        string[] validOtherGames,
-        string invalidOtherGame
+        PKMN.Game[] validOtherGames,
+        PKMN.Game invalidOtherGame
     )
     {
         for(int i = 0; i < PC.Length; ++i)
         {
             TestSettingPokemon(PC[i], validOtherGames, invalidOtherGame);
-            Assert.AreEqual(PC[i][0].Species, "Squirtle");
-            Assert.AreEqual(PC[i][1].Species, "Charmander");
+            Assert.AreEqual(PC[i][0].Species, PKMN.Species.SQUIRTLE);
+            Assert.AreEqual(PC[i][1].Species, PKMN.Species.CHARMANDER);
         }
     }
 
     public static void TestPokemonPC(
         PKMN.PokemonPC PC,
-        string[] validOtherGames,
-        string invalidOtherGame
+        PKMN.Game[] validOtherGames,
+        PKMN.Game invalidOtherGame
     )
     {
         TestEmptyPokemonPC(PC);

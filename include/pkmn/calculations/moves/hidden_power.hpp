@@ -9,6 +9,8 @@
 
 #include <pkmn/config.hpp>
 
+#include <pkmn/enums/type.hpp>
+
 #include <string>
 
 namespace pkmn { namespace calculations {
@@ -22,26 +24,21 @@ namespace pkmn { namespace calculations {
     struct hidden_power
     {
         hidden_power():
-            type(""),
+            type(pkmn::e_type::NONE),
             base_power(0)
         {}
 
         hidden_power(
-            const std::string& move_type,
+            pkmn::e_type move_type,
             int move_power
-        ): type(move_type), base_power(move_power)
+        ): type(move_type),
+           base_power(move_power)
         {}
 
         hidden_power(const hidden_power&) = default;
         hidden_power& operator=(const hidden_power&) = default;
 
 #ifndef SWIG
-        hidden_power(
-            std::string&& move_type,
-            int move_power
-        ): type(std::move(move_type)), base_power(move_power)
-        {}
-
         hidden_power(hidden_power&&) = default;
         hidden_power& operator=(hidden_power&&) = default;
 #endif
@@ -56,7 +53,7 @@ namespace pkmn { namespace calculations {
             return !operator==(rhs);
         }
 
-        std::string type;
+        pkmn::e_type type;
         int base_power;
     };
 

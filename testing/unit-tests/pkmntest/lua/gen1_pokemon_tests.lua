@@ -15,21 +15,27 @@ function gen1_pokemon_tests.common(game, species)
     local pokemon = pkmn.pokemon(species, game, "", 30)
     local test_params =
     {
-        valid_ball = "Great Ball",
-        invalid_balls = {"Great Ball"},
+        valid_ball = pkmn.item.GREAT_BALL,
+        invalid_balls = {pkmn.item.GREAT_BALL},
 
-        valid_item = "Potion",
-        invalid_items = {"Potion"},
+        valid_item = pkmn.item.POTION,
+        invalid_items = {pkmn.item.POTION},
 
-        expected_original_location = "Special",
+        expected_original_location = pkmn.stat.SPECIAL,
         valid_locations = {"Route 1"},
         invalid_locations = {"Route 1"},
 
-        valid_moves = {"Slash", "Flamethrower", "Tail Whip", "Fire Blast"},
-        invalid_moves = {"Return"},
+        valid_moves =
+        {
+            pkmn.move.SLASH,
+            pkmn.move.FLAMETHROWER,
+            pkmn.move.TAIL_WHIP,
+            pkmn.move.FIRE_BLAST
+        },
+        invalid_moves = {pkmn.move.RETURN},
 
-        valid_original_games = {"Red"},
-        invalid_original_games = {"Red"}
+        valid_original_games = {pkmn.game.RED},
+        invalid_original_games = {pkmn.game.RED}
     }
 
     pokemon_tests.test_common(pokemon, test_params)
@@ -40,29 +46,29 @@ end
 -- Red
 
 function test_red_pokemon()
-    gen1_pokemon_tests.common("Red", "Charmander")
+    gen1_pokemon_tests.common(pkmn.game.RED, pkmn.species.CHARMANDER)
 end
 
 function test_red_forms()
-    pokemon_tests.forms_test("Red")
+    pokemon_tests.forms_test(pkmn.game.RED)
 end
 
 -- Blue
 
 function test_blue_pokemon()
-    gen1_pokemon_tests.common("Blue", "Squirtle")
+    gen1_pokemon_tests.common(pkmn.game.BLUE, pkmn.species.SQUIRTLE)
 end
 
 function test_blue_forms()
-    pokemon_tests.forms_test("Blue")
+    pokemon_tests.forms_test(pkmn.game.BLUE)
 end
 
 -- Yellow
 
 function test_yellow_pokemon()
-    gen1_pokemon_tests.common("Yellow", "Bulbasaur")
+    gen1_pokemon_tests.common(pkmn.game.YELLOW, pkmn.species.BULBASAUR)
 end
 
 function test_yellow_forms()
-    pokemon_tests.forms_test("Yellow")
+    pokemon_tests.forms_test(pkmn.game.YELLOW)
 end

@@ -12,23 +12,6 @@
 
 #include "common/misc.hpp"
 
-enum pkmn_error pkmn_levelup_move_free(
-    struct pkmn_levelup_move* p_levelup_move
-)
-{
-    enum pkmn_error error = pkmn::c::check_for_null_param(
-                                p_levelup_move,
-                                "p_levelup_move"
-                            );
-    if(!error)
-    {
-        pkmn::c::free_pointer_and_set_to_null(&p_levelup_move->p_move);
-        p_levelup_move->level = 0;
-    }
-
-    return error;
-}
-
 enum pkmn_error pkmn_levelup_moves_free(
     struct pkmn_levelup_moves* p_levelup_moves
 )
@@ -37,25 +20,9 @@ enum pkmn_error pkmn_levelup_moves_free(
                                 p_levelup_moves,
                                 "p_levelup_moves"
                             );
-
-    if(!error && (p_levelup_moves->length > 0))
-    {
-        for(size_t move_index = 0;
-            (move_index < p_levelup_moves->length) && !error;
-            ++move_index)
-        {
-            error = pkmn_levelup_move_free(&p_levelup_moves->p_levelup_moves[move_index]);
-        }
-
-        if(!error)
-        {
-            std::free(p_levelup_moves->p_levelup_moves);
-        }
-    }
-
     if(!error)
     {
-        p_levelup_moves->p_levelup_moves = nullptr;
+        pkmn::c::free_pointer_and_set_to_null(&p_levelup_moves->p_levelup_moves);
         p_levelup_moves->length = 0;
     }
 

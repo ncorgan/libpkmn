@@ -29,12 +29,23 @@
 #include <pkmn/database/move_entry.hpp>
 #include <pkmn/database/pokemon_entry.hpp>
 
+#include <pkmn/enums/ability.hpp>
+#include <pkmn/enums/contest_stat.hpp>
+#include <pkmn/enums/egg_group.hpp>
+#include <pkmn/enums/stat.hpp>
+#include <pkmn/enums/type.hpp>
+
 #include <pkmn/types/time_duration.hpp>
 
 #include <pkmn-c/error.h>
 #include <pkmn-c/database/item_entry.h>
 #include <pkmn-c/database/move_entry.h>
 #include <pkmn-c/database/pokemon_entry.h>
+#include <pkmn-c/enums/ability.h>
+#include <pkmn-c/enums/contest_stat.h>
+#include <pkmn-c/enums/egg_group.h>
+#include <pkmn-c/enums/stat.h>
+#include <pkmn-c/enums/type.h>
 #include <pkmn-c/types/hidden_power.h>
 #include <pkmn-c/types/int_pair.h>
 #include <pkmn-c/types/item_slot.h>
@@ -119,6 +130,21 @@ namespace pkmn { namespace c {
     BOOST_STATIC_CONSTEXPR auto& get_pokemon_party_internal_ptr = get_internal_ptr<struct pkmn_pokemon_party, pkmn::pokemon_party>;
     BOOST_STATIC_CONSTEXPR auto& get_pokemon_pc_internal_ptr = get_internal_ptr<struct pkmn_pokemon_pc, pkmn::pokemon_pc>;
 
+    template <typename value_type>
+    void set_to_value_for_invalid_enum(
+        value_type* p_value
+    )
+    {
+        BOOST_ASSERT(p_value != nullptr);
+
+        *p_value = static_cast<value_type>(-1);
+    }
+
+    template <>
+    void set_to_value_for_invalid_enum<bool>(
+        bool* p_value
+    );
+
     // Calls to initialize internal representations.
     void init_daycare(
         const pkmn::daycare::sptr& daycare_cpp,
@@ -165,6 +191,7 @@ namespace pkmn { namespace c {
         struct pkmn_game_save* p_game_save_c_out
     );
 
+    // TODO: accept null buffer input, will just output necessary size
     template <typename T>
     void list_cpp_to_c(
         const std::vector<T>& list_cpp,
@@ -184,11 +211,140 @@ namespace pkmn { namespace c {
             );
         }
 
-        if(p_num_values_out)
+        if(p_num_values_out != nullptr)
         {
             *p_num_values_out = list_cpp.size();
         }
     }
+
+    template <typename cpp_enum_type, typename c_enum_type, typename c_struct_type>
+    typename std::enable_if<std::is_enum<cpp_enum_type>::value && std::is_enum<c_enum_type>::value, void>::type
+    enum_list_cpp_to_c(
+        const std::vector<cpp_enum_type>& cpp_enum_vector,
+        c_struct_type* p_c_struct_out
+    )
+    {
+        BOOST_ASSERT(p_c_struct_out != nullptr);
+
+        static_assert(
+            sizeof(cpp_enum_type) == sizeof(c_enum_type),
+            "Enums aren't the same size."
+        );
+
+        if(!cpp_enum_vector.empty())
+        {
+            p_c_struct_out->p_enums = static_cast<c_enum_type*>(
+                                          std::calloc(
+                                              cpp_enum_vector.size(),
+                                              sizeof(c_enum_type)
+                                          )
+                                      );
+            p_c_struct_out->length = cpp_enum_vector.size();
+
+            std::memcpy(
+                p_c_struct_out->p_enums,
+                cpp_enum_vector.data(),
+                cpp_enum_vector.size() * sizeof(cpp_enum_type)
+            );
+        }
+    }
+
+    /*
+     * The compiler can't auto-deduce c_enum_type from c_struct_type, and since we
+     * can't alias functions, this is the best we can do.
+     */
+    BOOST_STATIC_CONSTEXPR auto& ability_enum_list_cpp_to_c =
+        enum_list_cpp_to_c<pkmn::e_ability, enum pkmn_ability, struct pkmn_ability_enum_list>;
+    BOOST_STATIC_CONSTEXPR auto& game_enum_list_cpp_to_c =
+        enum_list_cpp_to_c<pkmn::e_game, enum pkmn_game, struct pkmn_game_enum_list>;
+    BOOST_STATIC_CONSTEXPR auto& item_enum_list_cpp_to_c =
+        enum_list_cpp_to_c<pkmn::e_item, enum pkmn_item, struct pkmn_item_enum_list>;
+    BOOST_STATIC_CONSTEXPR auto& move_enum_list_cpp_to_c =
+        enum_list_cpp_to_c<pkmn::e_move, enum pkmn_move, struct pkmn_move_enum_list>;
+    BOOST_STATIC_CONSTEXPR auto& nature_enum_list_cpp_to_c =
+        enum_list_cpp_to_c<pkmn::e_nature, enum pkmn_nature, struct pkmn_nature_enum_list>;
+    BOOST_STATIC_CONSTEXPR auto& species_enum_list_cpp_to_c =
+        enum_list_cpp_to_c<pkmn::e_species, enum pkmn_species, struct pkmn_species_enum_list>;
+    BOOST_STATIC_CONSTEXPR auto& type_enum_list_cpp_to_c =
+        enum_list_cpp_to_c<pkmn::e_type, enum pkmn_type, struct pkmn_type_enum_list>;
+
+    template <
+        typename cpp_enum_type,
+        typename c_enum_type,
+        typename c_struct_type,
+        typename map_value_type,
+        cpp_enum_type max_enum
+    >
+    typename std::enable_if<std::is_enum<cpp_enum_type>::value && std::is_enum<c_enum_type>::value, void>::type
+    enum_map_cpp_to_c(
+        const std::map<cpp_enum_type, map_value_type>& cpp_enum_map,
+        c_struct_type* p_c_struct_out
+    )
+    {
+        BOOST_ASSERT(p_c_struct_out != nullptr);
+
+        if(!cpp_enum_map.empty())
+        {
+            p_c_struct_out->length = static_cast<size_t>(max_enum) + 1;
+            BOOST_ASSERT(p_c_struct_out->length >= cpp_enum_map.size());
+
+            // We're overriding default values anyway, but there's a warning
+            // from CppCheck about using malloc instead of calloc.
+            p_c_struct_out->p_values = static_cast<map_value_type*>(
+                                           std::calloc(
+                                               p_c_struct_out->length,
+                                               sizeof(map_value_type)
+                                           )
+                                       );
+            for(size_t value_index = 0;
+                value_index < p_c_struct_out->length;
+                ++value_index)
+            {
+                set_to_value_for_invalid_enum<map_value_type>(
+                    &p_c_struct_out->p_values[value_index]
+                );
+            }
+
+            for(const auto& map_iter: cpp_enum_map)
+            {
+                c_enum_type c_enum = static_cast<c_enum_type>(map_iter.first);
+                int value = map_iter.second;
+
+                BOOST_ASSERT(static_cast<size_t>(c_enum) < p_c_struct_out->length);
+
+                p_c_struct_out->p_values[c_enum] = value;
+            }
+        }
+    }
+
+    /*
+     * The compiler can't auto-deduce c_enum_type from c_struct_type, and since we
+     * can't alias functions, this is the best we can do.
+     */
+    BOOST_STATIC_CONSTEXPR auto& contest_stat_enum_map_cpp_to_c =
+        enum_map_cpp_to_c<
+            pkmn::e_contest_stat,
+            enum pkmn_contest_stat,
+            struct pkmn_contest_stat_enum_map,
+            int,
+            pkmn::e_contest_stat::SHEEN
+        >;
+    BOOST_STATIC_CONSTEXPR auto& marking_enum_map_cpp_to_c =
+        enum_map_cpp_to_c<
+            pkmn::e_marking,
+            enum pkmn_marking,
+            struct pkmn_marking_enum_map,
+            bool,
+            pkmn::e_marking::DIAMOND
+        >;
+    BOOST_STATIC_CONSTEXPR auto& stat_enum_map_cpp_to_c =
+        enum_map_cpp_to_c<
+            pkmn::e_stat,
+            enum pkmn_stat,
+            struct pkmn_stat_enum_map,
+            int,
+            pkmn::e_stat::SPECIAL_DEFENSE
+        >;
 
     inline void int_pair_cpp_to_c(
         const std::pair<int, int>& int_pair_cpp,
@@ -199,6 +355,39 @@ namespace pkmn { namespace c {
 
         p_int_pair_c_out->first = int_pair_cpp.first;
         p_int_pair_c_out->second = int_pair_cpp.second;
+    }
+
+    inline void ability_pair_cpp_to_c(
+        const std::pair<pkmn::e_ability, pkmn::e_ability>& ability_pair_cpp,
+        struct pkmn_ability_enum_pair* p_ability_pair_c_out
+    )
+    {
+        BOOST_ASSERT(p_ability_pair_c_out != nullptr);
+
+        p_ability_pair_c_out->first = static_cast<enum pkmn_ability>(ability_pair_cpp.first);
+        p_ability_pair_c_out->second = static_cast<enum pkmn_ability>(ability_pair_cpp.second);
+    }
+
+    inline void egg_group_pair_cpp_to_c(
+        const std::pair<pkmn::e_egg_group, pkmn::e_egg_group>& egg_group_pair_cpp,
+        struct pkmn_egg_group_enum_pair* p_egg_group_pair_c_out
+    )
+    {
+        BOOST_ASSERT(p_egg_group_pair_c_out != nullptr);
+
+        p_egg_group_pair_c_out->first = static_cast<enum pkmn_egg_group>(egg_group_pair_cpp.first);
+        p_egg_group_pair_c_out->second = static_cast<enum pkmn_egg_group>(egg_group_pair_cpp.second);
+    }
+
+    inline void type_pair_cpp_to_c(
+        const std::pair<pkmn::e_type, pkmn::e_type>& type_pair_cpp,
+        struct pkmn_type_enum_pair* p_type_pair_c_out
+    )
+    {
+        BOOST_ASSERT(p_type_pair_c_out != nullptr);
+
+        p_type_pair_c_out->first = static_cast<enum pkmn_type>(type_pair_cpp.first);
+        p_type_pair_c_out->second = static_cast<enum pkmn_type>(type_pair_cpp.second);
     }
 
     void string_cpp_to_c(
@@ -307,10 +496,7 @@ namespace pkmn { namespace c {
     {
         BOOST_ASSERT(p_hidden_power_c_out != nullptr);
 
-        string_cpp_to_c_alloc(
-            hidden_power_cpp.type,
-            &p_hidden_power_c_out->p_type
-        );
+        p_hidden_power_c_out->type = static_cast<enum pkmn_type>(hidden_power_cpp.type);
         p_hidden_power_c_out->base_power = hidden_power_cpp.base_power;
     }
 
@@ -321,10 +507,7 @@ namespace pkmn { namespace c {
     {
         BOOST_ASSERT(p_natural_gift_c_out != nullptr);
 
-        string_cpp_to_c_alloc(
-            natural_gift_cpp.type,
-            &p_natural_gift_c_out->p_type
-        );
+        p_natural_gift_c_out->type = static_cast<enum pkmn_type>(natural_gift_cpp.type);
         p_natural_gift_c_out->base_power = natural_gift_cpp.base_power;
     }
 
@@ -335,10 +518,7 @@ namespace pkmn { namespace c {
     {
         BOOST_ASSERT(p_item_slot_c_out != nullptr);
 
-        string_cpp_to_c_alloc(
-            item_slot_cpp.item,
-            &p_item_slot_c_out->p_item
-        );
+        p_item_slot_c_out->item = static_cast<enum pkmn_item>(item_slot_cpp.item);
         p_item_slot_c_out->amount = item_slot_cpp.amount;
     }
 
@@ -354,10 +534,7 @@ namespace pkmn { namespace c {
     {
         BOOST_ASSERT(p_levelup_move_c_out != nullptr);
 
-        string_cpp_to_c_alloc(
-            levelup_move_cpp.move.get_name(),
-            &p_levelup_move_c_out->p_move
-        );
+        p_levelup_move_c_out->move = static_cast<enum pkmn_move>(levelup_move_cpp.move);
         p_levelup_move_c_out->level = levelup_move_cpp.level;
     }
 
@@ -378,21 +555,13 @@ namespace pkmn { namespace c {
     {
         BOOST_ASSERT(p_move_slot_c_out != nullptr);
 
-        string_cpp_to_c_alloc(
-            move_slot_cpp.move,
-            &p_move_slot_c_out->p_move
-        );
+        p_move_slot_c_out->move = static_cast<enum pkmn_move>(move_slot_cpp.move);
         p_move_slot_c_out->pp = move_slot_cpp.pp;
     }
 
     void move_slots_cpp_to_c(
         const pkmn::move_slots_t& move_slots_cpp,
         struct pkmn_move_slots* p_move_slots_c_out
-    );
-
-    void pokemon_entries_to_string_list(
-        const pkmn::database::pokemon_entries_t& pokemon_entries_cpp,
-        struct pkmn_string_list* p_string_list_c_out
     );
 
     void item_entry_cpp_to_c(
@@ -446,53 +615,54 @@ namespace pkmn { namespace c {
                 p_time_duration_c->frames};
     }
 
-    template <typename enum_type, typename buffer_type>
-    static void copy_map_to_buffer(
-        const std::map<std::string, buffer_type>& value_map,
-        const boost::bimap<std::string, enum_type>& value_enum_bimap,
-        buffer_type* p_values_buffer_out,
-        size_t value_buffer_size,
-        size_t p_actual_num_values,
-        size_t* p_actual_num_values_out
+    template <typename sptr_type>
+    void get_attribute_names_from_sptr(
+        const std::shared_ptr<sptr_type>& libpkmn_sptr,
+        struct pkmn_attribute_names* p_attribute_names_out
     )
     {
-        BOOST_ASSERT(p_values_buffer_out != nullptr);
+        BOOST_ASSERT(libpkmn_sptr.get() != nullptr);
+        BOOST_ASSERT(p_attribute_names_out != nullptr);
 
-        std::memset(
-            p_values_buffer_out,
-            0,
-            value_buffer_size * sizeof(buffer_type)
+        // Make all C++ calls and operate on a second struct until we
+        // know everything succeeds before changing any user output.
+        // If this fails, we'll leak, but it's small enough to not be
+        // a concern.
+        struct pkmn_attribute_names temp_attribute_names_c =
+        {
+            // numeric_attribute_names
+            {
+                nullptr, // pp_strings
+                0ULL     // length
+            },
+            // string_attribute_names
+            {
+                nullptr, // pp_strings
+                0ULL     // length
+            },
+            // boolean_attribute_names
+            {
+                nullptr, // pp_strings
+                0ULL     // length
+            }
+        };
+
+        string_list_cpp_to_c(
+            libpkmn_sptr->get_numeric_attribute_names(),
+            &temp_attribute_names_c.numeric_attribute_names
+        );
+        string_list_cpp_to_c(
+            libpkmn_sptr->get_string_attribute_names(),
+            &temp_attribute_names_c.string_attribute_names
+        );
+        string_list_cpp_to_c(
+            libpkmn_sptr->get_boolean_attribute_names(),
+            &temp_attribute_names_c.boolean_attribute_names
         );
 
-        size_t internal_num_values = std::min<size_t>(value_buffer_size, p_actual_num_values);
-        for(size_t value = 0; value < internal_num_values; ++value)
-        {
-            enum_type value_enum = enum_type(value);
-            BOOST_ASSERT(value_enum_bimap.right.count(value_enum) > 0);
-
-            const std::string& cpp_key = value_enum_bimap.right.at(value_enum);
-            if(value_map.count(cpp_key) > 0)
-            {
-                p_values_buffer_out[value] = value_map.at(value_enum_bimap.right.at(value_enum));
-            }
-            else
-            {
-                if(std::is_same<bool, buffer_type>::value)
-                {
-                    p_values_buffer_out[value] = false;
-                }
-                else
-                {
-                    p_values_buffer_out[value] = buffer_type(-1);
-                }
-            }
-        }
-
-        // Optional parameter
-        if(p_actual_num_values_out)
-        {
-            *p_actual_num_values_out = p_actual_num_values;
-        }
+        // Everything succeeded, so move it into the pointer the caller
+        // provided.
+        *p_attribute_names_out = std::move(temp_attribute_names_c);
     }
 }
 }

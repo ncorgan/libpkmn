@@ -10,6 +10,10 @@
 
 #include <pkmn/config.hpp>
 
+#include <pkmn/enums/ball.hpp>
+#include <pkmn/enums/game.hpp>
+#include <pkmn/enums/item.hpp>
+
 #include <string>
 
 /*
@@ -23,11 +27,17 @@ namespace pkmn { namespace priv {
         const std::string& game
     );
 
+    PKMN_API int game_enum_to_generation(pkmn::e_game game);
+
     PKMN_API void initialize_database_connection();
 
     PKMN_API std::string convert_image_for_mono(
         const std::string& filepath
     );
+
+    // TODO: move public
+    PKMN_API pkmn::e_item ball_to_item(pkmn::e_ball ball);
+    PKMN_API pkmn::e_ball item_to_ball(pkmn::e_item item);
 }}
 
 #endif /* INCLUDED_PKMN_PRIVATE_FUNCTIONS_HPP */

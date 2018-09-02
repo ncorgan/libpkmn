@@ -12,7 +12,9 @@
 #include <pksav/gen2/items.h>
 
 namespace pkmn {
-    class item_list_gen2_tmhmimpl: public item_list_impl {
+
+    class item_list_gen2_tmhmimpl: public item_list_impl
+    {
         public:
             item_list_gen2_tmhmimpl(
                 int item_list_id,
@@ -29,15 +31,15 @@ namespace pkmn {
 
             ~item_list_gen2_tmhmimpl() = default;
 
-            int get_num_items() override;
+            int get_num_items() final;
 
             void add(
-                const std::string& name,
+                pkmn::e_item item,
                 int amount
             ) final;
 
             void remove(
-                const std::string& name,
+                pkmn::e_item item,
                 int amount
             ) final;
 
@@ -48,7 +50,7 @@ namespace pkmn {
 
             void set_item(
                 int position,
-                const std::string& item_name,
+                pkmn::e_item item,
                 int amount
             ) final;
 

@@ -22,6 +22,9 @@ INCLUDE_DIRECTORIES(
 
 # Build our custom GTest main function.
 ADD_LIBRARY(pkmn_gtest_main STATIC pkmn_gtest_main.cpp)
+SET_SOURCE_FILES_PROPERTIES(pkmn_gtest_main.cpp
+    PROPERTIES COMPILE_FLAGS "${PKMN_CXX_FLAGS}"
+)
 TARGET_LINK_LIBRARIES(pkmn_gtest_main
     gtest
     pkmn
@@ -32,6 +35,7 @@ SET(cpp_tests
     cpp_breeding_test
     cpp_calculations_test
     cpp_daycare_test
+    cpp_enum_test
     cpp_exception_test
     cpp_game_save_test
     cpp_lists_test
@@ -63,6 +67,8 @@ SET(item_test_srcs
 PKMN_ADD_CPP_TEST(cpp_item_test "${item_test_srcs}")
 
 SET(pokemon_test_srcs
+    ${PKMN_SOURCE_DIR}/lib/pkmgc/enum_maps.cpp
+    ${PKMN_SOURCE_DIR}/lib/pksav/enum_maps.cpp
     cpp_pokemon_test/conversions_test.cpp
     cpp_pokemon_test/form_test.cpp
     cpp_pokemon_test/gen1_pokemon_test.cpp

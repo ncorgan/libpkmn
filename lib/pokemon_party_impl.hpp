@@ -34,7 +34,7 @@ namespace pkmn {
 
             virtual ~pokemon_party_impl() {}
 
-            std::string get_game() final;
+            pkmn::e_game get_game() final;
 
             const pkmn::pokemon::sptr& get_pokemon(
                 int index

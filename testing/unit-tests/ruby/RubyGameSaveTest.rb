@@ -179,20 +179,20 @@ class GameSaveTest < PKMNTest
         _test_rival_name(save)
 
         if @@MALE_ONLY_GAMES.include?(save.game)
-            assert_equal("Male", save.trainer_gender)
+            assert_equal(PKMN::Gender::MALE, save.trainer_gender)
             assert_raises RuntimeError do
-                save.trainer_gender = "Male"
+                save.trainer_gender = PKMN::Gender::MALE
             end
             assert_raises RuntimeError do
-                save.trainer_gender = "Female"
+                save.trainer_gender = PKMN::Gender::FEMALE
             end
         else
-            save.trainer_gender = "Male"
-            assert_equal("Male", save.trainer_gender)
-            save.trainer_gender = "Female"
-            assert_equal("Female", save.trainer_gender)
+            save.trainer_gender = PKMN::Gender::MALE
+            assert_equal(PKMN::Gender::MALE, save.trainer_gender)
+            save.trainer_gender = PKMN::Gender::FEMALE
+            assert_equal(PKMN::Gender::FEMALE, save.trainer_gender)
             assert_raises ArgumentError do
-                save.trainer_gender = "Genderless"
+                save.trainer_gender = PKMN::Gender::GENDERLESS
             end
         end
 

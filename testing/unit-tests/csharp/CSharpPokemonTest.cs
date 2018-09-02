@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -11,99 +11,99 @@ using NUnit.Framework;
 [TestFixture]
 public class CSharpPokemonTest
 {
-    [TestCase("Red")]
-    [TestCase("Blue")]
-    [TestCase("Yellow")]
-    [TestCase("Gold")]
-    [TestCase("Silver")]
-    [TestCase("Crystal")]
-    [TestCase("Ruby")]
-    [TestCase("Sapphire")]
-    [TestCase("Emerald")]
-    [TestCase("FireRed")]
-    [TestCase("LeafGreen")]
-    [TestCase("Colosseum")]
-    [TestCase("XD")]
+    [TestCase(PKMN.Game.RED)]
+    [TestCase(PKMN.Game.BLUE)]
+    [TestCase(PKMN.Game.YELLOW)]
+    [TestCase(PKMN.Game.GOLD)]
+    [TestCase(PKMN.Game.SILVER)]
+    [TestCase(PKMN.Game.CRYSTAL)]
+    [TestCase(PKMN.Game.RUBY)]
+    [TestCase(PKMN.Game.SAPPHIRE)]
+    [TestCase(PKMN.Game.EMERALD)]
+    [TestCase(PKMN.Game.FIRERED)]
+    [TestCase(PKMN.Game.LEAFGREEN)]
+    [TestCase(PKMN.Game.COLOSSEUM)]
+    [TestCase(PKMN.Game.XD)]
     public void FormTest(
-        string game
+        PKMN.Game game
     )
     {
         PKMNTest.PokemonTestCommon.FormTest(game);
     }
 
-    [TestCase("Gold")]
-    [TestCase("Silver")]
-    [TestCase("Crystal")]
-    [TestCase("Ruby")]
-    [TestCase("Sapphire")]
-    [TestCase("Emerald")]
-    [TestCase("FireRed")]
-    [TestCase("LeafGreen")]
-    [TestCase("Colosseum")]
-    [TestCase("XD")]
+    [TestCase(PKMN.Game.GOLD)]
+    [TestCase(PKMN.Game.SILVER)]
+    [TestCase(PKMN.Game.CRYSTAL)]
+    [TestCase(PKMN.Game.RUBY)]
+    [TestCase(PKMN.Game.SAPPHIRE)]
+    [TestCase(PKMN.Game.EMERALD)]
+    [TestCase(PKMN.Game.FIRERED)]
+    [TestCase(PKMN.Game.LEAFGREEN)]
+    [TestCase(PKMN.Game.COLOSSEUM)]
+    [TestCase(PKMN.Game.XD)]
     public void GenderTest(
-        string game
+        PKMN.Game game
     )
     {
         PKMNTest.PokemonTestCommon.GenderTest(game);
     }
 
-    [TestCase("Gold")]
-    [TestCase("Silver")]
-    [TestCase("Crystal")]
+    [TestCase(PKMN.Game.GOLD)]
+    [TestCase(PKMN.Game.SILVER)]
+    [TestCase(PKMN.Game.CRYSTAL)]
     public void Gen2UnownTest(
-        string game
+        PKMN.Game game
     )
     {
         PKMNTest.UnownTests.Gen2UnownTest(game);
     }
 
-    [TestCase("Ruby")]
-    [TestCase("Sapphire")]
-    [TestCase("Emerald")]
-    [TestCase("FireRed")]
-    [TestCase("LeafGreen")]
-    [TestCase("Colosseum")]
-    [TestCase("XD")]
+    [TestCase(PKMN.Game.RUBY)]
+    [TestCase(PKMN.Game.SAPPHIRE)]
+    [TestCase(PKMN.Game.EMERALD)]
+    [TestCase(PKMN.Game.FIRERED)]
+    [TestCase(PKMN.Game.LEAFGREEN)]
+    [TestCase(PKMN.Game.COLOSSEUM)]
+    [TestCase(PKMN.Game.XD)]
     public void Gen3UnownTest(
-        string game
+        PKMN.Game game
     )
     {
         PKMNTest.UnownTests.Gen3UnownTest(game);
     }
 
-    [TestCase("Red",    "Charmander")]
-    [TestCase("Blue",   "Squirtle")]
-    [TestCase("Yellow", "Bulbasaur")]
+    [TestCase(PKMN.Game.RED,    PKMN.Species.CHARMANDER)]
+    [TestCase(PKMN.Game.BLUE,   PKMN.Species.SQUIRTLE)]
+    [TestCase(PKMN.Game.YELLOW, PKMN.Species.BULBASAUR)]
     public void Gen1PokemonTest(
-        string game,
-        string species
+        PKMN.Game game,
+        PKMN.Species species
     )
     {
         PKMNTest.Gen1PokemonTests.PokemonTest(game, species);
     }
 
-    [TestCase("Gold",    "Cyndaquil")]
-    [TestCase("Silver",  "Totodile")]
-    [TestCase("Crystal", "Chikorita")]
+    [TestCase(PKMN.Game.GOLD,    PKMN.Species.CYNDAQUIL)]
+    [TestCase(PKMN.Game.SILVER,  PKMN.Species.TOTODILE)]
+    [TestCase(PKMN.Game.CRYSTAL, PKMN.Species.CHIKORITA)]
     public void Gen2PokemonTest(
-        string game,
-        string species
+        PKMN.Game game,
+        PKMN.Species species
     )
     {
         PKMNTest.Gen2PokemonTests.PokemonTest(game, species);
     }
 
-    [TestCase("Ruby", "Torchic")]
-    [TestCase("Sapphire", "Mudkip")]
-    [TestCase("Emerald", "Treecko")]
-    [TestCase("FireRed", "Charmander")]
-    [TestCase("LeafGreen", "Bulbasaur")]
-    [TestCase("Colosseum", "Espeon")]
-    [TestCase("XD", "Umbreon")]
+    [TestCase(PKMN.Game.RUBY, PKMN.Species.TORCHIC)]
+    [TestCase(PKMN.Game.SAPPHIRE, PKMN.Species.MUDKIP)]
+    [TestCase(PKMN.Game.EMERALD, PKMN.Species.TREECKO)]
+    [TestCase(PKMN.Game.FIRERED, PKMN.Species.CHARMANDER)]
+    [TestCase(PKMN.Game.LEAFGREEN, PKMN.Species.BULBASAUR)]
+    [TestCase(PKMN.Game.COLOSSEUM, PKMN.Species.ESPEON)]
+    [TestCase(PKMN.Game.XD, PKMN.Species.UMBREON)]
     public void Gen3PokemonTest(
-        string game,
-        string species
+        PKMN.Game game,
+        PKMN.Species species
     )
     {
         PKMNTest.Gen3PokemonTests.PokemonTest(game, species);
@@ -113,33 +113,33 @@ public class CSharpPokemonTest
      * I/O
      */
 
-    [TestCase("Red")]
-    [TestCase("Blue")]
-    [TestCase("Yellow")]
+    [TestCase(PKMN.Game.RED)]
+    [TestCase(PKMN.Game.BLUE)]
+    [TestCase(PKMN.Game.YELLOW)]
     public void TestSavingAndLoadingPK1(
-        string game
+        PKMN.Game game
     )
     {
         PKMNTest.PokemonIOTests.TestLoadingAndSavingPK1(game);
     }
 
-    [TestCase("Gold")]
-    [TestCase("Silver")]
-    [TestCase("Crystal")]
+    [TestCase(PKMN.Game.GOLD)]
+    [TestCase(PKMN.Game.SILVER)]
+    [TestCase(PKMN.Game.CRYSTAL)]
     public void TestSavingAndLoadingPK2(
-        string game
+        PKMN.Game game
     )
     {
         PKMNTest.PokemonIOTests.TestLoadingAndSavingPK2(game);
     }
 
-    [TestCase("Ruby")]
-    [TestCase("Sapphire")]
-    [TestCase("Emerald")]
-    [TestCase("FireRed")]
-    [TestCase("LeafGreen")]
+    [TestCase(PKMN.Game.RUBY)]
+    [TestCase(PKMN.Game.SAPPHIRE)]
+    [TestCase(PKMN.Game.EMERALD)]
+    [TestCase(PKMN.Game.FIRERED)]
+    [TestCase(PKMN.Game.LEAFGREEN)]
     public void TestSavingAndLoading3GPKM(
-        string game
+        PKMN.Game game
     )
     {
         PKMNTest.PokemonIOTests.TestLoadingAndSaving3GPKM(game);
@@ -156,55 +156,55 @@ public class CSharpPokemonTest
      */
 
     // Generation I -> Generation I
-    [TestCase("Bulbasaur", "", "Red", "Yellow")]
+    [TestCase(PKMN.Species.BULBASAUR, "", PKMN.Game.RED, PKMN.Game.YELLOW)]
 
     // Generation I -> Generation II
-    [TestCase("Squirtle", "", "Blue", "Gold")]
+    [TestCase(PKMN.Species.SQUIRTLE, "", PKMN.Game.BLUE, PKMN.Game.GOLD)]
 
     // Generation II -> Generation II
-    [TestCase("Cyndaquil", "", "Gold", "Crystal")]
-    [TestCase("Totodile", "", "Crystal", "Gold")]
+    [TestCase(PKMN.Species.CYNDAQUIL, "", PKMN.Game.GOLD, PKMN.Game.CRYSTAL)]
+    [TestCase(PKMN.Species.TOTODILE, "", PKMN.Game.CRYSTAL, PKMN.Game.GOLD)]
 
     // Generation II -> Generation I
-    [TestCase("Charmander", "", "Silver", "Blue")]
+    [TestCase(PKMN.Species.CHARMANDER, "", PKMN.Game.SILVER, PKMN.Game.BLUE)]
 
     // GBA -> GBA
-    [TestCase("Torchic", "", "Ruby", "Sapphire")]
-    [TestCase("Mudkip", "", "Ruby", "Emerald")]
-    [TestCase("Treecko", "", "Ruby", "FireRed")]
-    [TestCase("Torchic", "", "Emerald", "Sapphire")]
-    [TestCase("Mudkip", "", "Emerald", "Emerald")]
-    [TestCase("Treecko", "", "Emerald", "FireRed")]
-    [TestCase("Charmander", "", "FireRed", "Sapphire")]
-    [TestCase("Squirtle", "", "FireRed", "Emerald")]
-    [TestCase("Bulbasaur", "", "FireRed", "FireRed")]
+    [TestCase(PKMN.Species.TORCHIC, "", PKMN.Game.RUBY, PKMN.Game.SAPPHIRE)]
+    [TestCase(PKMN.Species.MUDKIP, "", PKMN.Game.RUBY, PKMN.Game.EMERALD)]
+    [TestCase(PKMN.Species.TREECKO, "", PKMN.Game.RUBY, PKMN.Game.FIRERED)]
+    [TestCase(PKMN.Species.TORCHIC, "", PKMN.Game.EMERALD, PKMN.Game.SAPPHIRE)]
+    [TestCase(PKMN.Species.MUDKIP, "", PKMN.Game.EMERALD, PKMN.Game.EMERALD)]
+    [TestCase(PKMN.Species.TREECKO, "", PKMN.Game.EMERALD, PKMN.Game.FIRERED)]
+    [TestCase(PKMN.Species.CHARMANDER, "", PKMN.Game.FIRERED, PKMN.Game.SAPPHIRE)]
+    [TestCase(PKMN.Species.SQUIRTLE, "", PKMN.Game.FIRERED, PKMN.Game.EMERALD)]
+    [TestCase(PKMN.Species.BULBASAUR, "", PKMN.Game.FIRERED, PKMN.Game.FIRERED)]
 
     // GBA -> GCN
-    [TestCase("Eevee", "", "Ruby", "Colosseum")]
-    [TestCase("Espeon", "", "Emerald", "Colosseum")]
-    [TestCase("Umbreon", "", "FireRed", "Colosseum")]
-    [TestCase("Eevee", "", "Ruby", "XD")]
-    [TestCase("Espeon", "", "Emerald", "XD")]
-    [TestCase("Umbreon", "", "FireRed", "XD")]
+    [TestCase(PKMN.Species.EEVEE, "", PKMN.Game.RUBY, PKMN.Game.COLOSSEUM)]
+    [TestCase(PKMN.Species.ESPEON, "", PKMN.Game.EMERALD, PKMN.Game.COLOSSEUM)]
+    [TestCase(PKMN.Species.UMBREON, "", PKMN.Game.FIRERED, PKMN.Game.COLOSSEUM)]
+    [TestCase(PKMN.Species.EEVEE, "", PKMN.Game.RUBY, PKMN.Game.XD)]
+    [TestCase(PKMN.Species.ESPEON, "", PKMN.Game.EMERALD, PKMN.Game.XD)]
+    [TestCase(PKMN.Species.UMBREON, "", PKMN.Game.FIRERED, PKMN.Game.XD)]
 
     // GCN -> GBA
-    [TestCase("Eevee", "", "Colosseum", "Sapphire")]
-    [TestCase("Espeon", "", "Colosseum", "Emerald")]
-    [TestCase("Umbreon", "", "Colosseum", "LeafGreen")]
-    [TestCase("Eevee", "", "XD", "Sapphire")]
-    [TestCase("Espeon", "", "XD", "Emerald")]
-    [TestCase("Umbreon", "", "XD", "LeafGreen")]
+    [TestCase(PKMN.Species.EEVEE, "", PKMN.Game.COLOSSEUM, PKMN.Game.SAPPHIRE)]
+    [TestCase(PKMN.Species.ESPEON, "", PKMN.Game.COLOSSEUM, PKMN.Game.EMERALD)]
+    [TestCase(PKMN.Species.UMBREON, "", PKMN.Game.COLOSSEUM, PKMN.Game.LEAFGREEN)]
+    [TestCase(PKMN.Species.EEVEE, "", PKMN.Game.XD, PKMN.Game.SAPPHIRE)]
+    [TestCase(PKMN.Species.ESPEON, "", PKMN.Game.XD, PKMN.Game.EMERALD)]
+    [TestCase(PKMN.Species.UMBREON, "", PKMN.Game.XD, PKMN.Game.LEAFGREEN)]
 
     // GCN -> GCN
-    [TestCase("Vaporeon", "", "Colosseum", "Colosseum")]
-    [TestCase("Jolteon", "", "Colosseum", "XD")]
-    [TestCase("Vaporeon", "", "XD", "XD")]
-    [TestCase("Jolteon", "", "XD", "Colosseum")]
+    [TestCase(PKMN.Species.VAPOREON, "", PKMN.Game.COLOSSEUM, PKMN.Game.COLOSSEUM)]
+    [TestCase(PKMN.Species.JOLTEON, "", PKMN.Game.COLOSSEUM, PKMN.Game.XD)]
+    [TestCase(PKMN.Species.VAPOREON, "", PKMN.Game.XD, PKMN.Game.XD)]
+    [TestCase(PKMN.Species.JOLTEON, "", PKMN.Game.XD, PKMN.Game.COLOSSEUM)]
     public void PokemonConversionsTest(
-        string species,
+        PKMN.Species species,
         string form,
-        string originGame,
-        string destGame
+        PKMN.Game originGame,
+        PKMN.Game destGame
     )
     {
         PKMNTest.PokemonConversionsTest.ConversionsTest(

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -29,7 +29,7 @@ using System.Runtime.InteropServices;"
 // Convert getter/setter functions into attributes for more idiomatic C#.
 
 %attributestring(pkmn::swig::pokemon_box, std::string, Name, get_name, set_name);
-%attributestring(pkmn::swig::pokemon_box, std::string, Game, get_game);
+%attribute(pkmn::swig::pokemon_box, pkmn::e_game, Game, get_game);
 %attribute(pkmn::swig::pokemon_box, int, NumPokemon, get_num_pokemon);
 %attribute(pkmn::swig::pokemon_box, int, Length, get_capacity);
 

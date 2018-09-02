@@ -14,22 +14,22 @@ local pokemon_tests = require("pokemon_tests")
 local gen2_pokemon_tests = {}
 
 function gen2_pokemon_tests.unown_test(game)
-    local unown_entry = pkmn.database.pokemon_entry("Unown", game, "")
+    local unown_entry = pkmn.database.pokemon_entry(pkmn.species.UNOWN, game, "")
 
     local unown = nil
 
     local unown_forms = unown_entry.forms
     for form_index = 1, #unown_forms
     do
-        unown = pkmn.pokemon("Unown", game, unown_forms[form_index], 5)
+        unown = pkmn.pokemon(pkmn.species.UNOWN, game, unown_forms[form_index], 5)
         luaunit.assertEquals(unown.form, unown_forms[form_index])
 
         -- Make sure IVs are properly set.
         local form_from_IVs = pkmn.calculations.gen2_unown_form(
-                                  unown.IVs["Attack"],
-                                  unown.IVs["Defense"],
-                                  unown.IVs["Speed"],
-                                  unown.IVs["Special"]
+                                  unown.IVs[pkmn.stat.ATTACK],
+                                  unown.IVs[pkmn.stat.DEFENSE],
+                                  unown.IVs[pkmn.stat.SPEED],
+                                  unown.IVs[pkmn.stat.SPECIAL]
                               )
         luaunit.assertEquals(form_from_IVs, unown.form)
 
@@ -37,7 +37,7 @@ function gen2_pokemon_tests.unown_test(game)
         luaunit.assertTrue(pkmntest_utils.file_exists(unown.sprite_filepath))
     end
 
-    unown = pkmn.pokemon("Unown", game, "A", 5)
+    unown = pkmn.pokemon(pkmn.species.UNOWN, game, "A", 5)
 
     -- Make sure setting the form properly changes the IVs.
     for form_index = 1, #unown_forms
@@ -46,10 +46,10 @@ function gen2_pokemon_tests.unown_test(game)
         luaunit.assertEquals(unown.form, unown_forms[form_index])
 
         local form_from_IVs = pkmn.calculations.gen2_unown_form(
-                                  unown.IVs["Attack"],
-                                  unown.IVs["Defense"],
-                                  unown.IVs["Speed"],
-                                  unown.IVs["Special"]
+                                  unown.IVs[pkmn.stat.ATTACK],
+                                  unown.IVs[pkmn.stat.DEFENSE],
+                                  unown.IVs[pkmn.stat.SPEED],
+                                  unown.IVs[pkmn.stat.SPECIAL]
                               )
         luaunit.assertEquals(form_from_IVs, unown.form)
 
@@ -58,10 +58,10 @@ function gen2_pokemon_tests.unown_test(game)
     end
 
     -- Make sure setting IVs properly sets the form.
-    unown.IVs["Attack"] = 10
-    unown.IVs["Defense"] = 9
-    unown.IVs["Speed"] = 1
-    unown.IVs["Special"] = 14
+    unown.IVs[pkmn.stat.ATTACK] = 10
+    unown.IVs[pkmn.stat.DEFENSE] = 9
+    unown.IVs[pkmn.stat.SPEED] = 1
+    unown.IVs[pkmn.stat.SPECIAL] = 14
     luaunit.assertEquals(unown.form, "G")
 end
 
@@ -69,98 +69,108 @@ function gen2_pokemon_tests.common(game, species)
     local pokemon = pkmn.pokemon(species, game, "", 30)
     local test_params =
     {
-        valid_ball = "Great Ball",
-        invalid_balls = {"Great Ball"},
+        valid_ball = pkmn.item.GREAT_BALL,
+        invalid_balls = {pkmn.item.GREAT_BALL},
 
-        valid_item = "Berry",
-        invalid_items = {"Razz Berry", "Bicycle"},
+        valid_item = pkmn.item.BERRY,
+        invalid_items = {pkmn.item.RAZZ_BERRY, pkmn.item.BICYCLE},
 
         expected_original_location = "Special",
         valid_locations = {"Sprout Tower", "Tohjo Falls"},
         invalid_locations = {"Littleroot Town", "Petalburg Woods"},
 
-        valid_moves = {"Slash", "Flamethrower", "Return", "Fire Blast"},
-        invalid_moves = {"Frenzy Plant", "Roost"},
+        valid_moves =
+        {
+            pkmn.move.SLASH,
+            pkmn.move.FLAMETHROWER,
+            pkmn.move.RETURN,
+            pkmn.move.FIRE_BLAST
+        },
+        invalid_moves =
+        {
+            pkmn.move.FRENZY_PLANT,
+            pkmn.move.ROOST
+        },
 
-        valid_original_games = {"Gold"},
-        invalid_original_games = {"Gold"}
+        valid_original_games = {pkmn.game.GOLD},
+        invalid_original_games = {pkmn.game.GOLD}
     }
 
     pokemon_tests.test_common(pokemon, test_params)
 
     -- Gender is tied to IVs, so make sure the abstraction reflects that.
 
-    pokemon.gender = "Male"
-    luaunit.assertEquals(pokemon.IVs["Attack"], 15)
-    pokemon.gender = "Female"
-    luaunit.assertTrue(pokemon.IVs["Attack"] < 15)
+    pokemon.gender = pkmn.gender.MALE
+    luaunit.assertEquals(pokemon.IVs[pkmn.stat.ATTACK], 15)
+    pokemon.gender = pkmn.gender.FEMALE
+    luaunit.assertTrue(pokemon.IVs[pkmn.stat.ATTACK] < 15)
 
-    pokemon.IVs["Attack"] = 0
-    luaunit.assertEquals(pokemon.gender, "Female")
-    pokemon.IVs["Attack"] = 15
-    luaunit.assertEquals(pokemon.gender, "Male")
+    pokemon.IVs[pkmn.stat.ATTACK] = 0
+    luaunit.assertEquals(pokemon.gender, pkmn.gender.FEMALE)
+    pokemon.IVs[pkmn.stat.ATTACK] = 15
+    luaunit.assertEquals(pokemon.gender, pkmn.gender.MALE)
 
     -- Shininess is tied to IVs, so make sure the abstraction reflects that.
 
     pokemon.is_shiny = false
-    luaunit.assertEquals(pokemon.IVs["Attack"], 13)
+    luaunit.assertEquals(pokemon.IVs[pkmn.stat.ATTACK], 13)
     pokemon.is_shiny = true
-    luaunit.assertEquals(pokemon.IVs["Attack"], 15)
-    luaunit.assertEquals(pokemon.IVs["Defense"], 10)
-    luaunit.assertEquals(pokemon.IVs["Speed"], 10)
-    luaunit.assertEquals(pokemon.IVs["Special"], 10)
+    luaunit.assertEquals(pokemon.IVs[pkmn.stat.ATTACK], 15)
+    luaunit.assertEquals(pokemon.IVs[pkmn.stat.DEFENSE], 10)
+    luaunit.assertEquals(pokemon.IVs[pkmn.stat.SPEED], 10)
+    luaunit.assertEquals(pokemon.IVs[pkmn.stat.SPECIAL], 10)
 end
 
 -- Gold
 
 function test_gold_pokemon()
-    gen2_pokemon_tests.common("Gold", "Cyndaquil")
+    gen2_pokemon_tests.common(pkmn.game.GOLD, pkmn.species.CYNDAQUIL)
 end
 
 function test_gold_forms()
-    pokemon_tests.forms_test("Gold")
+    pokemon_tests.forms_test(pkmn.game.GOLD)
 end
 
 function test_gold_genders()
-    pokemon_tests.gender_test("Gold")
+    pokemon_tests.gender_test(pkmn.game.GOLD)
 end
 
 function test_gold_unown()
-    gen2_pokemon_tests.unown_test("Gold")
+    gen2_pokemon_tests.unown_test(pkmn.game.GOLD)
 end
 
 -- Silver
 
 function test_silver_pokemon()
-    gen2_pokemon_tests.common("Silver", "Totodile")
+    gen2_pokemon_tests.common(pkmn.game.SILVER, pkmn.species.TOTODILE)
 end
 
 function test_silver_forms()
-    pokemon_tests.forms_test("Silver")
+    pokemon_tests.forms_test(pkmn.game.SILVER)
 end
 
 function test_silver_genders()
-    pokemon_tests.gender_test("Silver")
+    pokemon_tests.gender_test(pkmn.game.SILVER)
 end
 
 function test_silver_unown()
-    gen2_pokemon_tests.unown_test("Silver")
+    gen2_pokemon_tests.unown_test(pkmn.game.SILVER)
 end
 
 -- Crystal
 
 function test_crystal_pokemon()
-    gen2_pokemon_tests.common("Crystal", "Chikorita")
+    gen2_pokemon_tests.common(pkmn.game.CRYSTAL, pkmn.species.CHIKORITA)
 end
 
 function test_crystal_forms()
-    pokemon_tests.forms_test("Crystal")
+    pokemon_tests.forms_test(pkmn.game.CRYSTAL)
 end
 
 function test_crystal_genders()
-    pokemon_tests.gender_test("Crystal")
+    pokemon_tests.gender_test(pkmn.game.CRYSTAL)
 end
 
 function test_crystal_unown()
-    gen2_pokemon_tests.unown_test("Crystal")
+    gen2_pokemon_tests.unown_test(pkmn.game.CRYSTAL)
 end

@@ -12,11 +12,13 @@
 #include "pokemon_gbaimpl.hpp"
 #include "pokemon_gcnimpl.hpp"
 
+#include "utils/floating_point_comparison.hpp"
 #include "utils/misc.hpp"
+
 #include "database/database_common.hpp"
+#include "database/enum_conversions.hpp"
 #include "database/id_to_string.hpp"
 #include "database/index_to_string.hpp"
-#include "utils/floating_point_comparison.hpp"
 
 #include "io/pk1.hpp"
 #include "io/pk2.hpp"
@@ -24,6 +26,7 @@
 
 #include "types/rng.hpp"
 
+#include "pksav/enum_maps.hpp"
 #include "pksav/pksav_call.hpp"
 
 #include <pkmn/exception.hpp>
@@ -37,41 +40,21 @@
 
 #include <stdexcept>
 
-static const std::unordered_map<std::string, enum pksav_gb_IV> PKMN_STATS_TO_PKSAV_GB_IVS =
-boost::assign::map_list_of
-    ("HP",      PKSAV_GB_IV_HP)
-    ("Attack",  PKSAV_GB_IV_ATTACK)
-    ("Defense", PKSAV_GB_IV_DEFENSE)
-    ("Speed",   PKSAV_GB_IV_SPEED)
-    ("Special", PKSAV_GB_IV_SPECIAL)
-;
-
-static const std::unordered_map<std::string, enum pksav_IV> PKMN_STATS_TO_PKSAV_IVS =
-boost::assign::map_list_of
-    ("HP",              PKSAV_IV_HP)
-    ("Attack",          PKSAV_IV_ATTACK)
-    ("Defense",         PKSAV_IV_DEFENSE)
-    ("Speed",           PKSAV_IV_SPEED)
-    ("Special Attack",  PKSAV_IV_SPATK)
-    ("Special Defense", PKSAV_IV_SPDEF)
-;
-
 namespace fs = boost::filesystem;
 
 namespace pkmn
 {
-
     const uint32_t pkmn::pokemon::DEFAULT_TRAINER_ID = 2105214279;
     const std::string pkmn::pokemon::DEFAULT_TRAINER_NAME = "LibPKMN";
 
     pokemon::sptr pokemon::make(
-        const std::string& species,
-        const std::string& game,
+        pkmn::e_species species,
+        pkmn::e_game game,
         const std::string& form,
         int level
     )
     {
-        int game_id = pkmn::database::game_name_to_id(game);
+        int game_id = pkmn::database::game_enum_to_id(game);
 
         pkmn::database::pokemon_entry database_entry(
                                           species,
@@ -188,11 +171,11 @@ namespace pkmn
        _p_native_party(nullptr)
     {}
 
-    std::string pokemon_impl::get_species()
+    pkmn::e_species pokemon_impl::get_species()
     {
         boost::lock_guard<pokemon_impl> lock(*this);
 
-        return _database_entry.get_name();
+        return _database_entry.get_species();
     }
 
     std::string pokemon_impl::get_form()
@@ -202,7 +185,7 @@ namespace pkmn
         return _database_entry.get_form();
     }
 
-    std::string pokemon_impl::get_game()
+    pkmn::e_game pokemon_impl::get_game()
     {
         boost::lock_guard<pokemon_impl> lock(*this);
 
@@ -216,7 +199,7 @@ namespace pkmn
         return _database_entry;
     }
 
-    const std::map<std::string, bool>& pokemon_impl::get_markings()
+    const std::map<pkmn::e_marking, bool>& pokemon_impl::get_markings()
     {
         if(_generation < 3)
         {
@@ -240,7 +223,7 @@ namespace pkmn
         return _ribbons;
     }
 
-    const std::map<std::string, int>& pokemon_impl::get_contest_stats()
+    const std::map<pkmn::e_contest_stat, int>& pokemon_impl::get_contest_stats()
     {
         if(_generation < 3)
         {
@@ -259,21 +242,21 @@ namespace pkmn
         return _moves;
     }
 
-    const std::map<std::string, int>& pokemon_impl::get_EVs()
+    const std::map<pkmn::e_stat, int>& pokemon_impl::get_EVs()
     {
         boost::lock_guard<pokemon_impl> lock(*this);
 
         return _EVs;
     }
 
-    const std::map<std::string, int>& pokemon_impl::get_IVs()
+    const std::map<pkmn::e_stat, int>& pokemon_impl::get_IVs()
     {
         boost::lock_guard<pokemon_impl> lock(*this);
 
         return _IVs;
     }
 
-    const std::map<std::string, int>& pokemon_impl::get_stats()
+    const std::map<pkmn::e_stat, int>& pokemon_impl::get_stats()
     {
         boost::lock_guard<pokemon_impl> lock(*this);
 
@@ -285,7 +268,7 @@ namespace pkmn
         boost::lock_guard<pokemon_impl> lock(*this);
 
         return _database_entry.get_icon_filepath(
-                    (get_gender() == "Female")
+                    (get_gender() == pkmn::e_gender::FEMALE)
                );
     }
 
@@ -294,7 +277,7 @@ namespace pkmn
         boost::lock_guard<pokemon_impl> lock(*this);
 
         return _database_entry.get_sprite_filepath(
-                    (get_gender() == "Female"),
+                    (get_gender() == pkmn::e_gender::FEMALE),
                     is_shiny()
                );
     }
@@ -321,7 +304,7 @@ namespace pkmn
 
         for(int move_index = 0; move_index < 4; ++move_index)
         {
-            this->set_move("None", move_index);
+            this->set_move(pkmn::e_move::NONE, move_index);
         }
 
         pkmn::database::levelup_moves_t levelup_moves = _database_entry.get_levelup_moves();
@@ -367,7 +350,7 @@ namespace pkmn
                 ++move_index, ++levelup_move_index)
             {
                 this->set_move(
-                    levelup_moves[levelup_move_index].move.get_name(),
+                    levelup_moves[levelup_move_index].move,
                     static_cast<int>(move_index)
                 );
             }
@@ -378,71 +361,79 @@ namespace pkmn
         const uint16_t* iv_data_ptr
     )
     {
-        uint8_t IVs[PKSAV_NUM_GB_IVS] = {0};
+        uint8_t pksav_IVs[PKSAV_NUM_GB_IVS] = {0};
 
         PKSAV_CALL(
             pksav_get_gb_IVs(
                 iv_data_ptr,
-                IVs,
-                sizeof(IVs)
+                pksav_IVs,
+                sizeof(pksav_IVs)
             );
         )
 
-        _IVs["HP"]      = IVs[PKSAV_GB_IV_HP];
-        _IVs["Attack"]  = IVs[PKSAV_GB_IV_ATTACK];
-        _IVs["Defense"] = IVs[PKSAV_GB_IV_DEFENSE];
-        _IVs["Speed"]   = IVs[PKSAV_GB_IV_SPEED];
-        _IVs["Special"] = IVs[PKSAV_GB_IV_SPECIAL];
+        const pksav::gb_IV_bimap_t& gb_IV_bimap = pksav::get_gb_IV_bimap();
+        for(const auto& IV_pair: gb_IV_bimap.left)
+        {
+            pkmn::e_stat libpkmn_stat = IV_pair.first;
+            enum pksav_gb_IV pksav_IV = IV_pair.second;
+
+            _IVs[libpkmn_stat] = pksav_IVs[pksav_IV];
+        }
     }
 
     void pokemon_impl::_init_modern_IV_map(
         const uint32_t* iv_data_ptr
     )
     {
-        uint8_t IVs[PKSAV_NUM_IVS] = {0};
+        uint8_t pksav_IVs[PKSAV_NUM_IVS] = {0};
 
         PKSAV_CALL(
             pksav_get_IVs(
                 iv_data_ptr,
-                IVs,
-                sizeof(IVs)
+                pksav_IVs,
+                sizeof(pksav_IVs)
             );
         )
 
-        _IVs["HP"]              = IVs[PKSAV_IV_HP];
-        _IVs["Attack"]          = IVs[PKSAV_IV_ATTACK];
-        _IVs["Defense"]         = IVs[PKSAV_IV_DEFENSE];
-        _IVs["Speed"]           = IVs[PKSAV_IV_SPEED];
-        _IVs["Special Attack"]  = IVs[PKSAV_IV_SPATK];
-        _IVs["Special Defense"] = IVs[PKSAV_IV_SPDEF];
+        const pksav::IV_bimap_t& IV_bimap = pksav::get_IV_bimap();
+        for(const auto& IV_pair: IV_bimap.left)
+        {
+            pkmn::e_stat libpkmn_stat = IV_pair.first;
+            enum pksav_IV pksav_IV = IV_pair.second;
+
+            _IVs[libpkmn_stat] = pksav_IVs[pksav_IV];
+        }
     }
 
     void pokemon_impl::_init_contest_stat_map(
-        const struct pksav_contest_stats* native_ptr
+        const struct pksav_contest_stats* p_native
     )
     {
-        _contest_stats["Cool"]   = int(native_ptr->cool);
-        _contest_stats["Beauty"] = int(native_ptr->beauty);
-        _contest_stats["Cute"]   = int(native_ptr->cute);
-        _contest_stats["Smart"]  = int(native_ptr->smart);
-        _contest_stats["Tough"]  = int(native_ptr->tough);
+        _contest_stats[pkmn::e_contest_stat::COOL]   = int(p_native->cool);
+        _contest_stats[pkmn::e_contest_stat::BEAUTY] = int(p_native->beauty);
+        _contest_stats[pkmn::e_contest_stat::CUTE]   = int(p_native->cute);
+        _contest_stats[pkmn::e_contest_stat::SMART]  = int(p_native->smart);
+        _contest_stats[pkmn::e_contest_stat::TOUGH]  = int(p_native->tough);
 
         // Feel and sheen are a union in this struct, so this is fine.
-        _contest_stats[(_generation == 3) ? "Feel" : "Sheen"] = int(native_ptr->feel);
+        pkmn::e_contest_stat feel_or_sheen = (_generation == 3) ? pkmn::e_contest_stat::FEEL
+                                                                : pkmn::e_contest_stat::SHEEN;
+
+        _contest_stats[feel_or_sheen] = int(p_native->feel);
     }
 
     void pokemon_impl::_init_markings_map(
-        const uint8_t* native_ptr
+        const uint8_t* p_native
     )
     {
-        _markings["Circle"]   = bool((*native_ptr) & PKSAV_MARKING_CIRCLE);
-        _markings["Triangle"] = bool((*native_ptr) & PKSAV_MARKING_TRIANGLE);
-        _markings["Square"]   = bool((*native_ptr) & PKSAV_MARKING_SQUARE);
-        _markings["Heart"]    = bool((*native_ptr) & PKSAV_MARKING_HEART);
+        _markings[pkmn::e_marking::CIRCLE]   = bool((*p_native) & PKSAV_MARKING_CIRCLE);
+        _markings[pkmn::e_marking::TRIANGLE] = bool((*p_native) & PKSAV_MARKING_TRIANGLE);
+        _markings[pkmn::e_marking::SQUARE]   = bool((*p_native) & PKSAV_MARKING_SQUARE);
+        _markings[pkmn::e_marking::HEART]    = bool((*p_native) & PKSAV_MARKING_HEART);
         if(_generation > 3)
         {
-            _markings["Star"]    = bool((*native_ptr) & PKSAV_MARKING_STAR);
-            _markings["Diamond"] = bool((*native_ptr) & PKSAV_MARKING_DIAMOND);
+            _markings[pkmn::e_marking::STAR]    = bool((*p_native) & PKSAV_MARKING_STAR);
+            _markings[pkmn::e_marking::DIAMOND] = bool((*p_native) & PKSAV_MARKING_DIAMOND);
         }
     }
 
@@ -481,7 +472,7 @@ namespace pkmn
 
     void pokemon_impl::_set_modern_gender(
         uint32_t* personality_ptr,
-        const std::string& gender
+        pkmn::e_gender gender
     )
     {
         float chance_male = _database_entry.get_chance_male();
@@ -490,7 +481,7 @@ namespace pkmn
         // Check for invalid genders.
         if(pkmn::fp_compare_equal(chance_male, 0.0f) and pkmn::fp_compare_equal(chance_female, 0.0f))
         {
-            if(gender != "Genderless")
+            if(gender != pkmn::e_gender::GENDERLESS)
             {
                 throw std::invalid_argument("This Pokémon is genderless.");
             }
@@ -500,20 +491,20 @@ namespace pkmn
                 return;
             }
         }
-        else if(pkmn::fp_compare_equal(chance_male, 1.0f) and gender != "Male")
+        else if(pkmn::fp_compare_equal(chance_male, 1.0f) and gender != pkmn::e_gender::MALE)
         {
             throw std::invalid_argument("This Pokémon is male-only.");
         }
-        else if(pkmn::fp_compare_equal(chance_female, 1.0f) and gender != "Female")
+        else if(pkmn::fp_compare_equal(chance_female, 1.0f) and gender != pkmn::e_gender::FEMALE)
         {
             throw std::invalid_argument("This Pokémon is female-only.");
         }
-        else if(gender == "Genderless")
+        else if(gender == pkmn::e_gender::GENDERLESS)
         {
             throw std::invalid_argument("gender: valid options \"Male\", \"Female\"");
         }
 
-        if(gender == "Male")
+        if(gender == pkmn::e_gender::MALE)
         {
             *personality_ptr |= 0xFF;
         }
@@ -577,7 +568,7 @@ namespace pkmn
     }
 
     void pokemon_impl::_set_gb_IV(
-        const std::string& stat,
+        pkmn::e_stat stat,
         int value,
         uint16_t* iv_data_ptr
     )
@@ -587,7 +578,7 @@ namespace pkmn
 
         PKSAV_CALL(
             pksav_set_gb_IV(
-                PKMN_STATS_TO_PKSAV_GB_IVS.at(stat),
+                pksav::get_gb_IV_bimap().left.at(stat),
                 uint8_t(value),
                 iv_data_ptr
             );
@@ -600,7 +591,7 @@ namespace pkmn
     }
 
     void pokemon_impl::_set_modern_IV(
-        const std::string& stat,
+        pkmn::e_stat stat,
         int value,
         uint32_t* iv_data_ptr
     )
@@ -610,7 +601,7 @@ namespace pkmn
 
         PKSAV_CALL(
             pksav_set_IV(
-                PKMN_STATS_TO_PKSAV_IVS.at(stat),
+                pksav::get_IV_bimap().left.at(stat),
                 uint8_t(value),
                 iv_data_ptr
             );
@@ -620,19 +611,20 @@ namespace pkmn
         _populate_party_data();
     }
 
-    #define SET_CONTEST_STAT(str,field) \
+    #define SET_CONTEST_STAT(map_key, native_field) \
     { \
-        if(stat == (str)) { \
-            native_ptr->field = uint8_t(value); \
-            _contest_stats[(str)] = value; \
+        if(stat == (map_key)) \
+        { \
+            p_native->native_field = uint8_t(value); \
+            _contest_stats[(map_key)] = value; \
             return; \
         } \
     }
 
     void pokemon_impl::_set_contest_stat(
-        const std::string& stat,
+        pkmn::e_contest_stat stat,
         int value,
-        struct pksav_contest_stats* native_ptr
+        struct pksav_contest_stats* p_native
     )
     {
         pkmn::enforce_value_in_map_keys(
@@ -642,31 +634,34 @@ namespace pkmn
         );
         pkmn::enforce_bounds("Contest stat", value, 0, 255);
 
-        SET_CONTEST_STAT("Cool",   cool);
-        SET_CONTEST_STAT("Beauty", beauty);
-        SET_CONTEST_STAT("Cute",   cute);
-        SET_CONTEST_STAT("Smart",  smart);
-        SET_CONTEST_STAT("Tough",  tough);
-        SET_CONTEST_STAT("Feel",   feel);
-        SET_CONTEST_STAT("Sheen",  sheen);
+        SET_CONTEST_STAT(pkmn::e_contest_stat::COOL,   cool);
+        SET_CONTEST_STAT(pkmn::e_contest_stat::BEAUTY, beauty);
+        SET_CONTEST_STAT(pkmn::e_contest_stat::CUTE,   cute);
+        SET_CONTEST_STAT(pkmn::e_contest_stat::SMART,  smart);
+        SET_CONTEST_STAT(pkmn::e_contest_stat::TOUGH,  tough);
+        SET_CONTEST_STAT(pkmn::e_contest_stat::FEEL,   feel);
+        SET_CONTEST_STAT(pkmn::e_contest_stat::SHEEN,  sheen);
     }
 
-    #define SET_MARKING(str,mask) \
+    #define SET_MARKING(map_key, mask) \
     { \
-        if(marking == (str)) { \
-            if(value) { \
-                *native_ptr |= (mask); \
-            } else { \
-                *native_ptr &= ~(mask); \
+        if(marking == (map_key)) \
+        { \
+            if(value) \
+            { \
+                *p_native |= (mask); \
+            } else \
+            { \
+                *p_native &= ~(mask); \
             } \
             _markings[marking] = value; \
         } \
     }
 
     void pokemon_impl::_set_marking(
-        const std::string& marking,
+        pkmn::e_marking marking,
         bool value,
-        uint8_t* native_ptr
+        uint8_t* p_native
     )
     {
         pkmn::enforce_value_in_map_keys(
@@ -675,21 +670,21 @@ namespace pkmn
             _markings
         );
 
-        SET_MARKING("Circle", PKSAV_MARKING_CIRCLE);
-        SET_MARKING("Triangle", PKSAV_MARKING_TRIANGLE);
-        SET_MARKING("Square", PKSAV_MARKING_SQUARE);
-        SET_MARKING("Heart", PKSAV_MARKING_HEART);
+        SET_MARKING(pkmn::e_marking::CIRCLE, PKSAV_MARKING_CIRCLE);
+        SET_MARKING(pkmn::e_marking::TRIANGLE, PKSAV_MARKING_TRIANGLE);
+        SET_MARKING(pkmn::e_marking::SQUARE, PKSAV_MARKING_SQUARE);
+        SET_MARKING(pkmn::e_marking::HEART, PKSAV_MARKING_HEART);
         if(_generation > 3)
         {
-            SET_MARKING("Star", PKSAV_MARKING_STAR);
-            SET_MARKING("Diamond", PKSAV_MARKING_DIAMOND);
+            SET_MARKING(pkmn::e_marking::STAR, PKSAV_MARKING_STAR);
+            SET_MARKING(pkmn::e_marking::DIAMOND, PKSAV_MARKING_DIAMOND);
         }
     }
 
     void pokemon_impl::_set_ability_from_personality()
     {
-        const std::pair<std::string, std::string> abilities = _database_entry.get_abilities();
-        if((abilities.second != "None") && ((get_personality() % 2) == 1))
+        const pkmn::ability_pair_t abilities = _database_entry.get_abilities();
+        if((abilities.second != pkmn::e_ability::NONE) && ((get_personality() % 2) == 1))
         {
             _set_ability(abilities.second);
         }

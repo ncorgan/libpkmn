@@ -22,7 +22,7 @@ public class CSharpDaycareTest
             ++levelupPokemonIndex)
         {
             Assert.AreEqual(
-                "None",
+                PKMN.Species.NONE,
                 daycare.LevelupPokemon[levelupPokemonIndex].Species
             );
         }
@@ -50,7 +50,7 @@ public class CSharpDaycareTest
                 breedingPokemonIndex < daycare.BreedingPokemon.Length;
                 ++breedingPokemonIndex)
             {
-                Assert.AreEqual("None", daycare.BreedingPokemon[breedingPokemonIndex].Species);
+                Assert.AreEqual(PKMN.Species.NONE, daycare.BreedingPokemon[breedingPokemonIndex].Species);
             }
 
             // Test invalid indices.
@@ -74,68 +74,68 @@ public class CSharpDaycareTest
     )
     {
         daycare.LevelupPokemon[0] = new PKMN.Pokemon(
-                                            "Venusaur",
+                                            PKMN.Species.VENUSAUR,
                                             daycare.Game,
                                             "",
                                             50
                                         );
-        Assert.AreEqual("Venusaur", daycare.LevelupPokemon[0].Species);
+        Assert.AreEqual(PKMN.Species.VENUSAUR, daycare.LevelupPokemon[0].Species);
 
         if(daycare.LevelupPokemon.Length == 2)
         {
             daycare.LevelupPokemon[1] = new PKMN.Pokemon(
-                                                "Charizard",
+                                                PKMN.Species.CHARIZARD,
                                                 daycare.Game,
                                                 "",
                                                 50
                                             );
-            Assert.AreEqual("Charizard", daycare.LevelupPokemon[1].Species);
+            Assert.AreEqual(PKMN.Species.CHARIZARD, daycare.LevelupPokemon[1].Species);
         }
 
         if(daycare.CanBreedPokemon)
         {
             // TODO: validate genders
             daycare.BreedingPokemon[0] = new PKMN.Pokemon(
-                                                 "Blastoise",
+                                                 PKMN.Species.BLASTOISE,
                                                  daycare.Game,
                                                  "",
                                                  50
                                              );
-            daycare.BreedingPokemon[0].Gender = "Female";
+            daycare.BreedingPokemon[0].Gender = PKMN.Gender.FEMALE;
 
-            Assert.AreEqual("Blastoise", daycare.BreedingPokemon[0].Species);
-            Assert.AreEqual("Female", daycare.BreedingPokemon[0].Gender);
+            Assert.AreEqual(PKMN.Species.BLASTOISE, daycare.BreedingPokemon[0].Species);
+            Assert.AreEqual(PKMN.Gender.FEMALE, daycare.BreedingPokemon[0].Gender);
 
             daycare.BreedingPokemon[1] = new PKMN.Pokemon(
-                                                 "Marowak",
+                                                 PKMN.Species.MAROWAK,
                                                  daycare.Game,
                                                  "",
                                                  50
                                              );
-            daycare.BreedingPokemon[1].Gender = "Male";
+            daycare.BreedingPokemon[1].Gender = PKMN.Gender.MALE;
 
-            Assert.AreEqual("Marowak", daycare.BreedingPokemon[1].Species);
-            Assert.AreEqual("Male", daycare.BreedingPokemon[1].Gender);
+            Assert.AreEqual(PKMN.Species.MAROWAK, daycare.BreedingPokemon[1].Species);
+            Assert.AreEqual(PKMN.Gender.MALE, daycare.BreedingPokemon[1].Gender);
 
             // TODO: test egg
         }
     }
 
-    [TestCase("Red", false)]
-    [TestCase("Blue", false)]
-    [TestCase("Yellow", false)]
-    [TestCase("Gold", true)]
-    [TestCase("Silver", true)]
-    [TestCase("Crystal", true)]
+    [TestCase(PKMN.Game.RED, false)]
+    [TestCase(PKMN.Game.BLUE, false)]
+    [TestCase(PKMN.Game.YELLOW, false)]
+    [TestCase(PKMN.Game.GOLD, true)]
+    [TestCase(PKMN.Game.SILVER, true)]
+    [TestCase(PKMN.Game.CRYSTAL, true)]
     /*[TestCase("Ruby", true)]
     [TestCase("Sapphire", true)]
     [TestCase("Emerald", true)]
     [TestCase("FireRed", true)]
     [TestCase("LeafGreen", true)]*/
-    [TestCase("Colosseum", false)]
-    [TestCase("XD", false)]
+    [TestCase(PKMN.Game.COLOSSEUM, false)]
+    [TestCase(PKMN.Game.XD, false)]
     public void DaycareTest(
-        string game,
+        PKMN.Game game,
         bool canBreed
     )
     {

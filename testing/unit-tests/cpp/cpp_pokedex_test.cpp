@@ -7,6 +7,7 @@
 
 #include <pkmntest/util.hpp>
 
+#include "private_exports.hpp"
 #include "pksav/pksav_call.hpp"
 #include "types/rng.hpp"
 
@@ -22,7 +23,7 @@
 
 #include <string>
 
-class pokedex_test: public ::testing::TestWithParam<std::string> {};
+class pokedex_test: public ::testing::TestWithParam<pkmn::e_game> {};
 
 static void check_pksav_buffer(
     const uint8_t* pksav_buffer,
@@ -111,8 +112,8 @@ static void check_gba_pksav_pokedex(
 
 TEST_P(pokedex_test, pokedex_test)
 {
-    std::string game = GetParam();
-    int generation = game_generations.at(game);
+    pkmn::e_game game = GetParam();
+    int generation = pkmn::priv::game_enum_to_generation(game);
 
     pkmn::rng<int> int_rng;
     pkmn::rng<size_t> size_rng;
@@ -128,7 +129,7 @@ TEST_P(pokedex_test, pokedex_test)
     EXPECT_EQ(0, pokedex->get_num_caught());
 
     // Set random Pokémon to be seen and caught.
-    std::vector<std::string> all_pokemon = pkmn::database::get_pokemon_list(generation, true);
+    std::vector<pkmn::e_species> all_pokemon = pkmn::database::get_pokemon_list(generation, true);
 
     std::vector<int> seen_pokemon_nums;
     size_t num_pokemon_seen = size_rng.rand(1, all_pokemon.size());
@@ -202,8 +203,8 @@ TEST_P(pokedex_test, pokedex_test)
     // Remove all entries. Do this in reverse because adding a Pokémon as
     // having been caught also makes it having been seen.
 
-    std::vector<std::string> all_seen = pokedex->get_all_seen();
-    for(const std::string& species: all_seen)
+    std::vector<pkmn::e_species> all_seen = pokedex->get_all_seen();
+    for(pkmn::e_species species: all_seen)
     {
         pokedex->set_has_seen(species, false);
         EXPECT_FALSE(pokedex->has_seen(species));
@@ -211,8 +212,8 @@ TEST_P(pokedex_test, pokedex_test)
     EXPECT_EQ(0, pokedex->get_num_seen());
     EXPECT_EQ(0ULL, pokedex->get_all_seen().size());
 
-    std::vector<std::string> all_caught = pokedex->get_all_caught();
-    for(const std::string& species: all_caught)
+    std::vector<pkmn::e_species> all_caught = pokedex->get_all_caught();
+    for(pkmn::e_species species: all_caught)
     {
         pokedex->set_has_caught(species, false);
         EXPECT_FALSE(pokedex->has_caught(species));
@@ -256,11 +257,19 @@ TEST_P(pokedex_test, pokedex_test)
     }
 }
 
-static const std::vector<std::string> PARAMS =
+static const std::vector<pkmn::e_game> PARAMS =
 {
-    "Red", "Blue", "Yellow",
-    "Gold", "Silver", "Crystal",
-    "Ruby", "Sapphire", "Emerald", "FireRed", "LeafGreen"
+    pkmn::e_game::RED,
+    pkmn::e_game::BLUE,
+    pkmn::e_game::YELLOW,
+    pkmn::e_game::GOLD,
+    pkmn::e_game::SILVER,
+    pkmn::e_game::CRYSTAL,
+    pkmn::e_game::RUBY,
+    pkmn::e_game::SAPPHIRE,
+    pkmn::e_game::EMERALD,
+    pkmn::e_game::FIRERED,
+    pkmn::e_game::LEAFGREEN,
 };
 
 INSTANTIATE_TEST_CASE_P(

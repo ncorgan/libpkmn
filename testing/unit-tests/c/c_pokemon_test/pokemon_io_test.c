@@ -46,8 +46,8 @@ static const struct pkmn_move_slots empty_move_slots =
 };
 static const struct pkmn_pokemon empty_pokemon =
 {
-    .p_species = NULL,
-    .p_game = NULL,
+    .species = PKMN_SPECIES_NONE,
+    .game = PKMN_GAME_NONE,
     .p_internal = NULL
 };
 
@@ -206,12 +206,8 @@ static void test_location_met(
 
 // Generation I
 
-static void pk1_test(
-    const char* game
-)
+static void pk1_test(enum pkmn_game game)
 {
-    TEST_ASSERT_NOT_NULL(game);
-
     enum pkmn_error error = PKMN_ERROR_NONE;
 
     char tmp_dir[STRBUFFER_LEN] = {0};
@@ -226,15 +222,20 @@ static void pk1_test(
     snprintf(
         pk1_path,
         sizeof(pk1_path),
-        "%s%s%s_%d.pk1",
+        "%s%s%d_%d.pk1",
         tmp_dir,
         FS_SEPARATOR,
-        game,
+        (int)game,
         rand()
     );
 
     struct pkmn_pokemon random_pokemon = empty_pokemon;
-    get_random_pokemon(&random_pokemon, NULL, NULL, game);
+    get_random_pokemon(
+        &random_pokemon,
+        NULL,
+        PKMN_SPECIES_NONE, // Can be any
+        game
+    );
 
     error = pkmn_pokemon_export_to_file(
                 &random_pokemon,
@@ -270,27 +271,23 @@ static void pk1_test(
 
 void red_pk1_test()
 {
-    pk1_test("Red");
+    pk1_test(PKMN_GAME_RED);
 }
 
 void blue_pk1_test()
 {
-    pk1_test("Blue");
+    pk1_test(PKMN_GAME_BLUE);
 }
 
 void yellow_pk1_test()
 {
-    pk1_test("Yellow");
+    pk1_test(PKMN_GAME_YELLOW);
 }
 
 // Generation II
 
-static void pk2_test(
-    const char* game
-)
+static void pk2_test(enum pkmn_game game)
 {
-    TEST_ASSERT_NOT_NULL(game);
-
     enum pkmn_error error = PKMN_ERROR_NONE;
 
     char tmp_dir[STRBUFFER_LEN] = {0};
@@ -305,15 +302,20 @@ static void pk2_test(
     snprintf(
         pk2_path,
         sizeof(pk2_path),
-        "%s%s%s_%d.pk2",
+        "%s%s%d_%d.pk2",
         tmp_dir,
         FS_SEPARATOR,
-        game,
+        (int)game,
         rand()
     );
 
     struct pkmn_pokemon random_pokemon = empty_pokemon;
-    get_random_pokemon(&random_pokemon, NULL, NULL, game);
+    get_random_pokemon(
+        &random_pokemon,
+        NULL,
+        PKMN_SPECIES_NONE, // Can be any
+        game
+    );
 
     error = pkmn_pokemon_export_to_file(
                 &random_pokemon,
@@ -349,27 +351,23 @@ static void pk2_test(
 
 void gold_pk2_test()
 {
-    pk2_test("Gold");
+    pk2_test(PKMN_GAME_GOLD);
 }
 
 void silver_pk2_test()
 {
-    pk2_test("Silver");
+    pk2_test(PKMN_GAME_SILVER);
 }
 
 void crystal_pk2_test()
 {
-    pk2_test("Crystal");
+    pk2_test(PKMN_GAME_CRYSTAL);
 }
 
 // Generation III
 
-static void _3gpkm_test(
-    const char* game
-)
+static void _3gpkm_test(enum pkmn_game game)
 {
-    TEST_ASSERT_NOT_NULL(game);
-
     enum pkmn_error error = PKMN_ERROR_NONE;
 
     char tmp_dir[STRBUFFER_LEN] = {0};
@@ -384,15 +382,20 @@ static void _3gpkm_test(
     snprintf(
         _3gpkm_path,
         sizeof(_3gpkm_path),
-        "%s%s%s_%d.3gpkm",
+        "%s%s%d_%d.3gpkm",
         tmp_dir,
         FS_SEPARATOR,
-        game,
+        (int)game,
         rand()
     );
 
     struct pkmn_pokemon random_pokemon = empty_pokemon;
-    get_random_pokemon(&random_pokemon, NULL, NULL, game);
+    get_random_pokemon(
+        &random_pokemon,
+        NULL,
+        PKMN_SPECIES_NONE, // Can be any
+        game
+    );
 
     error = pkmn_pokemon_export_to_file(
                 &random_pokemon,
@@ -428,27 +431,27 @@ static void _3gpkm_test(
 
 void ruby_3gpkm_test()
 {
-    _3gpkm_test("Ruby");
+    _3gpkm_test(PKMN_GAME_RUBY);
 }
 
 void sapphire_3gpkm_test()
 {
-    _3gpkm_test("Sapphire");
+    _3gpkm_test(PKMN_GAME_SAPPHIRE);
 }
 
 void emerald_3gpkm_test()
 {
-    _3gpkm_test("Emerald");
+    _3gpkm_test(PKMN_GAME_EMERALD);
 }
 
 void firered_3gpkm_test()
 {
-    _3gpkm_test("FireRed");
+    _3gpkm_test(PKMN_GAME_FIRERED);
 }
 
 void leafgreen_3gpkm_test()
 {
-    _3gpkm_test("LeafGreen");
+    _3gpkm_test(PKMN_GAME_LEAFGREEN);
 }
 
 void test_outside_3gpkm()
@@ -476,8 +479,8 @@ void test_outside_3gpkm()
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
 
-    TEST_ASSERT_EQUAL_STRING("Mightyena", pokemon.p_species);
-    TEST_ASSERT_EQUAL_STRING("Emerald", pokemon.p_game);
+    TEST_ASSERT_EQUAL(PKMN_SPECIES_MIGHTYENA, pokemon.species);
+    TEST_ASSERT_EQUAL(PKMN_GAME_EMERALD, pokemon.game);
 
     test_pokemon_string(
         &pokemon,
@@ -516,18 +519,6 @@ void test_outside_3gpkm()
         254,
         pkmn_pokemon_get_current_trainer_friendship
     );
-    test_pokemon_string(
-        &pokemon,
-        "Ability",
-        "Intimidate",
-        pkmn_pokemon_get_ability
-    );
-    test_pokemon_string(
-        &pokemon,
-        "Ball",
-        "Great Ball",
-        pkmn_pokemon_get_ball
-    );
     test_pokemon_int(
         &pokemon,
         "Level met",
@@ -538,12 +529,6 @@ void test_outside_3gpkm()
         &pokemon,
         false,
         "Route 120"
-    );
-    test_pokemon_string(
-        &pokemon,
-        "Original game",
-        "Emerald",
-        pkmn_pokemon_get_original_game
     );
     test_pokemon_uint32(
         &pokemon,
@@ -564,20 +549,44 @@ void test_outside_3gpkm()
         pkmn_pokemon_get_level
     );
 
-    bool markings[PKMN_NUM_MARKINGS] = {false};
+    enum pkmn_ability ability = PKMN_ABILITY_NONE;
+    error = pkmn_pokemon_get_ability(
+                &pokemon,
+                &ability
+            );
+    PKMN_TEST_ASSERT_SUCCESS(error);
+    TEST_ASSERT_EQUAL(PKMN_ABILITY_INTIMIDATE, ability);
+
+    enum pkmn_ball ball = PKMN_BALL_NONE;
+    error = pkmn_pokemon_get_ball(
+                &pokemon,
+                &ball
+            );
+    PKMN_TEST_ASSERT_SUCCESS(error);
+    TEST_ASSERT_EQUAL(PKMN_BALL_GREAT_BALL, ball);
+
+    enum pkmn_game original_game = PKMN_GAME_NONE;
+    error = pkmn_pokemon_get_original_game(
+                &pokemon,
+                &original_game
+            );
+    PKMN_TEST_ASSERT_SUCCESS(error);
+    TEST_ASSERT_EQUAL(PKMN_GAME_EMERALD, original_game);
+
+    struct pkmn_marking_enum_map markings = {NULL, 0};
     error = pkmn_pokemon_get_markings(
                 &pokemon,
-                markings,
-                PKMN_NUM_MARKINGS,
-                NULL
+                &markings
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
     for(enum pkmn_marking marking = PKMN_MARKING_CIRCLE;
         marking <= PKMN_MARKING_DIAMOND;
         ++marking)
     {
-        TEST_ASSERT_FALSE(markings[marking]);
+        TEST_ASSERT_FALSE(markings.p_values[marking]);
     }
+    error = pkmn_marking_enum_map_free(&markings);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 
     struct pkmn_string_list ribbon_names = empty_string_list;
     error = pkmn_pokemon_get_ribbon_names(
@@ -609,20 +618,20 @@ void test_outside_3gpkm()
     error = pkmn_string_list_free(&ribbon_names);
     PKMN_TEST_ASSERT_SUCCESS(error);
 
-    int contest_stats[PKMN_NUM_CONTEST_STATS] = {0};
+    struct pkmn_contest_stat_enum_map contest_stats = {NULL, 0};
     error = pkmn_pokemon_get_contest_stats(
                 &pokemon,
-                contest_stats,
-                PKMN_NUM_CONTEST_STATS,
-                NULL
+                &contest_stats
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
     for(enum pkmn_contest_stat contest_stat = PKMN_CONTEST_STAT_COOL;
         contest_stat <= PKMN_CONTEST_STAT_FEEL;
         ++contest_stat)
     {
-        TEST_ASSERT_EQUAL(0, contest_stats[contest_stat]);
+        TEST_ASSERT_EQUAL(0, contest_stats.p_values[contest_stat]);
     }
+    error = pkmn_contest_stat_enum_map_free(&contest_stats);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 
     struct pkmn_move_slots move_slots = empty_move_slots;
     error = pkmn_pokemon_get_moves(
@@ -631,61 +640,61 @@ void test_outside_3gpkm()
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_EQUAL(4, move_slots.length);
-    TEST_ASSERT_EQUAL_STRING("Crunch", move_slots.p_move_slots[0].p_move);
-    TEST_ASSERT_EQUAL_STRING("Strength", move_slots.p_move_slots[1].p_move);
-    TEST_ASSERT_EQUAL_STRING("Shadow Ball", move_slots.p_move_slots[2].p_move);
-    TEST_ASSERT_EQUAL_STRING("Double-Edge", move_slots.p_move_slots[3].p_move);
+    TEST_ASSERT_EQUAL(PKMN_MOVE_CRUNCH, move_slots.p_move_slots[0].move);
+    TEST_ASSERT_EQUAL(PKMN_MOVE_STRENGTH, move_slots.p_move_slots[1].move);
+    TEST_ASSERT_EQUAL(PKMN_MOVE_SHADOW_BALL, move_slots.p_move_slots[2].move);
+    TEST_ASSERT_EQUAL(PKMN_MOVE_DOUBLE_EDGE, move_slots.p_move_slots[3].move);
 
     error = pkmn_move_slots_free(&move_slots);
     PKMN_TEST_ASSERT_SUCCESS(error);
 
-    int EVs[PKMN_NUM_STATS] = {0};
+    struct pkmn_stat_enum_map EVs = {NULL, 0};
     error = pkmn_pokemon_get_EVs(
                 &pokemon,
-                EVs,
-                PKMN_NUM_STATS,
-                NULL
+                &EVs
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
-    TEST_ASSERT_EQUAL(30, EVs[PKMN_STAT_HP]);
-    TEST_ASSERT_EQUAL(110, EVs[PKMN_STAT_ATTACK]);
-    TEST_ASSERT_EQUAL(32, EVs[PKMN_STAT_DEFENSE]);
-    TEST_ASSERT_EQUAL(48, EVs[PKMN_STAT_SPEED]);
-    TEST_ASSERT_EQUAL(-1, EVs[PKMN_STAT_SPECIAL]);
-    TEST_ASSERT_EQUAL(17, EVs[PKMN_STAT_SPATK]);
-    TEST_ASSERT_EQUAL(83, EVs[PKMN_STAT_SPDEF]);
+    TEST_ASSERT_EQUAL(30, EVs.p_values[PKMN_STAT_HP]);
+    TEST_ASSERT_EQUAL(110, EVs.p_values[PKMN_STAT_ATTACK]);
+    TEST_ASSERT_EQUAL(32, EVs.p_values[PKMN_STAT_DEFENSE]);
+    TEST_ASSERT_EQUAL(48, EVs.p_values[PKMN_STAT_SPEED]);
+    TEST_ASSERT_EQUAL(-1, EVs.p_values[PKMN_STAT_SPECIAL]);
+    TEST_ASSERT_EQUAL(17, EVs.p_values[PKMN_STAT_SPECIAL_ATTACK]);
+    TEST_ASSERT_EQUAL(83, EVs.p_values[PKMN_STAT_SPECIAL_DEFENSE]);
 
-    int IVs[PKMN_NUM_STATS] = {0};
+    error = pkmn_stat_enum_map_free(&EVs);
+    PKMN_TEST_ASSERT_SUCCESS(error);
+
+    struct pkmn_stat_enum_map IVs = {NULL, 0};
     error = pkmn_pokemon_get_IVs(
                 &pokemon,
-                IVs,
-                PKMN_NUM_STATS,
-                NULL
+                &IVs
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
-    TEST_ASSERT_EQUAL(26, IVs[PKMN_STAT_HP]);
-    TEST_ASSERT_EQUAL(28, IVs[PKMN_STAT_ATTACK]);
-    TEST_ASSERT_EQUAL(4, IVs[PKMN_STAT_DEFENSE]);
-    TEST_ASSERT_EQUAL(13, IVs[PKMN_STAT_SPEED]);
-    TEST_ASSERT_EQUAL(-1, IVs[PKMN_STAT_SPECIAL]);
-    TEST_ASSERT_EQUAL(25, IVs[PKMN_STAT_SPATK]);
-    TEST_ASSERT_EQUAL(26, IVs[PKMN_STAT_SPDEF]);
+    TEST_ASSERT_EQUAL(26, IVs.p_values[PKMN_STAT_HP]);
+    TEST_ASSERT_EQUAL(28, IVs.p_values[PKMN_STAT_ATTACK]);
+    TEST_ASSERT_EQUAL(4, IVs.p_values[PKMN_STAT_DEFENSE]);
+    TEST_ASSERT_EQUAL(13, IVs.p_values[PKMN_STAT_SPEED]);
+    TEST_ASSERT_EQUAL(-1, IVs.p_values[PKMN_STAT_SPECIAL]);
+    TEST_ASSERT_EQUAL(25, IVs.p_values[PKMN_STAT_SPECIAL_ATTACK]);
+    TEST_ASSERT_EQUAL(26, IVs.p_values[PKMN_STAT_SPECIAL_DEFENSE]);
 
-    int stats[PKMN_NUM_STATS] = {0};
+    error = pkmn_stat_enum_map_free(&IVs);
+    PKMN_TEST_ASSERT_SUCCESS(error);
+
+    struct pkmn_stat_enum_map stats = {NULL, 0};
     error = pkmn_pokemon_get_stats(
                 &pokemon,
-                stats,
-                PKMN_NUM_STATS,
-                NULL
+                &stats
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
-    TEST_ASSERT_EQUAL(146, stats[PKMN_STAT_HP]);
-    TEST_ASSERT_EQUAL(122, stats[PKMN_STAT_ATTACK]);
-    TEST_ASSERT_EQUAL(81, stats[PKMN_STAT_DEFENSE]);
-    TEST_ASSERT_EQUAL(87, stats[PKMN_STAT_SPEED]);
-    TEST_ASSERT_EQUAL(-1, stats[PKMN_STAT_SPECIAL]);
-    TEST_ASSERT_EQUAL(79, stats[PKMN_STAT_SPATK]);
-    TEST_ASSERT_EQUAL(88, stats[PKMN_STAT_SPDEF]);
+    TEST_ASSERT_EQUAL(146, stats.p_values[PKMN_STAT_HP]);
+    TEST_ASSERT_EQUAL(122, stats.p_values[PKMN_STAT_ATTACK]);
+    TEST_ASSERT_EQUAL(81, stats.p_values[PKMN_STAT_DEFENSE]);
+    TEST_ASSERT_EQUAL(87, stats.p_values[PKMN_STAT_SPEED]);
+    TEST_ASSERT_EQUAL(-1, stats.p_values[PKMN_STAT_SPECIAL]);
+    TEST_ASSERT_EQUAL(79, stats.p_values[PKMN_STAT_SPECIAL_ATTACK]);
+    TEST_ASSERT_EQUAL(88, stats.p_values[PKMN_STAT_SPECIAL_DEFENSE]);
 
     error = pkmn_pokemon_free(&pokemon);
     PKMN_TEST_ASSERT_SUCCESS(error);

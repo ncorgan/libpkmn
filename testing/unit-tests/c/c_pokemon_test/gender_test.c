@@ -11,24 +11,20 @@
 
 static const struct pkmn_pokemon empty_pokemon =
 {
-    .p_species = NULL,
-    .p_game = NULL,
+    .species = PKMN_SPECIES_NONE,
+    .game = PKMN_GAME_NONE,
     .p_internal = NULL
 };
 
-static void gender_test(
-    const char* game
-)
+static void gender_test(enum pkmn_game game)
 {
-    TEST_ASSERT_NOT_NULL(game);
-
     enum pkmn_error error = PKMN_ERROR_NONE;
     enum pkmn_gender gender = PKMN_GENDER_GENDERLESS;
 
     // Single-gender
     struct pkmn_pokemon nidorina = empty_pokemon;
     error = pkmn_pokemon_init(
-                "Nidorina",
+                PKMN_SPECIES_NIDORINA,
                 game,
                 "",
                 50,
@@ -66,7 +62,7 @@ static void gender_test(
 
     struct pkmn_pokemon nidorino = empty_pokemon;
     error = pkmn_pokemon_init(
-                "Nidorino",
+                PKMN_SPECIES_NIDORINO,
                 game,
                 "",
                 50,
@@ -104,7 +100,7 @@ static void gender_test(
 
     struct pkmn_pokemon magnemite = empty_pokemon;
     error = pkmn_pokemon_init(
-                "Magnemite",
+                PKMN_SPECIES_MAGNEMITE,
                 game,
                 "",
                 50,
@@ -140,17 +136,17 @@ static void gender_test(
     PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_NULL(magnemite.p_internal);
 
-    static const char* mixed_pokemon[] =
+    static const enum pkmn_species mixed_pokemon[] =
     {
-        "Charmander", // 87.% male
-        "Growlithe",  // 75% male
-        "Pidgey",     // 50% male
-        "Vulpix",     // 25% male
-        NULL
+        PKMN_SPECIES_CHARMANDER, // 87.% male
+        PKMN_SPECIES_GROWLITHE,  // 75% male
+        PKMN_SPECIES_PIDGEY,     // 50% male
+        PKMN_SPECIES_VULPIX,     // 25% male
+        PKMN_SPECIES_NONE
     };
 
     for(size_t pokemon_index = 0;
-        mixed_pokemon[pokemon_index];
+        mixed_pokemon[pokemon_index] != PKMN_SPECIES_NONE;
         ++pokemon_index)
     {
         struct pkmn_pokemon pokemon = empty_pokemon;
@@ -208,50 +204,50 @@ static void gender_test(
 
 void gold_gender_test()
 {
-    gender_test("Gold");
+    gender_test(PKMN_GAME_GOLD);
 }
 
 void silver_gender_test()
 {
-    gender_test("Silver");
+    gender_test(PKMN_GAME_SILVER);
 }
 
 void crystal_gender_test()
 {
-    gender_test("Crystal");
+    gender_test(PKMN_GAME_CRYSTAL);
 }
 
 void ruby_gender_test()
 {
-    gender_test("Ruby");
+    gender_test(PKMN_GAME_RUBY);
 }
 
 void sapphire_gender_test()
 {
-    gender_test("Sapphire");
+    gender_test(PKMN_GAME_SAPPHIRE);
 }
 
 void emerald_gender_test()
 {
-    gender_test("Emerald");
+    gender_test(PKMN_GAME_EMERALD);
 }
 
 void firered_gender_test()
 {
-    gender_test("FireRed");
+    gender_test(PKMN_GAME_FIRERED);
 }
 
 void leafgreen_gender_test()
 {
-    gender_test("LeafGreen");
+    gender_test(PKMN_GAME_LEAFGREEN);
 }
 
 void colosseum_gender_test()
 {
-    gender_test("Colosseum");
+    gender_test(PKMN_GAME_COLOSSEUM);
 }
 
 void xd_gender_test()
 {
-    gender_test("XD");
+    gender_test(PKMN_GAME_XD);
 }

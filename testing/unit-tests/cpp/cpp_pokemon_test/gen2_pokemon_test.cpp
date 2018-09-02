@@ -11,6 +11,7 @@
 #include <pkmn/calculations/form.hpp>
 #include <pkmn/database/item_entry.hpp>
 
+#include "pksav/enum_maps.hpp"
 #include "pksav/pksav_call.hpp"
 
 #include <pksav/common/pokerus.h>
@@ -30,51 +31,59 @@ TEST_P(gen2_pokemon_test, gen2_pokemon_test) {
     pokemon_test_common(
         pokemon,
         {
-            "Great Ball",
-            {"Great Ball"},
+            pkmn::e_ball::GREAT_BALL,
+            {pkmn::e_ball::GREAT_BALL},
 
-            "Berry",
-            {"Razz Berry", "Bicycle"},
+            pkmn::e_item::BERRY,
+            {pkmn::e_item::RAZZ_BERRY, pkmn::e_item::BICYCLE},
 
             "Special",
             {"Sprout Tower", "Tohjo Falls"},
             {"Littleroot Town", "Petalburg Woods"},
 
-            {"Slash", "Flamethrower", "Return", "Fire Blast"},
-            {"Frenzy Plant", "Roost"},
+            {
+                pkmn::e_move::SLASH,
+                pkmn::e_move::FLAMETHROWER,
+                pkmn::e_move::RETURN,
+                pkmn::e_move::FIRE_BLAST
+            },
+            {
+                pkmn::e_move::FRENZY_PLANT,
+                pkmn::e_move::ROOST
+            },
 
-            {"Gold"},
-            {"Gold"}
+            {pkmn::e_game::GOLD},
+            {pkmn::e_game::GOLD}
         }
     );
 
     // Gender affects IVs, so make sure the abstraction reflects that.
-    const std::map<std::string, int>& IVs = pokemon->get_IVs();
-    pokemon->set_gender("Male");
-    EXPECT_EQ(15, IVs.at("Attack"));
-    pokemon->set_gender("Female");
-    EXPECT_LT(IVs.at("Attack"), 15);
+    const std::map<pkmn::e_stat, int>& IVs = pokemon->get_IVs();
+    pokemon->set_gender(pkmn::e_gender::MALE);
+    EXPECT_EQ(15, IVs.at(pkmn::e_stat::ATTACK));
+    pokemon->set_gender(pkmn::e_gender::FEMALE);
+    EXPECT_LT(IVs.at(pkmn::e_stat::ATTACK), 15);
 
-    pokemon->set_IV("Attack", 0);
-    EXPECT_EQ("Female", pokemon->get_gender());
-    pokemon->set_IV("Attack", 15);
-    EXPECT_EQ("Male", pokemon->get_gender());
+    pokemon->set_IV(pkmn::e_stat::ATTACK, 0);
+    EXPECT_EQ(pkmn::e_gender::FEMALE, pokemon->get_gender());
+    pokemon->set_IV(pkmn::e_stat::ATTACK, 15);
+    EXPECT_EQ(pkmn::e_gender::MALE, pokemon->get_gender());
 
     // Shininess affects IVs, so make sure the abstraction reflects that.
     pokemon->set_shininess(false);
     EXPECT_FALSE(pokemon->is_shiny());
-    EXPECT_EQ(13, IVs.at("Attack"));
+    EXPECT_EQ(13, IVs.at(pkmn::e_stat::ATTACK));
 
     pokemon->set_shininess(true);
     EXPECT_TRUE(pokemon->is_shiny());
-    EXPECT_EQ(15, IVs.at("Attack"));
-    EXPECT_EQ(10, IVs.at("Defense"));
-    EXPECT_EQ(10, IVs.at("Speed"));
-    EXPECT_EQ(10, IVs.at("Special"));
+    EXPECT_EQ(15, IVs.at(pkmn::e_stat::ATTACK));
+    EXPECT_EQ(10, IVs.at(pkmn::e_stat::DEFENSE));
+    EXPECT_EQ(10, IVs.at(pkmn::e_stat::SPEED));
+    EXPECT_EQ(10, IVs.at(pkmn::e_stat::SPECIAL));
 
     // On the C++ level, make sure functions that affect the same PKSav field don't impact each other.
     std::string location_met_before_change = pokemon->get_location_met(false);
-    std::string trainer_gender_before_change = pokemon->get_original_trainer_gender();
+    pkmn::e_gender trainer_gender_before_change = pokemon->get_original_trainer_gender();
     int level_met_before_change = pokemon->get_level_met();
 
     const struct pksav_gen2_pc_pokemon* native_pc = reinterpret_cast<const struct pksav_gen2_pc_pokemon*>(
@@ -99,8 +108,8 @@ TEST_P(gen2_pokemon_test, gen2_pokemon_test) {
     pokemon->set_location_met(location_met_before_change, false);
 
     // Setting trainer gender shouldn't affect level caught, location caught, or time of day caught.
-    pokemon->set_original_trainer_gender("Female");
-    EXPECT_EQ("Female", pokemon->get_original_trainer_gender());
+    pokemon->set_original_trainer_gender(pkmn::e_gender::FEMALE);
+    EXPECT_EQ(pkmn::e_gender::FEMALE, pokemon->get_original_trainer_gender());
     EXPECT_EQ(location_met_before_change, pokemon->get_location_met(false));
     EXPECT_EQ(level_met_before_change, pokemon->get_level_met());
 
@@ -158,12 +167,12 @@ TEST_P(gen2_pokemon_test, gen2_pokemon_test) {
         );
     }
 
-    const std::map<std::string, int>& EVs = pokemon->get_EVs();
-    EXPECT_EQ(EVs.at("HP"), int(pksav_bigendian16(native_pc->ev_hp)));
-    EXPECT_EQ(EVs.at("Attack"), int(pksav_bigendian16(native_pc->ev_atk)));
-    EXPECT_EQ(EVs.at("Defense"), int(pksav_bigendian16(native_pc->ev_def)));
-    EXPECT_EQ(EVs.at("Speed"), int(pksav_bigendian16(native_pc->ev_spd)));
-    EXPECT_EQ(EVs.at("Special"), int(pksav_bigendian16(native_pc->ev_spcl)));
+    const std::map<pkmn::e_stat, int>& EVs = pokemon->get_EVs();
+    EXPECT_EQ(EVs.at(pkmn::e_stat::HP), int(pksav_bigendian16(native_pc->ev_hp)));
+    EXPECT_EQ(EVs.at(pkmn::e_stat::ATTACK), int(pksav_bigendian16(native_pc->ev_atk)));
+    EXPECT_EQ(EVs.at(pkmn::e_stat::DEFENSE), int(pksav_bigendian16(native_pc->ev_def)));
+    EXPECT_EQ(EVs.at(pkmn::e_stat::SPEED), int(pksav_bigendian16(native_pc->ev_spd)));
+    EXPECT_EQ(EVs.at(pkmn::e_stat::SPECIAL), int(pksav_bigendian16(native_pc->ev_spcl)));
 
     uint8_t pksav_IVs[PKSAV_NUM_GB_IVS] = {0};
     PKSAV_CALL(
@@ -174,30 +183,36 @@ TEST_P(gen2_pokemon_test, gen2_pokemon_test) {
         )
     )
 
-    EXPECT_EQ(IVs.at("HP"),      int(pksav_IVs[PKSAV_GB_IV_HP]));
-    EXPECT_EQ(IVs.at("Attack"),  int(pksav_IVs[PKSAV_GB_IV_ATTACK]));
-    EXPECT_EQ(IVs.at("Defense"), int(pksav_IVs[PKSAV_GB_IV_DEFENSE]));
-    EXPECT_EQ(IVs.at("Speed"),   int(pksav_IVs[PKSAV_GB_IV_SPEED]));
-    EXPECT_EQ(IVs.at("Special"), int(pksav_IVs[PKSAV_GB_IV_SPECIAL]));
+    EXPECT_EQ(IVs.at(pkmn::e_stat::HP),      int(pksav_IVs[PKSAV_GB_IV_HP]));
+    EXPECT_EQ(IVs.at(pkmn::e_stat::ATTACK),  int(pksav_IVs[PKSAV_GB_IV_ATTACK]));
+    EXPECT_EQ(IVs.at(pkmn::e_stat::DEFENSE), int(pksav_IVs[PKSAV_GB_IV_DEFENSE]));
+    EXPECT_EQ(IVs.at(pkmn::e_stat::SPEED),   int(pksav_IVs[PKSAV_GB_IV_SPEED]));
+    EXPECT_EQ(IVs.at(pkmn::e_stat::SPECIAL), int(pksav_IVs[PKSAV_GB_IV_SPECIAL]));
 
     EXPECT_EQ(pokemon->get_level(), int(native_pc->level));
 
     /*
      * Party data
      */
-    EXPECT_EQ(pokemon->get_stats().at("HP"), int(pksav_bigendian16(native_party_data->max_hp)));
+    static const pksav::gb_condition_bimap_t& GB_CONDITION_BIMAP = pksav::get_gb_condition_bimap();
+    EXPECT_EQ(
+        uint8_t(GB_CONDITION_BIMAP.left.at(pokemon->get_condition())),
+        native_party_data->condition
+    );
+    EXPECT_EQ(pokemon->get_stats().at(pkmn::e_stat::HP), int(pksav_bigendian16(native_party_data->max_hp)));
     EXPECT_EQ(pokemon->get_current_hp(), int(pksav_bigendian16(native_party_data->current_hp)));
-    EXPECT_EQ(pokemon->get_stats().at("Attack"), int(pksav_bigendian16(native_party_data->atk)));
-    EXPECT_EQ(pokemon->get_stats().at("Defense"), int(pksav_bigendian16(native_party_data->def)));
-    EXPECT_EQ(pokemon->get_stats().at("Speed"), int(pksav_bigendian16(native_party_data->spd)));
-    EXPECT_EQ(pokemon->get_stats().at("Special Attack"), int(pksav_bigendian16(native_party_data->spatk)));
-    EXPECT_EQ(pokemon->get_stats().at("Special Defense") , int(pksav_bigendian16(native_party_data->spdef)));
+    EXPECT_EQ(pokemon->get_stats().at(pkmn::e_stat::ATTACK), int(pksav_bigendian16(native_party_data->atk)));
+    EXPECT_EQ(pokemon->get_stats().at(pkmn::e_stat::DEFENSE), int(pksav_bigendian16(native_party_data->def)));
+    EXPECT_EQ(pokemon->get_stats().at(pkmn::e_stat::SPEED), int(pksav_bigendian16(native_party_data->spd)));
+    EXPECT_EQ(pokemon->get_stats().at(pkmn::e_stat::SPECIAL_ATTACK), int(pksav_bigendian16(native_party_data->spatk)));
+    EXPECT_EQ(pokemon->get_stats().at(pkmn::e_stat::SPECIAL_DEFENSE) , int(pksav_bigendian16(native_party_data->spdef)));
 }
 
-static const std::vector<std::pair<std::string, std::string>> params = {
-    {"Gold", "Cyndaquil"},
-    {"Silver", "Totodile"},
-    {"Crystal", "Chikorita"}
+static const std::vector<std::pair<pkmn::e_game, pkmn::e_species>> params =
+{
+    {pkmn::e_game::GOLD,    pkmn::e_species::CYNDAQUIL},
+    {pkmn::e_game::SILVER,  pkmn::e_species::TOTODILE},
+    {pkmn::e_game::CRYSTAL, pkmn::e_species::CHIKORITA},
 };
 
 INSTANTIATE_TEST_CASE_P(

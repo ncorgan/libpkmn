@@ -19,7 +19,7 @@
 
 // Convert getter/setter functions into attributes for more idiomatic Ruby.
 
-%attributestring(pkmn::swig::pokemon_pc, std::string, game, get_game);
+%attribute(pkmn::swig::pokemon_pc, pkmn::e_game, game, get_game);
 %attributeval(pkmn::swig::pokemon_pc, %arg(std::vector<std::string>), box_names, get_box_names);
 
 %extend pkmn::swig::pokemon_pc

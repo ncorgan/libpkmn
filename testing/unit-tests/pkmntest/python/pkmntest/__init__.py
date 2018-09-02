@@ -5,27 +5,33 @@
 # or copy at http://opensource.org/licenses/MIT)
 #
 
+import pkmn
+
 ALL_GAMES = [
-    "Red", "Blue", "Yellow",
-    "Gold", "Silver", "Crystal",
-    "Ruby", "Sapphire", "Emerald", "FireRed", "LeafGreen", "Colosseum", "XD"
+    pkmn.game.RED, pkmn.game.BLUE, pkmn.game.YELLOW,
+    pkmn.game.GOLD, pkmn.game.SILVER, pkmn.game.CRYSTAL,
+    pkmn.game.RUBY, pkmn.game.SAPPHIRE, pkmn.game.EMERALD, pkmn.game.FIRERED, pkmn.game.LEAFGREEN,
+    pkmn.game.COLOSSEUM, pkmn.game.XD
 ]
-ALL_MAIN_SERIES_GAMES = [game for game in ALL_GAMES if game not in ["Colosseum", "XD"]]
+ALL_GAME_NAMES = [pkmn.game_to_string(game) for game in ALL_GAMES]
+
+ALL_MAIN_SERIES_GAMES = [game for game in ALL_GAMES if game not in [pkmn.game.COLOSSEUM, pkmn.game.XD]]
+ALL_MAIN_SERIES_GAME_NAMES = [pkmn.game_to_string(game) for game in ALL_MAIN_SERIES_GAMES]
 
 GAME_TO_GENERATION = {
-    "Red": 1,
-    "Blue": 1,
-    "Yellow": 1,
-    "Gold": 2,
-    "Silver": 2,
-    "Crystal": 2,
-    "Ruby": 3,
-    "Sapphire": 3,
-    "Emerald": 3,
-    "FireRed": 3,
-    "LeafGreen": 3,
-    "Colosseum": 3,
-    "XD": 3
+    pkmn.game.RED: 1,
+    pkmn.game.BLUE: 1,
+    pkmn.game.YELLOW: 1,
+    pkmn.game.GOLD: 2,
+    pkmn.game.SILVER: 2,
+    pkmn.game.CRYSTAL: 2,
+    pkmn.game.RUBY: 3,
+    pkmn.game.SAPPHIRE: 3,
+    pkmn.game.EMERALD: 3,
+    pkmn.game.FIRERED: 3,
+    pkmn.game.LEAFGREEN: 3,
+    pkmn.game.COLOSSEUM: 3,
+    pkmn.game.XD: 3
 }
 
 from .base_test import *

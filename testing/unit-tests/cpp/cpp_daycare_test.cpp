@@ -15,9 +15,10 @@
 #include <pksav/gen2.h>
 #include <pksav/gba.h>
 
+#include "private_exports.hpp"
 #include "pksav/pksav_call.hpp"
 
-#include "libpkmgc_includes.hpp"
+#include "pkmgc/includes.hpp"
 
 #include <gtest/gtest.h>
 
@@ -25,8 +26,8 @@
 #include <string>
 
 typedef std::tuple<
-            std::string, // game
-            bool         // can_breed
+            pkmn::e_game, // game
+            bool          // can_breed
         > test_params_t;
 
 class daycare_test: public ::testing::TestWithParam<test_params_t> {};
@@ -34,7 +35,7 @@ class daycare_test: public ::testing::TestWithParam<test_params_t> {};
 TEST_P(daycare_test, test_empty_daycare)
 {
     test_params_t test_params = GetParam();
-    const std::string& game = std::get<0>(test_params);
+    pkmn::e_game game = std::get<0>(test_params);
     bool can_breed = std::get<1>(test_params);
 
     pkmn::daycare::sptr daycare = pkmn::daycare::make(game);
@@ -47,7 +48,7 @@ TEST_P(daycare_test, test_empty_daycare)
         ++levelup_pokemon_index)
     {
         const pkmn::pokemon::sptr& pokemon = daycare->get_levelup_pokemon(levelup_pokemon_index);
-        ASSERT_EQ("None", pokemon->get_species());
+        ASSERT_EQ(pkmn::e_species::NONE, pokemon->get_species());
     }
 
     // Test invalid indices.
@@ -75,7 +76,7 @@ TEST_P(daycare_test, test_empty_daycare)
             ++breeding_pokemon_index)
         {
             const pkmn::pokemon::sptr& pokemon = daycare->get_breeding_pokemon(breeding_pokemon_index);
-            ASSERT_EQ("None", pokemon->get_species());
+            ASSERT_EQ(pkmn::e_species::NONE, pokemon->get_species());
         }
 
         // Test invalid indices.
@@ -94,7 +95,7 @@ TEST_P(daycare_test, test_empty_daycare)
         );
 
         const pkmn::pokemon::sptr& egg = daycare->get_egg();
-        ASSERT_EQ("None", egg->get_species());
+        ASSERT_EQ(pkmn::e_species::NONE, egg->get_species());
         ASSERT_TRUE(egg->is_egg());
     }
     else
@@ -111,7 +112,7 @@ TEST_P(daycare_test, test_empty_daycare)
         ASSERT_THROW(
             daycare->set_breeding_pokemon(
                 0,
-                pkmn::pokemon::make("Bulbasaur", game, "", 5)
+                pkmn::pokemon::make(pkmn::e_species::BULBASAUR, game, "", 5)
             );
         , pkmn::feature_not_in_game_error);
 
@@ -124,7 +125,7 @@ TEST_P(daycare_test, test_empty_daycare)
 TEST_P(daycare_test, test_setting_pokemon)
 {
     test_params_t test_params = GetParam();
-    const std::string& game = std::get<0>(test_params);
+    pkmn::e_game game = std::get<0>(test_params);
 
     pkmn::daycare::sptr daycare = pkmn::daycare::make(game);
 
@@ -132,14 +133,17 @@ TEST_P(daycare_test, test_setting_pokemon)
         daycare->get_levelup_pokemon_as_vector();
 
     pkmn::pokemon::sptr venusaur = pkmn::pokemon::make(
-                                       "Venusaur",
+                                       pkmn::e_species::VENUSAUR,
                                        game,
                                        "",
                                        50
                                    );
 
     daycare->set_levelup_pokemon(0, venusaur);
-    ASSERT_EQ("Venusaur", levelup_pokemon[0]->get_species());
+    ASSERT_EQ(
+        pkmn::e_species::VENUSAUR,
+        levelup_pokemon[0]->get_species()
+    );
     ASSERT_NE(
         venusaur->get_native_pc_data(),
         levelup_pokemon[0]->get_native_pc_data()
@@ -148,14 +152,17 @@ TEST_P(daycare_test, test_setting_pokemon)
     if(daycare->get_levelup_pokemon_capacity() == 2)
     {
         pkmn::pokemon::sptr charizard = pkmn::pokemon::make(
-                                            "Charizard",
+                                            pkmn::e_species::CHARIZARD,
                                             game,
                                             "",
                                             50
                                         );
 
         daycare->set_levelup_pokemon(1, charizard);
-        ASSERT_EQ("Charizard", levelup_pokemon[1]->get_species());
+        ASSERT_EQ(
+            pkmn::e_species::CHARIZARD,
+            levelup_pokemon[1]->get_species()
+        );
         ASSERT_NE(
             charizard->get_native_pc_data(),
             levelup_pokemon[1]->get_native_pc_data()
@@ -164,7 +171,7 @@ TEST_P(daycare_test, test_setting_pokemon)
 
     if(daycare->can_breed_pokemon())
     {
-        int generation = game_generations.at(game);
+        int generation = pkmn::priv::game_enum_to_generation(game);
 
         const pkmn::pokemon_list_t& breeding_pokemon =
             daycare->get_breeding_pokemon_as_vector();
@@ -194,32 +201,38 @@ TEST_P(daycare_test, test_setting_pokemon)
 
         // TODO: validate genders
         pkmn::pokemon::sptr blastoise = pkmn::pokemon::make(
-                                            "Blastoise",
+                                            pkmn::e_species::BLASTOISE,
                                             game,
                                             "",
                                             50
                                         );
         daycare->set_breeding_pokemon(0, blastoise);
-        ASSERT_EQ("Blastoise", blastoise->get_species());
+        ASSERT_EQ(
+            pkmn::e_species::BLASTOISE,
+            blastoise->get_species()
+        );
         ASSERT_NE(
             blastoise->get_native_pc_data(),
             breeding_pokemon[0]->get_native_pc_data()
         );
-        breeding_pokemon[0]->set_gender("Female");
+        breeding_pokemon[0]->set_gender(pkmn::e_gender::FEMALE);
 
         pkmn::pokemon::sptr marowak = pkmn::pokemon::make(
-                                          "Marowak",
+                                          pkmn::e_species::MAROWAK,
                                           game,
                                           "",
                                           50
                                       );
         daycare->set_breeding_pokemon(1, marowak);
-        ASSERT_EQ("Marowak", marowak->get_species());
+        ASSERT_EQ(
+            pkmn::e_species::MAROWAK,
+            marowak->get_species()
+        );
         ASSERT_NE(
             marowak->get_native_pc_data(),
             breeding_pokemon[1]->get_native_pc_data()
         );
-        breeding_pokemon[1]->set_gender("Male");
+        breeding_pokemon[1]->set_gender(pkmn::e_gender::MALE);
 
         ASSERT_TRUE(daycare->get_egg()->is_egg());
     }
@@ -230,18 +243,18 @@ TEST_P(daycare_test, test_setting_pokemon)
 static const std::vector<test_params_t> TEST_PARAMS =
 {
     // Generation I
-    test_params_t("Red", false),
-    test_params_t("Blue", false),
-    test_params_t("Yellow", false),
+    test_params_t(pkmn::e_game::RED,   false),
+    test_params_t(pkmn::e_game::BLUE,  false),
+    test_params_t(pkmn::e_game::YELLOW, false),
 
     // Generation II
-    test_params_t("Gold", true),
-    test_params_t("Silver", true),
-    test_params_t("Crystal", true),
+    test_params_t(pkmn::e_game::GOLD,    true),
+    test_params_t(pkmn::e_game::SILVER,  true),
+    test_params_t(pkmn::e_game::CRYSTAL, true),
 
     // Gamecube
-    test_params_t("Colosseum", false),
-    test_params_t("XD", false),
+    test_params_t(pkmn::e_game::COLOSSEUM, false),
+    test_params_t(pkmn::e_game::XD,        false),
 };
 
 INSTANTIATE_TEST_CASE_P(

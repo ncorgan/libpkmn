@@ -77,7 +77,7 @@ namespace pkmn {
 
         pkmn::enforce_bounds("Party index", index, 0, max_index);
 
-        if((index < (num_pokemon-1)) && (new_pokemon->get_species() == "None"))
+        if((index < (num_pokemon-1)) && (new_pokemon->get_species() == pkmn::e_species::NONE))
         {
             throw std::invalid_argument("Parties store Pokémon contiguously.");
         }
@@ -119,17 +119,19 @@ namespace pkmn {
                                );
 
         // Update the number of Pokémon in the party if needed.
-        std::string new_species = new_pokemon->get_species();
+        pkmn::e_species new_species = new_pokemon->get_species();
         if(index == num_pokemon)
         {
-            if((_libpkmgc_pokemon_uptrs[index]->species > LibPkmGC::NoSpecies) && (new_species != "None"))
+            if((_libpkmgc_pokemon_uptrs[index]->species > LibPkmGC::NoSpecies) &&
+               (new_species != pkmn::e_species::NONE))
             {
                 ++_num_pokemon;
             }
         }
         else if(index == (num_pokemon-1))
         {
-            if((_libpkmgc_pokemon_uptrs[index]->species == LibPkmGC::NoSpecies) && (new_species == "None"))
+            if((_libpkmgc_pokemon_uptrs[index]->species == LibPkmGC::NoSpecies) &&
+               (new_species == pkmn::e_species::NONE))
             {
                 --_num_pokemon;
             }
@@ -149,7 +151,7 @@ namespace pkmn {
                                             _libpkmgc_pokemon_uptrs[party_index].get(),
                                             _game_id
                                         );
-            if(_pokemon_list[party_index]->get_species() != "None")
+            if(_pokemon_list[party_index]->get_species() != pkmn::e_species::NONE)
             {
                 ++_num_pokemon;
             }

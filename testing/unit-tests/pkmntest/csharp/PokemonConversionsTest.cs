@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -16,10 +16,10 @@ public class PokemonConversionsTest
     private static System.Random rng = new System.Random();
 
     public static void ConversionsTest(
-        string species,
+        PKMN.Species species,
         string form,
-        string originGame,
-        string destGame
+        PKMN.Game originGame,
+        PKMN.Game destGame
     )
     {
         PKMN.Pokemon firstPokemon = new PKMN.Pokemon(species, originGame, form, 50);
@@ -27,31 +27,28 @@ public class PokemonConversionsTest
         int originGeneration = Util.GameToGeneration(originGame);
         int destGeneration = Util.GameToGeneration(destGame);
         int minGeneration = System.Math.Min(originGeneration, destGeneration);
-        string gameForLists = (minGeneration == originGeneration) ? originGame : destGame;
+        PKMN.Game gameForLists = (minGeneration == originGeneration) ? originGame : destGame;
 
-        PKMN.StringList items = PKMN.Database.Lists.ItemList(gameForLists);
-        PKMN.StringList moves = PKMN.Database.Lists.MoveList(gameForLists);
+        PKMN.ItemEnumList items = PKMN.Database.Lists.ItemList(gameForLists);
+        PKMN.MoveEnumList moves = PKMN.Database.Lists.MoveList(gameForLists);
 
         for(int i = 0; i < 4; ++i)
         {
-            /*
-             * This will get rid of legitimate moves, like Shadow Ball, but not
-             * enough to cause an issue.
-             */
-            string moveName = "";
+            PKMN.Move move = PKMN.Move.NONE;
             do
             {
-                moveName = moves[rng.Next(0, moves.Count-1)];
-            } while(moveName.IndexOf("Shadow") == 0);
+                move = moves[rng.Next(0, moves.Count-1)];
+            }
+            while(move >= PKMN.Move.SHADOW_RUSH);
 
-            firstPokemon.Moves[i].Move = moveName;
+            firstPokemon.Moves[i].Move = move;
         }
 
         if(originGeneration >= 3)
         {
             firstPokemon.OriginalTrainerSecretID = (ushort)rng.Next(0, 0xFFFF);
 
-            if(!firstPokemon.DatabaseEntry.Abilities.Second.Equals("None"))
+            if(firstPokemon.DatabaseEntry.Abilities.Second != PKMN.Ability.NONE)
             {
                 firstPokemon.Ability = Util.RandomBool() ? firstPokemon.DatabaseEntry.Abilities.First
                                                          : firstPokemon.DatabaseEntry.Abilities.Second;
@@ -61,24 +58,24 @@ public class PokemonConversionsTest
 
         if(minGeneration >= 2)
         {
-            string heldItem = "";
+            PKMN.Item heldItem = PKMN.Item.NONE;
             do
             {
                 heldItem = items[rng.Next(0, items.Count-1)];
             } while(!(new PKMN.Database.ItemEntry(heldItem, originGame).IsHoldable) ||
-                    (heldItem.IndexOf("Scent") != -1));
+                    ((heldItem >= PKMN.Item.JOY_SCENT) && (heldItem <= PKMN.Item.VIVID_SCENT)));
 
             firstPokemon.HeldItem = heldItem;
         }
         if(originGeneration >= 2)
         {
-            firstPokemon.Gender = Util.RandomBool() ? "Male" : "Female";
+            firstPokemon.Gender = Util.RandomBool() ? PKMN.Gender.MALE : PKMN.Gender.FEMALE;
             firstPokemon.IsShiny = Util.RandomBool();
             firstPokemon.CurrentTrainerFriendship = rng.Next(0, 255);
 
-            if(!originGame.Equals("Gold") && !originGame.Equals("Silver"))
+            if((originGame == PKMN.Game.GOLD) || (originGame == PKMN.Game.CRYSTAL))
             {
-                firstPokemon.OriginalTrainerGender = Util.RandomBool() ? "Male" : "Female";
+                firstPokemon.OriginalTrainerGender = Util.RandomBool() ? PKMN.Gender.MALE : PKMN.Gender.FEMALE;
             }
 
             // The max level met value in Generation II is 63.
@@ -87,7 +84,7 @@ public class PokemonConversionsTest
         if(originGeneration >= 3)
         {
             // Randomize ribbons, markings, and contest stats.
-            foreach(string marking in firstPokemon.Markings.Keys)
+            foreach(PKMN.Marking marking in firstPokemon.Markings.Keys)
             {
                 firstPokemon.Markings[marking] = Util.RandomBool();
             }
@@ -95,7 +92,7 @@ public class PokemonConversionsTest
             {
                 firstPokemon.Ribbons[ribbon] = Util.RandomBool();
             }
-            foreach(string contestStat in firstPokemon.ContestStats.Keys)
+            foreach(PKMN.ContestStat contestStat in firstPokemon.ContestStats.Keys)
             {
                 firstPokemon.ContestStats[contestStat] = rng.Next(0, 255);
             }
@@ -136,7 +133,7 @@ public class PokemonConversionsTest
 
             if(originGeneration == destGeneration)
             {
-                foreach(string marking in firstPokemon.Markings.Keys)
+                foreach(PKMN.Marking marking in firstPokemon.Markings.Keys)
                 {
                     Assert.AreEqual(firstPokemon.Markings[marking], secondPokemon.Markings[marking]);
                 }
@@ -144,7 +141,7 @@ public class PokemonConversionsTest
                 {
                     Assert.AreEqual(firstPokemon.Ribbons[ribbon], secondPokemon.Ribbons[ribbon]);
                 }
-                foreach(string contestStat in firstPokemon.ContestStats.Keys)
+                foreach(PKMN.ContestStat contestStat in firstPokemon.ContestStats.Keys)
                 {
                     Assert.AreEqual(firstPokemon.ContestStats[contestStat], secondPokemon.ContestStats[contestStat]);
                 }

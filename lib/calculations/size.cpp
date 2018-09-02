@@ -76,7 +76,7 @@ inline static float round_float(float value) {
 namespace pkmn { namespace calculations {
 
     float pokemon_size(
-        const std::string& species,
+        pkmn::e_species species,
         uint32_t personality,
         int IV_HP,
         int IV_attack,
@@ -94,7 +94,7 @@ namespace pkmn { namespace calculations {
         pkmn::enforce_IV_bounds("Special Defense", IV_spdef,   true);
 
         // TODO: can this be done without instantiating an entire entry?
-        uint16_t h = uint16_t(pkmn::database::pokemon_entry(species, "HeartGold", "").get_height() * 10);
+        uint16_t h = uint16_t(pkmn::database::pokemon_entry(species, pkmn::e_game::HEARTGOLD, "").get_height() * 10);
 
         uint16_t p1 = uint16_t(personality % 256);
         uint16_t p2 = uint16_t((personality / 256) % 256);

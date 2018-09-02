@@ -10,6 +10,10 @@
 #include <pkmntest-c/config.h>
 
 #include <pkmn-c/pokemon.h>
+#include <pkmn-c/enums/game.h>
+#include <pkmn-c/enums/item.h>
+#include <pkmn-c/enums/species.h>
+#include <pkmn-c/enums/stat.h>
 #include <pkmn-c/types/string_types.h>
 
 #include <stdbool.h>
@@ -23,12 +27,13 @@ typedef enum pkmn_error (*pokemon_string_getter_fcn_t)(const struct pkmn_pokemon
 typedef enum pkmn_error (*pokemon_bool_getter_fcn_t)(const struct pkmn_pokemon*,bool*);
 typedef enum pkmn_error (*pokemon_int_buffer_getter_fcn_t)(const struct pkmn_pokemon*,int*,size_t,size_t*);
 typedef enum pkmn_error (*pokemon_bool_buffer_getter_fcn_t)(const struct pkmn_pokemon*,bool*,size_t,size_t*);
+typedef enum pkmn_error (*pokemon_stat_map_getter_fcn_t)(const struct pkmn_pokemon*,struct pkmn_stat_enum_map*);
 
 PKMNTEST_C_API void get_random_pokemon(
     struct pkmn_pokemon* p_pokemon,
-    struct pkmn_string_list* p_item_list, // Can be NULL
-    const char* species, // Can be NULL
-    const char* game
+    struct pkmn_item_enum_list* p_item_list, // Can be NULL
+    enum pkmn_species species, // PKMN_SPECIES_NONE means function will choose one
+    enum pkmn_game game
 );
 
 PKMNTEST_C_API void compare_pokemon(
@@ -81,6 +86,16 @@ PKMNTEST_C_API void compare_pokemon_bool_buffers(
 );
 
 PKMNTEST_C_API void compare_pokemon_original_trainer_info(
+    const struct pkmn_pokemon* p_pokemon1,
+    const struct pkmn_pokemon* p_pokemon2
+);
+
+PKMNTEST_C_API void compare_pokemon_contest_stats(
+    const struct pkmn_pokemon* p_pokemon1,
+    const struct pkmn_pokemon* p_pokemon2
+);
+
+PKMNTEST_C_API void compare_pokemon_markings(
     const struct pkmn_pokemon* p_pokemon1,
     const struct pkmn_pokemon* p_pokemon2
 );

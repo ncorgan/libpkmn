@@ -8,6 +8,7 @@
 #include <pkmn/qt/LocationListComboBox.hpp>
 
 #include <pkmn/database/lists.hpp>
+#include <pkmn/enums/enum_to_string.hpp>
 
 namespace pkmn { namespace qt {
 
@@ -17,8 +18,10 @@ namespace pkmn { namespace qt {
         QWidget* parent
     ): QComboBox(parent)
     {
-        std::vector<std::string> locations = pkmn::database::get_location_list(
-                                                 game.toStdString(),
+        pkmn::e_game game_enum = pkmn::string_to_game(game.toStdString());
+
+        std::vector<std::string> locations = pkmn::database::get_location_name_list(
+                                                 game_enum,
                                                  wholeGeneration
                                              );
         for(const std::string& location: locations)

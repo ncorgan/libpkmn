@@ -8,18 +8,15 @@
 IF(NOT PKMN_DONT_INSTALL_HEADERS)
     SET(pkmn_c_types_headers
         attribute_names.h
-        condition.h
-        gender.h
         hidden_power.h
         int_pair.h
         item_slot.h
         levelup_move.h
-        marking.h
         move_slot.h
         natural_gift.h
         pokemon_list.h
         pokemon_box_list.h
-        stats.h
+        stat_list.h
         string_types.h
         time_duration.h
         trainer_id.h

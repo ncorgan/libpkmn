@@ -12,6 +12,8 @@
 
 #include "common/misc.hpp"
 
+#include <cstring>
+
 enum pkmn_error pkmn_trainer_info_free(
     struct pkmn_trainer_info* p_trainer_info
 )
@@ -23,8 +25,7 @@ enum pkmn_error pkmn_trainer_info_free(
     if(!error)
     {
         pkmn::c::free_pointer_and_set_to_null(&p_trainer_info->p_name);
-        p_trainer_info->id.id = 0U;
-        p_trainer_info->gender = PKMN_GENDER_GENDERLESS;
+        std::memset(p_trainer_info, 0, sizeof(*p_trainer_info));
     }
 
     return error;

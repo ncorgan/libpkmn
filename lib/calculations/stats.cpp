@@ -22,7 +22,8 @@ namespace pkmn { namespace calculations {
         int base_stat,
         int EV,
         int IV
-    ) {
+    )
+    {
         return int(std::floor<int>(
                    (((base_stat + IV) * 2 +
                       int(std::floor<int>(
@@ -35,12 +36,13 @@ namespace pkmn { namespace calculations {
     }
 
     int get_gb_stat(
-        const std::string& stat,
+        pkmn::e_stat stat,
         int level,
         int base_stat,
         int EV,
         int IV
-    ) {
+    )
+    {
         // Input validation
         pkmn::enforce_value_in_vector("Stat", stat, pkmn::GEN2_STATS);
         pkmn::enforce_EV_bounds(stat, EV, false);
@@ -48,9 +50,12 @@ namespace pkmn { namespace calculations {
 
         int ret = 0;
 
-        if(stat == "HP") {
+        if(stat == pkmn::e_stat::HP)
+        {
             ret = gb_stat_common(level, base_stat, EV, IV) + level + 10;
-        } else {
+        }
+        else
+        {
             ret = gb_stat_common(level, base_stat, EV, IV) + 5;
         }
 
@@ -62,7 +67,8 @@ namespace pkmn { namespace calculations {
         int base_stat,
         int EV,
         int IV
-    ) {
+    )
+    {
         return int(
                    std::floor<int>(
                        ((2 * base_stat + IV +
@@ -75,13 +81,14 @@ namespace pkmn { namespace calculations {
     }
 
     int get_modern_stat(
-        const std::string& stat,
+        pkmn::e_stat stat,
         int level,
         float nature_modifier,
         int base_stat,
         int EV,
         int IV
-    ) {
+    )
+    {
         // Input validation
         if(pkmn::fp_compare_not_equal(nature_modifier, 0.9f) and
            pkmn::fp_compare_not_equal(nature_modifier, 1.0f) and
@@ -96,9 +103,12 @@ namespace pkmn { namespace calculations {
 
         int ret = 0;
 
-        if(stat == "HP") {
+        if(stat == pkmn::e_stat::HP)
+        {
             ret = modern_stat_common(level, base_stat, EV, IV) + level + 10;
-        } else {
+        }
+        else
+        {
             ret = int((modern_stat_common(level, base_stat, EV, IV) + 5) * nature_modifier);
         }
 

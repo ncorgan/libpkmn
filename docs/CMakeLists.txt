@@ -43,13 +43,17 @@ IF(PKMN_ENABLE_CSHARP)
     ADD_DEPENDENCIES(doxygen_csharp_docs PKMN.CSharp)
 ENDIF()
 
-# TODO: add dependency to other modules when swig branch merged
 IF(PKMN_ENABLE_PYTHON)
     PKMN_BUILD_DOXYGEN_DOCS("" "python" "Python")
     ADD_DEPENDENCIES(doxygen_python_docs
-        _pkmn_python
-        _stl_python
-        _database_python
+        _breeding_python
+        _buildinfo_python
         _calculations_python
+        _database_python
+        _lists_python
+        _pkmn_python
+        _qt_python_swig
+        _stl_python
+        pkmn_python_enums
     )
 ENDIF()

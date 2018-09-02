@@ -1,11 +1,12 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
  */
 
 #include "env.hpp"
+#include "private_exports.hpp"
 #include "types/rng.hpp"
 
 #include <pkmntest/util.hpp>
@@ -15,6 +16,7 @@
 #include <pkmn/utils/paths.hpp>
 
 #include <boost/filesystem.hpp>
+#include <boost/format.hpp>
 
 #include <gtest/gtest.h>
 
@@ -45,22 +47,29 @@ static bool get_random_bool()
 }
 
 static pkmn::pokemon::sptr get_random_pokemon(
-    const std::string& game
-) {
-    int generation = game_generations.at(game);
+    pkmn::e_game game
+)
+{
+    int generation = pkmn::priv::game_enum_to_generation(game);
     pkmn::rng<uint32_t> rng;
 
-    std::vector<std::string> item_list = pkmn::database::get_item_list(game);
-    std::vector<std::string> move_list = pkmn::database::get_move_list(game);
-    std::vector<std::string> pokemon_list = pkmn::database::get_pokemon_list(generation, true);
+    std::vector<pkmn::e_item> item_list = pkmn::database::get_item_list(game);
+    std::vector<pkmn::e_move> move_list = pkmn::database::get_move_list(game);
+    std::vector<pkmn::e_species> pokemon_list = pkmn::database::get_pokemon_list(generation, true);
 
     // Don't deal with Deoxys or Unown issues here.
-    std::string species;
-    if(generation == 3) {
-        do {
+    pkmn::e_species species = pkmn::e_species::NONE;
+    if(generation == 3)
+    {
+        do
+        {
             species = pokemon_list[rng.rand() % pokemon_list.size()];
-        } while(species == "Deoxys" || species == "Unown");
-    } else {
+        }
+        while((species == pkmn::e_species::UNOWN) ||
+              (species == pkmn::e_species::DEOXYS));
+    }
+    else
+    {
         species = pokemon_list[rng.rand() % pokemon_list.size()];
     }
     pkmn::pokemon::sptr ret = pkmn::pokemon::make(
@@ -69,30 +78,34 @@ static pkmn::pokemon::sptr get_random_pokemon(
                                   "",
                                   ((rng.rand() % 99) + 2)
                               );
-    for(int i = 0; i < 4; ++i) {
-        std::string move = "";
+    for(int move_index = 0; move_index < 4; ++move_index)
+    {
+        pkmn::e_move move = pkmn::e_move::NONE;
         do
         {
             move = move_list[rng.rand() % move_list.size()];
-        } while(move.find("Shadow") == 0);
-        ret->set_move(move, i);
+        }
+        while(move >= pkmn::e_move::SHADOW_RUSH);
+        ret->set_move(move, move_index);
     }
 
-    const std::map<std::string, int>& EVs = ret->get_EVs();
+    const std::map<pkmn::e_stat, int>& EVs = ret->get_EVs();
     for(auto iter = EVs.begin(); iter != EVs.end(); ++iter)
     {
         ret->set_EV(iter->first, (rand() % 256));
     }
 
-    const std::map<std::string, int>& IVs = ret->get_IVs();
+    const std::map<pkmn::e_stat, int>& IVs = ret->get_IVs();
     for(auto iter = IVs.begin(); iter != IVs.end(); ++iter)
     {
         ret->set_IV(iter->first, (rand() % 16));
     }
 
-    if(generation >= 2) {
+    if(generation >= 2)
+    {
         // Keep going until one is holdable
-        while(ret->get_held_item() == "None") {
+        while(ret->get_held_item() == pkmn::e_item::NONE)
+        {
             try {
                 ret->set_held_item(
                     item_list[rng.rand() % item_list.size()]
@@ -105,7 +118,7 @@ static pkmn::pokemon::sptr get_random_pokemon(
 
     if(generation >= 3)
     {
-        const std::map<std::string, bool>& markings = ret->get_markings();
+        const std::map<pkmn::e_marking, bool>& markings = ret->get_markings();
         for(auto iter = markings.begin(); iter != markings.end(); ++iter)
         {
             ret->set_marking(iter->first, get_random_bool());
@@ -117,7 +130,7 @@ static pkmn::pokemon::sptr get_random_pokemon(
             ret->set_ribbon(iter->first, get_random_bool());
         }
 
-        const std::map<std::string, int>& contest_stats = ret->get_contest_stats();
+        const std::map<pkmn::e_contest_stat, int>& contest_stats = ret->get_contest_stats();
         for(auto iter = contest_stats.begin(); iter != contest_stats.end(); ++iter)
         {
             ret->set_contest_stat(iter->first, (rand() % 256));
@@ -130,9 +143,10 @@ static pkmn::pokemon::sptr get_random_pokemon(
 static void compare_pokemon(
     pkmn::pokemon::sptr pokemon1,
     pkmn::pokemon::sptr pokemon2
-) {
-    std::string game = pokemon1->get_game();
-    int generation = game_generations.at(game);
+)
+{
+    pkmn::e_game game = pokemon1->get_game();
+    int generation = pkmn::priv::game_enum_to_generation(game);
 
     // There is no way to determine what game an imported Generation I-II
     // Pokémon comes from, so LibPKMN defaults to a default valid game.
@@ -149,22 +163,22 @@ static void compare_pokemon(
     EXPECT_EQ(pokemon1->get_nickname(), pokemon2->get_nickname());
     EXPECT_EQ(pokemon1->get_original_trainer_name(), pokemon2->get_original_trainer_name());
 
-    const std::map<std::string, int>& EVs1 = pokemon1->get_EVs();
-    const std::map<std::string, int>& EVs2 = pokemon2->get_EVs();
+    const std::map<pkmn::e_stat, int>& EVs1 = pokemon1->get_EVs();
+    const std::map<pkmn::e_stat, int>& EVs2 = pokemon2->get_EVs();
     for(auto iter = EVs1.begin(); iter != EVs1.end(); ++iter)
     {
         EXPECT_EQ(iter->second, EVs2.at(iter->first));
     }
 
-    const std::map<std::string, int>& IVs1 = pokemon1->get_IVs();
-    const std::map<std::string, int>& IVs2 = pokemon2->get_IVs();
+    const std::map<pkmn::e_stat, int>& IVs1 = pokemon1->get_IVs();
+    const std::map<pkmn::e_stat, int>& IVs2 = pokemon2->get_IVs();
     for(auto iter = IVs1.begin(); iter != IVs1.end(); ++iter)
     {
         EXPECT_EQ(iter->second, IVs2.at(iter->first));
     }
 
-    const std::map<std::string, int>& stats1 = pokemon1->get_stats();
-    const std::map<std::string, int>& stats2 = pokemon2->get_stats();
+    const std::map<pkmn::e_stat, int>& stats1 = pokemon1->get_stats();
+    const std::map<pkmn::e_stat, int>& stats2 = pokemon2->get_stats();
     for(auto iter = stats1.begin(); iter != stats1.end(); ++iter)
     {
         EXPECT_EQ(iter->second, stats2.at(iter->first));
@@ -193,8 +207,8 @@ static void compare_pokemon(
         EXPECT_EQ(pokemon1->get_personality(), pokemon2->get_personality());
         EXPECT_EQ(pokemon1->get_ball(), pokemon2->get_ball());
 
-        const std::map<std::string, bool>& markings1 = pokemon1->get_markings();
-        const std::map<std::string, bool>& markings2 = pokemon2->get_markings();
+        const std::map<pkmn::e_marking, bool>& markings1 = pokemon1->get_markings();
+        const std::map<pkmn::e_marking, bool>& markings2 = pokemon2->get_markings();
         for(auto iter = markings1.begin(); iter != markings1.end(); ++iter)
         {
             EXPECT_EQ(iter->second, markings2.at(iter->first));
@@ -207,8 +221,8 @@ static void compare_pokemon(
             EXPECT_EQ(iter->second, ribbons2.at(iter->first));
         }
 
-        const std::map<std::string, int>& contest_stats1 = pokemon1->get_contest_stats();
-        const std::map<std::string, int>& contest_stats2 = pokemon2->get_contest_stats();
+        const std::map<pkmn::e_contest_stat, int>& contest_stats1 = pokemon1->get_contest_stats();
+        const std::map<pkmn::e_contest_stat, int>& contest_stats2 = pokemon2->get_contest_stats();
         for(auto iter = contest_stats1.begin(); iter != contest_stats1.end(); ++iter)
         {
             EXPECT_EQ(iter->second, contest_stats2.at(iter->first));
@@ -222,11 +236,11 @@ static void compare_pokemon(
 
 // Actual tests
 
-class pk1_test: public ::testing::TestWithParam<std::string> {};
+class pk1_test: public ::testing::TestWithParam<pkmn::e_game> {};
 
 TEST_P(pk1_test, test_saving_and_loading_pk1)
 {
-    std::string game = GetParam();
+    pkmn::e_game game = GetParam();
 
     pkmn::pokemon::sptr random_pokemon = get_random_pokemon(game);
     std::string tmp_path = export_pokemon_to_tmp_file(random_pokemon, "pk1");
@@ -237,7 +251,12 @@ TEST_P(pk1_test, test_saving_and_loading_pk1)
     std::remove(tmp_path.c_str());
 }
 
-static const std::vector<std::string> GEN1_GAMES = {"Red", "Blue", "Yellow"};
+static const std::vector<pkmn::e_game> GEN1_GAMES =
+{
+    pkmn::e_game::RED,
+    pkmn::e_game::BLUE,
+    pkmn::e_game::YELLOW
+};
 
 INSTANTIATE_TEST_CASE_P(
     pk1_test,
@@ -245,11 +264,11 @@ INSTANTIATE_TEST_CASE_P(
     ::testing::ValuesIn(GEN1_GAMES)
 );
 
-class pk2_test: public ::testing::TestWithParam<std::string> {};
+class pk2_test: public ::testing::TestWithParam<pkmn::e_game> {};
 
 TEST_P(pk2_test, test_saving_and_loading_pk2)
 {
-    std::string game = GetParam();
+    pkmn::e_game game = GetParam();
 
     pkmn::pokemon::sptr random_pokemon = get_random_pokemon(game);
     std::string tmp_path = export_pokemon_to_tmp_file(random_pokemon, "pk2");
@@ -260,7 +279,12 @@ TEST_P(pk2_test, test_saving_and_loading_pk2)
     std::remove(tmp_path.c_str());
 }
 
-static const std::vector<std::string> GEN2_GAMES = {"Gold", "Silver", "Crystal"};
+static const std::vector<pkmn::e_game> GEN2_GAMES =
+{
+    pkmn::e_game::GOLD,
+    pkmn::e_game::SILVER,
+    pkmn::e_game::CRYSTAL
+};
 
 INSTANTIATE_TEST_CASE_P(
     pk2_test,
@@ -268,11 +292,11 @@ INSTANTIATE_TEST_CASE_P(
     ::testing::ValuesIn(GEN2_GAMES)
 );
 
-class _3gpkm_test: public ::testing::TestWithParam<std::string> {};
+class _3gpkm_test: public ::testing::TestWithParam<pkmn::e_game> {};
 
 TEST_P(_3gpkm_test, test_saving_and_loading_3gpkm)
 {
-    std::string game = GetParam();
+    pkmn::e_game game = GetParam();
 
     pkmn::pokemon::sptr random_pokemon = get_random_pokemon(game);
     std::string tmp_path = export_pokemon_to_tmp_file(random_pokemon, "3gpkm");
@@ -283,7 +307,14 @@ TEST_P(_3gpkm_test, test_saving_and_loading_3gpkm)
     std::remove(tmp_path.c_str());
 }
 
-static const std::vector<std::string> GBA_GAMES = {"Ruby", "Sapphire", "Emerald", "FireRed", "LeafGreen"};
+static const std::vector<pkmn::e_game> GBA_GAMES =
+{
+    pkmn::e_game::RUBY,
+    pkmn::e_game::SAPPHIRE,
+    pkmn::e_game::EMERALD,
+    pkmn::e_game::FIRERED,
+    pkmn::e_game::LEAFGREEN
+};
 
 INSTANTIATE_TEST_CASE_P(
     _3gpkm_test,
@@ -298,31 +329,33 @@ TEST(pokemon_io_test, test_outside_3gpkm) {
     pkmn::pokemon::sptr mightyena = pkmn::pokemon::from_file(
                                         (_3GPKM_DIR / "MIGHTYENA.3gpkm").string()
                                     );
-    EXPECT_EQ("Mightyena", mightyena->get_species());
-    EXPECT_EQ("Emerald", mightyena->get_game());
+    EXPECT_EQ(pkmn::e_species::MIGHTYENA, mightyena->get_species());
+    EXPECT_EQ(pkmn::e_game::EMERALD, mightyena->get_game());
     EXPECT_EQ("Standard", mightyena->get_form());
     EXPECT_EQ("MIGHTYENA", mightyena->get_nickname());
     EXPECT_FALSE(mightyena->is_shiny());
-    EXPECT_EQ("Heart Scale", mightyena->get_held_item());
+    EXPECT_EQ(pkmn::e_condition::NONE, mightyena->get_condition());
+    EXPECT_EQ(pkmn::e_item::HEART_SCALE, mightyena->get_held_item());
     EXPECT_EQ("A", mightyena->get_original_trainer_name());
     EXPECT_EQ(61415, mightyena->get_original_trainer_public_id());
     EXPECT_EQ(3417, mightyena->get_original_trainer_secret_id());
     EXPECT_EQ(223997927, mightyena->get_original_trainer_id());
-    EXPECT_EQ("Female", mightyena->get_original_trainer_gender());
+    EXPECT_EQ(pkmn::e_gender::FEMALE, mightyena->get_original_trainer_gender());
     EXPECT_EQ(254, mightyena->get_current_trainer_friendship());
-    EXPECT_EQ("Intimidate" , mightyena->get_ability());
-    EXPECT_EQ("Great Ball", mightyena->get_ball());
+    EXPECT_EQ(pkmn::e_ability::INTIMIDATE, mightyena->get_ability());
+    EXPECT_EQ(pkmn::e_ball::GREAT_BALL, mightyena->get_ball());
     EXPECT_EQ(25, mightyena->get_level_met());
     EXPECT_EQ("Route 120", mightyena->get_location_met(false));
-    EXPECT_EQ("Emerald", mightyena->get_original_game());
+    EXPECT_EQ(pkmn::e_game::EMERALD, mightyena->get_original_game());
     EXPECT_EQ(3557601241, mightyena->get_personality());
     EXPECT_EQ(128734, mightyena->get_experience());
     EXPECT_EQ(50, mightyena->get_level());
 
-    const std::map<std::string, bool>& mightyena_markings = mightyena->get_markings();
+    const std::map<pkmn::e_marking, bool>& mightyena_markings = mightyena->get_markings();
     EXPECT_EQ(4, mightyena_markings.size());
-    for(auto iter = mightyena_markings.begin(); iter != mightyena_markings.end(); ++iter) {
-        EXPECT_FALSE(iter->second);
+    for(const auto& marking_iter: mightyena_markings)
+    {
+        EXPECT_FALSE(marking_iter.second);
     }
 
     const std::map<std::string, bool>& mightyena_ribbons = mightyena->get_ribbons();
@@ -335,47 +368,56 @@ TEST(pokemon_io_test, test_outside_3gpkm) {
         }
     }
 
-    const std::map<std::string, int>& mightyena_contest_stats = mightyena->get_contest_stats();
+    const std::map<pkmn::e_contest_stat, int>& mightyena_contest_stats = mightyena->get_contest_stats();
     EXPECT_EQ(6, mightyena_contest_stats.size());
     for(auto iter = mightyena_contest_stats.begin(); iter != mightyena_contest_stats.end(); ++iter) {
         EXPECT_EQ(0, iter->second);
     }
 
-    static const std::string expected_mightyena_moves[] = {
-        "Crunch", "Strength", "Shadow Ball", "Double-Edge"
+    static const std::vector<pkmn::e_move> expected_mightyena_moves =
+    {
+        pkmn::e_move::CRUNCH,
+        pkmn::e_move::STRENGTH,
+        pkmn::e_move::SHADOW_BALL,
+        pkmn::e_move::DOUBLE_EDGE
     };
+
     const pkmn::move_slots_t mightyena_moves = mightyena->get_moves();
     EXPECT_EQ(4, mightyena_moves.size());
-    for(int i = 0; i < 4; ++i) {
-        EXPECT_EQ(expected_mightyena_moves[i], mightyena_moves[i].move);
+    for(int move_index = 0; move_index < 4; ++move_index)
+    {
+        EXPECT_EQ(
+            expected_mightyena_moves[move_index],
+            mightyena_moves[move_index].move
+        );
     }
 
-    const std::map<std::string, int>& mightyena_EVs = mightyena->get_EVs();
+    const std::map<pkmn::e_stat, int>& mightyena_EVs = mightyena->get_EVs();
     EXPECT_EQ(6, mightyena_EVs.size());
-    EXPECT_EQ(30, mightyena_EVs.at("HP"));
-    EXPECT_EQ(110, mightyena_EVs.at("Attack"));
-    EXPECT_EQ(32, mightyena_EVs.at("Defense"));
-    EXPECT_EQ(48, mightyena_EVs.at("Speed"));
-    EXPECT_EQ(17, mightyena_EVs.at("Special Attack"));
-    EXPECT_EQ(83, mightyena_EVs.at("Special Defense"));
+    EXPECT_EQ(30, mightyena_EVs.at(pkmn::e_stat::HP));
+    EXPECT_EQ(110, mightyena_EVs.at(pkmn::e_stat::ATTACK));
+    EXPECT_EQ(32, mightyena_EVs.at(pkmn::e_stat::DEFENSE));
+    EXPECT_EQ(48, mightyena_EVs.at(pkmn::e_stat::SPEED));
+    EXPECT_EQ(17, mightyena_EVs.at(pkmn::e_stat::SPECIAL_ATTACK));
+    EXPECT_EQ(83, mightyena_EVs.at(pkmn::e_stat::SPECIAL_DEFENSE));
 
-    const std::map<std::string, int>& mightyena_IVs = mightyena->get_IVs();
+    const std::map<pkmn::e_stat, int>& mightyena_IVs = mightyena->get_IVs();
     EXPECT_EQ(6, mightyena_IVs.size());
-    EXPECT_EQ(26, mightyena_IVs.at("HP"));
-    EXPECT_EQ(28, mightyena_IVs.at("Attack"));
-    EXPECT_EQ(4, mightyena_IVs.at("Defense"));
-    EXPECT_EQ(13, mightyena_IVs.at("Speed"));
-    EXPECT_EQ(25, mightyena_IVs.at("Special Attack"));
-    EXPECT_EQ(26, mightyena_IVs.at("Special Defense"));
+    EXPECT_EQ(26, mightyena_IVs.at(pkmn::e_stat::HP));
+    EXPECT_EQ(28, mightyena_IVs.at(pkmn::e_stat::ATTACK));
+    EXPECT_EQ(4, mightyena_IVs.at(pkmn::e_stat::DEFENSE));
+    EXPECT_EQ(13, mightyena_IVs.at(pkmn::e_stat::SPEED));
+    EXPECT_EQ(25, mightyena_IVs.at(pkmn::e_stat::SPECIAL_ATTACK));
+    EXPECT_EQ(26, mightyena_IVs.at(pkmn::e_stat::SPECIAL_DEFENSE));
 
-    const std::map<std::string, int>& mightyena_stats = mightyena->get_stats();
+    const std::map<pkmn::e_stat, int>& mightyena_stats = mightyena->get_stats();
     EXPECT_EQ(6, mightyena_stats.size());
-    EXPECT_EQ(146, mightyena_stats.at("HP"));
-    EXPECT_EQ(122, mightyena_stats.at("Attack"));
-    EXPECT_EQ(81, mightyena_stats.at("Defense"));
-    EXPECT_EQ(87, mightyena_stats.at("Speed"));
-    EXPECT_EQ(79, mightyena_stats.at("Special Attack"));
-    EXPECT_EQ(88, mightyena_stats.at("Special Defense"));
+    EXPECT_EQ(146, mightyena_stats.at(pkmn::e_stat::HP));
+    EXPECT_EQ(122, mightyena_stats.at(pkmn::e_stat::ATTACK));
+    EXPECT_EQ(81, mightyena_stats.at(pkmn::e_stat::DEFENSE));
+    EXPECT_EQ(87, mightyena_stats.at(pkmn::e_stat::SPEED));
+    EXPECT_EQ(79, mightyena_stats.at(pkmn::e_stat::SPECIAL_ATTACK));
+    EXPECT_EQ(88, mightyena_stats.at(pkmn::e_stat::SPECIAL_DEFENSE));
 }
 
 // These tests makes sure that when a Pokémon is exported and re-imported, that
@@ -383,9 +425,9 @@ TEST(pokemon_io_test, test_outside_3gpkm) {
 
 typedef struct
 {
-    std::string species;
+    pkmn::e_species species;
     std::string file_extension;
-    std::vector<std::string> games;
+    std::vector<pkmn::e_game> games;
 } io_form_test_params_t;
 
 class io_form_test: public ::testing::TestWithParam<io_form_test_params_t> {};
@@ -394,7 +436,7 @@ TEST_P(io_form_test, test_form_is_preserved_after_io)
 {
     io_form_test_params_t test_params = GetParam();
 
-    for(const std::string& game: test_params.games)
+    for(pkmn::e_game game: test_params.games)
     {
         std::vector<std::string> forms = pkmn::database::pokemon_entry(
                                              test_params.species,
@@ -467,7 +509,15 @@ TEST_P(io_form_test, test_form_is_preserved_after_io)
 
 static const std::vector<io_form_test_params_t> GEN2_IO_FORM_TEST_PARAMS =
 {
-    {"Unown", "pk2", {"Gold", "Silver", "Crystal"}}
+    {
+        pkmn::e_species::UNOWN,
+        "pk2",
+        {
+            pkmn::e_game::GOLD,
+            pkmn::e_game::SILVER,
+            pkmn::e_game::CRYSTAL
+        }
+    }
 };
 
 INSTANTIATE_TEST_CASE_P(
@@ -480,7 +530,17 @@ INSTANTIATE_TEST_CASE_P(
 
 static const std::vector<io_form_test_params_t> GEN3_IO_FORM_TEST_PARAMS =
 {
-    {"Unown", "3gpkm", {"Ruby", "Sapphire", "Emerald", "FireRed", "LeafGreen"}}
+    {
+        pkmn::e_species::UNOWN,
+        "3gpkm",
+        {
+            pkmn::e_game::RUBY,
+            pkmn::e_game::SAPPHIRE,
+            pkmn::e_game::EMERALD,
+            pkmn::e_game::FIRERED,
+            pkmn::e_game::LEAFGREEN
+        }
+    }
 };
 
 INSTANTIATE_TEST_CASE_P(

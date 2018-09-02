@@ -9,7 +9,7 @@
 
 #include "item_bag_impl.hpp"
 
-#include "libpkmgc_includes.hpp"
+#include "pkmgc/includes.hpp"
 
 #include <memory>
 

@@ -9,6 +9,8 @@
 
 #include <pkmn/config.hpp>
 
+#include <pkmn/enums/game.hpp>
+
 #include <stdexcept>
 #include <string>
 
@@ -47,6 +49,11 @@ namespace pkmn {
             feature_not_in_game_error(
                 const std::string& feature,
                 const std::string& game
+            );
+            //! Throw the exception for the given feature and game.
+            feature_not_in_game_error(
+                const std::string& feature,
+                pkmn::e_game game
             );
     };
 

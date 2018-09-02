@@ -7,6 +7,7 @@
 
 #include "exception_internal.hpp"
 #include "utils/misc.hpp"
+#include "enum_conversions.hpp"
 #include "database_common.hpp"
 #include "id_to_string.hpp"
 
@@ -49,7 +50,8 @@ namespace pkmn { namespace database {
     ):
         _move_id(move_id),
         _game_id(game_id),
-        _none(move_id == 0)
+        _none(move_id == 0),
+        _invalid(false)
     {
         _generation = pkmn::database::game_id_to_generation(
                           _game_id
@@ -60,55 +62,74 @@ namespace pkmn { namespace database {
          *
          * With this constructor, it's fine if not.
          */
-        if(_move_id > MOVE_INDEX_BOUNDS[_generation]) {
-            if(_game_id == COLO) {
+        if(_move_id > MOVE_INDEX_BOUNDS[_generation])
+        {
+            if(_game_id == COLO)
+            {
                 _invalid = (_move_id != SHADOW_RUSH);
-            } else if(_game_id == XD) {
-                _invalid = (_move_id < SHADOW_RUSH) or
+            }
+            else if(_game_id == XD)
+            {
+                _invalid = (_move_id < SHADOW_RUSH) ||
                            (_move_id > SHADOW_SKY);
-            } else {
+            }
+            else
+            {
                 _invalid = true;
             }
-        } else if(_generation == 6 and _game_id <= Y) {
+        }
+        else if((_generation == 6) && (_game_id <= Y))
+        {
             _invalid = (_move_id > XY_MAX);
-        } else {
+        }
+        else
+        {
             _invalid = false;
         }
     }
 
+    // TODO: disallow specifically passing in INVALID here
     move_entry::move_entry(
-        const std::string& move_name,
-        const std::string& game_name
+        pkmn::e_move move,
+        pkmn::e_game game
     ):
-        _none(move_name == "None")
+        _none(move == pkmn::e_move::NONE),
+        _invalid(move == pkmn::e_move::INVALID)
     {
         // Input validation
-        _game_id = pkmn::database::game_name_to_id(
-                       game_name
-                   );
+        _game_id = pkmn::database::game_enum_to_id(game);
         _generation = pkmn::database::game_id_to_generation(
                           _game_id
                       );
-        _move_id = pkmn::database::move_name_to_id(
-                       move_name
-                   );
+        _move_id = static_cast<int>(move);
 
         // Check to see if the move is valid for the given game.
-        if(_move_id > MOVE_INDEX_BOUNDS[_generation]) {
-            if(_game_id == COLO) {
+        if(_move_id > MOVE_INDEX_BOUNDS[_generation])
+        {
+            if(_game_id == COLO)
+            {
                 _invalid = (_move_id != SHADOW_RUSH);
-            } else if(_game_id == XD) {
-                _invalid = (_move_id < SHADOW_RUSH) or
+            }
+            else if(_game_id == XD)
+            {
+                _invalid = (_move_id < SHADOW_RUSH) ||
                            (_move_id > SHADOW_SKY);
-            } else {
+            }
+            else
+            {
                 _invalid = true;
             }
-        } else if(_generation == 6 and _game_id <= Y) {
+        }
+        else if(_generation == 6 and _game_id <= Y)
+        {
             _invalid = (_move_id > XY_MAX);
-        } else {
+        }
+        else
+        {
             _invalid = false;
         }
-        if(_invalid) {
+        if(_invalid)
+        {
             throw std::invalid_argument("This move was not in this game.");
         }
     }
@@ -129,59 +150,67 @@ namespace pkmn { namespace database {
         return ret;
     }
 
-    std::string move_entry::get_game() const {
-        return pkmn::database::game_id_to_name(
-                   _game_id
-               );
+    pkmn::e_game move_entry::get_game() const
+    {
+        return pkmn::database::game_id_to_enum(_game_id);
     }
 
-    std::string move_entry::get_type() const {
-        std::string ret;
+    pkmn::e_type move_entry::get_type() const
+    {
+        pkmn::e_type ret = pkmn::e_type::NONE;
 
-        if(_none) {
-            ret = "None";
-        } else if(_invalid) {
-            ret = "Invalid";
-        } else {
-            /*
-             * In Generation I, before the Dark type was introduced,
-             * four moves were Normal type.
-             *
-             * There aren't enough edge cases to warrant adding them
-             * to the database.
-             */
-            if(_generation == 1) {
+        if(!_none && !_invalid)
+        {
+            if(_generation == 1)
+            {
+                /*
+                 * In Generation I, before the Dark type was introduced,
+                 * four moves were Normal type.
+                 *
+                 * There aren't enough edge cases to warrant adding them
+                 * to the database.
+                 */
                 BOOST_STATIC_CONSTEXPR int NORMAL_IDS[] = {2,16,28,44};
-                for(int normal_id: NORMAL_IDS) {
-                    if(_move_id == normal_id) {
-                        ret = "Normal";
+                for(int normal_id: NORMAL_IDS)
+                {
+                    if(_move_id == normal_id)
+                    {
+                        ret = pkmn::e_type::NORMAL;
                     }
                 }
             }
 
-            /*
-             * In Generation VI, before the Fairy type was introduced,
-             * three moves were Normal type.
-             *
-             * There aren't enough edge cases to warrant adding them
-             * to the database.
-             */
-            if(_generation < 6) {
+            if((ret == pkmn::e_type::NONE) && (_generation < 6))
+            {
+                /*
+                 * In Generation VI, before the Fairy type was introduced,
+                 * three moves were Normal type.
+                 *
+                 * There aren't enough edge cases to warrant adding them
+                 * to the database.
+                 */
                 BOOST_STATIC_CONSTEXPR int NORMAL_IDS[] = {186,204,236};
-                for(int normal_id: NORMAL_IDS) {
-                    if(_move_id == normal_id) {
-                        ret = "Normal";
+                for(int normal_id: NORMAL_IDS)
+                {
+                    if(_move_id == normal_id)
+                    {
+                        ret = pkmn::e_type::NORMAL;
                     }
                 }
             }
 
-            static BOOST_CONSTEXPR const char* query = \
-                "SELECT name FROM type_names WHERE local_language_id=9 "
-                "AND type_id=(SELECT type_id FROM moves WHERE id=?)";
+            if(ret == pkmn::e_type::NONE)
+            {
+                static const std::string query =
+                    "SELECT type_id FROM moves WHERE id=?";
 
-            ret = pkmn::database::query_db_bind1<std::string, int>(
-                      query, _move_id
-                  );
+                ret = static_cast<pkmn::e_type>(
+                          pkmn::database::query_db_bind1<int, int>(
+                              query.c_str(),
+                              _move_id
+                          )
+                      );
+            }
         }
 
         return ret;
@@ -206,63 +235,62 @@ namespace pkmn { namespace database {
         return ret;
     }
 
-    std::string move_entry::get_target() const {
-        std::string ret;
+    pkmn::e_move_target move_entry::get_target() const
+    {
+        pkmn::e_move_target ret = pkmn::e_move_target::NONE;
 
-        if(_none) {
-            ret = "None";
-        } else if(_invalid) {
-            ret = "Unknown";
-        } else {
-            static BOOST_CONSTEXPR const char* query = \
-                "SELECT name FROM move_target_prose WHERE local_language_id=9 "
-                "AND move_target_id=(SELECT id FROM move_targets WHERE id="
-                "(SELECT target_id FROM moves WHERE id=?))";
+        if(!_none && !_invalid)
+        {
+            static const std::string query =
+                "SELECT id FROM move_targets WHERE id="
+                "(SELECT target_id FROM moves WHERE id=?)";
 
-            ret = pkmn::database::query_db_bind1<std::string, int>(
-                       query, _move_id
-                   );
+            ret = static_cast<pkmn::e_move_target>(
+                      pkmn::database::query_db_bind1<int, int>(
+                          query.c_str(),
+                          _move_id
+                      )
+                  );
         }
 
         return ret;
     }
 
-    std::string move_entry::get_damage_class() const {
-        std::string ret;
+    pkmn::e_move_damage_class move_entry::get_damage_class() const
+    {
+        pkmn::e_move_damage_class ret = pkmn::e_move_damage_class::NONE;
 
-        if(_none) {
-            ret = "None";
-        } else if(_invalid) {
-            ret = "Unknown";
-        } else {
+        if(!_none && !_invalid)
+        {
+            static const std::string main_query =
+                "SELECT damage_class_id FROM moves WHERE id=?";
+
+            ret = static_cast<pkmn::e_move_damage_class>(
+                      pkmn::database::query_db_bind1<int, int>(
+                          main_query.c_str(),
+                          _move_id
+                      )
+                  );
+
             /*
              * In Generations I-III (minus the Gamecube games), a move's damage
              * class was associated with its type instead of the move itself,
              * unless it's a status move.
              */
-            static BOOST_CONSTEXPR const char* old_games_query = \
-                "SELECT damage_class_id FROM types WHERE id="
-                "(SELECT type_id FROM moves where id=?)";
+            const bool is_old_game = ((_generation < 4) && !game_is_gamecube(_game_id));
+            if(is_old_game && (ret != pkmn::e_move_damage_class::STATUS))
+            {
+                static const std::string old_game_query =
+                    "SELECT damage_class_id FROM types WHERE id="
+                    "(SELECT type_id FROM moves where id=?)";
 
-            static BOOST_CONSTEXPR const char* main_query = \
-                "SELECT damage_class_id FROM moves WHERE id=?";
-
-            bool old_game = (_generation < 4 and not game_is_gamecube(_game_id));
-            int damage_class_id = pkmn::database::query_db_bind1<int, int>(
-                                      main_query, _move_id
-                                  );
-
-            static BOOST_CONSTEXPR const char* damage_classes[] = {
-                "", "Status", "Physical", "Special"
-            };
-
-            if(old_game and damage_class_id > 1) {
-                damage_class_id = pkmn::database::query_db_bind1<int, int>(
-                                      old_games_query, _move_id
-                                  );
+                ret = static_cast<pkmn::e_move_damage_class>(
+                          pkmn::database::query_db_bind1<int, int>(
+                              old_game_query.c_str(),
+                              _move_id
+                          )
+                      );
             }
-
-            ret = damage_classes[damage_class_id];
         }
 
         return ret;
@@ -533,25 +561,20 @@ namespace pkmn { namespace database {
         return ret;
     }
 
-    std::string move_entry::get_contest_type() const {
-        std::string ret;
+    pkmn::e_contest_stat move_entry::get_contest_type() const
+    {
+        pkmn::e_contest_stat ret = pkmn::e_contest_stat::NONE;
 
-        // Contests started in Generation III
-        if(_none or _generation < 3 or game_is_gamecube(_game_id)) {
-            ret = "None";
-        } else if(_invalid) {
-            ret = "Unknown";
-        } else {
-            static BOOST_CONSTEXPR const char* query = \
-                "SELECT name FROM contest_type_names WHERE contest_type_id="
-                "(SELECT contest_type_id FROM moves WHERE id=?) "
-                "AND local_language_id=9";
+        if(!_none && !_invalid && (_generation >= 3) && !game_is_gamecube(_game_id))
+        {
+            int contest_stat_as_int = 0;
 
-            if(not pkmn::database::maybe_query_db_bind1<std::string, int>(
-                       query, ret, _move_id
+            static const std::string query = "SELECT contest_type_id FROM moves WHERE id=?";
+            if(pkmn::database::maybe_query_db_bind1<int, int>(
+                   query.c_str(), contest_stat_as_int, _move_id
                ))
             {
-                ret = "None";
+                ret = static_cast<pkmn::e_contest_stat>(contest_stat_as_int);
             }
         }
 

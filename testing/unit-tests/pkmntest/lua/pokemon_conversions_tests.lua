@@ -1,5 +1,5 @@
 --
--- Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+-- Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
 --
 -- Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
 -- or copy at http://opensource.org/licenses/MIT)
@@ -125,116 +125,116 @@ end
 function test_pokemon_conversion_from_gen1()
     -- To Generation I
     pokemon_conversions_tests.conversions_test(
-        "Bulbasaur", "", "Red", "Yellow"
+        pkmn.species.BULBASAUR, "", pkmn.game.RED, pkmn.game.YELLOW
     )
 
     -- To Generation II
     pokemon_conversions_tests.conversions_test(
-        "Squirtle", "", "Blue", "Gold"
+        pkmn.species.SQUIRTLE, "", pkmn.game.BLUE, pkmn.game.GOLD
     )
 end
 
 function test_pokemon_conversion_from_gen2()
     -- To Generation II
     pokemon_conversions_tests.conversions_test(
-        "Cyndaquil", "", "Gold", "Crystal"
+        pkmn.species.CYNDAQUIL, "", pkmn.game.GOLD, pkmn.game.CRYSTAL
     )
     pokemon_conversions_tests.conversions_test(
-        "Totodile", "", "Crystal", "Gold"
+        pkmn.species.TOTODILE, "", pkmn.game.CRYSTAL, pkmn.game.GOLD
     )
 
     -- To Generation I
     pokemon_conversions_tests.conversions_test(
-        "Charmander", "", "Silver", "Blue"
+        pkmn.species.CHARMANDER, "", pkmn.game.SILVER, pkmn.game.BLUE
     )
 end
 
 function test_pokemon_conversion_from_gba()
     -- To GBA
     pokemon_conversions_tests.conversions_test(
-        "Torchic", "", "Ruby", "Sapphire"
+        pkmn.species.TORCHIC, "", pkmn.game.RUBY, pkmn.game.SAPPHIRE
     )
     pokemon_conversions_tests.conversions_test(
-        "Mudkip", "", "Ruby", "Emerald"
+        pkmn.species.MUDKIP, "", pkmn.game.RUBY, pkmn.game.EMERALD
     )
     pokemon_conversions_tests.conversions_test(
-        "Treecko", "", "Ruby", "FireRed"
+        pkmn.species.TREECKO, "", pkmn.game.RUBY, pkmn.game.FIRERED
     )
     pokemon_conversions_tests.conversions_test(
-        "Torchic", "", "Emerald", "Sapphire"
+        pkmn.species.TORCHIC, "", pkmn.game.EMERALD, pkmn.game.SAPPHIRE
     )
     pokemon_conversions_tests.conversions_test(
-        "Mudkip", "", "Emerald", "Emerald"
+        pkmn.species.MUDKIP, "", pkmn.game.EMERALD, pkmn.game.EMERALD
     )
     pokemon_conversions_tests.conversions_test(
-        "Treecko", "", "Emerald", "FireRed"
+        pkmn.species.TREECKO, "", pkmn.game.EMERALD, pkmn.game.FIRERED
     )
     pokemon_conversions_tests.conversions_test(
-        "Charmander", "", "FireRed", "Ruby"
+        pkmn.species.CHARMANDER, "", pkmn.game.FIRERED, pkmn.game.RUBY
     )
     pokemon_conversions_tests.conversions_test(
-        "Squirtle", "", "FireRed", "Emerald"
+        pkmn.species.SQUIRTLE, "", pkmn.game.FIRERED, pkmn.game.EMERALD
     )
     pokemon_conversions_tests.conversions_test(
-        "Bulbasaur", "", "FireRed", "FireRed"
+        pkmn.species.BULBASAUR, "", pkmn.game.FIRERED, pkmn.game.FIRERED
     )
     pokemon_conversions_tests.conversions_test(
-        "Bulbasaur", "", "FireRed", "FireRed"
+        pkmn.species.BULBASAUR, "", pkmn.game.FIRERED, pkmn.game.FIRERED
     )
 
     -- To GCN
     pokemon_conversions_tests.conversions_test(
-        "Eevee", "", "Ruby", "Colosseum"
+        pkmn.species.EEVEE, "", pkmn.game.RUBY, pkmn.game.COLOSSEUM
     )
     pokemon_conversions_tests.conversions_test(
-        "Espeon", "", "Emerald", "Colosseum"
+        pkmn.species.ESPEON, "", pkmn.game.EMERALD, pkmn.game.COLOSSEUM
     )
     pokemon_conversions_tests.conversions_test(
-        "Umbreon", "", "FireRed", "Colosseum"
+        pkmn.species.UMBREON, "", pkmn.game.FIRERED, pkmn.game.COLOSSEUM
     )
     pokemon_conversions_tests.conversions_test(
-        "Eevee", "", "Ruby", "XD"
+        pkmn.species.EEVEE, "", pkmn.game.RUBY, pkmn.game.XD
     )
     pokemon_conversions_tests.conversions_test(
-        "Espeon", "", "Emerald", "XD"
+        pkmn.species.ESPEON, "", pkmn.game.EMERALD, pkmn.game.XD
     )
     pokemon_conversions_tests.conversions_test(
-        "Umbreon", "", "FireRed", "XD"
+        pkmn.species.UMBREON, "", pkmn.game.FIRERED, pkmn.game.XD
     )
 end
 
 function test_pokemon_conversion_from_gcn()
     -- To GBA
     pokemon_conversions_tests.conversions_test(
-        "Eevee", "", "Colosseum", "Sapphire"
+        pkmn.species.EEVEE, "", pkmn.game.COLOSSEUM, pkmn.game.SAPPHIRE
     )
     pokemon_conversions_tests.conversions_test(
-        "Espeon", "", "Colosseum", "Emerald"
+        pkmn.species.ESPEON, "", pkmn.game.COLOSSEUM, pkmn.game.EMERALD
     )
     pokemon_conversions_tests.conversions_test(
-        "Umbreon", "", "Colosseum", "LeafGreen"
+        pkmn.species.UMBREON, "", pkmn.game.COLOSSEUM, pkmn.game.LEAFGREEN
     )
     pokemon_conversions_tests.conversions_test(
-        "Eevee", "", "XD", "Sapphire"
+        pkmn.species.EEVEE, "", pkmn.game.XD, pkmn.game.SAPPHIRE
     )
     pokemon_conversions_tests.conversions_test(
-        "Espeon", "", "XD", "Emerald"
+        pkmn.species.ESPEON, "", pkmn.game.XD, pkmn.game.EMERALD
     )
     pokemon_conversions_tests.conversions_test(
-        "Umbreon", "", "XD", "LeafGreen"
+        pkmn.species.UMBREON, "", pkmn.game.XD, pkmn.game.LEAFGREEN
     )
 
     -- To GCN
     pokemon_conversions_tests.conversions_test(
-        "Vaporeon", "", "Colosseum", "Colosseum"
+        pkmn.species.VAPOREON, "", pkmn.game.COLOSSEUM, pkmn.game.COLOSSEUM
     )
     pokemon_conversions_tests.conversions_test(
-        "Jolteon", "", "Colosseum", "XD"
+        pkmn.species.JOLTEON, "", pkmn.game.COLOSSEUM, pkmn.game.XD
     )
     pokemon_conversions_tests.conversions_test(
-        "Vaporeon", "", "XD", "XD"
+        pkmn.species.VAPOREON, "", pkmn.game.XD, pkmn.game.XD
     )
     pokemon_conversions_tests.conversions_test(
-        "Jolteon", "", "XD", "Colosseum"
+        pkmn.species.JOLTEON, "", pkmn.game.XD, pkmn.game.COLOSSEUM
     )
 end

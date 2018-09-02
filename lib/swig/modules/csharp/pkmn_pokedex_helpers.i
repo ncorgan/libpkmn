@@ -26,13 +26,13 @@ using System.Runtime.InteropServices;"
 
 // Make C++ methods private, replace with properties for more idiomatic C#.
 
-%csmethodmodifiers pkmn::swig::pokedex_has_seen_helper::get_has_seen(const std::string&) "private";
-%csmethodmodifiers pkmn::swig::pokedex_has_seen_helper::set_has_seen(const std::string&, bool) "private";
+%csmethodmodifiers pkmn::swig::pokedex_has_seen_helper::get_has_seen(pkmn::e_species) "private";
+%csmethodmodifiers pkmn::swig::pokedex_has_seen_helper::set_has_seen(pkmn::e_species, bool) "private";
 %csmethodmodifiers pkmn::swig::pokedex_has_seen_helper_map::cptr() "private";
 
 %typemap(cscode) pkmn::swig::pokedex_has_seen_helper
 %{
-    public bool this[string species]
+    public bool this[Species species]
     {
         get { return GetHasSeen(species); }
         set { SetHasSeen(species, value); }
@@ -97,13 +97,13 @@ using System.Runtime.InteropServices;"
 
 // Make C++ methods private, replace with properties for more idiomatic C#.
 
-%csmethodmodifiers pkmn::swig::pokedex_has_caught_helper::get_has_caught(const std::string&) "private";
-%csmethodmodifiers pkmn::swig::pokedex_has_caught_helper::set_has_caught(const std::string&, bool) "private";
+%csmethodmodifiers pkmn::swig::pokedex_has_caught_helper::get_has_caught(pkmn::e_species) "private";
+%csmethodmodifiers pkmn::swig::pokedex_has_caught_helper::set_has_caught(pkmn::e_species, bool) "private";
 %csmethodmodifiers pkmn::swig::pokedex_has_caught_helper_map::cptr() "private";
 
 %typemap(cscode) pkmn::swig::pokedex_has_caught_helper
 %{
-    public bool this[string species]
+    public bool this[Species species]
     {
         get { return GetHasCaught(species); }
         set { SetHasCaught(species, value); }

@@ -12,17 +12,30 @@
 
 #include <pkmn-c/database/pokemon_entry.h>
 
+#include <pkmn-c/enums/ability.h>
+#include <pkmn-c/enums/ball.h>
+#include <pkmn-c/enums/condition.h>
+#include <pkmn-c/enums/contest_stat.h>
+#include <pkmn-c/enums/game.h>
+#include <pkmn-c/enums/gender.h>
+#include <pkmn-c/enums/item.h>
+#include <pkmn-c/enums/language.h>
+#include <pkmn-c/enums/marking.h>
+#include <pkmn-c/enums/move.h>
+#include <pkmn-c/enums/nature.h>
+#include <pkmn-c/enums/species.h>
+#include <pkmn-c/enums/stat.h>
+
 #include <pkmn-c/types/attribute_names.h>
-#include <pkmn-c/types/condition.h>
-#include <pkmn-c/types/marking.h>
 #include <pkmn-c/types/move_slot.h>
-#include <pkmn-c/types/stats.h>
 #include <pkmn-c/types/trainer_info.h>
+
+// TODO: sync this with C++ class
 
 struct pkmn_pokemon
 {
-    char* p_species;
-    char* p_game;
+    enum pkmn_species species;
+    enum pkmn_game game;
 
     void* p_internal;
 };
@@ -36,8 +49,8 @@ PKMN_C_API union pkmn_trainer_id pkmn_pokemon_default_trainer_id();
 PKMN_C_API const char* pkmn_pokemon_default_trainer_name();
 
 PKMN_C_API enum pkmn_error pkmn_pokemon_init(
-    const char* p_species,
-    const char* p_game,
+    enum pkmn_species species,
+    enum pkmn_game game,
     const char* p_form,
     int level,
     struct pkmn_pokemon* p_pokemon_out
@@ -58,7 +71,7 @@ PKMN_C_API const char* pkmn_pokemon_strerror(
 
 PKMN_C_API enum pkmn_error pkmn_pokemon_to_game(
     const struct pkmn_pokemon* p_pokemon,
-    const char* p_game,
+    enum pkmn_game game,
     struct pkmn_pokemon* p_new_pokemon_out
 );
 
@@ -138,14 +151,22 @@ PKMN_C_API enum pkmn_error pkmn_pokemon_set_is_shiny(
 
 PKMN_C_API enum pkmn_error pkmn_pokemon_get_held_item(
     const struct pkmn_pokemon* p_pokemon,
-    char* p_held_item_out,
-    size_t held_item_buffer_len,
-    size_t* p_actual_held_item_len_out
+    enum pkmn_item* p_held_item_out
 );
 
 PKMN_C_API enum pkmn_error pkmn_pokemon_set_held_item(
     const struct pkmn_pokemon* p_pokemon,
-    const char* p_held_item
+    enum pkmn_item held_item
+);
+
+PKMN_C_API enum pkmn_error pkmn_pokemon_get_nature(
+    const struct pkmn_pokemon* p_pokemon,
+    enum pkmn_nature* p_nature_out
+);
+
+PKMN_C_API enum pkmn_error pkmn_pokemon_set_nature(
+    const struct pkmn_pokemon* p_pokemon,
+    enum pkmn_nature nature
 );
 
 PKMN_C_API enum pkmn_error pkmn_pokemon_get_pokerus_duration(
@@ -188,6 +209,16 @@ PKMN_C_API enum pkmn_error pkmn_pokemon_set_original_trainer_gender(
     enum pkmn_gender original_trainer_gender
 );
 
+PKMN_C_API enum pkmn_error pkmn_pokemon_get_language(
+    const struct pkmn_pokemon* p_pokemon,
+    enum pkmn_language* p_language_out
+);
+
+PKMN_C_API enum pkmn_error pkmn_pokemon_set_language(
+    const struct pkmn_pokemon* p_pokemon,
+    enum pkmn_language language
+);
+
 PKMN_C_API enum pkmn_error pkmn_pokemon_get_current_trainer_friendship(
     const struct pkmn_pokemon* p_pokemon,
     int* p_current_trainer_friendship_out
@@ -200,26 +231,22 @@ PKMN_C_API enum pkmn_error pkmn_pokemon_set_current_trainer_friendship(
 
 PKMN_C_API enum pkmn_error pkmn_pokemon_get_ability(
     const struct pkmn_pokemon* p_pokemon,
-    char* p_ability_out,
-    size_t ability_buffer_len,
-    size_t* p_actual_ability_len_out
+    enum pkmn_ability* p_ability_out
 );
 
 PKMN_C_API enum pkmn_error pkmn_pokemon_set_ability(
     const struct pkmn_pokemon* p_pokemon,
-    const char* p_ability
+    enum pkmn_ability ability
 );
 
 PKMN_C_API enum pkmn_error pkmn_pokemon_get_ball(
     const struct pkmn_pokemon* p_pokemon,
-    char* p_ball_out,
-    size_t ball_buffer_len,
-    size_t* p_actual_ball_len_out
+    enum pkmn_ball* p_ball_out
 );
 
 PKMN_C_API enum pkmn_error pkmn_pokemon_set_ball(
     const struct pkmn_pokemon* p_pokemon,
-    const char* p_ball
+    enum pkmn_ball ball
 );
 
 PKMN_C_API enum pkmn_error pkmn_pokemon_get_level_met(
@@ -248,14 +275,12 @@ PKMN_C_API enum pkmn_error pkmn_pokemon_set_location_met(
 
 PKMN_C_API enum pkmn_error pkmn_pokemon_get_original_game(
     const struct pkmn_pokemon* p_pokemon,
-    char* p_original_game_out,
-    size_t original_game_buffer_len,
-    size_t* p_actual_original_game_len_out
+    enum pkmn_game* p_original_game_out
 );
 
 PKMN_C_API enum pkmn_error pkmn_pokemon_set_original_game(
     const struct pkmn_pokemon* p_pokemon,
-    const char* p_game
+    enum pkmn_game game
 );
 
 PKMN_C_API enum pkmn_error pkmn_pokemon_get_personality(
@@ -290,9 +315,7 @@ PKMN_C_API enum pkmn_error pkmn_pokemon_set_level(
 
 PKMN_C_API enum pkmn_error pkmn_pokemon_get_markings(
     const struct pkmn_pokemon* p_pokemon,
-    bool* p_has_markings_buffer_out,
-    size_t has_marking_buffer_size,
-    size_t* p_actual_num_markings_out
+    struct pkmn_marking_enum_map* p_markings_out
 );
 
 PKMN_C_API enum pkmn_error pkmn_pokemon_set_has_marking(
@@ -320,9 +343,7 @@ PKMN_C_API enum pkmn_error pkmn_pokemon_get_ribbon_names(
 
 PKMN_C_API enum pkmn_error pkmn_pokemon_get_contest_stats(
     const struct pkmn_pokemon* p_pokemon,
-    int* p_contest_stats_buffer_out,
-    size_t contest_stat_buffer_size,
-    size_t* p_actual_num_contest_stats_out
+    struct pkmn_contest_stat_enum_map* p_contest_stats_out
 );
 
 PKMN_C_API enum pkmn_error pkmn_pokemon_set_contest_stat(
@@ -339,7 +360,7 @@ PKMN_C_API enum pkmn_error pkmn_pokemon_get_moves(
 PKMN_C_API enum pkmn_error pkmn_pokemon_set_move(
     const struct pkmn_pokemon* p_pokemon,
     size_t index,
-    const char* p_move
+    enum pkmn_move move
 );
 
 PKMN_C_API enum pkmn_error pkmn_pokemon_set_move_pp(
@@ -350,9 +371,7 @@ PKMN_C_API enum pkmn_error pkmn_pokemon_set_move_pp(
 
 PKMN_C_API enum pkmn_error pkmn_pokemon_get_EVs(
     const struct pkmn_pokemon* p_pokemon,
-    int* p_EVs_buffer_out,
-    size_t stat_buffer_size,
-    size_t* p_actual_num_EVs_out
+    struct pkmn_stat_enum_map* p_EVs_out
 );
 
 PKMN_C_API enum pkmn_error pkmn_pokemon_set_EV(
@@ -363,9 +382,7 @@ PKMN_C_API enum pkmn_error pkmn_pokemon_set_EV(
 
 PKMN_C_API enum pkmn_error pkmn_pokemon_get_IVs(
     const struct pkmn_pokemon* p_pokemon,
-    int* p_IVs_buffer_out,
-    size_t stat_buffer_size,
-    size_t* p_actual_num_IVs_out
+    struct pkmn_stat_enum_map* p_IVs_out
 );
 
 PKMN_C_API enum pkmn_error pkmn_pokemon_set_IV(
@@ -376,9 +393,7 @@ PKMN_C_API enum pkmn_error pkmn_pokemon_set_IV(
 
 PKMN_C_API enum pkmn_error pkmn_pokemon_get_stats(
     const struct pkmn_pokemon* p_pokemon,
-    int* p_stats_buffer_out,
-    size_t stat_buffer_size,
-    size_t* p_actual_num_stats_out
+    struct pkmn_stat_enum_map* p_stats_out
 );
 
 PKMN_C_API enum pkmn_error pkmn_pokemon_get_current_hp(

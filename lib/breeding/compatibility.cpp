@@ -17,33 +17,36 @@
 
 namespace pkmn { namespace breeding {
 
-    static bool does_string_pair_contain_value(
-        const std::pair<std::string, std::string>& string_pair,
-        const std::string& value
+    template <typename pair_type>
+    static bool does_pair_contain_value(
+        const std::pair<pair_type, pair_type>& pair_to_check,
+        const pair_type& value
     )
     {
-        return ((string_pair.first == value) ||
-                (string_pair.second == value));
+        return ((pair_to_check.first == value) ||
+                (pair_to_check.second == value));
     }
 
-    static bool do_string_pairs_have_common_valid_value(
-        const std::pair<std::string, std::string>& string_pair1,
-        const std::pair<std::string, std::string>& string_pair2
+    template <typename pair_type>
+    static bool do_pairs_have_common_valid_value(
+        const std::pair<pair_type, pair_type>& pair1,
+        const std::pair<pair_type, pair_type>& pair2,
+        const pair_type& none_value
     )
     {
         bool has_common_value = false;
 
-        has_common_value |= (string_pair1.first == string_pair2.first);
-        if(!has_common_value && (string_pair2.first != "None"))
+        has_common_value |= (pair1.first == pair2.first);
+        if(!has_common_value && (pair2.first != none_value))
         {
-            has_common_value |= (string_pair1.first == string_pair2.second);
+            has_common_value |= (pair1.first == pair2.second);
         }
-        if(!has_common_value && (string_pair1.second != "None"))
+        if(!has_common_value && (pair1.second != none_value))
         {
-            has_common_value |= (string_pair1.second == string_pair2.first);
-            if(!has_common_value && (string_pair2.second != "None"))
+            has_common_value |= (pair1.second == pair2.first);
+            if(!has_common_value && (pair2.second != none_value))
             {
-                has_common_value |= (string_pair1.second == string_pair2.second);
+                has_common_value |= (pair1.second == pair2.second);
             }
         }
 
@@ -89,15 +92,15 @@ namespace pkmn { namespace breeding {
     {
         bool are_compatible = true;
 
-        std::pair<std::string, std::string> pokemon1_egg_groups = pokemon1_entry.get_egg_groups();
-        std::pair<std::string, std::string> pokemon2_egg_groups = pokemon2_entry.get_egg_groups();
+        pkmn::egg_group_pair_t pokemon1_egg_groups = pokemon1_entry.get_egg_groups();
+        pkmn::egg_group_pair_t pokemon2_egg_groups = pokemon2_entry.get_egg_groups();
 
-        bool is_pokemon1_ditto = (pokemon1_egg_groups.first == "Ditto");
-        bool is_pokemon2_ditto = (pokemon2_egg_groups.first == "Ditto");
+        bool is_pokemon1_ditto = (pokemon1_egg_groups.first == pkmn::e_egg_group::DITTO);
+        bool is_pokemon2_ditto = (pokemon2_egg_groups.first == pkmn::e_egg_group::DITTO);
 
         // Pokémon in the "Undiscovered" group cannot breed.
-        if(does_string_pair_contain_value(pokemon1_egg_groups, "Undiscovered") ||
-           does_string_pair_contain_value(pokemon2_egg_groups, "Undiscovered"))
+        if(does_pair_contain_value(pokemon1_egg_groups, pkmn::e_egg_group::UNDISCOVERED) ||
+           does_pair_contain_value(pokemon2_egg_groups, pkmn::e_egg_group::UNDISCOVERED))
         {
             are_compatible = false;
         }
@@ -108,9 +111,10 @@ namespace pkmn { namespace breeding {
         }
         else if(!is_pokemon1_ditto && !is_pokemon2_ditto)
         {
-            are_compatible = do_string_pairs_have_common_valid_value(
+            are_compatible = do_pairs_have_common_valid_value(
                                  pokemon1_egg_groups,
-                                 pokemon2_egg_groups
+                                 pokemon2_egg_groups,
+                                 pkmn::e_egg_group::NONE
                              );
         }
 
@@ -148,11 +152,11 @@ namespace pkmn { namespace breeding {
     }
 
     bool are_pokemon_species_compatible(
-        const std::string& species1,
-        const std::string& species2
+        pkmn::e_species species1,
+        pkmn::e_species species2
     )
     {
-        static const std::string ENTRY_GAME = "X";
+        static const pkmn::e_game ENTRY_GAME = pkmn::e_game::X;
 
         pkmn::database::pokemon_entry species1_entry(species1, ENTRY_GAME, "");
         pkmn::database::pokemon_entry species2_entry(species2, ENTRY_GAME, "");

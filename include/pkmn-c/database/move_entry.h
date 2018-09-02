@@ -10,20 +10,29 @@
 #include <pkmn-c/config.h>
 #include <pkmn-c/error.h>
 
+#include <pkmn-c/enums/contest_stat.h>
+#include <pkmn-c/enums/game.h>
+#include <pkmn-c/enums/move.h>
+#include <pkmn-c/enums/move_damage_class.h>
+#include <pkmn-c/enums/move_target.h>
+#include <pkmn-c/enums/type.h>
+
 #include <stdbool.h>
 
 struct pkmn_database_move_entry
 {
+    enum pkmn_move move;
     char* p_name;
-    char* p_game;
+    enum pkmn_game game;
+    enum pkmn_type type;
     char* p_description;
-    char* p_target;
-    char* p_damage_class;
+    enum pkmn_move_target target;
+    enum pkmn_move_damage_class damage_class;
     int base_power;
     int pp[4];
     float accuracy;
     char* p_effect;
-    char* p_contest_type;
+    enum pkmn_contest_stat contest_type;
     char* p_contest_effect;
     char* p_super_contest_effect;
 };
@@ -33,8 +42,8 @@ extern "C" {
 #endif
 
 PKMN_C_API enum pkmn_error pkmn_database_get_move_entry(
-    const char* p_move_name,
-    const char* p_move_game,
+    enum pkmn_move move,
+    enum pkmn_game game,
     struct pkmn_database_move_entry* p_move_entry_out
 );
 

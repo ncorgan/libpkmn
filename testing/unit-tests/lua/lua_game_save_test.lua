@@ -25,15 +25,15 @@ game_save_test.DEFAULT_TRAINER_SID = 32123
 game_save_test.MONEY_MAX = 999999
 
 game_save_test.MALE_ONLY_GAMES = {
-    "Red", "Blue", "Yellow",
-    "Gold", "Silver",
-    "Colosseum", "XD"
+    pkmn.game.RED, pkmn.game.BLUE, pkmn.game.YELLOW,
+    pkmn.game.GOLD, pkmn.game.SILVER,
+    pkmn.game.COLOSSEUM, pkmn.game.XD
 }
 
 game_save_test.RIVAL_NAME_SET_GAMES = {
-    "Ruby", "Sapphire", "Emerald", "Colosseum", "XD",
-    "Black", "White",
-    "X", "Y"
+    pkmn.game.RUBY, pkmn.game.SAPPHIRE, pkmn.game.EMERALD, pkmn.game.COLOSSEUM, pkmn.game.XD,
+    pkmn.game.BLACK, pkmn.game.WHITE,
+    pkmn.game.X, pkmn.game.Y
 }
 
 function game_save_test.is_gb_game(game)
@@ -96,7 +96,7 @@ function game_save_test.test_time_played(save)
         save.time_played.frames = frames
     end
 
-    if (game == "Colosseum") or (game == "XD")
+    if (game == pkmn.game.COLOSSEUM) or (game == pkmn.game.XD)
     then
         luaunit.assertError(time_played_set_hours, 5)
         luaunit.assertError(time_played_set_minutes, 5)
@@ -154,7 +154,7 @@ function game_save_test.test_common_fields(save)
     local is_gb_game = game_save_test.is_gb_game(game)
     local is_male_only = game_save_test.is_male_only(game)
     local is_rival_name_set = game_save_test.is_rival_name_set(game)
-    local is_gamecube_game = (game == "Colosseum") or (game == "XD")
+    local is_gamecube_game = (game == pkmn.game.COLOSSEUM) or (game == pkmn.game.XD)
 
     -- Hacky setter functions because LuaUnit can't check setting variables...
     function game_save_set_money(save, money)
@@ -266,30 +266,30 @@ function game_save_test.test_common_fields(save)
     -- Trainer gender
     if is_male_only
     then
-        luaunit.assertEquals(save.trainer_gender, "Male")
+        luaunit.assertEquals(save.trainer_gender, pkmn.gender.MALE)
         luaunit.assertError(
             game_save_set_trainer_gender,
             save,
-            "Male"
+            pkmn.gender.MALE
         )
         luaunit.assertError(
             game_save_set_trainer_gender,
             save,
-            "Female"
+            pkmn.gender.FEMALE
         )
 
-        luaunit.assertError(save.set_trainer_gender, save, "Male")
-        luaunit.assertError(save.set_trainer_gender, save, "Female")
+        luaunit.assertError(save.set_trainer_gender, save, pkmn.gender.MALE)
+        luaunit.assertError(save.set_trainer_gender, save, pkmn.gender.FEMALE)
     else
-        save.trainer_gender = "Male"
-        luaunit.assertEquals(save.trainer_gender, "Male")
-        save.trainer_gender = "Female"
-        luaunit.assertEquals(save.trainer_gender, "Female")
+        save.trainer_gender = pkmn.gender.MALE
+        luaunit.assertEquals(save.trainer_gender, pkmn.gender.MALE)
+        save.trainer_gender = pkmn.gender.FEMALE
+        luaunit.assertEquals(save.trainer_gender, pkmn.gender.FEMALE)
 
         luaunit.assertError(
             game_save_set_trainer_gender,
             save,
-            "Genderless"
+            pkmn.gender.GENDERLESS
         )
     end
 
@@ -321,7 +321,7 @@ function game_save_test.test_common_fields(save)
 
         if party_index <= num_pokemon
         then
-            luaunit.assertNotEquals(pokemon.species, "None")
+            luaunit.assertNotEquals(pokemon.species, pkmn.species.NONE)
 
             if not is_gamecube_game and not pokemon.is_egg
             then
@@ -329,7 +329,7 @@ function game_save_test.test_common_fields(save)
                 luaunit.assertTrue(pokedex_caught_pokemon_map[pokemon.species])
             end
         else
-            luaunit.assertEquals(pokemon.species, "None")
+            luaunit.assertEquals(pokemon.species, pkmn.species.NONE)
         end
     end
 
@@ -350,7 +350,7 @@ function game_save_test.test_common_fields(save)
 
                 if box_index <= box.num_pokemon
                 then
-                    luaunit.assertNotEquals(pokemon.species, "None")
+                    luaunit.assertNotEquals(pokemon.species, pkmn.species.NONE)
 
                     if not is_gamecube_game and not pokemon.is_egg
                     then
@@ -358,7 +358,7 @@ function game_save_test.test_common_fields(save)
                         luaunit.assertTrue(pokedex_caught_pokemon_map[pokemon.species])
                     end
                 else
-                    luaunit.assertEquals(pokemon.species, "None")
+                    luaunit.assertEquals(pokemon.species, pkmn.species.NONE)
                 end
             end
         end
@@ -381,7 +381,7 @@ function game_save_test.test_attributes(save)
         save.numeric_attributes["Casino coins"] = casino_coins
         luaunit.assertEquals(save.numeric_attributes["Casino coins"], casino_coins)
 
-        if game == "Yellow"
+        if game == pkmn.game.YELLOW
         then
             luaunit.assertTrue(save.numeric_attributes["Pikachu friendship"] >= 0)
             luaunit.assertTrue(save.numeric_attributes["Pikachu friendship"] <= 255)
@@ -392,7 +392,7 @@ function game_save_test.test_attributes(save)
         end
     elseif generation == 3
     then
-        if game ~= "Colosseum" and game ~= "XD"
+        if game ~= pkmn.game.COLOSSEUM and game ~= pkmn.game.XD
         then
             luaunit.assertTrue(save.numeric_attributes["Casino coins"] >= 0)
             luaunit.assertTrue(save.numeric_attributes["Casino coins"] <= 9999)
@@ -526,7 +526,7 @@ function game_save_test.compare_game_saves(save1, save2)
         end
     end
 
-    if game ~= "Colosseum" and game ~= "XD"
+    if game ~= pkmn.game.COLOSSEUM and game ~= pkmn.game.XD
     then
         luaunit.assertEquals(save1.pokedex.all_seen, save2.pokedex.all_seen)
         luaunit.assertEquals(save1.pokedex.all_caught, save2.pokedex.all_caught)
@@ -537,13 +537,13 @@ end
 
 function game_save_test.test_game_save(expected_type, expected_game, subdir, filename)
     local save_filepath = ""
-    if expected_game == "Colosseum" or expected_game == "XD"
+    if expected_game == pkmn.game.COLOSSEUM or expected_game == pkmn.game.XD
     then
         save_filepath = pkmntest_utils.concat_paths(game_save_test.LIBPKMN_TEST_FILES, subdir, filename)
     else
         save_filepath = pkmntest_utils.concat_paths(game_save_test.PKSAV_TEST_SAVES, subdir, filename)
     end
-    luaunit.assertEquals(pkmn.detect_game_save_type(save_filepath), expected_type)
+    luaunit.assertEquals(pkmn.game_save.detect_type(save_filepath), expected_type)
 
     local save = pkmn.game_save(save_filepath)
     luaunit.assertEquals(save.filepath, save_filepath)
@@ -572,8 +572,8 @@ end
 
 function test_red_game_save()
     game_save_test.test_game_save(
-        "Red/Blue",
-        "Red",
+        pkmn.game_save_type.RED_BLUE,
+        pkmn.game.RED,
         "red_blue",
         "pokemon_red.sav"
     )
@@ -581,8 +581,8 @@ end
 
 function test_yellow_game_save()
     game_save_test.test_game_save(
-        "Yellow",
-        "Yellow",
+        pkmn.game_save_type.YELLOW,
+        pkmn.game.YELLOW,
         "yellow",
         "pokemon_yellow.sav"
     )
@@ -590,8 +590,8 @@ end
 
 function test_gold_game_save()
     game_save_test.test_game_save(
-        "Gold/Silver",
-        "Gold",
+        pkmn.game_save_type.GOLD_SILVER,
+        pkmn.game.GOLD,
         "gold_silver",
         "pokemon_gold.sav"
     )
@@ -599,8 +599,8 @@ end
 
 function test_crystal_game_save()
     game_save_test.test_game_save(
-        "Crystal",
-        "Crystal",
+        pkmn.game_save_type.CRYSTAL,
+        pkmn.game.CRYSTAL,
         "crystal",
         "pokemon_crystal.sav"
     )
@@ -608,8 +608,8 @@ end
 
 function test_ruby_game_save()
     game_save_test.test_game_save(
-        "Ruby/Sapphire",
-        "Ruby",
+        pkmn.game_save_type.RUBY_SAPPHIRE,
+        pkmn.game.RUBY,
         "ruby_sapphire",
         "pokemon_ruby.sav"
     )
@@ -617,8 +617,8 @@ end
 
 function test_emerald_game_save()
     game_save_test.test_game_save(
-        "Emerald",
-        "Emerald",
+        pkmn.game_save_type.EMERALD,
+        pkmn.game.EMERALD,
         "emerald",
         "pokemon_emerald.sav"
     )
@@ -626,8 +626,8 @@ end
 
 function test_firered_game_save()
     game_save_test.test_game_save(
-        "FireRed/LeafGreen",
-        "FireRed",
+        pkmn.game_save_type.FIRERED_LEAFGREEN,
+        pkmn.game.FIRERED,
         "firered_leafgreen",
         "pokemon_firered.sav"
     )
@@ -635,8 +635,8 @@ end
 
 function test_colosseum_game_save()
     game_save_test.test_game_save(
-        "Colosseum/XD",
-        "Colosseum",
+        pkmn.game_save_type.COLOSSEUM_XD,
+        pkmn.game.COLOSSEUM,
         "gamecube_saves",
         "pokemon_colosseum.gci"
     )
@@ -644,8 +644,8 @@ end
 
 function test_xd_game_save()
     game_save_test.test_game_save(
-        "Colosseum/XD",
-        "XD",
+        pkmn.game_save_type.COLOSSEUM_XD,
+        pkmn.game.XD,
         "gamecube_saves",
         "pokemon_xd.gci"
     )

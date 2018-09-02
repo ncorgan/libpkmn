@@ -11,7 +11,9 @@
 #include "pokedex_gbaimpl.hpp"
 
 #include "database/database_common.hpp"
+#include "database/enum_conversions.hpp"
 #include "database/id_to_string.hpp"
+
 #include "pksav/pksav_call.hpp"
 
 #include <pkmn/exception.hpp>
@@ -19,7 +21,6 @@
 #include <pksav/common/pokedex.h>
 
 #include <boost/assert.hpp>
-#include <boost/format.hpp>
 #include <boost/thread/lock_guard.hpp>
 
 namespace pkmn
@@ -29,11 +30,9 @@ namespace pkmn
         0, 151, 251, 386, 493, 649, 721, 807
     };
 
-    pokedex::sptr pokedex::make(
-        const std::string& game
-    )
+    pokedex::sptr pokedex::make(pkmn::e_game game)
     {
-        int game_id = pkmn::database::game_name_to_id(game);
+        int game_id = pkmn::database::game_enum_to_id(game);
         int generation = pkmn::database::game_id_to_generation(game_id);
 
         pokedex::sptr ret;
@@ -87,24 +86,25 @@ namespace pkmn
        _p_native(nullptr)
     {}
 
-    std::string pokedex_impl::get_game()
+    pkmn::e_game pokedex_impl::get_game()
     {
-        return pkmn::database::game_id_to_name(_game_id);
+        return pkmn::database::game_id_to_enum(_game_id);
     }
 
     void pokedex_impl::set_has_seen(
-        const std::string& species,
+        pkmn::e_species species,
         bool has_seen_value
     )
     {
         boost::lock_guard<pokedex_impl> lock(*this);
 
-        int species_id = pkmn::database::species_name_to_id(species);
-
-        _set_has_seen(species_id, has_seen_value);
+        _set_has_seen(
+            static_cast<int>(species),
+            has_seen_value
+        );
 
         // If a Pokémon has not been seen, then it cannot have been caught.
-        if((not has_seen_value) and has_caught(species))
+        if(!has_seen_value && has_caught(species))
         {
             set_has_caught(species, false);
         }
@@ -113,7 +113,7 @@ namespace pkmn
         _dirty_seen = true;
     }
 
-    const std::vector<std::string>& pokedex_impl::get_all_seen()
+    const std::vector<pkmn::e_species>& pokedex_impl::get_all_seen()
     {
         boost::lock_guard<pokedex_impl> lock(*this);
 
@@ -140,18 +140,19 @@ namespace pkmn
     }
 
     void pokedex_impl::set_has_caught(
-        const std::string& species,
+        pkmn::e_species species,
         bool has_caught_value
     )
     {
         boost::lock_guard<pokedex_impl> lock(*this);
 
-        int species_id = pkmn::database::species_name_to_id(species);
-
-        _set_has_caught(species_id, has_caught_value);
+        _set_has_caught(
+            static_cast<int>(species),
+            has_caught_value
+        );
 
         // If a Pokémon has been caught, then it must have been seen.
-        if(has_caught_value and (not has_seen(species)))
+        if(has_caught_value && !has_seen(species))
         {
             set_has_seen(species, true);
         }
@@ -160,7 +161,7 @@ namespace pkmn
         _dirty_caught = true;
     }
 
-    const std::vector<std::string>& pokedex_impl::get_all_caught()
+    const std::vector<pkmn::e_species>& pokedex_impl::get_all_caught()
     {
         boost::lock_guard<pokedex_impl> lock(*this);
 
@@ -195,14 +196,13 @@ namespace pkmn
 
     void pokedex_impl::_update_member_vector_with_pksav(
         const uint8_t* native_list,
-        std::vector<std::string>& member_vector
+        std::vector<pkmn::e_species>& member_vector
     )
     {
         BOOST_ASSERT(native_list != nullptr);
 
         member_vector.clear();
 
-        std::string query_numbers;
         for(uint16_t pokedex_num = 1; pokedex_num <= _num_pokemon; ++pokedex_num)
         {
             bool is_bit_present = false;
@@ -216,20 +216,8 @@ namespace pkmn
 
             if(is_bit_present)
             {
-                if(not query_numbers.empty())
-                {
-                    query_numbers.append(",");
-                }
-
-                query_numbers.append(std::to_string(pokedex_num));
+                member_vector.emplace_back(static_cast<pkmn::e_species>(pokedex_num));
             }
         }
-
-        static boost::format query_format("SELECT name FROM pokemon_species_names WHERE local_language_id=9 "
-                                          "AND pokemon_species_id IN (%s) ORDER BY pokemon_species_id");
-        pkmn::database::query_db_list(
-            str(query_format % query_numbers).c_str(),
-            member_vector
-        );
     }
 }

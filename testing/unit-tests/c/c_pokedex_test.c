@@ -13,27 +13,23 @@
 #include <stdlib.h>
 #include <time.h>
 
-static void pokedex_test(
-    const char* p_game
-)
+static void pokedex_test(enum pkmn_game game)
 {
-    TEST_ASSERT_NOT_NULL(p_game);
-
     enum pkmn_error error = PKMN_ERROR_NONE;
     struct pkmn_pokedex pokedex =
     {
-        .p_game = NULL,
+        .game = PKMN_GAME_NONE,
         .p_internal = NULL
     };
 
-    int generation = game_to_generation(p_game);
+    int generation = game_to_generation(game);
 
     error = pkmn_pokedex_init(
-                p_game,
+                game,
                 &pokedex
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
-    TEST_ASSERT_EQUAL_STRING(p_game, pokedex.p_game);
+    TEST_ASSERT_EQUAL(game, pokedex.game);
     TEST_ASSERT_NOT_NULL(pokedex.p_internal);
 
     // Check initial values.
@@ -60,14 +56,14 @@ static void pokedex_test(
     TEST_ASSERT_EQUAL(0, num_caught);
 
     // Set random Pokémon to be seen and caught.
-    struct pkmn_string_list all_pokemon =
+    struct pkmn_species_enum_list all_pokemon =
     {
-        .pp_strings = NULL,
+        .p_enums = NULL,
         .length = 0
     };
     error = pkmn_database_pokemon_list(generation, true, &all_pokemon);
     PKMN_TEST_ASSERT_SUCCESS(error);
-    TEST_ASSERT_NOT_NULL(all_pokemon.pp_strings);
+    TEST_ASSERT_NOT_NULL(all_pokemon.p_enums);
 
     num_seen = (size_t)((rand() % (int)all_pokemon.length/2 + 1));
     num_caught = (size_t)((rand() % (int)all_pokemon.length/2 + 1));
@@ -76,7 +72,7 @@ static void pokedex_test(
     {
         error = pkmn_pokedex_set_has_seen_species(
                     &pokedex,
-                    all_pokemon.pp_strings[pokemon_index],
+                    all_pokemon.p_enums[pokemon_index],
                     true
                 );
         PKMN_TEST_ASSERT_SUCCESS(error);
@@ -84,7 +80,7 @@ static void pokedex_test(
         bool has_seen = false;
         error = pkmn_pokedex_has_seen(
                     &pokedex,
-                    all_pokemon.pp_strings[pokemon_index],
+                    all_pokemon.p_enums[pokemon_index],
                     &has_seen
                 );
         PKMN_TEST_ASSERT_SUCCESS(error);
@@ -103,7 +99,7 @@ static void pokedex_test(
     {
         error = pkmn_pokedex_set_has_caught_species(
                     &pokedex,
-                    all_pokemon.pp_strings[pokemon_index],
+                    all_pokemon.p_enums[pokemon_index],
                     true
                 );
         PKMN_TEST_ASSERT_SUCCESS(error);
@@ -111,7 +107,7 @@ static void pokedex_test(
         bool has_caught = false;
         error = pkmn_pokedex_has_caught(
                     &pokedex,
-                    all_pokemon.pp_strings[pokemon_index],
+                    all_pokemon.p_enums[pokemon_index],
                     &has_caught
                 );
         PKMN_TEST_ASSERT_SUCCESS(error);
@@ -128,9 +124,9 @@ static void pokedex_test(
 
     // Remove all caught.
 
-    struct pkmn_string_list all_caught =
+    struct pkmn_species_enum_list all_caught =
     {
-        .pp_strings = NULL,
+        .p_enums = NULL,
         .length = 0
     };
     error = pkmn_pokedex_get_all_caught(
@@ -138,13 +134,13 @@ static void pokedex_test(
                 &all_caught
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
-    TEST_ASSERT_NOT_NULL(all_caught.pp_strings);
+    TEST_ASSERT_NOT_NULL(all_caught.p_enums);
 
     for(size_t pokemon_index = 0; pokemon_index < all_caught.length; ++pokemon_index)
     {
         error = pkmn_pokedex_set_has_caught_species(
                     &pokedex,
-                    all_caught.pp_strings[pokemon_index],
+                    all_caught.p_enums[pokemon_index],
                     false
                 );
         PKMN_TEST_ASSERT_SUCCESS(error);
@@ -152,7 +148,7 @@ static void pokedex_test(
         bool has_caught = true;
         error = pkmn_pokedex_has_caught(
                     &pokedex,
-                    all_caught.pp_strings[pokemon_index],
+                    all_caught.p_enums[pokemon_index],
                     &has_caught
                 );
         PKMN_TEST_ASSERT_SUCCESS(error);
@@ -167,15 +163,15 @@ static void pokedex_test(
     PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_EQUAL(0, num_caught_after);
 
-    error = pkmn_string_list_free(&all_caught);
+    error = pkmn_species_enum_list_free(&all_caught);
     PKMN_TEST_ASSERT_SUCCESS(error);
-    TEST_ASSERT_NULL(all_caught.pp_strings);
+    TEST_ASSERT_NULL(all_caught.p_enums);
 
     // Remove all seen.
 
-    struct pkmn_string_list all_seen =
+    struct pkmn_species_enum_list all_seen =
     {
-        .pp_strings = NULL,
+        .p_enums = NULL,
         .length = 0
     };
     error = pkmn_pokedex_get_all_seen(
@@ -183,13 +179,13 @@ static void pokedex_test(
                 &all_seen
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
-    TEST_ASSERT_NOT_NULL(all_seen.pp_strings);
+    TEST_ASSERT_NOT_NULL(all_seen.p_enums);
 
     for(size_t pokemon_index = 0; pokemon_index < all_seen.length; ++pokemon_index)
     {
         error = pkmn_pokedex_set_has_seen_species(
                     &pokedex,
-                    all_seen.pp_strings[pokemon_index],
+                    all_seen.p_enums[pokemon_index],
                     false
                 );
         PKMN_TEST_ASSERT_SUCCESS(error);
@@ -197,7 +193,7 @@ static void pokedex_test(
         bool has_seen = true;
         error = pkmn_pokedex_has_seen(
                     &pokedex,
-                    all_seen.pp_strings[pokemon_index],
+                    all_seen.p_enums[pokemon_index],
                     &has_seen
                 );
         PKMN_TEST_ASSERT_SUCCESS(error);
@@ -212,39 +208,38 @@ static void pokedex_test(
     PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_EQUAL(0, num_seen_after);
 
-    error = pkmn_string_list_free(&all_seen);
+    error = pkmn_species_enum_list_free(&all_seen);
     PKMN_TEST_ASSERT_SUCCESS(error);
-    TEST_ASSERT_NULL(all_seen.pp_strings);
+    TEST_ASSERT_NULL(all_seen.p_enums);
 
-    error = pkmn_string_list_free(&all_pokemon);
+    error = pkmn_species_enum_list_free(&all_pokemon);
     PKMN_TEST_ASSERT_SUCCESS(error);
-    TEST_ASSERT_NULL(all_pokemon.pp_strings);
+    TEST_ASSERT_NULL(all_pokemon.p_enums);
 
     error = pkmn_pokedex_free(&pokedex);
     PKMN_TEST_ASSERT_SUCCESS(error);
-    TEST_ASSERT_NULL(pokedex.p_game);
     TEST_ASSERT_NULL(pokedex.p_internal);
 }
 
-#define POKEDEX_TEST_FCN(game) \
+#define POKEDEX_TEST_FCN(game_enum, game) \
 static void game ## _test_pokedex() \
 { \
-    pokedex_test(#game); \
+    pokedex_test(game_enum); \
 }
 
-POKEDEX_TEST_FCN(Red)
-POKEDEX_TEST_FCN(Blue)
-POKEDEX_TEST_FCN(Yellow)
+POKEDEX_TEST_FCN(PKMN_GAME_RED, Red)
+POKEDEX_TEST_FCN(PKMN_GAME_BLUE, Blue)
+POKEDEX_TEST_FCN(PKMN_GAME_YELLOW, Yellow)
 
-POKEDEX_TEST_FCN(Gold)
-POKEDEX_TEST_FCN(Silver)
-POKEDEX_TEST_FCN(Crystal)
+POKEDEX_TEST_FCN(PKMN_GAME_GOLD, Gold)
+POKEDEX_TEST_FCN(PKMN_GAME_SILVER, Silver)
+POKEDEX_TEST_FCN(PKMN_GAME_CRYSTAL, Crystal)
 
-POKEDEX_TEST_FCN(Ruby)
-POKEDEX_TEST_FCN(Sapphire)
-POKEDEX_TEST_FCN(Emerald)
-POKEDEX_TEST_FCN(FireRed)
-POKEDEX_TEST_FCN(LeafGreen)
+POKEDEX_TEST_FCN(PKMN_GAME_RUBY, Ruby)
+POKEDEX_TEST_FCN(PKMN_GAME_SAPPHIRE, Sapphire)
+POKEDEX_TEST_FCN(PKMN_GAME_EMERALD, Emerald)
+POKEDEX_TEST_FCN(PKMN_GAME_FIRERED, FireRed)
+POKEDEX_TEST_FCN(PKMN_GAME_LEAFGREEN, LeafGreen)
 
 PKMN_C_TEST_MAIN(
     PKMN_C_TEST(Red_test_pokedex)

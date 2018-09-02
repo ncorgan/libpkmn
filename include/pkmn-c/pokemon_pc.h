@@ -12,6 +12,8 @@
 
 #include <pkmn-c/pokemon_box.h>
 
+#include <pkmn-c/enums/game.h>
+
 #include <pkmn-c/types/pokemon_box_list.h>
 #include <pkmn-c/types/string_types.h>
 
@@ -27,7 +29,7 @@ struct pkmn_pokemon_pc
     /*!
      * @brief The game this PC is associated with.
      */
-    char* p_game;
+    enum pkmn_game game;
 
     /*!
      * @brief How many boxes are in this PC.
@@ -53,7 +55,7 @@ extern "C" {
  * \returns ::PKMN_ERROR_INVALID_ARGUMENT if the game is invalid
  */
 PKMN_C_API enum pkmn_error pkmn_pokemon_pc_init(
-    const char* p_game,
+    enum pkmn_game game,
     struct pkmn_pokemon_pc* p_pokemon_pc_out
 );
 

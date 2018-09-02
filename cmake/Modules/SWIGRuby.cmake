@@ -12,7 +12,7 @@ SET(RUBY_INSTALL_DIR ${PKMN_LIBRARY_DIR}/ruby/${RUBY_VERSION})
 ########################################################################
 # Macro to build and install Ruby modules
 ########################################################################
-MACRO(SWIG_BUILD_RUBY_MODULE module_name cplusplus)
+MACRO(SWIG_BUILD_RUBY_MODULE_BUILD_ONLY module_name cplusplus)
     INCLUDE(UseSWIG)
 
     SET(SWIG_INCLUDE_DIRS
@@ -55,10 +55,14 @@ MACRO(SWIG_BUILD_RUBY_MODULE module_name cplusplus)
     ADD_DEPENDENCIES(${SWIG_MODULE_${module_name}_REAL_NAME}
         ruby_CamelCase_i
     )
+ENDMACRO()
+
+MACRO(SWIG_BUILD_RUBY_MODULE module_name cplusplus)
+    SWIG_BUILD_RUBY_MODULE_BUILD_ONLY(${module_name} ${cplusplus})
 
     INSTALL(
         TARGETS ${SWIG_MODULE_${module_name}_REAL_NAME}
         DESTINATION ${RUBY_INSTALL_DIR}/PKMN
         COMPONENT Ruby
     )
-ENDMACRO(SWIG_BUILD_RUBY_MODULE module_name cplusplus)
+ENDMACRO()

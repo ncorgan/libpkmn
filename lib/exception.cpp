@@ -5,6 +5,8 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
+#include "database/enum_conversions.hpp"
+
 #include <pkmn/exception.hpp>
 
 #include <pksav/error.h>
@@ -30,5 +32,13 @@ namespace pkmn {
     ): std::runtime_error(
         str(boost::format("%s not in %s")
             % feature.c_str() % game.c_str())
+       ) {}
+
+    feature_not_in_game_error::feature_not_in_game_error(
+        const std::string& feature,
+        pkmn::e_game game
+    ): std::runtime_error(
+        str(boost::format("%s not in %s")
+            % feature.c_str() % pkmn::database::game_enum_to_name(game).c_str())
        ) {}
 }

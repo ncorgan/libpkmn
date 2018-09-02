@@ -19,11 +19,11 @@ class PokemonPartyTest < MiniTest::Test
 
     def _test_empty_pokemon_party(party, game)
         party.each do |pokemon|
-            assert_equal("None", pokemon.species)
+            assert_equal(PKMN::Species::NONE, pokemon.species)
             assert_equal(game, pokemon.game)
 
             pokemon.moves.each do |move|
-                assert_equal("None", move.move)
+                assert_equal(PKMN::Move::NONE, move.move)
                 assert_equal(0, move.pp)
             end
         end
@@ -33,9 +33,9 @@ class PokemonPartyTest < MiniTest::Test
         original_first = party[0]
         original_second = party[1]
 
-        bulbasaur = PKMN::Pokemon.new("Bulbasaur", game, "", 5)
-        charmander = PKMN::Pokemon.new("Charmander", game, "", 5)
-        squirtle = PKMN::Pokemon.new("Squirtle", game, "", 5)
+        bulbasaur = PKMN::Pokemon.new(PKMN::Species::BULBASAUR, game, "", 5)
+        charmander = PKMN::Pokemon.new(PKMN::Species::CHARMANDER, game, "", 5)
+        squirtle = PKMN::Pokemon.new(PKMN::Species::SQUIRTLE, game, "", 5)
 
         # Make sure we can't set them at invalid indices.
         assert_raises IndexError do
@@ -47,15 +47,15 @@ class PokemonPartyTest < MiniTest::Test
 
         party[0] = bulbasaur
         assert_equal(1, party.num_pokemon)
-        assert_equal("Bulbasaur", party[0].species)
+        assert_equal(PKMN::Species::BULBASAUR, party[0].species)
         party[1] = charmander
         assert_equal(2, party.num_pokemon)
-        assert_equal("Charmander", party[1].species)
+        assert_equal(PKMN::Species::CHARMANDER, party[1].species)
 
         # Replace one of the new ones.
         party[0] = squirtle
         assert_equal(2, party.num_pokemon)
-        assert_equal("Squirtle", party[0].species)
+        assert_equal(PKMN::Species::SQUIRTLE, party[0].species)
 
         # Copy a Pokémon already part of the party.
         party[2] = party[1]
@@ -64,7 +64,7 @@ class PokemonPartyTest < MiniTest::Test
         # We should always be able to clear the last contiguous Pokémon.
         party[2] = original_first
         assert_equal(2, party.num_pokemon)
-        assert_equal("None", party[2].species)
+        assert_equal(PKMN::Species::NONE, party[2].species)
 
         # Put it back.
         party[2] = party[1]
@@ -75,24 +75,24 @@ class PokemonPartyTest < MiniTest::Test
             party[1] = original_first
         end
         assert_equal(3, party.num_pokemon)
-        assert_equal("Charmander", party[1].species)
+        assert_equal(PKMN::Species::CHARMANDER, party[1].species)
 
         assert_raises IndexError do
             party[4] = charmander
         end
         assert_equal(3, party.num_pokemon)
-        assert_equal("None", party[4].species)
+        assert_equal(PKMN::Species::NONE, party[4].species)
 
         # Now check everything we've created. Each variable should have
         # the same Pokémon underneath, even if the pointer has changed.
-        assert_equal("Squirtle", party[0].species)
-        assert_equal("Charmander", party[1].species)
-        assert_equal("Charmander", party[2].species)
-        assert_equal("None", original_first.species)
-        assert_equal("None", original_second.species)
-        assert_equal("Bulbasaur", bulbasaur.species)
-        assert_equal("Charmander", charmander.species)
-        assert_equal("Squirtle", squirtle.species)
+        assert_equal(PKMN::Species::SQUIRTLE, party[0].species)
+        assert_equal(PKMN::Species::CHARMANDER, party[1].species)
+        assert_equal(PKMN::Species::CHARMANDER, party[2].species)
+        assert_equal(PKMN::Species::NONE, original_first.species)
+        assert_equal(PKMN::Species::NONE, original_second.species)
+        assert_equal(PKMN::Species::BULBASAUR, bulbasaur.species)
+        assert_equal(PKMN::Species::CHARMANDER, charmander.species)
+        assert_equal(PKMN::Species::SQUIRTLE, squirtle.species)
     end
 
     def _pokemon_party_test(game)
@@ -107,7 +107,7 @@ class PokemonPartyTest < MiniTest::Test
 
      @@GAMES.each do |game|
         define_method("test_pokemon_party_#{game}") do
-            _pokemon_party_test(game)
+            _pokemon_party_test(PKMN::string_to_game(game))
         end
     end
 end

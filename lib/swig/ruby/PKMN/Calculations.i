@@ -31,6 +31,8 @@ PKMN_RUBY_INIT
     #include <pkmn/calculations/moves/natural_gift.hpp>
 %}
 
+%import <Enums.i>
+
 %include <pkmn/calculations/form.hpp>
 %include <pkmn/calculations/gender.hpp>
 %include <pkmn/calculations/nature.hpp>

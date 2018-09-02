@@ -35,6 +35,28 @@ namespace pkmn
         throw exception_type(exception_message);
     }
 
+    // Type-trait-related ugliness goes into these for outputting in a
+    // stringstream.
+    template <typename T>
+    inline typename std::enable_if<!std::is_enum<T>::value, void>::type
+    output_to_ostringstream(
+        std::ostringstream& r_stream,
+        T value
+    )
+    {
+        r_stream << value;
+    }
+
+    template <typename T>
+    inline typename std::enable_if<std::is_enum<T>::value, void>::type
+    output_to_ostringstream(
+        std::ostringstream& r_stream,
+        T value
+    )
+    {
+        r_stream << static_cast<typename std::underlying_type<T>::type>(value);
+    }
+
     template <typename map_type, typename key_type>
     void enforce_value_in_map_keys(
         const std::string& field,
@@ -67,7 +89,7 @@ namespace pkmn
                     err_msg << ", ";
                 }
 
-                err_msg << (iter->first);
+                output_to_ostringstream(err_msg, (iter->first));
             }
             err_msg << ".";
 
@@ -111,7 +133,7 @@ namespace pkmn
                     err_msg << ", ";
                 }
 
-                err_msg << (*iter);
+                output_to_ostringstream(err_msg, (*iter));
             }
             err_msg << ".";
 
@@ -160,9 +182,9 @@ namespace pkmn
 
             err_msg << field;
             err_msg << ": valid values ";
-            err_msg << min;
+            output_to_ostringstream(err_msg, min);
             err_msg << "-";
-            err_msg << max;
+            output_to_ostringstream(err_msg, max);
             err_msg << ".";
 
             if(std::is_floating_point<T>::value)
@@ -236,7 +258,7 @@ namespace pkmn
             err_msg << ": must be ";
             err_msg << nice_comparator_name;
             err_msg << " ";
-            err_msg << compare_value;
+            output_to_ostringstream(err_msg, compare_value);
             err_msg << ".";
 
             throw std::out_of_range(err_msg.str().c_str());
@@ -405,6 +427,19 @@ namespace pkmn
         );
     }
 
+    inline void enforce_EV_bounds(
+        pkmn::e_stat stat,
+        int value,
+        bool is_game_modern
+    )
+    {
+        enforce_EV_bounds(
+            STAT_NAMES_FROM_ENUM[int(stat)],
+            value,
+            is_game_modern
+        );
+    }
+
     inline void enforce_IV_bounds(
         const std::string& stat,
         int value,
@@ -421,6 +456,19 @@ namespace pkmn
             value,
             min_value,
             max_value
+        );
+    }
+
+    inline void enforce_IV_bounds(
+        pkmn::e_stat stat,
+        int value,
+        bool is_game_modern
+    )
+    {
+        enforce_IV_bounds(
+            STAT_NAMES_FROM_ENUM[int(stat)],
+            value,
+            is_game_modern
         );
     }
 

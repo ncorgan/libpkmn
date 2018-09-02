@@ -10,6 +10,9 @@
 #include <pkmn/config.hpp>
 #include <pkmn/item_slot.hpp>
 
+#include <pkmn/enums/game.hpp>
+#include <pkmn/enums/item.hpp>
+
 #include <map>
 #include <memory>
 #include <string>
@@ -52,7 +55,7 @@ namespace pkmn {
              */
             static sptr make(
                 const std::string& name,
-                const std::string& game
+                pkmn::e_game game
             );
 
             /*!
@@ -63,7 +66,7 @@ namespace pkmn {
             /*!
              * @brief Returns which game this item list comes from.
              */
-            virtual std::string get_game() = 0;
+            virtual pkmn::e_game get_game() = 0;
 
             /*!
              * @brief Returns how many unique items can be stored in this list.
@@ -92,13 +95,13 @@ namespace pkmn {
              * increased by the given amount. If not, the next empty slot will be used,
              * assuming one is available.
              *
-             * \param item_name Name of the item to add
+             * \param item The item to add
              * \param amount How many of the item to add
              * \throws std::invalid_argument If the item cannot be included in the given list
              * \throws std::out_of_range If amount is outside the range [1,99]
              */
             virtual void add(
-                const std::string& item_name,
+                pkmn::e_item item,
                 int amount
             ) = 0;
 
@@ -109,13 +112,13 @@ namespace pkmn {
              * decreased by the given amount. If all of this item is removed, the slot will
              * be cleared, and all later slots are shifted back.
              *
-             * \param item_name Name of the item to remove
+             * \param item The item to remove
              * \param amount How many of the item to remove
              * \throws std::invalid_argument If the item cannot be included in the given list
              * \throws std::out_of_range If amount is outside the range [1,99]
              */
             virtual void remove(
-                const std::string& item_name,
+                pkmn::e_item item,
                 int amount
             ) = 0;
 
@@ -145,9 +148,11 @@ namespace pkmn {
              */
             virtual void set_item(
                 int position,
-                const std::string& item_name,
+                pkmn::e_item item,
                 int amount
             ) = 0;
+
+            virtual const std::vector<pkmn::e_item>& get_valid_items() = 0;
 
             /*!
              * @brief Returns a list of the items that can be added to this list.
@@ -155,7 +160,7 @@ namespace pkmn {
              * If this item list corresponds to an item PC, this list of names will include almost
              * every item in the given game, minus certain Key Items.
              */
-            virtual const std::vector<std::string>& get_valid_items() = 0;
+            virtual const std::vector<std::string>& get_valid_item_names() = 0;
 
             /*!
              * @brief Returns a vector representation of the given item list.

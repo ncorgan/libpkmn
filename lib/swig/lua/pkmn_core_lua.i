@@ -12,6 +12,8 @@ PKMN_LUA_INIT
 
 %{
     #include "private_exports.hpp"
+
+    #include <pkmn/enums/enum_to_string.hpp>
 %}
 
 namespace pkmn { namespace priv {
@@ -19,7 +21,10 @@ namespace pkmn { namespace priv {
 }}
 
 %import <pkmn_database_lua.i>
+%import <pkmn_enums_lua.i>
 %import <pkmn_stl_lua.i>
+
+%include <pkmn/enums/enum_to_string.hpp>
 
 // Attribute Maps
 %include <lua/pkmn_attribute_maps.i>
@@ -57,5 +62,3 @@ namespace pkmn { namespace priv {
 // Game Save
 %include <lua/pkmn_game_save_helpers.i>
 %include <lua/pkmn_game_save.i>
-
-%include <pkmn_statics.i>

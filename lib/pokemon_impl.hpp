@@ -40,27 +40,27 @@ namespace pkmn {
 
             virtual ~pokemon_impl() {}
 
-            std::string get_species() final;
+            pkmn::e_species get_species() final;
 
             std::string get_form() final;
 
-            std::string get_game() final;
+            pkmn::e_game get_game() final;
 
             const pkmn::database::pokemon_entry& get_database_entry() final;
 
-            const std::map<std::string, bool>& get_markings() final;
+            const std::map<pkmn::e_marking, bool>& get_markings() final;
 
             const std::map<std::string, bool>& get_ribbons() final;
 
-            const std::map<std::string, int>& get_contest_stats() final;
+            const std::map<pkmn::e_contest_stat, int>& get_contest_stats() final;
 
             const pkmn::move_slots_t& get_moves() final;
 
-            const std::map<std::string, int>& get_EVs() final;
+            const std::map<pkmn::e_stat, int>& get_EVs() final;
 
-            const std::map<std::string, int>& get_IVs() final;
+            const std::map<pkmn::e_stat, int>& get_IVs() final;
 
-            const std::map<std::string, int>& get_stats() final;
+            const std::map<pkmn::e_stat, int>& get_stats() final;
 
             virtual std::string get_icon_filepath() override;
 
@@ -103,8 +103,12 @@ namespace pkmn {
 
         protected:
             pkmn::move_slots_t _moves;
-            std::map<std::string, int> _contest_stats, _stats, _EVs, _IVs;
-            std::map<std::string, bool> _markings, _ribbons;
+
+            std::map<pkmn::e_stat, int> _EVs, _IVs, _stats;
+
+            std::map<pkmn::e_contest_stat, int> _contest_stats;
+            std::map<pkmn::e_marking, bool> _markings;
+            std::map<std::string, bool> _ribbons;
 
             pkmn::database::pokemon_entry _database_entry;
 
@@ -112,8 +116,6 @@ namespace pkmn {
 
             void* _p_native_pc;
             void* _p_native_party;
-
-            boost::recursive_mutex _mem_mutex;
 
             virtual void _populate_party_data() = 0;
 
@@ -134,7 +136,7 @@ namespace pkmn {
             );
 
             void _init_contest_stat_map(
-                const struct pksav_contest_stats* native_ptr
+                const struct pksav_contest_stats* p_native
             );
 
             void _init_markings_map(
@@ -154,7 +156,7 @@ namespace pkmn {
 
             void _set_modern_gender(
                 uint32_t* personality_ptr,
-                const std::string& gender
+                pkmn::e_gender gender
             );
 
             void _set_modern_shininess(
@@ -164,27 +166,27 @@ namespace pkmn {
             );
 
             void _set_gb_IV(
-                const std::string& stat,
+                pkmn::e_stat stat,
                 int value,
                 uint16_t* iv_data_ptr
             );
 
             void _set_modern_IV(
-                const std::string& stat,
+                pkmn::e_stat stat,
                 int value,
                 uint32_t* iv_data_ptr
             );
 
             void _set_contest_stat(
-                const std::string& stat,
+                pkmn::e_contest_stat stat,
                 int value,
-                struct pksav_contest_stats* native_ptr
+                struct pksav_contest_stats* p_native
             );
 
             void _set_marking(
-                const std::string& marking,
+                pkmn::e_marking marking,
                 bool value,
-                uint8_t* native_ptr
+                uint8_t* p_native
             );
 
             template <typename native_type, typename mask_type>
@@ -208,7 +210,7 @@ namespace pkmn {
             }
 
             // Set without applying policy
-            virtual void _set_ability(const std::string&) {}
+            virtual void _set_ability(pkmn::e_ability) {}
             void _set_ability_from_personality();
 
             virtual void _update_held_item() {}

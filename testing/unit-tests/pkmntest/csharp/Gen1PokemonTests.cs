@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -14,24 +14,29 @@ namespace PKMNTest
 public class Gen1PokemonTests
 {
     public static void PokemonTest(
-        string game,
-        string species
+        PKMN.Game game,
+        PKMN.Species species
     )
     {
         PKMN.Pokemon pokemon = new PKMN.Pokemon(species, game, "", 30);
 
         PokemonTestParams testParams = new PokemonTestParams(
-                                               "Great Ball",
-                                               new string[]{"Great Ball"},
-                                               "Potion",
-                                               new string[]{"Potion"},
+                                               PKMN.Ball.GREAT_BALL,
+                                               new PKMN.Ball[]{PKMN.Ball.GREAT_BALL},
+                                               PKMN.Item.POTION,
+                                               new PKMN.Item[]{PKMN.Item.POTION},
                                                "Special",
                                                new string[]{"Route 1"},
                                                new string[]{"Route 1"},
-                                               new string[]{"Slash", "Flamethrower", "Tail Whip", "Fire Blast"},
-                                               new string[]{"Return"},
-                                               new string[]{"Red"},
-                                               new string[]{"Red"}
+                                               new PKMN.Move[]{
+                                                   PKMN.Move.SLASH,
+                                                   PKMN.Move.FLAMETHROWER,
+                                                   PKMN.Move.TAIL_WHIP,
+                                                   PKMN.Move.FIRE_BLAST
+                                               },
+                                               new PKMN.Move[]{PKMN.Move.RETURN},
+                                               new PKMN.Game[]{PKMN.Game.RED},
+                                               new PKMN.Game[]{PKMN.Game.RED}
                                            );
 
         PokemonTestCommon.TestCommon(pokemon, testParams);

@@ -7,9 +7,12 @@
 
 #include "item_test_common.hpp"
 
+#include <pkmntest/util.hpp>
+
 #include <pkmn/exception.hpp>
 #include <pkmn/database/item_entry.hpp>
 #include <pkmn/database/lists.hpp>
+#include <pkmn/enums/enum_to_string.hpp>
 #include "pksav/pksav_call.hpp"
 
 #include <pksav/common/stats.h>
@@ -23,16 +26,31 @@
 
 // TODO: check vector sizes against PKSav #defines
 
-static const std::vector<std::string> all_pocket_item_names = boost::assign::list_of
-    ("Potion")("Bicycle")("Great Ball")("TM28")
-    ("Berry")("SquirtBottle")("Friend Ball")("HM01")
-;
-static const std::vector<std::string> crystal_items = boost::assign::list_of
-    ("Clear Bell")("GS Ball")("Blue Card")("Egg Ticket")
-;
-static const std::vector<std::string> wrong_generation_all_pocket_items = boost::assign::list_of
-    ("Black Sludge")("Poffin Items")("TM51")("Occa Berry")
-;
+static const std::vector<pkmn::e_item> ALL_POCKET_ITEMS =
+{
+    pkmn::e_item::POTION,
+    pkmn::e_item::BICYCLE,
+    pkmn::e_item::GREAT_BALL,
+    pkmn::e_item::TM28,
+    pkmn::e_item::BERRY,
+    pkmn::e_item::SQUIRT_BOTTLE,
+    pkmn::e_item::FRIEND_BALL,
+    pkmn::e_item::HM01
+};
+static const std::vector<pkmn::e_item> CRYSTAL_ITEMS =
+{
+    pkmn::e_item::CLEAR_BELL,
+    pkmn::e_item::GS_BALL,
+    pkmn::e_item::BLUE_CARD,
+    pkmn::e_item::EGG_TICKET
+};
+static const std::vector<pkmn::e_item> WRONG_GENERATION_ALL_POCKET_ITEMS =
+{
+    pkmn::e_item::BLACK_SLUDGE,
+    pkmn::e_item::POFFIN_CASE,
+    pkmn::e_item::TM51,
+    pkmn::e_item::OCCA_BERRY
+};
 
 class gen2_item_list_test: public item_list_test {};
 
@@ -50,39 +68,56 @@ void gen2_item_pocket_test(
     // Confirm exceptions are thrown when expected.
     test_item_list_out_of_range_error(
         item_pocket,
-        "Potion"
+        pkmn::e_item::POTION
     );
 
     // Make sure we can't add items from other pockets.
-    static const std::vector<std::string> wrong_pocket_items = boost::assign::list_of
-        ("Bicycle")("Master Ball")("HM01")
-    ;
+    static const std::vector<pkmn::e_item> wrong_pocket_items =
+    {
+        pkmn::e_item::BICYCLE,
+        pkmn::e_item::MASTER_BALL,
+        pkmn::e_item::HM01
+    };
     test_item_list_invalid_items(
         item_pocket,
         wrong_pocket_items
     );
 
     // Make sure we can't add items from later generations.
-    static const std::vector<std::string> wrong_generation_items = boost::assign::list_of
-        ("Black Flute")("Black Sludge")("Binding Band")("Beedrillite")
-    ;
+    static const std::vector<pkmn::e_item> wrong_generation_items =
+    {
+        pkmn::e_item::BLACK_FLUTE,
+        pkmn::e_item::BLACK_SLUDGE,
+        pkmn::e_item::BINDING_BAND,
+        pkmn::e_item::BEEDRILLITE
+    };
     test_item_list_invalid_items(
         item_pocket,
         wrong_generation_items
     );
 
     // Start adding and removing stuff, and make sure the numbers are accurate.
-    static const std::vector<std::string> item_names = boost::assign::list_of
-        ("Potion")("HP Up")("Wht Apricorn")("Lucky Egg")
-        ("Flower Mail")("Burn Heal")("PSNCureBerry")("Stick")
-    ;
+    static const std::vector<pkmn::e_item> items =
+    {
+        pkmn::e_item::POTION,
+        pkmn::e_item::HP_UP,
+        pkmn::e_item::WHITE_APRICORN,
+        pkmn::e_item::LUCKY_EGG,
+        pkmn::e_item::FLOWER_MAIL,
+        pkmn::e_item::BURN_HEAL,
+        pkmn::e_item::PSNCUREBERRY,
+        pkmn::e_item::STICK
+    };
     test_item_list_add_remove(
         item_pocket,
-        item_names
+        items
     );
 
-    const std::vector<std::string>& valid_items = item_pocket->get_valid_items();
-    EXPECT_GT(valid_items.size(), 0);
+    const std::vector<pkmn::e_item>& valid_items = item_pocket->get_valid_items();
+    const std::vector<std::string>& valid_item_names = item_pocket->get_valid_item_names();
+
+    ASSERT_EQ(valid_items.size(), valid_item_names.size());
+    EXPECT_GT(valid_item_names.size(), 0);
 
     /*
      * On the C++ level, make sure the LibPKMN abstraction matches the underlying
@@ -91,7 +126,8 @@ void gen2_item_pocket_test(
     const pkmn::item_slots_t& item_slots = item_pocket->as_vector();
     int num_items = item_pocket->get_num_items();
 
-    const struct pksav_gen2_item_pocket* p_native_pocket = static_cast<const pksav_gen2_item_pocket*>(item_pocket->get_native());
+    const struct pksav_gen2_item_pocket* p_native_pocket =
+        static_cast<const pksav_gen2_item_pocket*>(item_pocket->get_native());
     EXPECT_EQ(num_items, int(p_native_pocket->count));
     for(int item_index = 0; item_index < num_items; ++item_index)
     {
@@ -126,31 +162,38 @@ void gen2_key_item_pocket_test(
     // Confirm exceptions are thrown when expected.
     test_item_list_out_of_range_error(
         key_item_pocket,
-        "Bicycle"
+        pkmn::e_item::BICYCLE
     );
 
     // Make sure we can't add items from other pockets.
-    static const std::vector<std::string> wrong_pocket_items = boost::assign::list_of
-        ("Potion")("Master Ball")("HM01")
-    ;
+    static const std::vector<pkmn::e_item> wrong_pocket_items =
+    {
+        pkmn::e_item::POTION,
+        pkmn::e_item::MASTER_BALL,
+        pkmn::e_item::HM01
+    };
     test_item_list_invalid_items(
         key_item_pocket,
         wrong_pocket_items
     );
 
     // Make sure we can't add items from later generations.
-    static const std::vector<std::string> wrong_generation_items = boost::assign::list_of
-        ("Mach Bike")("Jade Orb")("Light Stone")("Aqua Suit")
-    ;
+    static const std::vector<pkmn::e_item> wrong_generation_items =
+    {
+        pkmn::e_item::MACH_BIKE,
+        pkmn::e_item::JADE_ORB,
+        pkmn::e_item::LIGHT_STONE,
+        pkmn::e_item::AQUA_SUIT
+    };
     test_item_list_invalid_items(
         key_item_pocket,
         wrong_generation_items
     );
 
     // Crystal-specific items.
-    if(key_item_pocket->get_game() == "Crystal")
+    if(key_item_pocket->get_game() == pkmn::e_game::CRYSTAL)
     {
-        for(const std::string& item: crystal_items)
+        for(pkmn::e_item item: CRYSTAL_ITEMS)
         {
             key_item_pocket->add(item, 1);
             key_item_pocket->remove(item, 1);
@@ -162,50 +205,60 @@ void gen2_key_item_pocket_test(
     {
         test_item_list_invalid_items(
             key_item_pocket,
-            crystal_items
+            CRYSTAL_ITEMS
         );
     }
 
     // Make sure we can't add or remove more than a single item.
     EXPECT_THROW(
-        key_item_pocket->add("Bicycle", 5);
+        key_item_pocket->add(pkmn::e_item::BICYCLE, 5);
     , std::out_of_range);
-    key_item_pocket->add("Bicycle", 1);
+    key_item_pocket->add(pkmn::e_item::BICYCLE, 1);
     EXPECT_EQ(1, key_item_pocket->get_num_items());
 
     EXPECT_THROW(
-        key_item_pocket->remove("Bicycle", 5);
+        key_item_pocket->remove(pkmn::e_item::BICYCLE, 5);
     , std::out_of_range);
-    key_item_pocket->remove("Bicycle", 1);
+    key_item_pocket->remove(pkmn::e_item::BICYCLE, 1);
     EXPECT_EQ(0, key_item_pocket->get_num_items());
 
     // Start adding and removing stuff, and make sure the numbers are accurate.
-    static const std::vector<std::string> item_names = boost::assign::list_of
-        ("Bicycle")("Basement Key")("SecretPotion")("Mystery Egg")
-        ("Silver Wing")("Lost Item")("SquirtBottle")("Rainbow Wing")
-    ;
+    static const std::vector<pkmn::e_item> items =
+    {
+        pkmn::e_item::BICYCLE,
+        pkmn::e_item::BASEMENT_KEY,
+        pkmn::e_item::SECRETPOTION,
+        pkmn::e_item::MYSTERY_EGG,
+        pkmn::e_item::SILVER_WING,
+        pkmn::e_item::LOST_ITEM,
+        pkmn::e_item::SQUIRT_BOTTLE,
+        pkmn::e_item::RAINBOW_WING
+    };
     for(int item_index = 0; item_index < 8; ++item_index)
     {
         if(item_index < 4)
         {
-            key_item_pocket->add(item_names[item_index], 1);
+            key_item_pocket->add(items[item_index], 1);
         }
         else
         {
             key_item_pocket->set_item(
                 item_index,
-                item_names[item_index],
+                items[item_index],
                 1
             );
         }
     }
 
-    key_item_pocket->remove(item_names[2], 1);
-    key_item_pocket->set_item(2, "None", 0);
+    key_item_pocket->remove(items[2], 1);
+    key_item_pocket->set_item(2, pkmn::e_item::NONE, 0);
     EXPECT_EQ(6, key_item_pocket->get_num_items());
 
-    const std::vector<std::string>& valid_items = key_item_pocket->get_valid_items();
-    EXPECT_LE(valid_items.size(), PKSAV_GEN2_KEY_ITEM_POCKET_SIZE);
+    const std::vector<pkmn::e_item>& valid_items = key_item_pocket->get_valid_items();
+    const std::vector<std::string>& valid_item_names = key_item_pocket->get_valid_item_names();
+
+    ASSERT_EQ(valid_items.size(), valid_item_names.size());
+    EXPECT_LE(valid_item_names.size(), PKSAV_GEN2_KEY_ITEM_POCKET_SIZE);
 
     /*
      * On the C++ level, make sure the LibPKMN abstraction matches the underlying
@@ -214,7 +267,8 @@ void gen2_key_item_pocket_test(
     const pkmn::item_slots_t& item_slots = key_item_pocket->as_vector();
     int num_items = key_item_pocket->get_num_items();
 
-    const struct pksav_gen2_key_item_pocket* p_native_pocket = static_cast<const pksav_gen2_key_item_pocket*>(key_item_pocket->get_native());
+    const struct pksav_gen2_key_item_pocket* p_native_pocket =
+        static_cast<const pksav_gen2_key_item_pocket*>(key_item_pocket->get_native());
     EXPECT_EQ(num_items, int(p_native_pocket->count));
     for(int item_index = 0; item_index < num_items; ++item_index)
     {
@@ -244,39 +298,55 @@ void gen2_ball_pocket_test(
     // Confirm exceptions are thrown when expected.
     test_item_list_out_of_range_error(
         ball_pocket,
-        "Master Ball"
+        pkmn::e_item::MASTER_BALL
     );
 
     // Make sure we can't add items from other pockets.
-    static const std::vector<std::string> wrong_pocket_items = boost::assign::list_of
-        ("Potion")("Bicycle")("HM01")
-    ;
+    static const std::vector<pkmn::e_item> wrong_pocket_items =
+    {
+        pkmn::e_item::POTION,
+        pkmn::e_item::BICYCLE,
+        pkmn::e_item::HM01
+    };
     test_item_list_invalid_items(
         ball_pocket,
         wrong_pocket_items
     );
 
     // Make sure we can't add items from later generations.
-    static const std::vector<std::string> wrong_generation_items = boost::assign::list_of
-        ("Premier Ball")("Heal Ball")("Dream Ball")
-    ;
+    static const std::vector<pkmn::e_item> wrong_generation_items =
+    {
+        pkmn::e_item::PREMIER_BALL,
+        pkmn::e_item::HEAL_BALL,
+        pkmn::e_item::DREAM_BALL
+    };
     test_item_list_invalid_items(
         ball_pocket,
         wrong_generation_items
     );
 
     // Start adding and removing stuff, and make sure the numbers are accurate.
-    static const std::vector<std::string> item_names = boost::assign::list_of
-        ("Great Ball")("Poké Ball")("Park Ball")("Fast Ball")
-        ("Master Ball")("Friend Ball")("Love Ball")("Level Ball")
-    ;
+    static const std::vector<pkmn::e_item> items =
+    {
+        pkmn::e_item::GREAT_BALL,
+        pkmn::e_item::POKE_BALL,
+        pkmn::e_item::PARK_BALL,
+        pkmn::e_item::FAST_BALL,
+        pkmn::e_item::MASTER_BALL,
+        pkmn::e_item::FRIEND_BALL,
+        pkmn::e_item::LOVE_BALL,
+        pkmn::e_item::LEVEL_BALL
+    };
     test_item_list_add_remove(
         ball_pocket,
-        item_names
+        items
     );
 
-    const std::vector<std::string>& valid_items = ball_pocket->get_valid_items();
-    EXPECT_GT(valid_items.size(), 0);
+    const std::vector<pkmn::e_item>& valid_items = ball_pocket->get_valid_items();
+    const std::vector<std::string>& valid_item_names = ball_pocket->get_valid_item_names();
+
+    ASSERT_EQ(valid_items.size(), valid_item_names.size());
+    EXPECT_GT(valid_item_names.size(), 0);
 
     /*
      * On the C++ level, make sure the LibPKMN abstraction matches the underlying
@@ -285,7 +355,8 @@ void gen2_ball_pocket_test(
     const pkmn::item_slots_t& item_slots = ball_pocket->as_vector();
     int num_items = ball_pocket->get_num_items();
 
-    const struct pksav_gen2_ball_pocket* p_native_pocket = static_cast<const pksav_gen2_ball_pocket*>(ball_pocket->get_native());
+    const struct pksav_gen2_ball_pocket* p_native_pocket =
+        static_cast<const pksav_gen2_ball_pocket*>(ball_pocket->get_native());
     EXPECT_EQ(num_items, int(p_native_pocket->count));
     for(int item_index = 0; item_index < num_items; ++item_index)
     {
@@ -318,79 +389,89 @@ void gen2_tmhm_pocket_test(
 
     // Make sure item slots start as correctly empty.
     const pkmn::item_slots_t& item_slots = tmhm_pocket->as_vector();
-    ASSERT_EQ(TMHM_POCKET_SIZE, item_slots.size());
-    for(int tm_index = 1; tm_index <= PKSAV_GEN2_TM_COUNT; ++tm_index)
+    for(int tm_index = 0; tm_index < PKSAV_GEN2_TM_COUNT; ++tm_index)
     {
-        char name[5] = {0};
-        std::snprintf(name, sizeof(name), "TM%02d", tm_index);
-        EXPECT_EQ(name, item_slots[tm_index-1].item);
-        EXPECT_EQ(0, item_slots[tm_index-1].amount);
+        pkmn::e_item expected_item = pkmn::e_item(int(pkmn::e_item::TM01) + tm_index);
+        EXPECT_EQ(expected_item, item_slots[tm_index].item)
+            << pkmn::item_to_string(expected_item) << " vs "
+            << pkmn::item_to_string(item_slots[tm_index].item);
+
+        EXPECT_EQ(0, item_slots[tm_index].amount)
+            << pkmn::item_to_string(expected_item);
     }
-    for(int hm_index = 1; hm_index <= 7; ++hm_index)
+    for(int hm_index = 0; hm_index < PKSAV_GEN2_HM_COUNT; ++hm_index)
     {
-        char name[5] = {};
-        std::snprintf(name, sizeof(name), "HM%02d", hm_index);
-        EXPECT_EQ(name, item_slots[50+hm_index-1].item);
-        EXPECT_EQ(0, item_slots[50+hm_index-1].amount);
+        pkmn::e_item expected_item = pkmn::e_item(int(pkmn::e_item::HM01) + hm_index);
+        EXPECT_EQ(expected_item, item_slots[50+hm_index].item)
+            << pkmn::item_to_string(expected_item) << " vs "
+            << pkmn::item_to_string(item_slots[50+hm_index].item);
+
+        EXPECT_EQ(0, item_slots[50+hm_index].amount)
+            << pkmn::item_to_string(expected_item);
     }
 
     // Confirm exceptions are thrown when expected.
     test_item_list_out_of_range_error(
         tmhm_pocket,
-        "TM10"
+        pkmn::e_item::TM10
     );
 
     // Make sure we can't add items from other pockets.
-    static const std::vector<std::string> wrong_pocket_items = boost::assign::list_of
-        ("Potion")("Master Ball")("Bicycle")
-    ;
+    static const std::vector<pkmn::e_item> wrong_pocket_items =
+    {
+        pkmn::e_item::POTION,
+        pkmn::e_item::MASTER_BALL,
+        pkmn::e_item::BICYCLE
+    };
     test_item_list_invalid_items(
         tmhm_pocket,
         wrong_pocket_items
     );
 
     // Make sure we can't add items from later generations.
-    static const std::vector<std::string> wrong_generation_items = boost::assign::list_of
-        ("TM51")
-    ;
+    static const std::vector<pkmn::e_item> wrong_generation_items =
+    {
+        pkmn::e_item::TM51
+    };
     test_item_list_invalid_items(
         tmhm_pocket,
         wrong_generation_items
     );
 
     // Start adding and removing stuff, and make sure the numbers are accurate.
-    for(int tm_index = 1; tm_index <= 50; ++tm_index)
+    for(int tm_index = 0; tm_index < PKSAV_GEN2_TM_COUNT; ++tm_index)
     {
-        char name[5] = {0};
-        std::snprintf(name, sizeof(name), "TM%02d", tm_index);
-        tmhm_pocket->add(name, 50);
-        EXPECT_EQ(tm_index, tmhm_pocket->get_num_items());
-        EXPECT_EQ(name, item_slots[tm_index-1].item);
-        EXPECT_EQ(50, item_slots[tm_index-1].amount);
+        pkmn::e_item item = pkmn::e_item(int(pkmn::e_item::TM01) + tm_index);
+
+        tmhm_pocket->add(item, 50);
+        EXPECT_EQ(tm_index+1, tmhm_pocket->get_num_items());
+        EXPECT_EQ(item, item_slots[tm_index].item) << pkmn::item_to_string(item);
+        EXPECT_EQ(50, item_slots[tm_index].amount) << pkmn::item_to_string(item);
     }
-    for(int tm_index = 50; tm_index >= 1; --tm_index)
+    for(int tm_index = PKSAV_GEN2_TM_COUNT-1; tm_index >= 0; --tm_index)
     {
-        char name[5] = {0};
-        std::snprintf(name, sizeof(name), "TM%02d", tm_index);
-        tmhm_pocket->remove(name, 50);
-        EXPECT_EQ(tm_index-1, tmhm_pocket->get_num_items());
-        EXPECT_EQ(name, item_slots[tm_index-1].item);
-        EXPECT_EQ(0, item_slots[tm_index-1].amount);
+        pkmn::e_item item = pkmn::e_item(int(pkmn::e_item::TM01) + tm_index);
+
+        tmhm_pocket->remove(item, 50);
+        EXPECT_EQ(tm_index, tmhm_pocket->get_num_items());
+        EXPECT_EQ(item, item_slots[tm_index].item) << pkmn::item_to_string(item);
+        EXPECT_EQ(0, item_slots[tm_index].amount) << pkmn::item_to_string(item);
     }
 
     /*
      * Before removing items, on the C++ level, make sure the LibPKMN abstraction
      * matches the underlying PKSav struct.
      */
-    const struct pksav_gen2_tmhm_pocket* p_native_pocket = static_cast<const pksav_gen2_tmhm_pocket*>(tmhm_pocket->get_native());
-    for(int tm_index = 0; tm_index < 50; ++tm_index)
+    const struct pksav_gen2_tmhm_pocket* p_native_pocket =
+        static_cast<const pksav_gen2_tmhm_pocket*>(tmhm_pocket->get_native());
+    for(int tm_index = 0; tm_index < PKSAV_GEN2_TM_COUNT; ++tm_index)
     {
         EXPECT_EQ(
             item_slots[tm_index].amount,
             int(p_native_pocket->tm_count[tm_index])
         );
     }
-    for(int hm_index = 0; hm_index < 7; ++hm_index)
+    for(int hm_index = 0; hm_index < PKSAV_GEN2_HM_COUNT; ++hm_index)
     {
         EXPECT_EQ(
             item_slots[50+hm_index].amount,
@@ -398,27 +479,30 @@ void gen2_tmhm_pocket_test(
         );
     }
 
-    for(int hm_index = 1; hm_index <= 7; ++hm_index)
+    for(int hm_index = 0; hm_index < PKSAV_GEN2_HM_COUNT; ++hm_index)
     {
-        char name[5] = {0};
-        std::snprintf(name, sizeof(name), "HM%02d", hm_index);
-        tmhm_pocket->add(name, 1);
-        EXPECT_EQ(hm_index, tmhm_pocket->get_num_items());
-        EXPECT_EQ(name, item_slots[50+hm_index-1].item);
-        EXPECT_EQ(1, item_slots[50+hm_index-1].amount);
+        pkmn::e_item item = pkmn::e_item(int(pkmn::e_item::HM01) + hm_index);
+
+        tmhm_pocket->add(item, 1);
+        EXPECT_EQ(hm_index+1, tmhm_pocket->get_num_items());
+        EXPECT_EQ(item, item_slots[50+hm_index].item) << pkmn::item_to_string(item);
+        EXPECT_EQ(1, item_slots[50+hm_index].amount) << pkmn::item_to_string(item);
     }
-    for(int hm_index = 7; hm_index >= 1; --hm_index)
+    for(int hm_index = PKSAV_GEN2_HM_COUNT-1; hm_index >= 0; --hm_index)
     {
-        char name[5] = {0};
-        std::snprintf(name, sizeof(name), "HM%02d", hm_index);
-        tmhm_pocket->remove(name, 1);
-        EXPECT_EQ(hm_index-1, tmhm_pocket->get_num_items());
-        EXPECT_EQ(name, item_slots[50+hm_index-1].item);
-        EXPECT_EQ(0, item_slots[50+hm_index-1].amount);
+        pkmn::e_item item = pkmn::e_item(int(pkmn::e_item::HM01) + hm_index);
+
+        tmhm_pocket->remove(item, 1);
+        EXPECT_EQ(hm_index, tmhm_pocket->get_num_items());
+        EXPECT_EQ(item, item_slots[50+hm_index].item) << pkmn::item_to_string(item);
+        EXPECT_EQ(0, item_slots[50+hm_index].amount) << pkmn::item_to_string(item);
     }
 
-    const std::vector<std::string>& valid_items = tmhm_pocket->get_valid_items();
-    EXPECT_EQ(TMHM_POCKET_SIZE, valid_items.size());
+    const std::vector<pkmn::e_item>& valid_items = tmhm_pocket->get_valid_items();
+    const std::vector<std::string>& valid_item_names = tmhm_pocket->get_valid_item_names();
+
+    ASSERT_EQ(valid_items.size(), valid_item_names.size());
+    EXPECT_EQ(TMHM_POCKET_SIZE, valid_item_names.size());
 }
 
 void gen2_item_pc_test(
@@ -432,16 +516,16 @@ void gen2_item_pc_test(
     // Confirm exceptions are thrown when expected.
     test_item_list_out_of_range_error(
         item_pc,
-        "Potion"
+        pkmn::e_item::POTION
     );
 
     // Make sure item slots start as correctly empty.
     test_item_list_empty_slots(item_pc);
 
     // Crystal-specific items.
-    if(item_pc->get_game() == "Crystal")
+    if(item_pc->get_game() == pkmn::e_game::CRYSTAL)
     {
-        for(const std::string& crystal_item: crystal_items)
+        for(pkmn::e_item crystal_item: CRYSTAL_ITEMS)
         {
             item_pc->add(crystal_item, 1);
             item_pc->remove(crystal_item, 1);
@@ -453,25 +537,31 @@ void gen2_item_pc_test(
     {
         test_item_list_invalid_items(
             item_pc,
-            crystal_items
+            CRYSTAL_ITEMS
         );
     }
 
     // Make sure we can't add items from later generations.
     test_item_list_invalid_items(
         item_pc,
-        wrong_generation_all_pocket_items
+        WRONG_GENERATION_ALL_POCKET_ITEMS
     );
 
     // Start adding and removing stuff, and make sure the numbers are accurate.
     test_item_list_add_remove(
         item_pc,
-        all_pocket_item_names
+        ALL_POCKET_ITEMS
     );
 
-    const std::vector<std::string>& valid_items = item_pc->get_valid_items();
-    std::vector<std::string> full_item_list = pkmn::database::get_item_list(item_pc->get_game());
-    EXPECT_EQ(full_item_list.size(), valid_items.size());
+    const std::vector<pkmn::e_item>& valid_items = item_pc->get_valid_items();
+    const std::vector<std::string>& valid_item_names = item_pc->get_valid_item_names();
+
+    std::vector<pkmn::e_item> full_item_list = pkmn::database::get_item_list(item_pc->get_game());
+    std::vector<std::string> full_item_name_list = pkmn::database::get_item_name_list(item_pc->get_game());
+
+    ASSERT_EQ(valid_items.size(), valid_item_names.size());
+    ASSERT_EQ(full_item_list.size(), full_item_name_list.size());
+    ASSERT_EQ(valid_items.size(), full_item_list.size());
 
     /*
      * On the C++ level, make sure the LibPKMN abstraction matches the underlying
@@ -513,23 +603,23 @@ TEST_P(gen2_item_list_test, item_list_test) {
     gen2_test_fcns.at(get_name())(get_item_list());
 }
 
-static const std::vector<std::pair<std::string, std::string>> item_list_params =
+static const std::vector<std::pair<pkmn::e_game, std::string>> item_list_params =
 {
-    {"Gold", "Items"},
-    {"Gold", "KeyItems"},
-    {"Gold", "Balls"},
-    {"Gold", "TM/HM"},
-    {"Gold", "PC"},
-    {"Silver", "Items"},
-    {"Silver", "KeyItems"},
-    {"Silver", "Balls"},
-    {"Silver", "TM/HM"},
-    {"Silver", "PC"},
-    {"Crystal", "Items"},
-    {"Crystal", "KeyItems"},
-    {"Crystal", "Balls"},
-    {"Crystal", "TM/HM"},
-    {"Crystal", "PC"},
+    {pkmn::e_game::GOLD, "Items"},
+    {pkmn::e_game::GOLD, "KeyItems"},
+    {pkmn::e_game::GOLD, "Balls"},
+    {pkmn::e_game::GOLD, "TM/HM"},
+    {pkmn::e_game::GOLD, "PC"},
+    {pkmn::e_game::SILVER, "Items"},
+    {pkmn::e_game::SILVER, "KeyItems"},
+    {pkmn::e_game::SILVER, "Balls"},
+    {pkmn::e_game::SILVER, "TM/HM"},
+    {pkmn::e_game::SILVER, "PC"},
+    {pkmn::e_game::CRYSTAL, "Items"},
+    {pkmn::e_game::CRYSTAL, "KeyItems"},
+    {pkmn::e_game::CRYSTAL, "Balls"},
+    {pkmn::e_game::CRYSTAL, "TM/HM"},
+    {pkmn::e_game::CRYSTAL, "PC"},
 };
 
 INSTANTIATE_TEST_CASE_P(
@@ -576,7 +666,7 @@ TEST_P(gen2_item_bag_test, item_bag_test)
     for(int item_index = 0; item_index < 8; ++item_index)
     {
         bag->add(
-            all_pocket_item_names[item_index],
+            ALL_POCKET_ITEMS[item_index],
             1
         );
     }
@@ -586,34 +676,34 @@ TEST_P(gen2_item_bag_test, item_bag_test)
     const pkmn::item_slots_t& ball_slots = bag->get_pocket("Balls")->as_vector();
     const pkmn::item_slots_t& tm_hm_slots = bag->get_pocket("TM/HM")->as_vector();
 
-    EXPECT_EQ("Potion", item_slots.at(0).item);
+    EXPECT_EQ(pkmn::e_item::POTION, item_slots.at(0).item) << pkmn::item_to_string(item_slots.at(0).item);
     EXPECT_EQ(1, item_slots.at(0).amount);
-    EXPECT_EQ("Berry", item_slots.at(1).item);
+    EXPECT_EQ(pkmn::e_item::BERRY, item_slots.at(1).item) << pkmn::item_to_string(item_slots.at(1).item);
     EXPECT_EQ(1, item_slots.at(1).amount);
-    EXPECT_EQ("None", item_slots.at(2).item);
+    EXPECT_EQ(pkmn::e_item::NONE, item_slots.at(2).item) << pkmn::item_to_string(item_slots.at(2).item);
     EXPECT_EQ(0, item_slots.at(2).amount);
 
-    EXPECT_EQ("Bicycle", key_item_slots.at(0).item);
+    EXPECT_EQ(pkmn::e_item::BICYCLE, key_item_slots.at(0).item) << pkmn::item_to_string(key_item_slots.at(0).item);
     EXPECT_EQ(1, key_item_slots.at(0).amount);
-    EXPECT_EQ("SquirtBottle", key_item_slots.at(1).item);
+    EXPECT_EQ(pkmn::e_item::SQUIRT_BOTTLE, key_item_slots.at(1).item) << pkmn::item_to_string(key_item_slots.at(1).item);
     EXPECT_EQ(1, key_item_slots.at(1).amount);
-    EXPECT_EQ("None", key_item_slots.at(2).item);
+    EXPECT_EQ(pkmn::e_item::NONE, key_item_slots.at(2).item) << pkmn::item_to_string(key_item_slots.at(2).item);
     EXPECT_EQ(0, key_item_slots.at(2).amount);
 
-    EXPECT_EQ("Great Ball", ball_slots.at(0).item);
+    EXPECT_EQ(pkmn::e_item::GREAT_BALL, ball_slots.at(0).item) << pkmn::item_to_string(ball_slots.at(0).item);
     EXPECT_EQ(1, ball_slots.at(0).amount);
-    EXPECT_EQ("Friend Ball", ball_slots.at(1).item);
+    EXPECT_EQ(pkmn::e_item::FRIEND_BALL, ball_slots.at(1).item) << pkmn::item_to_string(ball_slots.at(1).item);
     EXPECT_EQ(1, ball_slots.at(1).amount);
-    EXPECT_EQ("None", ball_slots.at(2).item);
+    EXPECT_EQ(pkmn::e_item::NONE, ball_slots.at(2).item) << pkmn::item_to_string(ball_slots.at(2).item);
     EXPECT_EQ(0, ball_slots.at(2).amount);
 
-    EXPECT_EQ("TM01", tm_hm_slots.at(0).item);
+    EXPECT_EQ(pkmn::e_item::TM01, tm_hm_slots.at(0).item) << pkmn::item_to_string(tm_hm_slots.at(0).item);
     EXPECT_EQ(0, tm_hm_slots.at(0).amount);
-    EXPECT_EQ("TM02", tm_hm_slots.at(1).item);
+    EXPECT_EQ(pkmn::e_item::TM02, tm_hm_slots.at(1).item) << pkmn::item_to_string(tm_hm_slots.at(1).item);
     EXPECT_EQ(0, tm_hm_slots.at(1).amount);
-    EXPECT_EQ("TM28", tm_hm_slots.at(27).item);
+    EXPECT_EQ(pkmn::e_item::TM28, tm_hm_slots.at(27).item) << pkmn::item_to_string(tm_hm_slots.at(7).item);
     EXPECT_EQ(1, tm_hm_slots.at(27).amount);
-    EXPECT_EQ("HM01", tm_hm_slots.at(50).item);
+    EXPECT_EQ(pkmn::e_item::HM01, tm_hm_slots.at(50).item) << pkmn::item_to_string(tm_hm_slots.at(0).item);
     EXPECT_EQ(1, tm_hm_slots.at(50).amount);
 
     /*
@@ -674,52 +764,52 @@ TEST_P(gen2_item_bag_test, item_bag_test)
     for(int item_index = 0; item_index < 8; ++item_index)
     {
         bag->remove(
-            all_pocket_item_names[item_index],
+            ALL_POCKET_ITEMS[item_index],
             1
         );
     }
 
-    EXPECT_EQ("None", item_slots.at(0).item);
+    EXPECT_EQ(pkmn::e_item::NONE, item_slots.at(0).item);
     EXPECT_EQ(0, item_slots.at(0).amount);
-    EXPECT_EQ("None", item_slots.at(1).item);
+    EXPECT_EQ(pkmn::e_item::NONE, item_slots.at(1).item);
     EXPECT_EQ(0, item_slots.at(1).amount);
-    EXPECT_EQ("None", item_slots.at(2).item);
+    EXPECT_EQ(pkmn::e_item::NONE, item_slots.at(2).item);
     EXPECT_EQ(0, item_slots.at(2).amount);
 
-    EXPECT_EQ("None", key_item_slots.at(0).item);
+    EXPECT_EQ(pkmn::e_item::NONE, key_item_slots.at(0).item);
     EXPECT_EQ(0, key_item_slots.at(0).amount);
-    EXPECT_EQ("None", key_item_slots.at(1).item);
+    EXPECT_EQ(pkmn::e_item::NONE, key_item_slots.at(1).item);
     EXPECT_EQ(0, key_item_slots.at(1).amount);
-    EXPECT_EQ("None", key_item_slots.at(2).item);
+    EXPECT_EQ(pkmn::e_item::NONE, key_item_slots.at(2).item);
     EXPECT_EQ(0, key_item_slots.at(2).amount);
 
-    EXPECT_EQ("None", ball_slots.at(0).item);
+    EXPECT_EQ(pkmn::e_item::NONE, ball_slots.at(0).item);
     EXPECT_EQ(0, ball_slots.at(0).amount);
-    EXPECT_EQ("None", ball_slots.at(1).item);
+    EXPECT_EQ(pkmn::e_item::NONE, ball_slots.at(1).item);
     EXPECT_EQ(0, ball_slots.at(1).amount);
-    EXPECT_EQ("None", ball_slots.at(2).item);
+    EXPECT_EQ(pkmn::e_item::NONE, ball_slots.at(2).item);
     EXPECT_EQ(0, ball_slots.at(2).amount);
 
-    EXPECT_EQ("TM01", tm_hm_slots.at(0).item);
+    EXPECT_EQ(pkmn::e_item::TM01, tm_hm_slots.at(0).item);
     EXPECT_EQ(0, tm_hm_slots.at(0).amount);
-    EXPECT_EQ("TM02", tm_hm_slots.at(1).item);
+    EXPECT_EQ(pkmn::e_item::TM02, tm_hm_slots.at(1).item);
     EXPECT_EQ(0, tm_hm_slots.at(1).amount);
-    EXPECT_EQ("TM28", tm_hm_slots.at(27).item);
+    EXPECT_EQ(pkmn::e_item::TM28, tm_hm_slots.at(27).item);
     EXPECT_EQ(0, tm_hm_slots.at(27).amount);
-    EXPECT_EQ("HM01", tm_hm_slots.at(50).item);
+    EXPECT_EQ(pkmn::e_item::HM01, tm_hm_slots.at(50).item);
     EXPECT_EQ(0, tm_hm_slots.at(50).amount);
 
     // Make sure we can't add/remove Crystal-specific items with a Gold/Silver bag.
-    if(get_game() == "Crystal")
+    if(get_game() == pkmn::e_game::CRYSTAL)
     {
         for(int item_index = 0; item_index < 4; ++item_index)
         {
-            bag->add(crystal_items[item_index], 1);
+            bag->add(CRYSTAL_ITEMS[item_index], 1);
         }
         for(int item_index = 0; item_index < 4; ++item_index)
         {
             EXPECT_EQ(
-                crystal_items[item_index],
+                CRYSTAL_ITEMS[item_index],
                 key_item_slots.at(item_index).item
             );
             EXPECT_EQ(
@@ -730,11 +820,11 @@ TEST_P(gen2_item_bag_test, item_bag_test)
 
         for(int item_index = 0; item_index < 4; ++item_index)
         {
-            bag->remove(crystal_items[item_index], 1);
+            bag->remove(CRYSTAL_ITEMS[item_index], 1);
         }
         for(int item_index = 0; item_index < 4; ++item_index)
         {
-            EXPECT_EQ("None", key_item_slots.at(item_index).item);
+            EXPECT_EQ(pkmn::e_item::NONE, key_item_slots.at(item_index).item);
             EXPECT_EQ(0, key_item_slots.at(item_index).amount);
         }
     }
@@ -742,24 +832,19 @@ TEST_P(gen2_item_bag_test, item_bag_test)
     {
         test_item_bag_invalid_items(
             bag,
-            crystal_items
+            CRYSTAL_ITEMS
         );
     }
 
     // Make sure we can't add items from later generations.
     test_item_bag_invalid_items(
         bag,
-        wrong_generation_all_pocket_items
+        WRONG_GENERATION_ALL_POCKET_ITEMS
     );
 }
-
-static const std::vector<std::string> item_bag_params =
-{
-    "Gold", "Silver", "Crystal"
-};
 
 INSTANTIATE_TEST_CASE_P(
     cpp_gen2_item_bag_test,
     gen2_item_bag_test,
-    ::testing::ValuesIn(item_bag_params)
+    ::testing::ValuesIn(pkmntest::GEN2_GAMES)
 );

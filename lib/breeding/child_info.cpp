@@ -7,6 +7,7 @@
 
 #include "exception_internal.hpp"
 #include "database/database_common.hpp"
+#include "database/enum_conversions.hpp"
 #include "database/id_to_string.hpp"
 #include "pksav/pksav_call.hpp"
 #include "types/rng.hpp"
@@ -19,6 +20,7 @@
 #include <pkmn/breeding/compatibility.hpp>
 #include <pkmn/database/lists.hpp>
 #include <pkmn/database/pokemon_entry.hpp>
+#include <pkmn/enums/enum_to_string.hpp>
 
 #include <pksav/common/stats.h>
 
@@ -27,20 +29,16 @@
 
 namespace pkmn { namespace breeding {
 
-    BOOST_STATIC_CONSTEXPR int NIDORAN_F_SPECIES_ID = 29;
-    BOOST_STATIC_CONSTEXPR int NIDORAN_M_SPECIES_ID = 32;
-    BOOST_STATIC_CONSTEXPR int DITTO_SPECIES_ID     = 132;
-    BOOST_STATIC_CONSTEXPR int VOLBEAT_SPECIES_ID   = 313;
-    BOOST_STATIC_CONSTEXPR int ILLUMISE_SPECIES_ID  = 314;
-    BOOST_STATIC_CONSTEXPR int MANAPHY_SPECIES_ID   = 490;
+    // Needed to avoid using commas in BOOST_ASSERT
+    #define IV_MAP_KEYS_TO_VECTOR(iv_map) (map_keys_to_vector<std::map<pkmn::e_stat, int>, pkmn::e_stat>(iv_map))
 
     struct incense_breeding_pokemon
     {
-        std::vector<std::string> species;
-        std::string evolution_to_add;
+        std::vector<pkmn::e_species> species;
+        pkmn::e_species evolution_to_add;
     };
 
-    std::string get_earliest_species_in_evolutionary_line(
+    static pkmn::e_species get_earliest_species_in_evolutionary_line(
         int species_id,
         int generation
     )
@@ -67,13 +65,13 @@ namespace pkmn { namespace breeding {
             stmt.bind(2, query_species_id);
         }
 
-        return pkmn::database::species_id_to_name(query_species_id);
+        return static_cast<pkmn::e_species>(query_species_id);
     }
 
-    std::vector<std::string> get_possible_child_species(
-        const std::string& mother_species,
-        const std::string& father_species,
-        const std::string& game
+    std::vector<pkmn::e_species> get_possible_child_species(
+        pkmn::e_species mother_species,
+        pkmn::e_species father_species,
+        pkmn::e_game game
     )
     {
         if(!are_pokemon_species_compatible(mother_species, father_species))
@@ -86,7 +84,7 @@ namespace pkmn { namespace breeding {
         pkmn::database::pokemon_entry mother_entry(mother_species, game, "");
         if(fp_compare_equal(mother_entry.get_chance_male(), 1.0f))
         {
-            std::string error_message(mother_species);
+            std::string error_message(pkmn::species_to_string(mother_species));
             error_message += " is male-only and cannot be a mother.";
             throw std::invalid_argument(error_message);
         }
@@ -94,65 +92,67 @@ namespace pkmn { namespace breeding {
         pkmn::database::pokemon_entry father_entry(father_species, game, "");
         if(fp_compare_equal(father_entry.get_chance_female(), 1.0f))
         {
-            std::string error_message(father_species);
+            std::string error_message(pkmn::species_to_string(father_species));
             error_message += " is female-only and cannot be a father.";
             throw std::invalid_argument(error_message);
         }
 
-        std::vector<std::string> possible_child_species;
+        std::vector<pkmn::e_species> possible_child_species;
 
-        bool is_mother_nidoran_f = (mother_entry.get_species_id() == NIDORAN_F_SPECIES_ID);
-        bool is_mother_ditto     = (mother_entry.get_species_id() == DITTO_SPECIES_ID);
-        bool is_mother_illumise  = (mother_entry.get_species_id() == ILLUMISE_SPECIES_ID);
-        bool is_mother_manaphy   = (mother_entry.get_species_id() == MANAPHY_SPECIES_ID);
+        bool is_mother_nidoran_f = (mother_species == pkmn::e_species::NIDORAN_F);
+        bool is_mother_ditto     = (mother_species == pkmn::e_species::DITTO);
+        bool is_mother_illumise  = (mother_species == pkmn::e_species::ILLUMISE);
+        bool is_mother_manaphy   = (mother_species == pkmn::e_species::MANAPHY);
 
-        bool is_father_nidoran_m = (father_entry.get_species_id() == NIDORAN_M_SPECIES_ID);
-        bool is_father_ditto     = (father_entry.get_species_id() == DITTO_SPECIES_ID);
-        bool is_father_volbeat   = (father_entry.get_species_id() == VOLBEAT_SPECIES_ID);
-        bool is_father_manaphy   = (father_entry.get_species_id() == MANAPHY_SPECIES_ID);
+        bool is_father_nidoran_m = (father_species == pkmn::e_species::NIDORAN_M);
+        bool is_father_ditto     = (father_species == pkmn::e_species::DITTO);
+        bool is_father_volbeat   = (father_species == pkmn::e_species::VOLBEAT);
+        bool is_father_manaphy   = (father_species == pkmn::e_species::MANAPHY);
 
         if(is_mother_nidoran_f)
         {
-            // Trust the library to properly return the symbols.
-            static const std::vector<std::string> NIDORAN_F_POSSIBLE_SPECIES =
+            possible_child_species =
             {
-                pkmn::database::species_id_to_name(NIDORAN_F_SPECIES_ID),
-                pkmn::database::species_id_to_name(NIDORAN_M_SPECIES_ID),
+                pkmn::e_species::NIDORAN_F,
+                pkmn::e_species::NIDORAN_M
             };
-
-            possible_child_species = NIDORAN_F_POSSIBLE_SPECIES;
         }
         else if(is_mother_ditto && is_father_nidoran_m)
         {
-            possible_child_species.emplace_back(
-                pkmn::database::species_id_to_name(NIDORAN_M_SPECIES_ID)
-            );
+            possible_child_species = {pkmn::e_species::NIDORAN_M};
 
-            if(pkmn::database::game_name_to_generation(game) >= 5)
+            if(pkmn::database::game_enum_to_generation(game) >= 5)
             {
                 // Output should be sorted by species ID
                 possible_child_species.insert(
                     possible_child_species.begin(),
-                    pkmn::database::species_id_to_name(NIDORAN_F_SPECIES_ID)
+                    pkmn::e_species::NIDORAN_F
                 );
             }
         }
         else if(is_mother_ditto && is_father_volbeat)
         {
-            possible_child_species.emplace_back("Volbeat");
-            if(pkmn::database::game_name_to_generation(game) >= 5)
+            possible_child_species = {pkmn::e_species::VOLBEAT};
+
+            if(pkmn::database::game_enum_to_generation(game) >= 5)
             {
-                possible_child_species.emplace_back("Illumise");
+                possible_child_species.emplace_back(
+                    pkmn::e_species::ILLUMISE
+                );
             }
         }
         else if(is_mother_illumise)
         {
-            possible_child_species = {"Volbeat", "Illumise"};
+            possible_child_species =
+            {
+                pkmn::e_species::VOLBEAT,
+                pkmn::e_species::ILLUMISE
+            };
         }
         else if((is_mother_manaphy && is_father_ditto) ||
                 (is_father_manaphy && is_mother_ditto))
         {
-            possible_child_species = {"Phione"};
+            possible_child_species = {pkmn::e_species::PHIONE};
         }
         else if(is_mother_ditto)
         {
@@ -182,15 +182,42 @@ namespace pkmn { namespace breeding {
         // do this automatically, so we have to automatically check.
         static const std::vector<incense_breeding_pokemon> INCENSE_BREEDING_POKEMON =
         {
-            {{"Marill", "Azumarill"}, "Marill"},
-            {{"Wobbuffet"}, "Wobbuffet"},
-            {{"Roselia", "Roserade"}, "Roselia"},
-            {{"Chimecho"}, "Chimecho"},
-            {{"Sudowoodo"}, "Sudowoodo"},
-            {{"Mr. Mime"}, "Mr. Mime"},
-            {{"Chansey", "Blissey"}, "Chansey"},
-            {{"Mantine"}, "Mantine"},
-            {{"Snorlax"}, "Snorlax"}
+            {
+                {pkmn::e_species::MARILL, pkmn::e_species::AZUMARILL},
+                pkmn::e_species::MARILL
+            },
+            {
+                {pkmn::e_species::WOBBUFFET},
+                pkmn::e_species::WOBBUFFET
+            },
+            {
+                {pkmn::e_species::ROSELIA, pkmn::e_species::ROSERADE},
+                pkmn::e_species::ROSELIA
+            },
+            {
+                {pkmn::e_species::CHIMECHO},
+                pkmn::e_species::CHIMECHO
+            },
+            {
+                {pkmn::e_species::SUDOWOODO},
+                pkmn::e_species::SUDOWOODO
+            },
+            {
+                {pkmn::e_species::MR_MIME},
+                pkmn::e_species::MR_MIME
+            },
+            {
+                {pkmn::e_species::CHANSEY, pkmn::e_species::BLISSEY},
+                pkmn::e_species::CHANSEY
+            },
+            {
+                {pkmn::e_species::MANTINE},
+                pkmn::e_species::MANTINE
+            },
+            {
+                {pkmn::e_species::SNORLAX},
+                pkmn::e_species::SNORLAX
+            },
         };
         auto incense_breeding_pokemon_iter =
             std::find_if(
@@ -201,7 +228,7 @@ namespace pkmn { namespace breeding {
                 )
                 {
                     return (does_vector_contain_value(breeding_pokemon.species, mother_species)) ||
-                           ((mother_species == "Ditto") && does_vector_contain_value(breeding_pokemon.species, father_species));
+                           ((mother_species == pkmn::e_species::DITTO) && does_vector_contain_value(breeding_pokemon.species, father_species));
                 });
         if((incense_breeding_pokemon_iter != INCENSE_BREEDING_POKEMON.end()) &&
            !does_vector_contain_value(
@@ -220,10 +247,10 @@ namespace pkmn { namespace breeding {
         return possible_child_species;
     }
 
-    std::vector<std::string> get_child_moves(
+    std::vector<pkmn::e_move> get_child_moves(
         const pkmn::pokemon::sptr& mother,
         const pkmn::pokemon::sptr& father,
-        const std::string& child_species
+        pkmn::e_species child_species
     )
     {
         if(mother->get_game() != father->get_game())
@@ -233,28 +260,28 @@ namespace pkmn { namespace breeding {
                   );
         }
 
-        std::vector<std::string> possible_child_species = get_possible_child_species(
-                                                              mother->get_species(),
-                                                              father->get_species(),
-                                                              mother->get_game()
-                                                          );
+        std::vector<pkmn::e_species> possible_child_species = get_possible_child_species(
+                                                                  mother->get_species(),
+                                                                  father->get_species(),
+                                                                  mother->get_game()
+                                                              );
         if(!does_vector_contain_value(possible_child_species, child_species))
         {
-            std::string error_message = child_species;
+            std::string error_message = pkmn::species_to_string(child_species);
             error_message += " is not a possible child for ";
-            error_message += mother->get_species();
+            error_message += pkmn::species_to_string(mother->get_species());
             error_message += " and ";
-            error_message += father->get_species();
+            error_message += pkmn::species_to_string(father->get_species());
             error_message += ".";
 
             throw std::invalid_argument(error_message);
         }
 
-        const std::string game = mother->get_game();
-        const int generation = pkmn::database::game_name_to_generation(game);
+        const pkmn::e_game game = mother->get_game();
+        const int generation = pkmn::database::game_enum_to_generation(game);
 
         BOOST_STATIC_CONSTEXPR size_t MAX_NUM_MOVES = 4;
-        std::vector<std::string> child_moves;
+        std::vector<pkmn::e_move> child_moves;
 
         const pkmn::move_slots_t& mother_moves = mother->get_moves();
         const pkmn::move_slots_t& father_moves = father->get_moves();
@@ -268,21 +295,22 @@ namespace pkmn { namespace breeding {
          * child Pichu will know Volt Tackle. This takes priority over any
          * other policy.
          */
-        if(child_species == "Pichu")
+        if(child_species == pkmn::e_species::PICHU)
         {
             bool has_volt_tackle_policy = (generation >= 4) ||
-                                          (game == "Emerald");
+                                          (game == pkmn::e_game::EMERALD);
 
             if(has_volt_tackle_policy)
             {
-                if((mother->get_held_item() == "Light Ball") || (father->get_held_item() == "Light Ball"))
+                if((mother->get_held_item() == pkmn::e_item::LIGHT_BALL) ||
+                   (father->get_held_item() == pkmn::e_item::LIGHT_BALL))
                 {
-                    child_moves.emplace_back("Volt Tackle");
+                    child_moves.emplace_back(pkmn::e_move::VOLT_TACKLE);
                 }
             }
         }
 
-        pkmn::database::move_list_t child_egg_moves = child_entry.get_egg_moves();
+        std::vector<pkmn::e_move> child_egg_moves = child_entry.get_egg_moves();
         if(!child_egg_moves.empty())
         {
             /*
@@ -293,15 +321,7 @@ namespace pkmn { namespace breeding {
                 (mother_move_index < mother_moves.size()) && (child_moves.size() < MAX_NUM_MOVES);
                 ++mother_move_index)
             {
-                auto egg_move_iter =
-                    std::find_if(
-                        child_egg_moves.begin(),
-                        child_egg_moves.end(),
-                        [&mother_moves, &mother_move_index](const pkmn::database::move_entry& egg_move)
-                        {
-                            return (egg_move.get_name() == mother_moves[mother_move_index].move);
-                        });
-                if(egg_move_iter != child_egg_moves.end())
+                if(pkmn::does_vector_contain_value(child_egg_moves, mother_moves[mother_move_index].move))
                 {
                     child_moves.emplace_back(
                         mother_moves[mother_move_index].move
@@ -317,15 +337,7 @@ namespace pkmn { namespace breeding {
                 (father_move_index < father_moves.size()) && (child_moves.size() < MAX_NUM_MOVES);
                 ++father_move_index)
             {
-                auto egg_move_iter =
-                    std::find_if(
-                        child_egg_moves.begin(),
-                        child_egg_moves.end(),
-                        [&father_moves, &father_move_index](const pkmn::database::move_entry& egg_move)
-                        {
-                            return (egg_move.get_name() == father_moves[father_move_index].move);
-                        });
-                if(egg_move_iter != child_egg_moves.end())
+                if(pkmn::does_vector_contain_value(child_egg_moves, father_moves[father_move_index].move))
                 {
                     child_moves.emplace_back(
                         father_moves[father_move_index].move
@@ -342,25 +354,17 @@ namespace pkmn { namespace breeding {
          */
         if((child_moves.size() < MAX_NUM_MOVES) && (generation <= 5))
         {
-            pkmn::database::move_list_t child_tm_hm_moves = child_entry.get_tm_hm_moves();
-            std::vector<std::string> child_tm_hm_move_names;
-            for(const auto& child_tm_hm_move: child_tm_hm_moves)
-            {
-                child_tm_hm_move_names.emplace_back(child_tm_hm_move.get_name());
-            }
+            std::vector<pkmn::e_move> child_tm_hm_moves = child_entry.get_tm_hm_moves();
 
             for(size_t move_index = 0;
                 (move_index < father_moves.size()) && (child_moves.size() < MAX_NUM_MOVES);
                 ++move_index)
             {
-                auto tm_hm_move_name_iter = std::find(
-                                                child_tm_hm_move_names.begin(),
-                                                child_tm_hm_move_names.end(),
-                                                father_moves[move_index].move
-                                            );
-                if(tm_hm_move_name_iter != child_tm_hm_move_names.end())
+                if(pkmn::does_vector_contain_value(child_tm_hm_moves, father_moves[move_index].move))
                 {
-                    child_moves.emplace_back(*tm_hm_move_name_iter);
+                    child_moves.emplace_back(
+                        father_moves[move_index].move
+                    );
                 }
             }
         }
@@ -369,26 +373,18 @@ namespace pkmn { namespace breeding {
          * In Crystal, if the father knows any moves that the child can learn via
          * a Move Tutor, the child will hatch knowing these move(s).
          */
-        if((child_moves.size() < MAX_NUM_MOVES) && (game == "Crystal"))
+        if((child_moves.size() < MAX_NUM_MOVES) && (game == pkmn::e_game::CRYSTAL))
         {
-            pkmn::database::move_list_t child_tutor_moves = child_entry.get_tutor_moves();
+            std::vector<pkmn::e_move> child_tutor_moves = child_entry.get_tutor_moves();
 
-            for(size_t father_move_index = 0;
-                (father_move_index < father_moves.size()) && (child_moves.size() < MAX_NUM_MOVES);
-                ++father_move_index)
+            for(size_t move_index = 0;
+                (move_index < father_moves.size()) && (child_moves.size() < MAX_NUM_MOVES);
+                ++move_index)
             {
-                auto tutor_move_iter =
-                    std::find_if(
-                        child_tutor_moves.begin(),
-                        child_tutor_moves.end(),
-                        [&father_moves, &father_move_index](const pkmn::database::move_entry& tutor_move)
-                        {
-                            return (tutor_move.get_name() == father_moves[father_move_index].move);
-                        });
-                if(tutor_move_iter != child_tutor_moves.end())
+                if(pkmn::does_vector_contain_value(child_tutor_moves, father_moves[move_index].move))
                 {
                     child_moves.emplace_back(
-                        father_moves[father_move_index].move
+                        father_moves[move_index].move
                     );
                 }
             }
@@ -406,15 +402,15 @@ namespace pkmn { namespace breeding {
                 (levelup_move_index < child_levelup_moves.size()) && (child_moves.size() < MAX_NUM_MOVES);
                 ++levelup_move_index)
             {
-                std::string move_name = child_levelup_moves[levelup_move_index].move.get_name();
+                pkmn::e_move move = child_levelup_moves[levelup_move_index].move;
 
                 auto mother_move_iter =
                     std::find_if(
                         mother_moves.begin(),
                         mother_moves.end(),
-                        [&move_name](const pkmn::move_slot& move_slot)
+                        [&move](const pkmn::move_slot& move_slot)
                         {
-                            return (move_slot.move == move_name);
+                            return (move_slot.move == move);
                         });
                 if(mother_move_iter != mother_moves.end())
                 {
@@ -422,13 +418,13 @@ namespace pkmn { namespace breeding {
                         std::find_if(
                             father_moves.begin(),
                             father_moves.end(),
-                            [&move_name](const pkmn::move_slot& move_slot)
+                            [&move](const pkmn::move_slot& move_slot)
                             {
-                                return (move_slot.move == move_name);
+                                return (move_slot.move == move);
                             });
                     if(father_move_iter != father_moves.end())
                     {
-                        child_moves.emplace_back(move_name);
+                        child_moves.emplace_back(move);
                     }
                 }
             }
@@ -445,9 +441,7 @@ namespace pkmn { namespace breeding {
             {
                 if(child_levelup_moves[levelup_move_index].level <= child_level)
                 {
-                    child_moves.emplace_back(
-                        child_levelup_moves[levelup_move_index].move.get_name()
-                    );
+                    child_moves.emplace_back(child_levelup_moves[levelup_move_index].move);
                 }
                 else
                 {
@@ -456,15 +450,15 @@ namespace pkmn { namespace breeding {
             }
         }
 
-        child_moves.resize(MAX_NUM_MOVES, "None");
+        child_moves.resize(MAX_NUM_MOVES, pkmn::e_move::NONE);
         return child_moves;
     }
 
     static bool can_species_be_male(
-        const std::string& species
+        pkmn::e_species species
     )
     {
-        static const std::string ENTRY_GAME = "X";
+        static const pkmn::e_game ENTRY_GAME = pkmn::e_game::X;
 
         return fp_compare_not_equal(
                    pkmn::database::pokemon_entry(species, ENTRY_GAME, "").get_chance_male(),
@@ -473,10 +467,10 @@ namespace pkmn { namespace breeding {
     }
 
     static bool can_species_be_female(
-        const std::string& species
+        pkmn::e_species species
     )
     {
-        static const std::string ENTRY_GAME = "X";
+        static const pkmn::e_game ENTRY_GAME = pkmn::e_game::X;
 
         return fp_compare_not_equal(
                    pkmn::database::pokemon_entry(species, ENTRY_GAME, "").get_chance_female(),
@@ -485,10 +479,10 @@ namespace pkmn { namespace breeding {
     }
 
     static bool is_species_genderless(
-        const std::string& species
+        pkmn::e_species species
     )
     {
-        static const std::string ENTRY_GAME = "X";
+        static const pkmn::e_game ENTRY_GAME = pkmn::e_game::X;
 
         pkmn::database::pokemon_entry species_entry(species, ENTRY_GAME, "");
 
@@ -502,16 +496,16 @@ namespace pkmn { namespace breeding {
                );
     }
 
-    std::map<std::string, int> get_gen2_ideal_child_IVs(
+    std::map<pkmn::e_stat, int> get_gen2_ideal_child_IVs(
         const pkmn::pokemon::sptr& mother,
         const pkmn::pokemon::sptr& father,
-        const std::string& child_gender
+        pkmn::e_gender child_gender
     )
     {
-        bool is_mother_ditto = (mother->get_database_entry().get_species_id() == DITTO_SPECIES_ID);
-        bool is_father_ditto = (father->get_database_entry().get_species_id() == DITTO_SPECIES_ID);
+        bool is_mother_ditto = (mother->get_species() == pkmn::e_species::DITTO);
+        bool is_father_ditto = (father->get_species() == pkmn::e_species::DITTO);
 
-        std::map<std::string, int> parent_IVs;
+        std::map<pkmn::e_stat, int> parent_IVs;
         if(is_mother_ditto)
         {
             parent_IVs = mother->get_IVs();
@@ -524,23 +518,23 @@ namespace pkmn { namespace breeding {
         {
             // Genderless Pokémon can only breed with Ditto, so we know the parents
             // are male and female at this point.
-            parent_IVs = (child_gender == "Male") ? mother->get_IVs()
-                                                  : father->get_IVs();
+            parent_IVs = (child_gender == pkmn::e_gender::MALE) ? mother->get_IVs()
+                                                                : father->get_IVs();
         }
 
-        std::map<std::string, int> ideal_child_IVs;
+        std::map<pkmn::e_stat, int> ideal_child_IVs;
 
         // Use PKSav to set the IVs, as the HP IV is derived from the others.
         uint16_t pksav_IV = 0;
 
         // The Defense IV comes straight from the parent.
-        BOOST_ASSERT(parent_IVs.count("Defense") > 0);
+        BOOST_ASSERT(parent_IVs.count(pkmn::e_stat::DEFENSE) > 0);
 
-        ideal_child_IVs["Defense"] = parent_IVs["Defense"];
+        ideal_child_IVs[pkmn::e_stat::DEFENSE] = parent_IVs[pkmn::e_stat::DEFENSE];
         PKSAV_CALL(
             pksav_set_gb_IV(
                 PKSAV_GB_IV_DEFENSE,
-                static_cast<uint8_t>(parent_IVs["Defense"]),
+                static_cast<uint8_t>(parent_IVs[pkmn::e_stat::DEFENSE]),
                 &pksav_IV
             );
         )
@@ -550,14 +544,14 @@ namespace pkmn { namespace breeding {
         // it would be increased by 8, and if it was above it, it would be
         // decreased by 8. As this function returns ideal valid IVs, we will
         // add a low IV and leave a high IV as is.
-        BOOST_ASSERT(parent_IVs.count("Special") > 0);
+        BOOST_ASSERT(parent_IVs.count(pkmn::e_stat::SPECIAL) > 0);
 
-        int IV_special = parent_IVs["Special"];
+        int IV_special = parent_IVs[pkmn::e_stat::SPECIAL];
         if(IV_special < 8)
         {
             IV_special += 8;
         }
-        ideal_child_IVs["Special"] = IV_special;
+        ideal_child_IVs[pkmn::e_stat::SPECIAL] = IV_special;
         PKSAV_CALL(
             pksav_set_gb_IV(
                 PKSAV_GB_IV_SPECIAL,
@@ -568,7 +562,7 @@ namespace pkmn { namespace breeding {
 
         // Attack and Speed IVs are generated randomly, but as this function
         // returns ideal valid IVs, we'll just use the highest valid values.
-        ideal_child_IVs["Attack"] = PKSAV_MAX_GB_IV;
+        ideal_child_IVs[pkmn::e_stat::ATTACK] = PKSAV_MAX_GB_IV;
         PKSAV_CALL(
             pksav_set_gb_IV(
                 PKSAV_GB_IV_ATTACK,
@@ -577,7 +571,7 @@ namespace pkmn { namespace breeding {
             );
         )
 
-        ideal_child_IVs["Speed"]  = PKSAV_MAX_GB_IV;
+        ideal_child_IVs[pkmn::e_stat::SPEED]  = PKSAV_MAX_GB_IV;
         PKSAV_CALL(
             pksav_set_gb_IV(
                 PKSAV_GB_IV_SPEED,
@@ -595,29 +589,38 @@ namespace pkmn { namespace breeding {
                 sizeof(pksav_IVs)
             );
         )
-        ideal_child_IVs["HP"] = pksav_IVs[PKSAV_GB_IV_HP];
+        ideal_child_IVs[pkmn::e_stat::HP] = pksav_IVs[PKSAV_GB_IV_HP];
 
-        BOOST_ASSERT(map_keys_to_vector(ideal_child_IVs) == map_keys_to_vector(parent_IVs));
+        BOOST_ASSERT(
+            IV_MAP_KEYS_TO_VECTOR(ideal_child_IVs) ==
+            IV_MAP_KEYS_TO_VECTOR(parent_IVs)
+        );
         return ideal_child_IVs;
     }
 
-    static std::map<std::string, int> combine_maps_with_higher_values(
-        const std::map<std::string, int>& map1,
-        const std::map<std::string, int>& map2
+    static std::map<pkmn::e_stat, int> combine_maps_with_higher_values(
+        const std::map<pkmn::e_stat, int>& map1,
+        const std::map<pkmn::e_stat, int>& map2
     )
     {
-        BOOST_ASSERT(map_keys_to_vector(map1) == map_keys_to_vector(map2));
+        BOOST_ASSERT(
+            IV_MAP_KEYS_TO_VECTOR(map1) ==
+            IV_MAP_KEYS_TO_VECTOR(map2)
+        );
 
-        std::map<std::string, int> combined_map;
+        std::map<pkmn::e_stat, int> combined_map;
         for(const auto& map1_pair: map1)
         {
-            const std::string& key = map1_pair.first;
+            pkmn::e_stat key = map1_pair.first;
             int value = map1_pair.second;
 
             combined_map[key] = std::max(value, map2.at(key));
         }
 
-        BOOST_ASSERT(map_keys_to_vector(combined_map) == map_keys_to_vector(map1));
+        BOOST_ASSERT(
+            IV_MAP_KEYS_TO_VECTOR(combined_map) ==
+            IV_MAP_KEYS_TO_VECTOR(map1)
+        );
         return combined_map;
     }
 
@@ -640,12 +643,12 @@ namespace pkmn { namespace breeding {
     }
 
     void copy_highest_IV_and_remove_from_input_map(
-        std::map<std::string, int>& r_input_map,
-        std::map<std::string, int>& r_output_map
+        std::map<pkmn::e_stat, int>& r_input_map,
+        std::map<pkmn::e_stat, int>& r_output_map
     )
     {
         auto max_IV_iter = map_max_value_iter(r_input_map);
-        const std::string& stat = max_IV_iter->first;
+        pkmn::e_stat stat = max_IV_iter->first;
         int IV = max_IV_iter->second;
 
         r_output_map[stat] = IV;
@@ -654,7 +657,7 @@ namespace pkmn { namespace breeding {
         r_input_map.erase(max_IV_iter);
     }
 
-    static std::map<std::string, int> get_rs_frlg_ideal_child_IVs(
+    static std::map<pkmn::e_stat, int> get_rs_frlg_ideal_child_IVs(
         const pkmn::pokemon::sptr& mother,
         const pkmn::pokemon::sptr& father
     )
@@ -665,16 +668,19 @@ namespace pkmn { namespace breeding {
          * highest unique IVs from each parent and return the maximum
          * valid value for the rest.
          */
-        std::map<std::string, int> mother_IVs = mother->get_IVs();
-        std::map<std::string, int> father_IVs = father->get_IVs();
-        BOOST_ASSERT(map_keys_to_vector(mother_IVs) == map_keys_to_vector(father_IVs));
+        std::map<pkmn::e_stat, int> mother_IVs = mother->get_IVs();
+        std::map<pkmn::e_stat, int> father_IVs = father->get_IVs();
+        BOOST_ASSERT(
+            IV_MAP_KEYS_TO_VECTOR(mother_IVs) ==
+            IV_MAP_KEYS_TO_VECTOR(father_IVs)
+        );
 
-        std::map<std::string, int> max_parent_IVs = combine_maps_with_higher_values(
+        std::map<pkmn::e_stat, int> max_parent_IVs = combine_maps_with_higher_values(
                                                         mother_IVs,
                                                         father_IVs
                                                     );
 
-        std::map<std::string, int> ideal_child_IVs;
+        std::map<pkmn::e_stat, int> ideal_child_IVs;
 
         BOOST_STATIC_CONSTEXPR size_t num_inherited_IVs = 3;
         for(size_t iteration = 0; iteration < num_inherited_IVs; ++iteration)
@@ -689,26 +695,29 @@ namespace pkmn { namespace breeding {
         // IVs should have the max value.
         for(const auto& IV_map_pair: max_parent_IVs)
         {
-            const std::string& stat = IV_map_pair.first;
+            pkmn::e_stat stat = IV_map_pair.first;
 
             ideal_child_IVs[stat] = PKSAV_MAX_IV;
         }
 
-        BOOST_ASSERT(map_keys_to_vector(ideal_child_IVs) == map_keys_to_vector(mother_IVs));
+        BOOST_ASSERT(
+            IV_MAP_KEYS_TO_VECTOR(ideal_child_IVs) ==
+            IV_MAP_KEYS_TO_VECTOR(mother_IVs)
+        );
         return ideal_child_IVs;
     }
 
     // https://stackoverflow.com/a/180772/2425605
-    std::map<std::string, int> get_filtered_map(
-        const std::map<std::string, int>& input_map,
-        const std::vector<std::string>& keys_to_remove
+    std::map<pkmn::e_stat, int> get_filtered_map(
+        const std::map<pkmn::e_stat, int>& input_map,
+        const std::vector<pkmn::e_stat>& keys_to_remove
     )
     {
-        std::map<std::string, int> output_map(input_map);
+        std::map<pkmn::e_stat, int> output_map(input_map);
 
         for(auto map_iter = input_map.begin(); map_iter != input_map.end();)
         {
-            const std::string& key = map_iter->first;
+            pkmn::e_stat key = map_iter->first;
 
             auto key_iter = std::find(
                                 keys_to_remove.begin(),
@@ -728,7 +737,7 @@ namespace pkmn { namespace breeding {
         return output_map;
     }
 
-    std::map<std::string, int> get_emerald_dp_ideal_child_IVs(
+    std::map<pkmn::e_stat, int> get_emerald_dp_ideal_child_IVs(
         const pkmn::pokemon::sptr& mother,
         const pkmn::pokemon::sptr& father
     )
@@ -738,33 +747,39 @@ namespace pkmn { namespace breeding {
          * inherited. Third, an IV (not HP or Defense) will be inherited. The
          * rest will be randomly generated.
          */
-        std::map<std::string, int> mother_IVs = mother->get_IVs();
-        std::map<std::string, int> father_IVs = father->get_IVs();
-        BOOST_ASSERT(map_keys_to_vector(mother_IVs) == map_keys_to_vector(father_IVs));
+        std::map<pkmn::e_stat, int> mother_IVs = mother->get_IVs();
+        std::map<pkmn::e_stat, int> father_IVs = father->get_IVs();
+        BOOST_ASSERT(
+            IV_MAP_KEYS_TO_VECTOR(mother_IVs) ==
+            IV_MAP_KEYS_TO_VECTOR(father_IVs)
+        );
 
-        std::map<std::string, int> ideal_child_IVs;
+        std::map<pkmn::e_stat, int> ideal_child_IVs;
 
-        std::map<std::string, int> max_parent_IVs = combine_maps_with_higher_values(
-                                                        mother_IVs,
-                                                        father_IVs
-                                                    );
+        std::map<pkmn::e_stat, int> max_parent_IVs = combine_maps_with_higher_values(
+                                                         mother_IVs,
+                                                         father_IVs
+                                                     );
         copy_highest_IV_and_remove_from_input_map(
             max_parent_IVs,
             ideal_child_IVs
         );
 
-        std::map<std::string, int> max_parent_IVs_minus_hp = get_filtered_map(
-                                                                 max_parent_IVs,
-                                                                 {"HP"}
-                                                             );
+        std::map<pkmn::e_stat, int> max_parent_IVs_minus_hp = get_filtered_map(
+                                                                  max_parent_IVs,
+                                                                  {pkmn::e_stat::HP}
+                                                              );
         copy_highest_IV_and_remove_from_input_map(
             max_parent_IVs_minus_hp,
             ideal_child_IVs
         );
 
-        std::map<std::string, int> max_parent_IVs_minus_hp_and_def = get_filtered_map(
+        std::map<pkmn::e_stat, int> max_parent_IVs_minus_hp_and_def = get_filtered_map(
                                                                          max_parent_IVs,
-                                                                         {"HP", "Defense"}
+                                                                         {
+                                                                             pkmn::e_stat::HP,
+                                                                             pkmn::e_stat::DEFENSE
+                                                                         }
                                                                      );
         copy_highest_IV_and_remove_from_input_map(
             max_parent_IVs_minus_hp_and_def,
@@ -774,7 +789,7 @@ namespace pkmn { namespace breeding {
         // Use the highest possible value for the remaining IVs.
         for(const auto& max_parent_IV_pair: max_parent_IVs)
         {
-            const std::string& stat = max_parent_IV_pair.first;
+            pkmn::e_stat stat = max_parent_IV_pair.first;
             int IV = max_parent_IV_pair.second;
 
             if(ideal_child_IVs.count(stat) == 0)
@@ -783,20 +798,23 @@ namespace pkmn { namespace breeding {
             }
         }
 
-        BOOST_ASSERT(map_keys_to_vector(ideal_child_IVs) == map_keys_to_vector(mother_IVs));
+        BOOST_ASSERT(
+            IV_MAP_KEYS_TO_VECTOR(ideal_child_IVs) ==
+            IV_MAP_KEYS_TO_VECTOR(mother_IVs)
+        );
         return ideal_child_IVs;
     }
 
-    std::map<std::string, int> get_ideal_child_IVs(
+    std::map<pkmn::e_stat, int> get_ideal_child_IVs(
         const pkmn::pokemon::sptr& mother,
         const pkmn::pokemon::sptr& father,
-        const std::string& child_gender
+        pkmn::e_gender child_gender
     )
     {
         pkmn::enforce_value_in_vector(
             "Child gender",
             child_gender,
-            {"Male", "Female", "Genderless"}
+            {pkmn::e_gender::MALE, pkmn::e_gender::FEMALE, pkmn::e_gender::GENDERLESS}
         );
 
         if(mother->get_game() != father->get_game())
@@ -807,49 +825,53 @@ namespace pkmn { namespace breeding {
         }
 
         // Validate given child gender against possible child species.
-        std::vector<std::string> possible_child_species = get_possible_child_species(
-                                                              mother->get_species(),
-                                                              father->get_species(),
-                                                              mother->get_game()
-                                                          );
+        std::vector<pkmn::e_species> possible_child_species = get_possible_child_species(
+                                                                  mother->get_species(),
+                                                                  father->get_species(),
+                                                                  mother->get_game()
+                                                              );
 
         auto species_iter = possible_child_species.end();
-        if(child_gender == "Male")
+        switch(child_gender)
         {
-            species_iter = std::find_if(
-                               possible_child_species.begin(),
-                               possible_child_species.end(),
-                               can_species_be_male
-                           );
-        }
-        else if(child_gender == "Female")
-        {
-            species_iter = std::find_if(
-                               possible_child_species.begin(),
-                               possible_child_species.end(),
-                               can_species_be_female
-                           );
-        }
-        else
-        {
-            species_iter = std::find_if(
-                               possible_child_species.begin(),
-                               possible_child_species.end(),
-                               is_species_genderless
-                           );
+            case pkmn::e_gender::MALE:
+                species_iter = std::find_if(
+                                   possible_child_species.begin(),
+                                   possible_child_species.end(),
+                                   can_species_be_male
+                               );
+                break;
+
+            case pkmn::e_gender::FEMALE:
+                species_iter = std::find_if(
+                                   possible_child_species.begin(),
+                                   possible_child_species.end(),
+                                   can_species_be_female
+                               );
+                break;
+
+            case pkmn::e_gender::GENDERLESS:
+                species_iter = std::find_if(
+                                   possible_child_species.begin(),
+                                   possible_child_species.end(),
+                                   is_species_genderless
+                               );
+                break;
+
+            default:
+                BOOST_ASSERT_MSG(false, "Invalid child gender");
         }
         if(species_iter == possible_child_species.end())
         {
-            std::string error_message = "Invalid gender for any valid child species: ";
-            error_message += child_gender;
+            std::string error_message = "Invalid gender for any valid child species.";
             throw std::invalid_argument(error_message);
         }
 
-        const std::string game = mother->get_game();
-        const int generation = pkmn::database::game_name_to_generation(game);
+        const pkmn::e_game game = mother->get_game();
+        const int generation = pkmn::database::game_enum_to_generation(game);
         BOOST_ASSERT(generation >= 2);
 
-        std::map<std::string, int> ideal_child_IVs;
+        std::map<pkmn::e_stat, int> ideal_child_IVs;
 
         switch(generation)
         {
@@ -862,7 +884,7 @@ namespace pkmn { namespace breeding {
                 break;
 
             case 3:
-                if(game == "Emerald")
+                if(game == pkmn::e_game::EMERALD)
                 {
                     ideal_child_IVs = get_emerald_dp_ideal_child_IVs(
                                           mother,

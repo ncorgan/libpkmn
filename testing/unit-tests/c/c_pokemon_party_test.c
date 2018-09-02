@@ -11,8 +11,8 @@
 
 static const struct pkmn_pokemon empty_pokemon =
 {
-    .p_species = NULL,
-    .p_game = NULL,
+    .species = PKMN_SPECIES_NONE,
+    .game = PKMN_GAME_NONE,
     .p_internal = NULL
 };
 static const struct pkmn_pokemon_list empty_pokemon_list =
@@ -50,13 +50,13 @@ static void test_empty_pokemon_party(
 
     for(size_t pokemon_index = 0; pokemon_index < pokemon_list.length; ++pokemon_index)
     {
-        TEST_ASSERT_EQUAL_STRING(
-            "None",
-            pokemon_list.p_pokemon[pokemon_index].p_species
+        TEST_ASSERT_EQUAL(
+            PKMN_SPECIES_NONE,
+            pokemon_list.p_pokemon[pokemon_index].species
         );
-        TEST_ASSERT_EQUAL_STRING(
-            p_party->p_game,
-            pokemon_list.p_pokemon[pokemon_index].p_game
+        TEST_ASSERT_EQUAL(
+            p_party->game,
+            pokemon_list.p_pokemon[pokemon_index].game
         );
     }
 
@@ -133,8 +133,8 @@ static void test_setting_pokemon_in_party(
     struct pkmn_pokemon squirtle = empty_pokemon;
 
     error = pkmn_pokemon_init(
-                "Bulbasaur",
-                p_party->p_game,
+                PKMN_SPECIES_BULBASAUR,
+                p_party->game,
                 "",
                 5,
                 &bulbasaur
@@ -143,8 +143,8 @@ static void test_setting_pokemon_in_party(
     TEST_ASSERT_NOT_NULL(bulbasaur.p_internal);
 
     error = pkmn_pokemon_init(
-                "Charmander",
-                p_party->p_game,
+                PKMN_SPECIES_CHARMANDER,
+                p_party->game,
                 "",
                 5,
                 &charmander
@@ -153,8 +153,8 @@ static void test_setting_pokemon_in_party(
     TEST_ASSERT_NOT_NULL(charmander.p_internal);
 
     error = pkmn_pokemon_init(
-                "Squirtle",
-                p_party->p_game,
+                PKMN_SPECIES_SQUIRTLE,
+                p_party->game,
                 "",
                 5,
                 &squirtle
@@ -277,7 +277,7 @@ static void test_setting_pokemon_in_party(
                 &second_in_party
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
-    TEST_ASSERT_EQUAL_STRING("Charmander", second_in_party.p_species);
+    TEST_ASSERT_EQUAL(PKMN_SPECIES_CHARMANDER, second_in_party.species);
 
     error = pkmn_pokemon_free(&second_in_party);
     PKMN_TEST_ASSERT_SUCCESS(error);
@@ -297,7 +297,7 @@ static void test_setting_pokemon_in_party(
                 &fifth_in_party
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
-    TEST_ASSERT_EQUAL_STRING("None", fifth_in_party.p_species);
+    TEST_ASSERT_EQUAL(PKMN_SPECIES_NONE, fifth_in_party.species);
 
     error = pkmn_pokemon_free(&fifth_in_party);
     PKMN_TEST_ASSERT_SUCCESS(error);
@@ -316,23 +316,23 @@ static void test_setting_pokemon_in_party(
     TEST_ASSERT_NOT_NULL(pokemon_list.p_pokemon);
     TEST_ASSERT_EQUAL(6, pokemon_list.length);
 
-    TEST_ASSERT_EQUAL_STRING(
-        "Squirtle",
-        pokemon_list.p_pokemon[0].p_species
+    TEST_ASSERT_EQUAL(
+        PKMN_SPECIES_SQUIRTLE,
+        pokemon_list.p_pokemon[0].species
     );
-    TEST_ASSERT_EQUAL_STRING(
-        "Charmander",
-        pokemon_list.p_pokemon[1].p_species
+    TEST_ASSERT_EQUAL(
+        PKMN_SPECIES_CHARMANDER,
+        pokemon_list.p_pokemon[1].species
     );
-    TEST_ASSERT_EQUAL_STRING(
-        "Charmander",
-        pokemon_list.p_pokemon[2].p_species
+    TEST_ASSERT_EQUAL(
+        PKMN_SPECIES_CHARMANDER,
+        pokemon_list.p_pokemon[2].species
     );
-    TEST_ASSERT_EQUAL_STRING("None", original_first.p_species);
-    TEST_ASSERT_EQUAL_STRING("None", original_second.p_species);
-    TEST_ASSERT_EQUAL_STRING("Bulbasaur", bulbasaur.p_species);
-    TEST_ASSERT_EQUAL_STRING("Charmander", charmander.p_species);
-    TEST_ASSERT_EQUAL_STRING("Squirtle", squirtle.p_species);
+    TEST_ASSERT_EQUAL(PKMN_SPECIES_NONE, original_first.species);
+    TEST_ASSERT_EQUAL(PKMN_SPECIES_NONE, original_second.species);
+    TEST_ASSERT_EQUAL(PKMN_SPECIES_BULBASAUR, bulbasaur.species);
+    TEST_ASSERT_EQUAL(PKMN_SPECIES_CHARMANDER, charmander.species);
+    TEST_ASSERT_EQUAL(PKMN_SPECIES_SQUIRTLE, squirtle.species);
 
     // Cleanup
 
@@ -361,17 +361,13 @@ static void test_setting_pokemon_in_party(
     TEST_ASSERT_NULL(squirtle.p_internal);
 }
 
-static void pokemon_party_test_common(
-    const char* game
-)
+static void pokemon_party_test_common(enum pkmn_game game)
 {
-    TEST_ASSERT_NOT_NULL(game);
-
     enum pkmn_error error = PKMN_ERROR_NONE;
 
     struct pkmn_pokemon_party party =
     {
-        .p_game = NULL,
+        .game = PKMN_GAME_NONE,
         .capacity = 0,
         .p_internal = NULL
     };
@@ -382,7 +378,7 @@ static void pokemon_party_test_common(
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_NOT_NULL(party.p_internal);
-    TEST_ASSERT_EQUAL_STRING(game, party.p_game);
+    TEST_ASSERT_EQUAL(game, party.game);
     TEST_ASSERT_EQUAL(6, party.capacity);
 
     TEST_ASSERT_EQUAL_STRING(
@@ -395,7 +391,7 @@ static void pokemon_party_test_common(
 
     error = pkmn_pokemon_party_free(&party);
     PKMN_TEST_ASSERT_SUCCESS(error);
-    TEST_ASSERT_NULL(party.p_game);
+    TEST_ASSERT_EQUAL(PKMN_GAME_NONE, party.game);
     TEST_ASSERT_EQUAL(0, party.capacity);
     TEST_ASSERT_NULL(party.p_internal);
 }
@@ -404,91 +400,91 @@ static void pokemon_party_test_common(
 
 static void red_pokemon_party_test()
 {
-    pokemon_party_test_common("Red");
+    pokemon_party_test_common(PKMN_GAME_RED);
 }
 
 // Blue
 
 static void blue_pokemon_party_test()
 {
-    pokemon_party_test_common("Blue");
+    pokemon_party_test_common(PKMN_GAME_BLUE);
 }
 
 // Yellow
 
 static void yellow_pokemon_party_test()
 {
-    pokemon_party_test_common("Yellow");
+    pokemon_party_test_common(PKMN_GAME_YELLOW);
 }
 
 // Gold
 
 static void gold_pokemon_party_test()
 {
-    pokemon_party_test_common("Gold");
+    pokemon_party_test_common(PKMN_GAME_GOLD);
 }
 
 // Silver
 
 static void silver_pokemon_party_test()
 {
-    pokemon_party_test_common("Silver");
+    pokemon_party_test_common(PKMN_GAME_SILVER);
 }
 
 // Crystal
 
 static void crystal_pokemon_party_test()
 {
-    pokemon_party_test_common("Crystal");
+    pokemon_party_test_common(PKMN_GAME_CRYSTAL);
 }
 
 // Ruby
 
 static void ruby_pokemon_party_test()
 {
-    pokemon_party_test_common("Ruby");
+    pokemon_party_test_common(PKMN_GAME_RUBY);
 }
 
 // Sapphire
 
 static void sapphire_pokemon_party_test()
 {
-    pokemon_party_test_common("Sapphire");
+    pokemon_party_test_common(PKMN_GAME_SAPPHIRE);
 }
 
 // Emerald
 
 static void emerald_pokemon_party_test()
 {
-    pokemon_party_test_common("Emerald");
+    pokemon_party_test_common(PKMN_GAME_EMERALD);
 }
 
 // FireRed
 
 static void firered_pokemon_party_test()
 {
-    pokemon_party_test_common("FireRed");
+    pokemon_party_test_common(PKMN_GAME_FIRERED);
 }
 
 // LeafGreen
 
 static void leafgreen_pokemon_party_test()
 {
-    pokemon_party_test_common("LeafGreen");
+    pokemon_party_test_common(PKMN_GAME_LEAFGREEN);
 }
 
 // Colosseum
 
 static void colosseum_pokemon_party_test()
 {
-    pokemon_party_test_common("Colosseum");
+    pokemon_party_test_common(PKMN_GAME_COLOSSEUM);
 }
 
 // XD
 
 static void xd_pokemon_party_test()
 {
-    pokemon_party_test_common("XD");
+    pokemon_party_test_common(PKMN_GAME_XD);
 }
 
 PKMN_C_TEST_MAIN(

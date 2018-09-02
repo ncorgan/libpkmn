@@ -29,12 +29,12 @@ function pokemon_party_tests.test_empty_pokemon_party(party, game)
 
     for party_index = 1, #party
     do
-        luaunit.assertEquals(party[party_index].species, "None")
+        luaunit.assertEquals(party[party_index].species, pkmn.species.NONE)
         luaunit.assertEquals(party[party_index].game, game)
 
         for move_index = 1, #party[party_index].moves
         do
-            luaunit.assertEquals(party[party_index].moves[move_index].move, "None")
+            luaunit.assertEquals(party[party_index].moves[move_index].move, pkmn.move.NONE)
             luaunit.assertEquals(party[party_index].moves[move_index].pp, 0)
         end
     end
@@ -74,36 +74,36 @@ function pokemon_party_tests.test_setting_pokemon(party)
 
     -- Create Pokémon and place in party. The original variables should
     -- still have the same underlying Pokémon.
-    local bulbasaur = pkmn.pokemon("Bulbasaur", game, "", 5)
-    local charmander = pkmn.pokemon("Charmander", game, "", 5)
-    local squirtle = pkmn.pokemon("Squirtle", game, "", 5)
+    local bulbasaur = pkmn.pokemon(pkmn.species.BULBASAUR, game, "", 5)
+    local charmander = pkmn.pokemon(pkmn.species.CHARMANDER, game, "", 5)
+    local squirtle = pkmn.pokemon(pkmn.species.SQUIRTLE, game, "", 5)
 
     party[1] = bulbasaur
     luaunit.assertEquals(party.num_pokemon, 1)
-    luaunit.assertEquals(party[1].species, "Bulbasaur")
+    luaunit.assertEquals(party[1].species, pkmn.species.BULBASAUR)
     party[2] = charmander
     luaunit.assertEquals(party.num_pokemon, 2)
-    luaunit.assertEquals(party[2].species, "Charmander")
+    luaunit.assertEquals(party[2].species, pkmn.species.CHARMANDER)
 
     -- Replace one of the new ones.
     party[1] = squirtle
     luaunit.assertEquals(party.num_pokemon, 2)
-    luaunit.assertEquals(party[1].species, "Squirtle")
+    luaunit.assertEquals(party[1].species, pkmn.species.SQUIRTLE)
 
     -- Copy a Pokémon already part of the party.
     party[3] = party[2]
     luaunit.assertEquals(party.num_pokemon, 3)
-    luaunit.assertEquals(party[3].species, "Charmander")
+    luaunit.assertEquals(party[3].species, pkmn.species.CHARMANDER)
 
     -- We should be able to clear the last contiguous Pokémon.
     party[3] = original_first
     luaunit.assertEquals(party.num_pokemon, 2)
-    luaunit.assertEquals(party[3].species, "None")
+    luaunit.assertEquals(party[3].species, pkmn.species.NONE)
 
     -- Put it back.
     party[3] = party[2]
     luaunit.assertEquals(party.num_pokemon, 3)
-    luaunit.assertEquals(party[3].species, "Charmander")
+    luaunit.assertEquals(party[3].species, pkmn.species.CHARMANDER)
 
     -- Check that Pokémon cannot be placed non-contiguously.
     luaunit.assertError(
@@ -113,7 +113,7 @@ function pokemon_party_tests.test_setting_pokemon(party)
         original_first
     )
     luaunit.assertEquals(party.num_pokemon, 3)
-    luaunit.assertEquals(party[2].species, "Charmander")
+    luaunit.assertEquals(party[2].species, pkmn.species.CHARMANDER)
 
     luaunit.assertError(
         pokemon_party_tests.pokemon_party.set_pokemon,
@@ -122,18 +122,18 @@ function pokemon_party_tests.test_setting_pokemon(party)
         bulbasaur
     )
     luaunit.assertEquals(party.num_pokemon, 3)
-    luaunit.assertEquals(party[5].species, "None")
+    luaunit.assertEquals(party[5].species, pkmn.species.NONE)
 
     -- Now check everything we've created. Each variable should have
     -- the same underlying Pokémon.
-    luaunit.assertEquals(party[1].species, "Squirtle")
-    luaunit.assertEquals(party[2].species, "Charmander")
-    luaunit.assertEquals(party[3].species, "Charmander")
-    luaunit.assertEquals(original_first.species, "None")
-    luaunit.assertEquals(original_second.species, "None")
-    luaunit.assertEquals(bulbasaur.species, "Bulbasaur")
-    luaunit.assertEquals(charmander.species, "Charmander")
-    luaunit.assertEquals(squirtle.species, "Squirtle")
+    luaunit.assertEquals(party[1].species, pkmn.species.SQUIRTLE)
+    luaunit.assertEquals(party[2].species, pkmn.species.CHARMANDER)
+    luaunit.assertEquals(party[3].species, pkmn.species.CHARMANDER)
+    luaunit.assertEquals(original_first.species, pkmn.species.NONE)
+    luaunit.assertEquals(original_second.species, pkmn.species.NONE)
+    luaunit.assertEquals(bulbasaur.species, pkmn.species.BULBASAUR)
+    luaunit.assertEquals(charmander.species, pkmn.species.CHARMANDER)
+    luaunit.assertEquals(squirtle.species, pkmn.species.SQUIRTLE)
 end
 
 function pokemon_party_tests.test_pokemon_party(party, game)

@@ -59,7 +59,7 @@ SET(PYTHON_INSTALL_DIR ${PYTHON_INSTALL_DIR} CACHE FILEPATH "Python install dire
 ########################################################################
 # Macro to build and install Python SWIG modules
 ########################################################################
-MACRO(SWIG_BUILD_PYTHON_MODULE module_name module_rc_name install_dir cplusplus)
+MACRO(SWIG_BUILD_PYTHON_MODULE_BUILD_ONLY module_name module_rc_name install_dir cplusplus)
     INCLUDE(UseSWIG)
 
     SET(SWIG_INCLUDE_DIRS
@@ -127,6 +127,10 @@ MACRO(SWIG_BUILD_PYTHON_MODULE module_name module_rc_name install_dir cplusplus)
             LIBRARY_OUTPUT_DIRECTORY_DEBUG ${CMAKE_CURRENT_BINARY_DIR}
         )
     ENDIF(MSVC)
+ENDMACRO()
+
+MACRO(SWIG_BUILD_PYTHON_MODULE module_name module_rc_name install_dir cplusplus)
+    SWIG_BUILD_PYTHON_MODULE_BUILD_ONLY(${module_name} ${module_rc_name} ${install_dir} ${cplusplus})
 
     # Install files
     SET(py_files
@@ -144,5 +148,4 @@ MACRO(SWIG_BUILD_PYTHON_MODULE module_name module_rc_name install_dir cplusplus)
         DESTINATION ${PYTHON_INSTALL_DIR}/${install_dir}
         COMPONENT Python
     )
-
-ENDMACRO(SWIG_BUILD_PYTHON_MODULE)
+ENDMACRO()

@@ -18,26 +18,21 @@
 #include <cstdio>
 
 enum pkmn_error pkmn_item_bag_init(
-    const char* p_game,
+    enum pkmn_game game,
     struct pkmn_item_bag* p_item_bag_out
 )
 {
     enum pkmn_error error = pkmn::c::check_for_null_param(
-                                p_game,
-                                "p_game"
+                                p_item_bag_out,
+                                "p_item_bag_out"
                             );
-    if(!error)
-    {
-        error = pkmn::c::check_for_null_param(
-                    p_item_bag_out,
-                    "p_item_bag_out"
-                );
-    }
     if(!error)
     {
         auto impl = [&]()
         {
-            pkmn::item_bag::sptr cpp = pkmn::item_bag::make(p_game);
+            pkmn::item_bag::sptr cpp = pkmn::item_bag::make(
+                                           static_cast<pkmn::e_game>(game)
+                                       );
 
             pkmn::c::init_item_bag(
                 cpp,
@@ -63,12 +58,17 @@ enum pkmn_error pkmn_item_bag_free(
     {
         auto impl = [&]()
         {
-            pkmn::c::free_pointer_and_set_to_null(&p_item_bag->p_game);
-            pkmn::c::delete_pointer_and_set_to_null(
-                reinterpret_cast<pkmn::c::item_bag_internal_t**>(&p_item_bag->p_internal)
-            );
+            error = pkmn_string_list_free(&p_item_bag->pocket_names);
+            if(!error)
+            {
+                pkmn::c::delete_pointer_and_set_to_null(
+                    reinterpret_cast<pkmn::c::item_bag_internal_t**>(
+                        &p_item_bag->p_internal
+                    )
+                );
 
-            std::memset(p_item_bag, 0, sizeof(*p_item_bag));
+                std::memset(p_item_bag, 0, sizeof(*p_item_bag));
+            }
         };
 
         error = pkmn::c::handle_exceptions(impl);
@@ -131,13 +131,13 @@ enum pkmn_error pkmn_item_bag_get_pocket(
 
 enum pkmn_error pkmn_item_bag_add(
     const struct pkmn_item_bag* p_item_bag,
-    const char* p_item,
+    enum pkmn_item item,
     size_t amount
 )
 {
     return pkmn::c::add_item<struct pkmn_item_bag, pkmn::item_bag>(
                p_item_bag,
-               p_item,
+               item,
                amount,
                "p_item_bag"
            );
@@ -145,13 +145,13 @@ enum pkmn_error pkmn_item_bag_add(
 
 enum pkmn_error pkmn_item_bag_remove(
     const struct pkmn_item_bag* p_item_bag,
-    const char* p_item,
+    enum pkmn_item item,
     size_t amount
 )
 {
     return pkmn::c::remove_item<struct pkmn_item_bag, pkmn::item_bag>(
                p_item_bag,
-               p_item,
+               item,
                amount,
                "p_item_bag"
            );

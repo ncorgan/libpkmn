@@ -18,32 +18,16 @@
 #include <cstring>
 
 enum pkmn_error pkmn_database_get_pokemon_entry(
-    const char* p_species,
-    const char* p_game,
+    enum pkmn_species species,
+    enum pkmn_game game,
     const char* p_form,
     struct pkmn_database_pokemon_entry* p_pokemon_entry_out
 )
 {
-    enum pkmn_error error = PKMN_ERROR_NONE;
-
-    error = pkmn::c::check_for_null_param(
-                p_species,
-                "p_species"
-            );
-    if(!error)
-    {
-        error = pkmn::c::check_for_null_param(
-                    p_game,
-                    "p_game"
-                );
-    }
-    if(!error)
-    {
-        error = pkmn::c::check_for_null_param(
-                    p_form,
-                    "p_form"
-                );
-    }
+    enum pkmn_error error = pkmn::c::check_for_null_param(
+                                p_form,
+                                "p_form"
+                            );
     if(!error)
     {
         error = pkmn::c::check_for_null_param(
@@ -56,8 +40,8 @@ enum pkmn_error pkmn_database_get_pokemon_entry(
         auto impl = [&]()
         {
             pkmn::database::pokemon_entry pokemon_entry_cpp(
-                                              p_species,
-                                              p_game,
+                                              static_cast<pkmn::e_species>(species),
+                                              static_cast<pkmn::e_game>(game),
                                               p_form
                                           );
 
@@ -78,12 +62,10 @@ enum pkmn_error pkmn_database_pokemon_entry_set_form(
     const char* p_form
 )
 {
-    enum pkmn_error error = PKMN_ERROR_NONE;
-
-    error = pkmn::c::check_for_null_param(
-                p_pokemon_entry,
-                "p_pokemon_entry"
-            );
+    enum pkmn_error error = pkmn::c::check_for_null_param(
+                                p_pokemon_entry,
+                                "p_pokemon_entry"
+                            );
     if(!error)
     {
         error = pkmn::c::check_for_null_param(
@@ -96,8 +78,8 @@ enum pkmn_error pkmn_database_pokemon_entry_set_form(
         auto impl = [&]()
         {
             pkmn::database::pokemon_entry new_entry(
-                                              p_pokemon_entry->p_name,
-                                              p_pokemon_entry->p_game,
+                                              static_cast<pkmn::e_species>(p_pokemon_entry->species),
+                                              static_cast<pkmn::e_game>(p_pokemon_entry->game),
                                               p_form
                                           );
 
@@ -123,12 +105,10 @@ enum pkmn_error pkmn_database_pokemon_entry_experience_at_level(
     int* p_experience_out
 )
 {
-    enum pkmn_error error = PKMN_ERROR_NONE;
-
-    error = pkmn::c::check_for_null_param(
-                p_pokemon_entry,
-                "p_pokemon_entry"
-            );
+    enum pkmn_error error = pkmn::c::check_for_null_param(
+                                p_pokemon_entry,
+                                "p_pokemon_entry"
+                            );
     if(!error)
     {
         error = pkmn::c::check_for_null_param(
@@ -141,8 +121,8 @@ enum pkmn_error pkmn_database_pokemon_entry_experience_at_level(
         auto impl = [&]()
         {
             *p_experience_out = pkmn::database::pokemon_entry(
-                                    p_pokemon_entry->p_name,
-                                    p_pokemon_entry->p_game,
+                                    static_cast<pkmn::e_species>(p_pokemon_entry->species),
+                                    static_cast<pkmn::e_game>(p_pokemon_entry->game),
                                     p_pokemon_entry->p_form
                                 ).get_experience_at_level(level);
         };
@@ -159,12 +139,10 @@ enum pkmn_error pkmn_database_pokemon_entry_level_at_experience(
     int* p_level_out
 )
 {
-    enum pkmn_error error = PKMN_ERROR_NONE;
-
-    error = pkmn::c::check_for_null_param(
-                p_pokemon_entry,
-                "p_pokemon_entry"
-            );
+    enum pkmn_error error = pkmn::c::check_for_null_param(
+                                p_pokemon_entry,
+                                "p_pokemon_entry"
+                            );
     if(!error)
     {
         error = pkmn::c::check_for_null_param(
@@ -177,8 +155,8 @@ enum pkmn_error pkmn_database_pokemon_entry_level_at_experience(
         auto impl = [&]()
         {
             *p_level_out = pkmn::database::pokemon_entry(
-                               p_pokemon_entry->p_name,
-                               p_pokemon_entry->p_game,
+                               static_cast<pkmn::e_species>(p_pokemon_entry->species),
+                               static_cast<pkmn::e_game>(p_pokemon_entry->game),
                                p_pokemon_entry->p_form
                            ).get_level_at_experience(experience);
         };
@@ -197,12 +175,10 @@ enum pkmn_error pkmn_database_pokemon_entry_icon_filepath(
     size_t* p_icon_filepath_length_out
 )
 {
-    enum pkmn_error error = PKMN_ERROR_NONE;
-
-    error = pkmn::c::check_for_null_param(
-                p_pokemon_entry,
-                "p_pokemon_entry"
-            );
+    enum pkmn_error error = pkmn::c::check_for_null_param(
+                                p_pokemon_entry,
+                                "p_pokemon_entry"
+                            );
     if(!error)
     {
         error = pkmn::c::check_for_null_param(
@@ -216,8 +192,8 @@ enum pkmn_error pkmn_database_pokemon_entry_icon_filepath(
         {
             pkmn::c::string_cpp_to_c(
                 pkmn::database::pokemon_entry(
-                    p_pokemon_entry->p_name,
-                    p_pokemon_entry->p_game,
+                    static_cast<pkmn::e_species>(p_pokemon_entry->species),
+                    static_cast<pkmn::e_game>(p_pokemon_entry->game),
                     p_pokemon_entry->p_form
                 ).get_icon_filepath(shiny),
                 p_icon_filepath_out,
@@ -241,12 +217,10 @@ enum pkmn_error pkmn_database_pokemon_entry_sprite_filepath(
     size_t* p_sprite_filepath_length_out
 )
 {
-    enum pkmn_error error = PKMN_ERROR_NONE;
-
-    error = pkmn::c::check_for_null_param(
-                p_pokemon_entry,
-                "p_pokemon_entry"
-            );
+    enum pkmn_error error = pkmn::c::check_for_null_param(
+                                p_pokemon_entry,
+                                "p_pokemon_entry"
+                            );
     if(!error)
     {
         error = pkmn::c::check_for_null_param(
@@ -260,8 +234,8 @@ enum pkmn_error pkmn_database_pokemon_entry_sprite_filepath(
         {
             pkmn::c::string_cpp_to_c(
                 pkmn::database::pokemon_entry(
-                    p_pokemon_entry->p_name,
-                    p_pokemon_entry->p_game,
+                    static_cast<pkmn::e_species>(p_pokemon_entry->species),
+                    static_cast<pkmn::e_game>(p_pokemon_entry->game),
                     p_pokemon_entry->p_form
                 ).get_sprite_filepath(female, shiny),
                 p_sprite_filepath_out,
@@ -280,37 +254,31 @@ enum pkmn_error pkmn_database_pokemon_entry_free(
     struct pkmn_database_pokemon_entry* p_pokemon_entry
 )
 {
-    enum pkmn_error error = PKMN_ERROR_NONE;
-
-    error = pkmn::c::check_for_null_param(
-                p_pokemon_entry,
-                "p_pokemon_entry"
-            );
+    enum pkmn_error error = pkmn::c::check_for_null_param(
+                                p_pokemon_entry,
+                                "p_pokemon_entry"
+                            );
     if(!error)
     {
         auto impl = [&]()
         {
-            error = pkmn_string_pair_free(&p_pokemon_entry->types);
+            error = pkmn_stat_enum_map_free(&p_pokemon_entry->base_stats);
             if(!error)
             {
-                error = pkmn_string_pair_free(&p_pokemon_entry->abilities);
-            }
-            if(!error)
-            {
-                error = pkmn_string_pair_free(&p_pokemon_entry->egg_groups);
+                error = pkmn_stat_enum_map_free(&p_pokemon_entry->EV_yields);
             }
 
             if(!error)
             {
-                error = pkmn_string_list_free(&p_pokemon_entry->tm_hm_moves);
+                error = pkmn_move_enum_list_free(&p_pokemon_entry->tm_hm_moves);
             }
             if(!error)
             {
-                error = pkmn_string_list_free(&p_pokemon_entry->egg_moves);
+                error = pkmn_move_enum_list_free(&p_pokemon_entry->egg_moves);
             }
             if(!error)
             {
-                error = pkmn_string_list_free(&p_pokemon_entry->tutor_moves);
+                error = pkmn_move_enum_list_free(&p_pokemon_entry->tutor_moves);
             }
             if(!error)
             {
@@ -318,7 +286,7 @@ enum pkmn_error pkmn_database_pokemon_entry_free(
             }
             if(!error)
             {
-                error = pkmn_string_list_free(&p_pokemon_entry->evolutions);
+                error = pkmn_species_enum_list_free(&p_pokemon_entry->evolutions);
             }
 
             if(!error)
@@ -328,14 +296,16 @@ enum pkmn_error pkmn_database_pokemon_entry_free(
 
             if(!error)
             {
-                pkmn::c::free_pointer_and_set_to_null(&p_pokemon_entry->p_name);
-                pkmn::c::free_pointer_and_set_to_null(&p_pokemon_entry->p_game);
-                pkmn::c::free_pointer_and_set_to_null(&p_pokemon_entry->p_species);
+                pkmn::c::free_pointer_and_set_to_null(&p_pokemon_entry->p_species_name);
+                pkmn::c::free_pointer_and_set_to_null(&p_pokemon_entry->p_category);
                 pkmn::c::free_pointer_and_set_to_null(&p_pokemon_entry->p_form);
                 pkmn::c::free_pointer_and_set_to_null(&p_pokemon_entry->p_pokedex_entry);
-                pkmn::c::free_pointer_and_set_to_null(&p_pokemon_entry->p_hidden_ability);
 
-                std::memset(p_pokemon_entry, 0, sizeof(*p_pokemon_entry));
+                std::memset(
+                    p_pokemon_entry,
+                    0,
+                    sizeof(*p_pokemon_entry)
+                );
             }
         };
 

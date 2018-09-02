@@ -64,7 +64,8 @@ namespace pkmn { namespace database {
      */
 
     std::string nature_index_to_name(
-        int nature_index
+        int nature_index,
+        bool increment_error_message = false
     );
 
     int nature_name_to_index(

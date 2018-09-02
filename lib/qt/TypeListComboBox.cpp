@@ -8,6 +8,7 @@
 #include <pkmn/qt/TypeListComboBox.hpp>
 
 #include <pkmn/database/lists.hpp>
+#include <pkmn/enums/enum_to_string.hpp>
 
 namespace pkmn { namespace qt {
 
@@ -16,9 +17,9 @@ namespace pkmn { namespace qt {
         QWidget* parent
     ): QComboBox(parent)
     {
-        std::vector<std::string> types = pkmn::database::get_type_list(
-                                             game.toStdString()
-                                         );
+        pkmn::e_game game_enum = pkmn::string_to_game(game.toStdString());
+
+        std::vector<std::string> types = pkmn::database::get_type_name_list(game_enum);
         for(const std::string& type: types)
         {
             addItem(QString::fromStdString(type));

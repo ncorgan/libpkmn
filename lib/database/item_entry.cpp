@@ -6,6 +6,7 @@
  */
 
 #include "database_common.hpp"
+#include "enum_conversions.hpp"
 #include "id_to_index.hpp"
 #include "id_to_string.hpp"
 #include "../utils/misc.hpp"
@@ -183,11 +184,11 @@ namespace pkmn { namespace database {
         {
             // Overrides
             std::string name = this->get_name();
-            if(name.find("Berry") != std::string::npos)
+            if((name.find("Berry") != std::string::npos) && (name != "Berry Juice"))
             {
                 _item_list_id = BERRY_LIST_IDS[_version_group_id];
             }
-            else if((_generation == 2) and name.find("Apricorn") != std::string::npos)
+            else if((_generation == 2) && (name.find("Apricorn") != std::string::npos))
             {
                 _item_list_id = APRICORN_LIST_IDS[_version_group_id];
             }
@@ -212,19 +213,17 @@ namespace pkmn { namespace database {
     }
 
     item_entry::item_entry(
-        const std::string& item_name,
-        const std::string& game_name
+        pkmn::e_item item,
+        pkmn::e_game game
     ):
-        _none(item_name == "None"),
+        _none(item == pkmn::e_item::NONE),
         _invalid(false)
     {
         /*
          * Get version information. This validates the game input and gives
          * us the information we need to get version-specific information.
          */
-        _game_id = pkmn::database::game_name_to_id(
-                       game_name
-                   );
+        _game_id = pkmn::database::game_enum_to_id(game);
         _generation = pkmn::database::game_id_to_generation(
                           _game_id
                       );
@@ -232,9 +231,7 @@ namespace pkmn { namespace database {
                                 _game_id
                             );
 
-        _item_id = pkmn::database::item_name_to_id(
-                       item_name
-                   );
+        _item_id = static_cast<int>(item);
         _item_index = pkmn::database::item_id_to_index(
                           _item_id, _game_id
                       );
@@ -248,12 +245,14 @@ namespace pkmn { namespace database {
             throw std::invalid_argument("Gamecube games have no HMs.");
         }
 
+        std::string item_name = this->get_name();
+
         // Overrides
-        if(item_name.find("Berry") != std::string::npos)
+        if((item_name.find("Berry") != std::string::npos) && (item_name != "Berry Juice"))
         {
             _item_list_id = BERRY_LIST_IDS[_version_group_id];
         }
-        else if((_generation == 2) and (item_name.find("Apricorn") != std::string::npos))
+        else if((_generation == 2) && (item_name.find("Apricorn") != std::string::npos))
         {
             _item_list_id = APRICORN_LIST_IDS[_version_group_id];
         }
@@ -298,11 +297,9 @@ namespace pkmn { namespace database {
         return ret;
     }
 
-    std::string item_entry::get_game() const
+    pkmn::e_game item_entry::get_game() const
     {
-        return pkmn::database::game_id_to_name(
-                   _game_id
-               );
+        return pkmn::database::game_id_to_enum(_game_id);
     }
 
     std::string item_entry::get_category() const

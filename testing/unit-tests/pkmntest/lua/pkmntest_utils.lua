@@ -13,19 +13,19 @@ local pkmntest_utils = {}
 
 pkmntest_utils.GAME_TO_GENERATION =
 {
-    ["Red"] = 1,
-    ["Blue"] = 1,
-    ["Yellow"] = 1,
-    ["Gold"] = 2,
-    ["Silver"] = 2,
-    ["Crystal"] = 2,
-    ["Ruby"] = 3,
-    ["Sapphire"] = 3,
-    ["Emerald"] = 3,
-    ["FireRed"] = 3,
-    ["LeafGreen"] = 3,
-    ["Colosseum"] = 3,
-    ["XD"] = 3
+    [pkmn.game.RED] = 1,
+    [pkmn.game.BLUE] = 1,
+    [pkmn.game.YELLOW] = 1,
+    [pkmn.game.GOLD] = 2,
+    [pkmn.game.SILVER] = 2,
+    [pkmn.game.CRYSTAL] = 2,
+    [pkmn.game.RUBY] = 3,
+    [pkmn.game.SAPPHIRE] = 3,
+    [pkmn.game.EMERALD] = 3,
+    [pkmn.game.FIRERED] = 3,
+    [pkmn.game.LEAFGREEN] = 3,
+    [pkmn.game.COLOSSEUM] = 3,
+    [pkmn.game.XD] = 3
 }
 
 -- http://stackoverflow.com/a/4991602
@@ -142,10 +142,10 @@ function pkmntest_utils.get_specific_random_pokemon(game, species, form, move_li
 
     for move_index = 1, 4
     do
-        local move = ""
+        local move = pkmn.move.NONE
         repeat
             move = move_list[math.random(1, #move_list)]
-        until string.find(move, "Shadow") == nil
+        until move < pkmn.move.SHADOW_RUSH
         ret.moves[move_index].move = move
     end
 
@@ -167,9 +167,10 @@ function pkmntest_utils.get_specific_random_pokemon(game, species, form, move_li
         end
         repeat
             pcall(pokemon_set_held_item, ret, item_list[math.random(1, #item_list)])
-        until ret.held_item ~= "None" and string.find(ret.held_item, "Scent") == nil
+        until (ret.held_item ~= pkmn.item.NONE) and ((ret.held_item < pkmn.item.JOY_SCENT)
+               or (ret.held_item > pkmn.item.VIVID_SCENT))
 
-        ret.pokerus_duration = math.random(0, 15)
+         ret.pokerus_duration = math.random(0, 15)
     end
     if generation >= 3
     then
@@ -194,10 +195,10 @@ function pkmntest_utils.get_random_pokemon(game, pokemon_list, move_list, item_l
     local generation = pkmntest_utils.GAME_TO_GENERATION[game]
 
     -- Don't deal with Deoxys or Unown issues here.
-    local species = ""
+    local species = pkmn.species.NONE
     repeat
         species = pokemon_list[math.random(1, #pokemon_list)]
-    until (generation ~= 3 or (species ~= "Deoxys" and species ~= "Unown"))
+    until (generation ~= 3) or ((species ~= pkmn.species.DEOXYS) and (species ~= pkmn.species.UNOWN))
 
     return pkmntest_utils.get_specific_random_pokemon(game, species, "", move_list, item_list)
 end

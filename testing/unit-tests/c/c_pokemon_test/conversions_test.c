@@ -16,20 +16,17 @@
 
 static const struct pkmn_pokemon empty_pokemon =
 {
-    .p_species = NULL,
-    .p_game = NULL,
+    .species = PKMN_SPECIES_NONE,
+    .game = PKMN_GAME_NONE,
     .p_internal = NULL
 };
 
 static void conversions_test(
-    const char* species,
-    const char* origin_game,
-    const char* dest_game
+    enum pkmn_species species,
+    enum pkmn_game origin_game,
+    enum pkmn_game dest_game
 )
 {
-    TEST_ASSERT_NOT_NULL(origin_game);
-    TEST_ASSERT_NOT_NULL(dest_game);
-
     enum pkmn_error error = PKMN_ERROR_NONE;
 
     int origin_generation = game_to_generation(origin_game);
@@ -63,8 +60,8 @@ static void conversions_test(
 
     // Comparison
 
-    TEST_ASSERT_EQUAL_STRING(first_pokemon.p_species, second_pokemon.p_species);
-    TEST_ASSERT_EQUAL_STRING(dest_game, second_pokemon.p_game);
+    TEST_ASSERT_EQUAL(first_pokemon.species, second_pokemon.species);
+    TEST_ASSERT_EQUAL(dest_game, second_pokemon.game);
 
     // TODO: condition
 
@@ -112,18 +109,14 @@ static void conversions_test(
             "Is shiny",
             pkmn_pokemon_is_shiny
         );
-        compare_pokemon_strings(
-            &first_pokemon,
-            &second_pokemon,
-            "Held item",
-            pkmn_pokemon_get_held_item
-        );
         compare_pokemon_ints(
             &first_pokemon,
             &second_pokemon,
             "Current trainer friendship",
             pkmn_pokemon_get_current_trainer_friendship
         );
+
+        // Level/level met
 
         int first_pokemon_level = 0;
         int second_pokemon_level_met = 0;
@@ -139,27 +132,26 @@ static void conversions_test(
                 );
         PKMN_TEST_ASSERT_SUCCESS(error);
         TEST_ASSERT_EQUAL(first_pokemon_level, second_pokemon_level_met);
+
+        // Held item
+
+        enum pkmn_item first_pokemon_item = PKMN_ITEM_NONE;
+        enum pkmn_item second_pokemon_item = PKMN_ITEM_NONE;
+
+        error = pkmn_pokemon_get_held_item(
+                    &first_pokemon,
+                    &first_pokemon_item
+                );
+        PKMN_TEST_ASSERT_SUCCESS(error);
+        error = pkmn_pokemon_get_held_item(
+                    &second_pokemon,
+                    &second_pokemon_item
+                );
+        PKMN_TEST_ASSERT_SUCCESS(error);
+        TEST_ASSERT_EQUAL(first_pokemon_item, second_pokemon_item);
     }
     if(min_generation >= 3)
     {
-        compare_pokemon_strings(
-            &first_pokemon,
-            &second_pokemon,
-            "Ability",
-            pkmn_pokemon_get_ability
-        );
-        compare_pokemon_strings(
-            &first_pokemon,
-            &second_pokemon,
-            "Ball",
-            pkmn_pokemon_get_ball
-        );
-        compare_pokemon_strings(
-            &first_pokemon,
-            &second_pokemon,
-            "Original game",
-            pkmn_pokemon_get_original_game
-        );
         compare_pokemon_uint32s(
             &first_pokemon,
             &second_pokemon,
@@ -173,21 +165,49 @@ static void conversions_test(
             pkmn_pokemon_get_pokerus_duration
         );
 
+        // Ability
+
+        enum pkmn_ability first_pokemon_ability = PKMN_ABILITY_NONE;
+        enum pkmn_ability second_pokemon_ability = PKMN_ABILITY_NONE;
+
+        error = pkmn_pokemon_get_ability(
+                    &first_pokemon,
+                    &first_pokemon_ability
+                );
+        PKMN_TEST_ASSERT_SUCCESS(error);
+        error = pkmn_pokemon_get_ability(
+                    &second_pokemon,
+                    &second_pokemon_ability
+                );
+        PKMN_TEST_ASSERT_SUCCESS(error);
+        TEST_ASSERT_EQUAL(first_pokemon_ability, second_pokemon_ability);
+
+        // Ball
+
+        enum pkmn_ball first_pokemon_ball = PKMN_BALL_NONE;
+        enum pkmn_ball second_pokemon_ball = PKMN_BALL_NONE;
+
+        error = pkmn_pokemon_get_ball(
+                    &first_pokemon,
+                    &first_pokemon_ball
+                );
+        PKMN_TEST_ASSERT_SUCCESS(error);
+        error = pkmn_pokemon_get_ball(
+                    &second_pokemon,
+                    &second_pokemon_ball
+                );
+        PKMN_TEST_ASSERT_SUCCESS(error);
+        TEST_ASSERT_EQUAL(first_pokemon_ball, second_pokemon_ball);
+
         if(origin_generation == dest_generation)
         {
-            compare_pokemon_bool_buffers(
+            compare_pokemon_markings(
                 &first_pokemon,
-                &second_pokemon,
-                PKMN_NUM_MARKINGS,
-                "Markings",
-                pkmn_pokemon_get_markings
+                &second_pokemon
             );
-            compare_pokemon_int_buffers(
+            compare_pokemon_contest_stats(
                 &first_pokemon,
-                &second_pokemon,
-                PKMN_NUM_CONTEST_STATS,
-                "Contest stats",
-                pkmn_pokemon_get_contest_stats
+                &second_pokemon
             );
             compare_pokemon_ribbons(
                 &first_pokemon,
@@ -206,57 +226,57 @@ static void conversions_test(
 void gen1_conversions_test()
 {
     // Generation I -> Generation I
-    conversions_test("Bulbasaur", "Red", "Yellow");
+    conversions_test(PKMN_SPECIES_BULBASAUR, PKMN_GAME_RED, PKMN_GAME_YELLOW);
 
     // Generation I -> Generation II
-    conversions_test("Squirtle", "Blue", "Gold");
+    conversions_test(PKMN_SPECIES_SQUIRTLE, PKMN_GAME_BLUE, PKMN_GAME_GOLD);
 }
 
 void gen2_conversions_test()
 {
     // Generation II -> Generation II
-    conversions_test("Cyndaquil", "Gold", "Crystal");
-    conversions_test("Totodile", "Crystal", "Gold");
+    conversions_test(PKMN_SPECIES_CYNDAQUIL, PKMN_GAME_GOLD, PKMN_GAME_CRYSTAL);
+    conversions_test(PKMN_SPECIES_TOTODILE, PKMN_GAME_CRYSTAL, PKMN_GAME_GOLD);
 
     // Generation II -> Generation I
-    conversions_test("Charmander", "Silver", "Blue");
+    conversions_test(PKMN_SPECIES_CHARMANDER, PKMN_GAME_SILVER, PKMN_GAME_BLUE);
 }
 
 void gba_conversions_test()
 {
     // GBA -> GBA
-    conversions_test("Torchic", "Ruby", "Sapphire");
-    conversions_test("Mudkip", "Ruby", "Emerald");
-    conversions_test("Treecko", "Ruby", "FireRed");
-    conversions_test("Torchic", "Emerald", "Sapphire");
-    conversions_test("Mudkip", "Emerald", "Emerald");
-    conversions_test("Treecko", "Emerald", "FireRed");
-    conversions_test("Charmander", "FireRed", "Sapphire");
-    conversions_test("Squirtle", "FireRed", "Emerald");
-    conversions_test("Bulbasaur", "FireRed", "FireRed");
+    conversions_test(PKMN_SPECIES_TORCHIC, PKMN_GAME_RUBY, PKMN_GAME_SAPPHIRE);
+    conversions_test(PKMN_SPECIES_MUDKIP, PKMN_GAME_RUBY, PKMN_GAME_EMERALD);
+    conversions_test(PKMN_SPECIES_TREECKO, PKMN_GAME_RUBY, PKMN_GAME_FIRERED);
+    conversions_test(PKMN_SPECIES_TORCHIC, PKMN_GAME_EMERALD, PKMN_GAME_SAPPHIRE);
+    conversions_test(PKMN_SPECIES_MUDKIP, PKMN_GAME_EMERALD, PKMN_GAME_EMERALD);
+    conversions_test(PKMN_SPECIES_TREECKO, PKMN_GAME_EMERALD, PKMN_GAME_FIRERED);
+    conversions_test(PKMN_SPECIES_CHARMANDER, PKMN_GAME_FIRERED, PKMN_GAME_SAPPHIRE);
+    conversions_test(PKMN_SPECIES_SQUIRTLE, PKMN_GAME_FIRERED, PKMN_GAME_EMERALD);
+    conversions_test(PKMN_SPECIES_BULBASAUR, PKMN_GAME_FIRERED, PKMN_GAME_FIRERED);
 
     // GBA -> GCN
-    conversions_test("Eevee", "Ruby", "Colosseum");
-    conversions_test("Espeon", "Emerald", "Colosseum");
-    conversions_test("Umbreon", "FireRed", "Colosseum");
-    conversions_test("Eevee", "Ruby", "XD");
-    conversions_test("Espeon", "Emerald", "XD");
-    conversions_test("Umbreon", "FireRed", "XD");
+    conversions_test(PKMN_SPECIES_EEVEE, PKMN_GAME_RUBY, PKMN_GAME_COLOSSEUM);
+    conversions_test(PKMN_SPECIES_ESPEON, PKMN_GAME_EMERALD, PKMN_GAME_COLOSSEUM);
+    conversions_test(PKMN_SPECIES_UMBREON, PKMN_GAME_FIRERED, PKMN_GAME_COLOSSEUM);
+    conversions_test(PKMN_SPECIES_EEVEE, PKMN_GAME_RUBY, PKMN_GAME_XD);
+    conversions_test(PKMN_SPECIES_ESPEON, PKMN_GAME_EMERALD, PKMN_GAME_XD);
+    conversions_test(PKMN_SPECIES_UMBREON, PKMN_GAME_FIRERED, PKMN_GAME_XD);
 }
 
 void gcn_conversions_test()
 {
     // GCN -> GBA
-    conversions_test("Eevee", "Colosseum", "Sapphire");
-    conversions_test("Espeon", "Colosseum", "Emerald");
-    conversions_test("Umbreon", "Colosseum", "LeafGreen");
-    conversions_test("Eevee", "XD", "Sapphire");
-    conversions_test("Espeon", "XD", "Emerald");
-    conversions_test("Umbreon", "XD", "LeafGreen");
+    conversions_test(PKMN_SPECIES_EEVEE, PKMN_GAME_COLOSSEUM, PKMN_GAME_SAPPHIRE);
+    conversions_test(PKMN_SPECIES_ESPEON, PKMN_GAME_COLOSSEUM, PKMN_GAME_EMERALD);
+    conversions_test(PKMN_SPECIES_UMBREON, PKMN_GAME_COLOSSEUM, PKMN_GAME_LEAFGREEN);
+    conversions_test(PKMN_SPECIES_EEVEE, PKMN_GAME_XD, PKMN_GAME_SAPPHIRE);
+    conversions_test(PKMN_SPECIES_ESPEON, PKMN_GAME_XD, PKMN_GAME_EMERALD);
+    conversions_test(PKMN_SPECIES_UMBREON, PKMN_GAME_XD, PKMN_GAME_LEAFGREEN);
 
     // GCN -> GCN
-    conversions_test("Vaporeon", "Colosseum", "Colosseum");
-    conversions_test("Jolteon", "Colosseum", "XD");
-    conversions_test("Vaporeon", "XD", "XD");
-    conversions_test("Jolteon", "XD", "Colosseum");
+    conversions_test(PKMN_SPECIES_VAPOREON, PKMN_GAME_COLOSSEUM, PKMN_GAME_COLOSSEUM);
+    conversions_test(PKMN_SPECIES_JOLTEON, PKMN_GAME_COLOSSEUM, PKMN_GAME_XD);
+    conversions_test(PKMN_SPECIES_VAPOREON, PKMN_GAME_XD, PKMN_GAME_XD);
+    conversions_test(PKMN_SPECIES_JOLTEON, PKMN_GAME_XD, PKMN_GAME_COLOSSEUM);
 }

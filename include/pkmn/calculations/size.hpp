@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -8,6 +8,8 @@
 #define PKMN_CALCULATIONS_SIZE_HPP
 
 #include <pkmn/config.hpp>
+
+#include <pkmn/enums/species.hpp>
 
 #include <cstdint>
 #include <string>
@@ -26,7 +28,7 @@ namespace pkmn { namespace calculations {
      * \throws std::out_of_range if any IV parameter is not in the range [0-31]
      */
     PKMN_API float pokemon_size(
-        const std::string& species,
+        pkmn::e_species species,
         uint32_t personality,
         int IV_HP,
         int IV_attack,

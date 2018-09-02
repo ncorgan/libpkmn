@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -14,14 +14,14 @@
 
 namespace fs = boost::filesystem;
 
-class gen2_unown_test: public ::testing::TestWithParam<std::string> {};
-class gen3_unown_test: public ::testing::TestWithParam<std::string> {};
+class gen2_unown_test: public ::testing::TestWithParam<pkmn::e_game> {};
+class gen3_unown_test: public ::testing::TestWithParam<pkmn::e_game> {};
 
 TEST_P(gen2_unown_test, gen2_unown_test) {
-    std::string game = GetParam();
+    pkmn::e_game game = GetParam();
 
     pkmn::database::pokemon_entry unown_entry(
-        "Unown",
+        pkmn::e_species::UNOWN,
         game,
         ""
     );
@@ -29,7 +29,7 @@ TEST_P(gen2_unown_test, gen2_unown_test) {
 
     for(int i = 0; i < 26; ++i) {
         pkmn::pokemon::sptr unown = pkmn::pokemon::make(
-                                        "Unown",
+                                        pkmn::e_species::UNOWN,
                                         game,
                                         unown_forms[i],
                                         5
@@ -37,12 +37,12 @@ TEST_P(gen2_unown_test, gen2_unown_test) {
         EXPECT_EQ(unown_forms[i], unown->get_form());
 
         // Make sure IVs are properly set
-        const std::map<std::string, int>& IVs = unown->get_IVs();
+        const std::map<pkmn::e_stat, int>& IVs = unown->get_IVs();
         std::string form_from_IVs = pkmn::calculations::gen2_unown_form(
-                                        IVs.at("Attack"),
-                                        IVs.at("Defense"),
-                                        IVs.at("Speed"),
-                                        IVs.at("Special")
+                                        IVs.at(pkmn::e_stat::ATTACK),
+                                        IVs.at(pkmn::e_stat::DEFENSE),
+                                        IVs.at(pkmn::e_stat::SPEED),
+                                        IVs.at(pkmn::e_stat::SPECIAL)
                                     );
         EXPECT_EQ(form_from_IVs, unown->get_form());
         EXPECT_TRUE(fs::exists(unown->get_icon_filepath()));
@@ -50,38 +50,38 @@ TEST_P(gen2_unown_test, gen2_unown_test) {
     }
 
     pkmn::pokemon::sptr unown = pkmn::pokemon::make(
-                                    "Unown",
+                                    pkmn::e_species::UNOWN,
                                     game,
                                     "A",
                                     5
                                 );
-    const std::map<std::string, int>& IVs = unown->get_IVs();
+    const std::map<pkmn::e_stat, int>& IVs = unown->get_IVs();
 
     // Make sure setting the form properly changes the IVs.
     for(int i = 0; i < 26; ++i) {
         unown->set_form(unown_forms[i]);
         std::string form_from_IVs = pkmn::calculations::gen2_unown_form(
-                                        IVs.at("Attack"),
-                                        IVs.at("Defense"),
-                                        IVs.at("Speed"),
-                                        IVs.at("Special")
+                                        IVs.at(pkmn::e_stat::ATTACK),
+                                        IVs.at(pkmn::e_stat::DEFENSE),
+                                        IVs.at(pkmn::e_stat::SPEED),
+                                        IVs.at(pkmn::e_stat::SPECIAL)
                                     );
         EXPECT_EQ(form_from_IVs, unown->get_form());
     }
 
     // Make sure setting IVs properly changes the form.
-    unown->set_IV("Attack", 10);
-    unown->set_IV("Defense", 9);
-    unown->set_IV("Speed", 1);
-    unown->set_IV("Special", 14);
+    unown->set_IV(pkmn::e_stat::ATTACK, 10);
+    unown->set_IV(pkmn::e_stat::DEFENSE, 9);
+    unown->set_IV(pkmn::e_stat::SPEED, 1);
+    unown->set_IV(pkmn::e_stat::SPECIAL, 14);
     EXPECT_EQ("G", unown->get_form());
 }
 
 TEST_P(gen3_unown_test, gen3_unown_test) {
-    std::string game = GetParam();
+    pkmn::e_game game = GetParam();
 
     pkmn::database::pokemon_entry unown_entry(
-        "Unown",
+        pkmn::e_species::UNOWN,
         game,
         ""
     );
@@ -89,7 +89,7 @@ TEST_P(gen3_unown_test, gen3_unown_test) {
 
     for(auto form_iter = unown_forms.begin(); form_iter != unown_forms.end(); ++form_iter) {
         pkmn::pokemon::sptr unown = pkmn::pokemon::make(
-                                        "Unown",
+                                        pkmn::e_species::UNOWN,
                                         game,
                                         *form_iter,
                                         5
@@ -102,7 +102,7 @@ TEST_P(gen3_unown_test, gen3_unown_test) {
 
     // Make sure setting the personality properly sets the form.
     pkmn::pokemon::sptr unown = pkmn::pokemon::make(
-                                    "Unown",
+                                    pkmn::e_species::UNOWN,
                                     game,
                                     "A",
                                     5
@@ -121,10 +121,11 @@ TEST_P(gen3_unown_test, gen3_unown_test) {
     }
 }
 
-static const std::string gen2_games[] = {
-    "Gold",
-    "Silver",
-    "Crystal"
+static const std::vector<pkmn::e_game> gen2_games =
+{
+    pkmn::e_game::GOLD,
+    pkmn::e_game::SILVER,
+    pkmn::e_game::CRYSTAL
 };
 
 INSTANTIATE_TEST_CASE_P(
@@ -133,14 +134,15 @@ INSTANTIATE_TEST_CASE_P(
     ::testing::ValuesIn(gen2_games)
 );
 
-static const std::string gen3_games[] = {
-    "Ruby",
-    "Sapphire",
-    "Emerald",
-    "FireRed",
-    "LeafGreen",
-    "Colosseum",
-    "XD"
+static const std::vector<pkmn::e_game> gen3_games =
+{
+    pkmn::e_game::RUBY,
+    pkmn::e_game::SAPPHIRE,
+    pkmn::e_game::EMERALD,
+    pkmn::e_game::FIRERED,
+    pkmn::e_game::LEAFGREEN,
+    pkmn::e_game::COLOSSEUM,
+    pkmn::e_game::XD
 };
 
 INSTANTIATE_TEST_CASE_P(

@@ -144,9 +144,9 @@ namespace pkmn {
         // seen and caught the Pokémon.
         if(_pokedex.get())
         {
-            std::string species = new_pokemon->get_species();
+            pkmn::e_species species = new_pokemon->get_species();
 
-            if((species != "None") && !new_pokemon->is_egg())
+            if((species != pkmn::e_species::NONE) && !new_pokemon->is_egg())
             {
                 _pokedex->set_has_seen(species, true);
                 _pokedex->set_has_caught(species, true);
@@ -154,16 +154,14 @@ namespace pkmn {
         }
     }
 
-    std::vector<std::string> get_valid_gba_wallpaper_names(
-        const std::string& game
-    )
+    std::vector<std::string> get_valid_gba_wallpaper_names(pkmn::e_game game)
     {
         std::vector<std::string> valid_wallpaper_names =
             pkmn::map_keys_to_vector(pksav::get_gba_box_wallpaper_bimap().left);
 
         std::vector<std::string> game_specific_wallpaper_names;
 
-        if((game == "FireRed") || (game == "LeafGreen"))
+        if((game == pkmn::e_game::FIRERED) or (game == pkmn::e_game::LEAFGREEN))
         {
             game_specific_wallpaper_names =
                 pkmn::map_keys_to_vector(pksav::get_gba_frlg_box_wallpaper_bimap().left);

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016,2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -8,6 +8,8 @@
 #define PKMN_CALCULATIONS_STATS_HPP
 
 #include <pkmn/config.hpp>
+
+#include <pkmn/enums/stat.hpp>
 
 #include <string>
 #include <utility>
@@ -29,7 +31,7 @@ namespace pkmn { namespace calculations {
      * \returns Calculated stat
      */
     PKMN_API int get_gb_stat(
-        const std::string& stat,
+        pkmn::e_stat stat,
         int level,
         int base_stat,
         int EV,
@@ -47,7 +49,7 @@ namespace pkmn { namespace calculations {
      * \returns Calculated stats
      */
     inline std::pair<int, int> get_gb_stat_range(
-        const std::string& stat,
+        pkmn::e_stat stat,
         int level,
         int base_stat
     ) {
@@ -74,7 +76,7 @@ namespace pkmn { namespace calculations {
      * \returns Calculated stat
      */
     PKMN_API int get_modern_stat(
-        const std::string& stat,
+        pkmn::e_stat stat,
         int level,
         float nature_modifier,
         int base_stat,
@@ -93,7 +95,7 @@ namespace pkmn { namespace calculations {
      * \returns Calculated stats
      */
     inline std::pair<int, int> get_modern_stat_range(
-        const std::string& stat,
+        pkmn::e_stat stat,
         int level,
         int base_stat
     ) {

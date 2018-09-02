@@ -12,6 +12,50 @@
 namespace pksav
 {
 
+// Stats
+
+const gb_IV_bimap_t& get_gb_IV_bimap()
+{
+    static const gb_IV_bimap_t GB_IV_BIMAP =
+    boost::assign::list_of<gb_IV_bimap_t::relation>
+        (pkmn::e_stat::HP,      PKSAV_GB_IV_HP)
+        (pkmn::e_stat::ATTACK,  PKSAV_GB_IV_ATTACK)
+        (pkmn::e_stat::DEFENSE, PKSAV_GB_IV_DEFENSE)
+        (pkmn::e_stat::SPEED,   PKSAV_GB_IV_SPEED)
+        (pkmn::e_stat::SPECIAL, PKSAV_GB_IV_SPECIAL)
+    ;
+
+    return GB_IV_BIMAP;
+}
+
+const IV_bimap_t& get_IV_bimap()
+{
+    static const IV_bimap_t IV_BIMAP =
+    boost::assign::list_of<IV_bimap_t::relation>
+        (pkmn::e_stat::HP,              PKSAV_IV_HP)
+        (pkmn::e_stat::ATTACK,          PKSAV_IV_ATTACK)
+        (pkmn::e_stat::DEFENSE,         PKSAV_IV_DEFENSE)
+        (pkmn::e_stat::SPEED,           PKSAV_IV_SPEED)
+        (pkmn::e_stat::SPECIAL_ATTACK,  PKSAV_IV_SPATK)
+        (pkmn::e_stat::SPECIAL_DEFENSE, PKSAV_IV_SPDEF)
+    ;
+
+    return IV_BIMAP;
+}
+
+// Genders
+
+const gen2_gender_bimap_t& get_gen2_gender_bimap()
+{
+    static const gen2_gender_bimap_t GEN2_GENDER_BIMAP =
+    boost::assign::list_of<gen2_gender_bimap_t::relation>
+        (pkmn::e_gender::MALE,   PKSAV_GEN2_GENDER_MALE)
+        (pkmn::e_gender::FEMALE, PKSAV_GEN2_GENDER_FEMALE)
+    ;
+
+    return GEN2_GENDER_BIMAP;
+}
+
 // Options
 
 const gen1_rb_text_speed_bimap_t& get_gen1_rb_text_speed_bimap()
@@ -95,12 +139,12 @@ const gb_condition_bimap_t& get_gb_condition_bimap()
 {
     static const gb_condition_bimap_t GB_CONDITION_BIMAP =
     boost::assign::list_of<gb_condition_bimap_t::relation>
-        ("None",      PKSAV_GB_CONDITION_NONE)
-        ("Asleep",    PKSAV_GB_CONDITION_ASLEEP)
-        ("Poison",    PKSAV_GB_CONDITION_POISON)
-        ("Burn",      PKSAV_GB_CONDITION_BURN)
-        ("Frozen",    PKSAV_GB_CONDITION_FROZEN)
-        ("Paralysis", PKSAV_GB_CONDITION_PARALYZ)
+        (pkmn::e_condition::NONE,      PKSAV_GB_CONDITION_NONE)
+        (pkmn::e_condition::ASLEEP,    PKSAV_GB_CONDITION_ASLEEP)
+        (pkmn::e_condition::POISON,    PKSAV_GB_CONDITION_POISON)
+        (pkmn::e_condition::BURN,      PKSAV_GB_CONDITION_BURN)
+        (pkmn::e_condition::FROZEN,    PKSAV_GB_CONDITION_FROZEN)
+        (pkmn::e_condition::PARALYSIS, PKSAV_GB_CONDITION_PARALYZ)
     ;
 
     return GB_CONDITION_BIMAP;
@@ -110,13 +154,13 @@ const condition_mask_bimap_t& get_condition_mask_bimap()
 {
     static const condition_mask_bimap_t CONDITION_MASK_BIMAP =
     boost::assign::list_of<condition_mask_bimap_t::relation>
-        ("None",       PKSAV_CONDITION_NONE)
-        ("Asleep",     PKSAV_CONDITION_SLEEP_MASK)
-        ("Poison",     PKSAV_CONDITION_POISON)
-        ("Burn",       PKSAV_CONDITION_BURN)
-        ("Frozen",     PKSAV_CONDITION_FROZEN)
-        ("Paralysis",  PKSAV_CONDITION_PARALYZ)
-        ("Bad Poison", PKSAV_CONDITION_BAD_POISON)
+        (pkmn::e_condition::NONE,       PKSAV_CONDITION_NONE)
+        (pkmn::e_condition::ASLEEP,     PKSAV_CONDITION_SLEEP_MASK)
+        (pkmn::e_condition::POISON,     PKSAV_CONDITION_POISON)
+        (pkmn::e_condition::BURN,       PKSAV_CONDITION_BURN)
+        (pkmn::e_condition::FROZEN,     PKSAV_CONDITION_FROZEN)
+        (pkmn::e_condition::PARALYSIS,  PKSAV_CONDITION_PARALYZ)
+        (pkmn::e_condition::BAD_POISON, PKSAV_CONDITION_BAD_POISON)
     ;
 
     return CONDITION_MASK_BIMAP;
@@ -189,21 +233,21 @@ const gen1_type_bimap_t& get_gen1_type_bimap()
 {
     static const gen1_type_bimap_t GEN1_TYPE_BIMAP =
     boost::assign::list_of<gen1_type_bimap_t::relation>
-        ("Normal",   PKSAV_GEN1_TYPE_NORMAL)
-        ("Fighting", PKSAV_GEN1_TYPE_FIGHTING)
-        ("Flying",   PKSAV_GEN1_TYPE_FLYING)
-        ("Poison",   PKSAV_GEN1_TYPE_POISON)
-        ("Ground",   PKSAV_GEN1_TYPE_GROUND)
-        ("Rock",     PKSAV_GEN1_TYPE_ROCK)
-        ("Bug",      PKSAV_GEN1_TYPE_BUG)
-        ("Ghost",    PKSAV_GEN1_TYPE_GHOST)
-        ("Fire",     PKSAV_GEN1_TYPE_FIRE)
-        ("Water",    PKSAV_GEN1_TYPE_WATER)
-        ("Grass",    PKSAV_GEN1_TYPE_GRASS)
-        ("Electric", PKSAV_GEN1_TYPE_ELECTRIC)
-        ("Psychic",  PKSAV_GEN1_TYPE_PSYCHIC)
-        ("Ice",      PKSAV_GEN1_TYPE_ICE)
-        ("Dragon",   PKSAV_GEN1_TYPE_DRAGON)
+        (pkmn::e_type::NORMAL,   PKSAV_GEN1_TYPE_NORMAL)
+        (pkmn::e_type::FIGHTING, PKSAV_GEN1_TYPE_FIGHTING)
+        (pkmn::e_type::FLYING,   PKSAV_GEN1_TYPE_FLYING)
+        (pkmn::e_type::POISON,   PKSAV_GEN1_TYPE_POISON)
+        (pkmn::e_type::GROUND,   PKSAV_GEN1_TYPE_GROUND)
+        (pkmn::e_type::ROCK,     PKSAV_GEN1_TYPE_ROCK)
+        (pkmn::e_type::BUG,      PKSAV_GEN1_TYPE_BUG)
+        (pkmn::e_type::GHOST,    PKSAV_GEN1_TYPE_GHOST)
+        (pkmn::e_type::FIRE,     PKSAV_GEN1_TYPE_FIRE)
+        (pkmn::e_type::WATER,    PKSAV_GEN1_TYPE_WATER)
+        (pkmn::e_type::GRASS,    PKSAV_GEN1_TYPE_GRASS)
+        (pkmn::e_type::ELECTRIC, PKSAV_GEN1_TYPE_ELECTRIC)
+        (pkmn::e_type::PSYCHIC,  PKSAV_GEN1_TYPE_PSYCHIC)
+        (pkmn::e_type::ICE,      PKSAV_GEN1_TYPE_ICE)
+        (pkmn::e_type::DRAGON,   PKSAV_GEN1_TYPE_DRAGON)
     ;
 
     return GEN1_TYPE_BIMAP;
@@ -226,13 +270,13 @@ const gba_language_bimap_t& get_gba_language_bimap()
 {
     static const gba_language_bimap_t GBA_LANGUAGE_BIMAP =
     boost::assign::list_of<gba_language_bimap_t::relation>
-        ("Japanese", PKSAV_GBA_LANGUAGE_JAPANESE)
-        ("English",  PKSAV_GBA_LANGUAGE_ENGLISH)
-        ("French",   PKSAV_GBA_LANGUAGE_FRENCH)
-        ("Italian",  PKSAV_GBA_LANGUAGE_ITALIAN)
-        ("German",   PKSAV_GBA_LANGUAGE_GERMAN)
-        ("Korean",   PKSAV_GBA_LANGUAGE_KOREAN) // Unused, but the value's there
-        ("Spanish",  PKSAV_GBA_LANGUAGE_SPANISH)
+        (pkmn::e_language::JAPANESE, PKSAV_GBA_LANGUAGE_JAPANESE)
+        (pkmn::e_language::ENGLISH,  PKSAV_GBA_LANGUAGE_ENGLISH)
+        (pkmn::e_language::FRENCH,   PKSAV_GBA_LANGUAGE_FRENCH)
+        (pkmn::e_language::ITALIAN,  PKSAV_GBA_LANGUAGE_ITALIAN)
+        (pkmn::e_language::GERMAN,   PKSAV_GBA_LANGUAGE_GERMAN)
+        (pkmn::e_language::KOREAN,   PKSAV_GBA_LANGUAGE_KOREAN) // Unused, but the value's there
+        (pkmn::e_language::SPANISH,  PKSAV_GBA_LANGUAGE_SPANISH)
     ;
 
     return GBA_LANGUAGE_BIMAP;
@@ -242,31 +286,31 @@ const nature_bimap_t& get_nature_bimap()
 {
     static const nature_bimap_t NATURE_BIMAP =
     boost::assign::list_of<nature_bimap_t::relation>
-        ("Hardy",   PKSAV_NATURE_HARDY)
-        ("Lonely",  PKSAV_NATURE_LONELY)
-        ("Brave",   PKSAV_NATURE_BRAVE)
-        ("Adamant", PKSAV_NATURE_ADAMANT)
-        ("Naughty", PKSAV_NATURE_NAUGHTY)
-        ("Bold",    PKSAV_NATURE_BOLD)
-        ("Docile",  PKSAV_NATURE_DOCILE)
-        ("Relaxed", PKSAV_NATURE_RELAXED)
-        ("Impish",  PKSAV_NATURE_IMPISH)
-        ("Lax",     PKSAV_NATURE_LAX)
-        ("Timid",   PKSAV_NATURE_TIMID)
-        ("Hasty",   PKSAV_NATURE_HASTY)
-        ("Serious", PKSAV_NATURE_SERIOUS)
-        ("Jolly",   PKSAV_NATURE_JOLLY)
-        ("Naive",   PKSAV_NATURE_NAIVE)
-        ("Modest",  PKSAV_NATURE_MODEST)
-        ("Mild",    PKSAV_NATURE_MILD)
-        ("Quiet",   PKSAV_NATURE_QUIET)
-        ("Bashful", PKSAV_NATURE_BASHFUL)
-        ("Rash",    PKSAV_NATURE_RASH)
-        ("Calm",    PKSAV_NATURE_CALM)
-        ("Gentle",  PKSAV_NATURE_GENTLE)
-        ("Sassy",   PKSAV_NATURE_SASSY)
-        ("Careful", PKSAV_NATURE_CAREFUL)
-        ("Quirky",  PKSAV_NATURE_QUIRKY)
+        (pkmn::e_nature::HARDY,   PKSAV_NATURE_HARDY)
+        (pkmn::e_nature::LONELY,  PKSAV_NATURE_LONELY)
+        (pkmn::e_nature::BRAVE,   PKSAV_NATURE_BRAVE)
+        (pkmn::e_nature::ADAMANT, PKSAV_NATURE_ADAMANT)
+        (pkmn::e_nature::NAUGHTY, PKSAV_NATURE_NAUGHTY)
+        (pkmn::e_nature::BOLD,    PKSAV_NATURE_BOLD)
+        (pkmn::e_nature::DOCILE,  PKSAV_NATURE_DOCILE)
+        (pkmn::e_nature::RELAXED, PKSAV_NATURE_RELAXED)
+        (pkmn::e_nature::IMPISH,  PKSAV_NATURE_IMPISH)
+        (pkmn::e_nature::LAX,     PKSAV_NATURE_LAX)
+        (pkmn::e_nature::TIMID,   PKSAV_NATURE_TIMID)
+        (pkmn::e_nature::HASTY,   PKSAV_NATURE_HASTY)
+        (pkmn::e_nature::SERIOUS, PKSAV_NATURE_SERIOUS)
+        (pkmn::e_nature::JOLLY,   PKSAV_NATURE_JOLLY)
+        (pkmn::e_nature::NAIVE,   PKSAV_NATURE_NAIVE)
+        (pkmn::e_nature::MODEST,  PKSAV_NATURE_MODEST)
+        (pkmn::e_nature::MILD,    PKSAV_NATURE_MILD)
+        (pkmn::e_nature::QUIET,   PKSAV_NATURE_QUIET)
+        (pkmn::e_nature::BASHFUL, PKSAV_NATURE_BASHFUL)
+        (pkmn::e_nature::RASH,    PKSAV_NATURE_RASH)
+        (pkmn::e_nature::CALM,    PKSAV_NATURE_CALM)
+        (pkmn::e_nature::GENTLE,  PKSAV_NATURE_GENTLE)
+        (pkmn::e_nature::SASSY,   PKSAV_NATURE_SASSY)
+        (pkmn::e_nature::CAREFUL, PKSAV_NATURE_CAREFUL)
+        (pkmn::e_nature::QUIRKY,  PKSAV_NATURE_QUIRKY)
     ;
 
     return NATURE_BIMAP;

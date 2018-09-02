@@ -22,7 +22,7 @@
 typedef void (*item_list_test_fcn_t)(const pkmn::item_list::sptr&);
 typedef std::map<std::string, item_list_test_fcn_t> item_list_test_fcns_t;
 
-class item_list_test: public ::testing::TestWithParam<std::pair<std::string, std::string> >
+class item_list_test: public ::testing::TestWithParam<std::pair<pkmn::e_game, std::string> >
 {
     public:
         inline pkmn::item_list::sptr get_item_list()
@@ -30,7 +30,7 @@ class item_list_test: public ::testing::TestWithParam<std::pair<std::string, std
             return _item_list;
         }
 
-        inline const std::string& get_game()
+        inline pkmn::e_game get_game()
         {
             return _game;
         }
@@ -58,7 +58,8 @@ class item_list_test: public ::testing::TestWithParam<std::pair<std::string, std
 
     private:
 
-        std::string _name, _game;
+        std::string _name;
+        pkmn::e_game _game;
         pkmn::item_list::sptr _item_list;
 };
 
@@ -68,27 +69,27 @@ void test_item_list_empty_slots(
 
 void test_item_list_out_of_range_error(
     const pkmn::item_list::sptr& list,
-    const std::string& item_name
+    pkmn::e_item item
 );
 
 void test_item_list_invalid_items(
     const pkmn::item_list::sptr& list,
-    const std::vector<std::string> &item_names
+    const std::vector<pkmn::e_item>& items
 );
 
 void test_item_list_add_remove(
     const pkmn::item_list::sptr& list,
-    const std::vector<std::string> &item_names
+    const std::vector<pkmn::e_item>& items
 );
 
-class item_bag_test: public ::testing::TestWithParam<std::string> {
+class item_bag_test: public ::testing::TestWithParam<pkmn::e_game> {
     public:
         // We need access to the specific sptr instance.
         inline const pkmn::item_bag::sptr& get_item_bag() {
             return _item_bag;
         }
 
-        inline const std::string& get_game() {
+        inline pkmn::e_game get_game() {
             return _game;
         }
 
@@ -108,13 +109,13 @@ class item_bag_test: public ::testing::TestWithParam<std::string> {
 
     private:
 
-        std::string _game;
+        pkmn::e_game _game;
         pkmn::item_bag::sptr _item_bag;
 };
 
 void test_item_bag_invalid_items(
     const pkmn::item_bag::sptr& bag,
-    const std::vector<std::string>& item_names
+    const std::vector<pkmn::e_item>& items
 );
 
 #endif /* ITEM_TEST_COMMON_HPP */

@@ -70,18 +70,17 @@ namespace pkmn
     }
 
     bool pokedex_gbaimpl::has_seen(
-        const std::string& species
+        pkmn::e_species species
     )
     {
         boost::lock_guard<pokedex_gbaimpl> lock(*this);
 
-        int species_id = pkmn::database::species_name_to_id(species);
         bool has_seen = false;
 
         PKSAV_CALL(
             pksav_get_pokedex_bit(
-                _pksav_pokedex.p_seenA,
-                uint16_t(species_id),
+                _pksav_pokedex.p_seenA, // The others should match
+                uint16_t(species),
                 &has_seen
             );
         )
@@ -90,18 +89,17 @@ namespace pkmn
     }
 
     bool pokedex_gbaimpl::has_caught(
-        const std::string& species
+        pkmn::e_species species
     )
     {
         boost::lock_guard<pokedex_gbaimpl> lock(*this);
 
-        int species_id = pkmn::database::species_name_to_id(species);
         bool has_caught = false;
 
         PKSAV_CALL(
             pksav_get_pokedex_bit(
                 _pksav_pokedex.p_owned,
-                uint16_t(species_id),
+                uint16_t(species),
                 &has_caught
             );
         )

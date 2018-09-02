@@ -10,8 +10,9 @@
 #include <pkmn-c/config.h>
 #include <pkmn-c/error.h>
 
+#include <pkmn-c/enums/stat.h>
+
 #include <pkmn-c/types/int_pair.h>
-#include <pkmn-c/types/stats.h>
 
 #ifdef __cplusplus
 extern "C" {

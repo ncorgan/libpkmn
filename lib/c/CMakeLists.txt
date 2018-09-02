@@ -22,6 +22,7 @@ SET(pkmn_c_libs
 ADD_SUBDIRECTORY(breeding)
 ADD_SUBDIRECTORY(calculations)
 ADD_SUBDIRECTORY(database)
+ADD_SUBDIRECTORY(enums)
 ADD_SUBDIRECTORY(gui)
 ADD_SUBDIRECTORY(types)
 ADD_SUBDIRECTORY(utils)
@@ -30,6 +31,7 @@ SET(pkmn_c_sources
     ${pkmn_c_breeding_sources}
     ${pkmn_c_calculations_sources}
     ${pkmn_c_database_sources}
+    ${pkmn_c_enums_sources}
     ${pkmn_c_gui_sources}
     ${pkmn_c_types_sources}
     ${pkmn_c_utils_sources}

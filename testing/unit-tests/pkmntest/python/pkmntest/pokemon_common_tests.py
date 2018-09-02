@@ -24,26 +24,55 @@ def test_name_func(testcase_func, param_num, param):
 PYTHON_MAJOR_VERSION = sys.version_info[0]
 
 GEN1_POKEMON_WITH_XY_MEGA_FORMS = [
-    "Venusaur", "Blastoise", "Alakazam", "Gengar",
-    "Kangaskhan", "Pinsir", "Gyarados", "Aerodactyl"
+    pkmn.species.VENUSAUR,
+    pkmn.species.BLASTOISE,
+    pkmn.species.ALAKAZAM,
+    pkmn.species.GENGAR,
+    pkmn.species.KANGASKHAN,
+    pkmn.species.PINSIR,
+    pkmn.species.GYARADOS,
+    pkmn.species.AERODACTYL
 ]
 
 GEN1_POKEMON_WITH_ORAS_MEGA_FORMS = [
-    "Beedrill", "Pidgeot", "Slowbro"
+    pkmn.species.BEEDRILL,
+    pkmn.species.PIDGEOT,
+    pkmn.species.SLOWBRO
 ]
 
 GEN2_POKEMON_WITH_XY_MEGA_FORMS = [
-    "Ampharos", "Scizor", "Heracross", "Houndoom", "Tyranitar"
+    pkmn.species.AMPHAROS,
+    pkmn.species.SCIZOR,
+    pkmn.species.HERACROSS,
+    pkmn.species.HOUNDOOM,
+    pkmn.species.TYRANITAR
 ]
 
 GEN3_POKEMON_WITH_XY_MEGA_FORMS = [
-    "Blaziken", "Gardevoir", "Mawile", "Aggron", "Medicham",
-    "Manectric", "Banette", "Absol", "Latias", "Latios", "Garchomp"
+    pkmn.species.BLAZIKEN,
+    pkmn.species.GARDEVOIR,
+    pkmn.species.MAWILE,
+    pkmn.species.AGGRON,
+    pkmn.species.MEDICHAM,
+    pkmn.species.MANECTRIC,
+    pkmn.species.BANETTE,
+    pkmn.species.ABSOL,
+    pkmn.species.LATIAS,
+    pkmn.species.LATIOS,
+    pkmn.species.GARCHOMP
 ]
 
 GEN3_POKEMON_WITH_ORAS_MEGA_FORMS = [
-    "Sceptile", "Swampert", "Sableye", "Sharpedo", "Camerupt",
-    "Altaria", "Glalie", "Salamence", "Metagross", "Rayquaza"
+    pkmn.species.SCEPTILE,
+    pkmn.species.SWAMPERT,
+    pkmn.species.SABLEYE,
+    pkmn.species.SHARPEDO,
+    pkmn.species.CAMERUPT,
+    pkmn.species.ALTARIA,
+    pkmn.species.GLALIE,
+    pkmn.species.SALAMENCE,
+    pkmn.species.METAGROSS,
+    pkmn.species.RAYQUAZA
 ]
 
 class pokemon_common_tests(base_test):
@@ -60,22 +89,24 @@ class pokemon_common_tests(base_test):
                     pkmn.pokemon(species, game, "Mega", 100)
 
         for species in GEN1_POKEMON_WITH_ORAS_MEGA_FORMS:
-            if game in ["Omega Ruby", "Alpha Sapphire"]:
+            if game in [pkmn.game.OMEGA_RUBY, pkmn.game.ALPHA_SAPPHIRE]:
                 pkmn.pokemon(species, game, "Mega", 100)
             else:
                 with self.assertRaises(ValueError):
                     pkmn.pokemon(species, game, "Mega", 100)
 
         # Cosplay Pikachu should only work in OR/AS.
-        for form in pkmn.database.pokemon_entry("Pikachu", "Omega Ruby", "").forms[1:]:
-            if game in ["Omega Ruby", "Alpha Sapphire"]:
-                pkmn.pokemon("Pikachu", game, form, 100)
+        for form in pkmn.database.pokemon_entry(pkmn.species.PIKACHU,
+                                                pkmn.game.OMEGA_RUBY,
+                                                "").forms[1:]:
+            if game in [pkmn.game.OMEGA_RUBY, pkmn.game.ALPHA_SAPPHIRE]:
+                pkmn.pokemon(pkmn.species.PIKACHU, game, form, 100)
             else:
                 with self.assertRaises(ValueError):
-                    pkmn.pokemon("Pikachu", game, form, 100)
+                    pkmn.pokemon(pkmn.species.PIKACHU, game, form, 100)
 
         # Hardcode Mega X/Y cases.
-        for species in ["Charizard", "Mewtwo"]:
+        for species in [pkmn.species.CHARIZARD, pkmn.species.MEWTWO]:
             if generation >= 6:
                 pkmn.pokemon(species, game, "Mega X", 100)
                 pkmn.pokemon(species, game, "Mega Y", 100)
@@ -96,37 +127,37 @@ class pokemon_common_tests(base_test):
                 with self.assertRaises(ValueError):
                     pkmn.pokemon(species, game, "Mega", 100)
 
-        if game in ["Omega Ruby", "Alpha Sapphire"]:
-            pkmn.pokemon("Steelix", game, "Mega", 100)
+        if game in [pkmn.game.OMEGA_RUBY, pkmn.game.ALPHA_SAPPHIRE]:
+            pkmn.pokemon(pkmn.species.STEELIX, game, "Mega", 100)
         else:
             with self.assertRaises(ValueError):
-                pkmn.pokemon("Steelix", game, "Mega", 100)
+                pkmn.pokemon(pkmn.species.STEELIX, game, "Mega", 100)
 
         # Spiky-eared Pichu should only work in HG/SS.
-        if game in ["HeartGold", "SoulSilver"]:
-            pkmn.pokemon("Pichu", game, "Spiky-eared", 100)
+        if game in [pkmn.game.HEARTGOLD, pkmn.game.SOULSILVER]:
+            pkmn.pokemon(pkmn.species.PICHU, game, "Spiky-eared", 100)
         else:
             with self.assertRaises(ValueError):
-                pkmn.pokemon("Pichu", game, "Spiky-eared", 100)
+                pkmn.pokemon(pkmn.species.PICHU, game, "Spiky-eared", 100)
 
         # Unown's "!" and "?" forms aren't in Generation II.
         for letter in string.ascii_uppercase:
-            unown = pkmn.pokemon("Unown", game, letter, 10)
-            if game not in ["Colosseum", "XD"]:
+            unown = pkmn.pokemon(pkmn.species.UNOWN, game, letter, 10)
+            if game not in [pkmn.game.COLOSSEUM, pkmn.game.XD]:
                 self.assertTrue(os.path.exists(unown.icon_filepath))
                 self.assertTrue(os.path.exists(unown.sprite_filepath))
 
         if generation > 2:
-            pkmn.pokemon("Unown", game, "!", 10)
-            pkmn.pokemon("Unown", game, "?", 10)
+            pkmn.pokemon(pkmn.species.UNOWN, game, "!", 10)
+            pkmn.pokemon(pkmn.species.UNOWN, game, "?", 10)
         else:
             with self.assertRaises(ValueError):
-                pkmn.pokemon("Unown", game, "!", 10)
+                pkmn.pokemon(pkmn.species.UNOWN, game, "!", 10)
             with self.assertRaises(ValueError):
-                pkmn.pokemon("Unown", game, "?", 10)
+                pkmn.pokemon(pkmn.species.UNOWN, game, "?", 10)
 
     def gen3_forms_test(self, game):
-        gamecube = (game in ["Colosseum", "XD"])
+        gamecube = (game in [pkmn.game.COLOSSEUM, pkmn.game.XD])
         generation = GAME_TO_GENERATION[game]
 
         # Check that Mega forms only work in their given games.
@@ -138,26 +169,28 @@ class pokemon_common_tests(base_test):
                     pkmn.pokemon(species, game, "Mega", 100)
 
         for species in GEN3_POKEMON_WITH_ORAS_MEGA_FORMS:
-            if game in ["Omega Ruby", "Alpha Sapphire"]:
+            if game in [pkmn.game.OMEGA_RUBY, pkmn.game.ALPHA_SAPPHIRE]:
                 pkmn.pokemon(species, game, "Mega", 100)
             else:
                 with self.assertRaises(ValueError):
                     pkmn.pokemon(species, game, "Mega", 100)
 
         # Castform should always work.
-        for form in pkmn.database.pokemon_entry("Castform", "Omega Ruby", "").forms:
-            castform = pkmn.pokemon("Castform", game, form, 30)
-            if game not in ["Colosseum", "XD"]:
+        for form in pkmn.database.pokemon_entry(pkmn.species.CASTFORM,
+                                                pkmn.game.OMEGA_RUBY,
+                                                "").forms:
+            castform = pkmn.pokemon(pkmn.species.CASTFORM, game, form, 30)
+            if game not in [pkmn.game.COLOSSEUM, pkmn.game.XD]:
                 self.assertTrue(os.path.exists(castform.icon_filepath))
                 self.assertTrue(os.path.exists(castform.sprite_filepath))
 
         # Primal Reversion should only work in OR/AS.
-        for species in ["Groudon", "Kyogre"]:
+        for species in [pkmn.species.GROUDON, pkmn.species.KYOGRE]:
             pokemon = pkmn.pokemon(species, game, "", 70)
-            if game not in ["Colosseum", "XD"]:
+            if game not in [pkmn.game.COLOSSEUM, pkmn.game.XD]:
                 self.assertTrue(os.path.exists(pokemon.icon_filepath))
                 self.assertTrue(os.path.exists(pokemon.sprite_filepath))
-            if game in ["Omega Ruby", "Alpha Sapphire"]:
+            if game in [pkmn.game.OMEGA_RUBY, pkmn.game.ALPHA_SAPPHIRE]:
                 pkmn.pokemon(species, game, "Primal Reversion", 70)
             else:
                 with self.assertRaises(ValueError):
@@ -165,46 +198,50 @@ class pokemon_common_tests(base_test):
 
         # In Generation III, Deoxys's form is game-specific.
         if generation == 3:
-            if game in ["Ruby", "Sapphire", "Colosseum", "XD"]:
-                deoxys = pkmn.pokemon("Deoxys", game, "Normal", 70)
-                if game not in ["Colosseum", "XD"]:
+            if game in [pkmn.game.RUBY, pkmn.game.SAPPHIRE, pkmn.game.COLOSSEUM, pkmn.game.XD]:
+                deoxys = pkmn.pokemon(pkmn.species.DEOXYS, game, "Normal", 70)
+                if game not in [pkmn.game.COLOSSEUM, pkmn.game.XD]:
                     self.assertTrue(os.path.exists(deoxys.icon_filepath))
                     self.assertTrue(os.path.exists(deoxys.sprite_filepath))
             else:
                 with self.assertRaises(ValueError):
-                    deoxys = pkmn.pokemon("Deoxys", game, "Normal", 70)
+                    deoxys = pkmn.pokemon(pkmn.species.DEOXYS, game, "Normal", 70)
 
-            if game in ["FireRed"]:
-                deoxys = pkmn.pokemon("Deoxys", game, "Attack", 70)
+            if game in [pkmn.game.FIRERED]:
+                deoxys = pkmn.pokemon(pkmn.species.DEOXYS, game, "Attack", 70)
                 self.assertTrue(os.path.exists(deoxys.icon_filepath))
                 self.assertTrue(os.path.exists(deoxys.sprite_filepath))
             else:
                 with self.assertRaises(ValueError):
-                    deoxys = pkmn.pokemon("Deoxys", game, "Attack", 70)
+                    deoxys = pkmn.pokemon(pkmn.species.DEOXYS, game, "Attack", 70)
 
-            if game in ["LeafGreen"]:
-                deoxys = pkmn.pokemon("Deoxys", game, "Defense", 70)
+            if game in [pkmn.game.LEAFGREEN]:
+                deoxys = pkmn.pokemon(pkmn.species.DEOXYS, game, "Defense", 70)
                 self.assertTrue(os.path.exists(deoxys.icon_filepath))
                 self.assertTrue(os.path.exists(deoxys.sprite_filepath))
             else:
                 with self.assertRaises(ValueError):
-                    deoxys = pkmn.pokemon("Deoxys", game, "Defense", 70)
+                    deoxys = pkmn.pokemon(pkmn.species.DEOXYS, game, "Defense", 70)
 
-            if game in ["Emerald"]:
-                deoxys = pkmn.pokemon("Deoxys", game, "Speed", 70)
+            if game in [pkmn.game.EMERALD]:
+                deoxys = pkmn.pokemon(pkmn.species.DEOXYS, game, "Speed", 70)
                 self.assertTrue(os.path.exists(deoxys.icon_filepath))
                 self.assertTrue(os.path.exists(deoxys.sprite_filepath))
             else:
                 with self.assertRaises(ValueError):
-                    deoxys = pkmn.pokemon("Deoxys", game, "Speed", 70)
+                    deoxys = pkmn.pokemon(pkmn.species.DEOXYS, game, "Speed", 70)
         else:
-            for form in pkmn.database.pokemon_entry("Deoxys", "Omega Ruby", "").forms:
-                deoxys = pkmn.pokemon("Deoxys", game, form, 70)
+            for form in pkmn.database.pokemon_entry(pkmn.species.DEOXYS,
+                                                    pkmn.game.OMEGA_RUBY,
+                                                    "").forms:
+                deoxys = pkmn.pokemon(pkmn.species.DEOXYS, game, form, 70)
                 self.assertTrue(os.path.exists(deoxys.icon_filepath))
                 self.assertTrue(os.path.exists(deoxys.sprite_filepath))
 
-    @parameterized.expand(ALL_GAMES, testcase_func_name=test_name_func)
-    def test_forms(self, game):
+    @parameterized.expand(ALL_GAME_NAMES, testcase_func_name=test_name_func)
+    def test_forms(self, game_name):
+        game = pkmn.string_to_game(game_name)
+
         generation = GAME_TO_GENERATION[game]
 
         if generation >= 1:
@@ -214,45 +251,47 @@ class pokemon_common_tests(base_test):
         if generation >= 3:
             self.gen3_forms_test(game)
 
-    @parameterized.expand(ALL_GAMES[3:], testcase_func_name=test_name_func)
-    def test_gender(self, game):
+    @parameterized.expand(ALL_GAME_NAMES[3:], testcase_func_name=test_name_func)
+    def test_gender(self, game_name):
+        game = pkmn.string_to_game(game_name)
+
         # Single-gender
-        nidorina = pkmn.pokemon("Nidorina", game, "", 50)
-        self.assertEqual(nidorina.gender, "Female")
-        nidorina.gender = "Female"
+        nidorina = pkmn.pokemon(pkmn.species.NIDORINA, game, "", 50)
+        self.assertEqual(nidorina.gender, pkmn.gender.FEMALE)
+        nidorina.gender = pkmn.gender.FEMALE
         with self.assertRaises(ValueError):
-            nidorina.gender = "Male"
+            nidorina.gender = pkmn.gender.MALE
         with self.assertRaises(ValueError):
-            nidorina.gender = "Genderless"
+            nidorina.gender = pkmn.gender.GENDERLESS
 
-        nidorino = pkmn.pokemon("Nidorino", game, "", 50)
-        self.assertEqual(nidorino.gender, "Male")
-        nidorino.gender = "Male"
+        nidorino = pkmn.pokemon(pkmn.species.NIDORINO, game, "", 50)
+        self.assertEqual(nidorino.gender, pkmn.gender.MALE)
+        nidorino.gender = pkmn.gender.MALE
         with self.assertRaises(ValueError):
-            nidorino.gender = "Female"
+            nidorino.gender = pkmn.gender.FEMALE
         with self.assertRaises(ValueError):
-            nidorino.gender = "Genderless"
+            nidorino.gender = pkmn.gender.GENDERLESS
 
-        magnemite = pkmn.pokemon("Magnemite", game, "", 50)
-        self.assertEqual(magnemite.gender, "Genderless")
-        magnemite.gender = "Genderless"
+        magnemite = pkmn.pokemon(pkmn.species.MAGNEMITE, game, "", 50)
+        self.assertEqual(magnemite.gender, pkmn.gender.GENDERLESS)
+        magnemite.gender = pkmn.gender.GENDERLESS
         with self.assertRaises(ValueError):
-            magnemite.gender = "Male"
+            magnemite.gender = pkmn.gender.MALE
         with self.assertRaises(ValueError):
-            magnemite.gender = "Female"
+            magnemite.gender = pkmn.gender.FEMALE
 
         mixed_pokemon = [
-            "Charmander", # 87.5% male
-            "Growlithe",  # 75% male
-            "Pidgey",     # 50% male
-            "Vulpix"      # 25% male
+            pkmn.species.CHARMANDER, # 87.5% male
+            pkmn.species.GROWLITHE,  # 75% male
+            pkmn.species.PIDGEY,     # 50% male
+            pkmn.species.VULPIX      # 25% male
         ]
 
         for species in mixed_pokemon:
             pokemon = pkmn.pokemon(species, game, "", 50)
-            pokemon.gender = "Female"
-            self.assertEqual(pokemon.gender, "Female")
-            pokemon.gender = "Male"
-            self.assertEqual(pokemon.gender, "Male")
+            pokemon.gender = pkmn.gender.FEMALE
+            self.assertEqual(pokemon.gender, pkmn.gender.FEMALE)
+            pokemon.gender = pkmn.gender.MALE
+            self.assertEqual(pokemon.gender, pkmn.gender.MALE)
             with self.assertRaises(ValueError):
-                pokemon.gender = "Genderless"
+                pokemon.gender = pkmn.gender.GENDERLESS

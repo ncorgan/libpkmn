@@ -24,6 +24,7 @@ IF(NOT PKMN_DONT_INSTALL_HEADERS)
         config.h
         database.h
         daycare.h
+        enums.h
         error.h
         game_save.h
         item_bag.h
@@ -47,6 +48,7 @@ ENDIF()
 ADD_SUBDIRECTORY(breeding)
 ADD_SUBDIRECTORY(calculations)
 ADD_SUBDIRECTORY(database)
+ADD_SUBDIRECTORY(enums)
 ADD_SUBDIRECTORY(gui)
 ADD_SUBDIRECTORY(types)
 ADD_SUBDIRECTORY(utils)

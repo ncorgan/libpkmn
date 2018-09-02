@@ -451,47 +451,135 @@ TEST(cpp_to_c_test, list_cpp_to_c_test)
     }
 }
 
+enum class cpp_enum
+{
+    VALUE1 = 0,
+    VALUE2,
+    VALUE3
+};
+
+enum c_enum
+{
+    C_ENUM_VALUE1,
+    C_ENUM_VALUE2,
+    C_ENUM_VALUE3
+};
+
+struct c_test_enum_list
+{
+    c_enum* p_enums;
+    size_t length;
+};
+
+TEST(cpp_to_c_test, enum_list_cpp_to_c_test)
+{
+    const std::vector<cpp_enum> cpp_enum_vector =
+    {
+        cpp_enum::VALUE2,
+        cpp_enum::VALUE1,
+        cpp_enum::VALUE3
+    };
+    struct c_test_enum_list c_enum_list =
+    {
+        nullptr,
+        0
+    };
+
+    pkmn::c::enum_list_cpp_to_c<cpp_enum, enum c_enum, c_test_enum_list>(
+        cpp_enum_vector,
+        &c_enum_list
+    );
+
+    ASSERT_NE(nullptr, c_enum_list.p_enums);
+    EXPECT_EQ(3ULL, c_enum_list.length);
+
+    EXPECT_EQ(C_ENUM_VALUE2, c_enum_list.p_enums[0]);
+    EXPECT_EQ(C_ENUM_VALUE1, c_enum_list.p_enums[1]);
+    EXPECT_EQ(C_ENUM_VALUE3, c_enum_list.p_enums[2]);
+
+    std::free(c_enum_list.p_enums);
+    c_enum_list.length = 0;
+}
+
+struct c_test_enum_map
+{
+    int* p_values;
+    size_t length;
+};
+
+TEST(cpp_to_c_test, enum_map_cpp_to_c)
+{
+    const std::map<cpp_enum, int> cpp_enum_map =
+    {
+        {cpp_enum::VALUE1, rand()},
+        {cpp_enum::VALUE3, rand()}
+    };
+    struct c_test_enum_map c_enum_map =
+    {
+        nullptr,
+        0ULL
+    };
+
+    pkmn::c::enum_map_cpp_to_c<cpp_enum, c_enum, c_test_enum_map, int, cpp_enum::VALUE3>(
+        cpp_enum_map,
+        &c_enum_map
+    );
+
+    ASSERT_NE(nullptr, c_enum_map.p_values);
+    EXPECT_EQ(3ULL, c_enum_map.length);
+
+    EXPECT_EQ(
+        cpp_enum_map.at(cpp_enum::VALUE1),
+        c_enum_map.p_values[C_ENUM_VALUE1]
+    );
+    EXPECT_EQ(
+        cpp_enum_map.at(cpp_enum::VALUE3),
+        c_enum_map.p_values[C_ENUM_VALUE3]
+    );
+
+    std::free(c_enum_map.p_values);
+    c_enum_map.length = 0;
+}
+
 TEST(cpp_to_c_test, hidden_power_cpp_to_c_test)
 {
-    pkmn::calculations::hidden_power hidden_power_cpp("Normal", 90);
+    pkmn::calculations::hidden_power hidden_power_cpp(
+                                         pkmn::e_type::NORMAL,
+                                         90
+                                     );
 
-    struct pkmn_hidden_power hidden_power_c;
+    struct pkmn_hidden_power hidden_power_c = { PKMN_TYPE_NONE, 0 };
 
     pkmn::c::hidden_power_cpp_to_c(
         hidden_power_cpp,
         &hidden_power_c
     );
 
-    EXPECT_STREQ("Normal", hidden_power_c.p_type);
+    EXPECT_EQ(PKMN_TYPE_NORMAL, hidden_power_c.type);
     EXPECT_EQ(90, hidden_power_c.base_power);
-
-    pkmn_hidden_power_free(&hidden_power_c);
-    EXPECT_EQ(NULL, hidden_power_c.p_type);
-    EXPECT_EQ(0, hidden_power_c.base_power);
 }
 
 TEST(cpp_to_c_test, natural_gift_cpp_to_c_test)
 {
-    pkmn::calculations::natural_gift natural_gift_cpp("Normal", 90);
+    pkmn::calculations::natural_gift natural_gift_cpp(
+                                         pkmn::e_type::NORMAL,
+                                         90
+                                     );
 
-    struct pkmn_natural_gift natural_gift_c;
+    struct pkmn_natural_gift natural_gift_c = { PKMN_TYPE_NONE, 0 };
 
     pkmn::c::natural_gift_cpp_to_c(
         natural_gift_cpp,
         &natural_gift_c
     );
 
-    EXPECT_STREQ("Normal", natural_gift_c.p_type);
+    EXPECT_EQ(PKMN_TYPE_NORMAL, natural_gift_c.type);
     EXPECT_EQ(90, natural_gift_c.base_power);
-
-    pkmn_natural_gift_free(&natural_gift_c);
-    EXPECT_EQ(NULL, natural_gift_c.p_type);
-    EXPECT_EQ(0, natural_gift_c.base_power);
 }
 
 TEST(cpp_to_c_test, item_slot_cpp_to_c_test)
 {
-    pkmn::item_slot item_slot_cpp("Potion", 50);
+    pkmn::item_slot item_slot_cpp(pkmn::e_item::POTION, 50);
     struct pkmn_item_slot item_slot_c;
 
     pkmn::c::item_slot_cpp_to_c(
@@ -499,21 +587,17 @@ TEST(cpp_to_c_test, item_slot_cpp_to_c_test)
         &item_slot_c
     );
 
-    EXPECT_STREQ("Potion", item_slot_c.p_item);
+    EXPECT_EQ(PKMN_ITEM_POTION, item_slot_c.item);
     EXPECT_EQ(50, item_slot_c.amount);
-
-    pkmn_item_slot_free(&item_slot_c);
-    EXPECT_EQ(NULL, item_slot_c.p_item);
-    EXPECT_EQ(0, item_slot_c.amount);
 }
 
 TEST(cpp_to_c_test, item_slots_cpp_to_c_test)
 {
     pkmn::item_slots_t item_slots_cpp =
     {
-        pkmn::item_slot("Potion", 50),
-        pkmn::item_slot("Berry", 28),
-        pkmn::item_slot("Berry Pouch", 1)
+        pkmn::item_slot(pkmn::e_item::POTION, 50),
+        pkmn::item_slot(pkmn::e_item::BERRY, 28),
+        pkmn::item_slot(pkmn::e_item::BERRY_POUCH, 1)
     };
 
     struct pkmn_item_slots item_slots_c = { NULL, 0 };
@@ -523,11 +607,11 @@ TEST(cpp_to_c_test, item_slots_cpp_to_c_test)
     );
 
     EXPECT_EQ(3, item_slots_c.length);
-    EXPECT_STREQ("Potion", item_slots_c.p_item_slots[0].p_item);
+    EXPECT_EQ(PKMN_ITEM_POTION, item_slots_c.p_item_slots[0].item);
     EXPECT_EQ(50, item_slots_c.p_item_slots[0].amount);
-    EXPECT_STREQ("Berry", item_slots_c.p_item_slots[1].p_item);
+    EXPECT_EQ(PKMN_ITEM_BERRY, item_slots_c.p_item_slots[1].item);
     EXPECT_EQ(28, item_slots_c.p_item_slots[1].amount);
-    EXPECT_STREQ("Berry Pouch", item_slots_c.p_item_slots[2].p_item);
+    EXPECT_EQ(PKMN_ITEM_BERRY_POUCH, item_slots_c.p_item_slots[2].item);
     EXPECT_EQ(1, item_slots_c.p_item_slots[2].amount);
 
     pkmn_item_slots_free(
@@ -540,23 +624,19 @@ TEST(cpp_to_c_test, item_slots_cpp_to_c_test)
 TEST(cpp_to_c_test, levelup_move_cpp_to_c_test)
 {
     pkmn::database::levelup_move levelup_move_cpp(
-        pkmn::database::move_entry("Scratch", "Red"),
+        pkmn::e_move::SCRATCH,
         50
     );
 
-    struct pkmn_levelup_move levelup_move_c = { NULL, 0 };
+    struct pkmn_levelup_move levelup_move_c = { PKMN_MOVE_NONE, 0 };
 
     pkmn::c::levelup_move_cpp_to_c(
         levelup_move_cpp,
         &levelup_move_c
     );
 
-    EXPECT_STREQ("Scratch", levelup_move_c.p_move);
+    EXPECT_EQ(PKMN_MOVE_SCRATCH, levelup_move_c.move);
     EXPECT_EQ(50, levelup_move_c.level);
-
-    pkmn_levelup_move_free(&levelup_move_c);
-    EXPECT_EQ(NULL, levelup_move_c.p_move);
-    EXPECT_EQ(0, levelup_move_c.level);
 }
 
 TEST(cpp_to_c_test, levelup_moves_cpp_to_c_test)
@@ -564,15 +644,15 @@ TEST(cpp_to_c_test, levelup_moves_cpp_to_c_test)
     pkmn::database::levelup_moves_t levelup_moves_cpp =
     {
         pkmn::database::levelup_move(
-            pkmn::database::move_entry("Scratch", "Red"),
+            pkmn::e_move::SCRATCH,
             50
         ),
         pkmn::database::levelup_move(
-            pkmn::database::move_entry("Synthesis", "Silver"),
+            pkmn::e_move::SYNTHESIS,
             5
         ),
         pkmn::database::levelup_move(
-            pkmn::database::move_entry("Frenzy Plant", "Emerald"),
+            pkmn::e_move::FRENZY_PLANT,
             37
         )
     };
@@ -584,11 +664,11 @@ TEST(cpp_to_c_test, levelup_moves_cpp_to_c_test)
     );
 
     EXPECT_EQ(3, levelup_moves_c.length);
-    EXPECT_STREQ("Scratch", levelup_moves_c.p_levelup_moves[0].p_move);
+    EXPECT_EQ(PKMN_MOVE_SCRATCH, levelup_moves_c.p_levelup_moves[0].move);
     EXPECT_EQ(50, levelup_moves_c.p_levelup_moves[0].level);
-    EXPECT_STREQ("Synthesis", levelup_moves_c.p_levelup_moves[1].p_move);
+    EXPECT_EQ(PKMN_MOVE_SYNTHESIS, levelup_moves_c.p_levelup_moves[1].move);
     EXPECT_EQ(5, levelup_moves_c.p_levelup_moves[1].level);
-    EXPECT_STREQ("Frenzy Plant", levelup_moves_c.p_levelup_moves[2].p_move);
+    EXPECT_EQ(PKMN_MOVE_FRENZY_PLANT, levelup_moves_c.p_levelup_moves[2].move);
     EXPECT_EQ(37, levelup_moves_c.p_levelup_moves[2].level);
 
     pkmn_levelup_moves_free(
@@ -602,9 +682,9 @@ TEST(cpp_to_c_test, move_list_cpp_to_c_test)
 {
     pkmn::database::move_list_t move_list_cpp =
     {
-        pkmn::database::move_entry("Scratch", "Red"),
-        pkmn::database::move_entry("Synthesis", "Silver"),
-        pkmn::database::move_entry("Frenzy Plant", "Emerald")
+        pkmn::database::move_entry(pkmn::e_move::SCRATCH, pkmn::e_game::RED),
+        pkmn::database::move_entry(pkmn::e_move::SYNTHESIS, pkmn::e_game::SILVER),
+        pkmn::database::move_entry(pkmn::e_move::FRENZY_PLANT, pkmn::e_game::EMERALD)
     };
 
     struct pkmn_string_list string_list_c = { NULL, 0 };
@@ -628,7 +708,7 @@ TEST(cpp_to_c_test, move_list_cpp_to_c_test)
 TEST(cpp_to_c_test, move_slot_cpp_to_c_test)
 {
     pkmn::move_slot move_slot_cpp(
-        "Tackle",
+        pkmn::e_move::TACKLE,
         50
     );
 
@@ -639,12 +719,8 @@ TEST(cpp_to_c_test, move_slot_cpp_to_c_test)
         &move_slot_c
     );
 
-    EXPECT_STREQ("Tackle", move_slot_c.p_move);
+    EXPECT_EQ(PKMN_MOVE_TACKLE, move_slot_c.move);
     EXPECT_EQ(50, move_slot_c.pp);
-
-    pkmn_move_slot_free(&move_slot_c);
-    EXPECT_EQ(NULL, move_slot_c.p_move);
-    EXPECT_EQ(0, move_slot_c.pp);
 }
 
 TEST(cpp_to_c_test, move_slots_cpp_to_c_test)
@@ -652,15 +728,15 @@ TEST(cpp_to_c_test, move_slots_cpp_to_c_test)
     pkmn::move_slots_t move_slots_cpp =
     {
         pkmn::move_slot(
-            "Tackle",
+            pkmn::e_move::TACKLE,
             50
         ),
         pkmn::move_slot(
-            "Pound",
+            pkmn::e_move::POUND,
             28
         ),
         pkmn::move_slot(
-            "Metronome",
+            pkmn::e_move::METRONOME,
             1
         )
     };
@@ -672,11 +748,11 @@ TEST(cpp_to_c_test, move_slots_cpp_to_c_test)
     );
 
     EXPECT_EQ(3, move_slots_c.length);
-    EXPECT_STREQ("Tackle", move_slots_c.p_move_slots[0].p_move);
+    EXPECT_EQ(PKMN_MOVE_TACKLE, move_slots_c.p_move_slots[0].move);
     EXPECT_EQ(50, move_slots_c.p_move_slots[0].pp);
-    EXPECT_STREQ("Pound", move_slots_c.p_move_slots[1].p_move);
+    EXPECT_EQ(PKMN_MOVE_POUND, move_slots_c.p_move_slots[1].move);
     EXPECT_EQ(28, move_slots_c.p_move_slots[1].pp);
-    EXPECT_STREQ("Metronome", move_slots_c.p_move_slots[2].p_move);
+    EXPECT_EQ(PKMN_MOVE_METRONOME, move_slots_c.p_move_slots[2].move);
     EXPECT_EQ(1, move_slots_c.p_move_slots[2].pp);
 
     pkmn_move_slots_free(
@@ -686,45 +762,18 @@ TEST(cpp_to_c_test, move_slots_cpp_to_c_test)
     EXPECT_EQ(0, move_slots_c.length);
 }
 
-TEST(cpp_to_c_test, pokemon_entries_cpp_to_c_test)
-{
-    pkmn::database::pokemon_entries_t pokemon_entries_cpp =
-    {
-        pkmn::database::pokemon_entry("Charmander", "Red", ""),
-        pkmn::database::pokemon_entry("Totodile", "Gold", ""),
-        pkmn::database::pokemon_entry("Treecko", "Ruby", "")
-    };
-
-    struct pkmn_string_list string_list_c = { NULL, 0 };
-    pkmn::c::pokemon_entries_to_string_list(
-        pokemon_entries_cpp,
-        &string_list_c
-    );
-
-    EXPECT_EQ(3, string_list_c.length);
-    EXPECT_STREQ("Charmander", string_list_c.pp_strings[0]);
-    EXPECT_STREQ("Totodile", string_list_c.pp_strings[1]);
-    EXPECT_STREQ("Treecko", string_list_c.pp_strings[2]);
-
-    pkmn_string_list_free(
-        &string_list_c
-    );
-    EXPECT_EQ(NULL, string_list_c.pp_strings);
-    EXPECT_EQ(0, string_list_c.length);
-}
-
 TEST(cpp_to_c_test, pokemon_list_cpp_to_c)
 {
     pkmn::pokemon_list_t pokemon_list_cpp =
     {
         pkmn::pokemon::make(
-            "Charmander", "Red", "", 5
+            pkmn::e_species::CHARMANDER, pkmn::e_game::RED, "", 5
         ),
         pkmn::pokemon::make(
-            "Squirtle", "Blue", "", 10
+            pkmn::e_species::SQUIRTLE, pkmn::e_game::BLUE, "", 10
         ),
         pkmn::pokemon::make(
-            "Bulbasaur", "Yellow", "", 15
+            pkmn::e_species::BULBASAUR, pkmn::e_game::YELLOW, "", 15
         )
     };
 
@@ -740,13 +789,13 @@ TEST(cpp_to_c_test, pokemon_list_cpp_to_c)
     {
         int level_c = 0;
 
-        EXPECT_STREQ(
-            pokemon_list_cpp[i]->get_species().c_str(),
-            pokemon_list_c.p_pokemon[i].p_species
+        EXPECT_EQ(
+            int(pokemon_list_cpp[i]->get_species()),
+            pokemon_list_c.p_pokemon[i].species
         );
-        EXPECT_STREQ(
-            pokemon_list_cpp[i]->get_game().c_str(),
-            pokemon_list_c.p_pokemon[i].p_game
+        EXPECT_EQ(
+            int(pokemon_list_cpp[i]->get_game()),
+            pokemon_list_c.p_pokemon[i].game
         );
 
         error = pkmn_pokemon_get_level(
@@ -771,9 +820,9 @@ TEST(cpp_to_c_test, pokemon_box_list_cpp_to_c_test)
 {
     pkmn::pokemon_box_list_t pokemon_box_list_cpp =
     {
-        pkmn::pokemon_box::make("Gold"),
-        pkmn::pokemon_box::make("Ruby"),
-        pkmn::pokemon_box::make("FireRed")
+        pkmn::pokemon_box::make(pkmn::e_game::GOLD),
+        pkmn::pokemon_box::make(pkmn::e_game::RUBY),
+        pkmn::pokemon_box::make(pkmn::e_game::FIRERED)
     };
 
     pokemon_box_list_cpp[0]->set_name("ABCD");
@@ -792,9 +841,9 @@ TEST(cpp_to_c_test, pokemon_box_list_cpp_to_c_test)
     {
         char name_c[BUFFER_LEN] = {0};
 
-        EXPECT_STREQ(
-            pokemon_box_list_cpp[index]->get_game().c_str(),
-            pokemon_box_list_c.p_boxes[index].p_game
+        EXPECT_EQ(
+            int(pokemon_box_list_cpp[index]->get_game()),
+            int(pokemon_box_list_c.p_boxes[index].game)
         );
 
         error = pkmn_pokemon_box_get_name(

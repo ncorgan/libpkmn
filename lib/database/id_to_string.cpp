@@ -21,12 +21,16 @@ namespace pkmn { namespace database {
             return "None";
         }
 
-        static BOOST_CONSTEXPR const char* query =
+        static const std::string query =
             "SELECT name FROM ability_names WHERE ability_id=? AND "
             "local_language_id=9";
 
+        const std::string error_message = "Invalid ability: " + std::to_string(ability_id);
+
         return pkmn::database::query_db_bind1<std::string, int>(
-                   query, ability_id
+                   query.c_str(),
+                   ability_id,
+                   error_message
                );
     }
 
@@ -39,14 +43,15 @@ namespace pkmn { namespace database {
             return 0;
         }
 
-        static BOOST_CONSTEXPR const char* query =
+        static const std::string query =
             "SELECT ability_id FROM ability_names WHERE name=?";
 
-        std::string error_message = "Invalid ability: ";
-        error_message += ability_name;
+        const std::string error_message = "Invalid ability: " + ability_name;
 
         return pkmn::database::query_db_bind1<int, const std::string&>(
-                   query, ability_name, error_message
+                   query.c_str(),
+                   ability_name,
+                   error_message
                );
     }
 
@@ -59,11 +64,15 @@ namespace pkmn { namespace database {
             return "None";
         }
 
-        static BOOST_CONSTEXPR const char* query =
+        static const std::string query =
             "SELECT name FROM balls WHERE id=?";
 
+        const std::string error_message = "Invalid ball: " + std::to_string(ball_id);
+
         return pkmn::database::query_db_bind1<std::string, int>(
-                   query, ball_id
+                   query.c_str(),
+                   ball_id,
+                   error_message
                );
     }
 
@@ -76,14 +85,15 @@ namespace pkmn { namespace database {
             return 0;
         }
 
-        static BOOST_CONSTEXPR const char* query =
+        static const std::string query =
             "SELECT id FROM balls WHERE name=?";
 
-        std::string error_message = "Invalid ball: ";
-        error_message += ball_name;
+        const std::string error_message = "Invalid ball: " + ball_name;
 
         return pkmn::database::query_db_bind1<int, const std::string&>(
-                   query, ball_name, error_message
+                   query.c_str(),
+                   ball_name,
+                   error_message
                );
     }
 
@@ -96,12 +106,16 @@ namespace pkmn { namespace database {
             return "None";
         }
 
-        static BOOST_CONSTEXPR const char* query =
+        static const std::string query =
             "SELECT name FROM egg_group_prose WHERE egg_group_id=? AND "
             "local_language_id=9";
 
+        const std::string error_message = "Invalid egg group: " + std::to_string(egg_group_id);
+
         return pkmn::database::query_db_bind1<std::string, int>(
-                   query, egg_group_id
+                   query.c_str(),
+                   egg_group_id,
+                   error_message
                );
     }
 
@@ -114,11 +128,15 @@ namespace pkmn { namespace database {
             return 0;
         }
 
-        static BOOST_CONSTEXPR const char* query =
+        static const std::string query =
             "SELECT egg_group_id FROM egg_group_prose WHERE name=?";
 
+        const std::string error_message = "Invalid egg group: " + egg_group_name;
+
         return pkmn::database::query_db_bind1<int, const std::string&>(
-                   query, egg_group_name
+                   query.c_str(),
+                   egg_group_name,
+                   error_message
                );
     }
 
@@ -131,12 +149,16 @@ namespace pkmn { namespace database {
             return "None";
         }
 
-        static BOOST_CONSTEXPR const char* query =
+        static const std::string query =
             "SELECT name FROM version_names WHERE version_id=? AND "
             "local_language_id=9";
 
+        const std::string error_message = "Invalid game: " + std::to_string(game_id);
+
         return pkmn::database::query_db_bind1<std::string, int>(
-                   query, game_id
+                   query.c_str(),
+                   game_id,
+                   error_message
                );
     }
 
@@ -149,14 +171,15 @@ namespace pkmn { namespace database {
             return 0;
         }
 
-        static BOOST_CONSTEXPR const char* query =
+        static const std::string query =
             "SELECT version_id FROM version_names WHERE name=?";
 
-        std::string error_message = "Invalid game: ";
-        error_message += game_name;
+        const std::string error_message = "Invalid game: " + game_name;
 
         return pkmn::database::query_db_bind1<int, const std::string&>(
-                   query, game_name, error_message
+                   query.c_str(),
+                   game_name,
+                   error_message
                );
     }
 
@@ -208,8 +231,13 @@ namespace pkmn { namespace database {
             "SELECT name FROM item_names WHERE item_id=? AND "
             "local_language_id=9";
 
+        std::string error_message = "Invalid item: ";
+        error_message += std::to_string(item_id);
+
         return pkmn::database::query_db_bind1<std::string, int>(
-                   main_query, item_id
+                   main_query,
+                   item_id,
+                   error_message
                );
     }
 
@@ -339,8 +367,13 @@ namespace pkmn { namespace database {
             "SELECT name FROM move_names WHERE move_id=? AND "
             "local_language_id=9";
 
+        std::string error_message = "Invalid move: ";
+        error_message += std::to_string(move_id);
+
         return pkmn::database::query_db_bind1<std::string, int>(
-                   main_query, move_id
+                   main_query,
+                   move_id,
+                   error_message
                );
     }
 
@@ -365,7 +398,7 @@ namespace pkmn { namespace database {
         }
 
         static BOOST_CONSTEXPR const char* main_query =
-            "SELECT move_id FROM move_names WHERE name=?";
+            "SELECT move_id FROM move_names WHERE local_language_id=9 AND name=?";
 
         std::string error_message = "Invalid move: ";
         error_message += move_name;
@@ -377,17 +410,23 @@ namespace pkmn { namespace database {
 
     std::string nature_id_to_name(
         int nature_id
-    ) {
-        if(nature_id == 0) {
+    )
+    {
+        if(nature_id == 0)
+        {
             return "None";
         }
 
-        static BOOST_CONSTEXPR const char* query =
+        static const std::string query =
             "SELECT name FROM nature_names WHERE nature_id=? AND "
             "local_language_id=9";
 
+        const std::string error_message = "Invalid nature: " + std::to_string(nature_id);
+
         return pkmn::database::query_db_bind1<std::string, int>(
-                   query, nature_id
+                   query.c_str(),
+                   nature_id,
+                   error_message
                );
     }
 
@@ -400,11 +439,15 @@ namespace pkmn { namespace database {
             return 0;
         }
 
-        static BOOST_CONSTEXPR const char* query =
+        static const std::string query =
             "SELECT nature_id FROM nature_names WHERE name=?";
 
+        const std::string error_message = "Invalid nature: " + nature_name;
+
         return pkmn::database::query_db_bind1<int, const std::string&>(
-                   query, nature_name
+                   query.c_str(),
+                   nature_name,
+                   error_message
                );
     }
 
@@ -417,12 +460,16 @@ namespace pkmn { namespace database {
             return "None";
         }
 
-        static BOOST_CONSTEXPR const char* query =
+        static const std::string query =
             "SELECT name FROM pokemon_species_names WHERE "
             "pokemon_species_id=? AND local_language_id=9";
 
+        const std::string error_message = "Invalid species: " + std::to_string(species_id);
+
         return pkmn::database::query_db_bind1<std::string, int>(
-                   query, species_id
+                   query.c_str(),
+                   species_id,
+                   error_message
                );
     }
 
@@ -435,14 +482,14 @@ namespace pkmn { namespace database {
             return 0;
         }
 
-        static BOOST_CONSTEXPR const char* query =
+        static const std::string query =
             "SELECT pokemon_species_id FROM pokemon_species_names WHERE name=?";
 
         std::string error_message = "Invalid species: ";
         error_message += species_name;
 
         return pkmn::database::query_db_bind1<int, const std::string&>(
-                   query, species_name, error_message
+                   query.c_str(), species_name, error_message
                );
     }
 
@@ -455,12 +502,16 @@ namespace pkmn { namespace database {
             return "None";
         }
 
-        static BOOST_CONSTEXPR const char* query =
+        static const std::string query =
             "SELECT name FROM type_names WHERE type_id=? AND "
             "local_language_id=9";
 
+        const std::string error_message = "Invalid type: " + std::to_string(type_id);
+
         return pkmn::database::query_db_bind1<std::string, int>(
-                   query, type_id
+                   query.c_str(),
+                   type_id,
+                   error_message
                );
     }
 
@@ -473,11 +524,15 @@ namespace pkmn { namespace database {
             return 0;
         }
 
-        static BOOST_CONSTEXPR const char* query =
+        static const std::string query =
             "SELECT type_id FROM type_names WHERE name=?";
 
+        const std::string error_message = "Invalid type: " + type_name;
+
         return pkmn::database::query_db_bind1<int, const std::string&>(
-                   query, type_name
+                   query.c_str(),
+                   type_name,
+                   error_message
                );
     }
 

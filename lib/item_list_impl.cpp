@@ -16,6 +16,7 @@
 #include "utils/misc.hpp"
 
 #include "database/database_common.hpp"
+#include "database/enum_conversions.hpp"
 #include "database/id_to_string.hpp"
 
 #include <pkmn/exception.hpp>
@@ -30,24 +31,23 @@ namespace pkmn {
 
     item_list::sptr item_list::make(
         const std::string& name,
-        const std::string& game
+        pkmn::e_game game
     )
     {
-        int game_id = pkmn::database::game_name_to_id(game);
+        int game_id = pkmn::database::game_enum_to_id(game);
         int generation = pkmn::database::game_id_to_generation(game_id);
-        int item_list_id = 0;
 
         static const std::string query =
             "SELECT id FROM libpkmn_item_lists WHERE name=? AND "
             "version_group_id=(SELECT version_group_id FROM versions "
             "WHERE id=?)";
 
-        item_list_id = pkmn::database::query_db_bind2<int, std::string, int>(
-                           query.c_str(),
-                           name,
-                           game_id,
-                           "Invalid item list."
-                        );
+        int item_list_id = pkmn::database::query_db_bind2<int, const std::string&, int>(
+                               query.c_str(),
+                               name,
+                               game_id,
+                               "Invalid list."
+                           );
 
         switch(generation)
         {
@@ -193,11 +193,9 @@ namespace pkmn {
                );
     }
 
-    std::string item_list_impl::get_game()
+    pkmn::e_game item_list_impl::get_game()
     {
-        return pkmn::database::game_id_to_name(
-                   _game_id
-               );
+        return pkmn::database::game_id_to_enum(_game_id);
     }
 
     int item_list_impl::get_capacity()
@@ -230,7 +228,7 @@ namespace pkmn {
     }
 
     void item_list_impl::add(
-        const std::string& item_name,
+        pkmn::e_item item,
         int amount
     )
     {
@@ -246,7 +244,7 @@ namespace pkmn {
          */
         for(int item_index = 0; item_index < _num_items; ++item_index)
         {
-            if(_item_slots[item_index].item == item_name)
+            if(_item_slots[item_index].item == item)
             {
                 if(_item_slots[item_index].amount == 99)
                 {
@@ -277,9 +275,9 @@ namespace pkmn {
         {
             // Confirm the item can be placed in this pocket
             pkmn::database::item_entry entry(
-                item_name, get_game()
+                item, get_game()
             );
-            if(not _pc and entry.get_item_list_id() != _item_list_id)
+            if(!_pc && (entry.get_item_list_id() != _item_list_id))
             {
                 throw std::invalid_argument(
                           str(boost::format("This item belongs in the \"%s\" pocket.") %
@@ -287,14 +285,14 @@ namespace pkmn {
                       );
             }
 
-            _item_slots[_num_items].item = item_name;
+            _item_slots[_num_items].item = item;
             _item_slots[_num_items].amount = amount;
             _to_native(_num_items++);
         }
     }
 
     void item_list_impl::remove(
-        const std::string& item_name,
+        pkmn::e_item item,
         int amount
     )
     {
@@ -310,7 +308,7 @@ namespace pkmn {
          */
         for(int item_index = 0; item_index < _num_items; ++item_index)
         {
-            if(_item_slots[item_index].item == item_name)
+            if(_item_slots[item_index].item == item)
             {
                 if(_item_slots[item_index].amount < amount)
                 {
@@ -367,7 +365,7 @@ namespace pkmn {
 
     void item_list_impl::set_item(
         int position,
-        const std::string& item_name,
+        pkmn::e_item item,
         int amount
     )
     {
@@ -377,7 +375,7 @@ namespace pkmn {
 
         boost::lock_guard<item_list_impl> lock(*this);
 
-        if(item_name == "None")
+        if(item == pkmn::e_item::NONE)
         {
             if(amount != 0)
             {
@@ -390,8 +388,8 @@ namespace pkmn {
         }
         else
         {
-            pkmn::database::item_entry entry(item_name, get_game());
-            if(get_name() != "PC" and item_name != "None" and entry.get_pocket() != get_name())
+            pkmn::database::item_entry entry(item, get_game());
+            if(get_name() != "PC" and item != pkmn::e_item::NONE and entry.get_pocket() != get_name())
             {
                 throw std::invalid_argument("This item does not belong in this pocket.");
             }
@@ -399,7 +397,7 @@ namespace pkmn {
             pkmn::enforce_bounds("Amount", amount, 1, 99);
             for(int item_index = 0; item_index < _num_items; ++item_index)
             {
-                if((_item_slots[item_index].item == item_name) &&
+                if((_item_slots[item_index].item == item) &&
                    (item_index != position))
                 {
                     std::string err_msg = "This item is already present in slot ";
@@ -411,12 +409,12 @@ namespace pkmn {
             }
         }
 
-        _item_slots[position].item = item_name;
+        _item_slots[position].item = item;
         _item_slots[position].amount = amount;
-        if(item_name == "None" and position < end_boundary)
+        if(item == pkmn::e_item::NONE and position < end_boundary)
         {
             _item_slots.erase(_item_slots.begin()+position);
-            _item_slots.emplace_back(pkmn::item_slot("None", 0));
+            _item_slots.emplace_back(pkmn::item_slot(pkmn::e_item::NONE, 0));
             --_num_items;
         }
         else if(position == end_boundary)
@@ -439,7 +437,7 @@ namespace pkmn {
      * but they go in separate pockets in every game past Generation II, so this
      * overrides the database query.
      */
-    BOOST_STATIC_CONSTEXPR int BERRY_LIST_IDS[] =
+    static const std::vector<int> BERRY_LIST_IDS =
     {
         -1, // None
         -1, // Red/Blue
@@ -460,31 +458,65 @@ namespace pkmn {
         89  // Omega Ruby/Alpha Sapphire
     };
 
-    /*
-     * TODO: if PC, all items valid except Berry Pouch, TM Case
-     */
-    const std::vector<std::string>& item_list_impl::get_valid_items()
+    const std::vector<pkmn::e_item>& item_list_impl::get_valid_items()
     {
-        if(_valid_items.size() == 0)
+        _get_valid_item_lists();
+
+        return _valid_items;
+    }
+
+    const std::vector<std::string>& item_list_impl::get_valid_item_names()
+    {
+        _get_valid_item_lists();
+
+        return _valid_item_names;
+    }
+
+    void* item_list_impl::get_native()
+    {
+        boost::lock_guard<item_list_impl> lock(*this);
+
+        return _p_native;
+    }
+
+    void item_list_impl::_get_valid_item_lists()
+    {
+        boost::lock_guard<item_list_impl> lock(*this);
+
+        BOOST_ASSERT(_valid_items.empty() == _valid_items.empty());
+
+        if(_valid_items.empty())
         {
-            if(std::find(BERRY_LIST_IDS, BERRY_LIST_IDS+17, _item_list_id) != BERRY_LIST_IDS+17)
+            if(pkmn::does_vector_contain_value(BERRY_LIST_IDS, _item_list_id))
             {
-                static BOOST_CONSTEXPR const char* berry_list_query = \
-                    "SELECT DISTINCT item_names.name FROM item_names JOIN item_game_indices ON "
+                static const std::string berry_list_query =
+                    "SELECT DISTINCT item_names.item_id,item_names.name FROM item_names JOIN item_game_indices ON "
                     "(item_names.item_id=item_game_indices.item_id) WHERE item_game_indices.generation_id=? "
                     "AND item_names.name LIKE '%Berry'";
 
-                pkmn::database::query_db_list_bind1<std::string, int>(
-                    berry_list_query, _valid_items,
-                    pkmn::database::game_id_to_generation(_game_id)
+                SQLite::Statement stmt(
+                    pkmn::database::get_connection(),
+                    berry_list_query.c_str()
                 );
+                stmt.bind(1, pkmn::database::game_id_to_generation(_game_id));
+
+                while(stmt.executeStep())
+                {
+                    _valid_items.emplace_back(
+                        static_cast<pkmn::e_item>(int(stmt.getColumn(0)))
+                    );
+                    _valid_item_names.emplace_back(stmt.getColumn(1));
+                }
             }
             else
             {
-                pkmn::database::_get_item_list(
+                pkmn::database::_get_item_lists(
                     _valid_items,
+                    _valid_item_names,
                     ((get_name() == "PC") ? -1 : _item_list_id),
-                    _game_id
+                    _game_id,
+                    true, // should_populate_enum_list
+                    true // should_populate_string_list
                 );
             }
 
@@ -492,16 +524,22 @@ namespace pkmn {
 
             if(_pc && (_version_group_id == FRLG_VERSION_GROUP_ID))
             {
-                static const std::vector<std::string> INVALID_GBA_PC_ITEMS =
+                static const std::vector<pkmn::e_item> INVALID_GBA_PC_ITEMS =
                 {
-                    "Berry Pouch", "TM Case"
+                    pkmn::e_item::BERRY_POUCH,
+                    pkmn::e_item::TM_CASE
+                };
+                static const std::vector<std::string> INVALID_GBA_PC_ITEM_NAMES =
+                {
+                    "Berry Pouch",
+                    "TM Case"
                 };
 
                 _valid_items.erase(
                     std::remove_if(
                         _valid_items.begin(),
                         _valid_items.end(),
-                        [](const std::string& item)
+                        [](pkmn::e_item item)
                         {
                             return pkmn::does_vector_contain_value(
                                        INVALID_GBA_PC_ITEMS,
@@ -510,16 +548,22 @@ namespace pkmn {
                         }),
                     _valid_items.end()
                 );
+                _valid_item_names.erase(
+                    std::remove_if(
+                        _valid_item_names.begin(),
+                        _valid_item_names.end(),
+                        [](const std::string& item)
+                        {
+                            return pkmn::does_vector_contain_value(
+                                       INVALID_GBA_PC_ITEM_NAMES,
+                                       item
+                                   );
+                        }),
+                    _valid_item_names.end()
+                );
             }
+
+            BOOST_ASSERT(_valid_items.size() == _valid_item_names.size());
         }
-
-        return _valid_items;
-    }
-
-    void* item_list_impl::get_native()
-    {
-        boost::lock_guard<item_list_impl> lock(*this);
-
-        return _p_native;
     }
 }

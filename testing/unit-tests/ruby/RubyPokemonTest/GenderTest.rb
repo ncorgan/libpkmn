@@ -12,47 +12,47 @@ class GenderTest < PokemonTest
     def _test_gender(game)
         # Single-gender
         nidorina = PKMN::Pokemon.new("Nidorina", game, "", 50)
-        nidorina.gender = "Female"
-        assert_equal("Female", nidorina.gender)
+        nidorina.gender = PKMN::Gender::FEMALE
+        assert_equal(PKMN::Gender::FEMALE, nidorina.gender)
 
         assert_raises ArgumentError do
-            nidorina.gender = "Male"
+            nidorina.gender = PKMN::Gender::MALE
         end
         assert_raises ArgumentError do
-            nidorina.gender = "Genderless"
+            nidorina.gender = PKMN::Gender::GENDERLESS
         end
 
         nidorino = PKMN::Pokemon.new("Nidorino", game, "", 50)
-        nidorino.gender = "Male"
-        assert_equal("Male", nidorino.gender)
+        nidorino.gender = PKMN::Gender::MALE
+        assert_equal(PKMN::Gender::MALE, nidorino.gender)
 
         assert_raises ArgumentError do
-            nidorino.gender = "Female"
+            nidorino.gender = PKMN::Gender::FEMALE
         end
         assert_raises ArgumentError do
-            nidorino.gender = "Genderless"
+            nidorino.gender = PKMN::Gender::GENDERLESS
         end
 
         magnemite = PKMN::Pokemon.new("Magnemite", game, "", 50)
-        magnemite.gender = "Genderless"
-        assert_equal("Genderless", magnemite.gender)
+        magnemite.gender = PKMN::Gender::GENDERLESS
+        assert_equal(PKMN::Gender::GENDERLESS, magnemite.gender)
 
         assert_raises ArgumentError do
-            magnemite.gender = "Male"
+            magnemite.gender = PKMN::Gender::MALE
         end
         assert_raises ArgumentError do
-            magnemite.gender = "Female"
+            magnemite.gender = PKMN::Gender::FEMALE
         end
 
         mixed_pokemon = ["Charmander", "Growlithe", "Pidgey", "Vulpix"]
         mixed_pokemon.each do |species|
             pokemon = PKMN::Pokemon.new(species, game, "", 50)
-            pokemon.gender = "Male"
-            assert_equal("Male", pokemon.gender)
-            pokemon.gender = "Female"
-            assert_equal("Female", pokemon.gender)
+            pokemon.gender = PKMN::Gender::MALE
+            assert_equal(PKMN::Gender::MALE, pokemon.gender)
+            pokemon.gender = PKMN::Gender::FEMALE
+            assert_equal(PKMN::Gender::FEMALE, pokemon.gender)
             assert_raises ArgumentError do
-                pokemon.gender = "Genderless"
+                pokemon.gender = PKMN::Gender::GENDERLESS
             end
         end
     end

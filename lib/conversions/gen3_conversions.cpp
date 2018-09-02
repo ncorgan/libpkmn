@@ -9,6 +9,8 @@
 #include "database/database_common.hpp"
 #include "pksav/pksav_call.hpp"
 
+#include "pkmgc/enum_maps.hpp"
+
 #include <pkmn/calculations/stats.hpp>
 
 #include <pksav/common/condition.h>
@@ -56,41 +58,41 @@ namespace pkmn { namespace conversions {
     {
         uint32_t pksav_ribbon_mask;
         uint32_t pksav_ribbon_offset;
-        libpkmgc_contest_stat_t libpkmgc_contest_stat;
+        pkmgc::e_contest_stat libpkmgc_contest_stat;
     } ribbon_values_t;
     static const std::vector<ribbon_values_t> GEN3_RIBBON_VALUES =
     {
-        {PKSAV_GBA_COOL_RIBBONS_MASK,   PKSAV_GBA_COOL_RIBBONS_OFFSET,   LIBPKMGC_CONTEST_STAT_COOL},
-        {PKSAV_GBA_BEAUTY_RIBBONS_MASK, PKSAV_GBA_BEAUTY_RIBBONS_OFFSET, LIBPKMGC_CONTEST_STAT_BEAUTY},
-        {PKSAV_GBA_CUTE_RIBBONS_MASK,   PKSAV_GBA_CUTE_RIBBONS_OFFSET,   LIBPKMGC_CONTEST_STAT_CUTE},
-        {PKSAV_GBA_SMART_RIBBONS_MASK,  PKSAV_GBA_SMART_RIBBONS_OFFSET,  LIBPKMGC_CONTEST_STAT_SMART},
-        {PKSAV_GBA_TOUGH_RIBBONS_MASK,  PKSAV_GBA_TOUGH_RIBBONS_OFFSET,  LIBPKMGC_CONTEST_STAT_TOUGH}
+        {PKSAV_GBA_COOL_RIBBONS_MASK,   PKSAV_GBA_COOL_RIBBONS_OFFSET,   pkmgc::e_contest_stat::COOL},
+        {PKSAV_GBA_BEAUTY_RIBBONS_MASK, PKSAV_GBA_BEAUTY_RIBBONS_OFFSET, pkmgc::e_contest_stat::BEAUTY},
+        {PKSAV_GBA_CUTE_RIBBONS_MASK,   PKSAV_GBA_CUTE_RIBBONS_OFFSET,   pkmgc::e_contest_stat::CUTE},
+        {PKSAV_GBA_SMART_RIBBONS_MASK,  PKSAV_GBA_SMART_RIBBONS_OFFSET,  pkmgc::e_contest_stat::SMART},
+        {PKSAV_GBA_TOUGH_RIBBONS_MASK,  PKSAV_GBA_TOUGH_RIBBONS_OFFSET,  pkmgc::e_contest_stat::TOUGH}
     };
 
-    typedef boost::bimap<uint32_t, libpkmgc_ribbon_t> gen3_ribbon_bimap_t;
+    typedef boost::bimap<uint32_t, pkmgc::e_ribbon> gen3_ribbon_bimap_t;
     static const gen3_ribbon_bimap_t GEN3_RIBBON_BIMAP = boost::assign::list_of<gen3_ribbon_bimap_t::relation>
-        (PKSAV_GBA_CHAMPION_RIBBON_MASK, LIBPKMGC_RIBBON_CHAMPION)
-        (PKSAV_GBA_WINNING_RIBBON_MASK,  LIBPKMGC_RIBBON_WINNING)
-        (PKSAV_GBA_VICTORY_RIBBON_MASK,  LIBPKMGC_RIBBON_VICTORY)
-        (PKSAV_GBA_ARTIST_RIBBON_MASK,   LIBPKMGC_RIBBON_ARTIST)
-        (PKSAV_GBA_EFFORT_RIBBON_MASK,   LIBPKMGC_RIBBON_EFFORT)
-        (PKSAV_GBA_MARINE_RIBBON_MASK,   LIBPKMGC_RIBBON_MARINE)
-        (PKSAV_GBA_LAND_RIBBON_MASK,     LIBPKMGC_RIBBON_LAND)
-        (PKSAV_GBA_SKY_RIBBON_MASK,      LIBPKMGC_RIBBON_SKY)
-        (PKSAV_GBA_COUNTRY_RIBBON_MASK,  LIBPKMGC_RIBBON_COUNTRY)
-        (PKSAV_GBA_NATIONAL_RIBBON_MASK, LIBPKMGC_RIBBON_NATIONAL)
-        (PKSAV_GBA_EARTH_RIBBON_MASK,    LIBPKMGC_RIBBON_EARTH)
-        (PKSAV_GBA_WORLD_RIBBON_MASK,    LIBPKMGC_RIBBON_WORLD)
+        (PKSAV_GBA_CHAMPION_RIBBON_MASK, pkmgc::e_ribbon::CHAMPION)
+        (PKSAV_GBA_WINNING_RIBBON_MASK,  pkmgc::e_ribbon::WINNING)
+        (PKSAV_GBA_VICTORY_RIBBON_MASK,  pkmgc::e_ribbon::VICTORY)
+        (PKSAV_GBA_ARTIST_RIBBON_MASK,   pkmgc::e_ribbon::ARTIST)
+        (PKSAV_GBA_EFFORT_RIBBON_MASK,   pkmgc::e_ribbon::EFFORT)
+        (PKSAV_GBA_MARINE_RIBBON_MASK,   pkmgc::e_ribbon::MARINE)
+        (PKSAV_GBA_LAND_RIBBON_MASK,     pkmgc::e_ribbon::LAND)
+        (PKSAV_GBA_SKY_RIBBON_MASK,      pkmgc::e_ribbon::SKY)
+        (PKSAV_GBA_COUNTRY_RIBBON_MASK,  pkmgc::e_ribbon::COUNTRY)
+        (PKSAV_GBA_NATIONAL_RIBBON_MASK, pkmgc::e_ribbon::NATIONAL)
+        (PKSAV_GBA_EARTH_RIBBON_MASK,    pkmgc::e_ribbon::EARTH)
+        (PKSAV_GBA_WORLD_RIBBON_MASK,    pkmgc::e_ribbon::WORLD)
     ;
 
-    typedef boost::bimap<enum pksav_IV, libpkmgc_stat_t> gen3_IV_bimap_t;
+    typedef boost::bimap<enum pksav_IV, pkmgc::e_stat> gen3_IV_bimap_t;
     static const gen3_IV_bimap_t GEN3_IV_BIMAP = boost::assign::list_of<gen3_IV_bimap_t::relation>
-        (PKSAV_IV_HP,      LIBPKMGC_STAT_HP)
-        (PKSAV_IV_ATTACK,  LIBPKMGC_STAT_ATTACK)
-        (PKSAV_IV_DEFENSE, LIBPKMGC_STAT_DEFENSE)
-        (PKSAV_IV_SPATK,   LIBPKMGC_STAT_SPATK)
-        (PKSAV_IV_SPDEF,   LIBPKMGC_STAT_SPDEF)
-        (PKSAV_IV_SPEED,   LIBPKMGC_STAT_SPEED)
+        (PKSAV_IV_HP,      pkmgc::e_stat::HP)
+        (PKSAV_IV_ATTACK,  pkmgc::e_stat::ATTACK)
+        (PKSAV_IV_DEFENSE, pkmgc::e_stat::DEFENSE)
+        (PKSAV_IV_SPATK,   pkmgc::e_stat::SPECIAL_ATTACK)
+        (PKSAV_IV_SPDEF,   pkmgc::e_stat::SPECIAL_DEFENSE)
+        (PKSAV_IV_SPEED,   pkmgc::e_stat::SPEED)
     ;
 
     void gba_pc_pokemon_to_gcn(
@@ -169,7 +171,8 @@ namespace pkmn { namespace conversions {
 
         for(const auto& gen3_ribbon_left_pair: GEN3_RIBBON_BIMAP.left)
         {
-            to->specialRibbons[gen3_ribbon_left_pair.second] = bool(from_misc->ribbons_obedience & gen3_ribbon_left_pair.first);
+            to->specialRibbons[int(gen3_ribbon_left_pair.second)] =
+                bool(from_misc->ribbons_obedience & gen3_ribbon_left_pair.first);
         }
 
         for(size_t i = 0; i < 4; ++i)
@@ -179,12 +182,12 @@ namespace pkmn { namespace conversions {
             to->moves[i].nbPPUpsUsed = LibPkmGC::u8((from_growth->pp_up >> (i*2)) & 0x3);
         }
 
-        to->EVs[LIBPKMGC_STAT_HP]      = from_effort->ev_hp;
-        to->EVs[LIBPKMGC_STAT_ATTACK]  = from_effort->ev_atk;
-        to->EVs[LIBPKMGC_STAT_DEFENSE] = from_effort->ev_def;
-        to->EVs[LIBPKMGC_STAT_SPATK]   = from_effort->ev_spatk;
-        to->EVs[LIBPKMGC_STAT_SPDEF]   = from_effort->ev_spdef;
-        to->EVs[LIBPKMGC_STAT_SPEED]   = from_effort->ev_spd;
+        to->EVs[int(pkmgc::e_stat::HP)]              = from_effort->ev_hp;
+        to->EVs[int(pkmgc::e_stat::ATTACK)]          = from_effort->ev_atk;
+        to->EVs[int(pkmgc::e_stat::DEFENSE)]         = from_effort->ev_def;
+        to->EVs[int(pkmgc::e_stat::SPECIAL_ATTACK)]  = from_effort->ev_spatk;
+        to->EVs[int(pkmgc::e_stat::SPECIAL_DEFENSE)] = from_effort->ev_spdef;
+        to->EVs[int(pkmgc::e_stat::SPEED)]           = from_effort->ev_spd;
 
         uint8_t IVs[PKSAV_NUM_IVS] = {0};
         PKSAV_CALL(
@@ -198,20 +201,21 @@ namespace pkmn { namespace conversions {
 
         for(const auto& gen3_IV_left_pair: GEN3_IV_BIMAP.left)
         {
-            to->IVs[gen3_IV_left_pair.second] = IVs[gen3_IV_left_pair.first];
+            to->IVs[int(gen3_IV_left_pair.second)] = IVs[gen3_IV_left_pair.first];
         }
 
-        to->contestStats[LIBPKMGC_CONTEST_STAT_COOL]   = from_effort->contest_stats.cool;
-        to->contestStats[LIBPKMGC_CONTEST_STAT_BEAUTY] = from_effort->contest_stats.beauty;
-        to->contestStats[LIBPKMGC_CONTEST_STAT_CUTE]   = from_effort->contest_stats.cute;
-        to->contestStats[LIBPKMGC_CONTEST_STAT_SMART]  = from_effort->contest_stats.smart;
-        to->contestStats[LIBPKMGC_CONTEST_STAT_TOUGH]  = from_effort->contest_stats.tough;
+        to->contestStats[int(pkmgc::e_contest_stat::COOL)]   = from_effort->contest_stats.cool;
+        to->contestStats[int(pkmgc::e_contest_stat::BEAUTY)] = from_effort->contest_stats.beauty;
+        to->contestStats[int(pkmgc::e_contest_stat::CUTE)]   = from_effort->contest_stats.cute;
+        to->contestStats[int(pkmgc::e_contest_stat::SMART)]  = from_effort->contest_stats.smart;
+        to->contestStats[int(pkmgc::e_contest_stat::TOUGH)]  = from_effort->contest_stats.tough;
 
         for(const ribbon_values_t& ribbon_values: GEN3_RIBBON_VALUES)
         {
             uint32_t contest_level = from_misc->ribbons_obedience & ribbon_values.pksav_ribbon_mask;
             contest_level >>= ribbon_values.pksav_ribbon_offset;
-            to->contestAchievements[ribbon_values.libpkmgc_contest_stat] = LibPkmGC::ContestAchievementLevel(contest_level);
+            to->contestAchievements[int(ribbon_values.libpkmgc_contest_stat)] =
+                LibPkmGC::ContestAchievementLevel(contest_level);
         }
 
         // Let LibPkmGC do the work.
@@ -326,18 +330,18 @@ namespace pkmn { namespace conversions {
             to_growth->pp_up |= (from->moves[i].nbPPUpsUsed & 0x3) << (i*2);
         }
 
-        to_effort->ev_hp    = from->EVs[LIBPKMGC_STAT_HP];
-        to_effort->ev_atk   = from->EVs[LIBPKMGC_STAT_ATTACK];
-        to_effort->ev_def   = from->EVs[LIBPKMGC_STAT_DEFENSE];
-        to_effort->ev_spd   = from->EVs[LIBPKMGC_STAT_SPEED];
-        to_effort->ev_spatk = from->EVs[LIBPKMGC_STAT_SPATK];
-        to_effort->ev_spdef = from->EVs[LIBPKMGC_STAT_SPDEF];
+        to_effort->ev_hp    = from->EVs[int(pkmgc::e_stat::HP)];
+        to_effort->ev_atk   = from->EVs[int(pkmgc::e_stat::ATTACK)];
+        to_effort->ev_def   = from->EVs[int(pkmgc::e_stat::DEFENSE)];
+        to_effort->ev_spd   = from->EVs[int(pkmgc::e_stat::SPEED)];
+        to_effort->ev_spatk = from->EVs[int(pkmgc::e_stat::SPECIAL_ATTACK)];
+        to_effort->ev_spdef = from->EVs[int(pkmgc::e_stat::SPECIAL_DEFENSE)];
 
-        to_effort->contest_stats.cool   = from->contestStats[LIBPKMGC_CONTEST_STAT_COOL];
-        to_effort->contest_stats.beauty = from->contestStats[LIBPKMGC_CONTEST_STAT_BEAUTY];
-        to_effort->contest_stats.cute   = from->contestStats[LIBPKMGC_CONTEST_STAT_CUTE];
-        to_effort->contest_stats.smart  = from->contestStats[LIBPKMGC_CONTEST_STAT_SMART];
-        to_effort->contest_stats.tough  = from->contestStats[LIBPKMGC_CONTEST_STAT_TOUGH];
+        to_effort->contest_stats.cool   = from->contestStats[int(pkmgc::e_contest_stat::COOL)];
+        to_effort->contest_stats.beauty = from->contestStats[int(pkmgc::e_contest_stat::BEAUTY)];
+        to_effort->contest_stats.cute   = from->contestStats[int(pkmgc::e_contest_stat::CUTE)];
+        to_effort->contest_stats.smart  = from->contestStats[int(pkmgc::e_contest_stat::SMART)];
+        to_effort->contest_stats.tough  = from->contestStats[int(pkmgc::e_contest_stat::TOUGH)];
         to_effort->contest_stats.sheen  = from->contestLuster;
 
         to_misc->pokerus = from->pokerusStatus;
@@ -361,7 +365,7 @@ namespace pkmn { namespace conversions {
             PKSAV_CALL(
                 pksav_set_IV(
                     iter->first,
-                    from->IVs[iter->second],
+                    from->IVs[int(iter->second)],
                     &to_misc->iv_egg_ability
                 );
             );
@@ -378,13 +382,13 @@ namespace pkmn { namespace conversions {
 
         for(const ribbon_values_t& ribbon_values: GEN3_RIBBON_VALUES)
         {
-            uint32_t contest_level = uint32_t(from->contestAchievements[ribbon_values.libpkmgc_contest_stat]);
+            uint32_t contest_level = uint32_t(from->contestAchievements[int(ribbon_values.libpkmgc_contest_stat)]);
             contest_level <<= ribbon_values.pksav_ribbon_offset;
             to_misc->ribbons_obedience |= contest_level;
         }
         for(const auto& gen3_ribbon_right_pair: GEN3_RIBBON_BIMAP.right)
         {
-            if(from->specialRibbons[gen3_ribbon_right_pair.first])
+            if(from->specialRibbons[int(gen3_ribbon_right_pair.first)])
             {
                 to_misc->ribbons_obedience |= gen3_ribbon_right_pair.second;
             }
@@ -423,12 +427,12 @@ namespace pkmn { namespace conversions {
         to->party_data.level        = from->partyData.level;
         to->party_data.pokerus_time = uint8_t(from->partyData.pokerusDaysRemaining);
         to->party_data.current_hp   = pksav_littleendian16(from->partyData.currentHP);
-        to->party_data.max_hp       = pksav_littleendian16(from->partyData.stats[LIBPKMGC_STAT_HP]);
-        to->party_data.atk          = pksav_littleendian16(from->partyData.stats[LIBPKMGC_STAT_ATTACK]);
-        to->party_data.def          = pksav_littleendian16(from->partyData.stats[LIBPKMGC_STAT_DEFENSE]);
-        to->party_data.spd          = pksav_littleendian16(from->partyData.stats[LIBPKMGC_STAT_SPEED]);
-        to->party_data.spatk        = pksav_littleendian16(from->partyData.stats[LIBPKMGC_STAT_SPATK]);
-        to->party_data.spdef        = pksav_littleendian16(from->partyData.stats[LIBPKMGC_STAT_SPDEF]);
+        to->party_data.max_hp       = pksav_littleendian16(from->partyData.stats[int(pkmgc::e_stat::HP)]);
+        to->party_data.atk          = pksav_littleendian16(from->partyData.stats[int(pkmgc::e_stat::ATTACK)]);
+        to->party_data.def          = pksav_littleendian16(from->partyData.stats[int(pkmgc::e_stat::DEFENSE)]);
+        to->party_data.spd          = pksav_littleendian16(from->partyData.stats[int(pkmgc::e_stat::SPEED)]);
+        to->party_data.spatk        = pksav_littleendian16(from->partyData.stats[int(pkmgc::e_stat::SPECIAL_ATTACK)]);
+        to->party_data.spdef        = pksav_littleendian16(from->partyData.stats[int(pkmgc::e_stat::SPECIAL_DEFENSE)]);
     }
 
 }}

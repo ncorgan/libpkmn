@@ -10,7 +10,7 @@
 
 #include <pksav/gba/pokemon.h>
 
-#include "libpkmgc_includes.hpp"
+#include "pkmgc/includes.hpp"
 
 namespace pkmn { namespace conversions {
 

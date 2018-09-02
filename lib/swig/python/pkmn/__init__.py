@@ -15,6 +15,8 @@ from . import database
 from . import paths
 from . import qt
 
+@ENUM_IMPORT@
+
 VERSION = "@PKMN_VERSION@"
 
 initialize_database_connection()

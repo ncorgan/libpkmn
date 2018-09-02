@@ -28,7 +28,7 @@
 #include "gba/save_internal.h"
 
 // LibPkmGC includes, inside warning suppressions
-#include "libpkmgc_includes.hpp"
+#include "pkmgc/includes.hpp"
 
 #include <boost/filesystem.hpp>
 

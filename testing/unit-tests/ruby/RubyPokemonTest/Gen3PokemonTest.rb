@@ -70,14 +70,14 @@ class Gen3PokemonTest < PokemonTest
 
     def _gen3_test_common(pokemon)
         # Gender and personality are tied, so make sure they affect each other.
-        pokemon.gender = "Female"
+        pokemon.gender = PKMN::Gender::FEMALE
         assert_operator(pokemon.personality & 0xFF, :<, 0xFF)
-        pokemon.gender = "Male"
+        pokemon.gender = PKMN::Gender::MALE
 
         pokemon.personality = 0x1234AB00
-        assert_equal("Female", pokemon.gender)
+        assert_equal(PKMN::Gender::FEMALE, pokemon.gender)
         pokemon.personality = 0xCD5678FF
-        assert_equal("Male", pokemon.gender)
+        assert_equal(PKMN::Gender::MALE, pokemon.gender)
 
         # Setting shininess should affect personality.
         pokemon.is_shiny = false

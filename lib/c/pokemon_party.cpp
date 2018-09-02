@@ -17,26 +17,21 @@
 #include <pkmn-c/pokemon_party.h>
 
 enum pkmn_error pkmn_pokemon_party_init(
-    const char* p_game,
+    enum pkmn_game game,
     struct pkmn_pokemon_party* p_pokemon_party_out
 )
 {
     enum pkmn_error error = pkmn::c::check_for_null_param(
-                                p_game,
-                                "p_game"
+                                p_pokemon_party_out,
+                                "p_pokemon_party_out"
                             );
-    if(!error)
-    {
-        error = pkmn::c::check_for_null_param(
-                    p_pokemon_party_out,
-                    "p_pokemon_party_out"
-                );
-    }
     if(!error)
     {
         auto impl = [&]()
         {
-            pkmn::pokemon_party::sptr cpp = pkmn::pokemon_party::make(p_game);
+            pkmn::pokemon_party::sptr cpp = pkmn::pokemon_party::make(
+                                                static_cast<pkmn::e_game>(game)
+                                            );
 
             pkmn::c::init_pokemon_party(
                 cpp,
@@ -62,7 +57,6 @@ enum pkmn_error pkmn_pokemon_party_free(
     {
         auto impl = [&]()
         {
-            pkmn::c::free_pointer_and_set_to_null(&p_pokemon_party->p_game);
             pkmn::c::delete_pointer_and_set_to_null(
                 reinterpret_cast<pkmn::c::pokemon_party_internal_t**>(&p_pokemon_party->p_internal)
             );

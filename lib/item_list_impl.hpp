@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -8,6 +8,8 @@
 #define PKMN_ITEM_LIST_IMPL_HPP
 
 #include <pkmn/item_list.hpp>
+
+#include <pkmn/enums/item.hpp>
 
 #include <boost/thread/lockable_adapter.hpp>
 #include <boost/thread/recursive_mutex.hpp>
@@ -28,7 +30,7 @@ namespace pkmn {
 
             std::string get_name() final;
 
-            std::string get_game() final;
+            pkmn::e_game get_game() final;
 
             int get_capacity() final;
 
@@ -39,12 +41,12 @@ namespace pkmn {
             ) override;
 
             virtual void add(
-                const std::string& item_name,
+                pkmn::e_item item,
                 int amount
             ) override;
 
             virtual void remove(
-                const std::string& item_name,
+                pkmn::e_item item,
                 int amount
             ) override;
 
@@ -55,13 +57,15 @@ namespace pkmn {
 
             virtual void set_item(
                 int position,
-                const std::string& item_name,
+                pkmn::e_item item,
                 int amount
             ) override;
 
             const pkmn::item_slots_t& as_vector() final;
 
-            const std::vector<std::string>& get_valid_items() final;
+            const std::vector<pkmn::e_item>& get_valid_items() final;
+
+            const std::vector<std::string>& get_valid_item_names() final;
 
             void* get_native() final;
 
@@ -71,9 +75,14 @@ namespace pkmn {
             bool _pc;
 
             pkmn::item_slots_t _item_slots;
-            std::vector<std::string> _valid_items;
+
+            // To allow caching
+            mutable std::vector<pkmn::e_item> _valid_items;
+            mutable std::vector<std::string>  _valid_item_names;
 
             void* _p_native;
+
+            void _get_valid_item_lists();
 
             virtual void _from_native(
                 int index = -1

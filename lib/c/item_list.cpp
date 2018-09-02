@@ -18,7 +18,7 @@
 
 enum pkmn_error pkmn_item_list_init(
     const char* p_name,
-    const char* p_game,
+    enum pkmn_game game,
     struct pkmn_item_list* p_item_list_out
 )
 {
@@ -29,25 +29,26 @@ enum pkmn_error pkmn_item_list_init(
     if(!error)
     {
         error = pkmn::c::check_for_null_param(
-                    p_game,
-                    "p_game"
-                );
-    }
-    if(!error)
-    {
-        error = pkmn::c::check_for_null_param(
                     p_item_list_out,
                     "p_item_list_out"
                 );
     }
     if(!error)
     {
-        pkmn::item_list::sptr cpp = pkmn::item_list::make(p_name, p_game);
+        auto impl = [&]()
+        {
+            pkmn::item_list::sptr cpp = pkmn::item_list::make(
+                                            p_name,
+                                            static_cast<pkmn::e_game>(game)
+                                        );
 
-        pkmn::c::init_item_list(
-            cpp,
-            p_item_list_out
-        );
+            pkmn::c::init_item_list(
+                cpp,
+                p_item_list_out
+            );
+        };
+
+        error = pkmn::c::handle_exceptions(impl);
     }
 
     return error;
@@ -66,7 +67,6 @@ enum pkmn_error pkmn_item_list_free(
         auto impl = [&]()
         {
             pkmn::c::free_pointer_and_set_to_null(&p_item_list->p_name);
-            pkmn::c::free_pointer_and_set_to_null(&p_item_list->p_game);
             pkmn::c::delete_pointer_and_set_to_null(
                 reinterpret_cast<pkmn::c::item_list_internal_t**>(&p_item_list->p_internal)
             );
@@ -159,13 +159,13 @@ enum pkmn_error pkmn_item_list_at(
 
 enum pkmn_error pkmn_item_list_add(
     const struct pkmn_item_list* p_item_list,
-    const char* p_item,
+    enum pkmn_item item,
     size_t amount
 )
 {
     return pkmn::c::add_item<struct pkmn_item_list, pkmn::item_list>(
                p_item_list,
-               p_item,
+               item,
                amount,
                "p_item_list"
            );
@@ -173,13 +173,13 @@ enum pkmn_error pkmn_item_list_add(
 
 enum pkmn_error pkmn_item_list_remove(
     const struct pkmn_item_list* p_item_list,
-    const char* p_item,
+    enum pkmn_item item,
     size_t amount
 )
 {
     return pkmn::c::remove_item<struct pkmn_item_list, pkmn::item_list>(
                p_item_list,
-               p_item,
+               item,
                amount,
                "p_item_list"
            );
@@ -217,7 +217,7 @@ enum pkmn_error pkmn_item_list_move(
 enum pkmn_error pkmn_item_list_set_item(
     const struct pkmn_item_list* p_item_list,
     size_t position,
-    const char* p_item,
+    enum pkmn_item item,
     size_t amount
 )
 {
@@ -230,24 +230,16 @@ enum pkmn_error pkmn_item_list_set_item(
         auto* p_internal = pkmn::c::get_item_list_internal_ptr(p_item_list);
         BOOST_ASSERT(p_internal != nullptr);
 
-        error = pkmn::c::check_for_null_param(
-                    p_item,
-                    "p_item",
-                    p_internal
-                );
-        if(!error)
+        auto impl = [&]()
         {
-            auto impl = [&]()
-            {
-                p_internal->cpp->set_item(
-                    static_cast<int>(position),
-                    p_item,
-                    static_cast<int>(amount)
-                );
-            };
+            p_internal->cpp->set_item(
+                static_cast<int>(position),
+                static_cast<pkmn::e_item>(item),
+                static_cast<int>(amount)
+            );
+        };
 
-            error = pkmn::c::handle_exceptions(impl, p_internal);
-        }
+        error = pkmn::c::handle_exceptions(impl, p_internal);
     }
 
     return error;
@@ -255,7 +247,7 @@ enum pkmn_error pkmn_item_list_set_item(
 
 enum pkmn_error pkmn_item_list_get_valid_items(
     const struct pkmn_item_list* p_item_list,
-    struct pkmn_string_list* p_valid_items_out
+    struct pkmn_item_enum_list* p_valid_items_out
 )
 {
     enum pkmn_error error = pkmn::c::check_for_null_wrapper_param(
@@ -276,9 +268,45 @@ enum pkmn_error pkmn_item_list_get_valid_items(
         {
             auto impl = [&]()
             {
-                pkmn::c::string_list_cpp_to_c(
+                pkmn::c::item_enum_list_cpp_to_c(
                     p_internal->cpp->get_valid_items(),
                     p_valid_items_out
+                );
+            };
+
+            error = pkmn::c::handle_exceptions(impl, p_internal);
+        }
+    }
+
+    return error;
+}
+
+enum pkmn_error pkmn_item_list_get_valid_item_names(
+    const struct pkmn_item_list* p_item_list,
+    struct pkmn_string_list* p_valid_item_names_out
+)
+{
+    enum pkmn_error error = pkmn::c::check_for_null_wrapper_param(
+                                p_item_list,
+                                "p_item_list"
+                            );
+    if(!error)
+    {
+        auto* p_internal = pkmn::c::get_item_list_internal_ptr(p_item_list);
+        BOOST_ASSERT(p_internal != nullptr);
+
+        error = pkmn::c::check_for_null_param(
+                    p_valid_item_names_out,
+                    "p_valid_item_names_out",
+                    p_internal
+                );
+        if(!error)
+        {
+            auto impl = [&]()
+            {
+                pkmn::c::string_list_cpp_to_c(
+                    p_internal->cpp->get_valid_item_names(),
+                    p_valid_item_names_out
                 );
             };
 

@@ -17,7 +17,7 @@
 
 // Convert getter/setter functions into attributes for more idiomatic Lua.
 
-%attributestring(pkmn::swig::daycare, std::string, game, get_game);
+%attribute(pkmn::swig::daycare, pkmn::e_game, game, get_game);
 %attribute(pkmn::swig::daycare, bool, can_breed_pokemon, can_breed_pokemon);
 %attributeval(pkmn::swig::daycare, pkmn::swig::daycare_levelup_pokemon, levelup_pokemon, get_levelup_pokemon);
 %attributeval(pkmn::swig::daycare, pkmn::swig::daycare_breeding_pokemon, breeding_pokemon, get_breeding_pokemon);

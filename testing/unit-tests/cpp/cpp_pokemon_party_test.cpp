@@ -5,11 +5,14 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
+#include "private_exports.hpp"
+
 #include <pkmntest/config.hpp>
 #include <pkmntest/util.hpp>
 
 #include <pkmn/exception.hpp>
 #include <pkmn/pokemon_party.hpp>
+#include <pkmn/enums/enum_to_string.hpp>
 
 #include <pksav/gen1.h>
 #include <pksav/gen2.h>
@@ -17,7 +20,7 @@
 
 #include "pksav/pksav_call.hpp"
 
-#include "libpkmgc_includes.hpp"
+#include "pkmgc/includes.hpp"
 
 #include <gtest/gtest.h>
 
@@ -26,22 +29,22 @@
 
 struct test_params_t
 {
-    std::string party_game;
-    std::vector<std::string> valid_other_games;
-    std::string invalid_other_game;
+    pkmn::e_game party_game;
+    std::vector<pkmn::e_game> valid_other_games;
+    pkmn::e_game invalid_other_game;
 };
 
 class pokemon_party_test: public ::testing::TestWithParam<test_params_t> {
     public:
-        PKMNTEST_INLINE pkmn::pokemon_party::sptr get_party() {
+        inline pkmn::pokemon_party::sptr get_party() {
             return _party;
         }
 
-        PKMNTEST_INLINE const std::string& get_game() {
+        inline pkmn::e_game get_game() {
             return test_params.party_game;
         }
 
-        PKMNTEST_INLINE void reset_party() {
+        inline void reset_party() {
             _party = pkmn::pokemon_party::make(test_params.party_game);
 
             ASSERT_NE(nullptr, _party.get());
@@ -63,30 +66,32 @@ class pokemon_party_test: public ::testing::TestWithParam<test_params_t> {
         pkmn::pokemon_party::sptr _party;
 };
 
-TEST_P(pokemon_party_test, empty_party_test) {
+TEST_P(pokemon_party_test, empty_party_test)
+{
     pkmn::pokemon_party::sptr party = get_party();
     const pkmn::pokemon_list_t& list = party->as_vector();
 
     for(auto party_iter = list.begin(); party_iter != list.end(); ++party_iter) {
         ASSERT_NE(nullptr, party_iter->get());
-        EXPECT_EQ("None", (*party_iter)->get_species());
+        EXPECT_EQ(pkmn::e_species::NONE, (*party_iter)->get_species());
         EXPECT_EQ(get_game(), (*party_iter)->get_game());
 
         const pkmn::move_slots_t& move_slots = (*party_iter)->get_moves();
         ASSERT_EQ(4, move_slots.size());
-        for(auto move_iter = move_slots.begin(); move_iter != move_slots.end(); ++move_iter) {
-            EXPECT_EQ("None", move_iter->move);
-            EXPECT_EQ(0, move_iter->pp);
+        for(const pkmn::move_slot& move_slot: move_slots)
+        {
+            EXPECT_EQ(pkmn::e_move::NONE, move_slot.move);
+            EXPECT_EQ(0, move_slot.pp);
         }
     }
 }
 
 TEST_P(pokemon_party_test, setting_pokemon_test) {
     pkmn::pokemon_party::sptr party = get_party();
-    ASSERT_NE(nullptr, party.get()); 
+    ASSERT_NE(nullptr, party.get());
 
-    std::string game = party->get_game();
-    int generation = game_generations.at(game);
+    pkmn::e_game game = party->get_game();
+    int generation = pkmn::priv::game_enum_to_generation(game);
 
     pkmn::pokemon::sptr original_first = party->get_pokemon(0);
     pkmn::pokemon::sptr original_second = party->get_pokemon(1);
@@ -96,19 +101,19 @@ TEST_P(pokemon_party_test, setting_pokemon_test) {
      * have the same underlying Pokémon.
      */
     pkmn::pokemon::sptr bulbasaur = pkmn::pokemon::make(
-                                        "Bulbasaur",
+                                        pkmn::e_species::BULBASAUR,
                                         game,
                                         "",
                                         5
                                     );
     pkmn::pokemon::sptr charmander = pkmn::pokemon::make(
-                                         "Charmander",
+                                         pkmn::e_species::CHARMANDER,
                                          game,
                                          "",
                                          5
                                      );
     pkmn::pokemon::sptr squirtle = pkmn::pokemon::make(
-                                       "Squirtle",
+                                       pkmn::e_species::SQUIRTLE,
                                        game,
                                        "",
                                        5
@@ -124,15 +129,15 @@ TEST_P(pokemon_party_test, setting_pokemon_test) {
 
     party->set_pokemon(0, bulbasaur);
     EXPECT_EQ(1, party->get_num_pokemon());
-    EXPECT_EQ("Bulbasaur", party->get_pokemon(0)->get_species());
+    EXPECT_EQ(pkmn::e_species::BULBASAUR, party->get_pokemon(0)->get_species());
     party->set_pokemon(1, charmander);
     EXPECT_EQ(2, party->get_num_pokemon());
-    EXPECT_EQ("Charmander", party->get_pokemon(1)->get_species());
+    EXPECT_EQ(pkmn::e_species::CHARMANDER, party->get_pokemon(1)->get_species());
 
     // Replace one of the new ones.
     party->set_pokemon(0, squirtle);
     EXPECT_EQ(2, party->get_num_pokemon());
-    EXPECT_EQ("Squirtle", party->get_pokemon(0)->get_species());
+    EXPECT_EQ(pkmn::e_species::SQUIRTLE, party->get_pokemon(0)->get_species());
 
     // Copy a Pokémon whose memory is already part of the party.
     party->set_pokemon(2, party->get_pokemon(1));
@@ -141,7 +146,7 @@ TEST_P(pokemon_party_test, setting_pokemon_test) {
     // We should always be able to clear the last contiguous Pokémon.
     party->set_pokemon(2, original_first);
     EXPECT_EQ(2, party->get_num_pokemon());
-    EXPECT_EQ("None", party->get_pokemon(2)->get_species());
+    EXPECT_EQ(pkmn::e_species::NONE, party->get_pokemon(2)->get_species());
 
     // Put it back.
     party->set_pokemon(2, party->get_pokemon(1));
@@ -152,26 +157,26 @@ TEST_P(pokemon_party_test, setting_pokemon_test) {
         party->set_pokemon(1, original_first);
     , std::invalid_argument);
     EXPECT_EQ(3, party->get_num_pokemon());
-    EXPECT_EQ("Charmander", party->get_pokemon(1)->get_species());
+    EXPECT_EQ(pkmn::e_species::CHARMANDER, party->get_pokemon(1)->get_species());
 
     EXPECT_THROW(
         party->set_pokemon(4, bulbasaur);
     , std::out_of_range);
     EXPECT_EQ(3, party->get_num_pokemon());
-    EXPECT_EQ("None", party->get_pokemon(4)->get_species());
+    EXPECT_EQ(pkmn::e_species::NONE, party->get_pokemon(4)->get_species());
 
     /*
      * Now check everything we've created. Each variable should have the
      * same Pokémon underneath, even if the pointer has changed.
      */
-    EXPECT_EQ("Squirtle", party->get_pokemon(0)->get_species());
-    EXPECT_EQ("Charmander", party->get_pokemon(1)->get_species());
-    EXPECT_EQ("Charmander", party->get_pokemon(2)->get_species());
-    EXPECT_EQ("None", original_first->get_species());
-    EXPECT_EQ("None", original_second->get_species());
-    EXPECT_EQ("Bulbasaur", bulbasaur->get_species());
-    EXPECT_EQ("Charmander", charmander->get_species());
-    EXPECT_EQ("Squirtle", squirtle->get_species());
+    EXPECT_EQ(pkmn::e_species::SQUIRTLE, party->get_pokemon(0)->get_species());
+    EXPECT_EQ(pkmn::e_species::CHARMANDER, party->get_pokemon(1)->get_species());
+    EXPECT_EQ(pkmn::e_species::CHARMANDER, party->get_pokemon(2)->get_species());
+    EXPECT_EQ(pkmn::e_species::NONE, original_first->get_species());
+    EXPECT_EQ(pkmn::e_species::NONE, original_second->get_species());
+    EXPECT_EQ(pkmn::e_species::BULBASAUR, bulbasaur->get_species());
+    EXPECT_EQ(pkmn::e_species::CHARMANDER, charmander->get_species());
+    EXPECT_EQ(pkmn::e_species::SQUIRTLE, squirtle->get_species());
 
     // On the C++ level, make sure the expected equal pointers are equal.
     EXPECT_NE(original_first->get_native_pc_data(), party->get_pokemon(0)->get_native_pc_data());
@@ -268,7 +273,7 @@ TEST_P(pokemon_party_test, setting_pokemon_test) {
         }
 
         case 3:
-            if(game == "Colosseum" or game == "XD")
+            if((game == pkmn::e_game::COLOSSEUM) || (game == pkmn::e_game::XD))
             {
                 std::unique_ptr<LibPkmGC::GC::Pokemon>* p_native_uptrs =
                     reinterpret_cast<std::unique_ptr<LibPkmGC::GC::Pokemon>*>(party->get_native());
@@ -297,27 +302,27 @@ TEST_P(pokemon_party_test, setting_pokemon_test) {
 
     // Make sure converting Pokémon before putting into the party works (or doesn't work) as expected.
 
-    for(const std::string& valid_game: test_params.valid_other_games)
+    for(pkmn::e_game valid_game: test_params.valid_other_games)
     {
         pkmn::pokemon::sptr pikachu = pkmn::pokemon::make(
-                                          "Pikachu",
+                                          pkmn::e_species::PIKACHU,
                                           valid_game,
                                           "",
                                           50
                                       );
         ASSERT_EQ(valid_game, pikachu->get_game());
-        ASSERT_EQ(50, pikachu->get_level()) << valid_game;
+        ASSERT_EQ(50, pikachu->get_level()) << pkmn::game_to_string(valid_game);
 
         party->set_pokemon(3, pikachu);
 
         pkmn::pokemon::sptr party_pokemon = party->get_pokemon(3);
-        EXPECT_EQ("Pikachu", party_pokemon->get_species()) << valid_game;
-        EXPECT_EQ(test_params.party_game, party_pokemon->get_game()) << valid_game;
-        EXPECT_EQ(50, party_pokemon->get_level()) << valid_game;
+        EXPECT_EQ(pkmn::e_species::PIKACHU, party_pokemon->get_species()) << pkmn::game_to_string(valid_game);
+        EXPECT_EQ(test_params.party_game, party_pokemon->get_game()) << pkmn::game_to_string(valid_game);
+        EXPECT_EQ(50, party_pokemon->get_level()) << pkmn::game_to_string(valid_game);
     }
 
     pkmn::pokemon::sptr invalid_pikachu = pkmn::pokemon::make(
-                                              "Pikachu",
+                                              pkmn::e_species::PIKACHU,
                                               test_params.invalid_other_game,
                                               "",
                                               50
@@ -329,19 +334,156 @@ TEST_P(pokemon_party_test, setting_pokemon_test) {
 
 static const test_params_t PARAMS[] =
 {
-    {"Red", {"Blue", "Yellow", "Gold", "Silver", "Crystal"}, "Ruby"},
-    {"Blue", {"Red", "Yellow", "Gold", "Silver", "Crystal"}, "Sapphire"},
-    {"Yellow", {"Red", "Blue", "Gold", "Silver", "Crystal"}, "Emerald"},
-    {"Gold", {"Red", "Blue", "Yellow", "Silver", "Crystal"}, "FireRed"},
-    {"Silver", {"Red", "Blue", "Yellow", "Gold", "Crystal"}, "LeafGreen"},
-    {"Crystal", {"Red", "Blue", "Yellow", "Gold", "Silver"}, "Colosseum"},
-    {"Ruby", {"Sapphire", "Emerald", "FireRed", "LeafGreen", "Colosseum", "XD"}, "Red"},
-    {"Sapphire", {"Ruby", "Emerald", "FireRed", "LeafGreen", "Colosseum", "XD"}, "Blue"},
-    {"Emerald", {"Ruby", "Sapphire", "FireRed", "LeafGreen", "Colosseum", "XD"}, "Yellow"},
-    {"FireRed", {"Ruby", "Sapphire", "Emerald", "LeafGreen", "Colosseum", "XD"}, "Gold"},
-    {"LeafGreen", {"Ruby", "Sapphire", "Emerald", "FireRed", "Colosseum", "XD"}, "Silver"},
-    {"Colosseum", {"Ruby", "Sapphire", "Emerald", "FireRed", "LeafGreen", "XD"}, "Crystal"},
-    {"XD", {"Ruby", "Sapphire", "Emerald", "FireRed", "LeafGreen", "Colosseum"}, "Red"},
+    {
+        pkmn::e_game::RED,
+        {
+            pkmn::e_game::BLUE,
+            pkmn::e_game::YELLOW,
+            pkmn::e_game::GOLD,
+            pkmn::e_game::SILVER,
+            pkmn::e_game::CRYSTAL
+        },
+        pkmn::e_game::RUBY
+    },
+    {
+        pkmn::e_game::BLUE,
+        {
+            pkmn::e_game::RED,
+            pkmn::e_game::YELLOW,
+            pkmn::e_game::GOLD,
+            pkmn::e_game::SILVER,
+            pkmn::e_game::CRYSTAL
+        },
+        pkmn::e_game::SAPPHIRE
+    },
+    {
+        pkmn::e_game::YELLOW,
+        {
+            pkmn::e_game::RED,
+            pkmn::e_game::BLUE,
+            pkmn::e_game::GOLD,
+            pkmn::e_game::SILVER,
+            pkmn::e_game::CRYSTAL
+        },
+        pkmn::e_game::EMERALD
+    },
+    {
+        pkmn::e_game::GOLD,
+        {
+            pkmn::e_game::RED,
+            pkmn::e_game::BLUE,
+            pkmn::e_game::YELLOW,
+            pkmn::e_game::SILVER,
+            pkmn::e_game::CRYSTAL
+        },
+        pkmn::e_game::FIRERED
+    },
+    {
+        pkmn::e_game::SILVER,
+        {
+            pkmn::e_game::RED,
+            pkmn::e_game::BLUE,
+            pkmn::e_game::YELLOW,
+            pkmn::e_game::GOLD,
+            pkmn::e_game::CRYSTAL
+        },
+        pkmn::e_game::LEAFGREEN
+    },
+    {
+        pkmn::e_game::CRYSTAL,
+        {
+            pkmn::e_game::RED,
+            pkmn::e_game::BLUE,
+            pkmn::e_game::YELLOW,
+            pkmn::e_game::GOLD,
+            pkmn::e_game::SILVER
+        },
+        pkmn::e_game::COLOSSEUM
+    },
+    {
+        pkmn::e_game::RUBY,
+        {
+            pkmn::e_game::SAPPHIRE,
+            pkmn::e_game::EMERALD,
+            pkmn::e_game::FIRERED,
+            pkmn::e_game::LEAFGREEN,
+            pkmn::e_game::COLOSSEUM,
+            pkmn::e_game::XD,
+        },
+        pkmn::e_game::RED
+    },
+    {
+        pkmn::e_game::SAPPHIRE,
+        {
+            pkmn::e_game::RUBY,
+            pkmn::e_game::EMERALD,
+            pkmn::e_game::FIRERED,
+            pkmn::e_game::LEAFGREEN,
+            pkmn::e_game::COLOSSEUM,
+            pkmn::e_game::XD,
+        },
+        pkmn::e_game::BLUE
+    },
+    {
+        pkmn::e_game::EMERALD,
+        {
+            pkmn::e_game::RUBY,
+            pkmn::e_game::SAPPHIRE,
+            pkmn::e_game::FIRERED,
+            pkmn::e_game::LEAFGREEN,
+            pkmn::e_game::COLOSSEUM,
+            pkmn::e_game::XD,
+        },
+        pkmn::e_game::YELLOW
+    },
+    {
+        pkmn::e_game::FIRERED,
+        {
+            pkmn::e_game::RUBY,
+            pkmn::e_game::SAPPHIRE,
+            pkmn::e_game::EMERALD,
+            pkmn::e_game::LEAFGREEN,
+            pkmn::e_game::COLOSSEUM,
+            pkmn::e_game::XD,
+        },
+        pkmn::e_game::GOLD
+    },
+    {
+        pkmn::e_game::LEAFGREEN,
+        {
+            pkmn::e_game::RUBY,
+            pkmn::e_game::SAPPHIRE,
+            pkmn::e_game::EMERALD,
+            pkmn::e_game::FIRERED,
+            pkmn::e_game::COLOSSEUM,
+            pkmn::e_game::XD,
+        },
+        pkmn::e_game::SILVER
+    },
+    {
+        pkmn::e_game::COLOSSEUM,
+        {
+            pkmn::e_game::RUBY,
+            pkmn::e_game::SAPPHIRE,
+            pkmn::e_game::EMERALD,
+            pkmn::e_game::FIRERED,
+            pkmn::e_game::LEAFGREEN,
+            pkmn::e_game::XD,
+        },
+        pkmn::e_game::CRYSTAL
+    },
+    {
+        pkmn::e_game::XD,
+        {
+            pkmn::e_game::RUBY,
+            pkmn::e_game::SAPPHIRE,
+            pkmn::e_game::EMERALD,
+            pkmn::e_game::FIRERED,
+            pkmn::e_game::LEAFGREEN,
+            pkmn::e_game::COLOSSEUM,
+        },
+        pkmn::e_game::RED
+    },
 };
 
 INSTANTIATE_TEST_CASE_P(

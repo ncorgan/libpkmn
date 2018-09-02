@@ -14,6 +14,10 @@
 #include <pkmn/pokemon_party.hpp>
 #include <pkmn/pokemon_pc.hpp>
 
+#include <pkmn/enums/game.hpp>
+#include <pkmn/enums/game_save_type.hpp>
+#include <pkmn/enums/gender.hpp>
+
 #include <pkmn/types/class_with_attributes.hpp>
 #include <pkmn/types/time_duration.hpp>
 
@@ -47,18 +51,9 @@ namespace pkmn {
             /*!
              * @brief Returns what type of game save is at the given filepath.
              *
-             * Possible return values:
-             *  * "Red/Blue"
-             *  * "Yellow"
-             *  * "Gold/Silver"
-             *  * "Crystal"
-             *  * "Ruby/Sapphire/Emerald"
-             *  * "FireRed/LeafGreen"
-             *  * "Colosseum/XD"
-             *
              * \param filepath The filepath to check
              */
-            static std::string detect_type(
+            static pkmn::e_game_save_type detect_type(
                 const std::string& filepath
             );
 
@@ -111,7 +106,7 @@ namespace pkmn {
              * version group, LibPKMN will attempt to use the filename to determine
              * the specific game.
              */
-            virtual std::string get_game() = 0;
+            virtual pkmn::e_game get_game() = 0;
 
             virtual pkmn::time_duration get_time_played() = 0;
 
@@ -212,7 +207,7 @@ namespace pkmn {
             /*!
              * @brief Returns whether the player character is male or female.
              */
-            virtual std::string get_trainer_gender() = 0;
+            virtual pkmn::e_gender get_trainer_gender() = 0;
 
             /*!
              * @brief Sets whether the player character is male or female.
@@ -221,14 +216,14 @@ namespace pkmn {
              * and Pokémon Colosseum and XD had a single male character. As such, using this function for
              * Gamecube saves or for games before Crystal will result in an error.
              *
-             * Valid values: "Male", "Female"
+             * Valid values: pkmn::e_gender::MALE, pkmn::e_gender::FEMALE
              *
              * \param trainer_gender The new trainer gender
-             * \throws std::invalid_argument if the given gender is not "Male" or "Female"
+             * \throws std::invalid_argument if the given gender is not male or female
              * \throws pkmn::feature_not_in_game_error if the game only has one gender of playable character
              */
             virtual void set_trainer_gender(
-                const std::string& trainer_gender
+                pkmn::e_gender trainer_gender
             ) = 0;
 
             /*!

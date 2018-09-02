@@ -46,22 +46,21 @@ class pokemon_test_base(base_test):
     def initial_values_test(self, pokemon):
         generation = GAME_TO_GENERATION[pokemon.game]
 
-        self.assertEqual(pokemon.condition, "None")
+        self.assertEqual(pokemon.condition, pkmn.condition.NONE)
 
         if generation >= 5:
-            self.assertEqual(pokemon.nickname, pokemon.species)
+            self.assertEqual(pokemon.nickname, pokemon.database_entry.species_name)
         else:
-            self.assertEqual(pokemon.nickname, pokemon.species.upper())
+            self.assertEqual(pokemon.nickname, pokemon.database_entry.species_name.upper())
 
         self.assertEqual(pokemon.original_trainer_name, pkmn.pokemon.DEFAULT_TRAINER_NAME)
 
+        self.assertEqual(pokemon.held_item, pkmn.item.NONE)
         if generation >= 2:
-            self.assertEqual(pokemon.held_item, "None")
-            self.assertEqual(pokemon.original_trainer_gender, "Male")
+            self.assertEqual(pokemon.original_trainer_gender, pkmn.gender.MALE)
         else:
             # Default value since a getter shouldn't throw an exception.
-            self.assertEqual(pokemon.held_item, "")
-            self.assertEqual(pokemon.original_trainer_gender, "")
+            self.assertEqual(pokemon.original_trainer_gender, pkmn.gender.NONE)
 
         self.assertEqual(
             pokemon.original_trainer_public_id,
@@ -96,18 +95,18 @@ class pokemon_test_base(base_test):
             self.assertEqual(pokemon.current_trainer_friendship, 0)
 
         if generation >= 3:
-            self.assertEqual(pokemon.ball, "Premier Ball")
+            self.assertEqual(pokemon.ball, pkmn.ball.POKE_BALL)
 
             # There is no distinction between Colosseum and XD in the game
-            #storage.
-            if pokemon.game in ["Colosseum", "XD"]:
-                self.assertEqual(pokemon.original_game, "Colosseum/XD")
+            # storage.
+            if pokemon.game in [pkmn.game.COLOSSEUM, pkmn.game.XD]:
+                self.assertEqual(pokemon.original_game, pkmn.game.COLOSSEUM)
             else:
                 self.assertEqual(pokemon.original_game, pokemon.game)
         else:
             # Default value since a getter shouldn't throw an exception.
-            self.assertEqual(pokemon.ball, "")
-            self.assertEqual(pokemon.original_game, "")
+            self.assertEqual(pokemon.ball, pkmn.ball.NONE)
+            self.assertEqual(pokemon.original_game, pkmn.game.NONE)
 
         self.assertEqual(
             pokemon.experience,
@@ -122,43 +121,43 @@ class pokemon_test_base(base_test):
         self.assertTrue(os.path.exists(pokemon.icon_filepath))
         self.assertTrue(os.path.exists(pokemon.sprite_filepath))
 
-        self.assertEqual(pokemon.current_hp, pokemon.stats["HP"])
+        self.assertEqual(pokemon.current_hp, pokemon.stats[pkmn.pokemon_stat.HP])
 
     def initial_maps_test(self, pokemon):
         generation = GAME_TO_GENERATION[pokemon.game]
 
         # EVs
 
-        self.assertTrue("HP" in pokemon.EVs.keys)
-        self.assertTrue("Attack" in pokemon.EVs.keys)
-        self.assertTrue("Defense" in pokemon.EVs.keys)
-        self.assertTrue("Speed" in pokemon.EVs.keys)
+        self.assertTrue(pkmn.pokemon_stat.HP in pokemon.EVs.keys)
+        self.assertTrue(pkmn.pokemon_stat.ATTACK in pokemon.EVs.keys)
+        self.assertTrue(pkmn.pokemon_stat.DEFENSE in pokemon.EVs.keys)
+        self.assertTrue(pkmn.pokemon_stat.SPEED in pokemon.EVs.keys)
         if generation >= 3:
-            self.assertFalse("Special" in pokemon.EVs.keys)
-            self.assertTrue("Special Attack" in pokemon.EVs.keys)
-            self.assertTrue("Special Defense" in pokemon.EVs.keys)
+            self.assertFalse(pkmn.pokemon_stat.SPECIAL in pokemon.EVs.keys)
+            self.assertTrue(pkmn.pokemon_stat.SPECIAL_ATTACK in pokemon.EVs.keys)
+            self.assertTrue(pkmn.pokemon_stat.SPECIAL_DEFENSE in pokemon.EVs.keys)
         else:
-            self.assertTrue("Special" in pokemon.EVs.keys)
-            self.assertFalse("Special Attack" in pokemon.EVs.keys)
-            self.assertFalse("Special Defense" in pokemon.EVs.keys)
+            self.assertTrue(pkmn.pokemon_stat.SPECIAL in pokemon.EVs.keys)
+            self.assertFalse(pkmn.pokemon_stat.SPECIAL_ATTACK in pokemon.EVs.keys)
+            self.assertFalse(pkmn.pokemon_stat.SPECIAL_DEFENSE in pokemon.EVs.keys)
 
         for EV in pokemon.EVs.keys:
             self.assertEqual(pokemon.EVs[EV], 0)
 
         # IVs
 
-        self.assertTrue("HP" in pokemon.IVs.keys)
-        self.assertTrue("Attack" in pokemon.IVs.keys)
-        self.assertTrue("Defense" in pokemon.IVs.keys)
-        self.assertTrue("Speed" in pokemon.IVs.keys)
+        self.assertTrue(pkmn.pokemon_stat.HP in pokemon.IVs.keys)
+        self.assertTrue(pkmn.pokemon_stat.ATTACK in pokemon.IVs.keys)
+        self.assertTrue(pkmn.pokemon_stat.DEFENSE in pokemon.IVs.keys)
+        self.assertTrue(pkmn.pokemon_stat.SPEED in pokemon.IVs.keys)
         if generation >= 3:
-            self.assertFalse("Special" in pokemon.IVs.keys)
-            self.assertTrue("Special Attack" in pokemon.IVs.keys)
-            self.assertTrue("Special Defense" in pokemon.IVs.keys)
+            self.assertFalse(pkmn.pokemon_stat.SPECIAL in pokemon.IVs.keys)
+            self.assertTrue(pkmn.pokemon_stat.SPECIAL_ATTACK in pokemon.IVs.keys)
+            self.assertTrue(pkmn.pokemon_stat.SPECIAL_DEFENSE in pokemon.IVs.keys)
         else:
-            self.assertTrue("Special" in pokemon.IVs.keys)
-            self.assertFalse("Special Attack" in pokemon.IVs.keys)
-            self.assertFalse("Special Defense" in pokemon.IVs.keys)
+            self.assertTrue(pkmn.pokemon_stat.SPECIAL in pokemon.IVs.keys)
+            self.assertFalse(pkmn.pokemon_stat.SPECIAL_ATTACK in pokemon.IVs.keys)
+            self.assertFalse(pkmn.pokemon_stat.SPECIAL_DEFENSE in pokemon.IVs.keys)
 
         for IV in pokemon.IVs.keys:
             self.assertGreaterEqual(pokemon.IVs[IV], 0)
@@ -169,18 +168,18 @@ class pokemon_test_base(base_test):
 
         # Stats
 
-        self.assertTrue("HP" in pokemon.stats.keys())
-        self.assertTrue("Attack" in pokemon.stats.keys())
-        self.assertTrue("Defense" in pokemon.stats.keys())
-        self.assertTrue("Speed" in pokemon.stats.keys())
+        self.assertTrue(pkmn.pokemon_stat.HP in pokemon.stats.keys())
+        self.assertTrue(pkmn.pokemon_stat.ATTACK in pokemon.stats.keys())
+        self.assertTrue(pkmn.pokemon_stat.DEFENSE in pokemon.stats.keys())
+        self.assertTrue(pkmn.pokemon_stat.SPEED in pokemon.stats.keys())
         if generation >= 2:
-            self.assertFalse("Special" in pokemon.stats.keys())
-            self.assertTrue("Special Attack" in pokemon.stats.keys())
-            self.assertTrue("Special Defense" in pokemon.stats.keys())
+            self.assertFalse(pkmn.pokemon_stat.SPECIAL in pokemon.stats.keys())
+            self.assertTrue(pkmn.pokemon_stat.SPECIAL_ATTACK in pokemon.stats.keys())
+            self.assertTrue(pkmn.pokemon_stat.SPECIAL_DEFENSE in pokemon.stats.keys())
         else:
-            self.assertTrue("Special" in pokemon.stats.keys())
-            self.assertFalse("Special Attack" in pokemon.stats.keys())
-            self.assertFalse("Special Defense" in pokemon.stats.keys())
+            self.assertTrue(pkmn.pokemon_stat.SPECIAL in pokemon.stats.keys())
+            self.assertFalse(pkmn.pokemon_stat.SPECIAL_ATTACK in pokemon.stats.keys())
+            self.assertFalse(pkmn.pokemon_stat.SPECIAL_DEFENSE in pokemon.stats.keys())
 
         for stat in pokemon.stats.keys():
             self.assertGreaterEqual(pokemon.stats[stat], 0)
@@ -189,33 +188,33 @@ class pokemon_test_base(base_test):
         if generation >= 3:
             # Contest stats
 
-            self.assertTrue("Cool" in pokemon.contest_stats.keys)
-            self.assertTrue("Beauty" in pokemon.contest_stats.keys)
-            self.assertTrue("Cute" in pokemon.contest_stats.keys)
-            self.assertTrue("Smart" in pokemon.contest_stats.keys)
-            self.assertTrue("Tough" in pokemon.contest_stats.keys)
+            self.assertTrue(pkmn.contest_stat.COOL in pokemon.contest_stats.keys)
+            self.assertTrue(pkmn.contest_stat.BEAUTY in pokemon.contest_stats.keys)
+            self.assertTrue(pkmn.contest_stat.CUTE in pokemon.contest_stats.keys)
+            self.assertTrue(pkmn.contest_stat.SMART in pokemon.contest_stats.keys)
+            self.assertTrue(pkmn.contest_stat.TOUGH in pokemon.contest_stats.keys)
             if generation == 3:
-                self.assertTrue("Feel" in pokemon.contest_stats.keys)
-                self.assertFalse("Sheen" in pokemon.contest_stats.keys)
+                self.assertTrue(pkmn.contest_stat.FEEL in pokemon.contest_stats.keys)
+                self.assertFalse(pkmn.contest_stat.SHEEN in pokemon.contest_stats.keys)
             else:
-                self.assertFalse("Feel" in pokemon.contest_stats.keys)
-                self.assertTrue("Sheen" in pokemon.contest_stats.keys)
+                self.assertFalse(pkmn.contest_stat.FEEL in pokemon.contest_stats.keys)
+                self.assertTrue(pkmn.contest_stat.SHEEN in pokemon.contest_stats.keys)
 
             for contest_stat in pokemon.contest_stats.keys:
                 self.assertEqual(pokemon.contest_stats[contest_stat], 0)
 
             # Markings
 
-            self.assertTrue("Circle" in pokemon.markings.keys)
-            self.assertTrue("Triangle" in pokemon.markings.keys)
-            self.assertTrue("Square" in pokemon.markings.keys)
-            self.assertTrue("Heart" in pokemon.markings.keys)
+            self.assertTrue(pkmn.marking.CIRCLE in pokemon.markings.keys)
+            self.assertTrue(pkmn.marking.TRIANGLE in pokemon.markings.keys)
+            self.assertTrue(pkmn.marking.SQUARE in pokemon.markings.keys)
+            self.assertTrue(pkmn.marking.HEART in pokemon.markings.keys)
             if generation >= 4:
-                self.assertTrue("Star" in pokemon.markings.keys)
-                self.assertTrue("Diamond" in pokemon.markings.keys)
+                self.assertTrue(pkmn.marking.STAR in pokemon.markings.keys)
+                self.assertTrue(pkmn.marking.DIAMOND in pokemon.markings.keys)
             else:
-                self.assertFalse("Star" in pokemon.markings.keys)
-                self.assertFalse("Diamond" in pokemon.markings.keys)
+                self.assertFalse(pkmn.marking.STAR in pokemon.markings.keys)
+                self.assertFalse(pkmn.marking.DIAMOND in pokemon.markings.keys)
 
             for marking in pokemon.markings.keys:
                 self.assertFalse(pokemon.markings[marking])
@@ -226,7 +225,7 @@ class pokemon_test_base(base_test):
         self.assertTrue(os.path.exists(pokemon.icon_filepath))
 
         if generation >= 2:
-            for gender in ["Male", "Female"]:
+            for gender in [pkmn.gender.MALE, pkmn.gender.FEMALE]:
                 for is_shiny in [True, False]:
                     pokemon.gender = gender
                     pokemon.is_shiny = is_shiny
@@ -240,7 +239,7 @@ class pokemon_test_base(base_test):
         if generation >= 3:
             self.assertNotEquals(
                 pokemon.database_entry.abilities.first,
-                "None"
+                pkmn.ability.NONE
             )
 
             pokemon.ability = pokemon.database_entry.abilities.first
@@ -249,7 +248,7 @@ class pokemon_test_base(base_test):
                 pokemon.database_entry.abilities.first
             )
 
-            if pokemon.database_entry.abilities.second != "None":
+            if pokemon.database_entry.abilities.second != pkmn.ability.NONE:
                 pokemon.ability = pokemon.database_entry.abilities.second
                 self.assertEqual(
                     pokemon.ability,
@@ -257,7 +256,7 @@ class pokemon_test_base(base_test):
                 )
 
             if generation >= 5:
-                if pokemon.database_entry.hidden_ability != "None":
+                if pokemon.database_entry.hidden_ability != pkmn.ability.NONE:
                     pokemon.ability = pokemon.database_entry.ability
                     self.assertEqual(
                         pokemon.ability,
@@ -265,15 +264,15 @@ class pokemon_test_base(base_test):
                     )
 
             with self.assertRaises(ValueError):
-                pokemon.ability = "Not an ability"
+                pokemon.ability = pkmn.ability.NONE
             with self.assertRaises(ValueError):
-                pokemon.ability = "Wonder Guard"
+                pokemon.ability = pkmn.ability.WONDER_GUARD
         else:
             # The getter shouldn't throw by convention, but the setter will.
-            self.assertEqual(pokemon.ability, "")
+            self.assertEqual(pokemon.ability, pkmn.ability.NONE)
 
             with self.assertRaises(RuntimeError):
-                pokemon.ability = "Wonder Guard"
+                pokemon.ability = pkmn.ability.WONDER_GUARD
 
     def ball_test(self, pokemon, valid_ball_name, invalid_ball_names):
         generation = GAME_TO_GENERATION[pokemon.game]
@@ -287,17 +286,24 @@ class pokemon_test_base(base_test):
                     pokemon.ball = invalid_ball_name
         else:
             # The getter shouldn't throw by convention, but the setter will.
-            self.assertEqual(pokemon.ball, "")
+            self.assertEqual(pokemon.ball, pkmn.ball.NONE)
 
             with self.assertRaises(RuntimeError):
-                pokemon.ball = "Great Ball"
+                pokemon.ball = pkmn.ball.GREAT_BALL
 
     def condition_test(self, pokemon):
         generation = GAME_TO_GENERATION[pokemon.game]
 
-        conditions = ["None", "Asleep", "Poison", "Burn", "Frozen", "Paralysis"]
+        conditions = [
+            pkmn.condition.NONE,
+            pkmn.condition.ASLEEP,
+            pkmn.condition.POISON,
+            pkmn.condition.BURN,
+            pkmn.condition.FROZEN,
+            pkmn.condition.PARALYSIS
+        ]
         if generation >= 3:
-            conditions += ["Bad Poison"]
+            conditions += [pkmn.condition.BAD_POISON]
 
         for condition in conditions:
             pokemon.condition = condition
@@ -335,10 +341,10 @@ class pokemon_test_base(base_test):
                     pokemon.held_item = invalid_item_name
         else:
             # The getter shouldn't throw by convention, but the setter will.
-            self.assertEqual(pokemon.held_item, "")
+            self.assertEqual(pokemon.held_item, pkmn.item.NONE)
 
             with self.assertRaises(RuntimeError):
-                pokemon.held_item = "Potion"
+                pokemon.held_item = pkmn.item.POTION
 
     def level_test(self, pokemon):
         generation = GAME_TO_GENERATION[pokemon.game]
@@ -459,7 +465,7 @@ class pokemon_test_base(base_test):
         else:
             self.assertEqual(len(pokemon.markings), 0)
             with self.assertRaises(RuntimeError):
-                pokemon.markings["Circle"] = True
+                pokemon.markings[pkmn.marking.CIRCLE] = True
 
     def move_test(self, pokemon, valid_move_names, invalid_move_names):
         self.assertEqual(len(valid_move_names), 4)
@@ -507,10 +513,10 @@ class pokemon_test_base(base_test):
         if generation >= 3:
             for valid_game in valid_games:
                 pokemon.original_game = valid_game
-                if valid_game in ["Colosseum", "XD"]:
+                if valid_game in [pkmn.game.COLOSSEUM, pkmn.game.XD]:
                     self.assertEqual(
                         pokemon.original_game,
-                        "Colosseum/XD"
+                        pkmn.game.COLOSSEUM
                     )
                 else:
                     self.assertEqual(
@@ -523,7 +529,7 @@ class pokemon_test_base(base_test):
                     pokemon.original_game = invalid_game
         else:
             # The getter shouldn't throw by convention, but the setter will.
-            self.assertEqual(pokemon.original_game, "")
+            self.assertEqual(pokemon.original_game, pkmn.game.NONE)
 
             with self.assertRaises(RuntimeError):
                 pokemon.original_game = valid_games[0]
@@ -585,23 +591,23 @@ class pokemon_test_base(base_test):
         with self.assertRaises(IndexError):
             pokemon.current_hp = -1
         with self.assertRaises(IndexError):
-            pokemon.current_hp = pokemon.stats["HP"] + 1
+            pokemon.current_hp = pokemon.stats[pkmn.pokemon_stat.HP] + 1
 
         pokemon.current_hp = 0
         self.assertEqual(pokemon.current_hp, 0)
 
-        pokemon.current_hp = pokemon.stats["HP"] - 1
-        self.assertEqual(pokemon.current_hp, pokemon.stats["HP"] - 1)
+        pokemon.current_hp = pokemon.stats[pkmn.pokemon_stat.HP] - 1
+        self.assertEqual(pokemon.current_hp, pokemon.stats[pkmn.pokemon_stat.HP] - 1)
 
-        pokemon.current_hp = pokemon.stats["HP"]
-        self.assertEqual(pokemon.current_hp, pokemon.stats["HP"])
+        pokemon.current_hp = pokemon.stats[pkmn.pokemon_stat.HP]
+        self.assertEqual(pokemon.current_hp, pokemon.stats[pkmn.pokemon_stat.HP])
 
         # Set the HP stat to lower than the current HP, and make sure
         # it's updated.
 
         current_hp = pokemon.current_hp
-        pokemon.EVs["HP"] = 0
-        pokemon.IVs["HP"] = 0
+        pokemon.EVs[pkmn.pokemon_stat.HP] = 0
+        pokemon.IVs[pkmn.pokemon_stat.HP] = 0
         self.assertLessEqual(pokemon.current_hp, current_hp)
 
         if generation >= 3:
@@ -633,7 +639,7 @@ class pokemon_test_base(base_test):
         self.assertEqual(pokemon.original_trainer_name, "foobar")
 
         if generation >= 2:
-            for gender in ["Male", "Female"]:
+            for gender in [pkmn.gender.MALE, pkmn.gender.FEMALE]:
                 pokemon.original_trainer_gender = gender
                 self.assertEqual(
                     pokemon.original_trainer_gender,
@@ -641,9 +647,9 @@ class pokemon_test_base(base_test):
                 )
 
                 with self.assertRaises(ValueError):
-                    pokemon.original_trainer_gender = "Genderless"
+                    pokemon.original_trainer_gender = pkmn.gender.GENDERLESS
         else:
-            for gender in ["Male", "Female"]:
+            for gender in [pkmn.gender.MALE, pkmn.gender.FEMALE]:
                 with self.assertRaises(RuntimeError):
                     pokemon.original_trainer_gender = gender
 

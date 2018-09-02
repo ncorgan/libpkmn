@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -10,6 +10,8 @@
 #include <pkmn-c/config.h>
 #include <pkmn-c/error.h>
 
+#include <pkmn-c/enums/species.h>
+
 #include <stdbool.h>
 
 #ifdef __cplusplus
@@ -17,8 +19,8 @@ extern "C" {
 #endif
 
 PKMN_C_API enum pkmn_error pkmn_breeding_are_pokemon_species_compatible(
-    const char* p_species1,
-    const char* p_species2,
+    enum pkmn_species species1,
+    enum pkmn_species species2,
     bool* p_are_pokemon_species_compatible_out
 );
 

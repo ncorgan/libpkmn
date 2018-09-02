@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -42,7 +42,7 @@ namespace PKMN
         {
             public AbilityListComboBox(int generation)
             {
-                StringList abilities = Database.Lists.AbilityList(generation);
+                StringList abilities = Database.Lists.AbilityNameList(generation);
                 foreach(string ability in abilities)
                 {
                     this.Items.Add(ability);
@@ -54,7 +54,7 @@ namespace PKMN
         {
             public GameListComboBox(int generation, bool includePrevious)
             {
-                StringList games = Database.Lists.GameList(generation, includePrevious);
+                StringList games = Database.Lists.GameNameList(generation, includePrevious);
                 foreach(string game in games)
                 {
                     this.Items.Add(game);
@@ -66,7 +66,9 @@ namespace PKMN
         {
             public ItemListComboBox(string game)
             {
-                StringList items = Database.Lists.ItemList(game);
+                Game gameEnum = PKMN.StringToGame(game);
+
+                StringList items = Database.Lists.ItemNameList(gameEnum);
                 foreach(string item in items)
                 {
                     this.Items.Add(item);
@@ -78,7 +80,9 @@ namespace PKMN
         {
             public LocationListComboBox(string game, bool wholeGeneration)
             {
-                StringList locations = Database.Lists.LocationList(game, wholeGeneration);
+                Game gameEnum = PKMN.StringToGame(game);
+
+                StringList locations = Database.Lists.LocationNameList(gameEnum, wholeGeneration);
                 foreach(string location in locations)
                 {
                     this.Items.Add(location);
@@ -90,7 +94,9 @@ namespace PKMN
         {
             public MoveListComboBox(string game)
             {
-                StringList moves = Database.Lists.MoveList(game);
+                Game gameEnum = PKMN.StringToGame(game);
+
+                StringList moves = Database.Lists.MoveNameList(gameEnum);
                 foreach(string move in moves)
                 {
                     this.Items.Add(move);
@@ -102,7 +108,7 @@ namespace PKMN
         {
             public NatureListComboBox()
             {
-                StringList natures = Database.Lists.NatureList();
+                StringList natures = Database.Lists.NatureNameList();
                 foreach(string nature in natures)
                 {
                     this.Items.Add(nature);
@@ -114,7 +120,7 @@ namespace PKMN
         {
             public PokemonListComboBox(int generation, bool wholeGeneration)
             {
-                StringList pokemon = Database.Lists.PokemonList(generation, wholeGeneration);
+                StringList pokemon = Database.Lists.PokemonNameList(generation, wholeGeneration);
                 foreach(string pkmn in pokemon)
                 {
                     this.Items.Add(pkmn);
@@ -126,7 +132,7 @@ namespace PKMN
         {
             public RegionListComboBox()
             {
-                StringList regions = Database.Lists.RegionList();
+                StringList regions = Database.Lists.RegionNameList();
                 foreach(string region in regions)
                 {
                     this.Items.Add(region);
@@ -138,7 +144,7 @@ namespace PKMN
         {
             public RibbonListComboBox(int generation)
             {
-                StringList ribbons = Database.Lists.RibbonList(generation);
+                StringList ribbons = Database.Lists.RibbonNameList(generation);
                 foreach(string ribbon in ribbons)
                 {
                     this.Items.Add(ribbon);
@@ -150,7 +156,7 @@ namespace PKMN
         {
             public SuperTrainingMedalListComboBox()
             {
-                StringList superTrainingMedals = Database.Lists.SuperTrainingMedalList();
+                StringList superTrainingMedals = Database.Lists.SuperTrainingMedalNameList();
                 foreach(string superTrainingMedal in superTrainingMedals)
                 {
                     this.Items.Add(superTrainingMedal);
@@ -162,7 +168,9 @@ namespace PKMN
         {
             public TypeListComboBox(string game)
             {
-                StringList types = Database.Lists.TypeList(game);
+                Game gameEnum = PKMN.StringToGame(game);
+
+                StringList types = Database.Lists.TypeNameList(gameEnum);
                 foreach(string type in types)
                 {
                     this.Items.Add(type);

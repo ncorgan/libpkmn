@@ -10,6 +10,8 @@
 #include <pkmn-c/config.h>
 #include <pkmn-c/error.h>
 
+#include <pkmn-c/enums/item.h>
+
 #include <stdbool.h>
 #include <stdlib.h>
 
@@ -153,7 +155,7 @@ PKMN_C_API enum pkmn_error pkmn_calculations_flail_power(
  * \returns ::PKMN_ERROR_INVALID_ARGUMENT if the given item doesn't exist
  */
 PKMN_C_API enum pkmn_error pkmn_calculations_fling_power(
-    const char* p_held_item,
+    enum pkmn_item held_item,
     int* p_fling_power_out
 );
 

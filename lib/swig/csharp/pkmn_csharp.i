@@ -16,6 +16,8 @@ PKMN_CSHARP_INIT
 %{
     #include <pkmn/build_info.hpp>
 
+    #include <pkmn/enums/enum_to_string.hpp>
+
     #include "private_exports.hpp"
 
     inline std::string GetSWIGVersion()
@@ -50,6 +52,9 @@ namespace pkmn { namespace priv {
 %include <pkmn/build_info.hpp>
 %csmethodmodifiers GetSWIGVersion "internal";
 std::string GetSWIGVersion();
+
+// Enums
+%include <pkmn/enums/enum_to_string.hpp>
 
 // Attribute Maps
 %include <csharp/pkmn_attribute_maps.i>

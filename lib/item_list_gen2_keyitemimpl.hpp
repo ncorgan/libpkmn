@@ -32,18 +32,18 @@ namespace pkmn {
             ~item_list_gen2_keyitemimpl() = default;
 
             void add(
-                const std::string& item_name,
+                pkmn::e_item item,
                 int amount
             ) final;
 
             void remove(
-                const std::string& item_name,
+                pkmn::e_item item,
                 int amount
             ) final;
 
             void set_item(
                 int position,
-                const std::string& item_name,
+                pkmn::e_item item,
                 int amount
             ) final;
 

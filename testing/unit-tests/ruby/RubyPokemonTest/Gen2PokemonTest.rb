@@ -35,15 +35,15 @@ class Gen2PokemonTest < PokemonTest
         pokemon_test_common(pokemon, test_params)
 
         # Gender affects IVs, so make sure the abstraction reflects that.
-        pokemon.gender = "Male"
+        pokemon.gender = PKMN::Gender::MALE
         assert_equal(15, pokemon.IVs["Attack"])
-        pokemon.gender = "Female"
+        pokemon.gender = PKMN::Gender::FEMALE
         assert_operator(pokemon.IVs["Attack"], :<, 15)
 
         pokemon.IVs["Attack"] = 0
-        assert_equal("Female", pokemon.gender)
+        assert_equal(PKMN::Gender::FEMALE, pokemon.gender)
         pokemon.IVs["Attack"] = 15
-        assert_equal("Male", pokemon.gender)
+        assert_equal(PKMN::Gender::MALE, pokemon.gender)
 
         # Shininess affects IVs, so make sure the abstraction reflects that.
         pokemon.is_shiny = false

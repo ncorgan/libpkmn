@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+# Copyright (c) 2018 Nicholas Corgan (n.corgan@gmail.com)
 #
 # Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
 # or copy at http://opensource.org/licenses/MIT)
@@ -15,16 +15,16 @@ import unittest
 from nose_parameterized import parameterized
 
 DAYCARE_PARAMS = [
-    ("Red", False),
-    ("Blue", False),
-    ("Yellow", False),
+    (pkmn.game.RED, False),
+    (pkmn.game.BLUE, False),
+    (pkmn.game.YELLOW, False),
 
-    ("Gold", True),
-    ("Silver", True),
-    ("Crystal", True),
+    (pkmn.game.GOLD, True),
+    (pkmn.game.SILVER, True),
+    (pkmn.game.CRYSTAL, True),
 
-    ("Colosseum", False),
-    ("XD", False)
+    (pkmn.game.COLOSSEUM, False),
+    (pkmn.game.XD, False)
 ]
 
 def test_name_func(testcase_func, param_num, param):
@@ -34,7 +34,7 @@ class daycare_test(pkmntest.base_test):
 
     def __test_empty_daycare(self, daycare):
         for pokemon in daycare.levelup_pokemon:
-            self.assertEquals("None", pokemon.species)
+            self.assertEquals(pkmn.species.NONE, pokemon.species)
 
         # Test invalid indices.
         # What type of error is returned for the -1 case depends on SWIG version.
@@ -50,7 +50,7 @@ class daycare_test(pkmntest.base_test):
 
         if daycare.can_breed_pokemon:
             for pokemon in daycare.breeding_pokemon:
-                self.assertEquals("None", pokemon.species)
+                self.assertEquals(pkmn.species.NONE, pokemon.species)
 
             # Test invalid indices.
             # What type of error is returned for the -1 case depends on SWIG version.
@@ -66,45 +66,63 @@ class daycare_test(pkmntest.base_test):
 
     def __test_setting_pokemon(self, daycare):
         daycare.levelup_pokemon[0] = pkmn.pokemon(
-                                         "Venusaur",
+                                         pkmn.species.VENUSAUR,
                                          daycare.game,
                                          "",
                                          50
                                      )
-        self.assertEquals("Venusaur", daycare.levelup_pokemon[0].species)
+        self.assertEquals(
+            pkmn.species.VENUSAUR,
+            daycare.levelup_pokemon[0].species
+        )
 
         if len(daycare.levelup_pokemon) == 2:
             daycare.levelup_pokemon[1] = pkmn.pokemon(
-                                             "Charizard",
+                                             pkmn.species.CHARIZARD,
                                              daycare.game,
                                              "",
                                              50
                                          )
-            self.assertEquals("Charizard", daycare.levelup_pokemon[1].species)
+            self.assertEquals(
+                pkmn.species.CHARIZARD,
+                daycare.levelup_pokemon[1].species
+            )
 
         # TODO: validate genders
         if daycare.can_breed_pokemon:
             daycare.levelup_pokemon[0] = pkmn.pokemon(
-                                             "Blastoise",
+                                             pkmn.species.BLASTOISE,
                                              daycare.game,
                                              "",
                                              50
                                          )
-            daycare.levelup_pokemon[0].gender = "Female"
+            daycare.levelup_pokemon[0].gender = pkmn.gender.FEMALE
 
-            self.assertEquals("Blastoise", daycare.levelup_pokemon[0].species)
-            self.assertEquals("Female", daycare.levelup_pokemon[0].gender)
+            self.assertEquals(
+                pkmn.species.BLASTOISE,
+                daycare.levelup_pokemon[0].species
+            )
+            self.assertEquals(
+                pkmn.gender.FEMALE,
+                daycare.levelup_pokemon[0].gender
+            )
 
             daycare.levelup_pokemon[1] = pkmn.pokemon(
-                                             "Marowak",
+                                             pkmn.species.MAROWAK,
                                              daycare.game,
                                              "",
                                              50
                                          )
-            daycare.levelup_pokemon[1].gender = "Male"
+            daycare.levelup_pokemon[1].gender = pkmn.gender.MALE
 
-            self.assertEquals("Marowak", daycare.levelup_pokemon[1].species)
-            self.assertEquals("Male", daycare.levelup_pokemon[1].gender)
+            self.assertEquals(
+                pkmn.species.MAROWAK,
+                daycare.levelup_pokemon[1].species
+            )
+            self.assertEquals(
+                pkmn.gender.MALE,
+                daycare.levelup_pokemon[1].gender
+            )
 
     @parameterized.expand(DAYCARE_PARAMS, testcase_func_name=test_name_func)
     def test_daycare(self, game, expected_can_breed):

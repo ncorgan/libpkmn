@@ -16,18 +16,33 @@ class Gen1ItemTest < ItemTest
 
     @@GAMES = ["Red", "Blue", "Yellow"]
 
-    @@ITEM_NAMES = ["Potion", "Great Ball", "Ether", "PP Up",
-                    "TM34", "Moon Stone", "Bicycle", "Full Heal"]
+    @@ITEM_NAMES =
+    [
+        PKMN::Item::POTION,
+        PKMN::Item::GREAT_BALL,
+        PKMN::Item::ETHER,
+        PKMN::Item::PP_UP,
+        PKMN::Item::TM34,
+        PKMN::Item::MOON_STONE,
+        PKMN::Item::BICYCLE,
+        PKMN::Item::FULL_HEAL
+    ]
 
-    @@INVALID_GENERATION_ITEMS = ["Amulet Coin", "Apicot Berry", "Air Mail",
-                                  "Air Balloon", "Aqua Suit"]
+    @@INVALID_GENERATION_ITEMS =
+    [
+        PKMN::Item::AMULET_COIN,
+        PKMN::Item::APICOT_BERRY,
+        PKMN::Item::AIR_MAIL,
+        PKMN::Item::AIR_BALLOON,
+        PKMN::Item::AQUA_SUIT
+    ]
 
     def _test_item_list_common(list)
         # Make sure item slots start as correctly empty.
         item_list_test_empty_slots(list)
 
         # Confirm errors are thrown when expected.
-        item_list_test_out_of_range(list, "Potion")
+        item_list_test_out_of_range(list, PKMN::Item::POTION)
 
         # Confirm items from later generations can't be added.
         item_class_test_invalid_items(list, @@INVALID_GENERATION_ITEMS)
@@ -70,7 +85,7 @@ class Gen1ItemTest < ItemTest
             assert_equal(@@ITEM_NAMES[i], bag["Items"][i].item)
             assert_equal(i+1, bag["Items"][i].amount)
         end
-        assert_equal("None", bag["Items"][8].item)
+        assert_equal(PKMN::Item::NONE, bag["Items"][8].item)
         assert_equal(0, bag["Items"][8].amount)
 
         # Make sure removing items through the bag removes from the pocket.
@@ -79,26 +94,26 @@ class Gen1ItemTest < ItemTest
         end
 
         (0..8).each do |i|
-            assert_equal("None", bag["Items"][i].item)
+            assert_equal(PKMN::Item::NONE, bag["Items"][i].item)
             assert_equal(0, bag["Items"][i].amount)
         end
     end
 
     @@GAMES.each do |game|
         define_method("test_gen1_item_pocket_#{game}") do
-            _gen1_item_pocket_test(game)
+            _gen1_item_pocket_test(PKMN::string_to_game(game))
         end
     end
 
     @@GAMES.each do |game|
         define_method("test_gen1_item_pc_#{game}") do
-            _gen1_item_pc_test(game)
+            _gen1_item_pc_test(PKMN::string_to_game(game))
         end
     end
 
     @@GAMES.each do |game|
         define_method("test_gen1_item_bag_#{game}") do
-            _gen1_item_bag_test(game)
+            _gen1_item_bag_test(PKMN::string_to_game(game))
         end
     end
 end

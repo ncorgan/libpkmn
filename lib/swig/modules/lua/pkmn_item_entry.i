@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -13,8 +13,9 @@
 
 // Convert getter/setter functions into attributes for more idiomatic Lua.
 
+%attribute(pkmn::database::item_entry, pkmn::e_item, item, get_item);
 %attributestring(pkmn::database::item_entry, std::string, name, get_name);
-%attributestring(pkmn::database::item_entry, std::string, game, get_game);
+%attribute(pkmn::database::item_entry, pkmn::e_game, game, get_game);
 %attributestring(pkmn::database::item_entry, std::string, category, get_category);
 %attributestring(pkmn::database::item_entry, std::string, pocket, get_pocket);
 %attributestring(pkmn::database::item_entry, std::string, description, get_description);

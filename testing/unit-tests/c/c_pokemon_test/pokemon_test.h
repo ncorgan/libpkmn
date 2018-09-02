@@ -10,26 +10,27 @@
 
 #include <pkmn-c/pokemon.h>
 
-typedef struct {
-    char* valid_ball;
-    char** invalid_balls;
+typedef struct
+{
+    enum pkmn_ball valid_ball;
+    enum pkmn_ball* p_invalid_balls;
 
-    char* valid_item;
-    char** invalid_items;
+    enum pkmn_item valid_item;
+    enum pkmn_item* p_invalid_items;
 
     char* expected_original_location;
     char** valid_locations;
     char** invalid_locations;
 
-    char** moves;
-    char** invalid_moves;
+    enum pkmn_move* p_moves;
+    enum pkmn_move* p_invalid_moves;
 
-    char** valid_original_games;
-    char** invalid_original_games;
+    enum pkmn_game* valid_original_games;
+    enum pkmn_game* invalid_original_games;
 } pkmn_test_values_t;
 
 void pokemon_test_common(
-    struct pkmn_pokemon* p_pokemon,
+    const struct pkmn_pokemon* p_pokemon,
     pkmn_test_values_t* test_values
 );
 

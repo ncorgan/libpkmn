@@ -10,13 +10,16 @@
 #include <pkmn-c/config.h>
 #include <pkmn-c/error.h>
 
+#include <pkmn-c/enums/game.h>
+#include <pkmn-c/enums/species.h>
+
 #include <pkmn-c/types/string_types.h>
 
 #include <stdbool.h>
 
 struct pkmn_pokedex
 {
-    char* p_game;
+    enum pkmn_game game;
 
     void* p_internal;
 };
@@ -26,7 +29,7 @@ extern "C" {
 #endif
 
 PKMN_C_API enum pkmn_error pkmn_pokedex_init(
-    const char* p_game,
+    enum pkmn_game game,
     struct pkmn_pokedex* p_pokedex_out
 );
 
@@ -40,19 +43,19 @@ PKMN_C_API const char* pkmn_pokedex_strerror(
 
 PKMN_C_API enum pkmn_error pkmn_pokedex_has_seen(
     const struct pkmn_pokedex* p_pokedex,
-    const char* p_species,
+    enum pkmn_species species,
     bool* p_has_seen_out
 );
 
 PKMN_C_API enum pkmn_error pkmn_pokedex_set_has_seen_species(
     const struct pkmn_pokedex* p_pokedex,
-    const char* p_species,
+    enum pkmn_species species,
     bool has_seen
 );
 
 PKMN_C_API enum pkmn_error pkmn_pokedex_get_all_seen(
     const struct pkmn_pokedex* p_pokedex,
-    struct pkmn_string_list* p_all_seen_out
+    struct pkmn_species_enum_list* p_all_seen_out
 );
 
 PKMN_C_API enum pkmn_error pkmn_pokedex_get_num_seen(
@@ -62,19 +65,19 @@ PKMN_C_API enum pkmn_error pkmn_pokedex_get_num_seen(
 
 PKMN_C_API enum pkmn_error pkmn_pokedex_has_caught(
     const struct pkmn_pokedex* p_pokedex,
-    const char* p_species,
+    enum pkmn_species species,
     bool* p_has_caught_out
 );
 
 PKMN_C_API enum pkmn_error pkmn_pokedex_set_has_caught_species(
     const struct pkmn_pokedex* p_pokedex,
-    const char* p_species,
+    enum pkmn_species species,
     bool has_caught
 );
 
 PKMN_C_API enum pkmn_error pkmn_pokedex_get_all_caught(
     const struct pkmn_pokedex* p_pokedex,
-    struct pkmn_string_list* p_all_caught_out
+    struct pkmn_species_enum_list* p_all_caught_out
 );
 
 PKMN_C_API enum pkmn_error pkmn_pokedex_get_num_caught(

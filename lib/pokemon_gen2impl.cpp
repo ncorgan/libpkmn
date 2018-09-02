@@ -11,9 +11,12 @@
 #include "pokemon_gen2impl.hpp"
 
 #include "conversions/gb_conversions.hpp"
+
 #include "database/database_common.hpp"
+#include "database/enum_conversions.hpp"
 #include "database/id_to_string.hpp"
 #include "database/index_to_string.hpp"
+
 #include "utils/floating_point_comparison.hpp"
 
 #include <pkmn/calculations/form.hpp>
@@ -66,7 +69,7 @@ namespace pkmn
         std::memset(&_pksav_pokemon, 0, sizeof(_pksav_pokemon));
 
         _nickname = boost::algorithm::to_upper_copy(
-                        _database_entry.get_name()
+                        _database_entry.get_species_name()
                     );
         _trainer_name = DEFAULT_TRAINER_NAME;
 
@@ -141,7 +144,7 @@ namespace pkmn
         // Nickname and trainer name aren't stored with the binary,
         // so use LibPKMN's defaults.
         _nickname = boost::algorithm::to_upper_copy(
-                        _database_entry.get_name()
+                        _database_entry.get_species_name()
                     );
         _trainer_name = DEFAULT_TRAINER_NAME;
     }
@@ -173,20 +176,18 @@ namespace pkmn
         // Nickname and trainer name aren't stored with the binary,
         // so use LibPKMN's defaults.
         _nickname = boost::algorithm::to_upper_copy(
-                        _database_entry.get_name()
+                        _database_entry.get_species_name()
                     );
         _trainer_name = DEFAULT_TRAINER_NAME;
     }
 
-    pokemon::sptr pokemon_gen2impl::to_game(
-        const std::string& game
-    )
+    pokemon::sptr pokemon_gen2impl::to_game(pkmn::e_game game)
     {
         boost::lock_guard<pokemon_gen2impl> lock(*this);
 
         pkmn::pokemon::sptr ret;
 
-        int game_id = pkmn::database::game_name_to_id(game);
+        int game_id = pkmn::database::game_enum_to_id(game);
         int generation = pkmn::database::game_id_to_generation(game_id);
         switch(generation)
         {
@@ -264,11 +265,11 @@ namespace pkmn
         _is_egg = is_egg;
     }
 
-    std::string pokemon_gen2impl::get_condition()
+    pkmn::e_condition pokemon_gen2impl::get_condition()
     {
         boost::lock_guard<pokemon_gen2impl> lock(*this);
 
-        std::string ret = "None";
+        pkmn::e_condition ret = pkmn::e_condition::NONE;
         enum pksav_gb_condition gb_condition = static_cast<enum pksav_gb_condition>(_pksav_pokemon.party_data.condition);
 
         const pksav::gb_condition_bimap_t& gb_condition_bimap = pksav::get_gb_condition_bimap();
@@ -284,7 +285,7 @@ namespace pkmn
     }
 
     void pokemon_gen2impl::set_condition(
-        const std::string& condition
+        pkmn::e_condition condition
     )
     {
         boost::lock_guard<pokemon_gen2impl> lock(*this);
@@ -320,18 +321,18 @@ namespace pkmn
         _nickname = nickname;
     }
 
-    std::string pokemon_gen2impl::get_gender()
+    pkmn::e_gender pokemon_gen2impl::get_gender()
     {
         boost::lock_guard<pokemon_gen2impl> lock(*this);
 
         return pkmn::calculations::gen2_pokemon_gender(
-                   _database_entry.get_name(),
-                   _IVs["Attack"]
+                   get_species(),
+                   _IVs[pkmn::e_stat::ATTACK]
                );
     }
 
     void pokemon_gen2impl::set_gender(
-        const std::string& gender
+        pkmn::e_gender gender
     )
     {
         boost::lock_guard<pokemon_gen2impl> lock(*this);
@@ -341,14 +342,14 @@ namespace pkmn
 
         if(pkmn::fp_compare_equal(chance_male, 0.0f) and pkmn::fp_compare_equal(chance_female, 0.0f))
         {
-            if(gender != "Genderless")
+            if(gender != pkmn::e_gender::GENDERLESS)
             {
                 throw std::invalid_argument("This Pokémon is genderless.");
             }
         }
         else
         {
-            if(gender == "Male")
+            if(gender == pkmn::e_gender::MALE)
             {
                 if(pkmn::fp_compare_equal(chance_male, 0.0f))
                 {
@@ -356,10 +357,10 @@ namespace pkmn
                 }
                 else
                 {
-                    set_IV("Attack", PKSAV_MAX_GB_IV);
+                    set_IV(pkmn::e_stat::ATTACK, PKSAV_MAX_GB_IV);
                 }
             }
-            else if(gender == "Female")
+            else if(gender == pkmn::e_gender::FEMALE)
             {
                 if(pkmn::fp_compare_equal(chance_female, 0.0f))
                 {
@@ -370,19 +371,19 @@ namespace pkmn
                     // Set the IV to the max it can be while still being female.
                     if(pkmn::fp_compare_equal(chance_male, 0.875f))
                     {
-                        set_IV("Attack", 1);
+                        set_IV(pkmn::e_stat::ATTACK, 1);
                     }
                     else if(pkmn::fp_compare_equal(chance_male, 0.75f))
                     {
-                        set_IV("Attack", 3);
+                        set_IV(pkmn::e_stat::ATTACK, 3);
                     }
                     else if(pkmn::fp_compare_equal(chance_male, 0.5f))
                     {
-                        set_IV("Attack", 6);
+                        set_IV(pkmn::e_stat::ATTACK, 6);
                     }
                     else
                     {
-                        set_IV("Attack", 11);
+                        set_IV(pkmn::e_stat::ATTACK, 11);
                     }
                 }
             }
@@ -398,10 +399,10 @@ namespace pkmn
         boost::lock_guard<pokemon_gen2impl> lock(*this);
 
         return pkmn::calculations::gen2_shiny(
-                   _IVs["Attack"],
-                   _IVs["Defense"],
-                   _IVs["Speed"],
-                   _IVs["Special"]
+                   _IVs[pkmn::e_stat::ATTACK],
+                   _IVs[pkmn::e_stat::DEFENSE],
+                   _IVs[pkmn::e_stat::SPEED],
+                   _IVs[pkmn::e_stat::SPECIAL]
                );
     }
 
@@ -424,7 +425,7 @@ namespace pkmn
         }
         else
         {
-            set_IV("Attack", 13);
+            set_IV(pkmn::e_stat::ATTACK, 13);
         }
 
         if(_database_entry.get_species_id() == UNOWN_ID)
@@ -433,18 +434,20 @@ namespace pkmn
         }
     }
 
-    std::string pokemon_gen2impl::get_held_item()
+    pkmn::e_item pokemon_gen2impl::get_held_item()
     {
         boost::lock_guard<pokemon_gen2impl> lock(*this);
 
-        return pkmn::database::item_index_to_name(
-                   _pksav_pokemon.pc_data.held_item,
-                   _database_entry.get_game_id()
+        return pkmn::e_item(
+                   pkmn::database::item_index_to_id(
+                       _pksav_pokemon.pc_data.held_item,
+                       _database_entry.get_game_id()
+                   )
                );
     }
 
     void pokemon_gen2impl::set_held_item(
-        const std::string& held_item
+        pkmn::e_item held_item
     )
     {
         boost::lock_guard<pokemon_gen2impl> lock(*this);
@@ -455,7 +458,7 @@ namespace pkmn
             get_game()
         );
 
-        if(not item.holdable() and (held_item != "None"))
+        if(!item.holdable() && (held_item != pkmn::e_item::NONE))
         {
             throw std::invalid_argument("This item is not holdable.");
         }
@@ -463,12 +466,12 @@ namespace pkmn
         _pksav_pokemon.pc_data.held_item = uint8_t(item.get_item_index());
     }
 
-    std::string pokemon_gen2impl::get_nature()
+    pkmn::e_nature pokemon_gen2impl::get_nature()
     {
         throw pkmn::feature_not_in_game_error("Natures", "Generation II");
     }
 
-    void pokemon_gen2impl::set_nature(const std::string&)
+    void pokemon_gen2impl::set_nature(pkmn::e_nature)
     {
         throw pkmn::feature_not_in_game_error("Natures", "Generation II");
     }
@@ -563,27 +566,28 @@ namespace pkmn
         _pksav_pokemon.pc_data.ot_id = pksav_bigendian16(uint16_t(id));
     }
 
-    std::string pokemon_gen2impl::get_original_trainer_gender()
+    pkmn::e_gender pokemon_gen2impl::get_original_trainer_gender()
     {
         boost::lock_guard<pokemon_gen2impl> lock(*this);
 
-        return (_pksav_pokemon.pc_data.caught_data & PKSAV_GEN2_POKEMON_OT_GENDER_MASK) ? "Female"
-                                                                        : "Male";
+        return (_pksav_pokemon.pc_data.caught_data & PKSAV_GEN2_POKEMON_OT_GENDER_MASK)
+                    ? pkmn::e_gender::FEMALE
+                    : pkmn::e_gender::MALE;
     }
 
     void pokemon_gen2impl::set_original_trainer_gender(
-        const std::string& gender
+        pkmn::e_gender gender
     )
     {
-        pkmn::enforce_value_in_vector(
+        pkmn::enforce_value_in_map_keys(
             "Original trainer gender",
             gender,
-            {"Male", "Female"}
+            pksav::get_gen2_gender_bimap().left
         );
 
         boost::lock_guard<pokemon_gen2impl> lock(*this);
 
-        if(gender == "Male")
+        if(gender == pkmn::e_gender::MALE)
         {
             _pksav_pokemon.pc_data.caught_data &= ~PKSAV_GEN2_POKEMON_OT_GENDER_MASK;
         }
@@ -593,12 +597,12 @@ namespace pkmn
         }
     }
 
-    std::string pokemon_gen2impl::get_language()
+    pkmn::e_language pokemon_gen2impl::get_language()
     {
         throw pkmn::feature_not_in_game_error("Generation II does not track origin language.");
     }
 
-    void pokemon_gen2impl::set_language(const std::string&)
+    void pokemon_gen2impl::set_language(pkmn::e_language)
     {
         throw pkmn::feature_not_in_game_error("Generation II does not track origin language.");
     }
@@ -621,22 +625,22 @@ namespace pkmn
         _pksav_pokemon.pc_data.friendship = uint8_t(friendship);
     }
 
-    std::string pokemon_gen2impl::get_ability()
+    pkmn::e_ability pokemon_gen2impl::get_ability()
     {
         throw pkmn::feature_not_in_game_error("Abilities", "Generation II");
     }
 
-    void pokemon_gen2impl::set_ability(const std::string&)
+    void pokemon_gen2impl::set_ability(pkmn::e_ability)
     {
         throw pkmn::feature_not_in_game_error("Abilities", "Generation II");
     }
 
-    std::string pokemon_gen2impl::get_ball()
+    pkmn::e_ball pokemon_gen2impl::get_ball()
     {
         throw pkmn::feature_not_in_game_error("A Pokémon's ball is not recorded in Generation II.");
     }
 
-    void pokemon_gen2impl::set_ball(const std::string&)
+    void pokemon_gen2impl::set_ball(pkmn::e_ball)
     {
         throw pkmn::feature_not_in_game_error("A Pokémon's ball is not recorded in Generation II.");
     }
@@ -704,12 +708,12 @@ namespace pkmn
         }
     }
 
-    std::string pokemon_gen2impl::get_original_game()
+    pkmn::e_game pokemon_gen2impl::get_original_game()
     {
         throw pkmn::feature_not_in_game_error("Original game is not recorded in Generation II.");
     }
 
-    void pokemon_gen2impl::set_original_game(const std::string&)
+    void pokemon_gen2impl::set_original_game(pkmn::e_game)
     {
         throw pkmn::feature_not_in_game_error("Original game is not recorded in Generation II.");
     }
@@ -793,7 +797,7 @@ namespace pkmn
     }
 
     void pokemon_gen2impl::set_IV(
-        const std::string& stat,
+        pkmn::e_stat stat,
         int value
     )
     {
@@ -811,7 +815,7 @@ namespace pkmn
         }
     }
 
-    void pokemon_gen2impl::set_marking(const std::string&, bool)
+    void pokemon_gen2impl::set_marking(pkmn::e_marking, bool)
     {
         throw pkmn::feature_not_in_game_error("Markings", "Generation II");
     }
@@ -821,13 +825,13 @@ namespace pkmn
         throw pkmn::feature_not_in_game_error("Ribbons", "Generation II");
     }
 
-    void pokemon_gen2impl::set_contest_stat(const std::string&, int)
+    void pokemon_gen2impl::set_contest_stat(pkmn::e_contest_stat, int)
     {
         throw pkmn::feature_not_in_game_error("Contests", "Generation II");
     }
 
     void pokemon_gen2impl::set_move(
-        const std::string& move,
+        pkmn::e_move move,
         int index
     )
     {
@@ -840,8 +844,7 @@ namespace pkmn
             move,
             get_game()
         );
-        _moves[index].move = entry.get_name();
-        _moves[index].pp   = entry.get_pp(0);
+        _moves[index] = {move, entry.get_pp(0)};
 
         _pksav_pokemon.pc_data.moves[index] = uint8_t(entry.get_move_id());
         _pksav_pokemon.pc_data.move_pps[index] = uint8_t(_moves[index].pp);
@@ -880,7 +883,7 @@ namespace pkmn
     }
 
     void pokemon_gen2impl::set_EV(
-        const std::string& stat,
+        pkmn::e_stat stat,
         int value
     )
     {
@@ -894,25 +897,27 @@ namespace pkmn
 
         boost::lock_guard<pokemon_gen2impl> lock(*this);
 
-        if(stat == "HP")
+        switch(stat)
         {
-            _pksav_pokemon.pc_data.ev_hp = pksav_bigendian16(uint16_t(value));
-        }
-        else if(stat == "Attack")
-        {
-            _pksav_pokemon.pc_data.ev_atk = pksav_bigendian16(uint16_t(value));
-        }
-        else if(stat == "Defense")
-        {
-            _pksav_pokemon.pc_data.ev_def = pksav_bigendian16(uint16_t(value));
-        }
-        else if(stat == "Speed")
-        {
-            _pksav_pokemon.pc_data.ev_spd = pksav_bigendian16(uint16_t(value));
-        }
-        else
-        {
-            _pksav_pokemon.pc_data.ev_spcl = pksav_bigendian16(uint16_t(value));
+            case pkmn::e_stat::HP:
+                _pksav_pokemon.pc_data.ev_hp = pksav_bigendian16(uint16_t(value));
+                break;
+
+            case pkmn::e_stat::ATTACK:
+                _pksav_pokemon.pc_data.ev_atk = pksav_bigendian16(uint16_t(value));
+                break;
+
+            case pkmn::e_stat::DEFENSE:
+                _pksav_pokemon.pc_data.ev_def = pksav_bigendian16(uint16_t(value));
+                break;
+
+            case pkmn::e_stat::SPEED:
+                _pksav_pokemon.pc_data.ev_spd = pksav_bigendian16(uint16_t(value));
+                break;
+
+            default:
+                _pksav_pokemon.pc_data.ev_spcl = pksav_bigendian16(uint16_t(value));
+                break;
         }
 
         _update_EV_map();
@@ -934,7 +939,7 @@ namespace pkmn
             "Current HP",
             hp,
             0,
-            _stats["HP"]
+            _stats[pkmn::e_stat::HP]
         );
 
         boost::lock_guard<pokemon_gen2impl> lock(*this);
@@ -964,11 +969,9 @@ namespace pkmn
             case 1:
             case 2:
             case 3:
+                // TODO: check move validity
                 _moves[index] = pkmn::move_slot(
-                    pkmn::database::move_id_to_name(
-                        _pksav_pokemon.pc_data.moves[index],
-                        1
-                    ),
+                    static_cast<pkmn::e_move>(_pksav_pokemon.pc_data.moves[index]),
                     (_pksav_pokemon.pc_data.move_pps[index] & PKSAV_GEN2_POKEMON_MOVE_PP_MASK)
                 );
                 break;
@@ -983,31 +986,31 @@ namespace pkmn
 
     void pokemon_gen2impl::_update_EV_map()
     {
-        _EVs["HP"]      = int(pksav_bigendian16(_pksav_pokemon.pc_data.ev_hp));
-        _EVs["Attack"]  = int(pksav_bigendian16(_pksav_pokemon.pc_data.ev_atk));
-        _EVs["Defense"] = int(pksav_bigendian16(_pksav_pokemon.pc_data.ev_def));
-        _EVs["Speed"]   = int(pksav_bigendian16(_pksav_pokemon.pc_data.ev_spd));
-        _EVs["Special"] = int(pksav_bigendian16(_pksav_pokemon.pc_data.ev_spcl));
+        _EVs[pkmn::e_stat::HP]      = int(pksav_bigendian16(_pksav_pokemon.pc_data.ev_hp));
+        _EVs[pkmn::e_stat::ATTACK]  = int(pksav_bigendian16(_pksav_pokemon.pc_data.ev_atk));
+        _EVs[pkmn::e_stat::DEFENSE] = int(pksav_bigendian16(_pksav_pokemon.pc_data.ev_def));
+        _EVs[pkmn::e_stat::SPEED]   = int(pksav_bigendian16(_pksav_pokemon.pc_data.ev_spd));
+        _EVs[pkmn::e_stat::SPECIAL] = int(pksav_bigendian16(_pksav_pokemon.pc_data.ev_spcl));
     }
 
     void pokemon_gen2impl::_update_stat_map()
     {
-        _stats["HP"]              = int(pksav_bigendian16(_pksav_pokemon.party_data.max_hp));
-        _stats["Attack"]          = int(pksav_bigendian16(_pksav_pokemon.party_data.atk));
-        _stats["Defense"]         = int(pksav_bigendian16(_pksav_pokemon.party_data.def));
-        _stats["Speed"]           = int(pksav_bigendian16(_pksav_pokemon.party_data.spd));
-        _stats["Special Attack"]  = int(pksav_bigendian16(_pksav_pokemon.party_data.spatk));
-        _stats["Special Defense"] = int(pksav_bigendian16(_pksav_pokemon.party_data.spdef));
+        _stats[pkmn::e_stat::HP]              = int(pksav_bigendian16(_pksav_pokemon.party_data.max_hp));
+        _stats[pkmn::e_stat::ATTACK]          = int(pksav_bigendian16(_pksav_pokemon.party_data.atk));
+        _stats[pkmn::e_stat::DEFENSE]         = int(pksav_bigendian16(_pksav_pokemon.party_data.def));
+        _stats[pkmn::e_stat::SPEED]           = int(pksav_bigendian16(_pksav_pokemon.party_data.spd));
+        _stats[pkmn::e_stat::SPECIAL_ATTACK]  = int(pksav_bigendian16(_pksav_pokemon.party_data.spatk));
+        _stats[pkmn::e_stat::SPECIAL_DEFENSE] = int(pksav_bigendian16(_pksav_pokemon.party_data.spdef));
     }
 
     void pokemon_gen2impl::_set_unown_form_from_IVs()
     {
         _database_entry.set_form(
             pkmn::calculations::gen2_unown_form(
-                _IVs["Attack"],
-                _IVs["Defense"],
-                _IVs["Speed"],
-                _IVs["Special"]
+                _IVs[pkmn::e_stat::ATTACK],
+                _IVs[pkmn::e_stat::DEFENSE],
+                _IVs[pkmn::e_stat::SPEED],
+                _IVs[pkmn::e_stat::SPECIAL]
             )
         );
     }
@@ -1019,42 +1022,42 @@ namespace pkmn
         // Set the maximum possible Special IV for the given form.
         uint16_t num = std::min<uint16_t>(uint16_t((form[0] - 'A') * 10) + 9, 255);
 
-        uint8_t IV_attack = uint8_t(_IVs["Attack"]);
+        uint8_t IV_attack = uint8_t(_IVs[pkmn::e_stat::ATTACK]);
         IV_attack &= ~0x6;
         IV_attack |= ((num & 0xC0) >> 5);
 
-        uint8_t IV_defense = uint8_t(_IVs["Defense"]);
+        uint8_t IV_defense = uint8_t(_IVs[pkmn::e_stat::DEFENSE]);
         IV_defense &= ~0x6;
         IV_defense |= ((num & 0x30) >> 3);
 
-        uint8_t IV_speed = uint8_t(_IVs["Speed"]);
+        uint8_t IV_speed = uint8_t(_IVs[pkmn::e_stat::SPEED]);
         IV_speed &= ~0x6;
         IV_speed |= ((num & 0xC) >> 1);
 
-        uint8_t IV_special = uint8_t(_IVs["Special"]);
+        uint8_t IV_special = uint8_t(_IVs[pkmn::e_stat::SPECIAL]);
         IV_special &= ~0x6;
         IV_special |= ((num & 0x3) << 1);
 
         _set_gb_IV(
-            "Attack",
+            pkmn::e_stat::ATTACK,
             IV_attack,
             &_pksav_pokemon.pc_data.iv_data
         );
 
         _set_gb_IV(
-            "Defense",
+            pkmn::e_stat::DEFENSE,
             IV_defense,
             &_pksav_pokemon.pc_data.iv_data
         );
 
         _set_gb_IV(
-            "Speed",
+            pkmn::e_stat::SPEED,
             IV_speed,
             &_pksav_pokemon.pc_data.iv_data
         );
 
         _set_gb_IV(
-            "Special",
+            pkmn::e_stat::SPECIAL,
             IV_special,
             &_pksav_pokemon.pc_data.iv_data
         );

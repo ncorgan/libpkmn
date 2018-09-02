@@ -9,6 +9,13 @@
 
 #include <pkmn/config.hpp>
 
+#include <pkmn/enums/contest_stat.hpp>
+#include <pkmn/enums/game.hpp>
+#include <pkmn/enums/move.hpp>
+#include <pkmn/enums/move_damage_class.hpp>
+#include <pkmn/enums/move_target.hpp>
+#include <pkmn/enums/type.hpp>
+
 #include <string>
 #include <vector>
 
@@ -52,14 +59,14 @@ namespace pkmn { namespace database {
              * This class allows for querying information regarding the move in the given game.
              * It accounts for differences between games, such as changes in base PP or priority.
              *
-             * \param move_name Move's name (does not need to match name in given game)
-             * \param game_name Which game this move is from
+             * \param move Which move
+             * \param game Which game this move is from
              * \throw std::invalid_argument If the move or game name is invalid
              * \throw std::invalid_argument If the given move was not in the given game
              */
             move_entry(
-                const std::string& move_name,
-                const std::string& game_name
+                pkmn::e_move move,
+                pkmn::e_game game
             );
 
             move_entry(const move_entry&) = default;
@@ -69,6 +76,12 @@ namespace pkmn { namespace database {
             move_entry(move_entry&&) = default;
             move_entry& operator=(move_entry&&) = default;
 #endif
+
+            inline pkmn::e_move get_move() const
+            {
+                return _invalid ? pkmn::e_move::INVALID
+                                : static_cast<pkmn::e_move>(_move_id);
+            }
 
             /*!
              * @brief Returns the move's name.
@@ -86,9 +99,9 @@ namespace pkmn { namespace database {
             std::string get_name() const;
 
             /*!
-             * @brief Returns the name of the game associated with this entry.
+             * @brief Returns the game associated with this entry.
              */
-            std::string get_game() const;
+            pkmn::e_game get_game() const;
 
             /*!
              * @brief Returns the move's type.
@@ -96,13 +109,10 @@ namespace pkmn { namespace database {
              * This function accounts for type changes between generations
              * and returns the type corresponding to the given game.
              *
-             * If this entry corresponds to a "None" move, this function will
-             * return the string "None".
-             *
-             * If this entry corresponds to an invalid move, this function will
-             * return the string "Unknown".
+             * If this entry corresponds to a "None" or invliad move, this function
+             * will remove NONE.
              */
-            std::string get_type() const;
+            pkmn::e_type get_type() const;
 
             /*!
              * @brief Returns a description of this move.
@@ -118,13 +128,10 @@ namespace pkmn { namespace database {
             /*!
              * @brief Returns which Pokémon this move will target in battle.
              *
-             * If this entry corresponds to a "None" move, this function will
-             * return the string "None".
-             *
-             * If this entry corresponds to an invalid move, this function will
-             * return the string "Unknown".
+             * If this entry corresponds to a None/Invalid move, this function will
+             * return NONE.
              */
-            std::string get_target() const;
+            pkmn::e_move_target get_target() const;
 
             /*!
              * @brief Returns this move's damage class (Physical, Special, Status).
@@ -137,13 +144,10 @@ namespace pkmn { namespace database {
              * separated. For example, Fire Punch is a Special move in Generation I but a
              * Physical move in Generation IV.
              *
-             * If this entry corresponds to a "None" move, this function will
-             * return the string "None".
-             *
-             * If this entry corresponds to an invalid move, this function will
-             * return the string "Unknown".
+             * If this entry corresponds to a None/Invalid move, this function will
+             * return NONE.
              */
-            std::string get_damage_class() const;
+            pkmn::e_move_damage_class get_damage_class() const;
 
             /*!
              * @brief Returns this move's base power.
@@ -203,13 +207,10 @@ namespace pkmn { namespace database {
             /*!
              * @brief Return the move's type when used in a Contest.
              *
-             * If this entry corresponds to a "None" move, or this move's game is Generation I-II
-             * or Gamecube, this function will return the string "None".
-             *
-             * If this entry corresponds to an invalid move, this function will
-             * return the string "Unknown".
+             * If this entry corresponds to a "None" or unknown move, or if this
+             * move's game is Generation I-II or Gamecube, this function will return None.
              */
-            std::string get_contest_type() const;
+            pkmn::e_contest_stat get_contest_type() const;
 
             /*!
              * @brief Return the move's effect when used in a Contest.

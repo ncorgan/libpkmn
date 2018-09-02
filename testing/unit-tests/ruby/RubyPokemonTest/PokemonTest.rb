@@ -39,7 +39,7 @@ class PokemonTest < PKMNTest
 
         if generation >= 2
             assert_equal("None", pokemon.held_item)
-            assert_equal("Male", pokemon.original_trainer_gender)
+            assert_equal(PKMN::Gender::MALE, pokemon.original_trainer_gender)
         else
             assert_equal("", pokemon.held_item)
             assert_equal("", pokemon.original_trainer_gender)
@@ -176,7 +176,7 @@ class PokemonTest < PKMNTest
         assert(Pathname.new(pokemon.icon_filepath).exist?)
 
         if generation >= 2
-            ["Male", "Female"].each do |gender|
+            [PKMN::Gender::MALE, PKMN::Gender::FEMALE].each do |gender|
                 pokemon.gender = gender
                 [true, false].each do |shininess|
                     pokemon.is_shiny = shininess
@@ -584,18 +584,18 @@ class PokemonTest < PKMNTest
         assert_equal("foobar", pokemon.original_trainer_name)
 
         if generation >= 2
-            pokemon.original_trainer_gender = "Male"
-            assert_equal("Male", pokemon.original_trainer_gender)
-            pokemon.original_trainer_gender = "Female"
-            assert_equal("Female", pokemon.original_trainer_gender)
+            pokemon.original_trainer_gender = PKMN::Gender::MALE
+            assert_equal(PKMN::Gender::MALE, pokemon.original_trainer_gender)
+            pokemon.original_trainer_gender = PKMN::Gender::FEMALE
+            assert_equal(PKMN::Gender::FEMALE, pokemon.original_trainer_gender)
 
             assert_raises ArgumentError do
-                pokemon.original_trainer_gender = "Genderless"
+                pokemon.original_trainer_gender = PKMN::Gender::GENDERLESS
             end
         else
             assert_equal("", pokemon.original_trainer_gender)
             assert_raises RuntimeError do
-                pokemon.original_trainer_gender = "Male"
+                pokemon.original_trainer_gender = PKMN::Gender::MALE
             end
         end
     end

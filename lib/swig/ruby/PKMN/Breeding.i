@@ -10,6 +10,7 @@
 %include <ruby/ruby_init.i>
 PKMN_RUBY_INIT
 
+%import <Enums.i>
 %import <STL.i>
 %import <PKMNRuby.i>
 
@@ -19,6 +20,9 @@ PKMN_RUBY_INIT
 
     #include "cpp_wrappers/breeding.hpp"
 %}
+
+%import <pkmn/enums/gender.hpp>
+%import <pkmn/enums/stat.hpp>
 
 %include <pkmn/breeding/child_info.hpp>
 %include <pkmn/breeding/compatibility.hpp>

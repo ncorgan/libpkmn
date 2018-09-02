@@ -8,6 +8,7 @@
 
 import pkmn
 
+import pkmntest
 import pkmntest.base_test
 
 from nose_parameterized import parameterized
@@ -26,34 +27,37 @@ DEFAULT_TRAINER_PID = 1351
 DEFAULT_TRAINER_SID = 32123
 MONEY_MAX_VALUE = 999999
 
-GB_GAMES = ["Red", "Blue", "Yellow",
-            "Gold", "Silver", "Crystal"]
-RIVAL_NAME_SET_GAMES = ["Ruby", "Sapphire", "Emerald",
-                        "Colosseum", "XD",
-                        "Black", "White",
-                        "X", "Y"]
-MALE_ONLY_GAMES = ["Red", "Blue", "Yellow",
-                   "Gold", "Silver",
-                   "Colosseum", "XD"]
-
-GAME_GENERATIONS = dict(
-    Red = 1,
-    Blue = 1,
-    Yellow = 1,
-    Gold = 2,
-    Silver = 2,
-    Crystal = 2,
-    Ruby = 3,
-    Sapphire = 3,
-    Emerald = 3,
-    FireRed = 3,
-    LeafGreen = 3,
-    Colosseum = 3,
-    XD = 3
-)
+GB_GAMES = [
+    pkmn.game.RED,
+    pkmn.game.BLUE,
+    pkmn.game.YELLOW,
+    pkmn.game.GOLD,
+    pkmn.game.SILVER,
+    pkmn.game.CRYSTAL
+]
+RIVAL_NAME_SET_GAMES = [
+    pkmn.game.RUBY,
+    pkmn.game.SAPPHIRE,
+    pkmn.game.EMERALD,
+    pkmn.game.COLOSSEUM,
+    pkmn.game.XD,
+    pkmn.game.BLACK,
+    pkmn.game.WHITE,
+    pkmn.game.X,
+    pkmn.game.Y
+]
+MALE_ONLY_GAMES = [
+    pkmn.game.RED,
+    pkmn.game.BLUE,
+    pkmn.game.YELLOW,
+    pkmn.game.GOLD,
+    pkmn.game.SILVER,
+    pkmn.game.COLOSSEUM,
+    pkmn.game.XD
+]
 
 def test_name_func(testcase_func, param_num, param):
-    return "{0}_{1}".format(testcase_func.__name__, param.args[1])
+    return "{0}_{1}".format(testcase_func.__name__, pkmn.game_to_string(param.args[1]))
 
 class game_save_test(pkmntest.base_test):
 
@@ -92,7 +96,7 @@ class game_save_test(pkmntest.base_test):
             self.assertEqual(self.save.trainer_secret_id, DEFAULT_TRAINER_SID)
 
     def __test_time_played(self):
-        if self.save.game in ["Colosseum", "XD"]:
+        if self.save.game in [pkmn.game.COLOSSEUM, pkmn.game.XD]:
             with self.assertRaises(RuntimeError):
                 self.save.time_played.hours = 5
             with self.assertRaises(RuntimeError):
@@ -117,7 +121,7 @@ class game_save_test(pkmntest.base_test):
             self.assertEqual(seconds, self.save.time_played.seconds)
 
             # Only Generation I has frames.
-            if GAME_GENERATIONS[self.save.game] > 1:
+            if pkmntest.GAME_TO_GENERATION[self.save.game] > 1:
                 frames = random.randint(0, 59)
                 self.save.time_played.frames = frames
                 self.assertEqual(frames, self.save.time_played.frames)
@@ -140,7 +144,7 @@ class game_save_test(pkmntest.base_test):
                 self.save.time_played.seconds = 999999
 
             # Only Generation I has frames.
-            if GAME_GENERATIONS[self.save.game] > 1:
+            if pkmntest.GAME_TO_GENERATION[self.save.game] > 1:
                 with self.assertRaises(IndexError):
                     self.save.time_played.frames = -1
                 with self.assertRaises(IndexError):
@@ -212,18 +216,18 @@ class game_save_test(pkmntest.base_test):
         self.__test_rival_name()
 
         if self.save.game in MALE_ONLY_GAMES:
-            self.assertEqual(self.save.trainer_gender, "Male")
+            self.assertEqual(self.save.trainer_gender, pkmn.gender.MALE)
             with self.assertRaises(RuntimeError):
-                self.save.trainer_gender = "Male"
+                self.save.trainer_gender = pkmn.gender.MALE
             with self.assertRaises(RuntimeError):
-                self.save.trainer_gender = "Female"
+                self.save.trainer_gender = pkmn.gender.FEMALE
         else:
-            self.save.trainer_gender = "Male"
-            self.assertEqual(self.save.trainer_gender, "Male")
-            self.save.trainer_gender = "Female"
-            self.assertEqual(self.save.trainer_gender, "Female")
+            self.save.trainer_gender = pkmn.gender.MALE
+            self.assertEqual(self.save.trainer_gender, pkmn.gender.MALE)
+            self.save.trainer_gender = pkmn.gender.FEMALE
+            self.assertEqual(self.save.trainer_gender, pkmn.gender.FEMALE)
             with self.assertRaises(ValueError):
-                self.save.trainer_gender = "Genderless"
+                self.save.trainer_gender = pkmn.gender.GENDERLESS
 
         with self.assertRaises(IndexError):
             self.save.money = -1
@@ -240,9 +244,9 @@ class game_save_test(pkmntest.base_test):
 
         for party_index in range(6):
             if party_index < party.num_pokemon:
-                self.assertNotEquals(party[party_index].species, "None")
+                self.assertNotEquals(party[party_index].species, pkmn.species.NONE)
             else:
-                self.assertEquals(party[party_index].species, "None")
+                self.assertEquals(party[party_index].species, pkmn.species.NONE)
 
         # Pokemon PC
         pc = self.save.pokemon_pc
@@ -254,12 +258,12 @@ class game_save_test(pkmntest.base_test):
             if is_gb_game:
                 for box_index in range(len(box)):
                     if box_index < box.num_pokemon:
-                        self.assertNotEquals(box[box_index].species, "None")
+                        self.assertNotEquals(box[box_index].species, pkmn.species.NONE)
                     else:
-                        self.assertEquals(box[box_index].species, "None")
+                        self.assertEquals(box[box_index].species, pkmn.species.NONE)
 
         # Pokedex
-        if self.save.game not in ["Colosseum", "XD"]:
+        if self.save.game not in [pkmn.game.COLOSSEUM, pkmn.game.XD]:
             pokedex = self.save.pokedex
             self.assertGreaterEqual(
                 pokedex.num_seen,
@@ -268,14 +272,14 @@ class game_save_test(pkmntest.base_test):
 
             for pokemon in self.save.pokemon_party:
                 species = pokemon.species
-                if species != "None" and not pokemon.is_egg:
+                if species != pkmn.species.NONE and not pokemon.is_egg:
                     self.assertTrue(pokedex.seen_pokemon_map[species])
                     self.assertTrue(pokedex.caught_pokemon_map[species])
 
             for box in self.save.pokemon_pc:
                 for pokemon in box:
                     species = pokemon.species
-                    if species != "None" and not pokemon.is_egg:
+                    if species != pkmn.species.NONE and not pokemon.is_egg:
                         self.assertTrue(pokedex.seen_pokemon_map[species])
                         self.assertTrue(pokedex.caught_pokemon_map[species])
 
@@ -284,7 +288,7 @@ class game_save_test(pkmntest.base_test):
 
     def __test_attributes(self):
         game = self.save.game
-        generation = GAME_GENERATIONS[game]
+        generation = pkmntest.GAME_TO_GENERATION[game]
 
         if generation == 1:
             self.assertTrue("Casino coins" in self.save.numeric_attributes.names)
@@ -304,7 +308,7 @@ class game_save_test(pkmntest.base_test):
                 casino_coins
             )
 
-            if game == "Yellow":
+            if game == pkmn.game.YELLOW:
                 self.assertTrue("Pikachu friendship" in self.save.numeric_attributes.names)
                 self.assertGreaterEqual(
                     self.save.numeric_attributes["Pikachu friendship"],
@@ -324,7 +328,7 @@ class game_save_test(pkmntest.base_test):
             else:
                 self.assertFalse("Pikachu friendship" in self.save.numeric_attributes.names)
         elif generation == 3:
-            if game != "Colosseum" and game != "XD":
+            if game not in [pkmn.game.COLOSSEUM, pkmn.game.XD]:
                 self.assertTrue("Casino coins" in self.save.numeric_attributes.names)
                 self.assertGreaterEqual(
                     self.save.numeric_attributes["Casino coins"],
@@ -344,7 +348,7 @@ class game_save_test(pkmntest.base_test):
 
     def __randomize_pokemon(self, item_list):
         game = self.save.game
-        generation = GAME_GENERATIONS[game]
+        generation = pkmntest.GAME_TO_GENERATION[game]
         pokemon_list = pkmn.database.lists.get_pokemon_list(generation, True)
         move_list = pkmn.database.lists.get_move_list(game)
 
@@ -373,7 +377,7 @@ class game_save_test(pkmntest.base_test):
 
     def __compare_game_saves(self):
         game = self.save.game
-        generation = GAME_GENERATIONS[game]
+        generation = pkmntest.GAME_TO_GENERATION[game]
         is_gb_game = (game in GB_GAMES)
         is_male_only = (game in MALE_ONLY_GAMES)
         is_rival_name_set = (game in RIVAL_NAME_SET_GAMES)
@@ -416,24 +420,69 @@ class game_save_test(pkmntest.base_test):
             for box_index in range(len(box1)):
                 self.compare_pokemon(box1[box_index], box2[box_index])
 
-        if game != "Colosseum" and game != "XD":
+        if game not in [pkmn.game.COLOSSEUM, pkmn.game.XD]:
             pokedex1 = self.save.pokedex
             pokedex2 = self.save2.pokedex
             self.__compare_pokedexes(pokedex1, pokedex2)
 
     @parameterized.expand([
-        ("Red/Blue", "Red", "red_blue", "pokemon_red.sav"),
-        ("Yellow", "Yellow", "yellow", "pokemon_yellow.sav"),
-        ("Gold/Silver", "Gold", "gold_silver", "pokemon_gold.sav"),
-        ("Crystal", "Crystal", "crystal", "pokemon_crystal.sav"),
-        ("Ruby/Sapphire", "Ruby", "ruby_sapphire", "pokemon_ruby.sav"),
-        ("Emerald", "Emerald", "emerald", "pokemon_emerald.sav"),
-        ("FireRed/LeafGreen", "FireRed", "firered_leafgreen", "pokemon_firered.sav"),
-        ("Colosseum/XD", "Colosseum", "gamecube_saves", "pokemon_colosseum.gci"),
-        ("Colosseum/XD", "XD", "gamecube_saves", "pokemon_xd.gci")
+        (
+            pkmn.game_save_type.RED_BLUE,
+            pkmn.game.RED,
+            "red_blue",
+            "pokemon_red.sav"
+        ),
+        (
+            pkmn.game_save_type.YELLOW,
+            pkmn.game.YELLOW,
+            "yellow",
+            "pokemon_yellow.sav"
+        ),
+        (
+            pkmn.game_save_type.GOLD_SILVER,
+            pkmn.game.GOLD,
+            "gold_silver",
+            "pokemon_gold.sav"
+        ),
+        (
+            pkmn.game_save_type.CRYSTAL,
+            pkmn.game.CRYSTAL,
+            "crystal",
+            "pokemon_crystal.sav"
+        ),
+        (
+            pkmn.game_save_type.RUBY_SAPPHIRE,
+            pkmn.game.RUBY,
+            "ruby_sapphire",
+            "pokemon_ruby.sav"
+        ),
+        (
+            pkmn.game_save_type.EMERALD,
+            pkmn.game.EMERALD,
+            "emerald",
+            "pokemon_emerald.sav"
+        ),
+        (
+            pkmn.game_save_type.FIRERED_LEAFGREEN,
+            pkmn.game.FIRERED,
+            "firered_leafgreen",
+            "pokemon_firered.sav"
+        ),
+        (
+            pkmn.game_save_type.COLOSSEUM_XD,
+            pkmn.game.COLOSSEUM,
+            "gamecube_saves",
+            "pokemon_colosseum.gci"
+        ),
+        (
+            pkmn.game_save_type.COLOSSEUM_XD,
+            pkmn.game.XD,
+            "gamecube_saves",
+            "pokemon_xd.gci"
+        )
     ], testcase_func_name=test_name_func)
     def test_game_save(self, expected_type, expected_game, subdir, filename):
-        if expected_game == "Colosseum" or expected_game == "XD":
+        if expected_type == pkmn.game_save_type.COLOSSEUM_XD:
             filepath = os.path.join(LIBPKMN_TEST_FILES, subdir, filename)
         else:
             filepath = os.path.join(PKSAV_TEST_SAVES, subdir, filename)

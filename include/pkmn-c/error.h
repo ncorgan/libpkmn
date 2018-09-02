@@ -15,7 +15,6 @@ enum pkmn_error
     //! No error.
     PKMN_ERROR_NONE = 0,
 
-
     //! An exposed function is not implemented for a given game.
     PKMN_ERROR_UNIMPLEMENTED_ERROR = 10,
     //! A given functionality does not exist in the given game.

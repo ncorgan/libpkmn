@@ -19,9 +19,6 @@
 
 namespace pkmn { namespace calculations {
 
-    static BOOST_CONSTEXPR const char* stat_name_query =
-        "SELECT name FROM type_names WHERE local_language_id=9 AND type_id=?";
-
     // Most significant bit
     #define MSB(var) (((var) >> 3) & 1)
 
@@ -29,16 +26,20 @@ namespace pkmn { namespace calculations {
      * There is no Normal-type Hidden Power, so all type indices
      * are offset from normal.
      */
-    PKMN_CONSTEXPR_OR_INLINE int gen2_hidden_power_type(
+    inline pkmn::e_type gen2_hidden_power_type(
         int IV_attack, int IV_defense
-    ) {
-        return (4 * (IV_attack % 4) + (IV_defense % 4)) + 2;
+    )
+    {
+        return static_cast<pkmn::e_type>(
+                   (4 * (IV_attack % 4) + (IV_defense % 4)) + 2
+               );
     }
 
     inline int gen2_hidden_power_base_power(
         uint8_t v, uint8_t w, uint8_t x,
         uint8_t y, uint8_t Z
-    ) {
+    )
+    {
         return int(std::floor<int>(((5 * (v + (w<<1) + (x<<2) + (y<<3)) + Z) / 2) + 31));
     }
 
@@ -61,10 +62,7 @@ namespace pkmn { namespace calculations {
         uint8_t Z = (IV_special % 4);
 
         return hidden_power(
-                   pkmn::database::query_db_bind1<std::string, int>(
-                       stat_name_query,
-                       gen2_hidden_power_type(IV_attack, IV_defense)
-                   ),
+                   gen2_hidden_power_type(IV_attack, IV_defense),
                    gen2_hidden_power_base_power(v, w, x, y, Z)
                );
     }
@@ -74,17 +72,21 @@ namespace pkmn { namespace calculations {
     // Second-least significant bit
     #define LSB2(var) (((var) & 2) >> 1)
 
-    inline int modern_hidden_power_type(
+    inline pkmn::e_type modern_hidden_power_type(
         uint8_t a, uint8_t b, uint8_t c,
         uint8_t d, uint8_t e, uint8_t f
-    ) {
-         return int(std::floor<int>(((a + (b<<1) + (c<<2) + (d<<3) + (e<<4) + (f<<5)) * 15) / 63)) + 2;
+    )
+    {
+         return static_cast<pkmn::e_type>(static_cast<int>(
+                    (std::floor<int>(((a + (b<<1) + (c<<2) + (d<<3) + (e<<4) + (f<<5)) * 15) / 63)) + 2
+                ));
     }
 
     inline int modern_hidden_power_base_power(
         uint8_t u, uint8_t v, uint8_t w,
         uint8_t x, uint8_t y, uint8_t z
-    ) {
+    )
+    {
         return int(std::floor<int>((((u + (v<<1) + (w<<2) + (x<<3) + (y<<4) + (z<<5)) * 40) / 63) + 30));
     }
 
@@ -95,7 +97,8 @@ namespace pkmn { namespace calculations {
         int IV_speed,
         int IV_spatk,
         int IV_spdef
-    ) {
+    )
+    {
         // Input validation
         pkmn::enforce_IV_bounds("HP",              IV_HP,      true);
         pkmn::enforce_IV_bounds("Attack",          IV_attack,  true);
@@ -119,10 +122,7 @@ namespace pkmn { namespace calculations {
         uint8_t z = LSB2(IV_spdef);
 
         return hidden_power(
-                   pkmn::database::query_db_bind1<std::string, int>(
-                       stat_name_query,
-                       modern_hidden_power_type(a, b, c, d, e, f)
-                   ),
+                   modern_hidden_power_type(a, b, c, d, e, f),
                    modern_hidden_power_base_power(u, v, w, x, y, z)
                );
     }

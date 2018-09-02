@@ -23,13 +23,13 @@ using System.Runtime.InteropServices;"
 
 // Convert getter/setter functions into attributes for more idiomatic C#.
 
-%attributestring(pkmn::swig::game_save, std::string, Game, get_game);
+%attribute(pkmn::swig::game_save, pkmn::e_game, Game, get_game);
 %attributestring(pkmn::swig::game_save, std::string, Filepath, get_filepath);
 %attributestring(pkmn::swig::game_save, std::string, TrainerName, get_trainer_name, set_trainer_name);
 %attribute(pkmn::swig::game_save, uint16_t, TrainerPublicID, get_trainer_public_id, set_trainer_public_id);
 %attribute(pkmn::swig::game_save, uint16_t, TrainerSecretID, get_trainer_secret_id, set_trainer_secret_id);
 %attribute(pkmn::swig::game_save, uint32_t, TrainerID, get_trainer_id, set_trainer_id);
-%attributestring(pkmn::swig::game_save, std::string, TrainerGender, get_trainer_gender, set_trainer_gender);
+%attribute(pkmn::swig::game_save, pkmn::e_gender, TrainerGender, get_trainer_gender, set_trainer_gender);
 %attributestring(pkmn::swig::game_save, std::string, RivalName, get_rival_name, set_rival_name);
 %attribute(pkmn::swig::game_save, int, Money, get_money, set_money);
 %attributeval(pkmn::swig::game_save, pkmn::swig::pokedex, Pokedex, get_pokedex);

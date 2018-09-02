@@ -9,6 +9,7 @@
 #include "utils/misc.hpp"
 
 #include "database_common.hpp"
+#include "enum_conversions.hpp"
 #include "id_to_index.hpp"
 #include "id_to_string.hpp"
 
@@ -94,25 +95,24 @@ namespace pkmn { namespace database {
 
     static void _query_to_move_list(
         const char* query,
-        pkmn::database::move_list_t &move_list_out,
+        std::vector<pkmn::e_move>& move_list_out,
         int pokemon_id,
-        int game_id,
         int version_group_id,
         bool tmhm
-    ) {
+    )
+    {
         SQLite::Statement stmt(get_connection(), query);
         stmt.bind(1, pokemon_id);
         stmt.bind(2, version_group_id);
-        if(tmhm) {
+        if(tmhm)
+        {
             stmt.bind(3, version_group_id);
         }
 
-        while(stmt.executeStep()) {
+        while(stmt.executeStep())
+        {
             move_list_out.emplace_back(
-                pkmn::database::move_entry(
-                    int(stmt.getColumn(0)),
-                    game_id
-                )
+                static_cast<pkmn::e_move>(int(stmt.getColumn(0)))
             );
         }
     }
@@ -124,6 +124,7 @@ namespace pkmn { namespace database {
         _pokemon_index(pokemon_index),
         _game_id(game_id),
         _none(pokemon_index == 0),
+        _invalid(false),
         _shadow(false)
     {
         /*
@@ -152,12 +153,15 @@ namespace pkmn { namespace database {
          * index. Like Unown, this form is in a separate field and is
          * no longer game-dependent.
          */
-        if(_none) {
+        if(_none)
+        {
             _species_id = _pokemon_id = _form_id = 0;
-        } else if(_generation == 3 and pokemon_index_is_unown(
-                   _pokemon_index,
-                   (_game_id == XD)
-               ))
+        }
+        else if((_generation == 3) && pokemon_index_is_unown(
+                                          _pokemon_index,
+                                          (_game_id == XD)
+                                      )
+               )
         {
             _species_id = _pokemon_id = UNOWN_INDEX;
             _invalid = false;
@@ -170,10 +174,13 @@ namespace pkmn { namespace database {
                            unown_query, _pokemon_index
                        );
 
-        } else if(_generation == 3 and _pokemon_index == DEOXYS_GEN3_INDEX) {
+        }
+        else if((_generation == 3) && (_pokemon_index == DEOXYS_GEN3_INDEX))
+        {
             _species_id = DEOXYS_NORMAL_ID;
             _invalid = false;
-            switch(_game_id) {
+            switch(_game_id)
+            {
                 case FIRERED:
                     _pokemon_id = DEOXYS_ATTACK_ID;
                     _form_id    = DEOXYS_ATTACK_FORM_ID;
@@ -193,26 +200,34 @@ namespace pkmn { namespace database {
                     _pokemon_id = _form_id = DEOXYS_NORMAL_ID;
                     break;
             }
-        } else {
+        }
+        else
+        {
             static BOOST_CONSTEXPR const char* species_id_query = \
                 "SELECT species_id FROM pokemon WHERE id=?";
 
             static BOOST_CONSTEXPR const char* form_id_query = \
                 "SELECT id FROM pokemon_forms WHERE pokemon_id=?";
 
-            try {
+            try
+            {
                 int game_id = game_is_gamecube(_game_id) ? RUBY : _game_id;
                 _pokemon_id = pkmn::database::pokemon_index_to_id(
                                   _pokemon_index, game_id
                               );
                 _invalid = false;
-            } catch(const std::invalid_argument&) {
+            }
+            catch(const std::invalid_argument&)
+            {
                 _invalid = true;
             }
 
-            if(_invalid) {
+            if(_invalid)
+            {
                 _species_id = _pokemon_id = _form_id = -1;
-            } else {
+            }
+            else
+            {
                 _species_id = pkmn::database::query_db_bind1<int, int>(
                                   species_id_query, _pokemon_id
                               );
@@ -225,20 +240,20 @@ namespace pkmn { namespace database {
     }
 
     pokemon_entry::pokemon_entry(
-        const std::string& species_name,
-        const std::string& game_name,
+        pkmn::e_species species,
+        pkmn::e_game game,
         const std::string& form_name
     ):
-        _none(species_name == "None"),
-        _invalid(false),
+        _none(species == pkmn::e_species::NONE),
+        _invalid(species == pkmn::e_species::INVALID),
         _shadow(false)
     {
         /*
          * Game-related info
          */
-        _game_id = pkmn::database::game_name_to_id(
-                          game_name
-                      );
+        _game_id = pkmn::database::game_enum_to_id(
+                       game
+                   );
         _generation = pkmn::database::game_id_to_generation(
                           _game_id
                       );
@@ -249,25 +264,42 @@ namespace pkmn { namespace database {
         /*
          * Pokémon-related info
          */
-        _species_id = pkmn::database::species_name_to_id(
-                          species_name
-                      );
+        if(_none)
+        {
+            _pokemon_id = 0;
+            _species_id = 0;
+            _form_id = 0;
+            _pokemon_index = 0;
+        }
+        else if(_invalid)
+        {
+            _pokemon_id = -1;
+            _species_id = -1;
+            _form_id = -1;
+            _pokemon_index = -1;
+        }
+        else
+        {
+            _species_id = static_cast<int>(species);
 
-        if(_none) {
-            _pokemon_index = _pokemon_id = _species_id;
-        } else {
             set_form(form_name);
         }
     }
 
-    std::string pokemon_entry::get_name() const {
+    std::string pokemon_entry::get_species_name() const
+    {
         std::string ret;
 
-        if(_none) {
+        if(_none)
+        {
             ret = "None";
-        } else if(_invalid) {
+        }
+        else if(_invalid)
+        {
             ret = str(boost::format("Invalid (0x%x)") % _pokemon_index);
-        } else {
+        }
+        else
+        {
             ret = pkmn::database::species_id_to_name(
                       _species_id
                   );
@@ -276,21 +308,26 @@ namespace pkmn { namespace database {
         return ret;
     }
 
-    std::string pokemon_entry::get_game() const {
-        return pkmn::database::game_id_to_name(
-                   _game_id
-               );
-    }
+    pkmn::e_game pokemon_entry::get_game() const
+    {
+        return pkmn::database::game_id_to_enum(_game_id);
+    };
 
-    std::string pokemon_entry::get_species() const {
+    std::string pokemon_entry::get_category() const
+    {
         std::string ret;
 
-        if(_none) {
+        if(_none)
+        {
             ret = "None";
-        } else if(_invalid) {
+        }
+        else if(_invalid)
+        {
             ret = "Unknown";
-        } else {
-            static BOOST_CONSTEXPR const char* query = \
+        }
+        else
+        {
+            static BOOST_CONSTEXPR const char* query =
                 "SELECT genus FROM pokemon_species_names WHERE "
                 "pokemon_species_id=? AND local_language_id=9";
 
@@ -524,136 +561,158 @@ namespace pkmn { namespace database {
         return (std::find(old_none_secondary, old_none_secondary+14, species_id) != (old_none_secondary+14));
     }
 
-    static const std::pair<std::string, std::string> normal_only_pair = std::make_pair(
-        "Normal", "None"
-    );
+    pkmn::type_pair_t pokemon_entry::get_types() const
+    {
+        static const pkmn::type_pair_t normal_only_pair =
+        {
+            pkmn::e_type::NORMAL,
+            pkmn::e_type::NONE
+        };
 
-    std::pair<std::string, std::string> pokemon_entry::get_types() const {
-        std::pair<std::string, std::string> ret;
+        pkmn::type_pair_t ret =
+        {
+            pkmn::e_type::NONE,
+            pkmn::e_type::NONE
+        };
 
-        if(_none) {
-            ret = {"None", "None"};
-        } else if(_invalid) {
-            ret = {"Unknown", "Unknown"};
-        } else if(_generation < 6 and species_id_had_normal_only(_species_id)) {
-            // Corner cases
-            ret = normal_only_pair;
-        } else {
-            static BOOST_CONSTEXPR const char* query1 = \
-                "SELECT name FROM type_names WHERE local_language_id=9 AND type_id="
-                "(SELECT type_id FROM pokemon_types WHERE pokemon_id=? AND slot=1)";
-            static BOOST_CONSTEXPR const char* query2 = \
-                "SELECT name FROM type_names WHERE local_language_id=9 AND type_id="
-                "(SELECT type_id FROM pokemon_types WHERE pokemon_id=? AND slot=2)";
-
-            ret.first = pkmn::database::query_db_bind1<std::string, int>(
-                            query1, _pokemon_id
-                        );
-            if(not pkmn::database::maybe_query_db_bind1<std::string, int>(
-                   query2, ret.second, _pokemon_id
-               )) {
-                ret.second = "None";
+        if(!_none && !_invalid)
+        {
+            if((_generation < 6) && species_id_had_normal_only(_species_id))
+            {
+                // Corner cases
+                ret = normal_only_pair;
             }
+            else
+            {
+                static const std::string first_type_query =
+                    "SELECT type_id FROM pokemon_types WHERE pokemon_id=? AND slot=1";
 
-            if(_generation < 6 and species_id_had_normal_primary(_species_id)) {
-                ret.first = "Normal";
-            } else if(_generation < 6 and species_id_had_none_secondary(_species_id)) {
-                ret.second = "None";
+                ret.first = static_cast<pkmn::e_type>(int(
+                                pkmn::database::query_db_bind1<int, int>(
+                                    first_type_query.c_str(),
+                                    _pokemon_id
+                                )));
+
+                static const std::string second_type_query =
+                    "SELECT type_id FROM pokemon_types WHERE pokemon_id=? AND slot=2";
+                int second_type_as_int = 0;
+
+                if(pkmn::database::maybe_query_db_bind1<int, int>(
+                       second_type_query.c_str(),
+                       second_type_as_int,
+                       _pokemon_id
+                   ))
+                {
+                    ret.second = static_cast<pkmn::e_type>(second_type_as_int);
+                }
+
+                if((_generation < 6) && species_id_had_normal_primary(_species_id))
+                {
+                    ret.first = pkmn::e_type::NORMAL;
+                }
+                else if((_generation < 6) && species_id_had_none_secondary(_species_id))
+                {
+                    ret.second = pkmn::e_type::NONE;
+                }
             }
         }
 
         return ret;
     }
 
-    std::pair<std::string, std::string> pokemon_entry::get_abilities() const
+    pkmn::ability_pair_t pokemon_entry::get_abilities() const
     {
-        std::pair<std::string, std::string> ret;
+        pkmn::ability_pair_t ret =
+        {
+            pkmn::e_ability::NONE,
+            pkmn::e_ability::NONE
+        };
 
         // Abilities were introduced in Generation III
-        if(_none or _generation < 3)
+        if(!_none && !_invalid && (_generation >= 3))
         {
-            ret = {"None", "None"};
-        }
-        else if(_invalid)
-        {
-            ret = {"Unknown", "Unknown"};
-        }
-        else
-        {
-            static BOOST_CONSTEXPR const char* query1 =
-                "SELECT name FROM ability_names WHERE local_language_id=9 AND ability_id="
-                "(SELECT ability_id FROM pokemon_abilities WHERE pokemon_id=? AND "
-                "is_hidden=0 AND slot=1)";
+            static const std::string first_ability_query =
+                "SELECT ability_id FROM pokemon_abilities WHERE pokemon_id=? "
+                "AND is_hidden=0 AND slot=1";
 
-            static BOOST_CONSTEXPR const char* query2 =
-                "SELECT name FROM ability_names WHERE local_language_id=9 AND ability_id="
-                "(SELECT abilities.id FROM abilities INNER JOIN pokemon_abilities ON "
+            // Account for abilities being added in later generations.
+            static const std::string second_ability_query =
+                "SELECT abilities.id FROM abilities INNER JOIN pokemon_abilities ON "
                 "(abilities.id=pokemon_abilities.ability_id) WHERE pokemon_abilities.pokemon_id=? "
                 "AND pokemon_abilities.is_hidden=0 AND pokemon_abilities.slot=2 AND "
-                "abilities.generation_id<=?)";
+                "abilities.generation_id<=?";
 
-            ret.first = pkmn::database::query_db_bind1<std::string, int>(
-                            query1, _pokemon_id
+            ret.first = static_cast<pkmn::e_ability>(
+                            pkmn::database::query_db_bind1<int, int>(
+                                first_ability_query.c_str(),
+                                _pokemon_id
+                            )
                         );
-            if(not pkmn::database::maybe_query_db_bind2<std::string, int>(
-                   query2, ret.second, _pokemon_id, _generation
-               ))
+
+            int second_ability_as_int = 0;
+            if(pkmn::database::maybe_query_db_bind2<int, int>(
+                   second_ability_query.c_str(),
+                   second_ability_as_int,
+                   _pokemon_id,
+                   _generation))
             {
-                ret.second = "None";
+                ret.second = static_cast<pkmn::e_ability>(second_ability_as_int);
             }
         }
 
         return ret;
     }
 
-    std::string pokemon_entry::get_hidden_ability() const {
-        std::string ret;
+    pkmn::e_ability pokemon_entry::get_hidden_ability() const
+    {
+        pkmn::e_ability ret = pkmn::e_ability::NONE;
 
-        // Hidden Abilities were introduced in Generation V
-        if(_none or _generation < 5) {
-            ret = "None";
-        } else if(_invalid) {
-            ret = "Unknown";
-        } else {
-            static BOOST_CONSTEXPR const char* query = \
-                "SELECT name FROM ability_names WHERE local_language_id=9 AND ability_id=("
-                "SELECT ability_id FROM pokemon_abilities WHERE pokemon_id=? AND "
-                "is_hidden=1)";
+        // Hidden Abilities were introduced in Generation V.
+        if(!_none && !_invalid && (_generation >= 5))
+        {
+            static const std::string query =
+                "SELECT ability_id FROM pokemon_abilities WHERE pokemon_id=? "
+                "AND is_hidden=1";
 
-            if(not pkmn::database::maybe_query_db_bind1<std::string, int>(
-                       query, ret, _pokemon_id
-              ))
+            int hidden_ability_as_int = 0;
+            if(pkmn::database::maybe_query_db_bind1<int, int>(
+                   query.c_str(),
+                   hidden_ability_as_int,
+                   _pokemon_id))
             {
-                ret = "None";
+                ret = static_cast<pkmn::e_ability>(hidden_ability_as_int);
             }
         }
 
         return ret;
     }
 
-    std::pair<std::string, std::string> pokemon_entry::get_egg_groups() const {
-        std::pair<std::string, std::string> ret;
+    pkmn::egg_group_pair_t pokemon_entry::get_egg_groups() const
+    {
+        pkmn::egg_group_pair_t ret =
+        {
+            pkmn::e_egg_group::NONE,
+            pkmn::e_egg_group::NONE
+        };
 
-        // Breeding was introduced in Generation I
-        if(_none or _generation == 1) {
-            ret = {"None", "None"};
-        } else if(_invalid) {
-            ret = {"Unknown", "Unknown"};
-        } else {
-            static BOOST_CONSTEXPR const char* query = \
-                "SELECT name FROM egg_group_prose WHERE local_language_id=9 AND egg_group_id IN "
-                "(SELECT egg_group_id FROM pokemon_egg_groups WHERE species_id=? "
-                "ORDER BY egg_group_id)";
+        // Breeding was introduced in Generation II
+        if(!_none && !_invalid && (_generation >= 2))
+        {
+            static const std::string query =
+                "SELECT egg_group_id FROM pokemon_egg_groups WHERE species_id=? ORDER BY egg_group_id";
 
             SQLite::Statement stmt(get_connection(), query);
             stmt.bind(1, _species_id);
 
             stmt.executeStep();
-            ret.first = std::string(stmt.getColumn(0));
-            if(stmt.executeStep()) {
-                ret.second = std::string(stmt.getColumn(0));
-            } else {
-                ret.second = "None";
+            ret.first = static_cast<pkmn::e_egg_group>(int(stmt.getColumn(0)));
+            if(stmt.executeStep())
+            {
+                ret.second = static_cast<pkmn::e_egg_group>(int(stmt.getColumn(0)));
+            }
+            else
+            {
+                ret.second = pkmn::e_egg_group::NONE;
             }
         }
 
@@ -663,31 +722,43 @@ namespace pkmn { namespace database {
     /*
      * Just return these for None and Invalid entries
      */
-    static const std::map<std::string, int> _bad_stat_map_old = boost::assign::map_list_of
-        ("HP", 0)("Attack", 0)("Defense", 0)
-        ("Speed", 0)("Special", 0)
+    static const std::map<pkmn::e_stat, int> _bad_stat_map_old = boost::assign::map_list_of
+        (pkmn::e_stat::HP, 0)
+        (pkmn::e_stat::ATTACK, 0)
+        (pkmn::e_stat::DEFENSE, 0)
+        (pkmn::e_stat::SPEED, 0)
+        (pkmn::e_stat::SPECIAL, 0)
     ;
-    static const std::map<std::string, int> _bad_stat_map = boost::assign::map_list_of
-        ("HP", 0)("Attack", 0)("Defense", 0)
-        ("Speed", 0)("Special Attack", 0)("Special Defense", 0)
+    static const std::map<pkmn::e_stat, int> _bad_stat_map = boost::assign::map_list_of
+        (pkmn::e_stat::HP, 0)
+        (pkmn::e_stat::ATTACK, 0)
+        (pkmn::e_stat::DEFENSE, 0)
+        (pkmn::e_stat::SPEED, 0)
+        (pkmn::e_stat::SPECIAL_ATTACK, 0)
+        (pkmn::e_stat::SPECIAL_DEFENSE, 0)
     ;
 
     static inline void execute_stat_stmt_and_get(
-        SQLite::Statement &stmt,
-        std::map<std::string, int> &ret,
-        const std::string& key
-    ) {
-        stmt.executeStep();
-        ret[key] = stmt.getColumn(0);
+        SQLite::Statement& r_stmt,
+        std::map<pkmn::e_stat, int>& r_ret,
+        pkmn::e_stat key
+    )
+    {
+        r_stmt.executeStep();
+        r_ret[key] = r_stmt.getColumn(0);
     }
 
-    std::map<std::string, int> pokemon_entry::get_base_stats() const {
-        std::map<std::string, int> ret;
+    std::map<pkmn::e_stat, int> pokemon_entry::get_base_stats() const
+    {
+        std::map<pkmn::e_stat, int> ret;
 
-        if(_none or _invalid) {
+        if(_none or _invalid)
+        {
             ret = (_generation == 1) ? _bad_stat_map_old
                                      : _bad_stat_map;
-        } else {
+        }
+        else
+        {
             static BOOST_CONSTEXPR const char* old_query = \
                 "SELECT base_stat FROM pokemon_stats WHERE pokemon_id=? AND "
                 "stat_id IN (1,2,3,6,9)";
@@ -702,38 +773,46 @@ namespace pkmn { namespace database {
             );
             stmt.bind(1, _pokemon_id);
 
-            execute_stat_stmt_and_get(stmt, ret, "HP");
-            execute_stat_stmt_and_get(stmt, ret, "Attack");
-            execute_stat_stmt_and_get(stmt, ret, "Defense");
+            execute_stat_stmt_and_get(stmt, ret, pkmn::e_stat::HP);
+            execute_stat_stmt_and_get(stmt, ret, pkmn::e_stat::ATTACK);
+            execute_stat_stmt_and_get(stmt, ret, pkmn::e_stat::DEFENSE);
             if(_generation == 1) {
-                execute_stat_stmt_and_get(stmt, ret, "Speed");
-                execute_stat_stmt_and_get(stmt, ret, "Special");
+                execute_stat_stmt_and_get(stmt, ret, pkmn::e_stat::SPEED);
+                execute_stat_stmt_and_get(stmt, ret, pkmn::e_stat::SPECIAL);
             } else {
-                execute_stat_stmt_and_get(stmt, ret, "Special Attack");
-                execute_stat_stmt_and_get(stmt, ret, "Special Defense");
-                execute_stat_stmt_and_get(stmt, ret, "Speed");
+                execute_stat_stmt_and_get(stmt, ret, pkmn::e_stat::SPECIAL_ATTACK);
+                execute_stat_stmt_and_get(stmt, ret, pkmn::e_stat::SPECIAL_DEFENSE);
+                execute_stat_stmt_and_get(stmt, ret, pkmn::e_stat::SPEED);
             }
         }
 
         return ret;
     }
 
-    std::map<std::string, int> pokemon_entry::get_EV_yields() const {
-        std::map<std::string, int> ret;
+    std::map<pkmn::e_stat, int> pokemon_entry::get_EV_yields() const
+    {
+        std::map<pkmn::e_stat, int> ret;
 
-        if(_none or _invalid) {
+        if(_none or _invalid)
+        {
             ret = (_generation <= 2) ? _bad_stat_map_old
                                      : _bad_stat_map;
-        } else if(_generation == 1) {
+        }
+        else if(_generation == 1)
+        {
             // EV's are just base stats
             ret = this->get_base_stats();
-        } else if(_generation == 2) {
+        }
+        else if(_generation == 2)
+        {
             // EV's almost match base stats but just have Special
             ret = this->get_base_stats();
-            ret["Special"] = ret["Special Attack"];
-            ret.erase("Special Attack");
-            ret.erase("Special Defense");
-        } else {
+            ret[pkmn::e_stat::SPECIAL] = ret[pkmn::e_stat::SPECIAL_ATTACK];
+            ret.erase(pkmn::e_stat::SPECIAL_ATTACK);
+            ret.erase(pkmn::e_stat::SPECIAL_DEFENSE);
+        }
+        else
+        {
             static BOOST_CONSTEXPR const char* query = \
                 "SELECT effort FROM pokemon_stats WHERE pokemon_id=? AND "
                 "stat_id IN (1,2,3,4,5,6)";
@@ -741,12 +820,12 @@ namespace pkmn { namespace database {
             SQLite::Statement stmt(get_connection(), query);
             stmt.bind(1, _pokemon_id);
 
-            execute_stat_stmt_and_get(stmt, ret, "HP");
-            execute_stat_stmt_and_get(stmt, ret, "Attack");
-            execute_stat_stmt_and_get(stmt, ret, "Defense");
-            execute_stat_stmt_and_get(stmt, ret, "Special Attack");
-            execute_stat_stmt_and_get(stmt, ret, "Special Defense");
-            execute_stat_stmt_and_get(stmt, ret, "Speed");
+            execute_stat_stmt_and_get(stmt, ret, pkmn::e_stat::HP);
+            execute_stat_stmt_and_get(stmt, ret, pkmn::e_stat::ATTACK);
+            execute_stat_stmt_and_get(stmt, ret, pkmn::e_stat::DEFENSE);
+            execute_stat_stmt_and_get(stmt, ret, pkmn::e_stat::SPECIAL_ATTACK);
+            execute_stat_stmt_and_get(stmt, ret, pkmn::e_stat::SPECIAL_DEFENSE);
+            execute_stat_stmt_and_get(stmt, ret, pkmn::e_stat::SPEED);
         }
 
         return ret;
@@ -866,26 +945,24 @@ namespace pkmn { namespace database {
         return ret;
     }
 
-    pkmn::database::levelup_moves_t pokemon_entry::get_levelup_moves() const {
+    pkmn::database::levelup_moves_t pokemon_entry::get_levelup_moves() const
+    {
         pkmn::database::levelup_moves_t ret;
 
-        if(not (_none or _invalid)) {
-            static BOOST_CONSTEXPR const char* query = \
+        if(!_none && !_invalid)
+        {
+            static const std::string query =
                 "SELECT move_id,level FROM pokemon_moves WHERE pokemon_id=? "
                 "AND version_group_id=? AND pokemon_move_method_id=1 ORDER BY level";
 
             SQLite::Statement stmt(get_connection(), query);
             stmt.bind(1, _pokemon_id);
             stmt.bind(2, _version_group_id);
-            while(stmt.executeStep()) {
+            while(stmt.executeStep())
+            {
                 ret.emplace_back(
-                    pkmn::database::levelup_move(
-                        pkmn::database::move_entry(
-                            int(stmt.getColumn(0)),
-                            _game_id
-                        ),
-                        int(stmt.getColumn(1))
-                    )
+                    static_cast<pkmn::e_move>(int(stmt.getColumn(0))),
+                    int(stmt.getColumn(1))
                 );
             }
         }
@@ -893,29 +970,31 @@ namespace pkmn { namespace database {
         return ret;
     }
 
-    pkmn::database::move_list_t pokemon_entry::get_tm_hm_moves() const {
-        pkmn::database::move_list_t ret;
+    std::vector<pkmn::e_move> pokemon_entry::get_tm_hm_moves() const
+    {
+        std::vector<pkmn::e_move> ret;
 
-        if(not (_none or _invalid)) {
-            static BOOST_CONSTEXPR const char* query = \
+        if(!_none && !_invalid)
+        {
+            static const std::string& query =
                 "SELECT move_id FROM machines WHERE move_id IN "
                 "(SELECT move_id FROM pokemon_moves WHERE pokemon_move_method_id=4 AND "
                 "pokemon_id=? AND version_group_id=?) AND version_group_id=? ORDER BY "
                 "machine_number";
 
             // Gamecube results match Ruby/Sapphire, so use that instead
-            int game_id = 0;
             int version_group_id = 0;
-            if(game_is_gamecube(_game_id)) {
-                game_id = RUBY;
+            if(game_is_gamecube(_game_id))
+            {
                 version_group_id = RS;
-            } else {
-                game_id = _game_id;
+            }
+            else
+            {
                 version_group_id = _version_group_id;
             }
 
             _query_to_move_list(
-                query, ret, _pokemon_id, game_id, version_group_id, true
+                query.c_str(), ret, _pokemon_id, version_group_id, true
             );
         }
 
@@ -926,23 +1005,27 @@ namespace pkmn { namespace database {
      * Veekun's database only stores egg moves for unevolved Pokemon, so we need to
      * figure out this Pokemon's earliest evolution and use that for the query.
      */
-    pkmn::database::move_list_t pokemon_entry::get_egg_moves() const {
-        pkmn::database::move_list_t ret;
+    std::vector<pkmn::e_move> pokemon_entry::get_egg_moves() const
+    {
+        std::vector<pkmn::e_move> ret;
 
-        if(not (_none or _invalid)) {
-            static BOOST_CONSTEXPR const char* evolution_query = \
+        if(!_none && !_invalid)
+        {
+            static const std::string evolution_query =
                 "SELECT evolves_from_species_id FROM pokemon_species WHERE id=?";
 
-            static BOOST_CONSTEXPR const char* move_query = \
+            static const std::string move_query =
                 "SELECT move_id FROM pokemon_moves WHERE pokemon_move_method_id=2 AND "
                 "pokemon_id=? AND version_group_id=?";
 
             int species_id = _species_id;
-            SQLite::Statement stmt(get_connection(), evolution_query);
+            SQLite::Statement stmt(get_connection(), evolution_query.c_str());
             stmt.bind(1, species_id);
-            while(stmt.executeStep()) {
+            while(stmt.executeStep())
+            {
                 // The final query will be valid but return 0, which we can't use
-                if(int(stmt.getColumn(0)) == 0) {
+                if(int(stmt.getColumn(0)) == 0)
+                {
                     break;
                 }
                 species_id = stmt.getColumn(0);
@@ -952,34 +1035,36 @@ namespace pkmn { namespace database {
             }
 
             // Gamecube results match Ruby/Sapphire, so use that instead
-            int game_id = 0;
             int version_group_id = 0;
-            if(game_is_gamecube(_game_id)) {
-                game_id = RUBY;
+            if(game_is_gamecube(_game_id))
+            {
                 version_group_id = RS;
-            } else {
-                game_id = _game_id;
+            }
+            else
+            {
                 version_group_id = _version_group_id;
             }
 
             _query_to_move_list(
-                move_query, ret, species_id, game_id, version_group_id, false
+                move_query.c_str(), ret, species_id, version_group_id, false
             );
         }
 
         return ret;
     }
 
-    pkmn::database::move_list_t pokemon_entry::get_tutor_moves() const {
-        pkmn::database::move_list_t ret;
+    std::vector<pkmn::e_move> pokemon_entry::get_tutor_moves() const
+    {
+        std::vector<pkmn::e_move> ret;
 
-        if(not (_none or _invalid)) {
-            static BOOST_CONSTEXPR const char* query = \
+        if(!_none && !_invalid)
+        {
+            static const std::string query =
                 "SELECT move_id FROM pokemon_moves WHERE pokemon_move_method_id=3 AND "
                 "pokemon_id=? AND version_group_id=?";
 
             _query_to_move_list(
-                query, ret, _pokemon_id, _game_id, _version_group_id, false
+                query.c_str(), ret, _pokemon_id, _version_group_id, false
             );
         }
 
@@ -1036,26 +1121,23 @@ namespace pkmn { namespace database {
         return ret;
     }
 
-    pkmn::database::pokemon_entries_t pokemon_entry::get_evolutions() const {
-        pkmn::database::pokemon_entries_t ret;
+    std::vector<pkmn::e_species> pokemon_entry::get_evolutions() const
+    {
+        std::vector<pkmn::e_species> ret;
 
-        if(not (_none or _invalid)) {
-            static BOOST_CONSTEXPR const char* query = \
-                "SELECT name FROM pokemon_species_names WHERE local_language_id=9 AND "
-                "pokemon_species_id IN (SELECT id FROM pokemon_species WHERE "
-                "evolves_from_species_id=? AND generation_id<=?)";
-
-            std::string game = this->get_game();
+        if(!_none && !_invalid)
+        {
+            static const std::string query =
+                "SELECT id FROM pokemon_species WHERE evolves_from_species_id=? "
+                "AND generation_id<=?";
 
             SQLite::Statement stmt(get_connection(), query);
             stmt.bind(1, _species_id);
             stmt.bind(2, _generation);
-            while(stmt.executeStep()) {
+            while(stmt.executeStep())
+            {
                 ret.emplace_back(
-                    pokemon_entry(
-                        std::string(stmt.getColumn(0)),
-                        game, ""
-                    )
+                    static_cast<pkmn::e_species>(int(stmt.getColumn(0)))
                 );
             }
         }
@@ -1146,7 +1228,7 @@ namespace pkmn { namespace database {
                                     if(form_id != _species_id) {
                                         throw std::invalid_argument(
                                             str(boost::format("Deoxys can only be in its Normal Forme in %s.")
-                                                    % this->get_game().c_str()
+                                                    % game_enum_to_name(this->get_game()).c_str()
                                                )
                                         );
                                     }

@@ -9,7 +9,7 @@
 
 #include "pokemon_box_impl.hpp"
 
-#include "libpkmgc_includes.hpp"
+#include "pkmgc/includes.hpp"
 
 #include <memory>
 

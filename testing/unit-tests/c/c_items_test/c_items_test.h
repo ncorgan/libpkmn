@@ -16,54 +16,54 @@
 // Helper functions
 
 void check_num_items(
-    struct pkmn_item_list* p_item_list,
+    const struct pkmn_item_list* p_item_list,
     size_t expected_num_items
 );
 
 void check_item_at_index(
-    struct pkmn_item_list* p_item_list,
+    const struct pkmn_item_list* p_item_list,
     size_t index,
-    const char* expected_item_name,
+    enum pkmn_item expected_item,
     size_t expected_item_amount
 );
 
 // Test functions
 
 void test_item_list_initial_values(
-    struct pkmn_item_list* list
+    const struct pkmn_item_list* list
 );
 
 void test_item_list_out_of_range_error(
-    struct pkmn_item_list* p_item_list,
-    const char* item_name
+    const struct pkmn_item_list* p_item_list,
+    enum pkmn_item item
 );
 
 void test_item_list_invalid_items(
-    struct pkmn_item_list* p_item_list,
-    const char** item_names,
+    const struct pkmn_item_list* p_item_list,
+    const enum pkmn_item* p_items,
     size_t num_items
 );
 
 void test_item_bag_invalid_items(
     struct pkmn_item_bag* p_item_bag,
-    const char** item_names,
+    const enum pkmn_item* p_items,
     size_t num_items
 );
 
 void test_item_list_set_item(
-    struct pkmn_item_list* p_item_list,
-    const char** item_names,
+    const struct pkmn_item_list* p_item_list,
+    const enum pkmn_item* p_items,
     size_t num_items
 );
 
 void test_item_list_add_remove(
-    struct pkmn_item_list* p_item_list,
-    const char** item_names,
+    const struct pkmn_item_list* p_item_list,
+    const enum pkmn_item* p_items,
     size_t num_items
 );
 
 void test_item_bag_pocket_names(
-    struct pkmn_item_bag* p_item_bag
+    const struct pkmn_item_bag* p_item_bag
 );
 
 #define GEN1_TEST_FCNS(game) \

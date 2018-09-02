@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -7,38 +7,65 @@
 
 #include "item_test_common.hpp"
 
+#include <pkmntest/util.hpp>
+
 #include <pkmn/exception.hpp>
 #include <pkmn/database/item_entry.hpp>
+#include <pkmn/enums/enum_to_string.hpp>
 #include "pksav/pksav_call.hpp"
 
-#include "libpkmgc_includes.hpp"
+#include "pkmgc/includes.hpp"
 
 #include <boost/assign.hpp>
 #include <boost/algorithm/string.hpp>
 
-static const std::vector<std::string> colosseum_all_pocket_items = boost::assign::list_of
-    ("Potion")("Ein File S")("Great Ball")("TM01")
-    ("TM02")("Aspear Berry")("Joy Scent")("Excite Scent")
-;
+static const std::vector<pkmn::e_item> COLOSSEUM_ALL_POCKET_ITEMS =
+{
+    pkmn::e_item::POTION,
+    pkmn::e_item::EIN_FILE_S,
+    pkmn::e_item::GREAT_BALL,
+    pkmn::e_item::TM01,
+    pkmn::e_item::TM02,
+    pkmn::e_item::ASPEAR_BERRY,
+    pkmn::e_item::JOY_SCENT,
+    pkmn::e_item::EXCITE_SCENT,
+};
+static const std::vector<pkmn::e_item> XD_ALL_POCKET_ITEMS =
+{
+    pkmn::e_item::POTION,
+    pkmn::e_item::GONZAPS_KEY,
+    pkmn::e_item::GREAT_BALL,
+    pkmn::e_item::TM01,
+    pkmn::e_item::TM02,
+    pkmn::e_item::ASPEAR_BERRY,
+    pkmn::e_item::JOY_SCENT,
+    pkmn::e_item::BATTLE_CD_01,
+};
 
-static const std::vector<std::string> xd_all_pocket_items = boost::assign::list_of
-    ("Potion")("Gonzap's Key")("Great Ball")("TM01")
-    ("TM02")("Aspear Berry")("Joy Scent")("Battle CD 01")
-;
-
-static const std::vector<std::string> colosseum_wrong_game_all_pocket_items = boost::assign::list_of
-    ("Pink Bow")("Black Sludge")
-    ("GS Ball")("Gonzap's Key")("Poffin Items")
-    ("TM51")("HM01")
-    ("Berry")("Occa Berry")
-;
-
-static const std::vector<std::string> xd_wrong_game_all_pocket_items = boost::assign::list_of
-    ("Pink Bow")("Black Sludge")
-    ("GS Ball")("Ein File S")("Poffin Items")
-    ("TM51")("HM01")
-    ("Berry")("Occa Berry")
-;
+static const std::vector<pkmn::e_item> COLOSSEUM_WRONG_GAME_ALL_POCKET_ITEMS =
+{
+    pkmn::e_item::PINK_BOW,
+    pkmn::e_item::BLACK_SLUDGE,
+    pkmn::e_item::GS_BALL,
+    pkmn::e_item::GONZAPS_KEY,
+    pkmn::e_item::POFFIN_CASE,
+    pkmn::e_item::TM51,
+    pkmn::e_item::HM01,
+    pkmn::e_item::BERRY,
+    pkmn::e_item::OCCA_BERRY
+};
+static const std::vector<pkmn::e_item> XD_WRONG_GAME_ALL_POCKET_ITEMS =
+{
+    pkmn::e_item::PINK_BOW,
+    pkmn::e_item::BLACK_SLUDGE,
+    pkmn::e_item::GS_BALL,
+    pkmn::e_item::EIN_FILE_S,
+    pkmn::e_item::POFFIN_CASE,
+    pkmn::e_item::TM51,
+    pkmn::e_item::HM01,
+    pkmn::e_item::BERRY,
+    pkmn::e_item::OCCA_BERRY
+};
 
 class gcn_item_list_test: public item_list_test {};
 
@@ -48,7 +75,7 @@ class gcn_item_list_test: public item_list_test {};
  */
 static void check_libpkmgc_class(
     const pkmn::item_slots_t& item_slots,
-    const std::string& game,
+    pkmn::e_game game,
     const LibPkmGC::Item* p_native_items,
     int expected_num_items
 )
@@ -81,7 +108,7 @@ void gcn_item_pocket_test(
 {
     ASSERT_EQ("Items", item_pocket->get_name());
 
-    bool colosseum = (item_pocket->get_game() == "Colosseum");
+    bool colosseum = (item_pocket->get_game() == pkmn::e_game::COLOSSEUM);
 
     int capacity = colosseum ? 20 : 30;
     ASSERT_EQ(capacity, item_pocket->get_capacity());
@@ -93,46 +120,79 @@ void gcn_item_pocket_test(
     // Confirm exceptions are thrown when expected.
     test_item_list_out_of_range_error(
         item_pocket,
-        "Potion"
+        pkmn::e_item::POTION
     );
 
     // Make sure we can't add items from other pockets.
-    static const std::vector<std::string> colosseum_wrong_pocket_items = boost::assign::list_of
-        ("Ein File S")("Great Ball")("TM01")("Oran Berry")("Joy Scent")
-    ;
-    static const std::vector<std::string> xd_wrong_pocket_items = boost::assign::list_of
-        ("Miror Radar")("Great Ball")("TM01")("Oran Berry")("Joy Scent")("Battle CD 01")
-    ;
+    static const std::vector<pkmn::e_item> colosseum_wrong_pocket_items =
+    {
+        pkmn::e_item::EIN_FILE_S,
+        pkmn::e_item::GREAT_BALL,
+        pkmn::e_item::TM01,
+        pkmn::e_item::ORAN_BERRY,
+        pkmn::e_item::JOY_SCENT
+    };
+    static const std::vector<pkmn::e_item> xd_wrong_pocket_items =
+    {
+        pkmn::e_item::EIN_FILE_S,
+        pkmn::e_item::GREAT_BALL,
+        pkmn::e_item::TM01,
+        pkmn::e_item::ORAN_BERRY,
+        pkmn::e_item::JOY_SCENT,
+        pkmn::e_item::BATTLE_CD_01
+    };
     test_item_list_invalid_items(
         item_pocket,
         (colosseum ? colosseum_wrong_pocket_items : xd_wrong_pocket_items)
     );
 
     // Make sure we can't add items from other generations.
-    static const std::vector<std::string> wrong_generation_items = boost::assign::list_of
-        ("Pink Bow")("Black Sludge")("Binding Band")("Beedrillite")
-    ;
+    static const std::vector<pkmn::e_item> wrong_generation_items =
+    {
+        pkmn::e_item::PINK_BOW,
+        pkmn::e_item::BLACK_SLUDGE,
+        pkmn::e_item::BINDING_BAND,
+        pkmn::e_item::BEEDRILLITE
+    };
     test_item_list_invalid_items(
         item_pocket,
         wrong_generation_items
     );
 
     // Start adding and removing stuff, and make sure the numbers are accurate.
-    static const std::vector<std::string> item_names = boost::assign::list_of
-        ("Potion")("Orange Mail")("Lava Cookie")("Stardust")
-        ("Shadow Mail")("Pink Scarf")("Antidote")("Green Shard")
-    ;
+    static const std::vector<pkmn::e_item> items =
+    {
+        pkmn::e_item::POTION,
+        pkmn::e_item::ORANGE_MAIL,
+        pkmn::e_item::LAVA_COOKIE,
+        pkmn::e_item::STARDUST,
+        pkmn::e_item::SHADOW_MAIL,
+        pkmn::e_item::PINK_SCARF,
+        pkmn::e_item::ANTIDOTE,
+        pkmn::e_item::GREEN_SHARD
+    };
     test_item_list_add_remove(
         item_pocket,
-        item_names
+        items
     );
 
     // Also make sure the pocket can hold both GBA and GCN items.
-    std::string gcn_item = colosseum ? "Time Flute" : "Poké Snack";
-    const std::vector<std::string>& valid_items = item_pocket->get_valid_items();
-    EXPECT_GT(valid_items.size(), 0);
-    EXPECT_TRUE(std::find(valid_items.begin(), valid_items.end(), "Potion") != valid_items.end());
-    EXPECT_TRUE(std::find(valid_items.begin(), valid_items.end(), gcn_item) != valid_items.end());
+    pkmn::e_item gcn_item = colosseum ? pkmn::e_item::TIME_FLUTE
+                                      : pkmn::e_item::POKE_SNACK;
+    std::string gcn_item_name = colosseum ? "Time Flute"
+                                          : "Poké Snack";
+
+    const std::vector<pkmn::e_item>& valid_items = item_pocket->get_valid_items();
+    const std::vector<std::string>& valid_item_names = item_pocket->get_valid_item_names();
+
+    ASSERT_EQ(valid_items.size(), valid_item_names.size());
+    EXPECT_FALSE(valid_item_names.empty());
+
+    EXPECT_TRUE(pkmn::does_vector_contain_value(valid_items, pkmn::e_item::POTION));
+    EXPECT_TRUE(pkmn::does_vector_contain_value(valid_items, gcn_item));
+
+    EXPECT_TRUE(pkmn::does_vector_contain_value<std::string>(valid_item_names, "Potion"));
+    EXPECT_TRUE(pkmn::does_vector_contain_value(valid_item_names, gcn_item_name));
 
     check_libpkmgc_class(
         item_pocket->as_vector(),
@@ -148,8 +208,12 @@ void gcn_key_item_pocket_test(
 {
     ASSERT_EQ("Key Items", key_item_pocket->get_name());
 
-    bool colosseum = (key_item_pocket->get_game() == "Colosseum");
-    std::string gcn_item = colosseum ? "Ein File S" : "Miror Radar";
+    bool colosseum = (key_item_pocket->get_game() == pkmn::e_game::COLOSSEUM);
+
+    pkmn::e_item gcn_item = colosseum ? pkmn::e_item::EIN_FILE_S
+                                      : pkmn::e_item::MIROR_RADAR;
+    std::string gcn_item_name = colosseum ? "Ein File S"
+                                          : "Miror Radar";
 
     int capacity = 43;
     ASSERT_EQ(capacity, key_item_pocket->get_capacity());
@@ -165,33 +229,53 @@ void gcn_key_item_pocket_test(
     );
 
     // Make sure we can't add items from other pockets.
-    static const std::vector<std::string> colosseum_wrong_pocket_items = boost::assign::list_of
-        ("Potion")("Great Ball")("TM01")("Oran Berry")("Joy Scent")
-    ;
-    static const std::vector<std::string> xd_wrong_pocket_items = boost::assign::list_of
-        ("Potion")("Great Ball")("TM01")("Oran Berry")("Joy Scent")("Battle CD 01")
-    ;
+    static const std::vector<pkmn::e_item> colosseum_wrong_pocket_items =
+    {
+        pkmn::e_item::POTION,
+        pkmn::e_item::GREAT_BALL,
+        pkmn::e_item::TM01,
+        pkmn::e_item::ORAN_BERRY,
+        pkmn::e_item::JOY_SCENT
+    };
+    static const std::vector<pkmn::e_item> xd_wrong_pocket_items =
+    {
+        pkmn::e_item::POTION,
+        pkmn::e_item::GREAT_BALL,
+        pkmn::e_item::TM01,
+        pkmn::e_item::ORAN_BERRY,
+        pkmn::e_item::JOY_SCENT,
+        pkmn::e_item::BATTLE_CD_01
+    };
     test_item_list_invalid_items(
         key_item_pocket,
         (colosseum ? colosseum_wrong_pocket_items : xd_wrong_pocket_items)
     );
 
     // Make sure we can't add items from other generations.
-    static const std::vector<std::string> wrong_generation_items = boost::assign::list_of
-        ("GS Ball")("Poffin Items")("DNA Splicers")("Aqua Suit")
-    ;
+    static const std::vector<pkmn::e_item> wrong_generation_items =
+    {
+        pkmn::e_item::GS_BALL,
+        pkmn::e_item::POFFIN_CASE,
+        pkmn::e_item::DNA_SPLICERS,
+        pkmn::e_item::AQUA_SUIT
+    };
     test_item_list_invalid_items(
         key_item_pocket,
         wrong_generation_items
     );
 
     // Make sure we can't add items from incompatible Generation III games.
-    static const std::vector<std::string> frlg_items = boost::assign::list_of
-        ("Helix Fossil")("Tea")("Ruby")
-    ;
-    static const std::vector<std::string> emerald_items = boost::assign::list_of
-        ("Magma Emblem")("Old Sea Map")
-    ;
+    static const std::vector<pkmn::e_item> frlg_items =
+    {
+        pkmn::e_item::HELIX_FOSSIL,
+        pkmn::e_item::TEA,
+        pkmn::e_item::RUBY
+    };
+    static const std::vector<pkmn::e_item> emerald_items =
+    {
+        pkmn::e_item::MAGMA_EMBLEM,
+        pkmn::e_item::OLD_SEA_MAP
+    };
     test_item_list_invalid_items(
         key_item_pocket,
         frlg_items
@@ -202,22 +286,41 @@ void gcn_key_item_pocket_test(
     );
 
     // Start adding and removing stuff, and make sure the numbers are accurate.
-    static const std::vector<std::string> colosseum_item_names = boost::assign::list_of
-        ("Jail Key")("Elevator Key")("Small Tablet")("F-Disk")
-        ("R-Disk")("L-Disk")("D-Disk")("U-Disk")
-    ;
-    static const std::vector<std::string> xd_item_names = boost::assign::list_of
-        ("Krane Memo 1")("Krane Memo 2")("Krane Memo 3")("Krane Memo 4")
-        ("Krane Memo 5")("Voice Case 1")("Voice Case 2")("Voice Case 3")
-    ;
+    static const std::vector<pkmn::e_item> colosseum_items =
+    {
+        pkmn::e_item::JAIL_KEY,
+        pkmn::e_item::ELEVATOR_KEY,
+        pkmn::e_item::SMALL_TABLET,
+        pkmn::e_item::F_DISK,
+        pkmn::e_item::R_DISK,
+        pkmn::e_item::L_DISK,
+        pkmn::e_item::D_DISK,
+        pkmn::e_item::U_DISK
+    };
+    static const std::vector<pkmn::e_item> xd_items =
+    {
+        pkmn::e_item::KRANE_MEMO_1,
+        pkmn::e_item::KRANE_MEMO_2,
+        pkmn::e_item::KRANE_MEMO_3,
+        pkmn::e_item::KRANE_MEMO_4,
+        pkmn::e_item::KRANE_MEMO_5,
+        pkmn::e_item::VOICE_CASE_1,
+        pkmn::e_item::VOICE_CASE_2,
+        pkmn::e_item::VOICE_CASE_3
+    };
     test_item_list_add_remove(
         key_item_pocket,
-        (colosseum ? colosseum_item_names : xd_item_names)
+        (colosseum ? colosseum_items : xd_items)
     );
 
-    const std::vector<std::string>& valid_items = key_item_pocket->get_valid_items();
-    EXPECT_GT(valid_items.size(), 0);
-    EXPECT_TRUE(std::find(valid_items.begin(), valid_items.end(), gcn_item) != valid_items.end());
+    const std::vector<pkmn::e_item>& valid_items = key_item_pocket->get_valid_items();
+    const std::vector<std::string>& valid_item_names = key_item_pocket->get_valid_item_names();
+
+    ASSERT_EQ(valid_items.size(), valid_item_names.size());
+    EXPECT_FALSE(valid_item_names.empty());
+
+    EXPECT_TRUE(pkmn::does_vector_contain_value(valid_items, gcn_item));
+    EXPECT_TRUE(pkmn::does_vector_contain_value(valid_item_names, gcn_item_name));
 
     check_libpkmgc_class(
         key_item_pocket->as_vector(),
@@ -233,7 +336,7 @@ void gcn_ball_pocket_test(
 {
     ASSERT_EQ("Poké Balls", ball_pocket->get_name());
 
-    bool colosseum = (ball_pocket->get_game() == "Colosseum");
+    bool colosseum = (ball_pocket->get_game() == pkmn::e_game::COLOSSEUM);
     int capacity = 16;
     ASSERT_EQ(capacity, ball_pocket->get_capacity());
     ASSERT_EQ(size_t(capacity), ball_pocket->as_vector().size());
@@ -244,42 +347,66 @@ void gcn_ball_pocket_test(
     // Confirm exceptions are thrown when expected.
     test_item_list_out_of_range_error(
         ball_pocket,
-        "Poké Ball"
+        pkmn::e_item::POKE_BALL
     );
 
     // Make sure we can't add items from other pockets.
-    static const std::vector<std::string> colosseum_wrong_pocket_items = boost::assign::list_of
-        ("Ein File S")("Potion")("TM01")("Oran Berry")("Joy Scent")
-    ;
-    static const std::vector<std::string> xd_wrong_pocket_items = boost::assign::list_of
-        ("Miror Radar")("Potion")("TM01")("Oran Berry")("Joy Scent")("Battle CD 01")
-    ;
+    static const std::vector<pkmn::e_item> colosseum_wrong_pocket_items =
+    {
+        pkmn::e_item::EIN_FILE_S,
+        pkmn::e_item::POTION,
+        pkmn::e_item::TM01,
+        pkmn::e_item::ORAN_BERRY,
+        pkmn::e_item::JOY_SCENT
+    };
+    static const std::vector<pkmn::e_item> xd_wrong_pocket_items =
+    {
+        pkmn::e_item::MIROR_RADAR,
+        pkmn::e_item::POTION,
+        pkmn::e_item::TM01,
+        pkmn::e_item::ORAN_BERRY,
+        pkmn::e_item::JOY_SCENT,
+        pkmn::e_item::BATTLE_CD_01
+    };
     test_item_list_invalid_items(
         ball_pocket,
         (colosseum ? colosseum_wrong_pocket_items : xd_wrong_pocket_items)
     );
 
     // Make sure we can't add items from other generations.
-    static const std::vector<std::string> wrong_generation_items = boost::assign::list_of
-        ("Moon Ball")("Heal Ball")("Dream Ball")
-    ;
+    static const std::vector<pkmn::e_item> wrong_generation_items =
+    {
+        pkmn::e_item::MOON_BALL,
+        pkmn::e_item::HEAL_BALL,
+        pkmn::e_item::DREAM_BALL
+    };
     test_item_list_invalid_items(
         ball_pocket,
         wrong_generation_items
     );
 
     // Start adding and removing stuff, and make sure the numbers are accurate.
-    static const std::vector<std::string> item_names = boost::assign::list_of
-        ("Master Ball")("Ultra Ball")("Great Ball")("Poké Ball")
-        ("Safari Ball")("Net Ball")("Dive Ball")("Nest Ball")
-    ;
+    static const std::vector<pkmn::e_item> items =
+    {
+        pkmn::e_item::MASTER_BALL,
+        pkmn::e_item::ULTRA_BALL,
+        pkmn::e_item::GREAT_BALL,
+        pkmn::e_item::POKE_BALL,
+        pkmn::e_item::SAFARI_BALL,
+        pkmn::e_item::NET_BALL,
+        pkmn::e_item::DIVE_BALL,
+        pkmn::e_item::NEST_BALL
+    };
     test_item_list_add_remove(
         ball_pocket,
-        item_names
+        items
     );
 
-    const std::vector<std::string>& valid_items = ball_pocket->get_valid_items();
-    EXPECT_GT(valid_items.size(), 0);
+    const std::vector<pkmn::e_item>& valid_items = ball_pocket->get_valid_items();
+    const std::vector<std::string>& valid_item_names = ball_pocket->get_valid_item_names();
+
+    ASSERT_EQ(valid_items.size(), valid_item_names.size());
+    EXPECT_FALSE(valid_item_names.empty());
 
     check_libpkmgc_class(
         ball_pocket->as_vector(),
@@ -295,7 +422,7 @@ void gcn_tm_pocket_test(
 {
     ASSERT_EQ("TMs", tm_pocket->get_name());
 
-    bool colosseum = (tm_pocket->get_game() == "Colosseum");
+    bool colosseum = (tm_pocket->get_game() == pkmn::e_game::COLOSSEUM);
     int capacity = 64;
     ASSERT_EQ(capacity, tm_pocket->get_capacity());
     ASSERT_EQ(size_t(capacity), tm_pocket->as_vector().size());
@@ -306,45 +433,72 @@ void gcn_tm_pocket_test(
     // Confirm exceptions are thrown when expected.
     test_item_list_out_of_range_error(
         tm_pocket,
-        "TM01"
+        pkmn::e_item::TM01
     );
 
     // Make sure we can't add items from other pockets.
-    static const std::vector<std::string> colosseum_wrong_pocket_items = boost::assign::list_of
-        ("Ein File S")("Potion")("Great Ball")("Oran Berry")("Joy Scent")
-    ;
-    static const std::vector<std::string> xd_wrong_pocket_items = boost::assign::list_of
-        ("Miror Radar")("Potion")("Great Ball")("Oran Berry")("Joy Scent")("Battle CD 01")
-    ;
+    static const std::vector<pkmn::e_item> colosseum_wrong_pocket_items =
+    {
+        pkmn::e_item::EIN_FILE_S,
+        pkmn::e_item::POTION,
+        pkmn::e_item::GREAT_BALL,
+        pkmn::e_item::ORAN_BERRY,
+        pkmn::e_item::JOY_SCENT
+    };
+    static const std::vector<pkmn::e_item> xd_wrong_pocket_items =
+    {
+        pkmn::e_item::MIROR_RADAR,
+        pkmn::e_item::POTION,
+        pkmn::e_item::GREAT_BALL,
+        pkmn::e_item::ORAN_BERRY,
+        pkmn::e_item::JOY_SCENT,
+        pkmn::e_item::BATTLE_CD_01
+    };
     test_item_list_invalid_items(
         tm_pocket,
         (colosseum ? colosseum_wrong_pocket_items : xd_wrong_pocket_items)
     );
 
     // Make sure we can't add items from other generations.
-    static const std::vector<std::string> wrong_generation_items = boost::assign::list_of
-        ("TM51")("HM01")
-    ;
+    static const std::vector<pkmn::e_item> wrong_generation_items =
+    {
+        pkmn::e_item::TM51,
+        pkmn::e_item::HM01
+    };
     test_item_list_invalid_items(
         tm_pocket,
         wrong_generation_items
     );
 
     // Start adding and removing stuff, and make sure the numbers are accurate.
-    static const std::vector<std::string> item_names = boost::assign::list_of
-        ("TM01")("TM02")("TM03")("TM04")
-        ("TM05")("TM06")("TM07")("TM08")
-    ;
+    static const std::vector<pkmn::e_item> items =
+    {
+        pkmn::e_item::TM01,
+        pkmn::e_item::TM02,
+        pkmn::e_item::TM03,
+        pkmn::e_item::TM04,
+        pkmn::e_item::TM05,
+        pkmn::e_item::TM06,
+        pkmn::e_item::TM07,
+        pkmn::e_item::TM08
+    };
     test_item_list_add_remove(
         tm_pocket,
-        item_names
+        items
     );
 
     // Gamecube games have no HMs.
-    const std::vector<std::string>& valid_items = tm_pocket->get_valid_items();
-    EXPECT_EQ(50, valid_items.size());
-    EXPECT_TRUE(std::find(valid_items.begin(), valid_items.end(), "TM01") != valid_items.end());
-    EXPECT_TRUE(std::find(valid_items.begin(), valid_items.end(), "HM01") == valid_items.end());
+    const std::vector<pkmn::e_item>& valid_items = tm_pocket->get_valid_items();
+    const std::vector<std::string>& valid_item_names = tm_pocket->get_valid_item_names();
+
+    ASSERT_EQ(valid_items.size(), valid_item_names.size());
+    EXPECT_EQ(50, valid_item_names.size());
+
+    EXPECT_TRUE(pkmn::does_vector_contain_value(valid_items, pkmn::e_item::TM01));
+    EXPECT_FALSE(pkmn::does_vector_contain_value(valid_items, pkmn::e_item::HM01));
+
+    EXPECT_TRUE(pkmn::does_vector_contain_value<std::string>(valid_item_names, "TM01"));
+    EXPECT_FALSE(pkmn::does_vector_contain_value<std::string>(valid_item_names, "HM01"));
 
     check_libpkmgc_class(
         tm_pocket->as_vector(),
@@ -359,7 +513,7 @@ void gcn_berry_pocket_test(
 ) {
     ASSERT_EQ("Berries", berry_pocket->get_name());
 
-    bool colosseum = (berry_pocket->get_game() == "Colosseum");
+    bool colosseum = (berry_pocket->get_game() == pkmn::e_game::COLOSSEUM);
     int capacity = 46;
     ASSERT_EQ(capacity, berry_pocket->get_capacity());
     ASSERT_EQ(size_t(capacity), berry_pocket->as_vector().size());
@@ -370,43 +524,69 @@ void gcn_berry_pocket_test(
     // Confirm exceptions are thrown when expected.
     test_item_list_out_of_range_error(
         berry_pocket,
-        "Oran Berry"
+        pkmn::e_item::ORAN_BERRY
     );
 
     // Make sure we can't add items from other pockets.
-    static const std::vector<std::string> colosseum_wrong_pocket_items = boost::assign::list_of
-        ("Ein File S")("Potion")("Great Ball")("TM01")("Joy Scent")
-    ;
-    static const std::vector<std::string> xd_wrong_pocket_items = boost::assign::list_of
-        ("Miror Radar")("Potion")("Great Ball")("TM01")("Joy Scent")("Battle CD 01")
-    ;
+    static const std::vector<pkmn::e_item> colosseum_wrong_pocket_items =
+    {
+        pkmn::e_item::EIN_FILE_S,
+        pkmn::e_item::POTION,
+        pkmn::e_item::GREAT_BALL,
+        pkmn::e_item::TM01,
+        pkmn::e_item::JOY_SCENT
+    };
+    static const std::vector<pkmn::e_item> xd_wrong_pocket_items =
+    {
+        pkmn::e_item::MIROR_RADAR,
+        pkmn::e_item::POTION,
+        pkmn::e_item::GREAT_BALL,
+        pkmn::e_item::TM01,
+        pkmn::e_item::JOY_SCENT,
+        pkmn::e_item::BATTLE_CD_01
+    };
     test_item_list_invalid_items(
         berry_pocket,
         (colosseum ? colosseum_wrong_pocket_items : xd_wrong_pocket_items)
     );
 
     // Make sure we can't add items from other generations.
-    static const std::vector<std::string> wrong_generation_items = boost::assign::list_of
-        ("Berry")("Occa Berry")("Roseli Berry")
-    ;
+    static const std::vector<pkmn::e_item> wrong_generation_items =
+    {
+        pkmn::e_item::BERRY,
+        pkmn::e_item::OCCA_BERRY,
+        pkmn::e_item::ROSELI_BERRY
+    };
     test_item_list_invalid_items(
         berry_pocket,
         wrong_generation_items
     );
 
     // Start adding and removing stuff, and make sure the numbers are accurate.
-    static const std::vector<std::string> item_names = boost::assign::list_of
-        ("Cheri Berry")("Razz Berry")("Lum Berry")("Pinap Berry")
-        ("Aspear Berry")("Iapapa Berry")("Wiki Berry")("Apicot Berry")
-    ;
+    static const std::vector<pkmn::e_item> items =
+    {
+        pkmn::e_item::CHERI_BERRY,
+        pkmn::e_item::RAZZ_BERRY,
+        pkmn::e_item::LUM_BERRY,
+        pkmn::e_item::PINAP_BERRY,
+        pkmn::e_item::ASPEAR_BERRY,
+        pkmn::e_item::IAPAPA_BERRY,
+        pkmn::e_item::WIKI_BERRY,
+        pkmn::e_item::APICOT_BERRY
+    };
     test_item_list_add_remove(
         berry_pocket,
-        item_names
+        items
     );
 
-    const std::vector<std::string>& valid_items = berry_pocket->get_valid_items();
-    EXPECT_GE(valid_items.size(), 0);
-    EXPECT_TRUE(std::find(valid_items.begin(), valid_items.end(), "Oran Berry") != valid_items.end());
+    const std::vector<pkmn::e_item>& valid_items = berry_pocket->get_valid_items();
+    const std::vector<std::string>& valid_item_names = berry_pocket->get_valid_item_names();
+
+    ASSERT_EQ(valid_items.size(), valid_item_names.size());
+    EXPECT_FALSE(valid_item_names.empty());
+
+    EXPECT_TRUE(pkmn::does_vector_contain_value(valid_items, pkmn::e_item::ORAN_BERRY));
+    EXPECT_TRUE(pkmn::does_vector_contain_value<std::string>(valid_item_names, "Oran Berry"));
 
     check_libpkmgc_class(
         berry_pocket->as_vector(),
@@ -422,7 +602,7 @@ void gcn_cologne_pocket_test(
 {
     ASSERT_EQ("Colognes", cologne_pocket->get_name());
 
-    bool colosseum = (cologne_pocket->get_game() == "Colosseum");
+    bool colosseum = (cologne_pocket->get_game() == pkmn::e_game::COLOSSEUM);
     int capacity = 3;
     ASSERT_EQ(capacity, cologne_pocket->get_capacity());
     ASSERT_EQ(size_t(capacity), cologne_pocket->as_vector().size());
@@ -433,16 +613,27 @@ void gcn_cologne_pocket_test(
     // Confirm exceptions are thrown when expected.
     test_item_list_out_of_range_error(
         cologne_pocket,
-        "Joy Scent"
+        pkmn::e_item::JOY_SCENT
     );
 
     // Make sure we can't add items from other pockets.
-    static const std::vector<std::string> colosseum_wrong_pocket_items = boost::assign::list_of
-        ("Ein File S")("Potion")("Great Ball")("TM01")("Oran Berry")
-    ;
-    static const std::vector<std::string> xd_wrong_pocket_items = boost::assign::list_of
-        ("Miror Radar")("Potion")("Great Ball")("TM01")("Oran Berry")("Battle CD 01")
-    ;
+    static const std::vector<pkmn::e_item> colosseum_wrong_pocket_items =
+    {
+        pkmn::e_item::EIN_FILE_S,
+        pkmn::e_item::POTION,
+        pkmn::e_item::GREAT_BALL,
+        pkmn::e_item::TM01,
+        pkmn::e_item::ORAN_BERRY
+    };
+    static const std::vector<pkmn::e_item> xd_wrong_pocket_items =
+    {
+        pkmn::e_item::MIROR_RADAR,
+        pkmn::e_item::POTION,
+        pkmn::e_item::GREAT_BALL,
+        pkmn::e_item::TM01,
+        pkmn::e_item::ORAN_BERRY,
+        pkmn::e_item::BATTLE_CD_01
+    };
     test_item_list_invalid_items(
         cologne_pocket,
         (colosseum ? colosseum_wrong_pocket_items : xd_wrong_pocket_items)
@@ -451,23 +642,28 @@ void gcn_cologne_pocket_test(
     // Since this pocket can only have 3 items, we can't use our typical function, which requires 8.
     const pkmn::item_slots_t& item_slots = cologne_pocket->as_vector();
 
-    cologne_pocket->add("Joy Scent", 3);
-    cologne_pocket->add("Excite Scent", 3);
-    cologne_pocket->add("Vivid Scent", 3);
+    cologne_pocket->add(pkmn::e_item::JOY_SCENT, 3);
+    cologne_pocket->add(pkmn::e_item::EXCITE_SCENT, 3);
+    cologne_pocket->add(pkmn::e_item::VIVID_SCENT, 3);
 
-    cologne_pocket->remove("Excite Scent", 3);
-    cologne_pocket->remove("Vivid Scent", 1);
+    cologne_pocket->remove(pkmn::e_item::EXCITE_SCENT, 3);
+    cologne_pocket->remove(pkmn::e_item::VIVID_SCENT, 1);
 
-    EXPECT_EQ("Joy Scent", item_slots.at(0).item);
+    EXPECT_EQ(pkmn::e_item::JOY_SCENT, item_slots.at(0).item);
     EXPECT_EQ(3, item_slots.at(0).amount);
-    EXPECT_EQ("Vivid Scent", item_slots.at(1).item);
+    EXPECT_EQ(pkmn::e_item::VIVID_SCENT, item_slots.at(1).item);
     EXPECT_EQ(2, item_slots.at(1).amount);
-    EXPECT_EQ("None", item_slots.at(2).item);
+    EXPECT_EQ(pkmn::e_item::NONE, item_slots.at(2).item);
     EXPECT_EQ(0, item_slots.at(2).amount);
 
-    const std::vector<std::string>& valid_items = cologne_pocket->get_valid_items();
-    EXPECT_EQ(3, valid_items.size());
-    EXPECT_TRUE(std::find(valid_items.begin(), valid_items.end(), "Joy Scent") != valid_items.end());
+    const std::vector<pkmn::e_item>& valid_items = cologne_pocket->get_valid_items();
+    const std::vector<std::string>& valid_item_names = cologne_pocket->get_valid_item_names();
+
+    ASSERT_EQ(valid_items.size(), valid_item_names.size());
+    EXPECT_EQ(3, valid_item_names.size());
+
+    EXPECT_TRUE(pkmn::does_vector_contain_value(valid_items, pkmn::e_item::JOY_SCENT));
+    EXPECT_TRUE(pkmn::does_vector_contain_value<std::string>(valid_item_names, "Joy Scent"));
 
     check_libpkmgc_class(
         cologne_pocket->as_vector(),
@@ -493,31 +689,49 @@ void gcn_battle_cd_pocket_test(
     // Confirm exceptions are thrown when expected.
     test_item_list_out_of_range_error(
         battle_cd_pocket,
-        "Battle CDs"
+        pkmn::e_item::BATTLE_CD_01
     );
 
     // Make sure we can't add items from other pockets.
-    static const std::vector<std::string> wrong_pocket_items = boost::assign::list_of
-        ("Miror Radar")("Potion")("Great Ball")("TM01")("Oran Berry")("Joy Scent")
-    ;
+    static const std::vector<pkmn::e_item> wrong_pocket_items =
+    {
+        pkmn::e_item::MIROR_RADAR,
+        pkmn::e_item::POTION,
+        pkmn::e_item::GREAT_BALL,
+        pkmn::e_item::TM01,
+        pkmn::e_item::ORAN_BERRY,
+        pkmn::e_item::JOY_SCENT
+    };
     test_item_list_invalid_items(
         battle_cd_pocket,
         wrong_pocket_items
     );
 
     // Start adding and removing stuff, and make sure the numbers are accurate.
-    static const std::vector<std::string> item_names = boost::assign::list_of
-        ("Battle CD 01")("Battle CD 02")("Battle CD 03")("Battle CD 04")
-        ("Battle CD 05")("Battle CD 06")("Battle CD 07")("Battle CD 08")
-    ;
+    static const std::vector<pkmn::e_item> items =
+    {
+        pkmn::e_item::BATTLE_CD_01,
+        pkmn::e_item::BATTLE_CD_02,
+        pkmn::e_item::BATTLE_CD_03,
+        pkmn::e_item::BATTLE_CD_04,
+        pkmn::e_item::BATTLE_CD_05,
+        pkmn::e_item::BATTLE_CD_06,
+        pkmn::e_item::BATTLE_CD_07,
+        pkmn::e_item::BATTLE_CD_08
+    };
     test_item_list_add_remove(
         battle_cd_pocket,
-        item_names
+        items
     );
 
-    const std::vector<std::string>& valid_items = battle_cd_pocket->get_valid_items();
-    EXPECT_EQ(60, valid_items.size());
-    EXPECT_TRUE(std::find(valid_items.begin(), valid_items.end(), "Battle CD 01") != valid_items.end());
+    const std::vector<pkmn::e_item>& valid_items = battle_cd_pocket->get_valid_items();
+    const std::vector<std::string>& valid_item_names = battle_cd_pocket->get_valid_item_names();
+
+    ASSERT_EQ(valid_items.size(), valid_item_names.size());
+    EXPECT_EQ(60, valid_item_names.size());
+
+    EXPECT_TRUE(pkmn::does_vector_contain_value(valid_items, pkmn::e_item::BATTLE_CD_01));
+    EXPECT_TRUE(pkmn::does_vector_contain_value<std::string>(valid_item_names, "Battle CD 01"));
 
     check_libpkmgc_class(
         battle_cd_pocket->as_vector(),
@@ -534,7 +748,7 @@ void gcn_item_pc_test(
     ASSERT_EQ("PC", item_pc->get_name());
     ASSERT_EQ(235, item_pc->get_capacity());
     ASSERT_EQ(235, item_pc->as_vector().size());
-    bool colosseum = (item_pc->get_game() == "Colosseum");
+    bool colosseum = (item_pc->get_game() == pkmn::e_game::COLOSSEUM);
 
     // Make sure item slots start as correctly empty
     test_item_list_empty_slots(item_pc);
@@ -542,19 +756,19 @@ void gcn_item_pc_test(
     // Confirm exceptions are thrown when expected.
     test_item_list_out_of_range_error(
         item_pc,
-        "Potion"
+        pkmn::e_item::POTION
     );
 
     // Make sure we can't add items from other generations or incompatible Generation III games.
     test_item_list_invalid_items(
         item_pc,
-        (colosseum ? colosseum_wrong_game_all_pocket_items : xd_wrong_game_all_pocket_items)
+        (colosseum ? COLOSSEUM_WRONG_GAME_ALL_POCKET_ITEMS : XD_WRONG_GAME_ALL_POCKET_ITEMS)
     );
 
     // Start adding and removing stuff, and make sure the numbers are accurate.
     test_item_list_add_remove(
         item_pc,
-        (colosseum ? colosseum_all_pocket_items: xd_all_pocket_items)
+        (colosseum ? COLOSSEUM_ALL_POCKET_ITEMS : XD_ALL_POCKET_ITEMS)
     );
 
     check_libpkmgc_class(
@@ -581,24 +795,24 @@ TEST_P(gcn_item_list_test, item_list_test)
     gcn_test_fcns.at(get_name())(get_item_list());
 }
 
-static const std::vector<std::pair<std::string, std::string>> item_list_params =
+static const std::vector<std::pair<pkmn::e_game, std::string>> item_list_params =
 {
-    {"Colosseum", "Items"},
-    {"Colosseum", "Key Items"},
-    {"Colosseum", "Poké Balls"},
-    {"Colosseum", "TMs"},
-    {"Colosseum", "Berries"},
-    {"Colosseum", "Colognes"},
-    {"Colosseum", "PC"},
+    {pkmn::e_game::COLOSSEUM, "Items"},
+    {pkmn::e_game::COLOSSEUM, "Key Items"},
+    {pkmn::e_game::COLOSSEUM, "Poké Balls"},
+    {pkmn::e_game::COLOSSEUM, "TMs"},
+    {pkmn::e_game::COLOSSEUM, "Berries"},
+    {pkmn::e_game::COLOSSEUM, "Colognes"},
+    {pkmn::e_game::COLOSSEUM, "PC"},
 
-    {"XD", "Items"},
-    {"XD", "Key Items"},
-    {"XD", "Poké Balls"},
-    {"XD", "TMs"},
-    {"XD", "Berries"},
-    {"XD", "Colognes"},
-    {"XD", "Battle CDs"},
-    {"XD", "PC"}
+    {pkmn::e_game::XD, "Items"},
+    {pkmn::e_game::XD, "Key Items"},
+    {pkmn::e_game::XD, "Poké Balls"},
+    {pkmn::e_game::XD, "TMs"},
+    {pkmn::e_game::XD, "Berries"},
+    {pkmn::e_game::XD, "Colognes"},
+    {pkmn::e_game::XD, "Battle CDs"},
+    {pkmn::e_game::XD, "PC"}
 };
 
 INSTANTIATE_TEST_CASE_P(
@@ -612,8 +826,8 @@ class gcn_item_bag_test: public item_bag_test {};
 TEST_P(gcn_item_bag_test, item_bag_test)
 {
     const pkmn::item_bag::sptr& bag = get_item_bag();
-    const std::string& game = get_game();
-    bool colosseum = (game == "Colosseum");
+    pkmn::e_game game = get_game();
+    bool colosseum = (game == pkmn::e_game::COLOSSEUM);
     int num_pockets = colosseum ? 6 : 7;
 
     const pkmn::item_pockets_t& pockets = bag->get_pockets();
@@ -679,8 +893,8 @@ TEST_P(gcn_item_bag_test, item_bag_test)
     for(int item_index = 0; item_index < 8; ++item_index)
     {
         bag->add(
-            (colosseum ? colosseum_all_pocket_items[item_index]
-                       : xd_all_pocket_items[item_index]),
+            (colosseum ? COLOSSEUM_ALL_POCKET_ITEMS[item_index]
+                       : XD_ALL_POCKET_ITEMS[item_index]),
             5
         );
     }
@@ -691,52 +905,53 @@ TEST_P(gcn_item_bag_test, item_bag_test)
     const pkmn::item_slots_t& tm_slots = bag->get_pocket("TMs")->as_vector();
     const pkmn::item_slots_t& berry_slots = bag->get_pocket("Berries")->as_vector();
     const pkmn::item_slots_t& cologne_slots = bag->get_pocket("Colognes")->as_vector();
-    std::string gcn_item = colosseum ? "Ein File S" : "Gonzap's Key";
+    pkmn::e_item gcn_item = colosseum ? pkmn::e_item::EIN_FILE_S
+                                      : pkmn::e_item::GONZAPS_KEY;
 
-    EXPECT_EQ("Potion", item_slots.at(0).item);
+    EXPECT_EQ(pkmn::e_item::POTION, item_slots.at(0).item);
     EXPECT_EQ(5, item_slots.at(0).amount);
-    EXPECT_EQ("None", item_slots.at(1).item);
+    EXPECT_EQ(pkmn::e_item::NONE, item_slots.at(1).item);
     EXPECT_EQ(0, item_slots.at(1).amount);
 
     EXPECT_EQ(gcn_item, key_item_slots.at(0).item);
     EXPECT_EQ(5, key_item_slots.at(0).amount);
-    EXPECT_EQ("None", key_item_slots.at(1).item);
+    EXPECT_EQ(pkmn::e_item::NONE, key_item_slots.at(1).item);
     EXPECT_EQ(0, key_item_slots.at(1).amount);
 
-    EXPECT_EQ("Great Ball", ball_slots.at(0).item);
+    EXPECT_EQ(pkmn::e_item::GREAT_BALL, ball_slots.at(0).item);
     EXPECT_EQ(5, ball_slots.at(0).amount);
-    EXPECT_EQ("None", ball_slots.at(1).item);
+    EXPECT_EQ(pkmn::e_item::NONE, ball_slots.at(1).item);
     EXPECT_EQ(0, ball_slots.at(1).amount);
 
-    EXPECT_EQ("TM01", tm_slots.at(0).item);
+    EXPECT_EQ(pkmn::e_item::TM01, tm_slots.at(0).item);
     EXPECT_EQ(5, tm_slots.at(0).amount);
-    EXPECT_EQ("TM02", tm_slots.at(1).item);
+    EXPECT_EQ(pkmn::e_item::TM02, tm_slots.at(1).item);
     EXPECT_EQ(5, tm_slots.at(1).amount);
-    EXPECT_EQ("None", tm_slots.at(2).item);
+    EXPECT_EQ(pkmn::e_item::NONE, tm_slots.at(2).item);
     EXPECT_EQ(0, tm_slots.at(2).amount);
 
-    EXPECT_EQ("Aspear Berry", berry_slots.at(0).item);
+    EXPECT_EQ(pkmn::e_item::ASPEAR_BERRY, berry_slots.at(0).item);
     EXPECT_EQ(5, berry_slots.at(0).amount);
-    EXPECT_EQ("None", berry_slots.at(1).item);
+    EXPECT_EQ(pkmn::e_item::NONE, berry_slots.at(1).item);
     EXPECT_EQ(0, berry_slots.at(1).amount);
 
-    EXPECT_EQ("Joy Scent", cologne_slots.at(0).item);
+    EXPECT_EQ(pkmn::e_item::JOY_SCENT, cologne_slots.at(0).item);
     EXPECT_EQ(5, cologne_slots.at(0).amount);
 
     if(colosseum)
     {
-        EXPECT_EQ("Excite Scent", cologne_slots.at(1).item);
+        EXPECT_EQ(pkmn::e_item::EXCITE_SCENT, cologne_slots.at(1).item);
         EXPECT_EQ(5, cologne_slots.at(1).amount);
     }
     else
     {
-        EXPECT_EQ("None", cologne_slots.at(1).item);
+        EXPECT_EQ(pkmn::e_item::NONE, cologne_slots.at(1).item);
         EXPECT_EQ(0, cologne_slots.at(1).amount);
 
         const pkmn::item_slots_t& battle_cd_slots = bag->get_pocket("Battle CDs")->as_vector();
-        EXPECT_EQ("Battle CD 01", battle_cd_slots.at(0).item);
+        EXPECT_EQ(pkmn::e_item::BATTLE_CD_01, battle_cd_slots.at(0).item);
         EXPECT_EQ(5, battle_cd_slots.at(0).amount);
-        EXPECT_EQ("None", battle_cd_slots.at(1).item);
+        EXPECT_EQ(pkmn::e_item::NONE, battle_cd_slots.at(1).item);
         EXPECT_EQ(0, battle_cd_slots.at(1).amount);
     }
 
@@ -794,72 +1009,67 @@ TEST_P(gcn_item_bag_test, item_bag_test)
     // Make sure removing items through the bag removes from the proper pockets.
     for(int i = 0; i < 8; ++i) {
         bag->remove(
-            (colosseum ? colosseum_all_pocket_items[i] : xd_all_pocket_items[i]),
+            (colosseum ? COLOSSEUM_ALL_POCKET_ITEMS[i] : XD_ALL_POCKET_ITEMS[i]),
             5
         );
     }
 
-    EXPECT_EQ("None", item_slots.at(0).item);
+    EXPECT_EQ(pkmn::e_item::NONE, item_slots.at(0).item);
     EXPECT_EQ(0, item_slots.at(0).amount);
-    EXPECT_EQ("None", item_slots.at(1).item);
+    EXPECT_EQ(pkmn::e_item::NONE, item_slots.at(1).item);
     EXPECT_EQ(0, item_slots.at(1).amount);
 
-    EXPECT_EQ("None", key_item_slots.at(0).item);
+    EXPECT_EQ(pkmn::e_item::NONE, key_item_slots.at(0).item);
     EXPECT_EQ(0, key_item_slots.at(0).amount);
-    EXPECT_EQ("None", key_item_slots.at(1).item);
+    EXPECT_EQ(pkmn::e_item::NONE, key_item_slots.at(1).item);
     EXPECT_EQ(0, key_item_slots.at(1).amount);
 
-    EXPECT_EQ("None", ball_slots.at(0).item);
+    EXPECT_EQ(pkmn::e_item::NONE, ball_slots.at(0).item);
     EXPECT_EQ(0, ball_slots.at(0).amount);
-    EXPECT_EQ("None", ball_slots.at(1).item);
+    EXPECT_EQ(pkmn::e_item::NONE, ball_slots.at(1).item);
     EXPECT_EQ(0, ball_slots.at(1).amount);
 
-    EXPECT_EQ("None", tm_slots.at(0).item);
+    EXPECT_EQ(pkmn::e_item::NONE, tm_slots.at(0).item);
     EXPECT_EQ(0, tm_slots.at(0).amount);
-    EXPECT_EQ("None", tm_slots.at(1).item);
+    EXPECT_EQ(pkmn::e_item::NONE, tm_slots.at(1).item);
     EXPECT_EQ(0, tm_slots.at(1).amount);
-    EXPECT_EQ("None", tm_slots.at(2).item);
+    EXPECT_EQ(pkmn::e_item::NONE, tm_slots.at(2).item);
     EXPECT_EQ(0, tm_slots.at(2).amount);
 
-    EXPECT_EQ("None", berry_slots.at(0).item);
+    EXPECT_EQ(pkmn::e_item::NONE, berry_slots.at(0).item);
     EXPECT_EQ(0, berry_slots.at(0).amount);
-    EXPECT_EQ("None", berry_slots.at(1).item);
+    EXPECT_EQ(pkmn::e_item::NONE, berry_slots.at(1).item);
     EXPECT_EQ(0, berry_slots.at(1).amount);
 
-    EXPECT_EQ("None", cologne_slots.at(0).item);
+    EXPECT_EQ(pkmn::e_item::NONE, cologne_slots.at(0).item);
     EXPECT_EQ(0, cologne_slots.at(0).amount);
 
     if(colosseum)
     {
-        EXPECT_EQ("None", cologne_slots.at(1).item);
+        EXPECT_EQ(pkmn::e_item::NONE, cologne_slots.at(1).item);
         EXPECT_EQ(0, cologne_slots.at(1).amount);
     }
     else
     {
-        EXPECT_EQ("None", cologne_slots.at(1).item);
+        EXPECT_EQ(pkmn::e_item::NONE, cologne_slots.at(1).item);
         EXPECT_EQ(0, cologne_slots.at(1).amount);
 
         const pkmn::item_slots_t& battle_cd_slots = bag->get_pocket("Battle CDs")->as_vector();
-        EXPECT_EQ("None", battle_cd_slots.at(0).item);
+        EXPECT_EQ(pkmn::e_item::NONE, battle_cd_slots.at(0).item);
         EXPECT_EQ(0, battle_cd_slots.at(0).amount);
-        EXPECT_EQ("None", battle_cd_slots.at(1).item);
+        EXPECT_EQ(pkmn::e_item::NONE, battle_cd_slots.at(1).item);
         EXPECT_EQ(0, battle_cd_slots.at(1).amount);
     }
 
     // Make sure we can't add items from other generations or invalid Generation III games.
     test_item_bag_invalid_items(
         bag,
-        (colosseum ? colosseum_wrong_game_all_pocket_items : xd_wrong_game_all_pocket_items)
+        (colosseum ? COLOSSEUM_WRONG_GAME_ALL_POCKET_ITEMS : XD_WRONG_GAME_ALL_POCKET_ITEMS)
     );
 }
-
-static const std::vector<std::string> item_bag_params =
-{
-    "Colosseum", "XD"
-};
 
 INSTANTIATE_TEST_CASE_P(
     cpp_gcn_item_bag_test,
     gcn_item_bag_test,
-    ::testing::ValuesIn(item_bag_params)
+    ::testing::ValuesIn(pkmntest::GCN_GAMES)
 );

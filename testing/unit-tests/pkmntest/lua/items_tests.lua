@@ -26,7 +26,7 @@ end
 function items_tests.item_list_test_empty_slot(items)
     for item_index = 1, #items
     do
-        luaunit.assertEquals(items[item_index].item, "None")
+        luaunit.assertEquals(items[item_index].item, pkmn.item.NONE)
         luaunit.assertEquals(items[item_index].amount, 0)
     end
 end
@@ -103,23 +103,23 @@ function items_tests.item_list_test_setting_items(items, item_names)
         item_names[4]
     )
 
-    items[2].item = "None"
+    items[2].item = pkmn.item.NONE
 
     luaunit.assertEquals(items.num_items, 2)
     luaunit.assertEquals(items[1].item, item_names[1])
     luaunit.assertEquals(items[1].amount, 50)
     luaunit.assertEquals(items[2].item, item_names[3])
     luaunit.assertEquals(items[2].amount, 30)
-    luaunit.assertEquals(items[3].item, "None")
+    luaunit.assertEquals(items[3].item, pkmn.item.NONE)
     luaunit.assertEquals(items[3].amount, 0)
 
-    items[1].item = "None"
-    items[1].item = "None"
+    items[1].item = pkmn.item.NONE
+    items[1].item = pkmn.item.NONE
 
     luaunit.assertEquals(items.num_items, 0)
     for item_index = 1, 3
     do
-        luaunit.assertEquals(items[item_index].item, "None")
+        luaunit.assertEquals(items[item_index].item, pkmn.item.NONE)
         luaunit.assertEquals(items[item_index].amount, 0)
     end
 end
@@ -177,7 +177,7 @@ function items_tests.item_list_test_add_remove(items, item_names)
     luaunit.assertEquals(items[1].amount, 79)
     luaunit.assertEquals(items[2].item, item_names[3])
     luaunit.assertEquals(items[2].amount, 16)
-    luaunit.assertEquals(items[3].item, "None")
+    luaunit.assertEquals(items[3].item, pkmn.item.NONE)
     luaunit.assertEquals(items[3].amount, 0)
     luaunit.assertEquals(items.num_items, 2)
 

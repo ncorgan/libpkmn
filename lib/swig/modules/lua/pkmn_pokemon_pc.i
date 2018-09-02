@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -19,7 +19,7 @@
 
 // Convert getter/setter functions into attributes for more idiomatic Lua.
 
-%attributestring(pkmn::swig::pokemon_pc, std::string, game, get_game);
+%attribute(pkmn::swig::pokemon_pc, pkmn::e_game, game, get_game);
 %attributeval(pkmn::swig::pokemon_pc, %arg(std::vector<std::string>), box_names, get_box_names);
 
 %extend pkmn::swig::pokemon_pc

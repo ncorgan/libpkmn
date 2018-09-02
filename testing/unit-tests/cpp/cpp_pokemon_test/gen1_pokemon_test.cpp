@@ -8,6 +8,7 @@
 #include "pokemon_test_common.hpp"
 
 #include <pkmn/exception.hpp>
+#include "pksav/enum_maps.hpp"
 #include "pksav/pksav_call.hpp"
 
 #include <pksav/common/stats.h>
@@ -19,27 +20,33 @@
 
 class gen1_pokemon_test: public pokemon_test {};
 
-TEST_P(gen1_pokemon_test, gen1_pokemon_test) {
+TEST_P(gen1_pokemon_test, gen1_pokemon_test)
+{
     pkmn::pokemon::sptr pokemon = get_pokemon();
 
     pokemon_test_common(
         pokemon,
         {
-            "Great Ball",
-            {"Great Ball"},
+            pkmn::e_ball::GREAT_BALL,
+            {pkmn::e_ball::GREAT_BALL},
 
-            "Potion",
-            {"Potion"},
+            pkmn::e_item::POTION,
+            {pkmn::e_item::POTION},
 
             "Special",
             {"Route 1"},
             {"Route 1"},
 
-            {"Slash", "Flamethrower", "Tail Whip", "Fire Blast"},
-            {"Return"},
+            {
+                pkmn::e_move::SLASH,
+                pkmn::e_move::FLAMETHROWER,
+                pkmn::e_move::TAIL_WHIP,
+                pkmn::e_move::FIRE_BLAST
+            },
+            {pkmn::e_move::RETURN},
 
-            {"Red"},
-            {"Red"}
+            {pkmn::e_game::RED},
+            {pkmn::e_game::RED}
         }
     );
 
@@ -53,6 +60,8 @@ TEST_P(gen1_pokemon_test, gen1_pokemon_test) {
     const struct pksav_gen1_pokemon_party_data* native_party_data = reinterpret_cast<struct pksav_gen1_pokemon_party_data*>(
                                                                         pokemon->get_native_party_data()
                                                                     );
+    static const pksav::gb_condition_bimap_t& GB_CONDITION_BIMAP = pksav::get_gb_condition_bimap();
+
 
     /*
      * PC data
@@ -60,8 +69,11 @@ TEST_P(gen1_pokemon_test, gen1_pokemon_test) {
     EXPECT_EQ(pokemon->get_database_entry().get_pokemon_index(), int(native_pc->species));
     EXPECT_EQ(pokemon->get_current_hp(), int(pksav_bigendian16(native_pc->current_hp)));
     EXPECT_EQ(pokemon->get_level(), int(native_pc->level));
-    // TODO: change condition and check
-    EXPECT_EQ(0, native_pc->condition);
+
+    EXPECT_EQ(
+        uint8_t(GB_CONDITION_BIMAP.left.at(pokemon->get_condition())),
+        native_pc->condition
+    );
     // TODO: programmatic check for types, catch rate
 
     const pkmn::move_slots_t& moves = pokemon->get_moves();
@@ -81,14 +93,14 @@ TEST_P(gen1_pokemon_test, gen1_pokemon_test) {
 
     EXPECT_EQ(pokemon->get_original_trainer_id(), int(pksav_bigendian16(native_pc->ot_id)));
 
-    const std::map<std::string, int>& EVs = pokemon->get_EVs();
-    EXPECT_EQ(EVs.at("HP"), int(pksav_bigendian16(native_pc->ev_hp)));
-    EXPECT_EQ(EVs.at("Attack") , int(pksav_bigendian16(native_pc->ev_atk)));
-    EXPECT_EQ(EVs.at("Defense"), int(pksav_bigendian16(native_pc->ev_def)));
-    EXPECT_EQ(EVs.at("Speed"), int(pksav_bigendian16(native_pc->ev_spd)));
-    EXPECT_EQ(EVs.at("Special"), int(pksav_bigendian16(native_pc->ev_spcl)));
+    const std::map<pkmn::e_stat, int>& EVs = pokemon->get_EVs();
+    EXPECT_EQ(EVs.at(pkmn::e_stat::HP), int(pksav_bigendian16(native_pc->ev_hp)));
+    EXPECT_EQ(EVs.at(pkmn::e_stat::ATTACK) , int(pksav_bigendian16(native_pc->ev_atk)));
+    EXPECT_EQ(EVs.at(pkmn::e_stat::DEFENSE), int(pksav_bigendian16(native_pc->ev_def)));
+    EXPECT_EQ(EVs.at(pkmn::e_stat::SPEED), int(pksav_bigendian16(native_pc->ev_spd)));
+    EXPECT_EQ(EVs.at(pkmn::e_stat::SPECIAL), int(pksav_bigendian16(native_pc->ev_spcl)));
 
-    const std::map<std::string, int>& IVs = pokemon->get_IVs();
+    const std::map<pkmn::e_stat, int>& IVs = pokemon->get_IVs();
     uint8_t pksav_IVs[PKSAV_NUM_GB_IVS] = {0};
     PKSAV_CALL(
         pksav_get_gb_IVs(
@@ -98,21 +110,21 @@ TEST_P(gen1_pokemon_test, gen1_pokemon_test) {
         );
     )
 
-    EXPECT_EQ(IVs.at("HP"),      int(pksav_IVs[PKSAV_GB_IV_HP]));
-    EXPECT_EQ(IVs.at("Attack"),  int(pksav_IVs[PKSAV_GB_IV_ATTACK]));
-    EXPECT_EQ(IVs.at("Defense"), int(pksav_IVs[PKSAV_GB_IV_DEFENSE]));
-    EXPECT_EQ(IVs.at("Speed"),   int(pksav_IVs[PKSAV_GB_IV_SPEED]));
-    EXPECT_EQ(IVs.at("Special"), int(pksav_IVs[PKSAV_GB_IV_SPECIAL]));
+    EXPECT_EQ(IVs.at(pkmn::e_stat::HP),      int(pksav_IVs[PKSAV_GB_IV_HP]));
+    EXPECT_EQ(IVs.at(pkmn::e_stat::ATTACK),  int(pksav_IVs[PKSAV_GB_IV_ATTACK]));
+    EXPECT_EQ(IVs.at(pkmn::e_stat::DEFENSE), int(pksav_IVs[PKSAV_GB_IV_DEFENSE]));
+    EXPECT_EQ(IVs.at(pkmn::e_stat::SPEED),   int(pksav_IVs[PKSAV_GB_IV_SPEED]));
+    EXPECT_EQ(IVs.at(pkmn::e_stat::SPECIAL), int(pksav_IVs[PKSAV_GB_IV_SPECIAL]));
 
     /*
      * Party data
      */
     EXPECT_EQ(pokemon->get_level(), int(native_party_data->level));
-    EXPECT_EQ(pokemon->get_stats().at("HP"), int(pksav_bigendian16(native_party_data->max_hp)));
-    EXPECT_EQ(pokemon->get_stats().at("Attack"), int(pksav_bigendian16(native_party_data->atk)));
-    EXPECT_EQ(pokemon->get_stats().at("Defense"), int(pksav_bigendian16(native_party_data->def)));
-    EXPECT_EQ(pokemon->get_stats().at("Speed"), int(pksav_bigendian16(native_party_data->spd)));
-    EXPECT_EQ(pokemon->get_stats().at("Special"), int(pksav_bigendian16(native_party_data->spcl)));
+    EXPECT_EQ(pokemon->get_stats().at(pkmn::e_stat::HP), int(pksav_bigendian16(native_party_data->max_hp)));
+    EXPECT_EQ(pokemon->get_stats().at(pkmn::e_stat::ATTACK), int(pksav_bigendian16(native_party_data->atk)));
+    EXPECT_EQ(pokemon->get_stats().at(pkmn::e_stat::DEFENSE), int(pksav_bigendian16(native_party_data->def)));
+    EXPECT_EQ(pokemon->get_stats().at(pkmn::e_stat::SPEED), int(pksav_bigendian16(native_party_data->spd)));
+    EXPECT_EQ(pokemon->get_stats().at(pkmn::e_stat::SPECIAL), int(pksav_bigendian16(native_party_data->spcl)));
 
     /*
      * Test attributes.
@@ -120,10 +132,11 @@ TEST_P(gen1_pokemon_test, gen1_pokemon_test) {
     EXPECT_EQ(pokemon->get_numeric_attribute("Catch rate"), int(native_pc->catch_rate));
 }
 
-static const std::vector<std::pair<std::string, std::string>> params = {
-    {"Red", "Charmander"},
-    {"Blue", "Squirtle"},
-    {"Yellow", "Bulbasaur"}
+static const std::vector<std::pair<pkmn::e_game, pkmn::e_species>> params =
+{
+    {pkmn::e_game::RED,    pkmn::e_species::CHARMANDER},
+    {pkmn::e_game::BLUE,   pkmn::e_species::SQUIRTLE},
+    {pkmn::e_game::YELLOW, pkmn::e_species::BULBASAUR},
 };
 
 INSTANTIATE_TEST_CASE_P(

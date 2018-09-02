@@ -11,6 +11,10 @@
 #include <pkmn-c/error.h>
 
 #include <pkmn-c/item_list.h>
+
+#include <pkmn-c/enums/game.h>
+#include <pkmn-c/enums/item.h>
+
 #include <pkmn-c/types/string_types.h>
 
 /*!
@@ -29,7 +33,7 @@ struct pkmn_item_bag
     /*!
      * @brief The game this bag is associated with.
      */
-    char* p_game;
+    enum pkmn_game game;
 
     /*!
      * @brief A list of the names of this bag's pockets.
@@ -58,7 +62,7 @@ extern "C" {
  * \returns ::PKMN_ERROR_NULL_POINTER if either parameter is NULL
  */
 PKMN_C_API enum pkmn_error pkmn_item_bag_init(
-    const char* p_game,
+    enum pkmn_game game,
     struct pkmn_item_bag* p_item_bag_out
 );
 
@@ -120,7 +124,7 @@ PKMN_C_API enum pkmn_error pkmn_item_bag_get_pocket(
  * adds the item to it.
  *
  * \param item_bag_ptr A pointer to the item bag struct to use
- * \param item Name of the item to add
+ * \param item The item to add
  * \param amount How many of the item to add
  * \returns ::PKMN_ERROR_NONE upon successful completion
  * \returns ::PKMN_ERROR_NULL_POINTER if any pointer parameter is NULL
@@ -131,7 +135,7 @@ PKMN_C_API enum pkmn_error pkmn_item_bag_get_pocket(
  */
 PKMN_C_API enum pkmn_error pkmn_item_bag_add(
     const struct pkmn_item_bag* p_item_bag,
-    const char* p_item,
+    enum pkmn_item item,
     size_t amount
 );
 
@@ -142,8 +146,8 @@ PKMN_C_API enum pkmn_error pkmn_item_bag_add(
  * removes the item from it.
  *
  * \param item_bag_ptr A pointer to the item bag struct to use
- * \param item Name of the item to add
- * \param amount How many of the item to add
+ * \param item The item to remote
+ * \param amount How many of the item to remote
  * \returns ::PKMN_ERROR_NONE upon successful completion
  * \returns ::PKMN_ERROR_NULL_POINTER if any pointer parameter is NULL
  * \returns ::PKMN_ERROR_INVALID_ARGUMENT if the item name is invalid
@@ -153,7 +157,7 @@ PKMN_C_API enum pkmn_error pkmn_item_bag_add(
  */
 PKMN_C_API enum pkmn_error pkmn_item_bag_remove(
     const struct pkmn_item_bag* p_item_bag,
-    const char* p_item,
+    enum pkmn_item item,
     size_t amount
 );
 

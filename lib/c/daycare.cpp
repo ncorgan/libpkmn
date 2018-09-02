@@ -16,26 +16,21 @@
 #include <pkmn-c/daycare.h>
 
 enum pkmn_error pkmn_daycare_init(
-    const char* p_game,
+    enum pkmn_game game,
     struct pkmn_daycare* p_daycare_out
 )
 {
     enum pkmn_error error = pkmn::c::check_for_null_param(
-                                p_game,
-                                "p_game"
+                                p_daycare_out,
+                                "p_daycare_out"
                             );
-    if(!error)
-    {
-        error = pkmn::c::check_for_null_param(
-                    p_daycare_out,
-                    "p_daycare_out"
-                );
-    }
     if(!error)
     {
         auto impl = [&]()
         {
-            pkmn::daycare::sptr cpp = pkmn::daycare::make(p_game);
+            pkmn::daycare::sptr cpp = pkmn::daycare::make(
+                                          static_cast<pkmn::e_game>(game)
+                                      );
 
             pkmn::c::init_daycare(
                 cpp,
@@ -61,7 +56,6 @@ enum pkmn_error pkmn_daycare_free(
     {
         auto impl = [&]()
         {
-            pkmn::c::free_pointer_and_set_to_null(&p_daycare->p_game);
             pkmn::c::delete_pointer_and_set_to_null(
                 reinterpret_cast<pkmn::c::daycare_internal_t**>(&p_daycare->p_internal)
             );

@@ -5,13 +5,13 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-#include "common/attributes.hpp"
-#include "common/misc.hpp"
-
-#include "enum_maps.hpp"
 #include "cpp_to_c.hpp"
+#include "enum_maps.hpp"
 #include "error_internal.hpp"
 #include "exception_internal.hpp"
+
+#include "common/attributes.hpp"
+#include "common/misc.hpp"
 
 #include "private_exports.hpp"
 
@@ -36,31 +36,17 @@ const char* pkmn_pokemon_default_trainer_name()
 }
 
 enum pkmn_error pkmn_pokemon_init(
-    const char* p_species,
-    const char* p_game,
+    enum pkmn_species species,
+    enum pkmn_game game,
     const char* p_form,
     int level,
     struct pkmn_pokemon* p_pokemon_out
 )
 {
     enum pkmn_error error = pkmn::c::check_for_null_param(
-                                p_species,
-                                "p_species"
+                                p_form,
+                                "p_form"
                             );
-    if(!error)
-    {
-        error = pkmn::c::check_for_null_param(
-                    p_game,
-                    "p_game"
-                );
-    }
-    if(!error)
-    {
-        error = pkmn::c::check_for_null_param(
-                    p_form,
-                    "p_form"
-                );
-    }
     if(!error)
     {
         error = pkmn::c::check_for_null_param(
@@ -73,8 +59,8 @@ enum pkmn_error pkmn_pokemon_init(
         auto impl = [&]()
         {
             pkmn::pokemon::sptr cpp = pkmn::pokemon::make(
-                                          p_species,
-                                          p_game,
+                                          static_cast<pkmn::e_species>(species),
+                                          static_cast<pkmn::e_game>(game),
                                           p_form,
                                           level
                                       );
@@ -137,8 +123,6 @@ enum pkmn_error pkmn_pokemon_free(
     {
         auto impl = [&]()
         {
-            pkmn::c::free_pointer_and_set_to_null(&p_pokemon->p_species);
-            pkmn::c::free_pointer_and_set_to_null(&p_pokemon->p_game);
             pkmn::c::delete_pointer_and_set_to_null(
                 reinterpret_cast<pkmn::c::pokemon_internal_t**>(&p_pokemon->p_internal)
             );
@@ -161,7 +145,7 @@ const char* pkmn_pokemon_strerror(
 
 enum pkmn_error pkmn_pokemon_to_game(
     const struct pkmn_pokemon* p_pokemon,
-    const char* p_game,
+    enum pkmn_game game,
     struct pkmn_pokemon* p_new_pokemon_out
 )
 {
@@ -175,23 +159,17 @@ enum pkmn_error pkmn_pokemon_to_game(
         BOOST_ASSERT(p_internal != nullptr);
 
         error = pkmn::c::check_for_null_param(
-                    p_game,
-                    "p_game",
+                    p_new_pokemon_out,
+                    "p_new_pokemon_out",
                     p_internal
                 );
         if(!error)
         {
-            error = pkmn::c::check_for_null_param(
-                        p_new_pokemon_out,
-                        "p_new_pokemon_out",
-                        p_internal
-                    );
-        }
-        if(!error)
-        {
             auto impl = [&]()
             {
-                pkmn::pokemon::sptr new_pokemon_cpp = p_internal->cpp->to_game(p_game);
+                pkmn::pokemon::sptr new_pokemon_cpp = p_internal->cpp->to_game(
+                                                          static_cast<pkmn::e_game>(game)
+                                                      );
 
                 pkmn::c::init_pokemon(
                     new_pokemon_cpp,
@@ -429,11 +407,9 @@ enum pkmn_error pkmn_pokemon_get_condition(
         {
             auto impl = [&]()
             {
-                std::string condition = p_internal->cpp->get_condition();
-
-                const pkmn::c::condition_bimap_t& condition_bimap = pkmn::c::get_condition_bimap();
-                BOOST_ASSERT(condition_bimap.left.count(condition) > 0);
-                *p_condition_out = condition_bimap.left.at(condition);
+                *p_condition_out = static_cast<enum pkmn_condition>(
+                                       p_internal->cpp->get_condition()
+                                   );
             };
 
             error = pkmn::c::handle_exceptions(impl, p_internal);
@@ -459,17 +435,7 @@ enum pkmn_error pkmn_pokemon_set_condition(
 
         auto impl = [&]()
         {
-            const pkmn::c::condition_bimap_t& condition_bimap = pkmn::c::get_condition_bimap();
-
-            pkmn::enforce_value_in_map_keys(
-                "Condition",
-                condition,
-                condition_bimap.right
-            );
-
-            p_internal->cpp->set_condition(
-                condition_bimap.right.at(condition)
-            );
+            p_internal->cpp->set_condition(static_cast<pkmn::e_condition>(condition));
         };
 
         error = pkmn::c::handle_exceptions(impl, p_internal);
@@ -574,11 +540,9 @@ enum pkmn_error pkmn_pokemon_get_gender(
         {
             auto impl = [&]()
             {
-                std::string gender = p_internal->cpp->get_gender();
+                pkmn::e_gender gender = p_internal->cpp->get_gender();
 
-                const pkmn::c::gender_bimap_t& gender_bimap = pkmn::c::get_gender_bimap();
-                BOOST_ASSERT(gender_bimap.left.count(gender) > 0);
-                *p_gender_out = gender_bimap.left.at(gender);
+                *p_gender_out = static_cast<enum pkmn_gender>(gender);
             };
 
             error = pkmn::c::handle_exceptions(impl, p_internal);
@@ -604,16 +568,8 @@ enum pkmn_error pkmn_pokemon_set_gender(
 
         auto impl = [&]()
         {
-            const pkmn::c::gender_bimap_t& gender_bimap = pkmn::c::get_gender_bimap();
-
-            pkmn::enforce_value_in_map_keys(
-                "Gender",
-                gender,
-                gender_bimap.right
-            );
-
             p_internal->cpp->set_gender(
-                gender_bimap.right.at(gender)
+                static_cast<pkmn::e_gender>(gender)
             );
         };
 
@@ -683,9 +639,61 @@ enum pkmn_error pkmn_pokemon_set_is_shiny(
 
 enum pkmn_error pkmn_pokemon_get_held_item(
     const struct pkmn_pokemon* p_pokemon,
-    char* p_held_item_out,
-    size_t held_item_buffer_len,
-    size_t* p_actual_held_item_len_out
+    enum pkmn_item* p_held_item_out
+)
+{
+    enum pkmn_error error = pkmn::c::check_for_null_wrapper_param(
+                                p_pokemon,
+                                "p_pokemon"
+                            );
+    if(!error)
+    {
+        auto* p_internal = pkmn::c::get_pokemon_internal_ptr(p_pokemon);
+        BOOST_ASSERT(p_internal != nullptr);
+
+        auto impl = [&]()
+        {
+            *p_held_item_out = static_cast<enum pkmn_item>(
+                                   p_internal->cpp->get_held_item()
+                               );
+        };
+
+        error = pkmn::c::handle_exceptions(impl, p_internal);
+    }
+
+    return error;
+}
+
+enum pkmn_error pkmn_pokemon_set_held_item(
+    const struct pkmn_pokemon* p_pokemon,
+    enum pkmn_item item
+)
+{
+    enum pkmn_error error = pkmn::c::check_for_null_wrapper_param(
+                                p_pokemon,
+                                "p_pokemon"
+                            );
+    if(!error)
+    {
+        auto* p_internal = pkmn::c::get_pokemon_internal_ptr(p_pokemon);
+        BOOST_ASSERT(p_internal != nullptr);
+
+        auto impl = [&]()
+        {
+            p_internal->cpp->set_held_item(
+                static_cast<pkmn::e_item>(item)
+            );
+        };
+
+        error = pkmn::c::handle_exceptions(impl, p_internal);
+    }
+
+    return error;
+}
+
+enum pkmn_error pkmn_pokemon_get_nature(
+    const struct pkmn_pokemon* p_pokemon,
+    enum pkmn_nature* p_nature_out
 )
 {
     enum pkmn_error error = pkmn::c::check_for_null_wrapper_param(
@@ -698,20 +706,17 @@ enum pkmn_error pkmn_pokemon_get_held_item(
         BOOST_ASSERT(p_internal != nullptr);
 
         error = pkmn::c::check_for_null_param(
-                    p_held_item_out,
-                    "p_held_item_out",
+                    p_nature_out,
+                    "p_nature_out",
                     p_internal
                 );
         if(!error)
         {
             auto impl = [&]()
             {
-                pkmn::c::string_cpp_to_c(
-                    p_internal->cpp->get_held_item(),
-                    p_held_item_out,
-                    held_item_buffer_len,
-                    p_actual_held_item_len_out
-                );
+                *p_nature_out = static_cast<enum pkmn_nature>(
+                                       p_internal->cpp->get_nature()
+                                   );
             };
 
             error = pkmn::c::handle_exceptions(impl, p_internal);
@@ -721,9 +726,9 @@ enum pkmn_error pkmn_pokemon_get_held_item(
     return error;
 }
 
-enum pkmn_error pkmn_pokemon_set_held_item(
+enum pkmn_error pkmn_pokemon_set_nature(
     const struct pkmn_pokemon* p_pokemon,
-    const char* p_held_item
+    enum pkmn_nature nature
 )
 {
     enum pkmn_error error = pkmn::c::check_for_null_wrapper_param(
@@ -735,20 +740,14 @@ enum pkmn_error pkmn_pokemon_set_held_item(
         auto* p_internal = pkmn::c::get_pokemon_internal_ptr(p_pokemon);
         BOOST_ASSERT(p_internal != nullptr);
 
-        error = pkmn::c::check_for_null_param(
-                    p_held_item,
-                    "p_held_item",
-                    p_internal
-                );
-        if(!error)
+        auto impl = [&]()
         {
-            auto impl = [&]()
-            {
-                p_internal->cpp->set_held_item(p_held_item);
-            };
+            p_internal->cpp->set_nature(
+                static_cast<pkmn::e_nature>(nature)
+            );
+        };
 
-            error = pkmn::c::handle_exceptions(impl, p_internal);
-        }
+        error = pkmn::c::handle_exceptions(impl, p_internal);
     }
 
     return error;
@@ -847,11 +846,9 @@ enum pkmn_error pkmn_pokemon_get_original_trainer_info(
 
                 if(p_internal->generation >= 2)
                 {
-                    std::string original_trainer_gender = p_internal->cpp->get_original_trainer_gender();
+                    pkmn::e_gender original_trainer_gender = p_internal->cpp->get_original_trainer_gender();
 
-                    const pkmn::c::gender_bimap_t& gender_bimap = pkmn::c::get_gender_bimap();
-                    BOOST_ASSERT(gender_bimap.left.count(original_trainer_gender) > 0);
-                    trainer_info.gender = gender_bimap.left.at(original_trainer_gender);
+                    trainer_info.gender = static_cast<enum pkmn_gender>(original_trainer_gender);
                 }
 
                 *p_original_trainer_info_out = std::move(trainer_info);
@@ -994,16 +991,62 @@ enum pkmn_error pkmn_pokemon_set_original_trainer_gender(
 
         auto impl = [&]()
         {
-            const pkmn::c::gender_bimap_t& gender_bimap = pkmn::c::get_gender_bimap();
-
-            pkmn::enforce_value_in_map_keys(
-                "Original trainer gender",
-                original_trainer_gender,
-                gender_bimap.right
-            );
-
             p_internal->cpp->set_original_trainer_gender(
-                gender_bimap.right.at(original_trainer_gender)
+                static_cast<pkmn::e_gender>(original_trainer_gender)
+            );
+        };
+
+        error = pkmn::c::handle_exceptions(impl, p_internal);
+    }
+
+    return error;
+}
+
+enum pkmn_error pkmn_pokemon_get_language(
+    const struct pkmn_pokemon* p_pokemon,
+    enum pkmn_language* p_language_out
+)
+{
+    enum pkmn_error error = pkmn::c::check_for_null_wrapper_param(
+                                p_pokemon,
+                                "p_pokemon"
+                            );
+    if(!error)
+    {
+        auto* p_internal = pkmn::c::get_pokemon_internal_ptr(p_pokemon);
+        BOOST_ASSERT(p_internal != nullptr);
+
+        auto impl = [&]()
+        {
+            *p_language_out = static_cast<enum pkmn_language>(
+                                  p_internal->cpp->get_language()
+                              );
+        };
+
+        error = pkmn::c::handle_exceptions(impl, p_internal);
+    }
+
+    return error;
+}
+
+enum pkmn_error pkmn_pokemon_set_language(
+    const struct pkmn_pokemon* p_pokemon,
+    enum pkmn_language language
+)
+{
+    enum pkmn_error error = pkmn::c::check_for_null_wrapper_param(
+                                p_pokemon,
+                                "p_pokemon"
+                            );
+    if(!error)
+    {
+        auto* p_internal = pkmn::c::get_pokemon_internal_ptr(p_pokemon);
+        BOOST_ASSERT(p_internal != nullptr);
+
+        auto impl = [&]()
+        {
+            p_internal->cpp->set_language(
+                static_cast<pkmn::e_language>(language)
             );
         };
 
@@ -1073,9 +1116,7 @@ enum pkmn_error pkmn_pokemon_set_current_trainer_friendship(
 
 enum pkmn_error pkmn_pokemon_get_ability(
     const struct pkmn_pokemon* p_pokemon,
-    char* p_ability_out,
-    size_t ability_buffer_len,
-    size_t* p_actual_ability_len_out
+    enum pkmn_ability* p_ability_out
 )
 {
     enum pkmn_error error = pkmn::c::check_for_null_wrapper_param(
@@ -1096,12 +1137,9 @@ enum pkmn_error pkmn_pokemon_get_ability(
         {
             auto impl = [&]()
             {
-                pkmn::c::string_cpp_to_c(
-                    p_internal->cpp->get_ability(),
-                    p_ability_out,
-                    ability_buffer_len,
-                    p_actual_ability_len_out
-                );
+                *p_ability_out = static_cast<enum pkmn_ability>(
+                                     p_internal->cpp->get_ability()
+                                 );
             };
 
             error = pkmn::c::handle_exceptions(impl, p_internal);
@@ -1113,7 +1151,7 @@ enum pkmn_error pkmn_pokemon_get_ability(
 
 enum pkmn_error pkmn_pokemon_set_ability(
     const struct pkmn_pokemon* p_pokemon,
-    const char* p_ability
+    enum pkmn_ability ability
 )
 {
     enum pkmn_error error = pkmn::c::check_for_null_wrapper_param(
@@ -1125,20 +1163,12 @@ enum pkmn_error pkmn_pokemon_set_ability(
         auto* p_internal = pkmn::c::get_pokemon_internal_ptr(p_pokemon);
         BOOST_ASSERT(p_internal != nullptr);
 
-        error = pkmn::c::check_for_null_param(
-                    p_ability,
-                    "p_ability",
-                    p_internal
-                );
-        if(!error)
+        auto impl = [&]()
         {
-            auto impl = [&]()
-            {
-                p_internal->cpp->set_ability(p_ability);
-            };
+            p_internal->cpp->set_ability(static_cast<pkmn::e_ability>(ability));
+        };
 
-            error = pkmn::c::handle_exceptions(impl, p_internal);
-        }
+        error = pkmn::c::handle_exceptions(impl, p_internal);
     }
 
     return error;
@@ -1146,9 +1176,7 @@ enum pkmn_error pkmn_pokemon_set_ability(
 
 enum pkmn_error pkmn_pokemon_get_ball(
     const struct pkmn_pokemon* p_pokemon,
-    char* p_ball_out,
-    size_t ball_buffer_len,
-    size_t* p_actual_ball_len_out
+    enum pkmn_ball* p_ball_out
 )
 {
     enum pkmn_error error = pkmn::c::check_for_null_wrapper_param(
@@ -1169,12 +1197,7 @@ enum pkmn_error pkmn_pokemon_get_ball(
         {
             auto impl = [&]()
             {
-                pkmn::c::string_cpp_to_c(
-                    p_internal->cpp->get_ball(),
-                    p_ball_out,
-                    ball_buffer_len,
-                    p_actual_ball_len_out
-                );
+                *p_ball_out = static_cast<enum pkmn_ball>(p_internal->cpp->get_ball());
             };
 
             error = pkmn::c::handle_exceptions(impl, p_internal);
@@ -1186,7 +1209,7 @@ enum pkmn_error pkmn_pokemon_get_ball(
 
 enum pkmn_error pkmn_pokemon_set_ball(
     const struct pkmn_pokemon* p_pokemon,
-    const char* p_ball
+    enum pkmn_ball ball
 )
 {
     enum pkmn_error error = pkmn::c::check_for_null_wrapper_param(
@@ -1198,20 +1221,12 @@ enum pkmn_error pkmn_pokemon_set_ball(
         auto* p_internal = pkmn::c::get_pokemon_internal_ptr(p_pokemon);
         BOOST_ASSERT(p_internal != nullptr);
 
-        error = pkmn::c::check_for_null_param(
-                    p_ball,
-                    "p_ball",
-                    p_internal
-                );
-        if(!error)
+        auto impl = [&]()
         {
-            auto impl = [&]()
-            {
-                p_internal->cpp->set_ball(p_ball);
-            };
+            p_internal->cpp->set_ball(static_cast<pkmn::e_ball>(ball));
+        };
 
-            error = pkmn::c::handle_exceptions(impl, p_internal);
-        }
+        error = pkmn::c::handle_exceptions(impl, p_internal);
     }
 
     return error;
@@ -1355,9 +1370,7 @@ enum pkmn_error pkmn_pokemon_set_location_met(
 
 enum pkmn_error pkmn_pokemon_get_original_game(
     const struct pkmn_pokemon* p_pokemon,
-    char* p_original_game_out,
-    size_t original_game_buffer_len,
-    size_t* p_actual_original_game_len_out
+    enum pkmn_game* p_original_game_out
 )
 {
     enum pkmn_error error = pkmn::c::check_for_null_wrapper_param(
@@ -1378,12 +1391,9 @@ enum pkmn_error pkmn_pokemon_get_original_game(
         {
             auto impl = [&]()
             {
-                pkmn::c::string_cpp_to_c(
-                    p_internal->cpp->get_original_game(),
-                    p_original_game_out,
-                    original_game_buffer_len,
-                    p_actual_original_game_len_out
-                );
+                pkmn::e_game original_game_cpp = p_internal->cpp->get_original_game();
+
+                *p_original_game_out = static_cast<enum pkmn_game>(original_game_cpp);
             };
 
             error = pkmn::c::handle_exceptions(impl, p_internal);
@@ -1395,7 +1405,7 @@ enum pkmn_error pkmn_pokemon_get_original_game(
 
 enum pkmn_error pkmn_pokemon_set_original_game(
     const struct pkmn_pokemon* p_pokemon,
-    const char* p_game
+    enum pkmn_game original_game
 )
 {
     enum pkmn_error error = pkmn::c::check_for_null_wrapper_param(
@@ -1407,20 +1417,12 @@ enum pkmn_error pkmn_pokemon_set_original_game(
         auto* p_internal = pkmn::c::get_pokemon_internal_ptr(p_pokemon);
         BOOST_ASSERT(p_internal != nullptr);
 
-        error = pkmn::c::check_for_null_param(
-                    p_game,
-                    "p_game",
-                    p_internal
-                );
-        if(!error)
+        auto impl = [&]()
         {
-            auto impl = [&]()
-            {
-                p_internal->cpp->set_original_game(p_game);
-            };
+            p_internal->cpp->set_original_game(static_cast<pkmn::e_game>(original_game));
+        };
 
-            error = pkmn::c::handle_exceptions(impl, p_internal);
-        }
+        error = pkmn::c::handle_exceptions(impl, p_internal);
     }
 
     return error;
@@ -1604,9 +1606,7 @@ enum pkmn_error pkmn_pokemon_set_level(
 
 enum pkmn_error pkmn_pokemon_get_markings(
     const struct pkmn_pokemon* p_pokemon,
-    bool* p_has_markings_buffer_out,
-    size_t has_marking_buffer_size,
-    size_t* p_actual_num_markings_out
+    struct pkmn_marking_enum_map* p_markings_out
 )
 {
     enum pkmn_error error = pkmn::c::check_for_null_wrapper_param(
@@ -1619,24 +1619,17 @@ enum pkmn_error pkmn_pokemon_get_markings(
         BOOST_ASSERT(p_internal != nullptr);
 
         error = pkmn::c::check_for_null_param(
-                    p_has_markings_buffer_out,
-                    "p_has_markings_buffer_out",
+                    p_markings_out,
+                    "p_markings_out",
                     p_internal
                 );
         if(!error)
         {
             auto impl = [&]()
             {
-                const pkmn::c::marking_bimap_t& marking_bimap = (p_internal->generation == 3) ?
-                    pkmn::c::get_gen3_marking_bimap() : pkmn::c::get_marking_bimap();
-
-                pkmn::c::copy_map_to_buffer(
+                pkmn::c::marking_enum_map_cpp_to_c(
                     p_internal->cpp->get_markings(),
-                    marking_bimap,
-                    p_has_markings_buffer_out,
-                    has_marking_buffer_size,
-                    marking_bimap.size(),
-                    p_actual_num_markings_out
+                    p_markings_out
                 );
             };
 
@@ -1664,17 +1657,8 @@ enum pkmn_error pkmn_pokemon_set_has_marking(
 
         auto impl = [&]()
         {
-            const pkmn::c::marking_bimap_t& marking_bimap = (p_internal->generation == 3) ?
-                pkmn::c::get_gen3_marking_bimap() : pkmn::c::get_marking_bimap();
-
-            pkmn::enforce_value_in_map_keys(
-                "Marking",
-                marking,
-                marking_bimap.right
-            );
-
             p_internal->cpp->set_marking(
-                marking_bimap.right.at(marking),
+                static_cast<pkmn::e_marking>(marking),
                 has_marking
             );
         };
@@ -1815,9 +1799,7 @@ enum pkmn_error pkmn_pokemon_get_ribbon_names(
 
 enum pkmn_error pkmn_pokemon_get_contest_stats(
     const struct pkmn_pokemon* p_pokemon,
-    int* p_contest_stats_buffer_out,
-    size_t contest_stat_buffer_size,
-    size_t* p_actual_num_contest_stats_out
+    struct pkmn_contest_stat_enum_map* p_contest_stats_out
 )
 {
     enum pkmn_error error = pkmn::c::check_for_null_wrapper_param(
@@ -1830,21 +1812,17 @@ enum pkmn_error pkmn_pokemon_get_contest_stats(
         BOOST_ASSERT(p_internal != nullptr);
 
         error = pkmn::c::check_for_null_param(
-                    p_contest_stats_buffer_out,
-                    "p_contest_stats_buffer_out",
+                    p_contest_stats_out,
+                    "p_contest_stats_out",
                     p_internal
                 );
         if(!error)
         {
             auto impl = [&]()
             {
-                pkmn::c::copy_map_to_buffer(
+                pkmn::c::contest_stat_enum_map_cpp_to_c(
                     p_internal->cpp->get_contest_stats(),
-                    pkmn::c::get_contest_stat_bimap(),
-                    p_contest_stats_buffer_out,
-                    contest_stat_buffer_size,
-                    PKMN_NUM_CONTEST_STATS,
-                    p_actual_num_contest_stats_out
+                    p_contest_stats_out
                 );
             };
 
@@ -1872,16 +1850,8 @@ enum pkmn_error pkmn_pokemon_set_contest_stat(
 
         auto impl = [&]()
         {
-            const pkmn::c::contest_stat_bimap_t& contest_stat_bimap = pkmn::c::get_contest_stat_bimap();
-
-            pkmn::enforce_value_in_map_keys(
-                "Contest stat",
-                contest_stat,
-                contest_stat_bimap.right
-            );
-
             p_internal->cpp->set_contest_stat(
-                contest_stat_bimap.right.at(contest_stat),
+                static_cast<pkmn::e_contest_stat>(contest_stat),
                 value
             );
         };
@@ -1933,7 +1903,7 @@ enum pkmn_error pkmn_pokemon_get_moves(
 enum pkmn_error pkmn_pokemon_set_move(
     const struct pkmn_pokemon* p_pokemon,
     size_t index,
-    const char* p_move
+    enum pkmn_move move
 )
 {
     enum pkmn_error error = pkmn::c::check_for_null_wrapper_param(
@@ -1945,23 +1915,15 @@ enum pkmn_error pkmn_pokemon_set_move(
         auto* p_internal = pkmn::c::get_pokemon_internal_ptr(p_pokemon);
         BOOST_ASSERT(p_internal != nullptr);
 
-        error = pkmn::c::check_for_null_param(
-                    p_move,
-                    "p_move",
-                    p_internal
-                );
-        if(!error)
+        auto impl = [&]()
         {
-            auto impl = [&]()
-            {
-                p_internal->cpp->set_move(
-                    p_move,
-                    static_cast<int>(index)
-                );
-            };
+            p_internal->cpp->set_move(
+                static_cast<pkmn::e_move>(move),
+                static_cast<int>(index)
+            );
+        };
 
-            error = pkmn::c::handle_exceptions(impl, p_internal);
-        }
+        error = pkmn::c::handle_exceptions(impl, p_internal);
     }
 
     return error;
@@ -2000,9 +1962,7 @@ enum pkmn_error pkmn_pokemon_set_move_pp(
 
 enum pkmn_error pkmn_pokemon_get_EVs(
     const struct pkmn_pokemon* p_pokemon,
-    int* p_EVs_buffer_out,
-    size_t stat_buffer_size,
-    size_t* p_actual_num_EVs_out
+    struct pkmn_stat_enum_map* p_EVs_out
 )
 {
     enum pkmn_error error = pkmn::c::check_for_null_wrapper_param(
@@ -2015,21 +1975,17 @@ enum pkmn_error pkmn_pokemon_get_EVs(
         BOOST_ASSERT(p_internal != nullptr);
 
         error = pkmn::c::check_for_null_param(
-                    p_EVs_buffer_out,
-                    "p_EVs_buffer_out",
+                    p_EVs_out,
+                    "p_EVs_out",
                     p_internal
                 );
         if(!error)
         {
             auto impl = [&]()
             {
-                pkmn::c::copy_map_to_buffer(
+                pkmn::c::stat_enum_map_cpp_to_c(
                     p_internal->cpp->get_EVs(),
-                    pkmn::c::get_stat_bimap(),
-                    p_EVs_buffer_out,
-                    stat_buffer_size,
-                    PKMN_NUM_STATS,
-                    p_actual_num_EVs_out
+                    p_EVs_out
                 );
             };
 
@@ -2079,9 +2035,7 @@ enum pkmn_error pkmn_pokemon_set_EV(
 
 enum pkmn_error pkmn_pokemon_get_IVs(
     const struct pkmn_pokemon* p_pokemon,
-    int* p_IVs_buffer_out,
-    size_t stat_buffer_size,
-    size_t* p_actual_num_IVs_out
+    struct pkmn_stat_enum_map* p_IVs_out
 )
 {
     enum pkmn_error error = pkmn::c::check_for_null_wrapper_param(
@@ -2094,21 +2048,17 @@ enum pkmn_error pkmn_pokemon_get_IVs(
         BOOST_ASSERT(p_internal != nullptr);
 
         error = pkmn::c::check_for_null_param(
-                    p_IVs_buffer_out,
-                    "p_IVs_buffer_out",
+                    p_IVs_out,
+                    "p_IVs_out",
                     p_internal
                 );
         if(!error)
         {
             auto impl = [&]()
             {
-                pkmn::c::copy_map_to_buffer(
+                pkmn::c::stat_enum_map_cpp_to_c(
                     p_internal->cpp->get_IVs(),
-                    pkmn::c::get_stat_bimap(),
-                    p_IVs_buffer_out,
-                    stat_buffer_size,
-                    PKMN_NUM_STATS,
-                    p_actual_num_IVs_out
+                    p_IVs_out
                 );
             };
 
@@ -2158,9 +2108,7 @@ enum pkmn_error pkmn_pokemon_set_IV(
 
 enum pkmn_error pkmn_pokemon_get_stats(
     const struct pkmn_pokemon* p_pokemon,
-    int* p_stats_buffer_out,
-    size_t stat_buffer_size,
-    size_t* p_actual_num_stats_out
+    struct pkmn_stat_enum_map* p_stats_out
 )
 {
     enum pkmn_error error = pkmn::c::check_for_null_wrapper_param(
@@ -2173,21 +2121,17 @@ enum pkmn_error pkmn_pokemon_get_stats(
         BOOST_ASSERT(p_internal != nullptr);
 
         error = pkmn::c::check_for_null_param(
-                    p_stats_buffer_out,
-                    "p_stats_buffer_out",
+                    p_stats_out,
+                    "p_stats_out",
                     p_internal
                 );
         if(!error)
         {
             auto impl = [&]()
             {
-                pkmn::c::copy_map_to_buffer(
+                pkmn::c::stat_enum_map_cpp_to_c(
                     p_internal->cpp->get_stats(),
-                    pkmn::c::get_stat_bimap(),
-                    p_stats_buffer_out,
-                    stat_buffer_size,
-                    PKMN_NUM_STATS,
-                    p_actual_num_stats_out
+                    p_stats_out
                 );
             };
 

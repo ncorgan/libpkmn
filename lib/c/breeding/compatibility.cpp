@@ -12,38 +12,22 @@
 #include <pkmn/breeding/compatibility.hpp>
 
 enum pkmn_error pkmn_breeding_are_pokemon_species_compatible(
-    const char* p_species1,
-    const char* p_species2,
+    enum pkmn_species species1,
+    enum pkmn_species species2,
     bool* p_are_pokemon_species_compatible_out
 )
 {
-    enum pkmn_error error = PKMN_ERROR_NONE;
-
-    error = pkmn::c::check_for_null_param(
-                p_species1,
-                "p_species1"
-            );
-    if(!error)
-    {
-        error = pkmn::c::check_for_null_param(
-                    p_species2,
-                    "p_species2"
-                );
-    }
-    if(!error)
-    {
-        error = pkmn::c::check_for_null_param(
-                    p_are_pokemon_species_compatible_out,
-                    "p_are_pokemon_species_compatible_out"
-                );
-    }
+    enum pkmn_error error = pkmn::c::check_for_null_param(
+                                p_are_pokemon_species_compatible_out,
+                                "p_are_pokemon_species_compatible_out"
+                            );
     if(!error)
     {
         auto impl = [&]()
         {
             *p_are_pokemon_species_compatible_out = pkmn::breeding::are_pokemon_species_compatible(
-                                                        p_species1,
-                                                        p_species2
+                                                        static_cast<pkmn::e_species>(species1),
+                                                        static_cast<pkmn::e_species>(species2)
                                                     );
         };
 

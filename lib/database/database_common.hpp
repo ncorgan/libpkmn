@@ -13,6 +13,8 @@
 
 #include <pkmn/config.hpp>
 
+#include <pkmn/enums/item.hpp>
+
 #include <boost/config.hpp>
 
 #include <memory>
@@ -255,7 +257,43 @@ namespace pkmn { namespace database {
     }
 
     /*
-     * Templated query functions that form lists
+     * Templated query functions that form enum lists
+     */
+
+    template <typename enum_type>
+    static void query_db_enum_list(
+        const std::string& query,
+        std::vector<enum_type>& ret_vec
+    )
+    {
+        SQLite::Statement stmt(get_connection(), query.c_str());
+        while(stmt.executeStep())
+        {
+            ret_vec.emplace_back(
+                static_cast<enum_type>(int(stmt.getColumn(0)))
+            );
+        }
+    }
+
+    template <typename enum_type, typename bind_type>
+    static void query_db_enum_list_bind1(
+        const std::string& query,
+        std::vector<enum_type>& ret_vec,
+        const bind_type& bind_val1
+    )
+    {
+        SQLite::Statement stmt(get_connection(), query.c_str());
+        stmt.bind(1, bind_val1);
+        while(stmt.executeStep())
+        {
+            ret_vec.emplace_back(
+                static_cast<enum_type>(int(stmt.getColumn(0)))
+            );
+        }
+    }
+
+    /*
+     * Templated query functions that form other lists
      */
 
     template <typename ret_type>
@@ -358,9 +396,13 @@ namespace pkmn { namespace database {
         bool* different_applies
     );
 
-    void _get_item_list(
-        std::vector<std::string> &ret,
-        int list_id, int game_id
+    void _get_item_lists(
+        std::vector<pkmn::e_item>& r_items,
+        std::vector<std::string>& r_item_name,
+        int list_id,
+        int game_id,
+        bool should_populate_enum_list = true,
+        bool should_populate_string_list = true
     );
 
     /*
@@ -417,6 +459,13 @@ namespace pkmn { namespace database {
         }
 
         return false;
+    }
+
+    inline bool is_item_enum_berry(pkmn::e_item item)
+    {
+        return ((item >= pkmn::e_item::CHERI_BERRY) && (item <= pkmn::e_item::ROWAP_BERRY)) ||
+               ((item >= pkmn::e_item::ROSELI_BERRY) && (item <= pkmn::e_item::MARANGA_BERRY)) ||
+               ((item >= pkmn::e_item::BERRY) && (item <= pkmn::e_item::MYSTERYBERRY));
     }
 }}
 

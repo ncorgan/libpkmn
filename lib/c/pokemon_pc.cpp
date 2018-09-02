@@ -16,26 +16,21 @@
 #include <pkmn-c/pokemon_pc.h>
 
 enum pkmn_error pkmn_pokemon_pc_init(
-    const char* p_game,
+    enum pkmn_game game,
     struct pkmn_pokemon_pc* p_pokemon_pc_out
 )
 {
     enum pkmn_error error = pkmn::c::check_for_null_param(
-                                p_game,
-                                "p_game"
+                                p_pokemon_pc_out,
+                                "p_pokemon_pc_out"
                             );
-    if(!error)
-    {
-        error = pkmn::c::check_for_null_param(
-                    p_pokemon_pc_out,
-                    "p_pokemon_pc_out"
-                );
-    }
     if(!error)
     {
         auto impl = [&]()
         {
-            pkmn::pokemon_pc::sptr cpp = pkmn::pokemon_pc::make(p_game);
+            pkmn::pokemon_pc::sptr cpp = pkmn::pokemon_pc::make(
+                                             static_cast<pkmn::e_game>(game)
+                                         );
 
             pkmn::c::init_pokemon_pc(
                 cpp,
@@ -61,7 +56,6 @@ enum pkmn_error pkmn_pokemon_pc_free(
     {
         auto impl = [&]()
         {
-            pkmn::c::free_pointer_and_set_to_null(&p_pokemon_pc->p_game);
             pkmn::c::delete_pointer_and_set_to_null(
                 reinterpret_cast<pkmn::c::pokemon_pc_internal_t**>(&p_pokemon_pc->p_internal)
             );

@@ -220,31 +220,22 @@ enum pkmn_error pkmn_calculations_flail_power(
 }
 
 enum pkmn_error pkmn_calculations_fling_power(
-    const char* p_held_item,
+    enum pkmn_item held_item,
     int* p_fling_power_out
 )
 {
-    enum pkmn_error error = PKMN_ERROR_NONE;
-
-    error = pkmn::c::check_for_null_param(
-                p_held_item,
-                "p_held_item"
-            );
-    if(!error)
-    {
-        error = pkmn::c::check_for_null_param(
-                    p_fling_power_out,
-                    "p_fling_power_out"
-                );
-    }
+    enum pkmn_error error = pkmn::c::check_for_null_param(
+                                p_fling_power_out,
+                                "p_fling_power_out"
+                            );
     if(!error)
     {
         auto impl = [&]()
         {
             *p_fling_power_out = pkmn::calculations::fling_power(
-                                     p_held_item
+                                     static_cast<pkmn::e_item>(held_item)
                                  );
-            };
+        };
 
         error = pkmn::c::handle_exceptions(impl);
     }

@@ -5,8 +5,13 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
+#include <pkmntest/util.hpp>
+
 #include <pkmn/exception.hpp>
 #include <pkmn/database/lists.hpp>
+#include <pkmn/enums/enum_to_string.hpp>
+
+#include "utils/misc.hpp"
 
 #include <gtest/gtest.h>
 
@@ -21,210 +26,643 @@ static inline bool string_in_vector(
     return (std::find(vec.begin(), vec.end(), str) != vec.end());
 }
 
-TEST(cpp_lists_test, ability_list_test) {
-    std::vector<std::string> abilities3, abilities4,
-                             abilities5, abilities6;
-
-    EXPECT_THROW(
-        (void)pkmn::database::get_ability_list(2);
-    , std::out_of_range);
-    EXPECT_THROW(
-        (void)pkmn::database::get_ability_list(7);
-    , std::out_of_range);
-
-    abilities3 = pkmn::database::get_ability_list(3);
-    EXPECT_FALSE(string_in_vector(abilities3, "Adaptability"));
-
-    abilities4 = pkmn::database::get_ability_list(4);
-    EXPECT_TRUE(string_in_vector(abilities4, "Adaptability"));
-    EXPECT_FALSE(string_in_vector(abilities4, "Analytic"));
-
-    abilities5 = pkmn::database::get_ability_list(5);
-    EXPECT_TRUE(string_in_vector(abilities5, "Analytic"));
-    EXPECT_FALSE(string_in_vector(abilities5, "Aerilate"));
-
-    abilities6 = pkmn::database::get_ability_list(6);
-    EXPECT_TRUE(string_in_vector(abilities6, "Aerilate"));
-
-    EXPECT_TRUE(abilities3.size() > 0);
-    EXPECT_TRUE(abilities3.size() < abilities4.size());
-    EXPECT_TRUE(abilities4.size() < abilities5.size());
-    EXPECT_TRUE(abilities5.size() < abilities6.size());
-}
-
-TEST(cpp_lists_test, game_list_test) {
-    std::vector<std::string> games1, games2,
-                             games3, games4,
-                             games5, games6;
-
-    /*
-     * Make sure invalid generations throw an exception.
-     */
-    EXPECT_THROW(
-        (void)pkmn::database::get_game_list(0, true);
-    , std::out_of_range);
-    EXPECT_THROW(
-        (void)pkmn::database::get_game_list(7, true);
-    , std::out_of_range);
-
-    /*
-     * Generation I
-     */
-    games1 = pkmn::database::get_game_list(1, false);
-    EXPECT_EQ(3, games1.size());
-    games1 = pkmn::database::get_game_list(1, true);
-    EXPECT_EQ(3, games1.size());
-
-    /*
-     * Generation II
-     */
-    games2 = pkmn::database::get_game_list(2, false);
-    EXPECT_EQ(3, games2.size());
-    games2 = pkmn::database::get_game_list(2, true);
-    EXPECT_EQ(6, games2.size());
-
-    /*
-     * Generation III
-     */
-    games3 = pkmn::database::get_game_list(3, false);
-    EXPECT_EQ(7, games3.size());
-    games3 = pkmn::database::get_game_list(3, true);
-    EXPECT_EQ(13, games3.size());
-
-    /*
-     * Generation IV
-     */
-    games4 = pkmn::database::get_game_list(4, false);
-    EXPECT_EQ(5, games4.size());
-    games4 = pkmn::database::get_game_list(4, true);
-    EXPECT_EQ(18, games4.size());
-
-    /*
-     * Generation V
-     */
-    games5 = pkmn::database::get_game_list(5, false);
-    EXPECT_EQ(4, games5.size());
-    games5 = pkmn::database::get_game_list(5, true);
-    EXPECT_EQ(22, games5.size());
-
-    /*
-     * Generation VI
-     */
-    games6 = pkmn::database::get_game_list(6, false);
-    EXPECT_EQ(4, games6.size());
-    games6 = pkmn::database::get_game_list(6, true);
-    EXPECT_EQ(26, games6.size());
-}
-
-TEST(cpp_lists_test, gamecube_shadow_pokemon_list_test)
+TEST(cpp_lists_test, ability_lists_test)
 {
-    std::vector<std::string> colosseum_shadow_pokemon = pkmn::database::get_gamecube_shadow_pokemon_list(true);
-    EXPECT_EQ(48, colosseum_shadow_pokemon.size());
+    static const int MIN_GENERATION = 3;
+    static const int MAX_GENERATION = 6;
 
-    std::vector<std::string> xd_shadow_pokemon = pkmn::database::get_gamecube_shadow_pokemon_list(false);
-    EXPECT_EQ(83, xd_shadow_pokemon.size());
+    // Enums
+
+    std::vector<pkmn::e_ability> abilities_gen3, abilities_gen4,
+                                 abilities_gen5, abilities_gen6;
+
+    EXPECT_THROW(
+        (void)pkmn::database::get_ability_list(MIN_GENERATION-1);
+    , std::out_of_range);
+    EXPECT_THROW(
+        (void)pkmn::database::get_ability_list(MAX_GENERATION+1);
+    , std::out_of_range);
+
+    abilities_gen3 = pkmn::database::get_ability_list(3);
+    EXPECT_FALSE(pkmn::does_vector_contain_value(
+        abilities_gen3,
+        pkmn::e_ability::ADAPTABILITY
+    ));
+
+    abilities_gen4 = pkmn::database::get_ability_list(4);
+    EXPECT_TRUE(pkmn::does_vector_contain_value(
+        abilities_gen4,
+        pkmn::e_ability::ADAPTABILITY)
+    );
+    EXPECT_FALSE(pkmn::does_vector_contain_value(
+        abilities_gen4,
+        pkmn::e_ability::ANALYTIC
+    ));
+
+    abilities_gen5 = pkmn::database::get_ability_list(5);
+    EXPECT_TRUE(pkmn::does_vector_contain_value(
+        abilities_gen5,
+        pkmn::e_ability::ANALYTIC
+    ));
+    EXPECT_FALSE(pkmn::does_vector_contain_value(
+        abilities_gen5,
+        pkmn::e_ability::AERILATE
+    ));
+
+    abilities_gen6 = pkmn::database::get_ability_list(6);
+    EXPECT_TRUE(pkmn::does_vector_contain_value(
+        abilities_gen6,
+        pkmn::e_ability::AERILATE
+    ));
+
+    ASSERT_FALSE(abilities_gen3.empty());
+    EXPECT_TRUE(abilities_gen3.size() < abilities_gen4.size());
+    EXPECT_TRUE(abilities_gen4.size() < abilities_gen5.size());
+    EXPECT_TRUE(abilities_gen5.size() < abilities_gen6.size());
+
+    // Names
+
+    std::vector<std::string> ability_names_gen3, ability_names_gen4,
+                             ability_names_gen5, ability_names_gen6;
+
+    EXPECT_THROW(
+        (void)pkmn::database::get_ability_name_list(MIN_GENERATION-1);
+    , std::out_of_range);
+    EXPECT_THROW(
+        (void)pkmn::database::get_ability_name_list(MAX_GENERATION+1);
+    , std::out_of_range);
+
+    ability_names_gen3 = pkmn::database::get_ability_name_list(3);
+    EXPECT_FALSE(pkmn::does_vector_contain_value<std::string>(
+        ability_names_gen3,
+        "Adaptability"
+    ));
+
+    ability_names_gen4 = pkmn::database::get_ability_name_list(4);
+    EXPECT_TRUE(pkmn::does_vector_contain_value<std::string>(
+        ability_names_gen4,
+        "Adaptability"
+    ));
+    EXPECT_FALSE(pkmn::does_vector_contain_value<std::string>(
+        ability_names_gen4,
+        "Analytic"
+    ));
+
+    ability_names_gen5 = pkmn::database::get_ability_name_list(5);
+    EXPECT_TRUE(pkmn::does_vector_contain_value<std::string>(
+        ability_names_gen5,
+        "Analytic"
+    ));
+    EXPECT_FALSE(pkmn::does_vector_contain_value<std::string>(
+        ability_names_gen5,
+        "Aerilate"
+    ));
+
+    ability_names_gen6 = pkmn::database::get_ability_name_list(6);
+    EXPECT_TRUE(pkmn::does_vector_contain_value<std::string>(
+        ability_names_gen6,
+        "Aerilate"
+    ));
+
+    ASSERT_FALSE(ability_names_gen3.empty());
+    EXPECT_TRUE(ability_names_gen3.size() < ability_names_gen4.size());
+    EXPECT_TRUE(ability_names_gen4.size() < ability_names_gen5.size());
+    EXPECT_TRUE(ability_names_gen5.size() < ability_names_gen6.size());
+
+    // Compare the enum and string vectors.
+    typedef std::pair<const std::vector<pkmn::e_ability>&, const std::vector<std::string>&> ability_vector_const_ref_pair_t;
+    const std::vector<ability_vector_const_ref_pair_t> ABILITY_VECTOR_PAIRS =
+    {
+        {abilities_gen3, ability_names_gen3},
+        {abilities_gen4, ability_names_gen4},
+        {abilities_gen5, ability_names_gen5},
+        {abilities_gen6, ability_names_gen6},
+    };
+    for(const ability_vector_const_ref_pair_t& ability_const_ref_pair: ABILITY_VECTOR_PAIRS)
+    {
+        const std::vector<pkmn::e_ability>& enum_vector = ability_const_ref_pair.first;
+        const std::vector<std::string>& string_vector = ability_const_ref_pair.second;
+
+        ASSERT_EQ(enum_vector.size(), string_vector.size());
+        for(size_t ability_index = 0; ability_index < enum_vector.size(); ++ability_index)
+        {
+            EXPECT_EQ(
+                string_vector[ability_index],
+                pkmn::ability_to_string(enum_vector[ability_index])
+            );
+        }
+    }
 }
 
-TEST(cpp_lists_test, item_list_test) {
+TEST(cpp_lists_test, game_lists_test)
+{
+    static const int MIN_GENERATION = 1;
+    static const int MAX_GENERATION = 6;
+
+    /*
+     * Make sure invalid generations result in an exception.
+     */
+
+    EXPECT_THROW(
+        (void)pkmn::database::get_game_list(MIN_GENERATION-1, true);
+    , std::out_of_range);
+    EXPECT_THROW(
+        (void)pkmn::database::get_game_name_list(MIN_GENERATION-1, true);
+    , std::out_of_range);
+
+    EXPECT_THROW(
+        (void)pkmn::database::get_game_name_list(MAX_GENERATION+1, true);
+    , std::out_of_range);
+    EXPECT_THROW(
+        (void)pkmn::database::get_game_list(MAX_GENERATION+1, true);
+    , std::out_of_range);
+
+    struct game_lists_test_params
+    {
+        int generation;
+        size_t num_games_in_generation;
+        size_t num_games_up_to_generation;
+    };
+    static const std::vector<game_lists_test_params> ALL_TEST_PARAMS =
+    {
+        {1, 3, 3},
+        {2, 3, 6},
+        {3, 7, 13},
+        {4, 5, 18},
+        {5, 4, 22},
+        {6, 4, 26}
+    };
+    for(const game_lists_test_params& test_params: ALL_TEST_PARAMS)
+    {
+        // Enums
+
+        std::vector<pkmn::e_game> game_enums_one_gen = pkmn::database::get_game_list(
+                                                           test_params.generation,
+                                                           false
+                                                       );
+        EXPECT_EQ(
+            test_params.num_games_in_generation,
+            game_enums_one_gen.size()
+        );
+
+        std::vector<pkmn::e_game> game_enums_all_gens = pkmn::database::get_game_list(
+                                                            test_params.generation,
+                                                            true
+                                                        );
+        EXPECT_EQ(
+            test_params.num_games_up_to_generation,
+            game_enums_all_gens.size()
+        );
+
+        // Strings
+
+        std::vector<std::string> game_names_one_gen = pkmn::database::get_game_name_list(
+                                                          test_params.generation,
+                                                          false
+                                                      );
+        EXPECT_EQ(
+            test_params.num_games_in_generation,
+            game_names_one_gen.size()
+        );
+
+        std::vector<std::string> game_names_all_gens = pkmn::database::get_game_name_list(
+                                                           test_params.generation,
+                                                           true
+                                                       );
+        EXPECT_EQ(
+            test_params.num_games_up_to_generation,
+            game_names_all_gens.size()
+        );
+
+        // Compare the enum and string vectors.
+
+        ASSERT_EQ(game_enums_one_gen.size(), game_names_one_gen.size());
+        for(size_t game_index = 0; game_index < game_enums_one_gen.size(); ++game_index)
+        {
+            EXPECT_EQ(
+                game_names_one_gen[game_index],
+                pkmn::game_to_string(game_enums_one_gen[game_index])
+            );
+        }
+
+        ASSERT_EQ(game_enums_all_gens.size(), game_names_all_gens.size());
+        for(size_t game_index = 0; game_index < game_enums_all_gens.size(); ++game_index)
+        {
+            EXPECT_EQ(
+                game_names_all_gens[game_index],
+                pkmn::game_to_string(game_enums_all_gens[game_index])
+            );
+        }
+    }
+}
+
+TEST(cpp_lists_test, gamecube_shadow_pokemon_lists_test)
+{
+    // Colosseum
+    static const size_t EXPECTED_NUM_COLOSSEUM_POKEMON = 48;
+
+    std::vector<pkmn::e_species> colosseum_shadow_pokemon_enums =
+        pkmn::database::get_gamecube_shadow_pokemon_list(true);
+    ASSERT_EQ(
+        EXPECTED_NUM_COLOSSEUM_POKEMON,
+        colosseum_shadow_pokemon_enums.size()
+    );
+
+    std::vector<std::string> colosseum_shadow_pokemon_names =
+        pkmn::database::get_gamecube_shadow_pokemon_name_list(true);
+    ASSERT_EQ(
+        EXPECTED_NUM_COLOSSEUM_POKEMON,
+        colosseum_shadow_pokemon_names.size()
+    );
+
+    for(size_t species_index = 0;
+        species_index < EXPECTED_NUM_COLOSSEUM_POKEMON;
+        ++species_index)
+    {
+        EXPECT_EQ(
+            colosseum_shadow_pokemon_names[species_index],
+            pkmn::species_to_string(colosseum_shadow_pokemon_enums[species_index])
+        );
+    }
+
+    // XD
+    static const size_t EXPECTED_NUM_XD_POKEMON = 83;
+
+    std::vector<pkmn::e_species> xd_shadow_pokemon_enums =
+        pkmn::database::get_gamecube_shadow_pokemon_list(false);
+    ASSERT_EQ(
+        EXPECTED_NUM_XD_POKEMON,
+        xd_shadow_pokemon_enums.size()
+    );
+
+    std::vector<std::string> xd_shadow_pokemon_names =
+        pkmn::database::get_gamecube_shadow_pokemon_name_list(false);
+    ASSERT_EQ(
+        EXPECTED_NUM_XD_POKEMON,
+        xd_shadow_pokemon_names.size()
+    );
+
+    for(size_t species_index = 0;
+        species_index < EXPECTED_NUM_XD_POKEMON;
+        ++species_index)
+    {
+        EXPECT_EQ(
+            xd_shadow_pokemon_names[species_index],
+            pkmn::species_to_string(xd_shadow_pokemon_enums[species_index])
+        );
+    }
+}
+
+TEST(cpp_lists_test, item_lists_test)
+{
     /*
      * Make sure invalid games fail.
      */
     EXPECT_THROW(
-        (void)pkmn::database::get_item_list("Not a game");
+        (void)pkmn::database::get_item_list(pkmn::e_game::NONE);
+    , std::invalid_argument);
+    EXPECT_THROW(
+        (void)pkmn::database::get_item_name_list(pkmn::e_game::NONE);
     , std::invalid_argument);
 
-    /*
-     * Generation I
-     */
-    std::vector<std::string> items_rb = pkmn::database::get_item_list("Red");
-    std::vector<std::string> items_y  = pkmn::database::get_item_list("Yellow");
-    EXPECT_TRUE(items_rb == items_y);
+    struct item_list_test_params
+    {
+        std::vector<pkmn::e_game> games;
+        std::vector<pkmn::e_item> items_expected_present;
+        std::vector<pkmn::e_item> items_expected_not_present;
+        std::vector<std::string> item_names_expected_present;
+        std::vector<std::string> item_names_expected_not_present;
+    };
+    static const std::vector<item_list_test_params> ALL_TEST_PARAMS =
+    {
+        {
+            pkmntest::GEN1_GAMES,
+            {pkmn::e_item::DOWSING_MACHINE},
+            {},
+            {"Itemfinder"},
+            {
+                "Dowsing MCHN",
+                "Dowsing Machine"
+            }
+        },
+        {
+            {pkmn::e_game::YELLOW},
+            {pkmn::e_item::DOWSING_MACHINE},
+            {},
+            {"Itemfinder"},
+            {
+                "Dowsing MCHN",
+                "Dowsing Machine"
+            }
+        },
+        {
+            {
+                pkmn::e_game::GOLD,
+                pkmn::e_game::SILVER
+            },
+            {pkmn::e_item::DOWSING_MACHINE},
+            {pkmn::e_item::GS_BALL},
+            {
+                "Blk Apricorn",
+                "RAGECANDYBAR",
+                "Itemfinder"
+            },
+            {
+                "Black Apricorn",
+                "GS Ball",
+                "Rage Candy Bar",
+                "Dowsing MCHN",
+                "Dowsing Machine"
+            }
+        },
+        {
+            {pkmn::e_game::CRYSTAL},
+            {
+                pkmn::e_item::GS_BALL,
+                pkmn::e_item::DOWSING_MACHINE
+            },
+            {},
+            {
+                "Blk Apricorn",
+                "GS Ball",
+                "RAGECANDYBAR",
+                "Itemfinder"
+            },
+            {
+                "Black Apricorn",
+                "Rage Candy Bar",
+                "Dowsing MCHN",
+                "Dowsing Machine"
+            }
+        },
+        {
+            {
+                pkmn::e_game::RUBY,
+                pkmn::e_game::SAPPHIRE
+            },
+            {pkmn::e_item::DOWSING_MACHINE},
+            {
+                pkmn::e_item::MAGMA_EMBLEM,
+                pkmn::e_item::HELIX_FOSSIL,
+                pkmn::e_item::TIME_FLUTE,
+                pkmn::e_item::BATTLE_CD_01
+            },
+            {"Itemfinder"},
+            {
+                "Magma Emblem",
+                "Helix Fossil",
+                "Time Flute",
+                "Battle CD 01",
+                "Dowsing MCHN",
+                "Dowsing Machine"
+            },
+        },
+        {
+            {pkmn::e_game::EMERALD},
+            {
+                pkmn::e_item::MAGMA_EMBLEM,
+                pkmn::e_item::HELIX_FOSSIL,
+                pkmn::e_item::DOWSING_MACHINE
+            },
+            {
+                pkmn::e_item::TIME_FLUTE,
+                pkmn::e_item::BATTLE_CD_01
+            },
+            {
+                "Magma Emblem",
+                "Helix Fossil",
+                "Itemfinder"
+            },
+            {
+                "Time Flute",
+                "Battle CD 01",
+                "Dowsing MCHN",
+                "Dowsing Machine"
+            },
+        },
+        {
+            {
+                pkmn::e_game::FIRERED,
+                pkmn::e_game::LEAFGREEN
+            },
+            {
+                pkmn::e_item::HELIX_FOSSIL,
+                pkmn::e_item::DOWSING_MACHINE
+            },
+            {
+                pkmn::e_item::MAGMA_EMBLEM,
+                pkmn::e_item::TIME_FLUTE,
+                pkmn::e_item::BATTLE_CD_01
+            },
+            {
+                "Helix Fossil",
+                "Itemfinder"
+            },
+            {
+                "Magma Emblem",
+                "Time Flute",
+                "Battle CD 01",
+                "Dowsing MCHN",
+                "Dowsing Machine"
+            },
+        },
+        {
+            {pkmn::e_game::COLOSSEUM},
+            {pkmn::e_item::TIME_FLUTE},
+            {
+                pkmn::e_item::MAGMA_EMBLEM,
+                pkmn::e_item::HELIX_FOSSIL,
+                pkmn::e_item::BATTLE_CD_01,
+                pkmn::e_item::DOWSING_MACHINE
+            },
+            {"Time Flute"},
+            {
+                "Magma Emblem",
+                "Helix Fossil",
+                "Battle CD 01",
+                "Itemfinder"
+            },
+        },
+        {
+            {pkmn::e_game::XD},
+            {pkmn::e_item::BATTLE_CD_01},
+            {
+                pkmn::e_item::MAGMA_EMBLEM,
+                pkmn::e_item::HELIX_FOSSIL,
+                pkmn::e_item::TIME_FLUTE,
+                pkmn::e_item::DOWSING_MACHINE
+            },
+            {"Battle CD 01"},
+            {
+                "Magma Emblem",
+                "Helix Fossil",
+                "Time Flute",
+                "Itemfinder"
+            },
+        },
+        {
+            {
+                pkmn::e_game::DIAMOND,
+                pkmn::e_game::PEARL
+            },
+            {},
+            {
+                pkmn::e_item::GRISEOUS_ORB,
+                pkmn::e_item::DOWSING_MACHINE
+            },
+            {},
+            {
+                "Griseous Orb",
+                "Dowsing MCHN"
+            },
+        },
+        {
+            {pkmn::e_game::PLATINUM},
+            {pkmn::e_item::GRISEOUS_ORB},
+            {pkmn::e_item::DOWSING_MACHINE},
+            {"Griseous Orb"},
+            {"Dowsing MCHN"}
+        },
+        {
+            {
+                pkmn::e_game::HEARTGOLD,
+                pkmn::e_game::SOULSILVER
+            },
+            {
+                pkmn::e_item::GRISEOUS_ORB,
+                pkmn::e_item::DOWSING_MACHINE
+            },
+            {},
+            {
+                "Griseous Orb",
+                "Dowsing MCHN"
+            },
+            {
+                "Itemfinder",
+                "Dowsing Machine"
+            },
+        },
+        {
+            {
+                pkmn::e_game::BLACK,
+                pkmn::e_game::WHITE
+            },
+            {pkmn::e_item::DOWSING_MACHINE},
+            {pkmn::e_item::COLRESS_MACHINE},
+            {"Dowsing MCHN"},
+            {
+                "Itemfinder",
+                "Dowsing Machine",
+                "Colress MCHN"
+            }
+        },
+        {
+            {
+                pkmn::e_game::BLACK2,
+                pkmn::e_game::WHITE2
+            },
+            {
+                pkmn::e_item::DOWSING_MACHINE,
+                pkmn::e_item::COLRESS_MACHINE
+            },
+            {},
+            {
+                "Dowsing MCHN",
+                "Colress MCHN"
+            },
+            {
+                "Itemfinder",
+                "Dowsing Machine",
+                "Colress Machine"
+            },
+        },
+        {
+            {
+                pkmn::e_game::X,
+                pkmn::e_game::Y
+            },
+            {pkmn::e_item::DOWSING_MACHINE},
+            {pkmn::e_item::SLOWBRONITE},
+            {
+                "Dowsing Machine"
+            },
+            {
+                "Itemfinder",
+                "Dowsing MCHN",
+                "Slowbronite"
+            },
+        },
+        {
+            {
+                pkmn::e_game::OMEGA_RUBY,
+                pkmn::e_game::ALPHA_SAPPHIRE
+            },
+            {
+                pkmn::e_item::DOWSING_MACHINE,
+                pkmn::e_item::SLOWBRONITE
+            },
+            {},
+            {
+                "Dowsing Machine",
+                "Slowbronite"
+            },
+            {
+                "Itemfinder",
+                "Dowsing MCHN",
+            },
+        },
+    };
+    for(const item_list_test_params& test_params: ALL_TEST_PARAMS)
+    {
+        for(pkmn::e_game game: test_params.games)
+        {
+            // Enums
 
-    /*
-     * Generation II
-     */
-    std::vector<std::string> items_gs = pkmn::database::get_item_list("Gold");
-    std::vector<std::string> items_c  = pkmn::database::get_item_list("Crystal");
-    EXPECT_LT(items_gs.size(), items_c.size());
-    EXPECT_FALSE(string_in_vector(items_gs, "GS Ball"));
-    EXPECT_TRUE(string_in_vector(items_c, "GS Ball"));
-    EXPECT_FALSE(string_in_vector(items_gs, "Black Apricorn"));
-    EXPECT_TRUE(string_in_vector(items_gs, "Blk Apricorn"));
+            std::vector<pkmn::e_item> items = pkmn::database::get_item_list(game);
+            for(pkmn::e_item item: test_params.items_expected_present)
+            {
+                EXPECT_TRUE(pkmn::does_vector_contain_value(items, item))
+                    << pkmn::game_to_string(game) << " " << int(item);
+            }
+            for(pkmn::e_item item: test_params.items_expected_not_present)
+            {
+                EXPECT_FALSE(pkmn::does_vector_contain_value(items, item))
+                    << pkmn::game_to_string(game) << " " << int(item);
+            }
 
-    /*
-     * Generation III
-     */
-    std::vector<std::string> items_rs   = pkmn::database::get_item_list("Ruby");
-    std::vector<std::string> items_e    = pkmn::database::get_item_list("Emerald");
-    std::vector<std::string> items_frlg = pkmn::database::get_item_list("FireRed");
-    std::vector<std::string> items_colo = pkmn::database::get_item_list("Colosseum");
-    std::vector<std::string> items_xd   = pkmn::database::get_item_list("XD");
+            // Names
 
-    EXPECT_TRUE(string_in_vector(items_rs, "Potion"));
-    EXPECT_TRUE(string_in_vector(items_e, "Potion"));
-    EXPECT_TRUE(string_in_vector(items_frlg, "Potion"));
-    EXPECT_TRUE(string_in_vector(items_colo, "Potion"));
-    EXPECT_TRUE(string_in_vector(items_xd, "Potion"));
+            std::vector<std::string> item_names = pkmn::database::get_item_name_list(game);
+            for(const std::string& item_name: test_params.item_names_expected_present)
+            {
+                EXPECT_TRUE(pkmn::does_vector_contain_value(item_names, item_name))
+                    << pkmn::game_to_string(game) << " " << item_name;
+            }
+            for(const std::string& item_name: test_params.item_names_expected_not_present)
+            {
+                EXPECT_FALSE(pkmn::does_vector_contain_value(item_names, item_name))
+                    << pkmn::game_to_string(game) << " " << item_name;
+            }
 
-    EXPECT_FALSE(string_in_vector(items_rs, "Magma Emblem"));
-    EXPECT_TRUE(string_in_vector(items_e, "Magma Emblem"));
-    EXPECT_FALSE(string_in_vector(items_frlg, "Magma Emblem"));
-    EXPECT_FALSE(string_in_vector(items_colo, "Magma Emblem"));
-    EXPECT_FALSE(string_in_vector(items_xd, "Magma Emblem"));
-
-    EXPECT_FALSE(string_in_vector(items_rs, "Helix Fossil"));
-    EXPECT_TRUE(string_in_vector(items_e, "Helix Fossil"));
-    EXPECT_TRUE(string_in_vector(items_frlg, "Helix Fossil"));
-    EXPECT_FALSE(string_in_vector(items_colo, "Helix Fossil"));
-    EXPECT_FALSE(string_in_vector(items_xd, "Helix Fossil"));
-
-    EXPECT_FALSE(string_in_vector(items_rs, "Time Flute"));
-    EXPECT_FALSE(string_in_vector(items_e, "Time Flute"));
-    EXPECT_FALSE(string_in_vector(items_frlg, "Time Flute"));
-    EXPECT_TRUE(string_in_vector(items_colo, "Time Flute"));
-    EXPECT_FALSE(string_in_vector(items_xd, "Time Flute"));
-
-    EXPECT_FALSE(string_in_vector(items_rs, "Battle CD 01"));
-    EXPECT_FALSE(string_in_vector(items_e, "Battle CD 01"));
-    EXPECT_FALSE(string_in_vector(items_frlg, "Battle CD 01"));
-    EXPECT_FALSE(string_in_vector(items_colo, "Battle CD 01"));
-    EXPECT_TRUE(string_in_vector(items_xd, "Battle CD 01"));
-
-    /*
-     * Generation IV
-     */
-    std::vector<std::string> items_dp   = pkmn::database::get_item_list("Diamond");
-    std::vector<std::string> items_p    = pkmn::database::get_item_list("Platinum");
-    std::vector<std::string> items_hgss = pkmn::database::get_item_list("HeartGold");
-
-    EXPECT_FALSE(string_in_vector(items_dp, "Griseous Orb"));
-    EXPECT_TRUE(string_in_vector(items_p, "Griseous Orb"));
-    EXPECT_TRUE(string_in_vector(items_hgss, "Griseous Orb"));
-
-    EXPECT_FALSE(string_in_vector(items_dp, "Dowsing MCHN"));
-    EXPECT_FALSE(string_in_vector(items_p, "Dowsing MCHN"));
-    EXPECT_TRUE(string_in_vector(items_hgss, "Dowsing MCHN"));
-
-    /*
-     * Generation V
-     */
-    std::vector<std::string> items_bw   = pkmn::database::get_item_list("Black");
-    std::vector<std::string> items_b2w2 = pkmn::database::get_item_list("Black 2");
-
-    EXPECT_FALSE(string_in_vector(items_bw, "Colress MCHN"));
-    EXPECT_TRUE(string_in_vector(items_b2w2, "Colress MCHN"));
-
-    /*
-     * Generation VI
-     */
-    std::vector<std::string> items_xy   = pkmn::database::get_item_list("X");
-    std::vector<std::string> items_oras = pkmn::database::get_item_list("Omega Ruby");
-
-    EXPECT_FALSE(string_in_vector(items_xy, "Slowbronite"));
-    EXPECT_TRUE(string_in_vector(items_oras, "Slowbronite"));
+            // Compare the enum and item lists.
+            ASSERT_EQ(items.size(), item_names.size()) << int(game);
+            for(size_t item_index = 0; item_index < items.size(); ++item_index)
+            {
+                // Ignore the DNA Sample issue for now.
+                if(item_names[item_index].find("DNA Sample") == std::string::npos)
+                {
+                    EXPECT_EQ(
+                        items[item_index],
+                        pkmn::string_to_item(item_names[item_index])
+                    ) << pkmn::game_to_string(game) << " " << item_names[item_index];
+                }
+            }
+        }
+    }
 }
 
-TEST(cpp_lists_test, location_list_test) {
+TEST(cpp_lists_test, location_list_test)
+{
     std::vector<std::string> locations_gen1,
                              locations_gs, locations_c,
                              locations_rs, locations_e,
@@ -238,18 +676,18 @@ TEST(cpp_lists_test, location_list_test) {
      * Make sure invalid games fail.
      */
     EXPECT_THROW(
-        (void)pkmn::database::get_location_list("Not a game", true);
+        (void)pkmn::database::get_location_name_list(pkmn::e_game::NONE, true);
     , std::invalid_argument);
 
     /*
      * Generation I (TODO)
      */
-    locations_gen1 = pkmn::database::get_location_list("Red", true);
+    locations_gen1 = pkmn::database::get_location_name_list(pkmn::e_game::RED, true);
     /*EXPECT_GT(locations_gen1.size(), 0);
     EXPECT_TRUE(string_in_vector(locations_gen1, "Pallet Town"));
     EXPECT_TRUE(string_in_vector(locations_gen1, "Cerulean Cave"));*/
 
-    locations_gen1 = pkmn::database::get_location_list("Red", false);
+    locations_gen1 = pkmn::database::get_location_name_list(pkmn::e_game::RED, false);
     /*EXPECT_GT(locations_gen1.size(), 0);
     EXPECT_TRUE(string_in_vector(locations_gen1, "Pallet Town"));
     EXPECT_TRUE(string_in_vector(locations_gen1, "Cerulean Cave"));*/
@@ -257,13 +695,13 @@ TEST(cpp_lists_test, location_list_test) {
     /*
      * Gold/Silver
      */
-    locations_gs = pkmn::database::get_location_list("Silver", true);
+    locations_gs = pkmn::database::get_location_name_list(pkmn::e_game::SILVER, true);
     EXPECT_GT(locations_gs.size(), 0);
     EXPECT_TRUE(string_in_vector(locations_gs, "Sprout Tower"));
     EXPECT_TRUE(string_in_vector(locations_gs, "Pallet Town"));
     EXPECT_TRUE(string_in_vector(locations_gs, "Battle Tower"));
 
-    locations_gs = pkmn::database::get_location_list("Silver", false);
+    locations_gs = pkmn::database::get_location_name_list(pkmn::e_game::SILVER, false);
     EXPECT_GT(locations_gs.size(), 0);
     EXPECT_TRUE(string_in_vector(locations_gs, "Sprout Tower"));
     EXPECT_TRUE(string_in_vector(locations_gs, "Pallet Town"));
@@ -272,13 +710,13 @@ TEST(cpp_lists_test, location_list_test) {
     /*
      * Crystal
      */
-    locations_c = pkmn::database::get_location_list("Crystal", true);
+    locations_c = pkmn::database::get_location_name_list(pkmn::e_game::CRYSTAL, true);
     EXPECT_GT(locations_c.size(), 0);
     EXPECT_TRUE(string_in_vector(locations_c, "Sprout Tower"));
     EXPECT_TRUE(string_in_vector(locations_c, "Pallet Town"));
     EXPECT_TRUE(string_in_vector(locations_c, "Battle Tower"));
 
-    locations_c = pkmn::database::get_location_list("Crystal", false);
+    locations_c = pkmn::database::get_location_name_list(pkmn::e_game::CRYSTAL, false);
     EXPECT_GT(locations_c.size(), 0);
     EXPECT_TRUE(string_in_vector(locations_c, "Sprout Tower"));
     EXPECT_TRUE(string_in_vector(locations_c, "Pallet Town"));
@@ -287,7 +725,7 @@ TEST(cpp_lists_test, location_list_test) {
     /*
      * Ruby/Sapphire
      */
-    locations_rs = pkmn::database::get_location_list("Ruby", true);
+    locations_rs = pkmn::database::get_location_name_list(pkmn::e_game::RUBY, true);
     EXPECT_GT(locations_rs.size(), 0);
     EXPECT_TRUE(string_in_vector(locations_rs, "New Mauville"));
     EXPECT_TRUE(string_in_vector(locations_rs, "Artisan Cave"));
@@ -295,7 +733,7 @@ TEST(cpp_lists_test, location_list_test) {
     EXPECT_FALSE(string_in_vector(locations_rs, "Pyrite Town"));
     EXPECT_FALSE(string_in_vector(locations_rs, "Kaminko's House"));
 
-    locations_rs = pkmn::database::get_location_list("Ruby", false);
+    locations_rs = pkmn::database::get_location_name_list(pkmn::e_game::RUBY, false);
     EXPECT_GT(locations_rs.size(), 0);
     EXPECT_TRUE(string_in_vector(locations_rs, "New Mauville"));
     EXPECT_FALSE(string_in_vector(locations_rs, "Artisan Cave"));
@@ -306,7 +744,7 @@ TEST(cpp_lists_test, location_list_test) {
     /*
      * Emerald
      */
-    locations_e = pkmn::database::get_location_list("Emerald", true);
+    locations_e = pkmn::database::get_location_name_list(pkmn::e_game::EMERALD, true);
     EXPECT_GT(locations_e.size(), 0);
     EXPECT_TRUE(string_in_vector(locations_e, "New Mauville"));
     EXPECT_TRUE(string_in_vector(locations_e, "Artisan Cave"));
@@ -314,7 +752,7 @@ TEST(cpp_lists_test, location_list_test) {
     EXPECT_FALSE(string_in_vector(locations_e, "Realgamtwr Dome"));
     EXPECT_FALSE(string_in_vector(locations_e, "Kaminko's House"));
 
-    locations_e = pkmn::database::get_location_list("Emerald", false);
+    locations_e = pkmn::database::get_location_name_list(pkmn::e_game::EMERALD, false);
     EXPECT_GT(locations_e.size(), 0);
     EXPECT_TRUE(string_in_vector(locations_e, "New Mauville"));
     EXPECT_TRUE(string_in_vector(locations_e, "Artisan Cave"));
@@ -325,7 +763,7 @@ TEST(cpp_lists_test, location_list_test) {
     /*
      * FireRed/LeafGreen
      */
-    locations_frlg = pkmn::database::get_location_list("LeafGreen", true);
+    locations_frlg = pkmn::database::get_location_name_list(pkmn::e_game::LEAFGREEN, true);
     EXPECT_GT(locations_frlg.size(), 0);
     EXPECT_TRUE(string_in_vector(locations_frlg, "New Mauville"));
     EXPECT_TRUE(string_in_vector(locations_frlg, "Artisan Cave"));
@@ -333,7 +771,7 @@ TEST(cpp_lists_test, location_list_test) {
     EXPECT_FALSE(string_in_vector(locations_frlg, "Realgamtwr Dome"));
     EXPECT_FALSE(string_in_vector(locations_frlg, "Kaminko's House"));
 
-    locations_frlg = pkmn::database::get_location_list("LeafGreen", false);
+    locations_frlg = pkmn::database::get_location_name_list(pkmn::e_game::LEAFGREEN, false);
     EXPECT_GT(locations_frlg.size(), 0);
     EXPECT_FALSE(string_in_vector(locations_frlg, "New Mauville"));
     EXPECT_FALSE(string_in_vector(locations_frlg, "Artisan Cave"));
@@ -344,7 +782,7 @@ TEST(cpp_lists_test, location_list_test) {
     /*
      * Colosseum
      */
-    locations_colo = pkmn::database::get_location_list("Colosseum", true);
+    locations_colo = pkmn::database::get_location_name_list(pkmn::e_game::COLOSSEUM, true);
     EXPECT_GT(locations_colo.size(), 0);
     EXPECT_FALSE(string_in_vector(locations_colo, "New Mauville"));
     EXPECT_FALSE(string_in_vector(locations_colo, "Artisan Cave"));
@@ -352,7 +790,7 @@ TEST(cpp_lists_test, location_list_test) {
     EXPECT_TRUE(string_in_vector(locations_colo, "Realgamtwr Dome"));
     EXPECT_TRUE(string_in_vector(locations_colo, "Kaminko's House"));
 
-    locations_colo = pkmn::database::get_location_list("Colosseum", false);
+    locations_colo = pkmn::database::get_location_name_list(pkmn::e_game::COLOSSEUM, false);
     EXPECT_GT(locations_colo.size(), 0);
     EXPECT_FALSE(string_in_vector(locations_colo, "New Mauville"));
     EXPECT_FALSE(string_in_vector(locations_colo, "Artisan Cave"));
@@ -363,7 +801,7 @@ TEST(cpp_lists_test, location_list_test) {
     /*
      * XD
      */
-    locations_xd = pkmn::database::get_location_list("XD", true);
+    locations_xd = pkmn::database::get_location_name_list(pkmn::e_game::XD, true);
     EXPECT_GT(locations_xd.size(), 0);
     EXPECT_FALSE(string_in_vector(locations_xd, "New Mauville"));
     EXPECT_FALSE(string_in_vector(locations_xd, "Artisan Cave"));
@@ -371,7 +809,7 @@ TEST(cpp_lists_test, location_list_test) {
     EXPECT_TRUE(string_in_vector(locations_xd, "Realgamtwr Dome"));
     EXPECT_TRUE(string_in_vector(locations_xd, "Kaminko's House"));
 
-    locations_xd = pkmn::database::get_location_list("XD", false);
+    locations_xd = pkmn::database::get_location_name_list(pkmn::e_game::XD, false);
     EXPECT_GT(locations_xd.size(), 0);
     EXPECT_FALSE(string_in_vector(locations_xd, "New Mauville"));
     EXPECT_FALSE(string_in_vector(locations_xd, "Artisan Cave"));
@@ -382,14 +820,14 @@ TEST(cpp_lists_test, location_list_test) {
     /*
      * Diamond/Pearl
      */
-    locations_dp = pkmn::database::get_location_list("Diamond", true);
+    locations_dp = pkmn::database::get_location_name_list(pkmn::e_game::DIAMOND, true);
     EXPECT_GT(locations_dp.size(), 0);
     EXPECT_TRUE(string_in_vector(locations_dp, "Route 221"));
     EXPECT_TRUE(string_in_vector(locations_dp, "Distortion World"));
     EXPECT_TRUE(string_in_vector(locations_dp, "Sinjoh Ruins"));
     EXPECT_TRUE(string_in_vector(locations_dp, "PC Tokyo"));
 
-    locations_dp = pkmn::database::get_location_list("Diamond", false);
+    locations_dp = pkmn::database::get_location_name_list(pkmn::e_game::DIAMOND, false);
     EXPECT_GT(locations_dp.size(), 0);
     EXPECT_TRUE(string_in_vector(locations_dp, "Route 221"));
     EXPECT_FALSE(string_in_vector(locations_dp, "Distortion World"));
@@ -399,14 +837,14 @@ TEST(cpp_lists_test, location_list_test) {
     /*
      * Platinum
      */
-    locations_pt = pkmn::database::get_location_list("Platinum", true);
+    locations_pt = pkmn::database::get_location_name_list(pkmn::e_game::PLATINUM, true);
     EXPECT_GT(locations_pt.size(), 0);
     EXPECT_TRUE(string_in_vector(locations_pt, "Route 221"));
     EXPECT_TRUE(string_in_vector(locations_pt, "Distortion World"));
     EXPECT_TRUE(string_in_vector(locations_pt, "Sinjoh Ruins"));
     EXPECT_TRUE(string_in_vector(locations_pt, "PC Tokyo"));
 
-    locations_pt = pkmn::database::get_location_list("Platinum", false);
+    locations_pt = pkmn::database::get_location_name_list(pkmn::e_game::PLATINUM, false);
     EXPECT_GT(locations_pt.size(), 0);
     EXPECT_TRUE(string_in_vector(locations_pt, "Route 221"));
     EXPECT_TRUE(string_in_vector(locations_pt, "Distortion World"));
@@ -416,14 +854,14 @@ TEST(cpp_lists_test, location_list_test) {
     /*
      * HeartGold/SoulSilver
      */
-    locations_hgss = pkmn::database::get_location_list("HeartGold", true);
+    locations_hgss = pkmn::database::get_location_name_list(pkmn::e_game::HEARTGOLD, true);
     EXPECT_GT(locations_hgss.size(), 0);
     EXPECT_TRUE(string_in_vector(locations_hgss, "Route 221"));
     EXPECT_TRUE(string_in_vector(locations_hgss, "Distortion World"));
     EXPECT_TRUE(string_in_vector(locations_hgss, "Sinjoh Ruins"));
     EXPECT_TRUE(string_in_vector(locations_hgss, "PC Tokyo"));
 
-    locations_hgss = pkmn::database::get_location_list("HeartGold", false);
+    locations_hgss = pkmn::database::get_location_name_list(pkmn::e_game::HEARTGOLD, false);
     EXPECT_GT(locations_hgss.size(), 0);
     EXPECT_FALSE(string_in_vector(locations_hgss, "Route 221"));
     EXPECT_FALSE(string_in_vector(locations_hgss, "Distortion World"));
@@ -433,14 +871,14 @@ TEST(cpp_lists_test, location_list_test) {
     /*
      * Black/White
      */
-    locations_bw = pkmn::database::get_location_list("White", true);
+    locations_bw = pkmn::database::get_location_name_list(pkmn::e_game::WHITE, true);
     EXPECT_GT(locations_bw.size(), 0);
     EXPECT_TRUE(string_in_vector(locations_bw, "Cold Storage"));
     EXPECT_TRUE(string_in_vector(locations_bw, "PWT"));
     EXPECT_TRUE(string_in_vector(locations_bw, "Castelia Sewers"));
     EXPECT_TRUE(string_in_vector(locations_bw, "PC Tokyo"));
 
-    locations_bw = pkmn::database::get_location_list("White", false);
+    locations_bw = pkmn::database::get_location_name_list(pkmn::e_game::WHITE, false);
     EXPECT_GT(locations_bw.size(), 0);
     EXPECT_TRUE(string_in_vector(locations_bw, "Cold Storage"));
     EXPECT_FALSE(string_in_vector(locations_bw, "PWT"));
@@ -450,14 +888,14 @@ TEST(cpp_lists_test, location_list_test) {
     /*
      * Black 2/White 2
      */
-    locations_b2w2 = pkmn::database::get_location_list("White 2", true);
+    locations_b2w2 = pkmn::database::get_location_name_list(pkmn::e_game::WHITE2, true);
     EXPECT_GT(locations_b2w2.size(), 0);
     EXPECT_TRUE(string_in_vector(locations_b2w2, "Cold Storage"));
     EXPECT_TRUE(string_in_vector(locations_b2w2, "PWT"));
     EXPECT_TRUE(string_in_vector(locations_b2w2, "Castelia Sewers"));
     EXPECT_TRUE(string_in_vector(locations_b2w2, "PC Tokyo"));
 
-    locations_b2w2 = pkmn::database::get_location_list("White 2", false);
+    locations_b2w2 = pkmn::database::get_location_name_list(pkmn::e_game::WHITE2, false);
     EXPECT_GT(locations_b2w2.size(), 0);
     EXPECT_FALSE(string_in_vector(locations_b2w2, "Cold Storage"));
     EXPECT_TRUE(string_in_vector(locations_b2w2, "PWT"));
@@ -467,13 +905,13 @@ TEST(cpp_lists_test, location_list_test) {
     /*
      * X/Y
      */
-    locations_xy = pkmn::database::get_location_list("X", true);
+    locations_xy = pkmn::database::get_location_name_list(pkmn::e_game::X, true);
     EXPECT_GT(locations_xy.size(), 0);
     EXPECT_TRUE(string_in_vector(locations_xy, "Zubat Roost"));
     EXPECT_TRUE(string_in_vector(locations_xy, "Route 101"));
     EXPECT_TRUE(string_in_vector(locations_xy, "PC Tokyo"));
 
-    locations_xy = pkmn::database::get_location_list("X", false);
+    locations_xy = pkmn::database::get_location_name_list(pkmn::e_game::X, false);
     EXPECT_GT(locations_xy.size(), 0);
     EXPECT_TRUE(string_in_vector(locations_xy, "Zubat Roost"));
     EXPECT_FALSE(string_in_vector(locations_xy, "Route 101"));
@@ -482,13 +920,13 @@ TEST(cpp_lists_test, location_list_test) {
     /*
      * Omega Ruby/Alpha Sapphire
      */
-    locations_oras = pkmn::database::get_location_list("Omega Ruby", true);
+    locations_oras = pkmn::database::get_location_name_list(pkmn::e_game::OMEGA_RUBY, true);
     EXPECT_GT(locations_oras.size(), 0);
     EXPECT_TRUE(string_in_vector(locations_oras, "Zubat Roost"));
     EXPECT_TRUE(string_in_vector(locations_oras, "Route 101"));
     EXPECT_TRUE(string_in_vector(locations_oras, "PC Tokyo"));
 
-    locations_oras = pkmn::database::get_location_list("Omega Ruby", false);
+    locations_oras = pkmn::database::get_location_name_list(pkmn::e_game::OMEGA_RUBY, false);
     EXPECT_GT(locations_oras.size(), 0);
     EXPECT_FALSE(string_in_vector(locations_oras, "Zubat Roost"));
     EXPECT_TRUE(string_in_vector(locations_oras, "Route 101"));
@@ -532,351 +970,430 @@ static const std::vector<changed_move_names> GEN3_CHANGED_MOVE_NAMES =
     {"SmellingSalt", "Smelling Salts"}
 };
 
-TEST(cpp_lists_test, move_list_test)
+TEST(cpp_lists_test, move_lists_test)
 {
-    std::vector<std::string> moves_gen1,
-                             moves_gen2, moves_gba,
-                             moves_colo, moves_xd,
-                             moves_gen4, moves_gen5,
-                             moves_xy,   moves_oras;
-
     /*
      * Make sure invalid games fail.
      */
     EXPECT_THROW(
-        (void)pkmn::database::get_type_list("Not a game");
+        (void)pkmn::database::get_move_list(pkmn::e_game::NONE);
+    , std::invalid_argument);
+    EXPECT_THROW(
+        (void)pkmn::database::get_move_name_list(pkmn::e_game::NONE);
     , std::invalid_argument);
 
     /*
-     * Generation I
+     * Check for list bounds.
      */
-    moves_gen1 = pkmn::database::get_move_list("Red");
-    EXPECT_EQ(165, moves_gen1.size());
-    EXPECT_EQ("Pound", moves_gen1.front());
-    EXPECT_EQ("Struggle", moves_gen1.back());
-
-    // Make sure old move names appear.
-    for(const auto& changed_move_names: GEN1_CHANGED_MOVE_NAMES)
+    struct move_lists_test_params
     {
-        EXPECT_TRUE(string_in_vector(moves_gen1, changed_move_names.old_name))  << changed_move_names.old_name;
-        EXPECT_FALSE(string_in_vector(moves_gen1, changed_move_names.new_name)) << changed_move_names.new_name;
+        std::vector<pkmn::e_game> games;
+        size_t expected_num_moves;
+        std::pair<pkmn::e_move, pkmn::e_move> expected_enum_ends;
+        std::pair<std::string, std::string> expected_string_ends;
+    };
+    static const std::vector<move_lists_test_params> ALL_TEST_PARAMS =
+    {
+        {
+            pkmntest::GEN1_GAMES,
+            165,
+            {pkmn::e_move::POUND, pkmn::e_move::STRUGGLE},
+            {"Pound", "Struggle"}
+        },
+        {
+            pkmntest::GEN2_GAMES,
+            251,
+            {pkmn::e_move::POUND, pkmn::e_move::BEAT_UP},
+            {"Pound", "Beat Up"}
+        },
+        {
+            pkmntest::GBA_GAMES,
+            354,
+            {pkmn::e_move::POUND, pkmn::e_move::PSYCHO_BOOST},
+            {"Pound", "Psycho Boost"}
+        },
+        {
+            {pkmn::e_game::COLOSSEUM},
+            355,
+            {pkmn::e_move::POUND, pkmn::e_move::SHADOW_RUSH},
+            {"Pound", "Shadow Rush"}
+        },
+        {
+            {pkmn::e_game::XD},
+            372,
+            {pkmn::e_move::POUND, pkmn::e_move::SHADOW_SKY},
+            {"Pound", "Shadow Sky"}
+        },
+        {
+            pkmntest::GEN4_GAMES,
+            467,
+            {pkmn::e_move::POUND, pkmn::e_move::SHADOW_FORCE},
+            {"Pound", "Shadow Force"}
+        },
+        {
+            pkmntest::GEN5_GAMES,
+            559,
+            {pkmn::e_move::POUND, pkmn::e_move::FUSION_BOLT},
+            {"Pound", "Fusion Bolt"}
+        },
+        {
+            {
+                pkmn::e_game::X,
+                pkmn::e_game::Y
+            },
+            617,
+            {pkmn::e_move::POUND, pkmn::e_move::LIGHT_OF_RUIN},
+            {"Pound", "Light of Ruin"}
+        },
+        {
+            {
+                pkmn::e_game::OMEGA_RUBY,
+                pkmn::e_game::ALPHA_SAPPHIRE
+            },
+            621,
+            {pkmn::e_move::POUND, pkmn::e_move::HYPERSPACE_FURY},
+            {"Pound", "Hyperspace Fury"}
+        },
+    };
+
+    for(const move_lists_test_params& test_params: ALL_TEST_PARAMS)
+    {
+        pkmn::e_move expected_first_move_enum = test_params.expected_enum_ends.first;
+        pkmn::e_move expected_last_move_enum  = test_params.expected_enum_ends.second;
+
+        const std::string& expected_first_move_name = test_params.expected_string_ends.first;
+        const std::string& expected_last_move_name  = test_params.expected_string_ends.second;
+
+        for(pkmn::e_game game: test_params.games)
+        {
+            std::vector<pkmn::e_move> moves = pkmn::database::get_move_list(game);
+            EXPECT_EQ(test_params.expected_num_moves, moves.size()) << pkmn::game_to_string(game);
+            EXPECT_EQ(expected_first_move_enum, moves.front()) << pkmn::game_to_string(game);
+            EXPECT_EQ(expected_last_move_enum, moves.back()) << pkmn::game_to_string(game);
+
+            std::vector<std::string> move_names = pkmn::database::get_move_name_list(game);
+            EXPECT_EQ(test_params.expected_num_moves, move_names.size()) << pkmn::game_to_string(game);
+            EXPECT_EQ(expected_first_move_name, move_names.front()) << pkmn::game_to_string(game);
+            EXPECT_EQ(expected_last_move_name, move_names.back()) << pkmn::game_to_string(game);
+
+            ASSERT_EQ(moves.size(), move_names.size());
+            for(size_t move_index = 0; move_index < moves.size(); ++move_index)
+            {
+                EXPECT_EQ(
+                    moves[move_index],
+                    pkmn::string_to_move(move_names[move_index])
+                ) << pkmn::game_to_string(game) << " " << move_names[move_index];
+            }
+        }
     }
 
     /*
-     * Generation II
+     * Check for changed spelling.
      */
-    moves_gen2 = pkmn::database::get_move_list("Gold");
-    EXPECT_EQ(251, moves_gen2.size());
-    EXPECT_EQ("Pound", moves_gen2.front());
-    EXPECT_EQ("Beat Up", moves_gen2.back());
 
-    // Make sure old move names appear.
-    for(const auto& changed_move_names: GEN1_CHANGED_MOVE_NAMES)
+    for(pkmn::e_game game: pkmntest::GEN1_GAMES)
     {
-        EXPECT_TRUE(string_in_vector(moves_gen2, changed_move_names.old_name))  << changed_move_names.old_name;
-        EXPECT_FALSE(string_in_vector(moves_gen2, changed_move_names.new_name)) << changed_move_names.new_name;
-    }
-    for(const auto& changed_move_names: GEN2_CHANGED_MOVE_NAMES)
-    {
-        EXPECT_TRUE(string_in_vector(moves_gen2, changed_move_names.old_name))  << changed_move_names.old_name;
-        EXPECT_FALSE(string_in_vector(moves_gen2, changed_move_names.new_name)) << changed_move_names.new_name;
-    }
+        std::vector<std::string> move_names = pkmn::database::get_move_name_list(game);
 
-    /*
-     * Game Boy Advance
-     */
-    moves_gba = pkmn::database::get_move_list("Sapphire");
-    EXPECT_EQ(354, moves_gba.size());
-    EXPECT_EQ("Pound", moves_gba.front());
-    EXPECT_EQ("Psycho Boost", moves_gba.back());
+        // Make sure old move names appear.
+        for(const auto& changed_move_names: GEN1_CHANGED_MOVE_NAMES)
+        {
+            EXPECT_TRUE(
+                pkmn::does_vector_contain_value(
+                    move_names,
+                    changed_move_names.old_name
+                )
+            ) << pkmn::game_to_string(game) << " " << changed_move_names.old_name;
 
-    // Make sure old move names appear.
-    for(const auto& changed_move_names: GEN1_CHANGED_MOVE_NAMES)
-    {
-        EXPECT_TRUE(string_in_vector(moves_gba, changed_move_names.old_name))  << changed_move_names.old_name;
-        EXPECT_FALSE(string_in_vector(moves_gba, changed_move_names.new_name)) << changed_move_names.new_name;
+            EXPECT_FALSE(
+                pkmn::does_vector_contain_value(
+                    move_names,
+                    changed_move_names.new_name
+                )
+            ) << pkmn::game_to_string(game) << " " << changed_move_names.new_name;
+        }
     }
-    for(const auto& changed_move_names: GEN2_CHANGED_MOVE_NAMES)
+    for(pkmn::e_game game: pkmntest::GEN2_GAMES)
     {
-        EXPECT_TRUE(string_in_vector(moves_gba, changed_move_names.old_name))  << changed_move_names.old_name;
-        EXPECT_FALSE(string_in_vector(moves_gba, changed_move_names.new_name)) << changed_move_names.new_name;
-    }
-    for(const auto& changed_move_names: GEN3_CHANGED_MOVE_NAMES)
-    {
-        EXPECT_TRUE(string_in_vector(moves_gba, changed_move_names.old_name))  << changed_move_names.old_name;
-        EXPECT_FALSE(string_in_vector(moves_gba, changed_move_names.new_name)) << changed_move_names.new_name;
-    }
+        std::vector<std::string> move_names = pkmn::database::get_move_name_list(game);
 
-    /*
-     * Colosseum
-     */
-    moves_colo = pkmn::database::get_move_list("Colosseum");
-    EXPECT_EQ(355, moves_colo.size());
-    EXPECT_EQ("Pound", moves_colo.front());
-    EXPECT_EQ("Shadow Rush", moves_colo.back());
+        // Make sure old move names appear.
+        for(const auto& changed_move_names: GEN1_CHANGED_MOVE_NAMES)
+        {
+            EXPECT_TRUE(
+                pkmn::does_vector_contain_value(
+                    move_names,
+                    changed_move_names.old_name
+                )
+            ) << pkmn::game_to_string(game) << " " << changed_move_names.old_name;
 
-    // Make sure old move names appear.
-    for(const auto& changed_move_names: GEN1_CHANGED_MOVE_NAMES)
-    {
-        EXPECT_TRUE(string_in_vector(moves_colo, changed_move_names.old_name))  << changed_move_names.old_name;
-        EXPECT_FALSE(string_in_vector(moves_colo, changed_move_names.new_name)) << changed_move_names.new_name;
-    }
-    for(const auto& changed_move_names: GEN2_CHANGED_MOVE_NAMES)
-    {
-        EXPECT_TRUE(string_in_vector(moves_colo, changed_move_names.old_name))  << changed_move_names.old_name;
-        EXPECT_FALSE(string_in_vector(moves_colo, changed_move_names.new_name)) << changed_move_names.new_name;
-    }
-    for(const auto& changed_move_names: GEN3_CHANGED_MOVE_NAMES)
-    {
-        EXPECT_TRUE(string_in_vector(moves_colo, changed_move_names.old_name))  << changed_move_names.old_name;
-        EXPECT_FALSE(string_in_vector(moves_colo, changed_move_names.new_name)) << changed_move_names.new_name;
-    }
+            EXPECT_FALSE(
+                pkmn::does_vector_contain_value(
+                    move_names,
+                    changed_move_names.new_name
+                )
+            ) << pkmn::game_to_string(game) << " " << changed_move_names.new_name;
+        }
+        for(const auto& changed_move_names: GEN2_CHANGED_MOVE_NAMES)
+        {
+            EXPECT_TRUE(
+                pkmn::does_vector_contain_value(
+                    move_names,
+                    changed_move_names.old_name
+                )
+            ) << pkmn::game_to_string(game) << " " << changed_move_names.old_name;
 
-    /*
-     * XD
-     */
-    moves_xd = pkmn::database::get_move_list("XD");
-    EXPECT_EQ(372, moves_xd.size());
-    EXPECT_EQ("Pound", moves_xd.front());
-    EXPECT_EQ("Shadow Sky", moves_xd.back());
+            EXPECT_FALSE(
+                pkmn::does_vector_contain_value(
+                    move_names,
+                    changed_move_names.new_name
+                )
+            ) << pkmn::game_to_string(game) << " " << changed_move_names.new_name;
+        }
+    }
+    for(pkmn::e_game game: pkmntest::GEN3_GAMES)
+    {
+        std::vector<std::string> move_names = pkmn::database::get_move_name_list(game);
 
-    // Make sure old move names appear.
-    for(const auto& changed_move_names: GEN1_CHANGED_MOVE_NAMES)
-    {
-        EXPECT_TRUE(string_in_vector(moves_xd, changed_move_names.old_name))  << changed_move_names.old_name;
-        EXPECT_FALSE(string_in_vector(moves_xd, changed_move_names.new_name)) << changed_move_names.new_name;
-    }
-    for(const auto& changed_move_names: GEN2_CHANGED_MOVE_NAMES)
-    {
-        EXPECT_TRUE(string_in_vector(moves_xd, changed_move_names.old_name))  << changed_move_names.old_name;
-        EXPECT_FALSE(string_in_vector(moves_xd, changed_move_names.new_name)) << changed_move_names.new_name;
-    }
-    for(const auto& changed_move_names: GEN3_CHANGED_MOVE_NAMES)
-    {
-        EXPECT_TRUE(string_in_vector(moves_xd, changed_move_names.old_name))  << changed_move_names.old_name;
-        EXPECT_FALSE(string_in_vector(moves_xd, changed_move_names.new_name)) << changed_move_names.new_name;
-    }
+        // Make sure old move names appear.
+        for(const auto& changed_move_names: GEN1_CHANGED_MOVE_NAMES)
+        {
+            EXPECT_TRUE(
+                pkmn::does_vector_contain_value(
+                    move_names,
+                    changed_move_names.old_name
+                )
+            ) << pkmn::game_to_string(game) << " " << changed_move_names.old_name;
 
-    /*
-     * Generation IV
-     */
-    moves_gen4 = pkmn::database::get_move_list("SoulSilver");
-    EXPECT_EQ(467, moves_gen4.size());
-    EXPECT_EQ("Pound", moves_gen4.front());
-    EXPECT_EQ("Shadow Force", moves_gen4.back());
+            EXPECT_FALSE(
+                pkmn::does_vector_contain_value(
+                    move_names,
+                    changed_move_names.new_name
+                )
+            ) << pkmn::game_to_string(game) << " " << changed_move_names.new_name;
+        }
+        for(const auto& changed_move_names: GEN2_CHANGED_MOVE_NAMES)
+        {
+            EXPECT_TRUE(
+                pkmn::does_vector_contain_value(
+                    move_names,
+                    changed_move_names.old_name
+                )
+            ) << pkmn::game_to_string(game) << " " << changed_move_names.old_name;
 
-    // Make sure old move names appear.
-    for(const auto& changed_move_names: GEN1_CHANGED_MOVE_NAMES)
-    {
-        EXPECT_TRUE(string_in_vector(moves_gen4, changed_move_names.old_name))  << changed_move_names.old_name;
-        EXPECT_FALSE(string_in_vector(moves_gen4, changed_move_names.new_name)) << changed_move_names.new_name;
-    }
-    for(const auto& changed_move_names: GEN2_CHANGED_MOVE_NAMES)
-    {
-        EXPECT_TRUE(string_in_vector(moves_gen4, changed_move_names.old_name))  << changed_move_names.old_name;
-        EXPECT_FALSE(string_in_vector(moves_gen4, changed_move_names.new_name)) << changed_move_names.new_name;
-    }
-    for(const auto& changed_move_names: GEN3_CHANGED_MOVE_NAMES)
-    {
-        EXPECT_TRUE(string_in_vector(moves_gen4, changed_move_names.old_name))  << changed_move_names.old_name;
-        EXPECT_FALSE(string_in_vector(moves_gen4, changed_move_names.new_name)) << changed_move_names.new_name;
-    }
+            EXPECT_FALSE(
+                pkmn::does_vector_contain_value(
+                    move_names,
+                    changed_move_names.new_name
+                )
+            ) << pkmn::game_to_string(game) << " " << changed_move_names.new_name;
+        }
+        for(const auto& changed_move_names: GEN3_CHANGED_MOVE_NAMES)
+        {
+            EXPECT_TRUE(
+                pkmn::does_vector_contain_value(
+                    move_names,
+                    changed_move_names.old_name
+                )
+            ) << pkmn::game_to_string(game) << " " << changed_move_names.old_name;
 
-    /*
-     * Generation V
-     */
-    moves_gen5 = pkmn::database::get_move_list("White");
-    EXPECT_EQ(559, moves_gen5.size());
-    EXPECT_EQ("Pound", moves_gen5.front());
-    EXPECT_EQ("Fusion Bolt", moves_gen5.back());
+            EXPECT_FALSE(
+                pkmn::does_vector_contain_value(
+                    move_names,
+                    changed_move_names.new_name
+                )
+            ) << pkmn::game_to_string(game) << " " << changed_move_names.new_name;
+        }
+    }
+    for(pkmn::e_game game: pkmntest::GEN4_GAMES)
+    {
+        std::vector<std::string> move_names = pkmn::database::get_move_name_list(game);
 
-    // Make sure old move names appear.
-    for(const auto& changed_move_names: GEN1_CHANGED_MOVE_NAMES)
-    {
-        EXPECT_TRUE(string_in_vector(moves_gen5, changed_move_names.old_name))  << changed_move_names.old_name;
-        EXPECT_FALSE(string_in_vector(moves_gen5, changed_move_names.new_name)) << changed_move_names.new_name;
-    }
-    for(const auto& changed_move_names: GEN2_CHANGED_MOVE_NAMES)
-    {
-        EXPECT_TRUE(string_in_vector(moves_gen5, changed_move_names.old_name))  << changed_move_names.old_name;
-        EXPECT_FALSE(string_in_vector(moves_gen5, changed_move_names.new_name)) << changed_move_names.new_name;
-    }
-    for(const auto& changed_move_names: GEN3_CHANGED_MOVE_NAMES)
-    {
-        EXPECT_TRUE(string_in_vector(moves_gen5, changed_move_names.old_name))  << changed_move_names.old_name;
-        EXPECT_FALSE(string_in_vector(moves_gen5, changed_move_names.new_name)) << changed_move_names.new_name;
-    }
+        // Make sure old move names appear.
+        for(const auto& changed_move_names: GEN1_CHANGED_MOVE_NAMES)
+        {
+            EXPECT_TRUE(
+                pkmn::does_vector_contain_value(
+                    move_names,
+                    changed_move_names.old_name
+                )
+            ) << pkmn::game_to_string(game) << " " << changed_move_names.old_name;
 
-    /*
-     * X/Y
-     */
-    moves_xy = pkmn::database::get_move_list("Y");
-    EXPECT_EQ(617, moves_xy.size());
-    EXPECT_EQ("Pound", moves_xy.front());
-    EXPECT_EQ("Light of Ruin", moves_xy.back());
+            EXPECT_FALSE(
+                pkmn::does_vector_contain_value(
+                    move_names,
+                    changed_move_names.new_name
+                )
+            ) << pkmn::game_to_string(game) << " " << changed_move_names.new_name;
+        }
+        for(const auto& changed_move_names: GEN2_CHANGED_MOVE_NAMES)
+        {
+            EXPECT_TRUE(
+                pkmn::does_vector_contain_value(
+                    move_names,
+                    changed_move_names.old_name
+                )
+            ) << pkmn::game_to_string(game) << " " << changed_move_names.old_name;
 
-    // Make sure new move names appear.
-    for(const auto& changed_move_names: GEN1_CHANGED_MOVE_NAMES)
-    {
-        EXPECT_FALSE(string_in_vector(moves_xy, changed_move_names.old_name))  << changed_move_names.old_name;
-        EXPECT_TRUE(string_in_vector(moves_xy, changed_move_names.new_name)) << changed_move_names.new_name;
-    }
-    for(const auto& changed_move_names: GEN2_CHANGED_MOVE_NAMES)
-    {
-        EXPECT_FALSE(string_in_vector(moves_xy, changed_move_names.old_name))  << changed_move_names.old_name;
-        EXPECT_TRUE(string_in_vector(moves_xy, changed_move_names.new_name)) << changed_move_names.new_name;
-    }
-    for(const auto& changed_move_names: GEN3_CHANGED_MOVE_NAMES)
-    {
-        EXPECT_FALSE(string_in_vector(moves_xy, changed_move_names.old_name))  << changed_move_names.old_name;
-        EXPECT_TRUE(string_in_vector(moves_xy, changed_move_names.new_name)) << changed_move_names.new_name;
-    }
+            EXPECT_FALSE(
+                pkmn::does_vector_contain_value(
+                    move_names,
+                    changed_move_names.new_name
+                )
+            ) << pkmn::game_to_string(game) << " " << changed_move_names.new_name;
+        }
+        for(const auto& changed_move_names: GEN3_CHANGED_MOVE_NAMES)
+        {
+            EXPECT_TRUE(
+                pkmn::does_vector_contain_value(
+                    move_names,
+                    changed_move_names.old_name
+                )
+            ) << pkmn::game_to_string(game) << " " << changed_move_names.old_name;
 
-    /*
-     * Omega Ruby/Alpha Sapphire
-     */
-    moves_oras = pkmn::database::get_move_list("Omega Ruby");
-    EXPECT_EQ(621, moves_oras.size());
-    EXPECT_EQ("Pound", moves_oras.front());
-    EXPECT_EQ("Hyperspace Fury", moves_oras.back());
+            EXPECT_FALSE(
+                pkmn::does_vector_contain_value(
+                    move_names,
+                    changed_move_names.new_name
+                )
+            ) << pkmn::game_to_string(game) << " " << changed_move_names.new_name;
+        }
+    }
+    for(pkmn::e_game game: pkmntest::GEN5_GAMES)
+    {
+        std::vector<std::string> move_names = pkmn::database::get_move_name_list(game);
 
-    // Make sure old move names appear.
-    for(const auto& changed_move_names: GEN1_CHANGED_MOVE_NAMES)
-    {
-        EXPECT_FALSE(string_in_vector(moves_oras, changed_move_names.old_name))  << changed_move_names.old_name;
-        EXPECT_TRUE(string_in_vector(moves_oras, changed_move_names.new_name)) << changed_move_names.new_name;
+        // Make sure new move names appear.
+        for(const auto& changed_move_names: GEN1_CHANGED_MOVE_NAMES)
+        {
+            EXPECT_TRUE(
+                pkmn::does_vector_contain_value(
+                    move_names,
+                    changed_move_names.old_name
+                )
+            ) << pkmn::game_to_string(game) << " " << changed_move_names.old_name;
+
+            EXPECT_FALSE(
+                pkmn::does_vector_contain_value(
+                    move_names,
+                    changed_move_names.new_name
+                )
+            ) << pkmn::game_to_string(game) << " " << changed_move_names.new_name;
+        }
+        for(const auto& changed_move_names: GEN2_CHANGED_MOVE_NAMES)
+        {
+            EXPECT_TRUE(
+                pkmn::does_vector_contain_value(
+                    move_names,
+                    changed_move_names.old_name
+                )
+            ) << pkmn::game_to_string(game) << " " << changed_move_names.old_name;
+
+            EXPECT_FALSE(
+                pkmn::does_vector_contain_value(
+                    move_names,
+                    changed_move_names.new_name
+                )
+            ) << pkmn::game_to_string(game) << " " << changed_move_names.new_name;
+        }
+        for(const auto& changed_move_names: GEN3_CHANGED_MOVE_NAMES)
+        {
+            EXPECT_TRUE(
+                pkmn::does_vector_contain_value(
+                    move_names,
+                    changed_move_names.old_name
+                )
+            ) << pkmn::game_to_string(game) << " " << changed_move_names.old_name;
+
+            EXPECT_FALSE(
+                pkmn::does_vector_contain_value(
+                    move_names,
+                    changed_move_names.new_name
+                )
+            ) << pkmn::game_to_string(game) << " " << changed_move_names.new_name;
+        }
     }
-    for(const auto& changed_move_names: GEN2_CHANGED_MOVE_NAMES)
+    for(pkmn::e_game game: pkmntest::GEN6_GAMES)
     {
-        EXPECT_FALSE(string_in_vector(moves_oras, changed_move_names.old_name))  << changed_move_names.old_name;
-        EXPECT_TRUE(string_in_vector(moves_oras, changed_move_names.new_name)) << changed_move_names.new_name;
-    }
-    for(const auto& changed_move_names: GEN3_CHANGED_MOVE_NAMES)
-    {
-        EXPECT_FALSE(string_in_vector(moves_oras, changed_move_names.old_name))  << changed_move_names.old_name;
-        EXPECT_TRUE(string_in_vector(moves_oras, changed_move_names.new_name)) << changed_move_names.new_name;
+        std::vector<std::string> move_names = pkmn::database::get_move_name_list(game);
+
+        // Make sure new move names appear.
+        for(const auto& changed_move_names: GEN1_CHANGED_MOVE_NAMES)
+        {
+            EXPECT_FALSE(
+                pkmn::does_vector_contain_value(
+                    move_names,
+                    changed_move_names.old_name
+                )
+            ) << pkmn::game_to_string(game) << " " << changed_move_names.old_name;
+
+            EXPECT_TRUE(
+                pkmn::does_vector_contain_value(
+                    move_names,
+                    changed_move_names.new_name
+                )
+            ) << pkmn::game_to_string(game) << " " << changed_move_names.new_name;
+        }
+        for(const auto& changed_move_names: GEN2_CHANGED_MOVE_NAMES)
+        {
+            EXPECT_FALSE(
+                pkmn::does_vector_contain_value(
+                    move_names,
+                    changed_move_names.old_name
+                )
+            ) << pkmn::game_to_string(game) << " " << changed_move_names.old_name;
+
+            EXPECT_TRUE(
+                pkmn::does_vector_contain_value(
+                    move_names,
+                    changed_move_names.new_name
+                )
+            ) << pkmn::game_to_string(game) << " " << changed_move_names.new_name;
+        }
+        for(const auto& changed_move_names: GEN3_CHANGED_MOVE_NAMES)
+        {
+            EXPECT_FALSE(
+                pkmn::does_vector_contain_value(
+                    move_names,
+                    changed_move_names.old_name
+                )
+            ) << pkmn::game_to_string(game) << " " << changed_move_names.old_name;
+
+            EXPECT_TRUE(
+                pkmn::does_vector_contain_value(
+                    move_names,
+                    changed_move_names.new_name
+                )
+            ) << pkmn::game_to_string(game) << " " << changed_move_names.new_name;
+        }
     }
 }
 
-TEST(cpp_lists_test, nature_list_test) {
-    std::vector<std::string> natures = pkmn::database::get_nature_list();
-    EXPECT_EQ(25, natures.size());
-    EXPECT_EQ("Hardy", natures.front());
-    EXPECT_EQ("Quirky", natures.back());
-}
+// TODO: natures
 
-TEST(cpp_lists_test, pokemon_list_test) {
-    std::vector<std::string> pokemon1, pokemon2,
-                             pokemon3, pokemon4,
-                             pokemon5, pokemon6;
-
-    EXPECT_THROW(
-        (void)pkmn::database::get_pokemon_list(0, true);
-    , std::out_of_range);
-    EXPECT_THROW(
-        (void)pkmn::database::get_pokemon_list(7, true);
-    , std::out_of_range);
-
-    /*
-     * Generation I
-     */
-    pokemon1 = pkmn::database::get_pokemon_list(1, true);
-    EXPECT_EQ(151, pokemon1.size());
-    EXPECT_EQ("Bulbasaur", pokemon1.front());
-    EXPECT_EQ("Mew", pokemon1.back());
-
-    pokemon1 = pkmn::database::get_pokemon_list(1, false);
-    EXPECT_EQ(151, pokemon1.size());
-    EXPECT_EQ("Bulbasaur", pokemon1.front());
-    EXPECT_EQ("Mew", pokemon1.back());
-
-    /*
-     * Generation II
-     */
-    pokemon2 = pkmn::database::get_pokemon_list(2, true);
-    EXPECT_EQ(251, pokemon2.size());
-    EXPECT_EQ("Bulbasaur", pokemon2.front());
-    EXPECT_EQ("Celebi", pokemon2.back());
-
-    pokemon2 = pkmn::database::get_pokemon_list(2, false);
-    EXPECT_EQ(100, pokemon2.size());
-    EXPECT_EQ("Chikorita", pokemon2.front());
-    EXPECT_EQ("Celebi", pokemon2.back());
-
-    /*
-     * Generation III
-     */
-    pokemon3 = pkmn::database::get_pokemon_list(3, true);
-    EXPECT_EQ(386, pokemon3.size());
-    EXPECT_EQ("Bulbasaur", pokemon3.front());
-    EXPECT_EQ("Deoxys", pokemon3.back());
-
-    pokemon3 = pkmn::database::get_pokemon_list(3, false);
-    EXPECT_EQ(135, pokemon3.size());
-    EXPECT_EQ("Treecko", pokemon3.front());
-    EXPECT_EQ("Deoxys", pokemon3.back());
-
-    /*
-     * Generation IV
-     */
-    pokemon4 = pkmn::database::get_pokemon_list(4, true);
-    EXPECT_EQ(493, pokemon4.size());
-    EXPECT_EQ("Bulbasaur", pokemon4.front());
-    EXPECT_EQ("Arceus", pokemon4.back());
-
-    pokemon4 = pkmn::database::get_pokemon_list(4, false);
-    EXPECT_EQ(107, pokemon4.size());
-    EXPECT_EQ("Turtwig", pokemon4.front());
-    EXPECT_EQ("Arceus", pokemon4.back());
-
-    /*
-     * Generation V
-     */
-    pokemon5 = pkmn::database::get_pokemon_list(5, true);
-    EXPECT_EQ(649, pokemon5.size());
-    EXPECT_EQ("Bulbasaur", pokemon5.front());
-    EXPECT_EQ("Genesect", pokemon5.back());
-
-    pokemon5 = pkmn::database::get_pokemon_list(5, false);
-    EXPECT_EQ(156, pokemon5.size());
-    EXPECT_EQ("Victini", pokemon5.front());
-    EXPECT_EQ("Genesect", pokemon5.back());
-
-    /*
-     * Generation VI
-     */
-    pokemon6 = pkmn::database::get_pokemon_list(6, true);
-    EXPECT_EQ(721, pokemon6.size());
-    EXPECT_EQ("Bulbasaur", pokemon6.front());
-    EXPECT_EQ("Volcanion", pokemon6.back());
-
-    pokemon6 = pkmn::database::get_pokemon_list(6, false);
-    EXPECT_EQ(72, pokemon6.size());
-    EXPECT_EQ("Chespin", pokemon6.front());
-    EXPECT_EQ("Volcanion", pokemon6.back());
-}
-
-TEST(cpp_lists_test, region_list_test) {
-    std::vector<std::string> regions = pkmn::database::get_region_list();
+TEST(cpp_lists_test, region_lists_test)
+{
+    std::vector<std::string> regions = pkmn::database::get_region_name_list();
     EXPECT_EQ(7, regions.size());
     EXPECT_EQ("Kanto", regions.front());
     EXPECT_EQ("Orre", regions[3]);
     EXPECT_EQ("Kalos", regions.back());
 }
 
-TEST(cpp_lists_test, ribbon_list_test) {
+TEST(cpp_lists_test, ribbon_lists_test) {
     // TODO: make sure function checks for bad generation
     //       test good cases
 }
 
-TEST(cpp_lists_test, super_training_medal_list_test) {
-    std::vector<std::string> super_training_medals = \
-        pkmn::database::get_super_training_medal_list();
+TEST(cpp_lists_test, super_training_medal_lists_test) {
+    std::vector<std::string> super_training_medals =
+        pkmn::database::get_super_training_medal_name_list();
 
     EXPECT_EQ(30, super_training_medals.size());
 }
 
-TEST(cpp_lists_test, type_list_test) {
+TEST(cpp_lists_test, type_lists_test)
+{
     std::vector<std::string> types_gen1,
                              types_gen2, types_gba,
                              types_gcn,  types_gen4,
@@ -886,234 +1403,462 @@ TEST(cpp_lists_test, type_list_test) {
      * Make sure invalid games fail.
      */
     EXPECT_THROW(
-        (void)pkmn::database::get_type_list("Not a game");
+        (void)pkmn::database::get_type_list(pkmn::e_game::NONE);
+    , std::invalid_argument);
+    EXPECT_THROW(
+        (void)pkmn::database::get_type_name_list(pkmn::e_game::NONE);
     , std::invalid_argument);
 
-    /*
-     * Generation I
-     */
-    types_gen1 = pkmn::database::get_type_list("Red");
+    struct type_lists_test_params
+    {
+        std::vector<pkmn::e_game> games;
+        size_t expected_num_types;
+        std::vector<pkmn::e_type> expected_types_present;
+        std::vector<pkmn::e_type> expected_types_not_present;
+        std::vector<std::string>  expected_type_names_present;
+        std::vector<std::string>  expected_type_names_not_present;
+    };
+    static const std::vector<type_lists_test_params> ALL_TEST_PARAMS =
+    {
+        {
+            pkmntest::GEN1_GAMES,
+            15,
+            {},
+            {
+                pkmn::e_type::DARK,
+                pkmn::e_type::STEEL,
+                pkmn::e_type::QUESTION_MARK,
+                pkmn::e_type::SHADOW,
+                pkmn::e_type::FAIRY
+            },
+            {},
+            {
+                "Dark",
+                "Steel",
+                "???",
+                "Shadow",
+                "Fairy"
+            }
+        },
+        {
+            pkmntest::GEN2_GAMES,
+            18,
+            {
+                pkmn::e_type::DARK,
+                pkmn::e_type::STEEL,
+                pkmn::e_type::QUESTION_MARK,
+            },
+            {
+                pkmn::e_type::SHADOW,
+                pkmn::e_type::FAIRY
+            },
+            {
+                "Dark",
+                "Steel",
+                "???",
+            },
+            {
+                "Shadow",
+                "Fairy"
+            }
+        },
+        {
+            pkmntest::GBA_GAMES,
+            18,
+            {
+                pkmn::e_type::DARK,
+                pkmn::e_type::STEEL,
+                pkmn::e_type::QUESTION_MARK,
+            },
+            {
+                pkmn::e_type::SHADOW,
+                pkmn::e_type::FAIRY
+            },
+            {
+                "Dark",
+                "Steel",
+                "???",
+            },
+            {
+                "Shadow",
+                "Fairy"
+            }
+        },
+        {
+            pkmntest::GCN_GAMES,
+            19,
+            {
+                pkmn::e_type::DARK,
+                pkmn::e_type::STEEL,
+                pkmn::e_type::QUESTION_MARK,
+                pkmn::e_type::SHADOW,
+            },
+            {
+                pkmn::e_type::FAIRY
+            },
+            {
+                "Dark",
+                "Steel",
+                "???",
+                "Shadow",
+            },
+            {
+                "Fairy"
+            }
+        },
+        {
+            pkmntest::GEN4_GAMES,
+            18,
+            {
+                pkmn::e_type::DARK,
+                pkmn::e_type::STEEL,
+                pkmn::e_type::QUESTION_MARK,
+            },
+            {
+                pkmn::e_type::SHADOW,
+                pkmn::e_type::FAIRY
+            },
+            {
+                "Dark",
+                "Steel",
+                "???",
+            },
+            {
+                "Shadow",
+                "Fairy"
+            }
+        },
+        {
+            pkmntest::GEN5_GAMES,
+            17,
+            {
+                pkmn::e_type::DARK,
+                pkmn::e_type::STEEL,
+            },
+            {
+                pkmn::e_type::QUESTION_MARK,
+                pkmn::e_type::SHADOW,
+                pkmn::e_type::FAIRY
+            },
+            {
+                "Dark",
+                "Steel",
+            },
+            {
+                "???",
+                "Shadow",
+                "Fairy"
+            }
+        },
+        {
+            pkmntest::GEN6_GAMES,
+            18,
+            {
+                pkmn::e_type::DARK,
+                pkmn::e_type::STEEL,
+                pkmn::e_type::FAIRY
+            },
+            {
+                pkmn::e_type::QUESTION_MARK,
+                pkmn::e_type::SHADOW,
+            },
+            {
+                "Dark",
+                "Steel",
+                "Fairy"
+            },
+            {
+                "???",
+                "Shadow",
+            }
+        },
+    };
 
-    EXPECT_EQ(15, types_gen1.size());
-    EXPECT_FALSE(string_in_vector(types_gen1, "Dark"));
-    EXPECT_FALSE(string_in_vector(types_gen1, "Steel"));
-    EXPECT_FALSE(string_in_vector(types_gen1, "???"));
-    EXPECT_FALSE(string_in_vector(types_gen1, "Shadow"));
-    EXPECT_FALSE(string_in_vector(types_gen1, "Fairy"));
+    for(const type_lists_test_params& test_params: ALL_TEST_PARAMS)
+    {
+        for(pkmn::e_game game: test_params.games)
+        {
+            std::vector<pkmn::e_type> types = pkmn::database::get_type_list(game);
+            EXPECT_EQ(
+                test_params.expected_num_types,
+                types.size()
+            ) << pkmn::game_to_string(game);
+            for(pkmn::e_type type: test_params.expected_types_present)
+            {
+                EXPECT_TRUE(pkmn::does_vector_contain_value(types, type))
+                    << pkmn::game_to_string(game) << " " << pkmn::type_to_string(type);
+            }
+            for(pkmn::e_type type: test_params.expected_types_not_present)
+            {
+                EXPECT_FALSE(pkmn::does_vector_contain_value(types, type))
+                    << pkmn::game_to_string(game) << " " << pkmn::type_to_string(type);
+            }
 
-    /*
-     * Generation II
-     */
-    types_gen2 = pkmn::database::get_type_list("Silver");
-    EXPECT_EQ(18, types_gen2.size());
-    EXPECT_TRUE(string_in_vector(types_gen2, "Dark"));
-    EXPECT_TRUE(string_in_vector(types_gen2, "Steel"));
-    EXPECT_TRUE(string_in_vector(types_gen2, "???"));
-    EXPECT_FALSE(string_in_vector(types_gen2, "Shadow"));
-    EXPECT_FALSE(string_in_vector(types_gen2, "Fairy"));
+            std::vector<std::string> type_names = pkmn::database::get_type_name_list(game);
+            EXPECT_EQ(
+                test_params.expected_num_types,
+                type_names.size()
+            ) << pkmn::game_to_string(game);
+            for(const std::string& type_name: test_params.expected_type_names_present)
+            {
+                EXPECT_TRUE(pkmn::does_vector_contain_value(type_names, type_name))
+                    << pkmn::game_to_string(game) << " " << type_name;
+            }
+            for(const std::string& type_name: test_params.expected_type_names_not_present)
+            {
+                EXPECT_FALSE(pkmn::does_vector_contain_value(type_names, type_name))
+                    << pkmn::game_to_string(game) << " " << type_name;
+            }
 
-    /*
-     * Game Boy Advance
-     */
-    types_gba = pkmn::database::get_type_list("Emerald");
-    EXPECT_EQ(18, types_gba.size());
-    EXPECT_TRUE(string_in_vector(types_gba, "Dark"));
-    EXPECT_TRUE(string_in_vector(types_gba, "Steel"));
-    EXPECT_TRUE(string_in_vector(types_gba, "???"));
-    EXPECT_FALSE(string_in_vector(types_gba, "Shadow"));
-    EXPECT_FALSE(string_in_vector(types_gba, "Fairy"));
-
-    /*
-     * Gamecube
-     */
-    types_gcn = pkmn::database::get_type_list("XD");
-    EXPECT_EQ(19, types_gcn.size());
-    EXPECT_TRUE(string_in_vector(types_gcn, "Dark"));
-    EXPECT_TRUE(string_in_vector(types_gcn, "Steel"));
-    EXPECT_TRUE(string_in_vector(types_gcn, "???"));
-    EXPECT_TRUE(string_in_vector(types_gcn, "Shadow"));
-    EXPECT_FALSE(string_in_vector(types_gcn, "Fairy"));
-
-    /*
-     * Generation IV
-     */
-    types_gen4 = pkmn::database::get_type_list("Platinum");
-    EXPECT_EQ(18, types_gen4.size());
-    EXPECT_TRUE(string_in_vector(types_gen4, "Dark"));
-    EXPECT_TRUE(string_in_vector(types_gen4, "Steel"));
-    EXPECT_TRUE(string_in_vector(types_gen4, "???"));
-    EXPECT_FALSE(string_in_vector(types_gen4, "Shadow"));
-    EXPECT_FALSE(string_in_vector(types_gen4, "Fairy"));
-
-    /*
-     * Generation V
-     */
-    types_gen5 = pkmn::database::get_type_list("White 2");
-    EXPECT_EQ(17, types_gen5.size());
-    EXPECT_TRUE(string_in_vector(types_gen5, "Dark"));
-    EXPECT_TRUE(string_in_vector(types_gen5, "Steel"));
-    EXPECT_FALSE(string_in_vector(types_gen5, "???"));
-    EXPECT_FALSE(string_in_vector(types_gen5, "Shadow"));
-    EXPECT_FALSE(string_in_vector(types_gen5, "Fairy"));
-
-    /*
-     * Generation VI
-     */
-    types_gen6 = pkmn::database::get_type_list("X");
-    EXPECT_EQ(18, types_gen6.size());
-    EXPECT_TRUE(string_in_vector(types_gen6, "Dark"));
-    EXPECT_TRUE(string_in_vector(types_gen6, "Steel"));
-    EXPECT_FALSE(string_in_vector(types_gen6, "???"));
-    EXPECT_FALSE(string_in_vector(types_gen6, "Shadow"));
-    EXPECT_TRUE(string_in_vector(types_gen6, "Fairy"));
+            ASSERT_EQ(types.size(), type_names.size()) << pkmn::game_to_string(game);
+            for(size_t type_index = 0; type_index < types.size(); ++type_index)
+            {
+                EXPECT_EQ(
+                    type_names[type_index],
+                    pkmn::type_to_string(types[type_index])
+                ) << pkmn::game_to_string(game);
+            }
+        }
+    }
 }
 
 /*
  * Machine tests
  */
 
-typedef std::function<std::vector<std::string>(const std::string&)> get_machine_move_list_fcn_t;
+typedef std::function<std::vector<pkmn::e_move>(pkmn::e_game)> get_machine_move_enum_list_fcn_t;
+typedef std::function<std::vector<std::string>(pkmn::e_game)>  get_machine_move_name_list_fcn_t;
 
 typedef std::tuple<
-            std::string,                 // Game
-            size_t,                      // List size
-            std::string,                 // First entry
-            std::string,                 // Last entry
-            get_machine_move_list_fcn_t> // Test function
-        machine_move_list_test_params_t;
+            std::vector<pkmn::e_game>,             // Games
+            size_t,                                // List size
+            std::pair<pkmn::e_move, pkmn::e_move>, // Expected beginning+end moves
+            std::pair<std::string, std::string>,   // Expected beginning+end move names
+            get_machine_move_enum_list_fcn_t,      // Enum function
+            get_machine_move_name_list_fcn_t>      // Name function
+        machine_move_lists_test_params_t;
 
-class cpp_machine_move_list_test: public ::testing::TestWithParam<machine_move_list_test_params_t> {};
+class cpp_machine_move_lists_test: public ::testing::TestWithParam<machine_move_lists_test_params_t> {};
 
-TEST_P(cpp_machine_move_list_test, test_machine_move_list)
+TEST_P(cpp_machine_move_lists_test, test_machine_move_lists)
 {
-    machine_move_list_test_params_t test_params = GetParam();
-    const std::string& game        = std::get<0>(test_params);
-    const size_t& list_size        = std::get<1>(test_params);
-    const std::string& first_entry = std::get<2>(test_params);
-    const std::string& last_entry  = std::get<3>(test_params);
-    const get_machine_move_list_fcn_t& get_machine_move_list_fcn = std::get<4>(test_params);
+    machine_move_lists_test_params_t test_params = GetParam();
 
-    std::vector<std::string> move_list = get_machine_move_list_fcn(game);
-    ASSERT_FALSE(move_list.empty());
+    const std::vector<pkmn::e_game>& games = std::get<0>(test_params);
+    size_t list_size                       = std::get<1>(test_params);
 
-    EXPECT_EQ(list_size, move_list.size());
-    EXPECT_EQ(first_entry, move_list.front());
-    EXPECT_EQ(last_entry, move_list.back());
+    pkmn::e_move expected_first_move = std::get<2>(test_params).first;
+    pkmn::e_move expected_last_move  = std::get<2>(test_params).second;
+
+    const std::string& expected_first_move_name = std::get<3>(test_params).first;
+    const std::string& expected_last_move_name  = std::get<3>(test_params).second;
+
+    const get_machine_move_enum_list_fcn_t& get_machine_move_enum_list_fcn = std::get<4>(test_params);
+    const get_machine_move_name_list_fcn_t& get_machine_move_name_list_fcn = std::get<5>(test_params);
+
+    for(pkmn::e_game game: games)
+    {
+        std::vector<pkmn::e_move> machine_moves = get_machine_move_enum_list_fcn(game);
+        EXPECT_EQ(list_size, machine_moves.size()) << pkmn::game_to_string(game);
+        EXPECT_EQ(expected_first_move, machine_moves.front())
+            << pkmn::game_to_string(game) << ": "   << pkmn::move_to_string(expected_first_move)
+                                          << " vs " << pkmn::move_to_string(machine_moves.front());
+
+        EXPECT_EQ(expected_last_move, machine_moves.back())
+            << pkmn::game_to_string(game) << ": "   << pkmn::move_to_string(expected_last_move)
+                                          << " vs " << pkmn::move_to_string(machine_moves.back());
+
+        std::vector<std::string> machine_move_names = get_machine_move_name_list_fcn(game);
+        EXPECT_EQ(list_size, machine_move_names.size()) << pkmn::game_to_string(game);
+        EXPECT_EQ(expected_first_move_name, machine_move_names.front()) << pkmn::game_to_string(game);
+        EXPECT_EQ(expected_last_move_name, machine_move_names.back()) << pkmn::game_to_string(game);
+
+        ASSERT_EQ(machine_moves.size(), machine_move_names.size());
+        for(size_t move_index = 0; move_index < machine_moves.size(); ++move_index)
+        {
+            EXPECT_EQ(
+                machine_moves[move_index],
+                pkmn::string_to_move(machine_move_names[move_index])
+            ) << pkmn::game_to_string(game) << " " << machine_move_names[move_index];
+        }
+    }
 }
 
 // TODO: move names should match what they were in a given game
-static const std::vector<machine_move_list_test_params_t> TM_LIST_TEST_PARAMS =
+static const std::vector<machine_move_lists_test_params_t> TM_LISTS_TEST_PARAMS =
 {
-    // Generation I
-    machine_move_list_test_params_t("Red", 50, "Mega Punch", "Substitute", pkmn::database::get_tm_move_list),
-    machine_move_list_test_params_t("Blue", 50, "Mega Punch", "Substitute", pkmn::database::get_tm_move_list),
-    machine_move_list_test_params_t("Yellow", 50, "Mega Punch", "Substitute", pkmn::database::get_tm_move_list),
-
-    // Generation II
-    machine_move_list_test_params_t("Gold", 50, "Dynamic Punch", "Nightmare", pkmn::database::get_tm_move_list),
-    machine_move_list_test_params_t("Silver", 50, "Dynamic Punch", "Nightmare", pkmn::database::get_tm_move_list),
-    machine_move_list_test_params_t("Crystal", 50, "Dynamic Punch", "Nightmare", pkmn::database::get_tm_move_list),
-
-    // Generation III
-    machine_move_list_test_params_t("Ruby", 50, "Focus Punch", "Overheat", pkmn::database::get_tm_move_list),
-    machine_move_list_test_params_t("Sapphire", 50, "Focus Punch", "Overheat", pkmn::database::get_tm_move_list),
-    machine_move_list_test_params_t("Emerald", 50, "Focus Punch", "Overheat", pkmn::database::get_tm_move_list),
-    machine_move_list_test_params_t("FireRed", 50, "Focus Punch", "Overheat", pkmn::database::get_tm_move_list),
-    machine_move_list_test_params_t("LeafGreen", 50, "Focus Punch", "Overheat", pkmn::database::get_tm_move_list),
-    machine_move_list_test_params_t("Colosseum", 50, "Focus Punch", "Overheat", pkmn::database::get_tm_move_list),
-    machine_move_list_test_params_t("XD", 50, "Focus Punch", "Overheat", pkmn::database::get_tm_move_list),
-
-    // Generation IV
-    machine_move_list_test_params_t("Diamond", 92, "Focus Punch", "Trick Room", pkmn::database::get_tm_move_list),
-    machine_move_list_test_params_t("Pearl", 92, "Focus Punch", "Trick Room", pkmn::database::get_tm_move_list),
-    machine_move_list_test_params_t("Platinum", 92, "Focus Punch", "Trick Room", pkmn::database::get_tm_move_list),
-    machine_move_list_test_params_t("HeartGold", 92, "Focus Punch", "Trick Room", pkmn::database::get_tm_move_list),
-    machine_move_list_test_params_t("SoulSilver", 92, "Focus Punch", "Trick Room", pkmn::database::get_tm_move_list),
-
-    // Generation V
-    machine_move_list_test_params_t("Black", 95, "Hone Claws", "Snarl", pkmn::database::get_tm_move_list),
-    machine_move_list_test_params_t("White", 95, "Hone Claws", "Snarl", pkmn::database::get_tm_move_list),
-    machine_move_list_test_params_t("Black 2", 95, "Hone Claws", "Snarl", pkmn::database::get_tm_move_list),
-    machine_move_list_test_params_t("White 2", 95, "Hone Claws", "Snarl", pkmn::database::get_tm_move_list),
-
-    // Generation VI
-    machine_move_list_test_params_t("X", 100, "Hone Claws", "Confide", pkmn::database::get_tm_move_list),
-    machine_move_list_test_params_t("Y", 100, "Hone Claws", "Confide", pkmn::database::get_tm_move_list),
-    machine_move_list_test_params_t("Omega Ruby", 100, "Hone Claws", "Confide", pkmn::database::get_tm_move_list),
-    machine_move_list_test_params_t("Alpha Sapphire", 100, "Hone Claws", "Confide", pkmn::database::get_tm_move_list),
+    machine_move_lists_test_params_t(
+        pkmntest::GEN1_GAMES,
+        50,
+        {pkmn::e_move::MEGA_PUNCH, pkmn::e_move::SUBSTITUTE},
+        {"Mega Punch", "Substitute"},
+        pkmn::database::get_tm_move_list,
+        pkmn::database::get_tm_move_name_list
+    ),
+    machine_move_lists_test_params_t(
+        pkmntest::GEN2_GAMES,
+        50,
+        {pkmn::e_move::DYNAMIC_PUNCH, pkmn::e_move::NIGHTMARE},
+        {"Dynamic Punch", "Nightmare"},
+        pkmn::database::get_tm_move_list,
+        pkmn::database::get_tm_move_name_list
+    ),
+    machine_move_lists_test_params_t(
+        pkmntest::GEN3_GAMES,
+        50,
+        {pkmn::e_move::FOCUS_PUNCH, pkmn::e_move::OVERHEAT},
+        {"Focus Punch", "Overheat"},
+        pkmn::database::get_tm_move_list,
+        pkmn::database::get_tm_move_name_list
+    ),
+    machine_move_lists_test_params_t(
+        pkmntest::GEN4_GAMES,
+        92,
+        {pkmn::e_move::FOCUS_PUNCH, pkmn::e_move::TRICK_ROOM},
+        {"Focus Punch", "Trick Room"},
+        pkmn::database::get_tm_move_list,
+        pkmn::database::get_tm_move_name_list
+    ),
+    machine_move_lists_test_params_t(
+        pkmntest::GEN5_GAMES,
+        95,
+        {pkmn::e_move::HONE_CLAWS, pkmn::e_move::SNARL},
+        {"Hone Claws", "Snarl"},
+        pkmn::database::get_tm_move_list,
+        pkmn::database::get_tm_move_name_list
+    ),
+    machine_move_lists_test_params_t(
+        pkmntest::GEN6_GAMES,
+        100,
+        {pkmn::e_move::HONE_CLAWS, pkmn::e_move::CONFIDE},
+        {"Hone Claws", "Confide"},
+        pkmn::database::get_tm_move_list,
+        pkmn::database::get_tm_move_name_list
+    ),
 };
 
 INSTANTIATE_TEST_CASE_P(
-    tm_move_list_test,
-    cpp_machine_move_list_test,
-    ::testing::ValuesIn(TM_LIST_TEST_PARAMS)
+    tm_moves_list_test,
+    cpp_machine_move_lists_test,
+    ::testing::ValuesIn(TM_LISTS_TEST_PARAMS)
 );
 
-static const std::vector<machine_move_list_test_params_t> HM_LIST_TEST_PARAMS =
+static const std::vector<machine_move_lists_test_params_t> HM_LISTS_TEST_PARAMS =
 {
-    // Generation I
-    machine_move_list_test_params_t("Red", 5, "Cut", "Flash", pkmn::database::get_hm_move_list),
-    machine_move_list_test_params_t("Blue", 5, "Cut", "Flash", pkmn::database::get_hm_move_list),
-    machine_move_list_test_params_t("Yellow", 5, "Cut", "Flash", pkmn::database::get_hm_move_list),
-
-    // Generation II
-    machine_move_list_test_params_t("Gold", 7, "Cut", "Waterfall", pkmn::database::get_hm_move_list),
-    machine_move_list_test_params_t("Silver", 7, "Cut", "Waterfall", pkmn::database::get_hm_move_list),
-    machine_move_list_test_params_t("Crystal", 7, "Cut", "Waterfall", pkmn::database::get_hm_move_list),
-
-    // Generation III
-    machine_move_list_test_params_t("Ruby", 8, "Cut", "Dive", pkmn::database::get_hm_move_list),
-    machine_move_list_test_params_t("Sapphire", 8, "Cut", "Dive", pkmn::database::get_hm_move_list),
-    machine_move_list_test_params_t("Emerald", 8, "Cut", "Dive", pkmn::database::get_hm_move_list),
-    machine_move_list_test_params_t("FireRed", 7, "Cut", "Waterfall", pkmn::database::get_hm_move_list),
-    machine_move_list_test_params_t("LeafGreen", 7, "Cut", "Waterfall", pkmn::database::get_hm_move_list),
-
-    // Generation IV
-    machine_move_list_test_params_t("Diamond", 8, "Cut", "Rock Climb", pkmn::database::get_hm_move_list),
-    machine_move_list_test_params_t("Pearl", 8, "Cut", "Rock Climb", pkmn::database::get_hm_move_list),
-    machine_move_list_test_params_t("Platinum", 8, "Cut", "Rock Climb", pkmn::database::get_hm_move_list),
-    machine_move_list_test_params_t("HeartGold", 8, "Cut", "Rock Climb", pkmn::database::get_hm_move_list),
-    machine_move_list_test_params_t("SoulSilver", 8, "Cut", "Rock Climb", pkmn::database::get_hm_move_list),
-
-    // Generation V
-    machine_move_list_test_params_t("Black", 6, "Cut", "Dive", pkmn::database::get_hm_move_list),
-    machine_move_list_test_params_t("White", 6, "Cut", "Dive", pkmn::database::get_hm_move_list),
-    machine_move_list_test_params_t("Black 2", 6, "Cut", "Dive", pkmn::database::get_hm_move_list),
-    machine_move_list_test_params_t("White 2", 6, "Cut", "Dive", pkmn::database::get_hm_move_list),
-
-    // Generation VI
-    machine_move_list_test_params_t("X", 5, "Cut", "Waterfall", pkmn::database::get_hm_move_list),
-    machine_move_list_test_params_t("Y", 5, "Cut", "Waterfall", pkmn::database::get_hm_move_list),
-    machine_move_list_test_params_t("Omega Ruby", 7, "Cut", "Dive", pkmn::database::get_hm_move_list),
-    machine_move_list_test_params_t("Alpha Sapphire", 7, "Cut", "Dive", pkmn::database::get_hm_move_list),
+    machine_move_lists_test_params_t(
+        pkmntest::GEN1_GAMES,
+        5,
+        {pkmn::e_move::CUT, pkmn::e_move::FLASH},
+        {"Cut", "Flash"},
+        pkmn::database::get_hm_move_list,
+        pkmn::database::get_hm_move_name_list
+    ),
+    machine_move_lists_test_params_t(
+        pkmntest::GEN2_GAMES,
+        7,
+        {pkmn::e_move::CUT, pkmn::e_move::WATERFALL},
+        {"Cut", "Waterfall"},
+        pkmn::database::get_hm_move_list,
+        pkmn::database::get_hm_move_name_list
+    ),
+    machine_move_lists_test_params_t(
+        {
+            pkmn::e_game::RUBY,
+            pkmn::e_game::SAPPHIRE,
+            pkmn::e_game::EMERALD,
+        },
+        8,
+        {pkmn::e_move::CUT, pkmn::e_move::DIVE},
+        {"Cut", "Dive"},
+        pkmn::database::get_hm_move_list,
+        pkmn::database::get_hm_move_name_list
+    ),
+    machine_move_lists_test_params_t(
+        {
+            pkmn::e_game::FIRERED,
+            pkmn::e_game::LEAFGREEN,
+        },
+        7,
+        {pkmn::e_move::CUT, pkmn::e_move::WATERFALL},
+        {"Cut", "Waterfall"},
+        pkmn::database::get_hm_move_list,
+        pkmn::database::get_hm_move_name_list
+    ),
+    machine_move_lists_test_params_t(
+        pkmntest::GEN4_GAMES,
+        8,
+        {pkmn::e_move::CUT, pkmn::e_move::ROCK_CLIMB},
+        {"Cut", "Rock Climb"},
+        pkmn::database::get_hm_move_list,
+        pkmn::database::get_hm_move_name_list
+    ),
+    machine_move_lists_test_params_t(
+        pkmntest::GEN5_GAMES,
+        6,
+        {pkmn::e_move::CUT, pkmn::e_move::DIVE},
+        {"Cut", "Dive"},
+        pkmn::database::get_hm_move_list,
+        pkmn::database::get_hm_move_name_list
+    ),
+    machine_move_lists_test_params_t(
+        {
+            pkmn::e_game::X,
+            pkmn::e_game::Y
+        },
+        5,
+        {pkmn::e_move::CUT, pkmn::e_move::WATERFALL},
+        {"Cut", "Waterfall"},
+        pkmn::database::get_hm_move_list,
+        pkmn::database::get_hm_move_name_list
+    ),
+    machine_move_lists_test_params_t(
+        {
+            pkmn::e_game::OMEGA_RUBY,
+            pkmn::e_game::ALPHA_SAPPHIRE
+        },
+        7,
+        {pkmn::e_move::CUT, pkmn::e_move::DIVE},
+        {"Cut", "Dive"},
+        pkmn::database::get_hm_move_list,
+        pkmn::database::get_hm_move_name_list
+    ),
 };
 
 INSTANTIATE_TEST_CASE_P(
-    hm_move_list_test,
-    cpp_machine_move_list_test,
-    ::testing::ValuesIn(HM_LIST_TEST_PARAMS)
+    hm_move_lists_test,
+    cpp_machine_move_lists_test,
+    ::testing::ValuesIn(HM_LISTS_TEST_PARAMS)
 );
 
 TEST(cpp_lists_test, test_machine_special_cases)
 {
     // Between X/Y and OR/AS, TM94 was changed from Rock Smash to Secret Power,
     // due to Rock Smash becoming an HM.
-    for(const std::string& xy_game: {"X", "Y"})
+    for(pkmn::e_game xy_game: {pkmn::e_game::X, pkmn::e_game::Y})
     {
-        std::vector<std::string> xy_tm_move_list = pkmn::database::get_tm_move_list(xy_game);
-        EXPECT_EQ("Rock Smash", xy_tm_move_list[93]);
+        std::vector<pkmn::e_move> xy_tm_move_list = pkmn::database::get_tm_move_list(xy_game);
+        EXPECT_EQ(pkmn::e_move::ROCK_SMASH, xy_tm_move_list[93]);
+
+        std::vector<std::string> xy_tm_move_name_list = pkmn::database::get_tm_move_name_list(xy_game);
+        EXPECT_EQ("Rock Smash", xy_tm_move_name_list[93]);
     }
-    for(const std::string& oras_game: {"Omega Ruby", "Alpha Sapphire"})
+    for(pkmn::e_game oras_game: {pkmn::e_game::OMEGA_RUBY, pkmn::e_game::ALPHA_SAPPHIRE})
     {
-        std::vector<std::string> oras_tm_move_list = pkmn::database::get_tm_move_list(oras_game);
-        EXPECT_EQ("Secret Power", oras_tm_move_list[93]);
+        std::vector<pkmn::e_move> oras_tm_move_list = pkmn::database::get_tm_move_list(oras_game);
+        EXPECT_EQ(pkmn::e_move::SECRET_POWER, oras_tm_move_list[93]);
+
+        std::vector<std::string> oras_tm_move_name_list = pkmn::database::get_tm_move_name_list(oras_game);
+        EXPECT_EQ("Secret Power", oras_tm_move_name_list[93]);
     }
 
     // HMs were not present in the Gamecube games.
-    for(const std::string& gamecube_game: {"Colosseum", "XD"})
+    for(pkmn::e_game gamecube_game: {pkmn::e_game::COLOSSEUM, pkmn::e_game::XD})
     {
         EXPECT_THROW(
             pkmn::database::get_hm_move_list(gamecube_game);
+        , pkmn::feature_not_in_game_error);
+        EXPECT_THROW(
+            pkmn::database::get_hm_move_name_list(gamecube_game);
         , pkmn::feature_not_in_game_error);
     }
 }

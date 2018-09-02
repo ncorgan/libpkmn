@@ -7,6 +7,7 @@
 
 #include "private_exports.hpp"
 
+#include "database/enum_conversions.hpp"
 #include "database/database_common.hpp"
 
 #include "types/rng.hpp"
@@ -40,6 +41,11 @@ namespace pkmn { namespace priv {
         return pkmn::database::game_name_to_generation(game);
     }
 
+    int game_enum_to_generation(pkmn::e_game game)
+    {
+        return pkmn::database::game_enum_to_generation(game);
+    }
+
     void initialize_database_connection()
     {
         pkmn::database::initialize_connection();
@@ -69,5 +75,15 @@ namespace pkmn { namespace priv {
 #else
         return filepath;
 #endif
+    }
+
+    pkmn::e_item ball_to_item(pkmn::e_ball ball)
+    {
+        return pkmn::database::ball_to_item(ball);
+    }
+
+    pkmn::e_ball item_to_ball(pkmn::e_item item)
+    {
+        return pkmn::database::item_to_ball(item);
     }
 }}

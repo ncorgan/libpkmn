@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -13,17 +13,18 @@
 
 // Convert getter/setter functions into attributes for more idiomatic C#.
 
+%attribute(pkmn::database::move_entry, pkmn::e_move, Move, get_move);
 %attributestring(pkmn::database::move_entry, std::string, Name, get_name);
-%attributestring(pkmn::database::move_entry, std::string, Game, get_game);
-%attributestring(pkmn::database::move_entry, std::string, MoveType, get_type);
+%attribute(pkmn::database::move_entry, pkmn::e_game, Game, get_game);
+%attribute(pkmn::database::move_entry, pkmn::e_type, MoveType, get_type);
 %attributestring(pkmn::database::move_entry, std::string, Description, get_description);
-%attributestring(pkmn::database::move_entry, std::string, Target, get_target);
-%attributestring(pkmn::database::move_entry, std::string, DamageClass, get_damage_class);
+%attribute(pkmn::database::move_entry, pkmn::e_move_target, Target, get_target);
+%attribute(pkmn::database::move_entry, pkmn::e_move_damage_class, DamageClass, get_damage_class);
 %attribute(pkmn::database::move_entry, int, BasePower, get_base_power);
 %attribute(pkmn::database::move_entry, float, Accuracy, get_accuracy);
 %attribute(pkmn::database::move_entry, int, Priority, get_priority);
 %attributestring(pkmn::database::move_entry, std::string, Effect, get_effect);
-%attributestring(pkmn::database::move_entry, std::string, ContestType, get_contest_type);
+%attribute(pkmn::database::move_entry, pkmn::e_contest_stat, ContestType, get_contest_type);
 %attributestring(pkmn::database::move_entry, std::string, ContestEffect, get_contest_effect);
 %attributestring(pkmn::database::move_entry, std::string, SuperContestEffect, get_super_contest_effect);
 
@@ -70,7 +71,7 @@
     public override int GetHashCode()
     {
         return HashCodeBuilder.Create().AddValue<string>(this.Name)
-                                       .AddValue<string>(this.Game)
+                                       .AddValue<Game>(this.Game)
                                        .ToHashCode();
     }
 %}

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2015-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -11,9 +11,11 @@ PKMN_PYTHON_INIT
 // Will be called on import
 
 %{
+    #include <pkmn/enums/enum_to_string.hpp>
+
     #include <pkmn/utils/paths.hpp>
 
-    #include "private_exports.hpp"
+#include "private_exports.hpp"
 %}
 
 namespace pkmn { namespace priv {
@@ -23,8 +25,12 @@ namespace pkmn { namespace priv {
 // Convert Doxygen docs to Python docstrings
 %include <pkmn_python_docstrings.i>
 
+%import <enums_python.i>
 %import <database/database_python.i>
 %import <stl_python.i>
+
+// Enums
+%include <pkmn/enums/enum_to_string.hpp>
 
 // Attribute Maps
 %include <python/pkmn_attribute_maps.i>

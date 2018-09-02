@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+# Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
 #
 # Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
 # or copy at http://opensource.org/licenses/MIT)
@@ -8,7 +8,7 @@
 INCLUDE(SWIGRuby)
 
 #
-# These files needs to be in the working directory when SWIG is called.
+# These files need to be in the working directory when SWIG is called.
 #
 CONFIGURE_FILE(
     ${CMAKE_CURRENT_SOURCE_DIR}/../../modules/ruby/rubycontainer.swg
@@ -46,6 +46,38 @@ SWIG_BUILD_RUBY_MODULE(Database     TRUE)
 SWIG_BUILD_RUBY_MODULE(GUI          TRUE)
 SWIG_BUILD_RUBY_MODULE(Paths        TRUE)
 SWIG_BUILD_RUBY_MODULE(STL          TRUE)
+
+# Oh, SWIG. We need to build this for other SWIG modules to treat C++ enum
+# parameters properly, but we don't need to install it.
+SWIG_BUILD_RUBY_MODULE_BUILD_ONLY(Enums TRUE)
+
+# Generate .rb files with enums.
+SET(ruby_enums_deps
+    ${PKMN_SOURCE_DIR}/include/pkmn/enums/CMakeLists.txt
+    ${PKMN_SOURCE_DIR}/scripts/generate_swig_enums.py
+)
+FOREACH(enum ${ENUM_LIST})
+    LIST(APPEND ruby_enums
+        "${CMAKE_CURRENT_BINARY_DIR}/${enum}.rb"
+    )
+ENDFOREACH()
+
+ADD_CUSTOM_COMMAND(
+    DEPENDS ${ruby_enums_deps}
+    OUTPUT ${ruby_enums}
+    COMMAND ${PYTHON_EXECUTABLE} ${PKMN_SOURCE_DIR}/scripts/generate_swig_enums.py --ruby --enum-dir=${PKMN_SOURCE_DIR}/include/pkmn/enums --output-dir=${CMAKE_CURRENT_BINARY_DIR}
+    COMMENT "Generating Ruby enums"
+)
+ADD_CUSTOM_TARGET(
+    pkmn_ruby_enums ALL
+    DEPENDS ${ruby_enums}
+)
+
+INSTALL(
+    FILES ${ruby_enums}
+    DESTINATION ${RUBY_INSTALL_DIR}/PKMN
+    COMPONENT Ruby
+)
 
 #
 # The PKMN module's SWIG file needs to have a different filename

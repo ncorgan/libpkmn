@@ -18,26 +18,21 @@
 #include <cstdio>
 
 enum pkmn_error pkmn_pokedex_init(
-    const char* p_game,
+    enum pkmn_game game,
     struct pkmn_pokedex* p_pokedex_out
 )
 {
     enum pkmn_error error = pkmn::c::check_for_null_param(
-                                p_game,
-                                "p_game"
+                                p_pokedex_out,
+                                "p_pokedex_out"
                             );
-    if(!error)
-    {
-        error = pkmn::c::check_for_null_param(
-                    p_pokedex_out,
-                    "p_pokedex_out"
-                );
-    }
     if(!error)
     {
         auto impl = [&]()
         {
-            pkmn::pokedex::sptr cpp = pkmn::pokedex::make(p_game);
+            pkmn::pokedex::sptr cpp = pkmn::pokedex::make(
+                                          static_cast<pkmn::e_game>(game)
+                                      );
 
             pkmn::c::init_pokedex(
                 cpp,
@@ -63,7 +58,6 @@ enum pkmn_error pkmn_pokedex_free(
     {
         auto impl = [&]()
         {
-            pkmn::c::free_pointer_and_set_to_null(&p_pokedex->p_game);
             pkmn::c::delete_pointer_and_set_to_null(
                 reinterpret_cast<pkmn::c::pokedex_internal_t**>(&p_pokedex->p_internal)
             );
@@ -84,7 +78,7 @@ const char* pkmn_pokedex_strerror(
 
 enum pkmn_error pkmn_pokedex_has_seen(
     const struct pkmn_pokedex* p_pokedex,
-    const char* p_species,
+    enum pkmn_species species,
     bool* p_has_seen_out
 )
 {
@@ -98,23 +92,17 @@ enum pkmn_error pkmn_pokedex_has_seen(
         BOOST_ASSERT(p_internal != nullptr);
 
         error = pkmn::c::check_for_null_param(
-                    p_species,
-                    "p_species",
+                    p_has_seen_out,
+                    "p_has_seen_out",
                     p_internal
                 );
         if(!error)
         {
-            error = pkmn::c::check_for_null_param(
-                        p_has_seen_out,
-                        "p_has_seen_out",
-                        p_internal
-                    );
-        }
-        if(!error)
-        {
             auto impl = [&]()
             {
-                *p_has_seen_out = p_internal->cpp->has_seen(p_species);
+                *p_has_seen_out = p_internal->cpp->has_seen(
+                                      static_cast<pkmn::e_species>(species)
+                                  );
             };
 
             error = pkmn::c::handle_exceptions(impl, p_internal);
@@ -126,7 +114,7 @@ enum pkmn_error pkmn_pokedex_has_seen(
 
 enum pkmn_error pkmn_pokedex_set_has_seen_species(
     const struct pkmn_pokedex* p_pokedex,
-    const char* p_species,
+    enum pkmn_species species,
     bool has_seen
 )
 {
@@ -139,20 +127,15 @@ enum pkmn_error pkmn_pokedex_set_has_seen_species(
         auto* p_internal = pkmn::c::get_pokedex_internal_ptr(p_pokedex);
         BOOST_ASSERT(p_internal != nullptr);
 
-        error = pkmn::c::check_for_null_param(
-                    p_species,
-                    "p_species",
-                    p_internal
-                );
-        if(!error)
+        auto impl = [&]()
         {
-            auto impl = [&]()
-            {
-                p_internal->cpp->set_has_seen(p_species, has_seen);
-            };
+            p_internal->cpp->set_has_seen(
+                static_cast<pkmn::e_species>(species),
+                has_seen
+            );
+        };
 
-            error = pkmn::c::handle_exceptions(impl, p_internal);
-        }
+        error = pkmn::c::handle_exceptions(impl, p_internal);
     }
 
     return error;
@@ -160,7 +143,7 @@ enum pkmn_error pkmn_pokedex_set_has_seen_species(
 
 enum pkmn_error pkmn_pokedex_get_all_seen(
     const struct pkmn_pokedex* p_pokedex,
-    struct pkmn_string_list* p_all_seen_out
+    struct pkmn_species_enum_list* p_all_seen_out
 )
 {
     enum pkmn_error error = pkmn::c::check_for_null_wrapper_param(
@@ -181,7 +164,7 @@ enum pkmn_error pkmn_pokedex_get_all_seen(
         {
             auto impl = [&]()
             {
-                pkmn::c::string_list_cpp_to_c(
+                pkmn::c::species_enum_list_cpp_to_c(
                     p_internal->cpp->get_all_seen(),
                     p_all_seen_out
                 );
@@ -231,7 +214,7 @@ enum pkmn_error pkmn_pokedex_get_num_seen(
 
 enum pkmn_error pkmn_pokedex_has_caught(
     const struct pkmn_pokedex* p_pokedex,
-    const char* p_species,
+    enum pkmn_species species,
     bool* p_has_caught_out
 )
 {
@@ -245,23 +228,17 @@ enum pkmn_error pkmn_pokedex_has_caught(
         BOOST_ASSERT(p_internal != nullptr);
 
         error = pkmn::c::check_for_null_param(
-                    p_species,
-                    "p_species",
+                    p_has_caught_out,
+                    "p_has_caught_out",
                     p_internal
                 );
         if(!error)
         {
-            error = pkmn::c::check_for_null_param(
-                        p_has_caught_out,
-                        "p_has_caught_out",
-                        p_internal
-                    );
-        }
-        if(!error)
-        {
             auto impl = [&]()
             {
-                *p_has_caught_out = p_internal->cpp->has_caught(p_species);
+                *p_has_caught_out = p_internal->cpp->has_caught(
+                                        static_cast<pkmn::e_species>(species)
+                                    );
             };
 
             error = pkmn::c::handle_exceptions(impl, p_internal);
@@ -273,7 +250,7 @@ enum pkmn_error pkmn_pokedex_has_caught(
 
 enum pkmn_error pkmn_pokedex_set_has_caught_species(
     const struct pkmn_pokedex* p_pokedex,
-    const char* p_species,
+    enum pkmn_species species,
     bool has_caught
 )
 {
@@ -286,16 +263,14 @@ enum pkmn_error pkmn_pokedex_set_has_caught_species(
         auto* p_internal = pkmn::c::get_pokedex_internal_ptr(p_pokedex);
         BOOST_ASSERT(p_internal != nullptr);
 
-        error = pkmn::c::check_for_null_param(
-                    p_species,
-                    "p_species",
-                    p_internal
-                );
         if(!error)
         {
             auto impl = [&]()
             {
-                p_internal->cpp->set_has_caught(p_species, has_caught);
+                p_internal->cpp->set_has_caught(
+                    static_cast<pkmn::e_species>(species),
+                    has_caught
+                );
             };
 
             error = pkmn::c::handle_exceptions(impl, p_internal);
@@ -307,7 +282,7 @@ enum pkmn_error pkmn_pokedex_set_has_caught_species(
 
 enum pkmn_error pkmn_pokedex_get_all_caught(
     const struct pkmn_pokedex* p_pokedex,
-    struct pkmn_string_list* p_all_caught_out
+    struct pkmn_species_enum_list* p_all_caught_out
 )
 {
     enum pkmn_error error = pkmn::c::check_for_null_wrapper_param(
@@ -328,7 +303,7 @@ enum pkmn_error pkmn_pokedex_get_all_caught(
         {
             auto impl = [&]()
             {
-                pkmn::c::string_list_cpp_to_c(
+                pkmn::c::species_enum_list_cpp_to_c(
                     p_internal->cpp->get_all_caught(),
                     p_all_caught_out
                 );

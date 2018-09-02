@@ -328,14 +328,12 @@ namespace pkmn {
         throw pkmn::feature_not_in_game_error("Secret ID", "Generation I");
     }
 
-    std::string game_save_gen1impl::get_trainer_gender()
+    pkmn::e_gender game_save_gen1impl::get_trainer_gender()
     {
-        return "Male";
+        return pkmn::e_gender::MALE;
     }
 
-    void game_save_gen1impl::set_trainer_gender(
-        PKMN_UNUSED(const std::string& trainer_gender)
-    )
+    void game_save_gen1impl::set_trainer_gender(pkmn::e_gender)
     {
         throw pkmn::feature_not_in_game_error("All trainers are male in Generation I.");
     }

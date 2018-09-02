@@ -8,6 +8,14 @@
 %define PKMN_RUBY_INIT
     %feature("autodoc", "2");
 
+    %{
+        // The Ruby headers define this but don't do anything with it. It messes
+        // with us because of our game enum.
+        #ifdef RUBY
+        #    undef RUBY
+        #endif
+    %}
+
     %include <swig_exceptions.i>
     SWIG_CATCH_DEFAULT
 

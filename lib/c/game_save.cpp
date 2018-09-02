@@ -1,17 +1,15 @@
 /*
- * p_Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
- * p_Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
- * p_or copy at http://opensource.org/licenses/MIT)
+ * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
+ * or copy at http://opensource.org/licenses/MIT)
  */
 
 #include "common/attributes.hpp"
 #include "common/misc.hpp"
 
 #include "cpp_to_c.hpp"
-#include "enum_maps.hpp"
 #include "error_internal.hpp"
-#include "exception_internal.hpp"
 
 #include <boost/assert.hpp>
 #include <boost/thread/mutex.hpp>
@@ -19,21 +17,6 @@
 #include <pkmn-c/game_save.h>
 
 #include <pkmn/game_save.hpp>
-
-#include <unordered_map>
-
-static const std::unordered_map<std::string, enum pkmn_game_save_type> GAME_SAVE_TYPES =
-{
-    {"None", PKMN_GAME_SAVE_TYPE_NONE},
-    {"Red/Blue", PKMN_GAME_SAVE_TYPE_RED_BLUE},
-    {"Yellow", PKMN_GAME_SAVE_TYPE_YELLOW},
-    {"Gold/Silver", PKMN_GAME_SAVE_TYPE_GOLD_SILVER},
-    {"Crystal", PKMN_GAME_SAVE_TYPE_CRYSTAL},
-    {"Ruby/Sapphire", PKMN_GAME_SAVE_TYPE_RUBY_SAPPHIRE},
-    {"Emerald", PKMN_GAME_SAVE_TYPE_EMERALD},
-    {"FireRed/LeafGreen", PKMN_GAME_SAVE_TYPE_FIRERED_LEAFGREEN},
-    {"Colosseum/XD", PKMN_GAME_SAVE_TYPE_COLOSSEUM_XD}
-};
 
 enum pkmn_error pkmn_game_save_detect_type(
     const char* p_filepath,
@@ -55,10 +38,9 @@ enum pkmn_error pkmn_game_save_detect_type(
     {
         auto impl = [&]()
         {
-            std::string cpp_game_save_type = pkmn::game_save::detect_type(p_filepath);
-            BOOST_ASSERT(GAME_SAVE_TYPES.count(cpp_game_save_type) > 0);
-
-            *p_game_save_type_out = GAME_SAVE_TYPES.at(cpp_game_save_type);
+            *p_game_save_type_out = static_cast<enum pkmn_game_save_type>(
+                                        pkmn::game_save::detect_type(p_filepath)
+                                    );
         };
 
         error = pkmn::c::handle_exceptions(impl);
@@ -105,14 +87,18 @@ enum pkmn_error pkmn_game_save_free(
     struct pkmn_game_save* p_game_save
 )
 {
-    enum pkmn_error error = pkmn::c::check_for_null_wrapper_param(p_game_save, "p_game_save");
+    enum pkmn_error error = pkmn::c::check_for_null_wrapper_param(
+                                p_game_save,
+                                "p_game_save"
+                            );
     if(!error)
     {
         auto impl = [&]()
         {
-            pkmn::c::free_pointer_and_set_to_null(&p_game_save->p_game);
             pkmn::c::delete_pointer_and_set_to_null(
-                reinterpret_cast<pkmn::c::game_save_internal_t**>(&p_game_save->p_internal)
+                reinterpret_cast<pkmn::c::game_save_internal_t**>(
+                    &p_game_save->p_internal
+                )
             );
 
             std::memset(p_game_save, 0, sizeof(*p_game_save));
@@ -133,7 +119,7 @@ const char* pkmn_game_save_strerror(
 
 // Save file actions
 
-PKMN_C_API enum pkmn_error pkmn_game_save_get_filepath(
+enum pkmn_error pkmn_game_save_get_filepath(
     const struct pkmn_game_save* p_game_save,
     char* p_filepath_buffer,
     size_t filepath_buffer_length,
@@ -267,11 +253,9 @@ enum pkmn_error pkmn_game_save_get_trainer_info(
 
                 if(p_internal->generation >= 2)
                 {
-                    std::string cpp_gender = p_internal->cpp->get_trainer_gender();
-
-                    const pkmn::c::gender_bimap_t& gender_bimap = pkmn::c::get_gender_bimap();
-                    BOOST_ASSERT(gender_bimap.left.count(cpp_gender) > 0);
-                    trainer_info.gender = gender_bimap.left.at(cpp_gender);
+                    trainer_info.gender = static_cast<enum pkmn_gender>(
+                                              p_internal->cpp->get_trainer_gender()
+                                          );
                 }
                 else
                 {
@@ -346,7 +330,7 @@ enum pkmn_error pkmn_game_save_set_trainer_id(
     return error;
 }
 
-PKMN_C_API enum pkmn_error pkmn_game_save_set_trainer_public_id(
+enum pkmn_error pkmn_game_save_set_trainer_public_id(
     const struct pkmn_game_save* p_game_save,
     uint16_t trainer_public_id
 )
@@ -371,7 +355,7 @@ PKMN_C_API enum pkmn_error pkmn_game_save_set_trainer_public_id(
     return error;
 }
 
-PKMN_C_API enum pkmn_error pkmn_game_save_set_trainer_secret_id(
+enum pkmn_error pkmn_game_save_set_trainer_secret_id(
     const struct pkmn_game_save* p_game_save,
     uint16_t trainer_secret_id
 )
@@ -412,16 +396,8 @@ enum pkmn_error pkmn_game_save_set_trainer_gender(
 
         auto impl = [&]()
         {
-            pkmn::enforce_value_in_vector(
-                "Gender",
-                gender,
-                {PKMN_GENDER_MALE, PKMN_GENDER_FEMALE}
-            );
-
-            static const pkmn::c::gender_bimap_t& gender_bimap = pkmn::c::get_gender_bimap();
-
             p_internal->cpp->set_trainer_gender(
-                gender_bimap.right.at(gender)
+                static_cast<pkmn::e_gender>(gender)
             );
         };
 

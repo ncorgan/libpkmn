@@ -10,6 +10,9 @@
 #include <pkmn/config.hpp>
 #include <pkmn/item_list.hpp>
 
+#include <pkmn/enums/game.hpp>
+#include <pkmn/enums/item.hpp>
+
 #include <memory>
 #include <string>
 #include <vector>
@@ -46,14 +49,12 @@ namespace pkmn {
              * \throws std::invalid_argument If either parameter is invalid
              * \throws std::runtime_error If an unimplemented game is given
              */
-            static sptr make(
-                const std::string& game
-            );
+            static sptr make(pkmn::e_game game);
 
             /*!
              * @brief Returns which game this item bag comes from.
              */
-            virtual std::string get_game() = 0;
+            virtual pkmn::e_game get_game() = 0;
 
             /*!
              * @brief Returns an interface to the bag's pocket with the given name.
@@ -95,7 +96,7 @@ namespace pkmn {
              * \throws std::out_of_range If the amount is not in the range [0,99]
              */
             virtual void add(
-                const std::string& item_name,
+                pkmn::e_item item,
                 int amount
             ) = 0;
 
@@ -113,7 +114,7 @@ namespace pkmn {
              * \throws std::out_of_range If the amount is not in the range [0,99]
              */
             virtual void remove(
-                const std::string& item_name,
+                pkmn::e_item item,
                 int amount
             ) = 0;
 

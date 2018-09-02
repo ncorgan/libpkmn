@@ -16,44 +16,58 @@ internal class Util
     private static System.Random rng = new System.Random();
 
     internal static int GameToGeneration(
-        string game
+        PKMN.Game game
     )
     {
-        if(game.Equals("Red") || game.Equals("Blue") || game.Equals("Yellow"))
+        int ret = 0;
+        switch(game)
         {
-            return 1;
+            case PKMN.Game.RED:
+            case PKMN.Game.BLUE:
+            case PKMN.Game.YELLOW:
+                ret = 1;
+                break;
+
+            case PKMN.Game.GOLD:
+            case PKMN.Game.SILVER:
+            case PKMN.Game.CRYSTAL:
+                ret = 2;
+                break;
+
+            case PKMN.Game.RUBY:
+            case PKMN.Game.SAPPHIRE:
+            case PKMN.Game.EMERALD:
+            case PKMN.Game.FIRERED:
+            case PKMN.Game.LEAFGREEN:
+            case PKMN.Game.COLOSSEUM:
+            case PKMN.Game.XD:
+                ret = 3;
+                break;
+
+            case PKMN.Game.DIAMOND:
+            case PKMN.Game.PEARL:
+            case PKMN.Game.PLATINUM:
+            case PKMN.Game.HEARTGOLD:
+            case PKMN.Game.SOULSILVER:
+                ret = 4;
+                break;
+
+            case PKMN.Game.BLACK:
+            case PKMN.Game.WHITE:
+            case PKMN.Game.BLACK2:
+            case PKMN.Game.WHITE2:
+                ret = 5;
+                break;
+
+            case PKMN.Game.X:
+            case PKMN.Game.Y:
+            case PKMN.Game.OMEGA_RUBY:
+            case PKMN.Game.ALPHA_SAPPHIRE:
+                ret = 6;
+                break;
         }
-        else if(game.Equals("Gold") || game.Equals("Silver") || game.Equals("Crystal"))
-        {
-            return 2;
-        }
-        else if(game.Equals("Ruby") || game.Equals("Sapphire") || game.Equals("Emerald") ||
-                game.Equals("FireRed") || game.Equals("LeafGreen") ||
-                game.Equals("Colosseum") || game.Equals("XD")
-        )
-        {
-            return 3;
-        }
-        else if(game.Equals("Diamond") || game.Equals("Pearl") || game.Equals("Platinum") ||
-                  game.Equals("HeartGold") || game.Equals("SoulSilver")
-        )
-        {
-            return 4;
-        }
-        else if(game.Equals("Black") || game.Equals("White") ||
-                game.Equals("Black 2") || game.Equals("White 2")
-        )
-        {
-            return 5;
-        }
-        else if(game.Equals("X") || game.Equals("Y") ||
-                game.Equals("Omega Ruby") || game.Equals("Alpha Sapphire")) {
-            return 6;
-        }
-        else
-        {
-            return 0;
-        }
+
+        return ret;
     }
 
     internal static bool RandomBool()
@@ -70,23 +84,23 @@ internal class Util
     }
 
     internal static PKMN.Pokemon GetRandomPokemon(
-        string game,
-        PKMN.StringList itemList,
-        PKMN.StringList moveList,
-        PKMN.StringList pokemonList
+        PKMN.Game game,
+        PKMN.ItemEnumList itemList,
+        PKMN.MoveEnumList moveList,
+        PKMN.SpeciesEnumList pokemonList
     )
     {
         int generation = Util.GameToGeneration(game);
 
         // Don't deal with Deoxys or Unown issues here.
-        string species;
+        PKMN.Species species = PKMN.Species.NONE;
         if(generation == 3)
         {
             do
             {
                 species = pokemonList[rng.Next(0, pokemonList.Count-1)];
             }
-            while(species == "Deoxys" || species == "Unown");
+            while((species == PKMN.Species.DEOXYS) || (species == PKMN.Species.UNOWN));
         }
         else
         {
@@ -94,29 +108,29 @@ internal class Util
         }
 
         PKMN.Pokemon ret = new PKMN.Pokemon(
-                                    species,
-                                    game,
-                                    "",
-                                    rng.Next(2, 100)
-                                );
+                                   species,
+                                   game,
+                                   "",
+                                   rng.Next(2, 100)
+                               );
 
         for(int moveIndex = 0; moveIndex < 4; ++moveIndex)
         {
-            string move;
+            PKMN.Move move;
             do
             {
                 move = moveList[rng.Next(0, moveList.Count-1)];
             }
-            while(move.IndexOf("Shadow") != -1);
+            while(move >= PKMN.Move.SHADOW_RUSH);
 
             ret.Moves[moveIndex].Move = move;
         }
 
-        foreach(string EV in ret.EVs.Keys)
+        foreach(PKMN.Stat EV in ret.EVs.Keys)
         {
             ret.EVs[EV] = rng.Next(0, 255);
         }
-        foreach(string IV in ret.IVs.Keys)
+        foreach(PKMN.Stat IV in ret.IVs.Keys)
         {
             ret.IVs[IV] = rng.Next(0, 15);
         }
@@ -124,7 +138,7 @@ internal class Util
         if(generation >= 2)
         {
             // Keep going until one is holdable.
-            while(ret.HeldItem == "None")
+            while(ret.HeldItem == PKMN.Item.NONE)
             {
                 try
                 {
@@ -139,7 +153,7 @@ internal class Util
         }
         if(generation >= 3)
         {
-            foreach(string marking in ret.Markings.Keys)
+            foreach(PKMN.Marking marking in ret.Markings.Keys)
             {
                 ret.Markings[marking] = Util.RandomBool();
             }
@@ -147,7 +161,7 @@ internal class Util
             {
                 ret.Ribbons[ribbon] = Util.RandomBool();
             }
-            foreach(string contestStat in ret.ContestStats.Keys)
+            foreach(PKMN.ContestStat contestStat in ret.ContestStats.Keys)
             {
                 ret.ContestStats[contestStat] = rng.Next(0, 255);
             }
@@ -161,7 +175,7 @@ internal class Util
         PKMN.Pokemon pokemon2
     )
     {
-        string game = pokemon1.Game;
+        PKMN.Game game = pokemon1.Game;
         int generation = Util.GameToGeneration(game);
 
         // There is no way to tell what game an imported Generation I-II
@@ -180,19 +194,19 @@ internal class Util
         Assert.AreEqual(pokemon1.OriginalTrainerName, pokemon2.OriginalTrainerName);
 
         Assert.AreEqual(pokemon1.EVs.Keys, pokemon2.EVs.Keys);
-        foreach(string EV in pokemon1.EVs.Keys)
+        foreach(PKMN.Stat EV in pokemon1.EVs.Keys)
         {
             Assert.AreEqual(pokemon1.EVs[EV], pokemon2.EVs[EV]);
         }
 
         Assert.AreEqual(pokemon1.IVs.Keys, pokemon2.IVs.Keys);
-        foreach(string IV in pokemon1.IVs.Keys)
+        foreach(PKMN.Stat IV in pokemon1.IVs.Keys)
         {
             Assert.AreEqual(pokemon1.IVs[IV], pokemon2.IVs[IV]);
         }
 
         Assert.AreEqual(pokemon1.Stats.Keys, pokemon2.Stats.Keys);
-        foreach(string stat in pokemon1.Stats.Keys)
+        foreach(PKMN.Stat stat in pokemon1.Stats.Keys)
         {
             Assert.AreEqual(pokemon1.Stats[stat], pokemon2.Stats[stat]);
         }
@@ -246,7 +260,7 @@ internal class Util
             Assert.AreEqual(pokemon1.Personality, pokemon2.Personality);
 
             Assert.AreEqual(pokemon1.Markings.Keys, pokemon2.Markings.Keys);
-            foreach(string marking in pokemon1.Markings.Keys)
+            foreach(PKMN.Marking marking in pokemon1.Markings.Keys)
             {
                 Assert.AreEqual(pokemon1.Markings[marking], pokemon2.Markings[marking]);
             }
@@ -258,7 +272,7 @@ internal class Util
             }
 
             Assert.AreEqual(pokemon1.ContestStats.Keys, pokemon2.ContestStats.Keys);
-            foreach(string contestStat in pokemon1.ContestStats.Keys)
+            foreach(PKMN.ContestStat contestStat in pokemon1.ContestStats.Keys)
             {
                 Assert.AreEqual(pokemon1.ContestStats[contestStat], pokemon2.ContestStats[contestStat]);
             }

@@ -10,6 +10,9 @@
 #include <pkmn-c/config.h>
 #include <pkmn-c/error.h>
 
+#include <pkmn-c/enums/game.h>
+#include <pkmn-c/enums/item.h>
+
 #include <pkmn-c/types/item_slot.h>
 #include <pkmn-c/types/string_types.h>
 
@@ -38,7 +41,7 @@ struct pkmn_item_list
     /*!
      * @brief The game this item list is associated with.
      */
-    char* p_game;
+    enum pkmn_game game;
 
     /*!
      * @brief How many items this list can hold.
@@ -67,7 +70,7 @@ extern "C" {
  */
 PKMN_C_API enum pkmn_error pkmn_item_list_init(
     const char* p_name,
-    const char* p_game,
+    enum pkmn_game game,
     struct pkmn_item_list* p_item_list_out
 );
 
@@ -115,9 +118,6 @@ PKMN_C_API enum pkmn_error pkmn_item_list_get_num_items(
 /*!
  * @brief Returns the item slot at the given position in the list (read-only).
  *
- * The pkmn_item_slot_t returned in item_slot_out will need to be freed with
- * ::pkmn_item_slot_free.
- *
  * \param item_list_ptr A pointer to the item list struct to use
  * \param position 0-based position of the item to return
  * \param item_slot_out Where to return the item slot
@@ -138,7 +138,7 @@ PKMN_C_API enum pkmn_error pkmn_item_list_at(
  * assuming one is available.
  *
  * \param item_list_ptr A pointer to the item list struct to use
- * \param item Name of the item to add
+ * \param item Item to add
  * \param amount How many of the item to add
  * \returns ::PKMN_ERROR_NONE upon successful completion
  * \returns ::PKMN_ERROR_NULL_POINTER if any pointer parameter is NULL
@@ -147,7 +147,7 @@ PKMN_C_API enum pkmn_error pkmn_item_list_at(
  */
 PKMN_C_API enum pkmn_error pkmn_item_list_add(
     const struct pkmn_item_list* p_item_list,
-    const char* p_item,
+    enum pkmn_item item,
     size_t amount
 );
 
@@ -159,7 +159,7 @@ PKMN_C_API enum pkmn_error pkmn_item_list_add(
  * be cleared, and all later slots are shifted back.
  *
  * \param item_list_ptr A pointer to the item list struct to use
- * \param item Name of the item to remove
+ * \param item Item to remove
  * \param amount How many of the item to remove
  * \returns ::PKMN_ERROR_NONE upon successful completion
  * \returns ::PKMN_ERROR_NULL_POINTER if any pointer parameter is NULL
@@ -168,7 +168,7 @@ PKMN_C_API enum pkmn_error pkmn_item_list_add(
  */
 PKMN_C_API enum pkmn_error pkmn_item_list_remove(
     const struct pkmn_item_list* p_item_list,
-    const char* p_item,
+    enum pkmn_item item,
     size_t amount
 );
 
@@ -206,27 +206,32 @@ PKMN_C_API enum pkmn_error pkmn_item_list_move(
 PKMN_C_API enum pkmn_error pkmn_item_list_set_item(
     const struct pkmn_item_list* p_item_list,
     size_t position,
-    const char* p_item,
+    enum pkmn_item item,
     size_t amount
+);
+
+PKMN_C_API enum pkmn_error pkmn_item_list_get_valid_items(
+    const struct pkmn_item_list* p_item_list,
+    struct pkmn_item_enum_list* p_valid_items_out
 );
 
 /*!
  * @brief Returns a list of the items that can be added to this list.
  *
- * The pkmn_string_list_t returned in valid_items_out will need to be freed by
+ * The pkmn_string_list_t returned in valid_item_names_out will need to be freed by
  * ::pkmn_string_list_free.
  *
  * If this item list corresponds to an item PC, this list of names will include almost
  * every item in the given game, minus certain Key Items.
  *
  * \param item_list_ptr A pointer to the item list struct to use
- * \param valid_items_out Where to return the list of valid items
+ * \param valid_item_names_out Where to return the list of valid items
  * \returns ::PKMN_ERROR_NONE upon successful completion
  * \returns ::PKMN_ERROR_NULL_POINTER if either parameter is NULL
 */
-PKMN_C_API enum pkmn_error pkmn_item_list_get_valid_items(
+PKMN_C_API enum pkmn_error pkmn_item_list_get_valid_item_names(
     const struct pkmn_item_list* p_item_list,
-    struct pkmn_string_list* p_valid_items_out
+    struct pkmn_string_list* p_valid_item_names_out
 );
 
 /*!

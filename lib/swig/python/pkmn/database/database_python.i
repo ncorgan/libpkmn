@@ -10,6 +10,7 @@ PKMN_PYTHON_INIT
 
 %include <std_string.i>
 
+%import <enums_python.i>
 %import <stl_python.i>
 
 // Convert Doxygen docs to Python docstrings
