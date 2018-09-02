@@ -92,7 +92,61 @@ namespace pkmn {
         return int(sizeof(_pksav_box.entries)/sizeof(_pksav_box.entries[0]));
     }
 
-    void pokemon_box_gbaimpl::set_pokemon(
+    static std::vector<std::string> get_valid_gba_wallpaper_names(pkmn::e_game game)
+    {
+        std::vector<std::string> valid_wallpaper_names =
+            pkmn::map_keys_to_vector(pksav::get_gba_box_wallpaper_bimap().left);
+
+        std::vector<std::string> game_specific_wallpaper_names;
+
+        if((game == pkmn::e_game::FIRERED) or (game == pkmn::e_game::LEAFGREEN))
+        {
+            game_specific_wallpaper_names =
+                pkmn::map_keys_to_vector(pksav::get_gba_frlg_box_wallpaper_bimap().left);
+        }
+        else
+        {
+            game_specific_wallpaper_names =
+                pkmn::map_keys_to_vector(pksav::get_gba_rse_box_wallpaper_bimap().left);
+        }
+
+        valid_wallpaper_names.insert(
+            valid_wallpaper_names.end(),
+            game_specific_wallpaper_names.begin(),
+            game_specific_wallpaper_names.end()
+        );
+
+        return valid_wallpaper_names;
+    }
+
+    std::string pokemon_box_gbaimpl::get_wallpaper()
+    {
+        boost::lock_guard<pokemon_box_gbaimpl> lock(*this);
+
+        BOOST_ASSERT(pkmn::does_vector_contain_value(
+            get_valid_gba_wallpaper_names(get_game()),
+            _wallpaper
+        ));
+
+        return _wallpaper;
+    }
+
+    void pokemon_box_gbaimpl::set_wallpaper(
+        const std::string& wallpaper
+    )
+    {
+        pkmn::enforce_value_in_vector(
+            "Wallpaper",
+            wallpaper,
+            get_valid_gba_wallpaper_names(get_game())
+        );
+
+        boost::lock_guard<pokemon_box_gbaimpl> lock(*this);
+
+        _wallpaper = wallpaper;
+    }
+
+    void pokemon_box_gbaimpl::_set_pokemon(
         int index,
         const pkmn::pokemon::sptr& new_pokemon
     )
@@ -152,60 +206,6 @@ namespace pkmn {
                 _pokedex->set_has_caught(species, true);
             }
         }
-    }
-
-    std::vector<std::string> get_valid_gba_wallpaper_names(pkmn::e_game game)
-    {
-        std::vector<std::string> valid_wallpaper_names =
-            pkmn::map_keys_to_vector(pksav::get_gba_box_wallpaper_bimap().left);
-
-        std::vector<std::string> game_specific_wallpaper_names;
-
-        if((game == pkmn::e_game::FIRERED) or (game == pkmn::e_game::LEAFGREEN))
-        {
-            game_specific_wallpaper_names =
-                pkmn::map_keys_to_vector(pksav::get_gba_frlg_box_wallpaper_bimap().left);
-        }
-        else
-        {
-            game_specific_wallpaper_names =
-                pkmn::map_keys_to_vector(pksav::get_gba_rse_box_wallpaper_bimap().left);
-        }
-
-        valid_wallpaper_names.insert(
-            valid_wallpaper_names.end(),
-            game_specific_wallpaper_names.begin(),
-            game_specific_wallpaper_names.end()
-        );
-
-        return valid_wallpaper_names;
-    }
-
-    std::string pokemon_box_gbaimpl::get_wallpaper()
-    {
-        boost::lock_guard<pokemon_box_gbaimpl> lock(*this);
-
-        BOOST_ASSERT(pkmn::does_vector_contain_value(
-            get_valid_gba_wallpaper_names(get_game()),
-            _wallpaper
-        ));
-
-        return _wallpaper;
-    }
-
-    void pokemon_box_gbaimpl::set_wallpaper(
-        const std::string& wallpaper
-    )
-    {
-        pkmn::enforce_value_in_vector(
-            "Wallpaper",
-            wallpaper,
-            get_valid_gba_wallpaper_names(get_game())
-        );
-
-        boost::lock_guard<pokemon_box_gbaimpl> lock(*this);
-
-        _wallpaper = wallpaper;
     }
 
     void pokemon_box_gbaimpl::_from_native()

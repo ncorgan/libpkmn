@@ -64,7 +64,7 @@ namespace pkmn {
     }
 
     POKEMON_PARTY_GBIMPL_TEMPLATE
-    void POKEMON_PARTY_GBIMPL_CLASS::set_pokemon(
+    void POKEMON_PARTY_GBIMPL_CLASS::_set_pokemon(
         int index,
         const pkmn::pokemon::sptr& new_pokemon
     )
@@ -81,20 +81,9 @@ namespace pkmn {
 
         boost::lock_guard<POKEMON_PARTY_GBIMPL_CLASS> lock(*this);
 
-        // If the given Pokémon isn't from this party's game, convert it if we can.
-        pkmn::pokemon::sptr actual_new_pokemon;
-        if(_game_id == new_pokemon->get_database_entry().get_game_id())
-        {
-            actual_new_pokemon = new_pokemon;
-        }
-        else
-        {
-            actual_new_pokemon = new_pokemon->to_game(get_game());
-        }
-
         // Make sure no one else is using the new Pokémon variable.
         libpkmn_pokemon_type* p_new_pokemon = dynamic_cast<libpkmn_pokemon_type*>(
-                                                  actual_new_pokemon.get()
+                                                  new_pokemon.get()
                                               );
         BOOST_ASSERT(p_new_pokemon != nullptr);
         boost::lock_guard<libpkmn_pokemon_type> new_pokemon_lock(*p_new_pokemon);
@@ -106,7 +95,7 @@ namespace pkmn {
         // Note: as we control the implementation, we know the PC data points
         // to the whole Pokémon data structure.
         rcast_equal<pksav_party_pokemon_type>(
-            actual_new_pokemon->get_native_pc_data(),
+            new_pokemon->get_native_pc_data(),
             &_pksav_party.party[index]
         );
         _pokemon_list[index] = std::make_shared<libpkmn_pokemon_type>(
@@ -115,8 +104,8 @@ namespace pkmn {
                                );
 
         // Don't set empty names.
-        std::string new_pokemon_nickname = actual_new_pokemon->get_nickname();
-        std::string new_pokemon_trainer_name = actual_new_pokemon->get_original_trainer_name();
+        std::string new_pokemon_nickname = new_pokemon->get_nickname();
+        std::string new_pokemon_trainer_name = new_pokemon->get_original_trainer_name();
         if(new_pokemon_nickname.empty())
         {
             new_pokemon_nickname = "None";
@@ -131,17 +120,17 @@ namespace pkmn {
 
         // In Generation II, whether or not a Pokémon is in an egg is
         // stored in the list that stores it, not the Pokémon struct itself.
-        if(std::is_same<list_type, struct pksav_gen2_pokemon_party>::value and actual_new_pokemon->is_egg())
+        if(std::is_same<list_type, struct pksav_gen2_pokemon_party>::value and new_pokemon->is_egg())
         {
             _pksav_party.species[index] = GEN2_EGG_ID;
         }
         else
         {
-            _pksav_party.species[index] = uint8_t(actual_new_pokemon->get_database_entry().get_pokemon_index());
+            _pksav_party.species[index] = uint8_t(new_pokemon->get_database_entry().get_pokemon_index());
         }
 
         // Update the number of Pokémon in the party if needed.
-        pkmn::e_species new_species = actual_new_pokemon->get_species();
+        pkmn::e_species new_species = new_pokemon->get_species();
         if((index == num_pokemon) && (new_species != pkmn::e_species::NONE))
         {
             ++(_pksav_party.count);
@@ -155,14 +144,14 @@ namespace pkmn {
         {
             PKSAV_CALL(
                 pksav_gen1_export_text(
-                    actual_new_pokemon->get_nickname().c_str(),
+                    new_pokemon->get_nickname().c_str(),
                     _pksav_party.nicknames[index],
                     PKSAV_GEN1_POKEMON_NICKNAME_LENGTH
                 );
             )
             PKSAV_CALL(
                 pksav_gen1_export_text(
-                    actual_new_pokemon->get_original_trainer_name().c_str(),
+                    new_pokemon->get_original_trainer_name().c_str(),
                     _pksav_party.otnames[index],
                     PKSAV_GEN1_POKEMON_OTNAME_LENGTH
                 );
@@ -172,14 +161,14 @@ namespace pkmn {
         {
             PKSAV_CALL(
                 pksav_gen2_export_text(
-                    actual_new_pokemon->get_nickname().c_str(),
+                    new_pokemon->get_nickname().c_str(),
                     _pksav_party.nicknames[index],
                     PKSAV_GEN2_POKEMON_NICKNAME_LENGTH
                 );
             )
             PKSAV_CALL(
                 pksav_gen2_export_text(
-                    actual_new_pokemon->get_original_trainer_name().c_str(),
+                    new_pokemon->get_original_trainer_name().c_str(),
                     _pksav_party.otnames[index],
                     PKSAV_GEN2_POKEMON_OTNAME_LENGTH
                 );

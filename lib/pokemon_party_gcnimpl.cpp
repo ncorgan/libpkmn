@@ -67,7 +67,7 @@ namespace pkmn {
         return _num_pokemon;
     }
 
-    void pokemon_party_gcnimpl::set_pokemon(
+    void pokemon_party_gcnimpl::_set_pokemon(
         int index,
         const pkmn::pokemon::sptr& new_pokemon
     )

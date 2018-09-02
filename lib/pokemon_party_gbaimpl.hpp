@@ -24,14 +24,14 @@ namespace pkmn {
 
             int get_num_pokemon() final;
 
-            void set_pokemon(
-                int index,
-                const pkmn::pokemon::sptr& new_pokemon
-            ) final;
-
         private:
 
             struct pksav_gba_pokemon_party _pksav_party;
+
+            void _set_pokemon(
+                int index,
+                const pkmn::pokemon::sptr& new_pokemon
+            ) final;
 
             void _from_native() final;
             void _to_native() final;

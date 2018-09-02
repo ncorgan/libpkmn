@@ -41,6 +41,7 @@ ADD_SUBDIRECTORY(enums)
 ADD_SUBDIRECTORY(io)
 ADD_SUBDIRECTORY(pkmgc)
 ADD_SUBDIRECTORY(pksav)
+ADD_SUBDIRECTORY(polymorphism)
 ADD_SUBDIRECTORY(utils)
 
 #
@@ -70,6 +71,7 @@ SET(pkmn_sources
     ${pkmn_io_sources}
     ${pkmn_pkmgc_sources}
     ${pkmn_pksav_sources}
+    ${pkmn_polymorphism_sources}
     ${pkmn_qt_sources}
     ${pkmn_utils_sources}
     private_exports.cpp

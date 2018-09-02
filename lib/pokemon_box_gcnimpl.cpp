@@ -89,7 +89,17 @@ namespace pkmn
         return 30;
     }
 
-    void pokemon_box_gcnimpl::set_pokemon(
+    std::string pokemon_box_gcnimpl::get_wallpaper()
+    {
+        throw pkmn::feature_not_in_game_error("Box wallpaper", get_game());
+    }
+
+    void pokemon_box_gcnimpl::set_wallpaper(const std::string&)
+    {
+        throw pkmn::feature_not_in_game_error("Box wallpaper", get_game());
+    }
+
+    void pokemon_box_gcnimpl::_set_pokemon(
         int index,
         const pkmn::pokemon::sptr& new_pokemon
     )
@@ -140,16 +150,6 @@ namespace pkmn
                                    ),
                                    _game_id
                                );
-    }
-
-    std::string pokemon_box_gcnimpl::get_wallpaper()
-    {
-        throw pkmn::feature_not_in_game_error("Box wallpaper", get_game());
-    }
-
-    void pokemon_box_gcnimpl::set_wallpaper(const std::string&)
-    {
-        throw pkmn::feature_not_in_game_error("Box wallpaper", get_game());
     }
 
     void pokemon_box_gcnimpl::_from_native()

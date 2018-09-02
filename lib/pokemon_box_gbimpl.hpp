@@ -49,11 +49,6 @@ namespace pkmn {
 
             int get_capacity() final;
 
-            void set_pokemon(
-                int index,
-                const pkmn::pokemon::sptr& new_pokemon
-            ) final;
-
             std::string get_wallpaper() final;
 
             void set_wallpaper(
@@ -63,6 +58,11 @@ namespace pkmn {
         private:
 
             list_type _pksav_box;
+
+            void _set_pokemon(
+                int index,
+                const pkmn::pokemon::sptr& new_pokemon
+            ) final;
 
             void _from_native() final;
             void _to_native() final;

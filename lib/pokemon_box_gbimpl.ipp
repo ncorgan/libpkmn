@@ -117,7 +117,19 @@ namespace pkmn {
     }
 
     POKEMON_BOX_GBIMPL_TEMPLATE
-    void POKEMON_BOX_GBIMPL_CLASS::set_pokemon(
+    std::string POKEMON_BOX_GBIMPL_CLASS::get_wallpaper()
+    {
+        throw pkmn::feature_not_in_game_error("Box wallpaper", "Generation I-II");
+    }
+
+    POKEMON_BOX_GBIMPL_TEMPLATE
+    void POKEMON_BOX_GBIMPL_CLASS::set_wallpaper(const std::string&)
+    {
+        throw pkmn::feature_not_in_game_error("Box wallpaper", "Generation I-II");
+    }
+
+    POKEMON_BOX_GBIMPL_TEMPLATE
+    void POKEMON_BOX_GBIMPL_CLASS::_set_pokemon(
         int index,
         const pkmn::pokemon::sptr& new_pokemon
     )
@@ -253,18 +265,6 @@ namespace pkmn {
                 _pokedex->set_has_caught(species, true);
             }
         }
-    }
-
-    POKEMON_BOX_GBIMPL_TEMPLATE
-    std::string POKEMON_BOX_GBIMPL_CLASS::get_wallpaper()
-    {
-        throw pkmn::feature_not_in_game_error("Box wallpaper", "Generation I-II");
-    }
-
-    POKEMON_BOX_GBIMPL_TEMPLATE
-    void POKEMON_BOX_GBIMPL_CLASS::set_wallpaper(const std::string&)
-    {
-        throw pkmn::feature_not_in_game_error("Box wallpaper", "Generation I-II");
     }
 
     POKEMON_BOX_GBIMPL_TEMPLATE

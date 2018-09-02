@@ -15,6 +15,9 @@
 #include "database/enum_conversions.hpp"
 #include "database/id_to_string.hpp"
 
+#include "polymorphism/is_libpkmn_impl.hpp"
+#include "polymorphism/pokemon.hpp"
+
 #include "utils/misc.hpp"
 
 #include <pkmn/exception.hpp>
@@ -80,6 +83,41 @@ namespace pkmn {
         boost::lock_guard<pokemon_box_impl> lock(*this);
 
         return _pokemon_list.at(index);
+    }
+
+    void pokemon_box_impl::set_pokemon(
+        int index,
+        const pkmn::pokemon::sptr& new_pokemon
+    )
+    {
+        int capacity = get_capacity();
+        pkmn::enforce_bounds("Box index", index, 0, (capacity-1));
+
+        boost::lock_guard<pokemon_box_impl> lock(*this);
+
+        // Make sure we only proceed if the given Pokémon variable is a LibPKMN
+        // implementation of the correct game.
+        pkmn::pokemon::sptr actual_new_pokemon;
+        if(pkmn::polymorphism::is_pokemon_from_libpkmn(new_pokemon.get()))
+        {
+            actual_new_pokemon = new_pokemon;
+        }
+        else
+        {
+            actual_new_pokemon = pkmn::polymorphism::pokemon_to_libpkmn_impl(
+                                     new_pokemon
+                                 );
+        }
+
+        if(actual_new_pokemon->get_game() != get_game())
+        {
+            actual_new_pokemon = actual_new_pokemon->to_game(get_game());
+        }
+
+        // Actual implementation
+        BOOST_ASSERT(actual_new_pokemon.get() != nullptr);
+        BOOST_ASSERT(pkmn::polymorphism::is_pokemon_from_libpkmn(actual_new_pokemon.get()));
+        _set_pokemon(index, actual_new_pokemon);
     }
 
     const pkmn::pokemon_list_t& pokemon_box_impl::as_vector()

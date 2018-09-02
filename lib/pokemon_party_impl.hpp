@@ -40,6 +40,11 @@ namespace pkmn {
                 int index
             ) final;
 
+            void set_pokemon(
+                int index,
+                const pkmn::pokemon::sptr& new_pokemon
+            ) final;
+
             const pkmn::pokemon_list_t& as_vector() final;
 
             void* get_native() final;
@@ -61,6 +66,11 @@ namespace pkmn {
             void* _p_native;
 
             int _game_id, _generation;
+
+            virtual void _set_pokemon(
+                int index,
+                const pkmn::pokemon::sptr& new_pokemon
+            ) = 0;
 
             virtual void _from_native() = 0;
             virtual void _to_native() = 0;
