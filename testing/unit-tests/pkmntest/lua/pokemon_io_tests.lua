@@ -15,112 +15,114 @@ local TMP_DIR = pkmn.paths.get_tmp_dir()
 
 local pokemon_io_tests = {}
 
--- Generation I
-
-function pokemon_io_tests.test_loading_and_saving_pk1(game)
-    local pk1_path = pkmntest_utils.concat_path(
+function pokemon_io_tests.test_saving_and_loading(game, extension)
+    local tmp_path = pkmntest_utils.concat_path(
                          TMP_DIR,
-                         string.format("%s_%d.pk1", game, math.random(0, 0xFFFF))
+                         string.format(
+                             "%s_%d.%s",
+                             game,
+                             math.random(0, 0xFFFF),
+                             extension
+                         )
                      )
 
     local item_list = pkmn.database.get_item_list(game)
     local move_list = pkmn.database.get_move_list(game)
-    local pokemon_list = pkmn.database.get_pokemon_list(1, true)
+    local pokemon_list = pkmn.database.get_pokemon_list(
+                             pkmntest_utils.GAME_TO_GENERATION[game],
+                             true
+                         )
 
     local random_pokemon = pkmntest_utils.get_random_pokemon(game, pokemon_list, move_list, item_list)
-    random_pokemon:export_to_file(pk1_path)
+    random_pokemon:export_to_file(tmp_path)
 
-    local imported_pokemon = pkmn.pokemon(pk1_path)
+    local imported_pokemon = pkmn.pokemon(tmp_path)
     pkmntest_utils.compare_pokemon(imported_pokemon, random_pokemon)
 
-    os.remove(pk1_path)
+    os.remove(tmp_path)
 end
 
-function test_red_loading_and_saving_pk1()
-    pokemon_io_tests.test_loading_and_saving_pk1(pkmn.game.RED)
+-- Generation I
+
+function test_red_saving_and_loading_pk1()
+    pokemon_io_tests.test_saving_and_loading(pkmn.game.RED, "pk1")
 end
 
-function test_blue_loading_and_saving_pk1()
-    pokemon_io_tests.test_loading_and_saving_pk1(pkmn.game.BLUE)
+function test_blue_saving_and_loading_pk1()
+    pokemon_io_tests.test_saving_and_loading(pkmn.game.BLUE, "pk1")
 end
 
-function test_yellow_loading_and_saving_pk1()
-    pokemon_io_tests.test_loading_and_saving_pk1(pkmn.game.YELLOW)
+function test_yellow_saving_and_loading_pk1()
+    pokemon_io_tests.test_saving_and_loading(pkmn.game.YELLOW, "pk1")
 end
 
 -- Generation II
 
-function pokemon_io_tests.test_loading_and_saving_pk2(game)
-    local pk2_path = pkmntest_utils.concat_path(
-                         TMP_DIR,
-                         string.format("%s_%d.pk2", game, math.random(0, 0xFFFF))
-                     )
-
-    local item_list = pkmn.database.get_item_list(game)
-    local move_list = pkmn.database.get_move_list(game)
-    local pokemon_list = pkmn.database.get_pokemon_list(2, true)
-
-    local random_pokemon = pkmntest_utils.get_random_pokemon(game, pokemon_list, move_list, item_list)
-    random_pokemon:export_to_file(pk2_path)
-
-    local imported_pokemon = pkmn.pokemon(pk2_path)
-    pkmntest_utils.compare_pokemon(imported_pokemon, random_pokemon)
-
-    os.remove(pk2_path)
+function test_gold_saving_and_loading_pk2()
+    pokemon_io_tests.test_saving_and_loading(pkmn.game.GOLD, "pk2")
 end
 
-function test_gold_loading_and_saving_pk2()
-    pokemon_io_tests.test_loading_and_saving_pk2(pkmn.game.GOLD)
+function test_silver_saving_and_loading_pk2()
+    pokemon_io_tests.test_saving_and_loading(pkmn.game.SILVER, "pk2")
 end
 
-function test_silver_loading_and_saving_pk2()
-    pokemon_io_tests.test_loading_and_saving_pk2(pkmn.game.SILVER)
+function test_crystal_saving_and_loading_pk2()
+    pokemon_io_tests.test_saving_and_loading(pkmn.game.CRYSTAL, "pk2")
 end
 
-function test_crystal_loading_and_saving_pk2()
-    pokemon_io_tests.test_loading_and_saving_pk2(pkmn.game.CRYSTAL)
+-- Game Boy Advance
+
+function test_ruby_saving_and_loading_3gpkm()
+    pokemon_io_tests.test_saving_and_loading(pkmn.game.RUBY, "3gpkm")
 end
 
--- Generation III
-
-function pokemon_io_tests.test_loading_and_saving_3gpkm(game)
-    local _3gpkm_path = pkmntest_utils.concat_path(
-                            TMP_DIR,
-                            string.format("%s_%d.3gpkm", game, math.random(0, 0xFFFF))
-                        )
-
-    local item_list = pkmn.database.get_item_list(game)
-    local move_list = pkmn.database.get_move_list(game)
-    local pokemon_list = pkmn.database.get_pokemon_list(3, true)
-
-    local random_pokemon = pkmntest_utils.get_random_pokemon(game, pokemon_list, move_list, item_list)
-    random_pokemon:export_to_file(_3gpkm_path)
-
-    local imported_pokemon = pkmn.pokemon(_3gpkm_path)
-    pkmntest_utils.compare_pokemon(imported_pokemon, random_pokemon)
-
-    os.remove(_3gpkm_path)
+function test_ruby_saving_and_loading_pk3()
+    pokemon_io_tests.test_saving_and_loading(pkmn.game.RUBY, "pk3")
 end
 
-function test_ruby_loading_and_saving_3gpkm()
-    pokemon_io_tests.test_loading_and_saving_3gpkm(pkmn.game.RUBY)
+function test_sapphire_saving_and_loading_3gpkm()
+    pokemon_io_tests.test_saving_and_loading(pkmn.game.SAPPHIRE, "3gpkm")
 end
 
-function test_sapphire_loading_and_saving_3gpkm()
-    pokemon_io_tests.test_loading_and_saving_3gpkm(pkmn.game.SAPPHIRE)
+function test_sapphire_saving_and_loading_pk3()
+    pokemon_io_tests.test_saving_and_loading(pkmn.game.SAPPHIRE, "pk3")
 end
 
-function test_emerald_loading_and_saving_3gpkm()
-    pokemon_io_tests.test_loading_and_saving_3gpkm(pkmn.game.EMERALD)
+function test_emerald_saving_and_loading_3gpkm()
+    pokemon_io_tests.test_saving_and_loading(pkmn.game.EMERALD, "3gpkm")
 end
 
-function test_firered_loading_and_saving_3gpkm()
-    pokemon_io_tests.test_loading_and_saving_3gpkm(pkmn.game.FIRERED)
+function test_emerald_saving_and_loading_pk3()
+    pokemon_io_tests.test_saving_and_loading(pkmn.game.EMERALD, "pk3")
 end
 
-function test_leafgreen_loading_and_saving_3gpkm()
-    pokemon_io_tests.test_loading_and_saving_3gpkm(pkmn.game.LEAFGREEN)
+function test_firered_saving_and_loading_3gpkm()
+    pokemon_io_tests.test_saving_and_loading(pkmn.game.FIRERED, "3gpkm")
 end
+
+function test_firered_saving_and_loading_pk3()
+    pokemon_io_tests.test_saving_and_loading(pkmn.game.FIRERED, "pk3")
+end
+
+function test_leafgreen_saving_and_loading_3gpkm()
+    pokemon_io_tests.test_saving_and_loading(pkmn.game.LEAFGREEN, "3gpkm")
+end
+
+function test_leafgreen_saving_and_loading_pk3()
+    pokemon_io_tests.test_saving_and_loading(pkmn.game.LEAFGREEN, "pk3")
+end
+
+-- Gamecube
+
+function test_colosseum_saving_and_loading_ck3()
+    pokemon_io_tests.test_saving_and_loading(pkmn.game.COLOSSEUM, "ck3")
+end
+
+function test_xd_saving_and_loading_xk3()
+    pokemon_io_tests.test_saving_and_loading(pkmn.game.XD, "xk3")
+end
+
+-- Outside files
 
 function test_outside_3gpkm()
     local CONTEST_LEVELS = {"Super", "Hyper", "Master"}

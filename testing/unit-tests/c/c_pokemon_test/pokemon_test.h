@@ -64,21 +64,26 @@ void xd_pokemon_test();
 void red_pk1_test();
 void blue_pk1_test();
 void yellow_pk1_test();
+
 void gold_pk2_test();
 void silver_pk2_test();
 void crystal_pk2_test();
+
 void ruby_3gpkm_test();
+void ruby_pk3_test();
 void sapphire_3gpkm_test();
+void sapphire_pk3_test();
 void emerald_3gpkm_test();
+void emerald_pk3_test();
 void firered_3gpkm_test();
+void firered_pk3_test();
 void leafgreen_3gpkm_test();
+void leafgreen_pk3_test();
+
+void colosseum_ck3_test();
+void xd_xk3_test();
+
 void test_outside_3gpkm();
-
-// Generation I friendship
-
-void red_friendship_test();
-void blue_friendship_test();
-void yellow_friendship_test();
 
 // Form
 

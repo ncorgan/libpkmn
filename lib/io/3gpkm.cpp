@@ -5,10 +5,13 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-#include "3gpkm.hpp"
-#include "../pokemon_gbaimpl.hpp"
-#include "../database/database_common.hpp"
-#include "../database/id_to_index.hpp"
+#include "pokemon_gbaimpl.hpp"
+
+#include "database/database_common.hpp"
+#include "database/id_to_index.hpp"
+
+#include "io/3gpkm.hpp"
+#include "io/read_write.hpp"
 
 #include <pksav/gba/pokemon.h>
 #include <pksav/math/endian.h>
@@ -104,13 +107,6 @@ namespace pkmn { namespace io {
                   );
         }
 
-        size_t filesize = size_t(fs::file_size(filepath));
-        std::vector<uint8_t> buffer(filesize);
-
-        std::ifstream ifile(filepath.c_str(), std::ios::binary);
-        ifile.read(reinterpret_cast<char*>(buffer.data()), filesize);
-        ifile.close();
-
-        return load_3gpkm(buffer);
+        return load_3gpkm(read_file(filepath));
     }
 }}

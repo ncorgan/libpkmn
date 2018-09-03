@@ -5,18 +5,20 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-#include "pk1.hpp"
-#include "../pokemon_gen1impl.hpp"
-#include "../database/database_common.hpp"
-#include "../database/id_to_index.hpp"
-#include "../database/id_to_string.hpp"
+#include "pokemon_gen1impl.hpp"
+
+#include "database/database_common.hpp"
+#include "database/id_to_index.hpp"
+#include "database/id_to_string.hpp"
+
+#include "io/pk1.hpp"
+#include "io/read_write.hpp"
 
 #include <pksav/gen1/pokemon.h>
 
 #include <boost/filesystem.hpp>
 #include <boost/format.hpp>
 
-#include <fstream>
 #include <stdexcept>
 
 namespace fs = boost::filesystem;
@@ -58,7 +60,7 @@ namespace pkmn { namespace io {
         const std::vector<uint8_t>& buffer
     )
     {
-        if(not vector_is_valid_pk1(buffer))
+        if(!vector_is_valid_pk1(buffer))
         {
             throw std::runtime_error("Invalid .pk1.");
         }
@@ -73,7 +75,7 @@ namespace pkmn { namespace io {
         const std::string& filepath
     )
     {
-        if(not fs::exists(filepath))
+        if(!fs::exists(filepath))
         {
             throw std::invalid_argument(
                       str(boost::format("The file \"%s\" does not exist.")
@@ -81,13 +83,6 @@ namespace pkmn { namespace io {
                   );
         }
 
-        size_t filesize = size_t(fs::file_size(filepath));
-        std::vector<uint8_t> buffer(filesize);
-
-        std::ifstream ifile(filepath.c_str(), std::ios::binary);
-        ifile.read(reinterpret_cast<char*>(buffer.data()), filesize);
-        ifile.close();
-
-        return load_pk1(buffer);
+        return load_pk1(read_file(filepath));
     }
 }}

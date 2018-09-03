@@ -18,6 +18,8 @@
 #include "database/id_to_string.hpp"
 #include "database/index_to_string.hpp"
 
+#include "io/read_write.hpp"
+
 #include "pkmgc/enum_maps.hpp"
 #include "pksav/enum_maps.hpp"
 
@@ -35,6 +37,7 @@
 
 #include <boost/algorithm/string.hpp>
 #include <boost/assign.hpp>
+#include <boost/filesystem.hpp>
 #include <boost/format.hpp>
 #include <boost/bimap.hpp>
 
@@ -43,6 +46,8 @@
 #include <cstring>
 #include <stdexcept>
 #include <unordered_map>
+
+namespace fs = boost::filesystem;
 
 namespace pkmn
 {
@@ -75,7 +80,16 @@ namespace pkmn
         pkmn::rng<LibPkmGC::u8> rng8;
         pkmn::rng<LibPkmGC::u32> rng32;
 
-        _libpkmgc_pokemon_uptr->species = LibPkmGC::PokemonSpeciesIndex(_database_entry.get_pokemon_index());
+        // No matter the form, the Unown ID stays the same.
+        if(_database_entry.get_species_id() == UNOWN_ID)
+        {
+            _libpkmgc_pokemon_uptr->species = LibPkmGC::Unown;
+        }
+        else
+        {
+            _libpkmgc_pokemon_uptr->species = LibPkmGC::PokemonSpeciesIndex(_database_entry.get_pokemon_index());
+        }
+
         _libpkmgc_pokemon_uptr->heldItem = LibPkmGC::NoItem;
         _libpkmgc_pokemon_uptr->friendship = LibPkmGC::u8(_database_entry.get_base_friendship());
         _libpkmgc_pokemon_uptr->locationCaught = 0; // Met in a distant land
@@ -176,7 +190,7 @@ namespace pkmn
 
         if(_database_entry.get_species_id() == UNOWN_ID)
         {
-            _set_unown_personality_from_form();
+            _set_unown_form_from_personality();
         }
 
         _register_attributes();
@@ -269,10 +283,27 @@ namespace pkmn
     }
 
     void pokemon_gcnimpl::export_to_file(
-        PKMN_UNUSED(const std::string& filepath)
+        const std::string& filepath
     )
     {
-        throw pkmn::feature_not_in_game_error("Exporting to file");
+        std::string extension = fs::extension(filepath);
+        if((get_game() == pkmn::e_game::COLOSSEUM) && (extension != ".ck3"))
+        {
+            throw std::invalid_argument("Colosseum Pokémon can only be saved to .ck3 files.");
+        }
+        else if((get_game() == pkmn::e_game::XD) && (extension != ".xk3"))
+        {
+            throw std::invalid_argument("XD Pokémon can only be saved to .xk3 files.");
+        }
+
+        boost::lock_guard<pokemon_gcnimpl> lock(*this);
+
+        _libpkmgc_pokemon_uptr->save();
+        pkmn::io::write_file(
+            filepath,
+            _libpkmgc_pokemon_uptr->data,
+            _libpkmgc_pokemon_uptr->getSize()
+        );
     }
 
     void pokemon_gcnimpl::set_form(
@@ -288,11 +319,11 @@ namespace pkmn
             _set_unown_personality_from_form();
         }
 
-        if(was_shadow and form != "Shadow")
+        if(was_shadow && (form != "Shadow"))
         {
             _libpkmgc_pokemon_uptr->shadowPkmID = 0;
         }
-        else if(form == "Shadow")
+        else if(!was_shadow && (form == "Shadow"))
         {
             static const char* shadow_query = \
                 "SELECT shadow_pokemon_id FROM shadow_pokemon WHERE species_id=? AND "
