@@ -9,6 +9,9 @@
 #define  POKEMON_IO_GAMECUBE_POKEMON_HPP
 
 #include "pokemon_gcnimpl.hpp"
+
+#include "io/read_write.hpp"
+
 #include "utils/misc.hpp"
 
 #include <LibPkmGC/Colosseum/Common/Pokemon.h>
@@ -93,15 +96,8 @@ namespace pkmn { namespace io {
                       );
             }
 
-            size_t filesize = size_t(fs::file_size(filepath));
-            std::vector<uint8_t> buffer(filesize);
-
-            std::ifstream ifile(filepath.c_str(), std::ios::binary);
-            ifile.read(reinterpret_cast<char*>(buffer.data()), filesize);
-            ifile.close();
-
             return load_gamecube_pokemon<libpkmgc_pokemon_type>(
-                       buffer,
+                       read_file(buffer),
                        extension,
                        game_id
                    );

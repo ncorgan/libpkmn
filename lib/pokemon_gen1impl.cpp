@@ -16,6 +16,8 @@
 #include "database/enum_conversions.hpp"
 #include "database/id_to_string.hpp"
 
+#include "io/read_write.hpp"
+
 #include "pksav/enum_maps.hpp"
 #include "pksav/party_data.hpp"
 #include "pksav/pksav_call.hpp"
@@ -226,9 +228,11 @@ namespace pkmn
         {
             boost::lock_guard<pokemon_gen1impl> lock(*this);
 
-            std::ofstream ofile(filepath, std::ios::binary);
-            ofile.write(static_cast<const char*>(get_native_pc_data()), sizeof(struct pksav_gen1_pc_pokemon));
-            ofile.close();
+            pkmn::io::write_file(
+                filepath,
+                get_native_pc_data(),
+                sizeof(struct pksav_gen1_pc_pokemon)
+            );
         }
         else
         {

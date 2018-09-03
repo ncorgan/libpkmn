@@ -17,6 +17,8 @@
 #include "database/id_to_string.hpp"
 #include "database/index_to_string.hpp"
 
+#include "io/read_write.hpp"
+
 #include "pkmgc/includes.hpp"
 
 #include "pksav/enum_maps.hpp"
@@ -298,17 +300,19 @@ namespace pkmn
     )
     {
         std::string extension = fs::extension(filepath);
-        if(extension == ".3gpkm")
+        if((extension == ".3gpkm") || (extension == ".pk3"))
         {
             boost::lock_guard<pokemon_gbaimpl> lock(*this);
 
-            std::ofstream ofile(filepath, std::ios::binary);
-            ofile.write(static_cast<const char*>(get_native_pc_data()), sizeof(struct pksav_gba_pc_pokemon));
-            ofile.close();
+            pkmn::io::write_file(
+                filepath,
+                get_native_pc_data(),
+                sizeof(struct pksav_gba_pc_pokemon)
+            );
         }
         else
         {
-            throw std::invalid_argument("GBA Pokémon can only be saved to .3gpkm files.");
+            throw std::invalid_argument("GBA Pokémon can only be saved to .3gpkm or .pk3 files.");
         }
     }
 

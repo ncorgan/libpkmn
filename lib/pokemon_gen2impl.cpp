@@ -17,6 +17,8 @@
 #include "database/id_to_string.hpp"
 #include "database/index_to_string.hpp"
 
+#include "io/read_write.hpp"
+
 #include "utils/floating_point_comparison.hpp"
 
 #include <pkmn/calculations/form.hpp>
@@ -226,9 +228,11 @@ namespace pkmn
         {
             boost::lock_guard<pokemon_gen2impl> lock(*this);
 
-            std::ofstream ofile(filepath, std::ios::binary);
-            ofile.write(static_cast<const char*>(get_native_pc_data()), sizeof(struct pksav_gen2_pc_pokemon));
-            ofile.close();
+            pkmn::io::write_file(
+                filepath,
+                get_native_pc_data(),
+                sizeof(struct pksav_gen2_pc_pokemon)
+            );
         }
         else
         {

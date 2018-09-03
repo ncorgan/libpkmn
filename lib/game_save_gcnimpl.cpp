@@ -12,6 +12,8 @@
 #include "pokemon_party_gcnimpl.hpp"
 #include "pokemon_pc_gcnimpl.hpp"
 
+#include "io/read_write.hpp"
+
 #include "utils/misc.hpp"
 
 #include <pkmn/config.hpp>
@@ -135,9 +137,10 @@ namespace pkmn {
 
         _libpkmgc_save_uptr->saveEncrypted(_raw.data(), _has_gci_data);
 
-        std::ofstream ofile(filepath, std::ios::binary);
-        ofile.write(reinterpret_cast<const char*>(_raw.data()), _raw.size());
-        ofile.close();
+        pkmn::io::write_file(
+            filepath,
+            _raw
+        );
 
         _filepath = fs::absolute(filepath).string();
     }

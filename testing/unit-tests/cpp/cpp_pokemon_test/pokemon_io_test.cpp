@@ -307,6 +307,21 @@ TEST_P(_3gpkm_test, test_saving_and_loading_3gpkm)
     std::remove(tmp_path.c_str());
 }
 
+class pk3_test: public ::testing::TestWithParam<pkmn::e_game> {};
+
+TEST_P(pk3_test, test_saving_and_loading_pk3)
+{
+    pkmn::e_game game = GetParam();
+
+    pkmn::pokemon::sptr random_pokemon = get_random_pokemon(game);
+    std::string tmp_path = export_pokemon_to_tmp_file(random_pokemon, "pk3");
+    pkmn::pokemon::sptr imported_pokemon = pkmn::pokemon::from_file(tmp_path);
+
+    compare_pokemon(random_pokemon, imported_pokemon);
+
+    std::remove(tmp_path.c_str());
+}
+
 static const std::vector<pkmn::e_game> GBA_GAMES =
 {
     pkmn::e_game::RUBY,
@@ -319,6 +334,11 @@ static const std::vector<pkmn::e_game> GBA_GAMES =
 INSTANTIATE_TEST_CASE_P(
     _3gpkm_test,
     _3gpkm_test,
+    ::testing::ValuesIn(GBA_GAMES)
+);
+INSTANTIATE_TEST_CASE_P(
+    pk3_test,
+    pk3_test,
     ::testing::ValuesIn(GBA_GAMES)
 );
 
@@ -526,13 +546,24 @@ INSTANTIATE_TEST_CASE_P(
     ::testing::ValuesIn(GEN2_IO_FORM_TEST_PARAMS)
 );
 
-// Generation III
+// Generation III (TODO: Gamecube)
 
 static const std::vector<io_form_test_params_t> GEN3_IO_FORM_TEST_PARAMS =
 {
     {
         pkmn::e_species::UNOWN,
         "3gpkm",
+        {
+            pkmn::e_game::RUBY,
+            pkmn::e_game::SAPPHIRE,
+            pkmn::e_game::EMERALD,
+            pkmn::e_game::FIRERED,
+            pkmn::e_game::LEAFGREEN
+        }
+    },
+    {
+        pkmn::e_species::UNOWN,
+        "pk3",
         {
             pkmn::e_game::RUBY,
             pkmn::e_game::SAPPHIRE,

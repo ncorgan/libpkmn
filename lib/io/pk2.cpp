@@ -1,14 +1,17 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-#include "pk2.hpp"
-#include "../pokemon_gen2impl.hpp"
-#include "../database/database_common.hpp"
-#include "../database/id_to_index.hpp"
+#include "pokemon_gen2impl.hpp"
+
+#include "database/database_common.hpp"
+#include "database/id_to_index.hpp"
+
+#include "io/pk2.hpp"
+#include "io/read_write.hpp"
 
 #include <pksav/gen2/pokemon.h>
 
@@ -57,7 +60,7 @@ namespace pkmn { namespace io {
         const std::vector<uint8_t>& buffer
     )
     {
-        if(not vector_is_valid_pk2(buffer))
+        if(!vector_is_valid_pk2(buffer))
         {
             throw std::runtime_error("Invalid .pk2.");
         }
@@ -72,7 +75,7 @@ namespace pkmn { namespace io {
         const std::string& filepath
     )
     {
-        if(not fs::exists(filepath))
+        if(!fs::exists(filepath))
         {
             throw std::invalid_argument(
                       str(boost::format("The file \"%s\" does not exist.")
@@ -80,13 +83,6 @@ namespace pkmn { namespace io {
                   );
         }
 
-        size_t filesize = size_t(fs::file_size(filepath));
-        std::vector<uint8_t> buffer(filesize);
-
-        std::ifstream ifile(filepath.c_str(), std::ios::binary);
-        ifile.read(reinterpret_cast<char*>(buffer.data()), filesize);
-        ifile.close();
-
-        return load_pk2(buffer);
+        return load_pk2(read_file(filepath));
     }
 }}

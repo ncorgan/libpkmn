@@ -14,6 +14,8 @@
 #include "database/enum_conversions.hpp"
 #include "database/id_to_string.hpp"
 
+#include "io/read_write.hpp"
+
 #include "pkmgc/includes.hpp"
 #include "pksav/pksav_call.hpp"
 
@@ -152,7 +154,7 @@ namespace pkmn {
         const std::string& filepath
     )
     {
-        if(not fs::exists(filepath))
+        if(!fs::exists(filepath))
         {
             throw std::invalid_argument("The given filepath does not exist.");
         }
@@ -171,12 +173,7 @@ namespace pkmn {
         const std::string& filepath
     )
     {
-        size_t filesize = size_t(fs::file_size(filepath));
-        std::vector<uint8_t> raw(filesize);
-
-        std::ifstream ifile(filepath.c_str(), std::ios::binary);
-        ifile.read(reinterpret_cast<char*>(raw.data()), filesize);
-        ifile.close();
+        std::vector<uint8_t> raw = pkmn::io::read_file(filepath);
 
         pkmn::e_game_save_type save_type = _detect_save_type(raw);
 
