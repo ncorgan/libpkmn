@@ -264,30 +264,30 @@ TEST_P(pokemon_io_test, test_saving_and_loading)
 static const std::vector<pokemon_io_test_params_t> TEST_PARAMS =
 {
     // Generation I
-    {pkmn::e_game::RED,    "pk1"},
-    {pkmn::e_game::BLUE,   "pk1"},
-    {pkmn::e_game::YELLOW, "pk1"},
+    std::make_tuple(pkmn::e_game::RED,    "pk1"),
+    std::make_tuple(pkmn::e_game::BLUE,   "pk1"),
+    std::make_tuple(pkmn::e_game::YELLOW, "pk1"),
 
     // Generation II
-    {pkmn::e_game::GOLD,    "pk2"},
-    {pkmn::e_game::SILVER,  "pk2"},
-    {pkmn::e_game::CRYSTAL, "pk2"},
+    std::make_tuple(pkmn::e_game::GOLD,    "pk2"),
+    std::make_tuple(pkmn::e_game::SILVER,  "pk2"),
+    std::make_tuple(pkmn::e_game::CRYSTAL, "pk2"),
 
     // Game Boy Advance
-    {pkmn::e_game::RUBY,      "3gpkm"},
-    {pkmn::e_game::RUBY,      "pk3"},
-    {pkmn::e_game::SAPPHIRE,  "3gpkm"},
-    {pkmn::e_game::SAPPHIRE,  "pk3"},
-    {pkmn::e_game::EMERALD,   "3gpkm"},
-    {pkmn::e_game::EMERALD,   "pk3"},
-    {pkmn::e_game::FIRERED,   "3gpkm"},
-    {pkmn::e_game::FIRERED,   "pk3"},
-    {pkmn::e_game::LEAFGREEN, "3gpkm"},
-    {pkmn::e_game::LEAFGREEN, "pk3"},
+    std::make_tuple(pkmn::e_game::RUBY,      "3gpkm"),
+    std::make_tuple(pkmn::e_game::RUBY,      "pk3"),
+    std::make_tuple(pkmn::e_game::SAPPHIRE,  "3gpkm"),
+    std::make_tuple(pkmn::e_game::SAPPHIRE,  "pk3"),
+    std::make_tuple(pkmn::e_game::EMERALD,   "3gpkm"),
+    std::make_tuple(pkmn::e_game::EMERALD,   "pk3"),
+    std::make_tuple(pkmn::e_game::FIRERED,   "3gpkm"),
+    std::make_tuple(pkmn::e_game::FIRERED,   "pk3"),
+    std::make_tuple(pkmn::e_game::LEAFGREEN, "3gpkm"),
+    std::make_tuple(pkmn::e_game::LEAFGREEN, "pk3"),
 
     // Gamecube
-    {pkmn::e_game::COLOSSEUM, "ck3"},
-    {pkmn::e_game::XD,        "xk3"},
+    std::make_tuple(pkmn::e_game::COLOSSEUM, "ck3"),
+    std::make_tuple(pkmn::e_game::XD,        "xk3"),
 };
 
 INSTANTIATE_TEST_CASE_P(
