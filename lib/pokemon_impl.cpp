@@ -23,6 +23,7 @@
 #include "io/pk1.hpp"
 #include "io/pk2.hpp"
 #include "io/3gpkm.hpp"
+#include "io/gamecube_pokemon.hpp"
 
 #include "types/rng.hpp"
 
@@ -112,17 +113,25 @@ namespace pkmn
         std::string extension = fs::extension(filepath);
         if(extension == ".pk1")
         {
-            ret =  pkmn::io::load_pk1(filepath);
+            ret = pkmn::io::load_pk1(filepath);
         }
         else if(extension == ".pk2")
         {
-            ret =  pkmn::io::load_pk2(filepath);
+            ret = pkmn::io::load_pk2(filepath);
         }
         else if((extension == ".3gpkm") || (extension == ".pk3"))
         {
-            ret =  pkmn::io::load_3gpkm(filepath);
+            ret = pkmn::io::load_3gpkm(filepath);
         }
-        else if(extension == ".pkm" or extension == ".pk6")
+        else if(extension == ".ck3")
+        {
+            ret = pkmn::io::load_ck3(filepath);
+        }
+        else if(extension == ".xk3")
+        {
+            ret = pkmn::io::load_xk3(filepath);
+        }
+        else if((extension == ".pkm") || (extension == ".pk6"))
         {
             throw pkmn::unimplemented_error();
         }
@@ -131,6 +140,7 @@ namespace pkmn
             std::vector<uint8_t> buffer(size_t(fs::file_size(filepath)));
             PKMN_UNUSED(int game_id) = 0;
 
+            // TODO: consistency in function names
             if(pkmn::io::vector_is_valid_pk1(buffer))
             {
                 ret = pkmn::io::load_pk1(buffer);
@@ -142,6 +152,14 @@ namespace pkmn
             else if(pkmn::io::vector_is_valid_3gpkm(buffer, &game_id))
             {
                 ret = pkmn::io::load_3gpkm(buffer);
+            }
+            else if(pkmn::io::is_vector_valid_ck3(buffer))
+            {
+                ret = pkmn::io::load_ck3(buffer);
+            }
+            else if(pkmn::io::is_vector_valid_xk3(buffer))
+            {
+                ret = pkmn::io::load_xk3(buffer);
             }
             else
             {
