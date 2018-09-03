@@ -97,7 +97,7 @@ namespace pkmn { namespace io {
             }
 
             return load_gamecube_pokemon<libpkmgc_pokemon_type>(
-                       read_file(buffer),
+                       read_file(filepath),
                        extension,
                        game_id
                    );

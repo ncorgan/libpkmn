@@ -80,7 +80,16 @@ namespace pkmn
         pkmn::rng<LibPkmGC::u8> rng8;
         pkmn::rng<LibPkmGC::u32> rng32;
 
-        _libpkmgc_pokemon_uptr->species = LibPkmGC::PokemonSpeciesIndex(_database_entry.get_pokemon_index());
+        // No matter the form, the Unown ID stays the same.
+        if(_database_entry.get_species_id() == UNOWN_ID)
+        {
+            _libpkmgc_pokemon_uptr->species = LibPkmGC::Unown;
+        }
+        else
+        {
+            _libpkmgc_pokemon_uptr->species = LibPkmGC::PokemonSpeciesIndex(_database_entry.get_pokemon_index());
+        }
+
         _libpkmgc_pokemon_uptr->heldItem = LibPkmGC::NoItem;
         _libpkmgc_pokemon_uptr->friendship = LibPkmGC::u8(_database_entry.get_base_friendship());
         _libpkmgc_pokemon_uptr->locationCaught = 0; // Met in a distant land
@@ -181,7 +190,7 @@ namespace pkmn
 
         if(_database_entry.get_species_id() == UNOWN_ID)
         {
-            _set_unown_personality_from_form();
+            _set_unown_form_from_personality();
         }
 
         _register_attributes();
@@ -310,11 +319,11 @@ namespace pkmn
             _set_unown_personality_from_form();
         }
 
-        if(was_shadow and form != "Shadow")
+        if(was_shadow && (form != "Shadow"))
         {
             _libpkmgc_pokemon_uptr->shadowPkmID = 0;
         }
-        else if(form == "Shadow")
+        else if(!was_shadow && (form == "Shadow"))
         {
             static const char* shadow_query = \
                 "SELECT shadow_pokemon_id FROM shadow_pokemon WHERE species_id=? AND "
