@@ -24,65 +24,81 @@ TMP_DIR = pkmn.paths.get_tmp_dir()
 
 class pokemon_io_test(base_test):
 
+    def _test_saving_and_loading(self, game, extension):
+        tmp_path = os.path.join(TMP_DIR, "{0}_{1}.{2}".format(
+                       game,
+                       random.randint(0, 1000),
+                       extension
+                   ))
+
+        item_list = pkmn.database.lists.get_item_list(game)
+        move_list = pkmn.database.lists.get_move_list(game)
+        pokemon_list = pkmn.database.lists.get_pokemon_list(
+                           GAME_TO_GENERATION[game],
+                           True
+                       )
+
+        random_pokemon = self.get_random_pokemon(game, pokemon_list, move_list, item_list)
+        random_pokemon.export_to_file(tmp_path)
+
+        imported_pokemon = pkmn.pokemon(tmp_path)
+        self.compare_pokemon(random_pokemon, imported_pokemon)
+
+        os.remove(tmp_path)
+
+    # Generation I
+
     @parameterized.expand([
         "Red","Blue","Yellow"
     ], testcase_func_name=test_name_func)
     def test_saving_and_loading_pk1(self, game_name):
-        game = pkmn.string_to_game(game_name)
+        self._test_saving_and_loading(
+            pkmn.string_to_game(game_name),
+            "pk1"
+        )
 
-        pk1_path = os.path.join(TMP_DIR, "{0}_{1}.pk1".format(game, random.randint(0, 1000)))
-
-        item_list = pkmn.database.lists.get_item_list(game)
-        move_list = pkmn.database.lists.get_move_list(game)
-        pokemon_list = pkmn.database.lists.get_pokemon_list(1, True)
-
-        random_pokemon = self.get_random_pokemon(game, pokemon_list, move_list, item_list)
-        random_pokemon.export_to_file(pk1_path)
-
-        imported_pokemon = pkmn.pokemon(pk1_path)
-        self.compare_pokemon(random_pokemon, imported_pokemon)
-
-        os.remove(pk1_path)
+    # Generation II
 
     @parameterized.expand([
         "Gold", "Silver", "Crystal"
     ], testcase_func_name=test_name_func)
     def test_saving_and_loading_pk2(self, game_name):
-        game = pkmn.string_to_game(game_name)
+        self._test_saving_and_loading(
+            pkmn.string_to_game(game_name),
+            "pk2"
+        )
 
-        pk2_path = os.path.join(TMP_DIR, "{0}_{1}.pk2".format(game, random.randint(0, 1000)))
-
-        item_list = pkmn.database.lists.get_item_list(game)
-        move_list = pkmn.database.lists.get_move_list(game)
-        pokemon_list = pkmn.database.lists.get_pokemon_list(2, True)
-
-        random_pokemon = self.get_random_pokemon(game, pokemon_list, move_list, item_list)
-        random_pokemon.export_to_file(pk2_path)
-
-        imported_pokemon = pkmn.pokemon(pk2_path)
-        self.compare_pokemon(random_pokemon, imported_pokemon)
-
-        os.remove(pk2_path)
+    # Game Boy Advance
 
     @parameterized.expand([
         "Ruby", "Sapphire", "Emerald", "FireRed", "LeafGreen"
     ], testcase_func_name=test_name_func)
     def test_saving_and_loading_3gpkm(self, game_name):
-        game = pkmn.string_to_game(game_name)
+        self._test_saving_and_loading(
+            pkmn.string_to_game(game_name),
+            "3gpkm"
+        )
 
-        _3gpkm_path = os.path.join(TMP_DIR, "{0}_{1}.3gpkm".format(game, random.randint(0, 1000)))
+    @parameterized.expand([
+        "Ruby", "Sapphire", "Emerald", "FireRed", "LeafGreen"
+    ], testcase_func_name=test_name_func)
+    def test_saving_and_loading_pk3(self, game_name):
+        self._test_saving_and_loading(
+            pkmn.string_to_game(game_name),
+            "pk3"
+        )
 
-        item_list = pkmn.database.lists.get_item_list(game)
-        move_list = pkmn.database.lists.get_move_list(game)
-        pokemon_list = pkmn.database.lists.get_pokemon_list(3, True)
+    def test_saving_and_loading_ck3(self):
+        self._test_saving_and_loading(
+            pkmn.game.COLOSSEUM,
+            "ck3"
+        )
 
-        random_pokemon = self.get_random_pokemon(game, pokemon_list, move_list, item_list)
-        random_pokemon.export_to_file(_3gpkm_path)
-
-        imported_pokemon = pkmn.pokemon(_3gpkm_path)
-        self.compare_pokemon(random_pokemon, imported_pokemon)
-
-        os.remove(_3gpkm_path)
+    def test_saving_and_loading_xk3(self):
+        self._test_saving_and_loading(
+            pkmn.game.XD,
+            "xk3"
+        )
 
     def test_outside_3gpkm(self):
         # Test files in repo and compare to known values.
