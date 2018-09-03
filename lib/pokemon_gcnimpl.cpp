@@ -18,6 +18,8 @@
 #include "database/id_to_string.hpp"
 #include "database/index_to_string.hpp"
 
+#include "io/read_write.hpp"
+
 #include "pkmgc/enum_maps.hpp"
 #include "pksav/enum_maps.hpp"
 
@@ -35,6 +37,7 @@
 
 #include <boost/algorithm/string.hpp>
 #include <boost/assign.hpp>
+#include <boost/filesystem.hpp>
 #include <boost/format.hpp>
 #include <boost/bimap.hpp>
 
@@ -43,6 +46,8 @@
 #include <cstring>
 #include <stdexcept>
 #include <unordered_map>
+
+namespace fs = boost::filesystem;
 
 namespace pkmn
 {
@@ -269,10 +274,27 @@ namespace pkmn
     }
 
     void pokemon_gcnimpl::export_to_file(
-        PKMN_UNUSED(const std::string& filepath)
+        const std::string& filepath
     )
     {
-        throw pkmn::feature_not_in_game_error("Exporting to file");
+        std::string extension = fs::extension(filepath);
+        if((get_game() == pkmn::e_game::COLOSSEUM) && (extension != ".ck3"))
+        {
+            throw std::invalid_argument("Colosseum Pokémon can only be saved to .ck3 files.");
+        }
+        else if((get_game() == pkmn::e_game::XD) && (extension != ".xk3"))
+        {
+            throw std::invalid_argument("XD Pokémon can only be saved to .xk3 files.");
+        }
+
+        boost::lock_guard<pokemon_gcnimpl> lock(*this);
+
+        _libpkmgc_pokemon_uptr->save();
+        pkmn::io::write_file(
+            filepath,
+            _libpkmgc_pokemon_uptr->data,
+            _libpkmgc_pokemon_uptr->getSize()
+        );
     }
 
     void pokemon_gcnimpl::set_form(
