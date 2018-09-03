@@ -73,14 +73,24 @@ PKMN_C_TEST_MAIN(
     PKMN_C_TEST(red_pk1_test);
     PKMN_C_TEST(blue_pk1_test);
     PKMN_C_TEST(yellow_pk1_test);
+
     PKMN_C_TEST(gold_pk2_test);
     PKMN_C_TEST(silver_pk2_test);
     PKMN_C_TEST(crystal_pk2_test);
+
     PKMN_C_TEST(ruby_3gpkm_test);
+    PKMN_C_TEST(ruby_pk3_test);
     PKMN_C_TEST(sapphire_3gpkm_test);
+    PKMN_C_TEST(sapphire_pk3_test);
     PKMN_C_TEST(emerald_3gpkm_test);
+    PKMN_C_TEST(emerald_pk3_test);
     PKMN_C_TEST(firered_3gpkm_test);
+    PKMN_C_TEST(firered_pk3_test);
     PKMN_C_TEST(leafgreen_3gpkm_test);
+    PKMN_C_TEST(leafgreen_pk3_test);
+    PKMN_C_TEST(colosseum_ck3_test);
+    PKMN_C_TEST(xd_xk3_test);
+
     PKMN_C_TEST(test_outside_3gpkm);
 
     PKMN_C_TEST(gen1_conversions_test);

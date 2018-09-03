@@ -204,10 +204,13 @@ static void test_location_met(
     TEST_ASSERT_EQUAL_STRING(expected_value, strbuffer);
 }
 
-// Generation I
-
-static void pk1_test(enum pkmn_game game)
+static void pokemon_io_test(
+    enum pkmn_game game,
+    const char* extension
+)
 {
+    TEST_ASSERT_NOT_NULL(extension);
+
     enum pkmn_error error = PKMN_ERROR_NONE;
 
     char tmp_dir[STRBUFFER_LEN] = {0};
@@ -218,15 +221,16 @@ static void pk1_test(enum pkmn_game game)
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
 
-    char pk1_path[STRBUFFER_LEN] = {0};
+    char tmp_path[STRBUFFER_LEN] = {0};
     snprintf(
-        pk1_path,
-        sizeof(pk1_path),
-        "%s%s%d_%d.pk1",
+        tmp_path,
+        sizeof(tmp_path),
+        "%s%s%d_%d.%s",
         tmp_dir,
         FS_SEPARATOR,
         (int)game,
-        rand()
+        rand(),
+        extension
     );
 
     struct pkmn_pokemon random_pokemon = empty_pokemon;
@@ -239,13 +243,13 @@ static void pk1_test(enum pkmn_game game)
 
     error = pkmn_pokemon_export_to_file(
                 &random_pokemon,
-                pk1_path
+                tmp_path
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
 
     struct pkmn_pokemon imported_pokemon = empty_pokemon;
     error = pkmn_pokemon_init_from_file(
-                pk1_path,
+                tmp_path,
                 &imported_pokemon
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
@@ -263,196 +267,111 @@ static void pk1_test(enum pkmn_game game)
     PKMN_TEST_ASSERT_SUCCESS(error);
 
 #ifdef PKMN_C_PLATFORM_WIN32
-    TEST_ASSERT_NOT_EQUAL(DeleteFile(pk1_path), 0);
+    TEST_ASSERT_NOT_EQUAL(DeleteFile(tmp_path), 0);
 #else
-    TEST_ASSERT_EQUAL(remove(pk1_path), 0);
+    TEST_ASSERT_EQUAL(remove(tmp_path), 0);
 #endif
 }
 
+// Generation I
+
 void red_pk1_test()
 {
-    pk1_test(PKMN_GAME_RED);
+    pokemon_io_test(PKMN_GAME_RED, "pk1");
 }
 
 void blue_pk1_test()
 {
-    pk1_test(PKMN_GAME_BLUE);
+    pokemon_io_test(PKMN_GAME_BLUE, "pk1");
 }
 
 void yellow_pk1_test()
 {
-    pk1_test(PKMN_GAME_YELLOW);
+    pokemon_io_test(PKMN_GAME_YELLOW, "pk1");
 }
 
 // Generation II
 
-static void pk2_test(enum pkmn_game game)
-{
-    enum pkmn_error error = PKMN_ERROR_NONE;
-
-    char tmp_dir[STRBUFFER_LEN] = {0};
-    error = pkmn_get_tmp_dir(
-                tmp_dir,
-                sizeof(tmp_dir),
-                NULL
-            );
-    PKMN_TEST_ASSERT_SUCCESS(error);
-
-    char pk2_path[STRBUFFER_LEN] = {0};
-    snprintf(
-        pk2_path,
-        sizeof(pk2_path),
-        "%s%s%d_%d.pk2",
-        tmp_dir,
-        FS_SEPARATOR,
-        (int)game,
-        rand()
-    );
-
-    struct pkmn_pokemon random_pokemon = empty_pokemon;
-    get_random_pokemon(
-        &random_pokemon,
-        NULL,
-        PKMN_SPECIES_NONE, // Can be any
-        game
-    );
-
-    error = pkmn_pokemon_export_to_file(
-                &random_pokemon,
-                pk2_path
-            );
-    PKMN_TEST_ASSERT_SUCCESS(error);
-
-    struct pkmn_pokemon imported_pokemon = empty_pokemon;
-    error = pkmn_pokemon_init_from_file(
-                pk2_path,
-                &imported_pokemon
-            );
-    PKMN_TEST_ASSERT_SUCCESS(error);
-
-    TEST_ASSERT_EQUAL_STRING(
-        "None",
-        pkmn_pokemon_strerror(&imported_pokemon)
-    );
-
-    compare_pokemon(&random_pokemon, &imported_pokemon);
-
-    error = pkmn_pokemon_free(&random_pokemon);
-    PKMN_TEST_ASSERT_SUCCESS(error);
-    error = pkmn_pokemon_free(&imported_pokemon);
-    PKMN_TEST_ASSERT_SUCCESS(error);
-
-#ifdef PKMN_C_PLATFORM_WIN32
-    TEST_ASSERT_NOT_EQUAL(DeleteFile(pk2_path), 0);
-#else
-    TEST_ASSERT_EQUAL(remove(pk2_path), 0);
-#endif
-}
-
 void gold_pk2_test()
 {
-    pk2_test(PKMN_GAME_GOLD);
+    pokemon_io_test(PKMN_GAME_GOLD, "pk2");
 }
 
 void silver_pk2_test()
 {
-    pk2_test(PKMN_GAME_SILVER);
+    pokemon_io_test(PKMN_GAME_SILVER, "pk2");
 }
 
 void crystal_pk2_test()
 {
-    pk2_test(PKMN_GAME_CRYSTAL);
+    pokemon_io_test(PKMN_GAME_CRYSTAL, "pk2");
 }
 
-// Generation III
-
-static void _3gpkm_test(enum pkmn_game game)
-{
-    enum pkmn_error error = PKMN_ERROR_NONE;
-
-    char tmp_dir[STRBUFFER_LEN] = {0};
-    error = pkmn_get_tmp_dir(
-                tmp_dir,
-                sizeof(tmp_dir),
-                NULL
-            );
-    PKMN_TEST_ASSERT_SUCCESS(error);
-
-    char _3gpkm_path[STRBUFFER_LEN] = {0};
-    snprintf(
-        _3gpkm_path,
-        sizeof(_3gpkm_path),
-        "%s%s%d_%d.3gpkm",
-        tmp_dir,
-        FS_SEPARATOR,
-        (int)game,
-        rand()
-    );
-
-    struct pkmn_pokemon random_pokemon = empty_pokemon;
-    get_random_pokemon(
-        &random_pokemon,
-        NULL,
-        PKMN_SPECIES_NONE, // Can be any
-        game
-    );
-
-    error = pkmn_pokemon_export_to_file(
-                &random_pokemon,
-                _3gpkm_path
-            );
-    PKMN_TEST_ASSERT_SUCCESS(error);
-
-    struct pkmn_pokemon imported_pokemon = empty_pokemon;
-    error = pkmn_pokemon_init_from_file(
-                _3gpkm_path,
-                &imported_pokemon
-            );
-    PKMN_TEST_ASSERT_SUCCESS(error);
-
-    TEST_ASSERT_EQUAL_STRING(
-        "None",
-        pkmn_pokemon_strerror(&imported_pokemon)
-    );
-
-    compare_pokemon(&random_pokemon, &imported_pokemon);
-
-    error = pkmn_pokemon_free(&random_pokemon);
-    PKMN_TEST_ASSERT_SUCCESS(error);
-    error = pkmn_pokemon_free(&imported_pokemon);
-    PKMN_TEST_ASSERT_SUCCESS(error);
-
-#ifdef PKMN_C_PLATFORM_WIN32
-    TEST_ASSERT_NOT_EQUAL(DeleteFile(_3gpkm_path), 0);
-#else
-    TEST_ASSERT_EQUAL(remove(_3gpkm_path), 0);
-#endif
-}
+// Game Boy Advance
 
 void ruby_3gpkm_test()
 {
-    _3gpkm_test(PKMN_GAME_RUBY);
+    pokemon_io_test(PKMN_GAME_RUBY, "3gpkm");
+}
+
+void ruby_pk3_test()
+{
+    pokemon_io_test(PKMN_GAME_RUBY, "pk3");
 }
 
 void sapphire_3gpkm_test()
 {
-    _3gpkm_test(PKMN_GAME_SAPPHIRE);
+    pokemon_io_test(PKMN_GAME_SAPPHIRE, "3gpkm");
+}
+
+void sapphire_pk3_test()
+{
+    pokemon_io_test(PKMN_GAME_SAPPHIRE, "pk3");
 }
 
 void emerald_3gpkm_test()
 {
-    _3gpkm_test(PKMN_GAME_EMERALD);
+    pokemon_io_test(PKMN_GAME_EMERALD, "3gpkm");
+}
+
+void emerald_pk3_test()
+{
+    pokemon_io_test(PKMN_GAME_EMERALD, "pk3");
 }
 
 void firered_3gpkm_test()
 {
-    _3gpkm_test(PKMN_GAME_FIRERED);
+    pokemon_io_test(PKMN_GAME_FIRERED, "3gpkm");
+}
+
+void firered_pk3_test()
+{
+    pokemon_io_test(PKMN_GAME_FIRERED, "pk3");
 }
 
 void leafgreen_3gpkm_test()
 {
-    _3gpkm_test(PKMN_GAME_LEAFGREEN);
+    pokemon_io_test(PKMN_GAME_LEAFGREEN, "3gpkm");
 }
+
+void leafgreen_pk3_test()
+{
+    pokemon_io_test(PKMN_GAME_LEAFGREEN, "pk3");
+}
+
+// Gamecube
+
+void colosseum_ck3_test()
+{
+    pokemon_io_test(PKMN_GAME_COLOSSEUM, "ck3");
+}
+
+void xd_xk3_test()
+{
+    pokemon_io_test(PKMN_GAME_XD, "xk3");
+}
+
+// Outside files
 
 void test_outside_3gpkm()
 {
