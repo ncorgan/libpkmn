@@ -18,62 +18,87 @@ public class PokemonIOTests
     private static string LibPKMNTestFiles = Environment.GetEnvironmentVariable("LIBPKMN_TEST_FILES");
     private static string TmpDir = PKMN.Paths.GetTmpDir();
 
+    private static void TestLoadingAndSaving(
+        PKMN.Game game,
+        string extension
+    )
+    {
+        string tmpPath = System.IO.Path.Combine(
+                             TmpDir,
+                             String.Format("{0}_{1}.{2}",
+                                 game,
+                                 rng.Next(),
+                                 extension
+                             )
+                          );
+
+        PKMN.ItemEnumList itemList = PKMN.Database.Lists.ItemList(game);
+        PKMN.MoveEnumList moveList = PKMN.Database.Lists.MoveList(game);
+        PKMN.SpeciesEnumList pokemonList = PKMN.Database.Lists.PokemonList(
+                                               Util.GameToGeneration(game),
+                                               true
+                                           );
+
+        PKMN.Pokemon randomPokemon = Util.GetRandomPokemon(game, itemList, moveList, pokemonList);
+        randomPokemon.ExportToFile(tmpPath);
+
+        PKMN.Pokemon importedPokemon = new PKMN.Pokemon(tmpPath);
+        Util.ComparePokemon(randomPokemon, importedPokemon);
+
+        System.IO.File.Delete(tmpPath);
+    }
+
+    // Generation I
+
     public static void TestLoadingAndSavingPK1(
         PKMN.Game game
     )
     {
-        string pk1Path = System.IO.Path.Combine(TmpDir, String.Format("{0}_{1}.pk1", game, rng.Next()));
-
-        PKMN.ItemEnumList itemList = PKMN.Database.Lists.ItemList(game);
-        PKMN.MoveEnumList moveList = PKMN.Database.Lists.MoveList(game);
-        PKMN.SpeciesEnumList pokemonList = PKMN.Database.Lists.PokemonList(1, true);
-
-        PKMN.Pokemon randomPokemon = Util.GetRandomPokemon(game, itemList, moveList, pokemonList);
-        randomPokemon.ExportToFile(pk1Path);
-
-        PKMN.Pokemon importedPokemon = new PKMN.Pokemon(pk1Path);
-        Util.ComparePokemon(randomPokemon, importedPokemon);
-
-        System.IO.File.Delete(pk1Path);
+        TestLoadingAndSaving(game, "pk1");
     }
+
+    // Generation III
 
     public static void TestLoadingAndSavingPK2(
         PKMN.Game game
     )
     {
-        string pk2Path = System.IO.Path.Combine(TmpDir, String.Format("{0}_{1}.pk2", game, rng.Next()));
-
-        PKMN.ItemEnumList itemList = PKMN.Database.Lists.ItemList(game);
-        PKMN.MoveEnumList moveList = PKMN.Database.Lists.MoveList(game);
-        PKMN.SpeciesEnumList pokemonList = PKMN.Database.Lists.PokemonList(2, true);
-
-        PKMN.Pokemon randomPokemon = Util.GetRandomPokemon(game, itemList, moveList, pokemonList);
-        randomPokemon.ExportToFile(pk2Path);
-
-        PKMN.Pokemon importedPokemon = new PKMN.Pokemon(pk2Path);
-        Util.ComparePokemon(randomPokemon, importedPokemon);
-
-        System.IO.File.Delete(pk2Path);
+        TestLoadingAndSaving(game, "pk2");
     }
+
+    // Game Boy Advance
 
     public static void TestLoadingAndSaving3GPKM(
         PKMN.Game game
     )
     {
-        string _3gpkmPath = System.IO.Path.Combine(TmpDir, String.Format("{0}_{1}.3gpkm", game, rng.Next()));
-
-        PKMN.ItemEnumList itemList = PKMN.Database.Lists.ItemList(game);
-        PKMN.MoveEnumList moveList = PKMN.Database.Lists.MoveList(game);
-        PKMN.SpeciesEnumList pokemonList = PKMN.Database.Lists.PokemonList(3, true);
-
-        PKMN.Pokemon randomPokemon = Util.GetRandomPokemon(game, itemList, moveList, pokemonList);
-        randomPokemon.ExportToFile(_3gpkmPath);
-
-        PKMN.Pokemon importedPokemon = new PKMN.Pokemon(_3gpkmPath);
-        Util.ComparePokemon(randomPokemon, importedPokemon);
-
-        System.IO.File.Delete(_3gpkmPath);
+        TestLoadingAndSaving(game, "3gpkm");
     }
+
+    public static void TestLoadingAndSavingPK3(
+        PKMN.Game game
+    )
+    {
+        TestLoadingAndSaving(game, "pk3");
+    }
+
+    // Gamecube
+
+    public static void TestLoadingAndSavingCK3(
+        PKMN.Game game
+    )
+    {
+        TestLoadingAndSaving(game, "ck3");
+    }
+
+    public static void TestLoadingAndSavingXK3(
+        PKMN.Game game
+    )
+    {
+        TestLoadingAndSaving(game, "xk3");
+    }
+
+    // Outside files
 
     public static void TestOutside3GPKM()
     {

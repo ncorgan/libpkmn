@@ -145,6 +145,34 @@ public class CSharpPokemonTest
         PKMNTest.PokemonIOTests.TestLoadingAndSaving3GPKM(game);
     }
 
+    [TestCase(PKMN.Game.RUBY)]
+    [TestCase(PKMN.Game.SAPPHIRE)]
+    [TestCase(PKMN.Game.EMERALD)]
+    [TestCase(PKMN.Game.FIRERED)]
+    [TestCase(PKMN.Game.LEAFGREEN)]
+    public void TestSavingAndLoadingPK3(
+        PKMN.Game game
+    )
+    {
+        PKMNTest.PokemonIOTests.TestLoadingAndSavingPK3(game);
+    }
+
+    [Test]
+    public void TestSavingAndLoadingCK3()
+    {
+        PKMNTest.PokemonIOTests.TestLoadingAndSavingCK3(
+            PKMN.Game.COLOSSEUM
+        );
+    }
+
+    [Test]
+    public void TestSavingAndLoadingXK3()
+    {
+        PKMNTest.PokemonIOTests.TestLoadingAndSavingXK3(
+            PKMN.Game.XD
+        );
+    }
+
     [Test]
     public void TestOutside3GPKM()
     {
