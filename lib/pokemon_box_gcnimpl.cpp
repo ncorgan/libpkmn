@@ -130,7 +130,7 @@ namespace pkmn
         delete _libpkmgc_box_uptr->pkm[index];
 
         _libpkmgc_box_uptr->pkm[index] =
-            static_cast<LibPkmGC::GC::Pokemon*>(
+            static_cast<const LibPkmGC::GC::Pokemon*>(
                 new_pokemon->get_native_pc_data()
             )->clone();
         _pokemon_list[index] = std::make_shared<pokemon_gcnimpl>(

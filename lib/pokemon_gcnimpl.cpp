@@ -23,6 +23,7 @@
 #include "pkmgc/enum_maps.hpp"
 #include "pksav/enum_maps.hpp"
 
+#include "types/lock_guard.hpp"
 #include "types/rng.hpp"
 
 #include <pkmn/exception.hpp>
@@ -40,8 +41,6 @@
 #include <boost/filesystem.hpp>
 #include <boost/format.hpp>
 #include <boost/bimap.hpp>
-
-#include <boost/thread/lock_guard.hpp>
 
 #include <cstring>
 #include <stdexcept>
@@ -201,7 +200,7 @@ namespace pkmn
 
     pokemon::sptr pokemon_gcnimpl::to_game(pkmn::e_game game)
     {
-        boost::lock_guard<pokemon_gcnimpl> lock(*this);
+        pkmn::lock_guard<pokemon_gcnimpl> lock(*this);
 
         pkmn::pokemon::sptr ret;
 
@@ -296,7 +295,7 @@ namespace pkmn
             throw std::invalid_argument("XD Pokémon can only be saved to .xk3 files.");
         }
 
-        boost::lock_guard<pokemon_gcnimpl> lock(*this);
+        pkmn::lock_guard<pokemon_gcnimpl> lock(*this);
 
         _libpkmgc_pokemon_uptr->save();
         pkmn::io::write_file(
@@ -310,7 +309,7 @@ namespace pkmn
         const std::string& form
     )
     {
-        boost::lock_guard<pokemon_gcnimpl> lock(*this);
+        pkmn::lock_guard<pokemon_gcnimpl> lock(*this);
 
         bool was_shadow = (_database_entry.get_form() == "Shadow");
         _database_entry.set_form(form);
@@ -339,9 +338,9 @@ namespace pkmn
         }
     }
 
-    bool pokemon_gcnimpl::is_egg()
+    bool pokemon_gcnimpl::is_egg() const
     {
-        boost::lock_guard<pokemon_gcnimpl> lock(*this);
+        pkmn::lock_guard<pokemon_gcnimpl> lock(*this);
 
         return _libpkmgc_pokemon_uptr->isEgg();
     }
@@ -350,14 +349,14 @@ namespace pkmn
         bool is_egg
     )
     {
-        boost::lock_guard<pokemon_gcnimpl> lock(*this);
+        pkmn::lock_guard<pokemon_gcnimpl> lock(*this);
 
         _libpkmgc_pokemon_uptr->setEggFlag(is_egg);
     }
 
-    pkmn::e_condition pokemon_gcnimpl::get_condition()
+    pkmn::e_condition pokemon_gcnimpl::get_condition() const
     {
-        boost::lock_guard<pokemon_gcnimpl> lock(*this);
+        pkmn::lock_guard<pokemon_gcnimpl> lock(*this);
 
         pkmn::e_condition ret = pkmn::e_condition::NONE;
         LibPkmGC::PokemonStatus status = _libpkmgc_pokemon_uptr->partyData.status;
@@ -383,7 +382,7 @@ namespace pkmn
 
         if(condition_iter != CONDITION_BIMAP.left.end())
         {
-            boost::lock_guard<pokemon_gcnimpl> lock(*this);
+            pkmn::lock_guard<pokemon_gcnimpl> lock(*this);
 
             _libpkmgc_pokemon_uptr->partyData.status = condition_iter->second;
 
@@ -399,9 +398,9 @@ namespace pkmn
         }
     }
 
-    std::string pokemon_gcnimpl::get_nickname()
+    std::string pokemon_gcnimpl::get_nickname() const
     {
-        boost::lock_guard<pokemon_gcnimpl> lock(*this);
+        pkmn::lock_guard<pokemon_gcnimpl> lock(*this);
 
         return _libpkmgc_pokemon_uptr->name->toUTF8();
     }
@@ -417,14 +416,14 @@ namespace pkmn
             10
         );
 
-        boost::lock_guard<pokemon_gcnimpl> lock(*this);
+        pkmn::lock_guard<pokemon_gcnimpl> lock(*this);
 
         _libpkmgc_pokemon_uptr->name->fromUTF8(nickname.c_str());
     }
 
-    pkmn::e_gender pokemon_gcnimpl::get_gender()
+    pkmn::e_gender pokemon_gcnimpl::get_gender() const
     {
-        boost::lock_guard<pokemon_gcnimpl> lock(*this);
+        pkmn::lock_guard<pokemon_gcnimpl> lock(*this);
 
         return pkmn::calculations::modern_pokemon_gender(
                    get_species(),
@@ -442,7 +441,7 @@ namespace pkmn
             {pkmn::e_gender::MALE, pkmn::e_gender::FEMALE, pkmn::e_gender::GENDERLESS}
         );
 
-        boost::lock_guard<pokemon_gcnimpl> lock(*this);
+        pkmn::lock_guard<pokemon_gcnimpl> lock(*this);
 
         _set_modern_gender(
             &_libpkmgc_pokemon_uptr->PID,
@@ -452,9 +451,9 @@ namespace pkmn
         // Unown is genderless, so don't bother setting the form.
     }
 
-    bool pokemon_gcnimpl::is_shiny()
+    bool pokemon_gcnimpl::is_shiny() const
     {
-        boost::lock_guard<pokemon_gcnimpl> lock(*this);
+        pkmn::lock_guard<pokemon_gcnimpl> lock(*this);
 
         return _libpkmgc_pokemon_uptr->isShiny();
     }
@@ -463,7 +462,7 @@ namespace pkmn
         bool value
     )
     {
-        boost::lock_guard<pokemon_gcnimpl> lock(*this);
+        pkmn::lock_guard<pokemon_gcnimpl> lock(*this);
 
         // LibPkmGC stores trainer IDs in halves.
         uint32_t trainer_id = _libpkmgc_pokemon_uptr->TID | (uint32_t(_libpkmgc_pokemon_uptr->SID) << 16);
@@ -480,9 +479,9 @@ namespace pkmn
         }
     }
 
-    pkmn::e_item pokemon_gcnimpl::get_held_item()
+    pkmn::e_item pokemon_gcnimpl::get_held_item() const
     {
-        boost::lock_guard<pokemon_gcnimpl> lock(*this);
+        pkmn::lock_guard<pokemon_gcnimpl> lock(*this);
 
         return pkmn::e_item(
                    pkmn::database::item_index_to_id(
@@ -496,7 +495,7 @@ namespace pkmn
         pkmn::e_item held_item
     )
     {
-        boost::lock_guard<pokemon_gcnimpl> lock(*this);
+        pkmn::lock_guard<pokemon_gcnimpl> lock(*this);
 
         // Make sure item is valid and holdable
         pkmn::database::item_entry item(
@@ -512,9 +511,9 @@ namespace pkmn
         _libpkmgc_pokemon_uptr->heldItem = LibPkmGC::ItemIndex(item.get_item_index());
     }
 
-    pkmn::e_nature pokemon_gcnimpl::get_nature()
+    pkmn::e_nature pokemon_gcnimpl::get_nature() const
     {
-        boost::lock_guard<pokemon_gcnimpl> lock(*this);
+        pkmn::lock_guard<pokemon_gcnimpl> lock(*this);
 
         const pksav::nature_bimap_t& nature_bimap = pksav::get_nature_bimap();
 
@@ -540,7 +539,7 @@ namespace pkmn
             nature_bimap.left
         );
 
-        boost::lock_guard<pokemon_gcnimpl> lock(*this);
+        pkmn::lock_guard<pokemon_gcnimpl> lock(*this);
 
         // Nature is derived from personality, so we need to find a new
         // one that preserves all other values. Note that nature is not stored
@@ -557,9 +556,9 @@ namespace pkmn
         );
     }
 
-    int pokemon_gcnimpl::get_pokerus_duration()
+    int pokemon_gcnimpl::get_pokerus_duration() const
     {
-        boost::lock_guard<pokemon_gcnimpl> lock(*this);
+        pkmn::lock_guard<pokemon_gcnimpl> lock(*this);
 
         return _get_pokerus_duration(&_libpkmgc_pokemon_uptr->pokerusStatus);
     }
@@ -570,7 +569,7 @@ namespace pkmn
     {
         pkmn::enforce_bounds("Duration", duration, 0, 15);
 
-        boost::lock_guard<pokemon_gcnimpl> lock(*this);
+        pkmn::lock_guard<pokemon_gcnimpl> lock(*this);
 
         _set_pokerus_duration(
             &_libpkmgc_pokemon_uptr->pokerusStatus,
@@ -580,9 +579,9 @@ namespace pkmn
         _libpkmgc_pokemon_uptr->partyData.pokerusDaysRemaining = LibPkmGC::s8(duration);
     }
 
-    std::string pokemon_gcnimpl::get_original_trainer_name()
+    std::string pokemon_gcnimpl::get_original_trainer_name() const
     {
-        boost::lock_guard<pokemon_gcnimpl> lock(*this);
+        pkmn::lock_guard<pokemon_gcnimpl> lock(*this);
 
         return _libpkmgc_pokemon_uptr->OTName->toUTF8();
     }
@@ -598,28 +597,28 @@ namespace pkmn
             7
         );
 
-        boost::lock_guard<pokemon_gcnimpl> lock(*this);
+        pkmn::lock_guard<pokemon_gcnimpl> lock(*this);
 
         _libpkmgc_pokemon_uptr->OTName->fromUTF8(trainer_name.c_str());
     }
 
-    uint16_t pokemon_gcnimpl::get_original_trainer_public_id()
+    uint16_t pokemon_gcnimpl::get_original_trainer_public_id() const
     {
-        boost::lock_guard<pokemon_gcnimpl> lock(*this);
+        pkmn::lock_guard<pokemon_gcnimpl> lock(*this);
 
         return _libpkmgc_pokemon_uptr->TID;
     }
 
-    uint16_t pokemon_gcnimpl::get_original_trainer_secret_id()
+    uint16_t pokemon_gcnimpl::get_original_trainer_secret_id() const
     {
-        boost::lock_guard<pokemon_gcnimpl> lock(*this);
+        pkmn::lock_guard<pokemon_gcnimpl> lock(*this);
 
         return _libpkmgc_pokemon_uptr->SID;
     }
 
-    uint32_t pokemon_gcnimpl::get_original_trainer_id()
+    uint32_t pokemon_gcnimpl::get_original_trainer_id() const
     {
-        boost::lock_guard<pokemon_gcnimpl> lock(*this);
+        pkmn::lock_guard<pokemon_gcnimpl> lock(*this);
 
         return uint32_t(_libpkmgc_pokemon_uptr->TID) | (uint32_t(_libpkmgc_pokemon_uptr->SID) << 16);
     }
@@ -628,7 +627,7 @@ namespace pkmn
         uint16_t public_id
     )
     {
-        boost::lock_guard<pokemon_gcnimpl> lock(*this);
+        pkmn::lock_guard<pokemon_gcnimpl> lock(*this);
 
         _libpkmgc_pokemon_uptr->TID = public_id;
     }
@@ -637,7 +636,7 @@ namespace pkmn
         uint16_t secret_id
     )
     {
-        boost::lock_guard<pokemon_gcnimpl> lock(*this);
+        pkmn::lock_guard<pokemon_gcnimpl> lock(*this);
 
         _libpkmgc_pokemon_uptr->SID = secret_id;
     }
@@ -646,15 +645,15 @@ namespace pkmn
         uint32_t id
     )
     {
-        boost::lock_guard<pokemon_gcnimpl> lock(*this);
+        pkmn::lock_guard<pokemon_gcnimpl> lock(*this);
 
         _libpkmgc_pokemon_uptr->TID = uint16_t(id & 0xFFFF);
         _libpkmgc_pokemon_uptr->SID = uint16_t(id >> 16);
     }
 
-    pkmn::e_gender pokemon_gcnimpl::get_original_trainer_gender()
+    pkmn::e_gender pokemon_gcnimpl::get_original_trainer_gender() const
     {
-        boost::lock_guard<pokemon_gcnimpl> lock(*this);
+        pkmn::lock_guard<pokemon_gcnimpl> lock(*this);
 
         static const pkmgc::gender_bimap_t& GENDER_BIMAP = pkmgc::get_gender_bimap();
         BOOST_ASSERT(GENDER_BIMAP.right.count(_libpkmgc_pokemon_uptr->OTGender) > 0);
@@ -672,7 +671,7 @@ namespace pkmn
             {pkmn::e_gender::MALE, pkmn::e_gender::FEMALE}
         );
 
-        boost::lock_guard<pokemon_gcnimpl> lock(*this);
+        pkmn::lock_guard<pokemon_gcnimpl> lock(*this);
 
         static const pkmgc::gender_bimap_t& GENDER_BIMAP = pkmgc::get_gender_bimap();
         BOOST_ASSERT(GENDER_BIMAP.left.count(gender) > 0);
@@ -680,9 +679,9 @@ namespace pkmn
         _libpkmgc_pokemon_uptr->OTGender = GENDER_BIMAP.left.at(gender);
     }
 
-    pkmn::e_language pokemon_gcnimpl::get_language()
+    pkmn::e_language pokemon_gcnimpl::get_language() const
     {
-        boost::lock_guard<pokemon_gcnimpl> lock(*this);
+        pkmn::lock_guard<pokemon_gcnimpl> lock(*this);
 
         pkmn::e_language ret = pkmn::e_language::ENGLISH;
 
@@ -712,14 +711,14 @@ namespace pkmn
             LANGUAGE_BIMAP.left
         );
 
-        boost::lock_guard<pokemon_gcnimpl> lock(*this);
+        pkmn::lock_guard<pokemon_gcnimpl> lock(*this);
 
         _libpkmgc_pokemon_uptr->version.language = LANGUAGE_BIMAP.left.at(language);
     }
 
-    int pokemon_gcnimpl::get_current_trainer_friendship()
+    int pokemon_gcnimpl::get_current_trainer_friendship() const
     {
-        boost::lock_guard<pokemon_gcnimpl> lock(*this);
+        pkmn::lock_guard<pokemon_gcnimpl> lock(*this);
 
         return _libpkmgc_pokemon_uptr->friendship;
     }
@@ -730,14 +729,14 @@ namespace pkmn
     {
         pkmn::enforce_bounds("Friendship", friendship, 0, 255);
 
-        boost::lock_guard<pokemon_gcnimpl> lock(*this);
+        pkmn::lock_guard<pokemon_gcnimpl> lock(*this);
 
         _libpkmgc_pokemon_uptr->friendship = LibPkmGC::u8(friendship);
     }
 
-    pkmn::e_ability pokemon_gcnimpl::get_ability()
+    pkmn::e_ability pokemon_gcnimpl::get_ability() const
     {
-        boost::lock_guard<pokemon_gcnimpl> lock(*this);
+        pkmn::lock_guard<pokemon_gcnimpl> lock(*this);
 
         pkmn::e_ability ret = pkmn::e_ability::NONE;
 
@@ -757,7 +756,7 @@ namespace pkmn
 
     void pokemon_gcnimpl::set_ability(pkmn::e_ability ability)
     {
-        boost::lock_guard<pokemon_gcnimpl> lock(*this);
+        pkmn::lock_guard<pokemon_gcnimpl> lock(*this);
 
         _set_ability(ability);
 
@@ -771,9 +770,9 @@ namespace pkmn
                                       );
     }
 
-    pkmn::e_ball pokemon_gcnimpl::get_ball()
+    pkmn::e_ball pokemon_gcnimpl::get_ball() const
     {
-        boost::lock_guard<pokemon_gcnimpl> lock(*this);
+        pkmn::lock_guard<pokemon_gcnimpl> lock(*this);
 
         pkmn::e_ball ball = pkmn::e_ball(_libpkmgc_pokemon_uptr->ballCaughtWith);
         if((ball < pkmn::e_ball::NONE) || (ball > pkmn::e_ball::PREMIER_BALL))
@@ -788,7 +787,7 @@ namespace pkmn
         pkmn::e_ball ball
     )
     {
-        boost::lock_guard<pokemon_gcnimpl> lock(*this);
+        pkmn::lock_guard<pokemon_gcnimpl> lock(*this);
 
         // Try and instantiate an item_entry to validate the ball.
         pkmn::database::item_entry item(
@@ -800,9 +799,9 @@ namespace pkmn
     }
 
 
-    int pokemon_gcnimpl::get_level_met()
+    int pokemon_gcnimpl::get_level_met() const
     {
-        boost::lock_guard<pokemon_gcnimpl> lock(*this);
+        pkmn::lock_guard<pokemon_gcnimpl> lock(*this);
 
         return _libpkmgc_pokemon_uptr->levelMet;
     }
@@ -813,14 +812,14 @@ namespace pkmn
     {
         pkmn::enforce_bounds("Level met", level, 0, 100);
 
-        boost::lock_guard<pokemon_gcnimpl> lock(*this);
+        pkmn::lock_guard<pokemon_gcnimpl> lock(*this);
 
         _libpkmgc_pokemon_uptr->levelMet = LibPkmGC::u8(level);
     }
 
     std::string pokemon_gcnimpl::get_location_met(
         bool as_egg
-    )
+    ) const
     {
         if(as_egg)
         {
@@ -828,7 +827,7 @@ namespace pkmn
         }
         else
         {
-            boost::lock_guard<pokemon_gcnimpl> lock(*this);
+            pkmn::lock_guard<pokemon_gcnimpl> lock(*this);
 
             return pkmn::database::location_index_to_name(
                        _libpkmgc_pokemon_uptr->locationCaught,
@@ -848,7 +847,7 @@ namespace pkmn
         }
         else
         {
-            boost::lock_guard<pokemon_gcnimpl> lock(*this);
+            pkmn::lock_guard<pokemon_gcnimpl> lock(*this);
 
             _libpkmgc_pokemon_uptr->locationCaught = LibPkmGC::u16(pkmn::database::location_name_to_index(
                                            location,
@@ -857,9 +856,9 @@ namespace pkmn
         }
     }
 
-    pkmn::e_game pokemon_gcnimpl::get_original_game()
+    pkmn::e_game pokemon_gcnimpl::get_original_game() const
     {
-        boost::lock_guard<pokemon_gcnimpl> lock(*this);
+        pkmn::lock_guard<pokemon_gcnimpl> lock(*this);
 
         pkmn::e_game ret = pkmn::e_game::NONE;
 
@@ -885,7 +884,7 @@ namespace pkmn
             throw std::invalid_argument("Game must be from Generation III.");
         }
 
-        boost::lock_guard<pokemon_gcnimpl> lock(*this);
+        pkmn::lock_guard<pokemon_gcnimpl> lock(*this);
 
         if((game == pkmn::e_game::COLOSSEUM) || (game == pkmn::e_game::XD))
         {
@@ -899,7 +898,8 @@ namespace pkmn
         }
     }
 
-    uint32_t pokemon_gcnimpl::get_personality() {
+    uint32_t pokemon_gcnimpl::get_personality() const
+    {
         return _libpkmgc_pokemon_uptr->PID;
     }
 
@@ -907,7 +907,7 @@ namespace pkmn
         uint32_t personality
     )
     {
-        boost::lock_guard<pokemon_gcnimpl> lock(*this);
+        pkmn::lock_guard<pokemon_gcnimpl> lock(*this);
 
         _libpkmgc_pokemon_uptr->PID = personality;
         _set_ability_from_personality();
@@ -918,9 +918,9 @@ namespace pkmn
         }
     }
 
-    int pokemon_gcnimpl::get_experience()
+    int pokemon_gcnimpl::get_experience() const
     {
-        boost::lock_guard<pokemon_gcnimpl> lock(*this);
+        pkmn::lock_guard<pokemon_gcnimpl> lock(*this);
 
         return int(_libpkmgc_pokemon_uptr->experience);
     }
@@ -929,7 +929,7 @@ namespace pkmn
         int experience
     )
     {
-        boost::lock_guard<pokemon_gcnimpl> lock(*this);
+        pkmn::lock_guard<pokemon_gcnimpl> lock(*this);
 
         int max_experience = _database_entry.get_experience_at_level(100);
         pkmn::enforce_bounds("Experience", experience, 0, max_experience);
@@ -941,9 +941,9 @@ namespace pkmn
         _update_stat_map();
     }
 
-    int pokemon_gcnimpl::get_level()
+    int pokemon_gcnimpl::get_level() const
     {
-        boost::lock_guard<pokemon_gcnimpl> lock(*this);
+        pkmn::lock_guard<pokemon_gcnimpl> lock(*this);
 
         return int(_libpkmgc_pokemon_uptr->partyData.level);
     }
@@ -954,7 +954,7 @@ namespace pkmn
     {
         pkmn::enforce_bounds("Level", level, 1, 100);
 
-        boost::lock_guard<pokemon_gcnimpl> lock(*this);
+        pkmn::lock_guard<pokemon_gcnimpl> lock(*this);
 
         _libpkmgc_pokemon_uptr->partyData.level = LibPkmGC::u8(level);
         _libpkmgc_pokemon_uptr->experience = _libpkmgc_pokemon_uptr->getExpTable()[level];
@@ -974,7 +974,7 @@ namespace pkmn
         );
         pkmn::enforce_IV_bounds(stat, value, true);
 
-        boost::lock_guard<pokemon_gcnimpl> lock(*this);
+        pkmn::lock_guard<pokemon_gcnimpl> lock(*this);
 
         const pkmgc::stat_bimap_t& STAT_BIMAP = pkmgc::get_stat_bimap();
 
@@ -999,7 +999,7 @@ namespace pkmn
             _markings
         );
 
-        boost::lock_guard<pokemon_gcnimpl> lock(*this);
+        pkmn::lock_guard<pokemon_gcnimpl> lock(*this);
 
         switch(marking)
         {
@@ -1038,7 +1038,7 @@ namespace pkmn
             _ribbons
         );
 
-        boost::lock_guard<pokemon_gcnimpl> lock(*this);
+        pkmn::lock_guard<pokemon_gcnimpl> lock(*this);
 
         static const pkmgc::ribbon_bimap_t& RIBBON_BIMAP = pkmgc::get_ribbon_bimap();
 
@@ -1118,7 +1118,7 @@ namespace pkmn
     {
         pkmn::enforce_bounds("Move index", index, 0, 3);
 
-        boost::lock_guard<pokemon_gcnimpl> lock(*this);
+        pkmn::lock_guard<pokemon_gcnimpl> lock(*this);
 
         pkmn::database::move_entry entry(move, get_game());
 
@@ -1146,7 +1146,7 @@ namespace pkmn
     {
         pkmn::enforce_bounds("Move index", index, 0, 3);
 
-        boost::lock_guard<pokemon_gcnimpl> lock(*this);
+        pkmn::lock_guard<pokemon_gcnimpl> lock(*this);
 
         // TODO: refactor to get vector of PPs
         std::vector<int> PPs;
@@ -1184,7 +1184,7 @@ namespace pkmn
         );
         pkmn::enforce_EV_bounds(stat, value, true);
 
-        boost::lock_guard<pokemon_gcnimpl> lock(*this);
+        pkmn::lock_guard<pokemon_gcnimpl> lock(*this);
 
         static const pkmgc::stat_bimap_t& STAT_BIMAP = pkmgc::get_stat_bimap();
 
@@ -1198,9 +1198,9 @@ namespace pkmn
         _populate_party_data();
     }
 
-    int pokemon_gcnimpl::get_current_hp()
+    int pokemon_gcnimpl::get_current_hp() const
     {
-        boost::lock_guard<pokemon_gcnimpl> lock(*this);
+        pkmn::lock_guard<pokemon_gcnimpl> lock(*this);
 
         return _libpkmgc_pokemon_uptr->partyData.currentHP;
     }
@@ -1216,21 +1216,21 @@ namespace pkmn
             _stats[pkmn::e_stat::HP]
         );
 
-        boost::lock_guard<pokemon_gcnimpl> lock(*this);
+        pkmn::lock_guard<pokemon_gcnimpl> lock(*this);
 
         _libpkmgc_pokemon_uptr->partyData.currentHP = static_cast<LibPkmGC::u16>(hp);
     }
 
-    bool pokemon_gcnimpl::get_is_obedient()
+    bool pokemon_gcnimpl::get_is_obedient() const
     {
-        boost::lock_guard<pokemon_gcnimpl> lock(*this);
+        pkmn::lock_guard<pokemon_gcnimpl> lock(*this);
 
         return _libpkmgc_pokemon_uptr->obedient;
     }
 
     void pokemon_gcnimpl::set_is_obedient(bool is_obedient)
     {
-        boost::lock_guard<pokemon_gcnimpl> lock(*this);
+        pkmn::lock_guard<pokemon_gcnimpl> lock(*this);
 
         _libpkmgc_pokemon_uptr->obedient = is_obedient;
     }

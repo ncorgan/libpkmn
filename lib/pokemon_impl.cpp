@@ -25,6 +25,7 @@
 #include "io/3gpkm.hpp"
 #include "io/gamecube_pokemon.hpp"
 
+#include "types/lock_guard.hpp"
 #include "types/rng.hpp"
 
 #include "pksav/enum_maps.hpp"
@@ -37,7 +38,6 @@
 
 #include <boost/assign.hpp>
 #include <boost/filesystem.hpp>
-#include <boost/thread/lock_guard.hpp>
 
 #include <stdexcept>
 
@@ -189,110 +189,110 @@ namespace pkmn
        _p_native_party(nullptr)
     {}
 
-    pkmn::e_species pokemon_impl::get_species()
+    pkmn::e_species pokemon_impl::get_species() const
     {
-        boost::lock_guard<pokemon_impl> lock(*this);
+        pkmn::lock_guard<pokemon_impl> lock(*this);
 
         return _database_entry.get_species();
     }
 
-    std::string pokemon_impl::get_form()
+    std::string pokemon_impl::get_form() const
     {
-        boost::lock_guard<pokemon_impl> lock(*this);
+        pkmn::lock_guard<pokemon_impl> lock(*this);
 
         return _database_entry.get_form();
     }
 
-    pkmn::e_game pokemon_impl::get_game()
+    pkmn::e_game pokemon_impl::get_game() const
     {
-        boost::lock_guard<pokemon_impl> lock(*this);
+        pkmn::lock_guard<pokemon_impl> lock(*this);
 
         return _database_entry.get_game();
     }
 
-    const pkmn::database::pokemon_entry& pokemon_impl::get_database_entry()
+    const pkmn::database::pokemon_entry& pokemon_impl::get_database_entry() const
     {
-        boost::lock_guard<pokemon_impl> lock(*this);
+        pkmn::lock_guard<pokemon_impl> lock(*this);
 
         return _database_entry;
     }
 
-    const std::map<pkmn::e_marking, bool>& pokemon_impl::get_markings()
+    const std::map<pkmn::e_marking, bool>& pokemon_impl::get_markings() const
     {
         if(_generation < 3)
         {
             throw pkmn::feature_not_in_game_error("Markings", "Generation I-II");
         }
 
-        boost::lock_guard<pokemon_impl> lock(*this);
+        pkmn::lock_guard<pokemon_impl> lock(*this);
 
         return _markings;
     }
 
-    const std::map<std::string, bool>& pokemon_impl::get_ribbons()
+    const std::map<std::string, bool>& pokemon_impl::get_ribbons() const
     {
         if(_generation < 3)
         {
             throw pkmn::feature_not_in_game_error("Ribbons", "Generation I-II");
         }
 
-        boost::lock_guard<pokemon_impl> lock(*this);
+        pkmn::lock_guard<pokemon_impl> lock(*this);
 
         return _ribbons;
     }
 
-    const std::map<pkmn::e_contest_stat, int>& pokemon_impl::get_contest_stats()
+    const std::map<pkmn::e_contest_stat, int>& pokemon_impl::get_contest_stats() const
     {
         if(_generation < 3)
         {
             throw pkmn::feature_not_in_game_error("Contests", "Generation I-II");
         }
 
-        boost::lock_guard<pokemon_impl> lock(*this);
+        pkmn::lock_guard<pokemon_impl> lock(*this);
 
         return _contest_stats;
     }
 
-    const pkmn::move_slots_t& pokemon_impl::get_moves()
+    const pkmn::move_slots_t& pokemon_impl::get_moves() const
     {
-        boost::lock_guard<pokemon_impl> lock(*this);
+        pkmn::lock_guard<pokemon_impl> lock(*this);
 
         return _moves;
     }
 
-    const std::map<pkmn::e_stat, int>& pokemon_impl::get_EVs()
+    const std::map<pkmn::e_stat, int>& pokemon_impl::get_EVs() const
     {
-        boost::lock_guard<pokemon_impl> lock(*this);
+        pkmn::lock_guard<pokemon_impl> lock(*this);
 
         return _EVs;
     }
 
-    const std::map<pkmn::e_stat, int>& pokemon_impl::get_IVs()
+    const std::map<pkmn::e_stat, int>& pokemon_impl::get_IVs() const
     {
-        boost::lock_guard<pokemon_impl> lock(*this);
+        pkmn::lock_guard<pokemon_impl> lock(*this);
 
         return _IVs;
     }
 
-    const std::map<pkmn::e_stat, int>& pokemon_impl::get_stats()
+    const std::map<pkmn::e_stat, int>& pokemon_impl::get_stats() const
     {
-        boost::lock_guard<pokemon_impl> lock(*this);
+        pkmn::lock_guard<pokemon_impl> lock(*this);
 
         return _stats;
     }
 
-    std::string pokemon_impl::get_icon_filepath()
+    std::string pokemon_impl::get_icon_filepath() const
     {
-        boost::lock_guard<pokemon_impl> lock(*this);
+        pkmn::lock_guard<pokemon_impl> lock(*this);
 
         return _database_entry.get_icon_filepath(
                     (get_gender() == pkmn::e_gender::FEMALE)
                );
     }
 
-    std::string pokemon_impl::get_sprite_filepath()
+    std::string pokemon_impl::get_sprite_filepath() const
     {
-        boost::lock_guard<pokemon_impl> lock(*this);
+        pkmn::lock_guard<pokemon_impl> lock(*this);
 
         return _database_entry.get_sprite_filepath(
                     (get_gender() == pkmn::e_gender::FEMALE),
@@ -300,16 +300,16 @@ namespace pkmn
                );
     }
 
-    void* pokemon_impl::get_native_pc_data()
+    const void* pokemon_impl::get_native_pc_data() const
     {
-        boost::lock_guard<pokemon_impl> lock(*this);
+        pkmn::lock_guard<pokemon_impl> lock(*this);
 
         return _p_native_pc;
     }
 
-    void* pokemon_impl::get_native_party_data()
+    const void* pokemon_impl::get_native_party_data() const
     {
-        boost::lock_guard<pokemon_impl> lock(*this);
+        pkmn::lock_guard<pokemon_impl> lock(*this);
 
         return _p_native_party;
     }
@@ -458,8 +458,8 @@ namespace pkmn
     // Shared setters
 
     int pokemon_impl::_get_pokerus_duration(
-        uint8_t* pokerus_ptr
-    )
+        const uint8_t* pokerus_ptr
+    ) const
     {
         uint8_t duration_from_pokerus = 0;
 

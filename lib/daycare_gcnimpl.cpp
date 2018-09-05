@@ -127,7 +127,7 @@ namespace pkmn {
         }
 
         GC_RCAST(_p_native)->pkm =
-            static_cast<LibPkmGC::GC::Pokemon*>(
+            static_cast<const LibPkmGC::GC::Pokemon*>(
                 new_pokemon->get_native_pc_data()
             )->clone();
         r_levelup_pokemon[0] = std::make_shared<pokemon_gcnimpl>(

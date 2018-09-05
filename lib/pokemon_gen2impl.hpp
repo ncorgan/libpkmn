@@ -52,63 +52,63 @@ namespace pkmn {
                 const std::string& form
             ) final;
 
-            bool is_egg() final;
+            bool is_egg() const final;
 
             void set_is_egg(
                 bool is_egg
             ) final;
 
-            pkmn::e_condition get_condition() final;
+            pkmn::e_condition get_condition() const final;
 
             void set_condition(
                 pkmn::e_condition condition
             ) final;
 
-            std::string get_nickname() final;
+            std::string get_nickname() const final;
 
             void set_nickname(
                 const std::string& nickname
             ) final;
 
-            pkmn::e_gender get_gender() final;
+            pkmn::e_gender get_gender() const final;
 
             void set_gender(
                 pkmn::e_gender gender
             ) final;
 
-            bool is_shiny() final;
+            bool is_shiny() const final;
 
             void set_shininess(
                 bool value
             ) final;
 
-            pkmn::e_item get_held_item() final;
+            pkmn::e_item get_held_item() const final;
 
             void set_held_item(
                 pkmn::e_item held_item
             ) final;
 
-            pkmn::e_nature get_nature() final;
+            pkmn::e_nature get_nature() const final;
 
             void set_nature(pkmn::e_nature) final;
 
-            int get_pokerus_duration() final;
+            int get_pokerus_duration() const final;
 
             void set_pokerus_duration(
                 int duration
             ) final;
 
-            std::string get_original_trainer_name() final;
+            std::string get_original_trainer_name() const final;
 
             void set_original_trainer_name(
                 const std::string& trainer_name
             ) final;
 
-            uint16_t get_original_trainer_public_id() final;
+            uint16_t get_original_trainer_public_id() const final;
 
-            uint16_t get_original_trainer_secret_id() final;
+            uint16_t get_original_trainer_secret_id() const final;
 
-            uint32_t get_original_trainer_id() final;
+            uint32_t get_original_trainer_id() const final;
 
             void set_original_trainer_public_id(
                 uint16_t public_id
@@ -122,35 +122,35 @@ namespace pkmn {
                 uint32_t id
             ) final;
 
-            pkmn::e_gender get_original_trainer_gender() final;
+            pkmn::e_gender get_original_trainer_gender() const final;
 
             void set_original_trainer_gender(
                 pkmn::e_gender gender
             ) final;
 
-            pkmn::e_language get_language() final;
+            pkmn::e_language get_language() const final;
 
             void set_language(
                 pkmn::e_language language
             ) final;
 
-            int get_current_trainer_friendship() final;
+            int get_current_trainer_friendship() const final;
 
             void set_current_trainer_friendship(
                 int friendship
             ) final;
 
-            pkmn::e_ability get_ability() final;
+            pkmn::e_ability get_ability() const final;
 
             void set_ability(pkmn::e_ability) final;
 
-            pkmn::e_ball get_ball() final;
+            pkmn::e_ball get_ball() const final;
 
             void set_ball(
                 pkmn::e_ball ball
             ) final;
 
-            int get_level_met() final;
+            int get_level_met() const final;
 
             void set_level_met(
                 int level
@@ -158,30 +158,30 @@ namespace pkmn {
 
             std::string get_location_met(
                 bool as_egg
-            ) final;
+            ) const final;
 
             void set_location_met(
                 const std::string& location,
                 bool as_egg
             ) final;
 
-            pkmn::e_game get_original_game() final;
+            pkmn::e_game get_original_game() const final;
 
             void set_original_game(pkmn::e_game) final;
 
-            uint32_t get_personality() final;
+            uint32_t get_personality() const final;
 
             void set_personality(
                 uint32_t personality
             ) final;
 
-            int get_experience() final;
+            int get_experience() const final;
 
             void set_experience(
                 int experience
             ) final;
 
-            int get_level() final;
+            int get_level() const final;
 
             void set_level(
                 int level
@@ -216,7 +216,7 @@ namespace pkmn {
                 int value
             ) final;
 
-            int get_current_hp() final;
+            int get_current_hp() const final;
 
             void set_current_hp(
                 int hp

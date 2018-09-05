@@ -98,7 +98,7 @@ namespace pkmn {
         // Note: as we control the implementation, we know the PC data points
         // to the whole Pokémon data structure.
         _libpkmgc_pokemon_uptrs[index].reset(
-            static_cast<LibPkmGC::GC::Pokemon*>(
+            static_cast<const LibPkmGC::GC::Pokemon*>(
                 new_pokemon->get_native_pc_data()
             )->clone()
         );
@@ -156,7 +156,7 @@ namespace pkmn {
             ++party_index)
         {
             _libpkmgc_pokemon_uptrs[party_index].reset(
-                static_cast<LibPkmGC::GC::Pokemon*>(
+                static_cast<const LibPkmGC::GC::Pokemon*>(
                     _pokemon_list[party_index]->get_native_pc_data()
                 )->clone()
             );

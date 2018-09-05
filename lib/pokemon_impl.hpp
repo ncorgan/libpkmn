@@ -40,35 +40,35 @@ namespace pkmn {
 
             virtual ~pokemon_impl() {}
 
-            pkmn::e_species get_species() final;
+            pkmn::e_species get_species() const final;
 
-            std::string get_form() final;
+            std::string get_form() const final;
 
-            pkmn::e_game get_game() final;
+            pkmn::e_game get_game() const final;
 
-            const pkmn::database::pokemon_entry& get_database_entry() final;
+            const pkmn::database::pokemon_entry& get_database_entry() const final;
 
-            const std::map<pkmn::e_marking, bool>& get_markings() final;
+            const std::map<pkmn::e_marking, bool>& get_markings() const final;
 
-            const std::map<std::string, bool>& get_ribbons() final;
+            const std::map<std::string, bool>& get_ribbons() const final;
 
-            const std::map<pkmn::e_contest_stat, int>& get_contest_stats() final;
+            const std::map<pkmn::e_contest_stat, int>& get_contest_stats() const final;
 
-            const pkmn::move_slots_t& get_moves() final;
+            const pkmn::move_slots_t& get_moves() const final;
 
-            const std::map<pkmn::e_stat, int>& get_EVs() final;
+            const std::map<pkmn::e_stat, int>& get_EVs() const final;
 
-            const std::map<pkmn::e_stat, int>& get_IVs() final;
+            const std::map<pkmn::e_stat, int>& get_IVs() const final;
 
-            const std::map<pkmn::e_stat, int>& get_stats() final;
+            const std::map<pkmn::e_stat, int>& get_stats() const final;
 
-            virtual std::string get_icon_filepath() override;
+            virtual std::string get_icon_filepath() const override;
 
-            virtual std::string get_sprite_filepath() override;
+            virtual std::string get_sprite_filepath() const override;
 
-            virtual void* get_native_pc_data() override;
+            const virtual void* get_native_pc_data() const override;
 
-            void* get_native_party_data() final;
+            const void* get_native_party_data() const final;
 
             // Make the box implementations friend classes so they can access the internals.
             friend class pokemon_box_impl;
@@ -146,8 +146,8 @@ namespace pkmn {
             // Shared setters
 
             int _get_pokerus_duration(
-                uint8_t* pokerus_ptr
-            );
+                const uint8_t* pokerus_ptr
+            ) const;
 
             void _set_pokerus_duration(
                 uint8_t* pokerus_ptr,
