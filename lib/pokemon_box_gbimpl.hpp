@@ -16,14 +16,12 @@
     template \
     <typename list_type, \
      typename pksav_pc_pokemon_type, \
-     typename pksav_pokemon_party_data_type, \
      typename libpkmn_pokemon_type>
 
 #define POKEMON_BOX_GBIMPL_CLASS \
     pokemon_box_gbimpl< \
         list_type, \
         pksav_pc_pokemon_type, \
-        pksav_pokemon_party_data_type, \
         libpkmn_pokemon_type>
 
 namespace pkmn {
@@ -72,14 +70,12 @@ namespace pkmn {
     typedef pokemon_box_gbimpl<
                 struct pksav_gen1_pokemon_box,
                 struct pksav_gen1_pc_pokemon,
-                struct pksav_gen1_pokemon_party_data,
                 pokemon_gen1impl> pokemon_box_gen1impl;
 
     // Generation II
     typedef pokemon_box_gbimpl<
                 struct pksav_gen2_pokemon_box,
                 struct pksav_gen2_pc_pokemon,
-                struct pksav_gen2_pokemon_party_data,
                 pokemon_gen2impl> pokemon_box_gen2impl;
 }
 

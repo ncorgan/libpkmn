@@ -189,9 +189,7 @@ namespace pkmn {
         BOOST_ASSERT(p_new_pokemon != nullptr);
         boost::lock_guard<pokemon_gen2impl> new_pokemon_lock(*p_new_pokemon);
 
-        // Copy the underlying memory to the box. At the end of this process,
-        // all existing variables will correspond to the same Pokémon, even if
-        // their underlying memory has changed.
+        // Copy the underlying memory.
         //
         // Note: as we control the implementation, we know the PC data points
         // to the whole Pokémon data structure.
@@ -200,7 +198,7 @@ namespace pkmn {
                             : &NATIVE_RCAST(_p_native)->stored_pokemon2_data.pokemon;
 
         rcast_equal<struct pksav_gen2_pc_pokemon>(
-            new_pokemon->get_native_pc_data(),
+            new_pokemon->get_native(),
             p_native_pokemon
         );
         r_levelup_pokemon[position] = std::make_shared<pokemon_gen2impl>(

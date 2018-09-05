@@ -223,6 +223,8 @@ namespace pkmn {
                 int hp
             ) final;
 
+            const void* get_native() const final;
+
             // Functions for attributes
 
             bool get_is_obedient() const;

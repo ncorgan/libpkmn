@@ -107,11 +107,6 @@ namespace pkmn
         int max_index = get_capacity();
         pkmn::enforce_bounds("Box index", index, 0, max_index);
 
-        if(_pokemon_list.at(index)->get_native_pc_data() == new_pokemon->get_native_pc_data())
-        {
-            throw std::invalid_argument("Cannot set a Pokémon to itself.");
-        }
-
         boost::lock_guard<pokemon_box_gcnimpl> lock(*this);
 
         // Make sure no one else is using the new Pokémon variable.
@@ -131,7 +126,7 @@ namespace pkmn
 
         _libpkmgc_box_uptr->pkm[index] =
             static_cast<const LibPkmGC::GC::Pokemon*>(
-                new_pokemon->get_native_pc_data()
+                new_pokemon->get_native()
             )->clone();
         _pokemon_list[index] = std::make_shared<pokemon_gcnimpl>(
                                    dynamic_cast<LibPkmGC::GC::Pokemon*>(
@@ -172,14 +167,14 @@ namespace pkmn
             if(_game_id == COLOSSEUM_ID)
             {
                 pkmn::rcast_equal<LibPkmGC::Colosseum::Pokemon>(
-                    _pokemon_list[pokemon_index]->get_native_pc_data(),
+                    _pokemon_list[pokemon_index]->get_native(),
                     _libpkmgc_box_uptr->pkm[pokemon_index]
                 );
             }
             else
             {
                 pkmn::rcast_equal<LibPkmGC::XD::Pokemon>(
-                    _pokemon_list[pokemon_index]->get_native_pc_data(),
+                    _pokemon_list[pokemon_index]->get_native(),
                     _libpkmgc_box_uptr->pkm[pokemon_index]
                 );
             }

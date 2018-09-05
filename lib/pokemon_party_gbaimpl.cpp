@@ -79,11 +79,8 @@ namespace pkmn {
         // Copy the underlying memory to the party. At the end of this process,
         // all existing variables will correspond to the same Pokémon, even if
         // their underlying memory has changed.
-        //
-        // Note: as we control the implementation, we know the PC data points
-        // to the whole Pokémon data structure.
         rcast_equal<struct pksav_gba_party_pokemon>(
-            new_pokemon->get_native_pc_data(),
+            new_pokemon->get_native(),
             &_pksav_party.party[index]
         );
         _pokemon_list[index] = std::make_shared<pokemon_gbaimpl>(
@@ -158,10 +155,8 @@ namespace pkmn {
             party_index < _pokemon_list.size();
             ++party_index)
         {
-            // As we control the implementation, we know the PC data pointer
-            // points to the whole structure.
             pkmn::rcast_equal<struct pksav_gba_party_pokemon>(
-                _pokemon_list[party_index]->get_native_pc_data(),
+                _pokemon_list[party_index]->get_native(),
                 &_pksav_party.party[party_index]
             );
         }

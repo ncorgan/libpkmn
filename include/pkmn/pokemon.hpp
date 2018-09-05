@@ -277,8 +277,7 @@ namespace pkmn {
             #ifndef __DOXYGEN__
             pokemon(): class_with_attributes() {}
             virtual ~pokemon () {}
-            const virtual void* get_native_pc_data() const = 0;
-            const virtual void* get_native_party_data() const = 0;
+            const virtual void* get_native() const = 0;
             #endif
     };
 

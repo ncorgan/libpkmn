@@ -220,6 +220,8 @@ namespace pkmn {
 
             std::string get_sprite_filepath() const final;
 
+            const void* get_native() const final;
+
             // Functions for attributes
 
             int get_catch_rate() const;

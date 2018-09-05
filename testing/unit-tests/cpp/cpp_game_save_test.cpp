@@ -757,17 +757,11 @@ namespace pkmntest {
     };
 
     // TODO: specific case for Gamecube games
-    BOOST_STATIC_CONSTEXPR size_t pksav_pc_pokemon_sizes[] = {
+    BOOST_STATIC_CONSTEXPR size_t pksav_pokemon_sizes[] = {
         0,
-        sizeof(struct pksav_gen1_pc_pokemon),
-        sizeof(struct pksav_gen2_pc_pokemon),
-        sizeof(struct pksav_gba_pc_pokemon)
-    };
-    BOOST_STATIC_CONSTEXPR size_t pksav_pokemon_party_data_sizes[] = {
-        0,
-        sizeof(struct pksav_gen1_pokemon_party_data),
-        sizeof(struct pksav_gen2_pokemon_party_data),
-        sizeof(struct pksav_gba_pokemon_party_data)
+        sizeof(struct pksav_gen1_party_pokemon),
+        sizeof(struct pksav_gen2_party_pokemon),
+        sizeof(struct pksav_gba_party_pokemon)
     };
 
     static void compare_item_lists(
@@ -817,8 +811,8 @@ namespace pkmntest {
         if((pokemon1->get_game() == pkmn::e_game::COLOSSEUM) ||
            (pokemon1->get_game() == pkmn::e_game::XD))
         {
-            const LibPkmGC::GC::Pokemon* native1 = reinterpret_cast<const LibPkmGC::GC::Pokemon*>(pokemon1->get_native_pc_data());
-            const LibPkmGC::GC::Pokemon* native2 = reinterpret_cast<const LibPkmGC::GC::Pokemon*>(pokemon2->get_native_pc_data());
+            const LibPkmGC::GC::Pokemon* native1 = reinterpret_cast<const LibPkmGC::GC::Pokemon*>(pokemon1->get_native());
+            const LibPkmGC::GC::Pokemon* native2 = reinterpret_cast<const LibPkmGC::GC::Pokemon*>(pokemon2->get_native());
 
             EXPECT_EQ(native1->species, native2->species);
             EXPECT_EQ(native1->SID, native2->SID);
@@ -860,17 +854,9 @@ namespace pkmntest {
             EXPECT_EQ(
                 0,
                 memcmp(
-                    pokemon1->get_native_pc_data(),
-                    pokemon2->get_native_pc_data(),
-                    pksav_pc_pokemon_sizes[generation]
-                )
-            );
-            EXPECT_EQ(
-                0,
-                memcmp(
-                    pokemon1->get_native_party_data(),
-                    pokemon2->get_native_party_data(),
-                    pksav_pokemon_party_data_sizes[generation]
+                    pokemon1->get_native(),
+                    pokemon2->get_native(),
+                    pksav_pokemon_sizes[generation]
                 )
             );
         }

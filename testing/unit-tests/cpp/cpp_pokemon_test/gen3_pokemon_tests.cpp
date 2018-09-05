@@ -204,9 +204,9 @@ TEST_P(gba_pokemon_test, gba_pokemon_test) {
      * On the C++ level, check the underlying representation and make
      * sure our abstractions match.
      */
-    const struct pksav_gba_pc_pokemon* native_pc_data = reinterpret_cast<const struct pksav_gba_pc_pokemon*>(
-                                                            pokemon->get_native_pc_data()
-                                                        );
+    const struct pksav_gba_pc_pokemon* native_pc_data = &reinterpret_cast<const struct pksav_gba_party_pokemon*>(
+                                                             pokemon->get_native()
+                                                         )->pc_data;
     const struct pksav_gba_pokemon_growth_block* growth = &native_pc_data->blocks.growth;
     const struct pksav_gba_pokemon_attacks_block* attacks = &native_pc_data->blocks.attacks;
     const struct pksav_gba_pokemon_effort_block* effort = &native_pc_data->blocks.effort;
@@ -322,9 +322,9 @@ TEST_P(gba_pokemon_test, gba_pokemon_test) {
     /*
      * Party data
      */
-    const struct pksav_gba_pokemon_party_data* native_party_data = reinterpret_cast<const struct pksav_gba_pokemon_party_data*>(
-                                                                       pokemon->get_native_party_data()
-                                                                   );
+    const struct pksav_gba_pokemon_party_data* native_party_data = &reinterpret_cast<const struct pksav_gba_party_pokemon*>(
+                                                                        pokemon->get_native()
+                                                                    )->party_data;
     EXPECT_EQ(
         uint8_t(CONDITION_MASK_BIMAP.left.at(pokemon->get_condition())),
         native_party_data->condition
@@ -437,9 +437,8 @@ TEST_P(gcn_pokemon_test, gcn_pokemon_test) {
      * On the C++ level, check the underlying representation and make
      * sure our abstractions match.
      */
-    const LibPkmGC::GC::Pokemon* native = reinterpret_cast<const LibPkmGC::GC::Pokemon*>(pokemon->get_native_pc_data());
+    const LibPkmGC::GC::Pokemon* native = reinterpret_cast<const LibPkmGC::GC::Pokemon*>(pokemon->get_native());
     ASSERT_NE(nullptr, native);
-    ASSERT_EQ(nullptr, pokemon->get_native_party_data());
 
     EXPECT_EQ(pokemon->get_database_entry().get_pokemon_index(), int(native->species));
     EXPECT_EQ(
@@ -644,7 +643,7 @@ TEST_P(gcn_pokemon_test, gcn_pokemon_test) {
                                              50
                                          );
     const LibPkmGC::GC::Pokemon* native_shadow_pokemon = reinterpret_cast<const LibPkmGC::GC::Pokemon*>(
-                                                             shadow_pokemon->get_native_pc_data()
+                                                             shadow_pokemon->get_native()
                                                          );
     EXPECT_EQ("Standard", shadow_pokemon->get_form());
     EXPECT_EQ(0, native_shadow_pokemon->shadowPkmID);

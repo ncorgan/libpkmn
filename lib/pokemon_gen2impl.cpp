@@ -112,9 +112,6 @@ namespace pkmn
         _init_gb_IV_map(&_pksav_pokemon.pc_data.iv_data);
         set_level(level);
         _init_default_moves_for_level();
-
-        _p_native_pc = &_pksav_pokemon.pc_data;
-        _p_native_party = &_pksav_pokemon.party_data;
     }
 
     pokemon_gen2impl::pokemon_gen2impl(
@@ -127,9 +124,6 @@ namespace pkmn
 
         _pksav_pokemon.pc_data = *p_pc_pokemon;
         _populate_party_data();
-
-        _p_native_pc = &_pksav_pokemon.pc_data;
-        _p_native_party = &_pksav_pokemon.party_data;
 
         // Populate abstractions
         _update_EV_map();
@@ -159,9 +153,6 @@ namespace pkmn
         BOOST_ASSERT(p_party_pokemon != nullptr);
 
         _pksav_pokemon = *p_party_pokemon;
-
-        _p_native_pc = &_pksav_pokemon.pc_data;
-        _p_native_party = &_pksav_pokemon.party_data;
 
         // Populate abstractions
         _update_EV_map();
@@ -229,7 +220,7 @@ namespace pkmn
 
             pkmn::io::write_file(
                 filepath,
-                get_native_pc_data(),
+                get_native(),
                 sizeof(struct pksav_gen2_pc_pokemon)
             );
         }
@@ -949,6 +940,13 @@ namespace pkmn
         pkmn::lock_guard<pokemon_gen2impl> lock(*this);
 
         _pksav_pokemon.party_data.current_hp = pksav_bigendian16(static_cast<uint16_t>(hp));
+    }
+
+    const void* pokemon_gen2impl::get_native() const
+    {
+        pkmn::lock_guard<pokemon_gen2impl> lock(*this);
+
+        return &_pksav_pokemon;
     }
 
     void pokemon_gen2impl::_populate_party_data()

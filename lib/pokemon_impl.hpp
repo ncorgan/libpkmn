@@ -66,10 +66,6 @@ namespace pkmn {
 
             virtual std::string get_sprite_filepath() const override;
 
-            const virtual void* get_native_pc_data() const override;
-
-            const void* get_native_party_data() const final;
-
             // Make the box implementations friend classes so they can access the internals.
             friend class pokemon_box_impl;
             friend class pokemon_box_gbaimpl;
@@ -78,7 +74,6 @@ namespace pkmn {
             template
             <typename list_type,
              typename pksav_pc_pokemon_type,
-             typename pksav_pokemon_party_data_type,
              typename libpkmn_pokemon_type>
             friend class pokemon_box_gbimpl;
 
@@ -113,9 +108,6 @@ namespace pkmn {
             pkmn::database::pokemon_entry _database_entry;
 
             int _generation;
-
-            void* _p_native_pc;
-            void* _p_native_party;
 
             virtual void _populate_party_data() = 0;
 

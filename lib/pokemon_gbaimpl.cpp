@@ -80,9 +80,6 @@ namespace pkmn
         _p_effort_block  = &_pksav_pokemon.pc_data.blocks.effort;
         _p_misc_block    = &_pksav_pokemon.pc_data.blocks.misc;
 
-        _p_native_pc    = &_pksav_pokemon.pc_data;
-        _p_native_party = &_pksav_pokemon.party_data;
-
         pkmn::rng<uint32_t> rng;
         _pksav_pokemon.pc_data.personality = rng.rand();
         _pksav_pokemon.pc_data.ot_id.id = pksav_littleendian32(DEFAULT_TRAINER_ID);
@@ -178,9 +175,6 @@ namespace pkmn
         _p_effort_block  = &_pksav_pokemon.pc_data.blocks.effort;
         _p_misc_block    = &_pksav_pokemon.pc_data.blocks.misc;
 
-        _p_native_pc    = &_pksav_pokemon.pc_data;
-        _p_native_party = &_pksav_pokemon.party_data;
-
         // Populate abstractions
         _update_ribbons_map();
         _update_EV_map();
@@ -215,9 +209,6 @@ namespace pkmn
         _p_attacks_block = &_pksav_pokemon.pc_data.blocks.attacks;
         _p_effort_block  = &_pksav_pokemon.pc_data.blocks.effort;
         _p_misc_block    = &_pksav_pokemon.pc_data.blocks.misc;
-
-        _p_native_pc    = &_pksav_pokemon.pc_data;
-        _p_native_party = &_pksav_pokemon.party_data;
 
         // Populate abstractions
         _update_ribbons_map();
@@ -305,7 +296,7 @@ namespace pkmn
 
             pkmn::io::write_file(
                 filepath,
-                get_native_pc_data(),
+                get_native(),
                 sizeof(struct pksav_gba_pc_pokemon)
             );
         }
@@ -1242,7 +1233,7 @@ namespace pkmn
         return ret;
     }
 
-    const void* pokemon_gbaimpl::get_native_pc_data() const
+    const void* pokemon_gbaimpl::get_native() const
     {
         pkmn::lock_guard<pokemon_gbaimpl> lock(*this);
 
@@ -1250,7 +1241,7 @@ namespace pkmn
             &_pksav_pokemon.pc_data
         );
 
-        return _p_native_pc;
+        return &_pksav_pokemon;
     }
 
     bool pokemon_gbaimpl::get_is_obedient() const

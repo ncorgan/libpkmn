@@ -179,8 +179,8 @@ TEST_P(pokemon_party_test, setting_pokemon_test) {
     EXPECT_EQ(pkmn::e_species::SQUIRTLE, squirtle->get_species());
 
     // On the C++ level, make sure the expected equal pointers are equal.
-    EXPECT_NE(original_first->get_native_pc_data(), party->get_pokemon(0)->get_native_pc_data());
-    EXPECT_NE(original_second->get_native_pc_data(), party->get_pokemon(1)->get_native_pc_data());
+    EXPECT_NE(original_first->get_native(), party->get_pokemon(0)->get_native());
+    EXPECT_NE(original_second->get_native(), party->get_pokemon(1)->get_native());
 
     // On the C++ level, check the underlying representation.
     switch(generation) {

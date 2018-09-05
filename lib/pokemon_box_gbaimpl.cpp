@@ -154,11 +154,6 @@ namespace pkmn {
         int max_index = get_capacity();
         pkmn::enforce_bounds("Box index", index, 0, max_index);
 
-        if(_pokemon_list.at(index)->get_native_pc_data() == new_pokemon->get_native_pc_data())
-        {
-            throw std::invalid_argument("Cannot set a Pokémon to itself.");
-        }
-
         boost::lock_guard<pokemon_box_gbaimpl> lock(*this);
 
         // Make sure no one else is using the new Pokémon variable.
@@ -171,11 +166,8 @@ namespace pkmn {
         // Copy the underlying memory to the party. At the end of this process,
         // all existing variables will correspond to the same Pokémon, even if
         // their underlying memory has changed.
-        //
-        // Note: as we control the implementation, we know the PC data points
-        // to the whole Pokémon data structure.
         rcast_equal<struct pksav_gba_pc_pokemon>(
-            new_pokemon->get_native_pc_data(),
+            new_pokemon->get_native(),
             &_pksav_box.entries[index]
         );
         _pokemon_list[index] = std::make_shared<pokemon_gbaimpl>(
@@ -222,7 +214,7 @@ namespace pkmn {
             ++pokemon_index)
         {
             pkmn::rcast_equal<struct pksav_gba_pc_pokemon>(
-                _pokemon_list[pokemon_index]->get_native_pc_data(),
+                _pokemon_list[pokemon_index]->get_native(),
                 &_pksav_box.entries[pokemon_index]
             );
         }

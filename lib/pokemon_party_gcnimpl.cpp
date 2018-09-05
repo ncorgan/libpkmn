@@ -94,12 +94,9 @@ namespace pkmn {
         // Copy the underlying memory to the party. At the end of this process,
         // all existing variables will correspond to the same Pokémon, even if
         // their underlying memory has changed.
-        //
-        // Note: as we control the implementation, we know the PC data points
-        // to the whole Pokémon data structure.
         _libpkmgc_pokemon_uptrs[index].reset(
             static_cast<const LibPkmGC::GC::Pokemon*>(
-                new_pokemon->get_native_pc_data()
+                new_pokemon->get_native()
             )->clone()
         );
         _pokemon_list[index] = std::make_shared<pokemon_gcnimpl>(
@@ -157,7 +154,7 @@ namespace pkmn {
         {
             _libpkmgc_pokemon_uptrs[party_index].reset(
                 static_cast<const LibPkmGC::GC::Pokemon*>(
-                    _pokemon_list[party_index]->get_native_pc_data()
+                    _pokemon_list[party_index]->get_native()
                 )->clone()
             );
         }

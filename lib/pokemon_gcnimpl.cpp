@@ -163,9 +163,6 @@ namespace pkmn
         }
 
         _register_attributes();
-
-        _p_native_pc = _libpkmgc_pokemon_uptr.get();
-        _p_native_party = nullptr;
     }
 
     pokemon_gcnimpl::pokemon_gcnimpl(
@@ -193,9 +190,6 @@ namespace pkmn
         }
 
         _register_attributes();
-
-        _p_native_pc = _libpkmgc_pokemon_uptr.get();
-        _p_native_party = nullptr;
     }
 
     pokemon::sptr pokemon_gcnimpl::to_game(pkmn::e_game game)
@@ -1219,6 +1213,13 @@ namespace pkmn
         pkmn::lock_guard<pokemon_gcnimpl> lock(*this);
 
         _libpkmgc_pokemon_uptr->partyData.currentHP = static_cast<LibPkmGC::u16>(hp);
+    }
+
+    const void* pokemon_gcnimpl::get_native() const
+    {
+        pkmn::lock_guard<pokemon_gcnimpl> lock(*this);
+
+        return _libpkmgc_pokemon_uptr.get();
     }
 
     bool pokemon_gcnimpl::get_is_obedient() const

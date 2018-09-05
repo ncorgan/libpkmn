@@ -222,6 +222,8 @@ namespace pkmn {
                 int hp
             ) final;
 
+            const void* get_native() const final;
+
         private:
             void _populate_party_data() final;
 

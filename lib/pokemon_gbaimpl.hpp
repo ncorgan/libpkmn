@@ -226,7 +226,7 @@ namespace pkmn {
 
             std::string get_sprite_filepath() const final;
 
-            const void* get_native_pc_data() const final;
+            const void* get_native() const final;
 
             // Functions for attributes
 

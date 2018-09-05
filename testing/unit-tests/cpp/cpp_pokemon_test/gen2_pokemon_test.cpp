@@ -86,9 +86,9 @@ TEST_P(gen2_pokemon_test, gen2_pokemon_test) {
     pkmn::e_gender trainer_gender_before_change = pokemon->get_original_trainer_gender();
     int level_met_before_change = pokemon->get_level_met();
 
-    const struct pksav_gen2_pc_pokemon* native_pc = reinterpret_cast<const struct pksav_gen2_pc_pokemon*>(
-                                                        pokemon->get_native_pc_data()
-                                                    );
+    const struct pksav_gen2_pc_pokemon* native_pc = &reinterpret_cast<const struct pksav_gen2_party_pokemon*>(
+                                                         pokemon->get_native()
+                                                     )->pc_data;
     uint16_t time_caught_before_change = (native_pc->caught_data & PKSAV_GEN2_TIME_OF_DAY_MASK);
     time_caught_before_change >>= PKSAV_GEN2_TIME_OF_DAY_OFFSET;
 
@@ -133,9 +133,9 @@ TEST_P(gen2_pokemon_test, gen2_pokemon_test) {
      * On the C++ level, check the underlying PKSav struct and make
      * sure our abstractions match.
      */
-    const struct pksav_gen2_pokemon_party_data* native_party_data = reinterpret_cast<const struct pksav_gen2_pokemon_party_data*>(
-                                                                        pokemon->get_native_party_data()
-                                                                    );
+    const struct pksav_gen2_pokemon_party_data* native_party_data = &reinterpret_cast<const struct pksav_gen2_party_pokemon*>(
+                                                                         pokemon->get_native()
+                                                                     )->party_data;
 
     EXPECT_EQ(native_pc->species, uint8_t(pokemon->get_database_entry().get_pokemon_index()));
     EXPECT_EQ(

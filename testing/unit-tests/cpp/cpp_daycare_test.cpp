@@ -145,8 +145,8 @@ TEST_P(daycare_test, test_setting_pokemon)
         levelup_pokemon[0]->get_species()
     );
     ASSERT_NE(
-        venusaur->get_native_pc_data(),
-        levelup_pokemon[0]->get_native_pc_data()
+        venusaur->get_native(),
+        levelup_pokemon[0]->get_native()
     );
 
     if(daycare->get_levelup_pokemon_capacity() == 2)
@@ -164,8 +164,8 @@ TEST_P(daycare_test, test_setting_pokemon)
             levelup_pokemon[1]->get_species()
         );
         ASSERT_NE(
-            charizard->get_native_pc_data(),
-            levelup_pokemon[1]->get_native_pc_data()
+            charizard->get_native(),
+            levelup_pokemon[1]->get_native()
         );
     }
 
@@ -212,8 +212,8 @@ TEST_P(daycare_test, test_setting_pokemon)
             blastoise->get_species()
         );
         ASSERT_NE(
-            blastoise->get_native_pc_data(),
-            breeding_pokemon[0]->get_native_pc_data()
+            blastoise->get_native(),
+            breeding_pokemon[0]->get_native()
         );
         breeding_pokemon[0]->set_gender(pkmn::e_gender::FEMALE);
 
@@ -229,8 +229,8 @@ TEST_P(daycare_test, test_setting_pokemon)
             marowak->get_species()
         );
         ASSERT_NE(
-            marowak->get_native_pc_data(),
-            breeding_pokemon[1]->get_native_pc_data()
+            marowak->get_native(),
+            breeding_pokemon[1]->get_native()
         );
         breeding_pokemon[1]->set_gender(pkmn::e_gender::MALE);
 

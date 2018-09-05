@@ -54,12 +54,12 @@ TEST_P(gen1_pokemon_test, gen1_pokemon_test)
      * On the C++ level, check the underlying PKSav struct and make
      * sure our abstractions match.
      */
-    const struct pksav_gen1_pc_pokemon* native_pc = reinterpret_cast<const struct pksav_gen1_pc_pokemon*>(
-                                                        pokemon->get_native_pc_data()
-                                                    );
-    const struct pksav_gen1_pokemon_party_data* native_party_data = reinterpret_cast<const struct pksav_gen1_pokemon_party_data*>(
-                                                                        pokemon->get_native_party_data()
-                                                                    );
+    const struct pksav_gen1_pc_pokemon* native_pc = &reinterpret_cast<const struct pksav_gen1_party_pokemon*>(
+                                                         pokemon->get_native()
+                                                     )->pc_data;
+    const struct pksav_gen1_pokemon_party_data* native_party_data = &reinterpret_cast<const struct pksav_gen1_party_pokemon*>(
+                                                                         pokemon->get_native()
+                                                                     )->party_data;
     static const pksav::gb_condition_bimap_t& GB_CONDITION_BIMAP = pksav::get_gb_condition_bimap();
 
 
