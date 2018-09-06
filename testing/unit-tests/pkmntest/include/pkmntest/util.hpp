@@ -78,6 +78,24 @@ static const std::vector<pkmn::e_game> GEN6_GAMES =
     pkmn::e_game::ALPHA_SAPPHIRE,
 };
 
+// Games with a full pokemon subclass
+static const std::vector<pkmn::e_game> SUPPORTED_GAMES =
+{
+    pkmn::e_game::RED,
+    pkmn::e_game::BLUE,
+    pkmn::e_game::YELLOW,
+    pkmn::e_game::GOLD,
+    pkmn::e_game::SILVER,
+    pkmn::e_game::CRYSTAL,
+    pkmn::e_game::RUBY,
+    pkmn::e_game::SAPPHIRE,
+    pkmn::e_game::EMERALD,
+    pkmn::e_game::FIRERED,
+    pkmn::e_game::LEAFGREEN,
+    pkmn::e_game::COLOSSEUM,
+    pkmn::e_game::XD,
+};
+
 static const std::vector<pkmn::e_game> ALL_GAMES =
 {
     pkmn::e_game::RED,
