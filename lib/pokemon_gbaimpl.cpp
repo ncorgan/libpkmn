@@ -127,7 +127,7 @@ namespace pkmn
         }
 
         // Only do this by default for Mew or Deoxys, who won't obey without
-        // this flag. For any others, this will cause them to falsely be
+        // this flag. For any rhss, this will cause them to falsely be
         // flagged as a fateful encounter if traded up to Generation IV.
         if((_database_entry.get_species_id() == MEW_ID) or
            (_database_entry.get_species_id() == DEOXYS_ID))
@@ -225,6 +225,40 @@ namespace pkmn
         }
 
         _register_attributes();
+    }
+
+    // We must make our own constructor, since some members are pointers
+    // to members of the PKSav struct.
+    pokemon_gbaimpl::pokemon_gbaimpl(const pokemon_gbaimpl& rhs):
+        pokemon_impl(rhs)
+    {
+        pkmn::lock_guard<pokemon_gbaimpl> rhs_lock(*this);
+
+        _pksav_pokemon  = rhs._pksav_pokemon;
+        _p_growth_block  = &_pksav_pokemon.pc_data.blocks.growth;
+        _p_attacks_block = &_pksav_pokemon.pc_data.blocks.attacks;
+        _p_effort_block  = &_pksav_pokemon.pc_data.blocks.effort;
+        _p_misc_block    = &_pksav_pokemon.pc_data.blocks.misc;
+    }
+
+    pokemon_gbaimpl& pokemon_gbaimpl::operator=(const pokemon_gbaimpl& rhs)
+    {
+        pkmn::lock_guard<pokemon_gbaimpl> rhs_lock(*this);
+
+        _pksav_pokemon   = rhs._pksav_pokemon;
+        _p_growth_block  = &_pksav_pokemon.pc_data.blocks.growth;
+        _p_attacks_block = &_pksav_pokemon.pc_data.blocks.attacks;
+        _p_effort_block  = &_pksav_pokemon.pc_data.blocks.effort;
+        _p_misc_block    = &_pksav_pokemon.pc_data.blocks.misc;
+
+        return *this;
+    }
+
+    pokemon::sptr pokemon_gbaimpl::clone() const
+    {
+        pkmn::lock_guard<pokemon_gbaimpl> lock(*this);
+
+        return std::make_shared<pokemon_gbaimpl>(*this);
     }
 
     pokemon::sptr pokemon_gbaimpl::to_game(pkmn::e_game game)

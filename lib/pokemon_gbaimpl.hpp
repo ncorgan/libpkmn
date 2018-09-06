@@ -13,9 +13,9 @@
 
 namespace pkmn {
 
-    class pokemon_gbaimpl: public pokemon_impl {
+    class pokemon_gbaimpl: public pokemon_impl
+    {
         public:
-            pokemon_gbaimpl() {}
             pokemon_gbaimpl(
                 pkmn::database::pokemon_entry&& database_entry,
                 int level
@@ -29,14 +29,15 @@ namespace pkmn {
                 int game_id
             );
 
-            // TODO
-            pokemon_gbaimpl(const pokemon_gbaimpl&) = delete;
-            pokemon_gbaimpl(pokemon_gbaimpl&&) = delete;
+            pokemon_gbaimpl(const pokemon_gbaimpl&);
+            pokemon_gbaimpl(pokemon_gbaimpl&&) = default;
 
-            pokemon_gbaimpl& operator=(const pokemon_gbaimpl&) = delete;
-            pokemon_gbaimpl& operator=(pokemon_gbaimpl&&) = delete;
+            pokemon_gbaimpl& operator=(const pokemon_gbaimpl&);
+            pokemon_gbaimpl& operator=(pokemon_gbaimpl&&) = default;
 
             ~pokemon_gbaimpl() = default;
+
+            pokemon::sptr clone() const final;
 
             pokemon::sptr to_game(pkmn::e_game game) final;
 

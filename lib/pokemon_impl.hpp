@@ -29,7 +29,6 @@ namespace pkmn {
                         public boost::basic_lockable_adapter<boost::recursive_mutex>
     {
         public:
-            pokemon_impl() {}
             pokemon_impl(
                 int pokemon_index,
                 int game_id
@@ -38,7 +37,13 @@ namespace pkmn {
                 pkmn::database::pokemon_entry&& database_entry
             );
 
-            virtual ~pokemon_impl() {}
+            pokemon_impl(const pokemon_impl&);
+            pokemon_impl(pokemon_impl&&) = default;
+
+            pokemon_impl& operator=(const pokemon_impl&);
+            pokemon_impl& operator=(pokemon_impl&&) = default;
+
+            virtual ~pokemon_impl() = default;
 
             pkmn::e_species get_species() const final;
 

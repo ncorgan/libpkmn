@@ -20,10 +20,14 @@ namespace pkmn {
     class class_with_attributes
     {
         public:
-            #ifndef __DOXYGEN__
-            class_with_attributes() {}
-            ~class_with_attributes () {}
-            #endif
+            class_with_attributes() = default;
+            ~class_with_attributes() = default;
+
+            class_with_attributes(const class_with_attributes&) = delete;
+            class_with_attributes(class_with_attributes&&) = default;
+
+            class_with_attributes& operator=(const class_with_attributes&) = delete;
+            class_with_attributes& operator=(class_with_attributes&&) = default;
 
             /*!
              * @brief Query the numeric attribute with the given name.

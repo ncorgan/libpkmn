@@ -17,9 +17,9 @@ namespace pkmn {
 
     BOOST_STATIC_CONSTEXPR uint8_t GEN2_EGG_ID = 0xFD;
 
-    class pokemon_gen2impl: public pokemon_impl {
+    class pokemon_gen2impl: public pokemon_impl
+    {
         public:
-            pokemon_gen2impl() {}
             pokemon_gen2impl(
                 pkmn::database::pokemon_entry&& database_entry,
                 int level
@@ -33,14 +33,15 @@ namespace pkmn {
                 int game_id
             );
 
-            // TODO
-            pokemon_gen2impl(const pokemon_gen2impl&) = delete;
-            pokemon_gen2impl(pokemon_gen2impl&&) = delete;
+            pokemon_gen2impl(const pokemon_gen2impl&) = default;
+            pokemon_gen2impl(pokemon_gen2impl&&) = default;
 
-            pokemon_gen2impl& operator=(const pokemon_gen2impl&) = delete;
-            pokemon_gen2impl& operator=(pokemon_gen2impl&&) = delete;
+            pokemon_gen2impl& operator=(const pokemon_gen2impl&) = default;
+            pokemon_gen2impl& operator=(pokemon_gen2impl&&) = default;
 
             ~pokemon_gen2impl() = default;
+
+            pokemon::sptr clone() const final;
 
             pokemon::sptr to_game(pkmn::e_game game) final;
 

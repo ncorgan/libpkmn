@@ -18,7 +18,6 @@ namespace pkmn {
     class pokemon_gcnimpl: public pokemon_impl
     {
         public:
-            pokemon_gcnimpl() {}
             pokemon_gcnimpl(
                 pkmn::database::pokemon_entry&& database_entry,
                 int level
@@ -28,14 +27,15 @@ namespace pkmn {
                 int game_id
             );
 
-            // TODO
-            pokemon_gcnimpl(const pokemon_gcnimpl&) = delete;
-            pokemon_gcnimpl(pokemon_gcnimpl&&) = delete;
+            pokemon_gcnimpl(const pokemon_gcnimpl&);
+            pokemon_gcnimpl(pokemon_gcnimpl&&) = default;
 
-            pokemon_gcnimpl& operator=(const pokemon_gcnimpl&) = delete;
-            pokemon_gcnimpl& operator=(pokemon_gcnimpl&&) = delete;
+            pokemon_gcnimpl& operator=(const pokemon_gcnimpl&);
+            pokemon_gcnimpl& operator=(pokemon_gcnimpl&&) = default;
 
             ~pokemon_gcnimpl() = default;
+
+            pokemon::sptr clone() const final;
 
             pokemon::sptr to_game(pkmn::e_game game) final;
 

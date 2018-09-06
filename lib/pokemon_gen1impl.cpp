@@ -164,6 +164,13 @@ namespace pkmn
         _register_attributes();
     }
 
+    pokemon::sptr pokemon_gen1impl::clone() const
+    {
+        pkmn::lock_guard<pokemon_gen1impl> lock(*this);
+
+        return std::make_shared<pokemon_gen1impl>(*this);
+    }
+
     pokemon::sptr pokemon_gen1impl::to_game(pkmn::e_game game)
     {
         pkmn::lock_guard<pokemon_gen1impl> lock(*this);

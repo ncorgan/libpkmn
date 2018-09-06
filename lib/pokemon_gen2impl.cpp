@@ -173,6 +173,13 @@ namespace pkmn
         _trainer_name = DEFAULT_TRAINER_NAME;
     }
 
+    pokemon::sptr pokemon_gen2impl::clone() const
+    {
+        pkmn::lock_guard<pokemon_gen2impl> lock(*this);
+
+        return std::make_shared<pokemon_gen2impl>(*this);
+    }
+
     pokemon::sptr pokemon_gen2impl::to_game(pkmn::e_game game)
     {
         pkmn::lock_guard<pokemon_gen2impl> lock(*this);

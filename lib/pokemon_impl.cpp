@@ -185,6 +185,45 @@ namespace pkmn
        _generation(pkmn::database::game_id_to_generation(_database_entry.get_game_id()))
     {}
 
+    // This comes out to be the default constructor, without trying to call
+    // into the non-existent boost::lockable_adapter copy constructor. As such,
+    // the new instance will have its own mutex.
+    //
+    // It's also intentional to set fields in the constructor body itself so we
+    // can lock the other's mutex before copying anything.
+    pokemon_impl::pokemon_impl(const pokemon_impl& other):
+        pokemon()
+    {
+        pkmn::lock_guard<pokemon_impl> other_lock(other);
+
+        _moves          = other._moves;
+        _EVs            = other._EVs;
+        _IVs            = other._IVs;
+        _stats          = other._stats;
+        _contest_stats  = other._contest_stats;
+        _markings       = other._markings;
+        _ribbons        = other._ribbons;
+        _database_entry = other._database_entry;
+        _generation     = other._generation;
+    }
+
+    pokemon_impl& pokemon_impl::operator=(const pokemon_impl& rhs)
+    {
+        pkmn::lock_guard<pokemon_impl> rhs_lock(rhs);
+
+        _moves          = rhs._moves;
+        _EVs            = rhs._EVs;
+        _IVs            = rhs._IVs;
+        _stats          = rhs._stats;
+        _contest_stats  = rhs._contest_stats;
+        _markings       = rhs._markings;
+        _ribbons        = rhs._ribbons;
+        _database_entry = rhs._database_entry;
+        _generation     = rhs._generation;
+
+        return *this;
+    }
+
     pkmn::e_species pokemon_impl::get_species() const
     {
         pkmn::lock_guard<pokemon_impl> lock(*this);

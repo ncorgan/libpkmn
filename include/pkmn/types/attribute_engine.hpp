@@ -32,10 +32,10 @@ namespace pkmn
             attribute_engine() {}
             ~attribute_engine() {};
 
-            attribute_engine(const attribute_engine&) = default;
+            attribute_engine(const attribute_engine&) = delete;
             attribute_engine(attribute_engine&&) = default;
 
-            attribute_engine& operator=(const attribute_engine&) = default;
+            attribute_engine& operator=(const attribute_engine&) = delete;
             attribute_engine& operator=(attribute_engine&&) = default;
 
             T get_attribute(

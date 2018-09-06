@@ -60,6 +60,8 @@ namespace pkmn {
 
             static const std::string DEFAULT_TRAINER_NAME;
 
+            virtual sptr clone() const = 0;
+
             virtual sptr to_game(pkmn::e_game game) = 0;
 
             virtual void export_to_file(

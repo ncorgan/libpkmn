@@ -192,6 +192,29 @@ namespace pkmn
         _register_attributes();
     }
 
+    pokemon_gcnimpl::pokemon_gcnimpl(
+        const pokemon_gcnimpl& other
+    ): pokemon_impl(other)
+    {
+        _libpkmgc_pokemon_uptr.reset(other._libpkmgc_pokemon_uptr->clone());
+    }
+
+    pokemon_gcnimpl& pokemon_gcnimpl::operator=(const pokemon_gcnimpl& rhs)
+    {
+        pokemon_impl::operator=(rhs);
+
+        _libpkmgc_pokemon_uptr.reset(rhs._libpkmgc_pokemon_uptr->clone());
+
+        return *this;
+    }
+
+    pokemon::sptr pokemon_gcnimpl::clone() const
+    {
+        pkmn::lock_guard<pokemon_gcnimpl> lock(*this);
+
+        return std::make_shared<pokemon_gcnimpl>(*this);
+    }
+
     pokemon::sptr pokemon_gcnimpl::to_game(pkmn::e_game game)
     {
         pkmn::lock_guard<pokemon_gcnimpl> lock(*this);
