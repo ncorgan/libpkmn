@@ -164,6 +164,28 @@ namespace pkmn
         _register_attributes();
     }
 
+    pokemon_gen1impl::pokemon_gen1impl(const pokemon_gen1impl& other):
+        pokemon_impl(other),
+        _pksav_pokemon(other._pksav_pokemon),
+        _nickname(other._nickname),
+        _trainer_name(other._trainer_name)
+    {
+        // This instance needs to register its own attributes to point
+        // to its own subfunctions.
+        _register_attributes();
+    }
+
+    pokemon_gen1impl::pokemon_gen1impl(pokemon_gen1impl&& r_other):
+        pokemon_impl(r_other),
+        _pksav_pokemon(std::move(r_other._pksav_pokemon)),
+        _nickname(std::move(r_other._nickname)),
+        _trainer_name(std::move(r_other._trainer_name))
+    {
+        // This instance needs to register its own attributes to point
+        // to its own subfunctions.
+        _register_attributes();
+    }
+
     pokemon::sptr pokemon_gen1impl::clone() const
     {
         pkmn::lock_guard<pokemon_gen1impl> lock(*this);

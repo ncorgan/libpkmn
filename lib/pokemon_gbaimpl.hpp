@@ -30,7 +30,7 @@ namespace pkmn {
             );
 
             pokemon_gbaimpl(const pokemon_gbaimpl&);
-            pokemon_gbaimpl(pokemon_gbaimpl&&) = default;
+            pokemon_gbaimpl(pokemon_gbaimpl&&);
 
             pokemon_gbaimpl& operator=(const pokemon_gbaimpl&);
             pokemon_gbaimpl& operator=(pokemon_gbaimpl&&) = default;

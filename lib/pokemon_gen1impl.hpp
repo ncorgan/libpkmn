@@ -29,8 +29,8 @@ namespace pkmn {
                 int game_id
             );
 
-            pokemon_gen1impl(const pokemon_gen1impl&) = default;
-            pokemon_gen1impl(pokemon_gen1impl&&) = default;
+            pokemon_gen1impl(const pokemon_gen1impl&);
+            pokemon_gen1impl(pokemon_gen1impl&&);
 
             pokemon_gen1impl& operator=(const pokemon_gen1impl&) = default;
             pokemon_gen1impl& operator=(pokemon_gen1impl&&) = default;

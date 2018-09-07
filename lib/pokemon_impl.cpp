@@ -187,7 +187,8 @@ namespace pkmn
 
     // This comes out to be the default constructor, without trying to call
     // into the non-existent boost::lockable_adapter copy constructor. As such,
-    // the new instance will have its own mutex.
+    // the new instance will have its own mutex. The attribute engine cannot
+    // be copied, so subclasses will need to re-register the attributes.
     //
     // It's also intentional to set fields in the constructor body itself so we
     // can lock the other's mutex before copying anything.

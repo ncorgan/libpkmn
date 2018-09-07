@@ -28,7 +28,7 @@ namespace pkmn {
             );
 
             pokemon_gcnimpl(const pokemon_gcnimpl&);
-            pokemon_gcnimpl(pokemon_gcnimpl&&) = default;
+            pokemon_gcnimpl(pokemon_gcnimpl&&);
 
             pokemon_gcnimpl& operator=(const pokemon_gcnimpl&);
             pokemon_gcnimpl& operator=(pokemon_gcnimpl&&) = default;

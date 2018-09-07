@@ -197,6 +197,19 @@ namespace pkmn
     ): pokemon_impl(other)
     {
         _libpkmgc_pokemon_uptr.reset(other._libpkmgc_pokemon_uptr->clone());
+
+        _register_attributes();
+    }
+
+    // We need a custom move constructor to register this instance's
+    // attributes.
+    pokemon_gcnimpl::pokemon_gcnimpl(
+        pokemon_gcnimpl&& r_other
+    ): pokemon_impl(r_other)
+    {
+        _libpkmgc_pokemon_uptr = std::move(r_other._libpkmgc_pokemon_uptr);
+
+        _register_attributes();
     }
 
     pokemon_gcnimpl& pokemon_gcnimpl::operator=(const pokemon_gcnimpl& rhs)

@@ -229,16 +229,34 @@ namespace pkmn
 
     // We must make our own constructor, since some members are pointers
     // to members of the PKSav struct.
-    pokemon_gbaimpl::pokemon_gbaimpl(const pokemon_gbaimpl& rhs):
-        pokemon_impl(rhs)
+    pokemon_gbaimpl::pokemon_gbaimpl(const pokemon_gbaimpl& other):
+        pokemon_impl(other)
     {
-        pkmn::lock_guard<pokemon_gbaimpl> rhs_lock(*this);
+        pkmn::lock_guard<pokemon_gbaimpl> other_lock(*this);
 
-        _pksav_pokemon  = rhs._pksav_pokemon;
+        _pksav_pokemon   = other._pksav_pokemon;
         _p_growth_block  = &_pksav_pokemon.pc_data.blocks.growth;
         _p_attacks_block = &_pksav_pokemon.pc_data.blocks.attacks;
         _p_effort_block  = &_pksav_pokemon.pc_data.blocks.effort;
         _p_misc_block    = &_pksav_pokemon.pc_data.blocks.misc;
+
+        _register_attributes();
+    }
+
+    // We need our own custom move constructor so we can register this
+    // instance's attributes.
+    pokemon_gbaimpl::pokemon_gbaimpl(pokemon_gbaimpl&& r_other):
+        pokemon_impl(r_other)
+    {
+        pkmn::lock_guard<pokemon_gbaimpl> other_lock(*this);
+
+        _pksav_pokemon   = std::move(r_other._pksav_pokemon);
+        _p_growth_block  = std::move(&_pksav_pokemon.pc_data.blocks.growth);
+        _p_attacks_block = std::move(&_pksav_pokemon.pc_data.blocks.attacks);
+        _p_effort_block  = std::move(&_pksav_pokemon.pc_data.blocks.effort);
+        _p_misc_block    = std::move(&_pksav_pokemon.pc_data.blocks.misc);
+
+        _register_attributes();
     }
 
     pokemon_gbaimpl& pokemon_gbaimpl::operator=(const pokemon_gbaimpl& rhs)
