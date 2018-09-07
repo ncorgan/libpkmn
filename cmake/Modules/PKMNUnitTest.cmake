@@ -21,11 +21,12 @@ INCLUDE_DIRECTORIES(
 
 SET(pkmn_cpp_test_libs
     ${Boost_LIBRARIES}
-    gtest
-    pkmn_gtest_main
     pkmn
+    pkmntest
     pksav
     PkmGC
+    gtest
+    pkmn_gtest_main
 )
 
 SET(pkmn_c_test_libs

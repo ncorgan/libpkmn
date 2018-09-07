@@ -9,6 +9,7 @@
 
 #include <pkmn/enums/game.hpp>
 
+#include <random>
 #include <vector>
 
 namespace pkmntest
@@ -125,6 +126,11 @@ static const std::vector<pkmn::e_game> ALL_GAMES =
     pkmn::e_game::OMEGA_RUBY,
     pkmn::e_game::ALPHA_SAPPHIRE,
 };
+
+inline bool get_random_bool()
+{
+    return ((rand() % 100) < 50);
+}
 
 }
 

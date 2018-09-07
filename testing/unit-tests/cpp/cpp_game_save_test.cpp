@@ -12,6 +12,7 @@
 #include "utils/misc.hpp"
 
 #include <pkmntest/config.hpp>
+#include <pkmntest/pokemon_comparison.hpp>
 #include <pkmntest/util.hpp>
 
 #include <pkmn/database/lists.hpp>
@@ -621,84 +622,6 @@ namespace pkmntest {
         }
     }
 
-    static pkmn::pokemon::sptr get_random_pokemon(
-        pkmn::e_game game,
-        const std::vector<pkmn::e_species>& pokemon_list,
-        const std::vector<pkmn::e_move>& move_list,
-        const std::vector<pkmn::e_item>& item_list
-    )
-    {
-        int generation = pkmn::priv::game_enum_to_generation(game);
-        pkmn::rng<uint32_t> rng;
-
-        // Don't deal with Deoxys or Unown issues here.
-        pkmn::e_species species = pkmn::e_species::NONE;
-        if(generation == 3)
-        {
-            do
-            {
-                species = pokemon_list[rng.rand() % pokemon_list.size()];
-            }
-            while((species == pkmn::e_species::UNOWN) ||
-                  (species == pkmn::e_species::DEOXYS));
-        }
-        else
-        {
-            species = pokemon_list[rng.rand() % pokemon_list.size()];
-        }
-        pkmn::pokemon::sptr ret = pkmn::pokemon::make(
-                                      species,
-                                      game,
-                                      "",
-                                      ((rng.rand() % 99) + 2)
-                                  );
-        for(int move_index = 0; move_index < 4; ++move_index)
-        {
-            pkmn::e_move move = pkmn::e_move::NONE;
-            do
-            {
-                move = move_list[rng.rand() % move_list.size()];
-            }
-            while(move >= pkmn::e_move::SHADOW_RUSH);
-            ret->set_move(move, move_index);
-        }
-
-        if(generation >= 2)
-        {
-            // Keep going until one is holdable
-            while(ret->get_held_item() == pkmn::e_item::NONE)
-            {
-                try
-                {
-                    ret->set_held_item(
-                        item_list[rng.rand() % item_list.size()]
-                    );
-                } catch(std::invalid_argument&) {}
-            }
-        }
-
-        // Set condition (TODO: add enum_maps to pkmntest library)
-        /*std::vector<std::string> conditions;
-        if(generation <= 2)
-        {
-            for(const auto& condition: pksav::get_gb_condition_bimap().left)
-            {
-                conditions.emplace_back(condition.first);
-            }
-        }
-        else
-        {
-            for(const auto& condition: pksav::get_condition_mask_bimap().left)
-            {
-                conditions.emplace_back(condition.first);
-            }
-        }
-
-        ret->set_condition(conditions[rng.rand() % conditions.size()]);*/
-
-        return ret;
-    }
-
     void randomize_items(
         const pkmn::game_save::sptr& save,
         const std::vector<pkmn::e_item>& item_list
@@ -722,11 +645,11 @@ namespace pkmntest {
         for(int i = 0; i < 6; ++i) {
             party->set_pokemon(
                 i,
-                get_random_pokemon(
+                pkmntest::get_random_pokemon(
                     save->get_game(),
                     pokemon_list,
-                    move_list,
-                    item_list
+                    item_list,
+                    move_list
                 )
             );
         }
@@ -737,11 +660,11 @@ namespace pkmntest {
             for(int j = 0; j < capacity; ++j) {
                 boxes[i]->set_pokemon(
                     j,
-                    get_random_pokemon(
+                    pkmntest::get_random_pokemon(
                         save->get_game(),
                         pokemon_list,
-                        move_list,
-                        item_list
+                        item_list,
+                        move_list
                     )
                 );
             }
@@ -792,7 +715,9 @@ namespace pkmntest {
         EXPECT_EQ(pokedex1->get_all_caught(), pokedex2->get_all_caught());
     }
 
-    static void compare_pokemon(
+    // Given the number of comparisons that need to be done, checking field by field
+    // adds about ten seconds.
+    static void compare_pokemon_fast(
         const pkmn::pokemon::sptr& pokemon1,
         const pkmn::pokemon::sptr& pokemon2
     )
@@ -1038,7 +963,7 @@ namespace pkmntest {
         pkmn::pokemon_party::sptr party2 = save2->get_pokemon_party();
         EXPECT_EQ(party1->get_num_pokemon(), party2->get_num_pokemon());
         for(int i = 0; i < 6; ++i) {
-            compare_pokemon(
+            compare_pokemon_fast(
                 party1->get_pokemon(i),
                 party2->get_pokemon(i)
             );
@@ -1073,7 +998,7 @@ namespace pkmntest {
                 pokemon_index < box1->get_capacity();
                 ++pokemon_index)
             {
-                compare_pokemon(
+                compare_pokemon_fast(
                     box1->get_pokemon(pokemon_index),
                     box2->get_pokemon(pokemon_index)
                 );
