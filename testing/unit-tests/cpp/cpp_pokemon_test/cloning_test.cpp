@@ -5,6 +5,7 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
+#include <pkmntest/pokemon_comparison.hpp>
 #include <pkmntest/util.hpp>
 
 #include <pkmn/pokemon.hpp>
@@ -17,16 +18,12 @@ class pokemon_cloning_test: public ::testing::TestWithParam<pkmn::e_game> {};
 
 TEST_P(pokemon_cloning_test, clone_and_compare)
 {
-    // TODO: randomize, compare
+    pkmn::e_game game = GetParam();
 
-    pkmn::pokemon::sptr original_pokemon = pkmn::pokemon::make(
-                                               pkmn::e_species::BULBASAUR,
-                                               GetParam(),
-                                               "",
-                                               50
-                                           );
+    pkmn::pokemon::sptr original_pokemon = pkmntest::get_random_pokemon(game);
     pkmn::pokemon::sptr cloned_pokemon = original_pokemon->clone();
-    (void)cloned_pokemon;
+
+    pkmntest::compare_pokemon(original_pokemon, cloned_pokemon);
 }
 
 INSTANTIATE_TEST_CASE_P(
