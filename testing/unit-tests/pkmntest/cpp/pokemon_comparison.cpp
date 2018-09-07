@@ -10,6 +10,7 @@
 
 #include <pkmn/database/lists.hpp>
 
+#include <pkmntest/misc_comparison.hpp>
 #include <pkmntest/pokemon_comparison.hpp>
 #include <pkmntest/util.hpp>
 
@@ -242,5 +243,10 @@ namespace pkmntest
         {
             EXPECT_EQ(pokemon1->get_location_met(true), pokemon2->get_location_met(true));
         }
+
+        compare_attributes(
+            pokemon1,
+            pokemon2
+        );
     }
 }

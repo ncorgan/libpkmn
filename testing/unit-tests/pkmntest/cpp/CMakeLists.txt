@@ -24,6 +24,7 @@ SET(pkmntest_libs
 )
 
 SET(pkmntest_sources
+    misc_comparison.cpp
     pokemon_comparison.cpp
 )
 
