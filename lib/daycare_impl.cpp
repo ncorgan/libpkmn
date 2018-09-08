@@ -156,6 +156,45 @@ namespace pkmn {
         );
     }
 
+    void daycare_impl::set_levelup_pokemon(
+        int index,
+        const pkmn::pokemon& new_pokemon
+    )
+    {
+        int levelup_capacity = this->get_levelup_pokemon_capacity();
+
+        // Same functionality, just better error messages for the given
+        // situation
+        if(levelup_capacity == 1)
+        {
+            pkmn::enforce_comparator(
+                "Index",
+                index,
+                0,
+                pkmn::value_comparator::EQ
+            );
+        }
+        else
+        {
+            pkmn::enforce_bounds(
+                "Index",
+                index,
+                0,
+                (levelup_capacity - 1)
+            );
+        }
+
+        boost::lock_guard<daycare_impl> lock(*this);
+
+        _set_levelup_pokemon(
+            index,
+            pkmn::polymorphism::pokemon_to_libpkmn_impl_of_game(
+                new_pokemon,
+                get_game()
+            )
+        );
+    }
+
     const pkmn::pokemon_list_t& daycare_impl::get_levelup_pokemon_as_vector()
     {
         boost::lock_guard<daycare_impl> lock(*this);
@@ -189,6 +228,36 @@ namespace pkmn {
     void daycare_impl::set_breeding_pokemon(
         int index,
         const pkmn::pokemon::sptr& new_pokemon
+    )
+    {
+        if(!this->can_breed_pokemon())
+        {
+            throw pkmn::feature_not_in_game_error(
+                      "Breeding",
+                      this->get_game()
+                  );
+        }
+        pkmn::enforce_bounds(
+            "Index",
+            index,
+            0,
+            (this->get_breeding_pokemon_capacity() - 1)
+        );
+
+        boost::lock_guard<daycare_impl> lock(*this);
+
+        _set_breeding_pokemon(
+            index,
+            pkmn::polymorphism::pokemon_to_libpkmn_impl_of_game(
+                new_pokemon,
+                get_game()
+            )
+        );
+    }
+
+    void daycare_impl::set_breeding_pokemon(
+        int index,
+        const pkmn::pokemon& new_pokemon
     )
     {
         if(!this->can_breed_pokemon())

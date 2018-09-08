@@ -8,6 +8,7 @@
 #include <pkmntest/pokemon_subclass.hpp>
 #include <pkmntest/util.hpp>
 
+#include <pkmn/daycare.hpp>
 #include <pkmn/pokemon_box.hpp>
 #include <pkmn/pokemon_party.hpp>
 #include <pkmn/enums/enum_to_string.hpp>
@@ -57,6 +58,33 @@ TEST_P(pokemon_polymorphism_test, setting_sptr_in_libpkmn_pokemon_party)
     test_setting_sptr_in_pokemon_container<pkmn::pokemon_party>(
         pkmn::e_species::BULBASAUR
     );
+}
+
+TEST_P(pokemon_polymorphism_test, setting_sptr_in_libpkmn_daycare)
+{
+    pkmn::e_game game = GetParam();
+
+    std::shared_ptr<pkmntest::pokemon_subclass> outside_pokemon_sptr =
+        std::make_shared<pkmntest::pokemon_subclass>(
+            pkmn::e_species::BULBASAUR,
+            game
+        );
+    ASSERT_EQ(
+        pkmn::e_species::BULBASAUR,
+        outside_pokemon_sptr->get_species()
+    ) << pkmn::species_to_string(outside_pokemon_sptr->get_species());
+    ASSERT_EQ(
+        game,
+        outside_pokemon_sptr->get_game()
+    ) << pkmn::game_to_string(outside_pokemon_sptr->get_game());
+
+    pkmn::daycare::sptr daycare = pkmn::daycare::make(game);
+    daycare->set_levelup_pokemon(0, outside_pokemon_sptr);
+
+    if(daycare->can_breed_pokemon())
+    {
+        daycare->set_breeding_pokemon(0, outside_pokemon_sptr);
+    }
 }
 
 INSTANTIATE_TEST_CASE_P(

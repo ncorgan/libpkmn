@@ -36,6 +36,11 @@ namespace pkmn {
                 const pkmn::pokemon::sptr& new_pokemon
             ) final;
 
+            void set_levelup_pokemon(
+                int index,
+                const pkmn::pokemon& new_pokemon
+            ) final;
+
             const pkmn::pokemon_list_t& get_levelup_pokemon_as_vector() final;
 
             const pkmn::pokemon::sptr& get_breeding_pokemon(
@@ -45,6 +50,11 @@ namespace pkmn {
             void set_breeding_pokemon(
                 int index,
                 const pkmn::pokemon::sptr& new_pokemon
+            ) final;
+
+            void set_breeding_pokemon(
+                int index,
+                const pkmn::pokemon& new_pokemon
             ) final;
 
             const pkmn::pokemon_list_t& get_breeding_pokemon_as_vector() final;
