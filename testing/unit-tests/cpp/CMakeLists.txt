@@ -66,6 +66,11 @@ SET(item_test_srcs
 )
 PKMN_ADD_CPP_TEST(cpp_item_test "${item_test_srcs}")
 
+SET(polymorphism_test_srcs
+    cpp_polymorphism_test/pokemon_polymorphism_test.cpp
+)
+PKMN_ADD_CPP_TEST(cpp_polymorphism_test "${polymorphism_test_srcs}")
+
 SET(pokemon_test_srcs
     ${PKMN_SOURCE_DIR}/lib/pkmgc/enum_maps.cpp
     ${PKMN_SOURCE_DIR}/lib/pksav/enum_maps.cpp

@@ -7,6 +7,8 @@
 
 #include <pkmntest/pokemon_subclass.hpp>
 
+#include <pkmn/enums/enum_to_string.hpp>
+
 namespace pkmntest
 {
     pokemon_subclass::pokemon_subclass(
@@ -17,13 +19,13 @@ namespace pkmntest
        _species(species),
        _game(game),
        _condition(pkmn::e_condition::NONE),
-       _gender(pkmn::e_gender::NONE),
+       _gender(pkmn::e_gender::MALE),
        _held_item(pkmn::e_item::NONE),
-       _nature(pkmn::e_nature::NONE),
-       _original_trainer_gender(pkmn::e_gender::NONE),
-       _language(pkmn::e_language::NONE),
+       _nature(pkmn::e_nature::HARDY),
+       _original_trainer_gender(pkmn::e_gender::MALE),
+       _language(pkmn::e_language::ENGLISH),
        _ability(pkmn::e_ability::NONE),
-       _ball(pkmn::e_ball::NONE),
+       _ball(pkmn::e_ball::POKE_BALL),
        _original_game(pkmn::e_game::NONE),
        _is_egg(false),
        _is_shiny(false),
@@ -34,8 +36,8 @@ namespace pkmntest
        _experience(0),
        _level(5),
        _current_hp(0),
-       _nickname(),
-       _original_trainer_name(),
+       _nickname(pkmn::species_to_string(species)),
+       _original_trainer_name("Test"),
        _location_met(),
        _location_met_as_egg(),
        _original_trainer_id({0}),
