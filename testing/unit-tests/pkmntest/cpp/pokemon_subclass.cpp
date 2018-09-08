@@ -49,6 +49,9 @@ namespace pkmntest
        _stats(),
        _moves()
     {
+        // This calls an implementation-agnostic function that populates
+        // values with suitable defaults to match in-game policy.
+        initialize_default_values(species, game);
     }
 
     pkmn::pokemon::sptr pokemon_subclass::clone() const

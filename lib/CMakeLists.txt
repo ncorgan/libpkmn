@@ -99,6 +99,7 @@ SET(pkmn_sources
     item_list_modernimpl.cpp
     pokedex_impl.cpp
     pokedex_gbaimpl.cpp
+    pokemon.cpp
     pokemon_impl.cpp
     pokemon_gen1impl.cpp
     pokemon_gen2impl.cpp

@@ -174,16 +174,18 @@ namespace pkmn
         int pokemon_index,
         int game_id
     ): pokemon(),
-       _database_entry(pkmn::database::pokemon_entry(pokemon_index, game_id)),
        _generation(pkmn::database::game_id_to_generation(game_id))
-    {}
+    {
+        _database_entry = pkmn::database::pokemon_entry(pokemon_index, game_id);
+    }
 
     pokemon_impl::pokemon_impl(
         pkmn::database::pokemon_entry&& database_entry
-    ): pokemon(),
-       _database_entry(std::move(database_entry)),
-       _generation(pkmn::database::game_id_to_generation(_database_entry.get_game_id()))
-    {}
+    ): pokemon()
+    {
+        _database_entry = std::move(database_entry);
+        _generation = pkmn::database::game_id_to_generation(_database_entry.get_game_id());
+    }
 
     // This comes out to be the default constructor, without trying to call
     // into the non-existent boost::lockable_adapter copy constructor. As such,

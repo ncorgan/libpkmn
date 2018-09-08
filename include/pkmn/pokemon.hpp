@@ -60,6 +60,18 @@ namespace pkmn {
 
             static const std::string DEFAULT_TRAINER_NAME;
 
+            // Implementation-agnostic helpers
+
+            // Taking in the species and game forces the caller class to
+            // provide these, as we cannot make an assumption that it's
+            // instantiated the database entry.
+            virtual void initialize_default_values(
+                pkmn::e_species species,
+                pkmn::e_game game
+            );
+
+            // Implementation-specific
+
             virtual sptr clone() const = 0;
 
             virtual sptr to_game(pkmn::e_game game) = 0;
@@ -281,6 +293,19 @@ namespace pkmn {
             virtual ~pokemon () {}
             const virtual void* get_native() const = 0;
             #endif
+
+        protected:
+            pkmn::database::pokemon_entry _database_entry;
+
+            std::map<pkmn::e_stat, int> _EVs;
+            std::map<pkmn::e_stat, int> _IVs;
+            std::map<pkmn::e_stat, int> _stats;
+
+            std::map<pkmn::e_contest_stat, int> _contest_stats;
+            std::map<pkmn::e_marking, bool> _markings;
+            std::map<std::string, bool> _ribbons;
+
+            pkmn::move_slots_t _moves;
     };
 
     typedef std::vector<pokemon::sptr> pokemon_list_t;

@@ -102,16 +102,6 @@ namespace pkmn {
             friend class daycare_gcnimpl;
 
         protected:
-            pkmn::move_slots_t _moves;
-
-            std::map<pkmn::e_stat, int> _EVs, _IVs, _stats;
-
-            std::map<pkmn::e_contest_stat, int> _contest_stats;
-            std::map<pkmn::e_marking, bool> _markings;
-            std::map<std::string, bool> _ribbons;
-
-            pkmn::database::pokemon_entry _database_entry;
-
             int _generation;
 
             virtual void _populate_party_data() = 0;
