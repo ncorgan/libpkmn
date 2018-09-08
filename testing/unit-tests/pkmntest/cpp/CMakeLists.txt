@@ -26,6 +26,7 @@ SET(pkmntest_libs
 SET(pkmntest_sources
     misc_comparison.cpp
     pokemon_comparison.cpp
+    pokemon_subclass.cpp
 )
 
 # Ignore overzealous error when comparing a size_t to a numeric literal.

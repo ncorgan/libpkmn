@@ -23,10 +23,10 @@ namespace pkmn {
             class_with_attributes() = default;
             ~class_with_attributes() = default;
 
-            class_with_attributes(const class_with_attributes&) = delete;
+            class_with_attributes(const class_with_attributes&) = default;
             class_with_attributes(class_with_attributes&&) = default;
 
-            class_with_attributes& operator=(const class_with_attributes&) = delete;
+            class_with_attributes& operator=(const class_with_attributes&) = default;
             class_with_attributes& operator=(class_with_attributes&&) = default;
 
             /*!
