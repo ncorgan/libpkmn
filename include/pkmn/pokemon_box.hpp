@@ -101,6 +101,11 @@ namespace pkmn
                 int index
             ) = 0;
 
+            virtual void set_pokemon(
+                int index,
+                const pkmn::pokemon& new_pokemon
+            ) = 0;
+
             /*!
              * @brief Copies the given Pokémon to the given position in the box (0-based).
              *

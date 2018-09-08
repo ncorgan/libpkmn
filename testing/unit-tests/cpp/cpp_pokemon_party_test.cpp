@@ -86,38 +86,20 @@ TEST_P(pokemon_party_test, empty_party_test)
     }
 }
 
-TEST_P(pokemon_party_test, setting_pokemon_test) {
-    pkmn::pokemon_party::sptr party = get_party();
+void test_setting_pokemon_as_sptr(
+    const pkmn::pokemon_party::sptr& party,
+    const pkmn::pokemon::sptr& bulbasaur,
+    const pkmn::pokemon::sptr& charmander,
+    const pkmn::pokemon::sptr& squirtle
+)
+{
     ASSERT_NE(nullptr, party.get());
-
-    pkmn::e_game game = party->get_game();
-    int generation = pkmn::priv::game_enum_to_generation(game);
+    ASSERT_NE(nullptr, bulbasaur.get());
+    ASSERT_NE(nullptr, charmander.get());
+    ASSERT_NE(nullptr, squirtle.get());
 
     pkmn::pokemon::sptr original_first = party->get_pokemon(0);
     pkmn::pokemon::sptr original_second = party->get_pokemon(1);
-
-    /*
-     * Create new Pokémon and place in party. The original variables should
-     * have the same underlying Pokémon.
-     */
-    pkmn::pokemon::sptr bulbasaur = pkmn::pokemon::make(
-                                        pkmn::e_species::BULBASAUR,
-                                        game,
-                                        "",
-                                        5
-                                    );
-    pkmn::pokemon::sptr charmander = pkmn::pokemon::make(
-                                         pkmn::e_species::CHARMANDER,
-                                         game,
-                                         "",
-                                         5
-                                     );
-    pkmn::pokemon::sptr squirtle = pkmn::pokemon::make(
-                                       pkmn::e_species::SQUIRTLE,
-                                       game,
-                                       "",
-                                       5
-                                   );
 
     // Make sure we can't set them at invalid indices.
     EXPECT_THROW(
@@ -165,10 +147,7 @@ TEST_P(pokemon_party_test, setting_pokemon_test) {
     EXPECT_EQ(3, party->get_num_pokemon());
     EXPECT_EQ(pkmn::e_species::NONE, party->get_pokemon(4)->get_species());
 
-    /*
-     * Now check everything we've created. Each variable should have the
-     * same Pokémon underneath, even if the pointer has changed.
-     */
+    // Now check everything we've created.
     EXPECT_EQ(pkmn::e_species::SQUIRTLE, party->get_pokemon(0)->get_species());
     EXPECT_EQ(pkmn::e_species::CHARMANDER, party->get_pokemon(1)->get_species());
     EXPECT_EQ(pkmn::e_species::CHARMANDER, party->get_pokemon(2)->get_species());
@@ -177,10 +156,94 @@ TEST_P(pokemon_party_test, setting_pokemon_test) {
     EXPECT_EQ(pkmn::e_species::BULBASAUR, bulbasaur->get_species());
     EXPECT_EQ(pkmn::e_species::CHARMANDER, charmander->get_species());
     EXPECT_EQ(pkmn::e_species::SQUIRTLE, squirtle->get_species());
+}
 
-    // On the C++ level, make sure the expected equal pointers are equal.
-    EXPECT_NE(original_first->get_native(), party->get_pokemon(0)->get_native());
-    EXPECT_NE(original_second->get_native(), party->get_pokemon(1)->get_native());
+void test_setting_pokemon_as_reference(
+    const pkmn::pokemon_party::sptr& party,
+    const pkmn::pokemon::sptr& bulbasaur,
+    const pkmn::pokemon::sptr& charmander,
+    const pkmn::pokemon::sptr& squirtle
+)
+{
+    ASSERT_NE(nullptr, party.get());
+    ASSERT_NE(nullptr, bulbasaur.get());
+    ASSERT_NE(nullptr, charmander.get());
+    ASSERT_NE(nullptr, squirtle.get());
+
+    pkmn::pokemon::sptr original_first = party->get_pokemon(0);
+    pkmn::pokemon::sptr original_second = party->get_pokemon(1);
+
+    // Make sure we can't set them at invalid indices.
+    EXPECT_THROW(
+        party->set_pokemon(-1, *bulbasaur);
+    , std::out_of_range);
+    EXPECT_THROW(
+        party->set_pokemon(6, *bulbasaur);
+    , std::out_of_range);
+
+    party->set_pokemon(0, *bulbasaur);
+    EXPECT_EQ(1, party->get_num_pokemon());
+    EXPECT_EQ(pkmn::e_species::BULBASAUR, party->get_pokemon(0)->get_species());
+    party->set_pokemon(1, *charmander);
+    EXPECT_EQ(2, party->get_num_pokemon());
+    EXPECT_EQ(pkmn::e_species::CHARMANDER, party->get_pokemon(1)->get_species());
+
+    // Replace one of the new ones.
+    party->set_pokemon(0, *squirtle);
+    EXPECT_EQ(2, party->get_num_pokemon());
+    EXPECT_EQ(pkmn::e_species::SQUIRTLE, party->get_pokemon(0)->get_species());
+
+    // Copy a Pokémon whose memory is already part of the party.
+    party->set_pokemon(2, party->get_pokemon(1));
+    EXPECT_EQ(3, party->get_num_pokemon());
+
+    // We should always be able to clear the last contiguous Pokémon.
+    party->set_pokemon(2, *original_first);
+    EXPECT_EQ(2, party->get_num_pokemon());
+    EXPECT_EQ(pkmn::e_species::NONE, party->get_pokemon(2)->get_species());
+
+    // Put it back.
+    party->set_pokemon(2, party->get_pokemon(1));
+    EXPECT_EQ(3, party->get_num_pokemon());
+
+    // Check that Pokémon cannot be placed non-contiguously.
+    EXPECT_THROW(
+        party->set_pokemon(1, *original_first);
+    , std::invalid_argument);
+    EXPECT_EQ(3, party->get_num_pokemon());
+    EXPECT_EQ(pkmn::e_species::CHARMANDER, party->get_pokemon(1)->get_species());
+
+    EXPECT_THROW(
+        party->set_pokemon(4, *bulbasaur);
+    , std::out_of_range);
+    EXPECT_EQ(3, party->get_num_pokemon());
+    EXPECT_EQ(pkmn::e_species::NONE, party->get_pokemon(4)->get_species());
+
+    // Now check everything we've created.
+    EXPECT_EQ(pkmn::e_species::SQUIRTLE, party->get_pokemon(0)->get_species());
+    EXPECT_EQ(pkmn::e_species::CHARMANDER, party->get_pokemon(1)->get_species());
+    EXPECT_EQ(pkmn::e_species::CHARMANDER, party->get_pokemon(2)->get_species());
+    EXPECT_EQ(pkmn::e_species::NONE, original_first->get_species());
+    EXPECT_EQ(pkmn::e_species::NONE, original_second->get_species());
+    EXPECT_EQ(pkmn::e_species::BULBASAUR, bulbasaur->get_species());
+    EXPECT_EQ(pkmn::e_species::CHARMANDER, charmander->get_species());
+    EXPECT_EQ(pkmn::e_species::SQUIRTLE, squirtle->get_species());
+}
+
+static void check_underlying_representation(
+    const pkmn::pokemon_party::sptr& party,
+    const pkmn::pokemon::sptr& bulbasaur,
+    const pkmn::pokemon::sptr& charmander,
+    const pkmn::pokemon::sptr& squirtle
+)
+{
+    ASSERT_NE(nullptr, party.get());
+    ASSERT_NE(nullptr, bulbasaur.get());
+    ASSERT_NE(nullptr, charmander.get());
+    ASSERT_NE(nullptr, squirtle.get());
+
+    pkmn::e_game game = party->get_game();
+    int generation = pkmn::priv::game_enum_to_generation(game);
 
     // On the C++ level, check the underlying representation.
     switch(generation) {
@@ -299,10 +362,109 @@ TEST_P(pokemon_party_test, setting_pokemon_test) {
         default:
             break;
     }
+}
+
+TEST_P(pokemon_party_test, setting_pokemon_as_sptr)
+{
+    pkmn::pokemon_party::sptr party = get_party();
+    ASSERT_NE(nullptr, party.get());
+
+    pkmn::e_game game = party->get_game();
+
+    /*
+     * Create new Pokémon and place in party. The original variables should
+     * have the same underlying Pokémon.
+     */
+    pkmn::pokemon::sptr bulbasaur = pkmn::pokemon::make(
+                                        pkmn::e_species::BULBASAUR,
+                                        game,
+                                        "",
+                                        5
+                                    );
+    pkmn::pokemon::sptr charmander = pkmn::pokemon::make(
+                                         pkmn::e_species::CHARMANDER,
+                                         game,
+                                         "",
+                                         5
+                                     );
+    pkmn::pokemon::sptr squirtle = pkmn::pokemon::make(
+                                       pkmn::e_species::SQUIRTLE,
+                                       game,
+                                       "",
+                                       5
+                                   );
+
+
+    test_setting_pokemon_as_sptr(
+        party,
+        bulbasaur,
+        charmander,
+        squirtle
+    );
+    check_underlying_representation(
+        party,
+        bulbasaur,
+        charmander,
+        squirtle
+    );
+}
+
+TEST_P(pokemon_party_test, setting_pokemon_as_reference)
+{
+    pkmn::pokemon_party::sptr party = get_party();
+    ASSERT_NE(nullptr, party.get());
+
+    pkmn::e_game game = party->get_game();
+
+    /*
+     * Create new Pokémon and place in party. The original variables should
+     * have the same underlying Pokémon.
+     */
+    pkmn::pokemon::sptr bulbasaur = pkmn::pokemon::make(
+                                        pkmn::e_species::BULBASAUR,
+                                        game,
+                                        "",
+                                        5
+                                    );
+    pkmn::pokemon::sptr charmander = pkmn::pokemon::make(
+                                         pkmn::e_species::CHARMANDER,
+                                         game,
+                                         "",
+                                         5
+                                     );
+    pkmn::pokemon::sptr squirtle = pkmn::pokemon::make(
+                                       pkmn::e_species::SQUIRTLE,
+                                       game,
+                                       "",
+                                       5
+                                   );
+
+
+    test_setting_pokemon_as_reference(
+        party,
+        bulbasaur,
+        charmander,
+        squirtle
+    );
+    check_underlying_representation(
+        party,
+        bulbasaur,
+        charmander,
+        squirtle
+    );
+}
+
+static void test_setting_pokemon_from_other_games(
+    const pkmn::pokemon_party::sptr& party,
+    const std::vector<pkmn::e_game>& valid_other_games,
+    pkmn::e_game invalid_other_game,
+    bool as_sptr
+)
+{
+    ASSERT_NE(nullptr, party.get());
 
     // Make sure converting Pokémon before putting into the party works (or doesn't work) as expected.
-
-    for(pkmn::e_game valid_game: test_params.valid_other_games)
+    for(pkmn::e_game valid_game: valid_other_games)
     {
         pkmn::pokemon::sptr pikachu = pkmn::pokemon::make(
                                           pkmn::e_species::PIKACHU,
@@ -313,23 +475,65 @@ TEST_P(pokemon_party_test, setting_pokemon_test) {
         ASSERT_EQ(valid_game, pikachu->get_game());
         ASSERT_EQ(50, pikachu->get_level()) << pkmn::game_to_string(valid_game);
 
-        party->set_pokemon(3, pikachu);
+        if(as_sptr)
+        {
+            party->set_pokemon(0, pikachu);
+        }
+        else
+        {
+            party->set_pokemon(0, *pikachu);
+        }
 
-        pkmn::pokemon::sptr party_pokemon = party->get_pokemon(3);
+        pkmn::pokemon::sptr party_pokemon = party->get_pokemon(0);
         EXPECT_EQ(pkmn::e_species::PIKACHU, party_pokemon->get_species()) << pkmn::game_to_string(valid_game);
-        EXPECT_EQ(test_params.party_game, party_pokemon->get_game()) << pkmn::game_to_string(valid_game);
+        EXPECT_EQ(party->get_game(), party_pokemon->get_game()) << pkmn::game_to_string(valid_game);
         EXPECT_EQ(50, party_pokemon->get_level()) << pkmn::game_to_string(valid_game);
     }
 
     pkmn::pokemon::sptr invalid_pikachu = pkmn::pokemon::make(
                                               pkmn::e_species::PIKACHU,
-                                              test_params.invalid_other_game,
+                                              invalid_other_game,
                                               "",
                                               50
                                           );
-    EXPECT_THROW(
-        party->set_pokemon(3, invalid_pikachu);
-    , std::invalid_argument);
+    if(as_sptr)
+    {
+        EXPECT_THROW(
+            party->set_pokemon(0, invalid_pikachu);
+        , std::invalid_argument);
+    }
+    else
+    {
+        EXPECT_THROW(
+            party->set_pokemon(0, *invalid_pikachu);
+        , std::invalid_argument);
+    }
+}
+
+TEST_P(pokemon_party_test, setting_pokemon_from_other_games_as_sptr)
+{
+    pkmn::pokemon_party::sptr party = get_party();
+    test_params_t test_params = GetParam();
+
+    test_setting_pokemon_from_other_games(
+        party,
+        test_params.valid_other_games,
+        test_params.invalid_other_game,
+        true // as_sptr
+    );
+}
+
+TEST_P(pokemon_party_test, setting_pokemon_from_other_games_as_reference)
+{
+    pkmn::pokemon_party::sptr party = get_party();
+    test_params_t test_params = GetParam();
+
+    test_setting_pokemon_from_other_games(
+        party,
+        test_params.valid_other_games,
+        test_params.invalid_other_game,
+        false // as_sptr
+    );
 }
 
 static const test_params_t PARAMS[] =

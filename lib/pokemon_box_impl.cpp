@@ -87,6 +87,25 @@ namespace pkmn {
 
     void pokemon_box_impl::set_pokemon(
         int index,
+        const pkmn::pokemon& new_pokemon
+    )
+    {
+        int capacity = get_capacity();
+        pkmn::enforce_bounds("Box index", index, 0, (capacity-1));
+
+        boost::lock_guard<pokemon_box_impl> lock(*this);
+
+        _set_pokemon(
+            index,
+            pkmn::polymorphism::pokemon_to_libpkmn_impl_of_game(
+                new_pokemon,
+                get_game()
+            )
+        );
+    }
+
+    void pokemon_box_impl::set_pokemon(
+        int index,
         const pkmn::pokemon::sptr& new_pokemon
     )
     {

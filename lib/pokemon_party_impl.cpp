@@ -86,6 +86,24 @@ namespace pkmn {
 
     void pokemon_party_impl::set_pokemon(
         int index,
+        const pkmn::pokemon& new_pokemon
+    )
+    {
+        pkmn::enforce_bounds("Party index", index, 0, (PARTY_SIZE-1));
+
+        boost::lock_guard<pokemon_party_impl> lock(*this);
+
+        _set_pokemon(
+            index,
+            pkmn::polymorphism::pokemon_to_libpkmn_impl_of_game(
+                new_pokemon,
+                get_game()
+            )
+        );
+    }
+
+    void pokemon_party_impl::set_pokemon(
+        int index,
         const pkmn::pokemon::sptr& new_pokemon
     )
     {

@@ -42,6 +42,11 @@ namespace pkmn {
 
             void set_pokemon(
                 int index,
+                const pkmn::pokemon& new_pokemon
+            ) final;
+
+            void set_pokemon(
+                int index,
                 const pkmn::pokemon::sptr& new_pokemon
             ) final;
 
