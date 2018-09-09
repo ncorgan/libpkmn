@@ -27,6 +27,11 @@ using Database;"
 // Needed for equality check.
 %csmethodmodifiers pkmn::swig::pokemon::cptr() "private";
 
+// Rename functions specific to SWIG class whose name were changed to remove
+// ambiguity from the base class.
+%rename(Clone) pkmn::swig::pokemon::clone_swig;
+%rename(ToGame) pkmn::swig::pokemon::to_game_swig;
+
 // Convert getter/setter functions into attributes for more idiomatic C#.
 
 %attributestring(pkmn::swig::pokemon, pkmn::e_species, Species, get_species);
@@ -58,12 +63,12 @@ using Database;"
 %attribute(pkmn::swig::pokemon, int, Experience, get_experience, set_experience);
 %attribute(pkmn::swig::pokemon, int, Level, get_level, set_level);
 %attribute(pkmn::swig::pokemon, int, CurrentHP, get_current_hp, set_current_hp);
-%attributeval(pkmn::swig::pokemon, pkmn::swig::EV_map, EVs, get_EVs);
-%attributeval(pkmn::swig::pokemon, pkmn::swig::IV_map, IVs, get_IVs);
-%attributeval(pkmn::swig::pokemon, pkmn::swig::marking_map, Markings, get_markings);
-%attributeval(pkmn::swig::pokemon, pkmn::swig::ribbon_map, Ribbons, get_ribbons);
-%attributeval(pkmn::swig::pokemon, pkmn::swig::contest_stat_map, ContestStats, get_contest_stats);
-%attributeval(pkmn::swig::pokemon, pkmn::swig::move_slots, Moves, get_moves);
+%attributeval(pkmn::swig::pokemon, pkmn::swig::EV_map, EVs, get_EVs_helper);
+%attributeval(pkmn::swig::pokemon, pkmn::swig::IV_map, IVs, get_IVs_helper);
+%attributeval(pkmn::swig::pokemon, pkmn::swig::marking_map, Markings, get_markings_helper);
+%attributeval(pkmn::swig::pokemon, pkmn::swig::ribbon_map, Ribbons, get_ribbons_helper);
+%attributeval(pkmn::swig::pokemon, pkmn::swig::contest_stat_map, ContestStats, get_contest_stats_helper);
+%attributeval(pkmn::swig::pokemon, pkmn::swig::move_slots, Moves, get_moves_helper);
 %attributeval(pkmn::swig::pokemon, %arg(std::map<pkmn::e_stat, int>), Stats, get_stats);
 %attributestring(pkmn::swig::pokemon, std::string, IconFilepath, get_icon_filepath);
 %attributestring(pkmn::swig::pokemon, std::string, SpriteFilepath, get_sprite_filepath);

@@ -24,6 +24,8 @@
 #include "swig/cpp_wrappers/game_save.hpp"
 #include "swig/cpp_wrappers/time_duration.hpp"
 
+#include "pkmntest/pokemon_comparison.hpp"
+
 #include <boost/filesystem.hpp>
 
 #include <gtest/gtest.h>
@@ -469,37 +471,58 @@ TEST(cpp_swig_wrapper_test, test_pokemon)
     swig_pokemon.set_level(50);
     EXPECT_EQ(50, swig_pokemon.get_level());
 
-    swig_pokemon.get_moves().get_move_slot(0).set_move(pkmn::e_move::RAZOR_LEAF);
-    EXPECT_EQ(pkmn::e_move::RAZOR_LEAF, swig_pokemon.get_moves().get_move_slot(0).get_move());
-    EXPECT_EQ(25, swig_pokemon.get_moves().get_move_slot(0).get_pp());
+    swig_pokemon.get_moves_helper().get_move_slot(0).set_move(pkmn::e_move::RAZOR_LEAF);
+    EXPECT_EQ(pkmn::e_move::RAZOR_LEAF, swig_pokemon.get_moves_helper().get_move_slot(0).get_move());
+    EXPECT_EQ(25, swig_pokemon.get_moves_helper().get_move_slot(0).get_pp());
 
-    swig_pokemon.get_moves().get_move_slot(0).set_move(pkmn::e_move::FISSURE);
-    EXPECT_EQ(pkmn::e_move::FISSURE, swig_pokemon.get_moves().get_move_slot(0).get_move());
-    EXPECT_EQ(5, swig_pokemon.get_moves().get_move_slot(0).get_pp());
+    swig_pokemon.get_moves_helper().get_move_slot(0).set_move(pkmn::e_move::FISSURE);
+    EXPECT_EQ(pkmn::e_move::FISSURE, swig_pokemon.get_moves_helper().get_move_slot(0).get_move());
+    EXPECT_EQ(5, swig_pokemon.get_moves_helper().get_move_slot(0).get_pp());
 
-    swig_pokemon.get_moves().get_move_slot(0).set_pp(2);
-    EXPECT_EQ(2, swig_pokemon.get_moves().get_move_slot(0).get_pp());
+    swig_pokemon.get_moves_helper().get_move_slot(0).set_pp(2);
+    EXPECT_EQ(2, swig_pokemon.get_moves_helper().get_move_slot(0).get_pp());
 
     swig_pokemon.set_current_hp(stats.at(pkmn::e_stat::HP)-1);
     EXPECT_EQ(stats.at(pkmn::e_stat::HP)-1, swig_pokemon.get_current_hp());
 
-    swig_pokemon.get_EVs().set_EV(pkmn::e_stat::ATTACK, 5);
-    EXPECT_EQ(5, swig_pokemon.get_EVs().get_EV(pkmn::e_stat::ATTACK));
+    swig_pokemon.get_EVs_helper().set_EV(pkmn::e_stat::ATTACK, 5);
+    EXPECT_EQ(5, swig_pokemon.get_EVs_helper().get_EV(pkmn::e_stat::ATTACK));
 
-    swig_pokemon.get_IVs().set_IV(pkmn::e_stat::ATTACK, 5);
-    EXPECT_EQ(5, swig_pokemon.get_IVs().get_IV(pkmn::e_stat::ATTACK));
+    swig_pokemon.get_IVs_helper().set_IV(pkmn::e_stat::ATTACK, 5);
+    EXPECT_EQ(5, swig_pokemon.get_IVs_helper().get_IV(pkmn::e_stat::ATTACK));
 
-    swig_pokemon.get_markings().set_marking(pkmn::e_marking::TRIANGLE, true);
-    EXPECT_TRUE(swig_pokemon.get_markings().get_marking(pkmn::e_marking::TRIANGLE));
+    swig_pokemon.get_markings_helper().set_marking(pkmn::e_marking::TRIANGLE, true);
+    EXPECT_TRUE(swig_pokemon.get_markings_helper().get_marking(pkmn::e_marking::TRIANGLE));
 
-    swig_pokemon.get_ribbons().set_ribbon("Cool Hyper", true);
-    EXPECT_TRUE(swig_pokemon.get_ribbons().get_ribbon("Cool Hyper"));
+    swig_pokemon.get_ribbons_helper().set_ribbon("Cool Hyper", true);
+    EXPECT_TRUE(swig_pokemon.get_ribbons_helper().get_ribbon("Cool Hyper"));
 
-    swig_pokemon.get_contest_stats().set_contest_stat(pkmn::e_contest_stat::SMART, 5);
-    EXPECT_EQ(5, swig_pokemon.get_contest_stats().get_contest_stat(pkmn::e_contest_stat::SMART));
+    swig_pokemon.get_contest_stats_helper().set_contest_stat(pkmn::e_contest_stat::SMART, 5);
+    EXPECT_EQ(5, swig_pokemon.get_contest_stats_helper().get_contest_stat(pkmn::e_contest_stat::SMART));
 
     EXPECT_TRUE(fs::exists(swig_pokemon.get_icon_filepath()));
     EXPECT_TRUE(fs::exists(swig_pokemon.get_sprite_filepath()));
+
+    pkmn::swig::pokemon cloned_pokemon = swig_pokemon.clone_swig();
+    ASSERT_NO_FATAL_FAILURE(
+        pkmntest::compare_pokemon(
+            swig_pokemon.get_internal(),
+            cloned_pokemon.get_internal()
+        )
+    );
+
+    pkmn::swig::pokemon pokemon_in_game = swig_pokemon.to_game_swig(
+                                              pkmn::e_game::COLOSSEUM
+                                          );
+    pkmn::pokemon::sptr native_pokemon_in_game = swig_pokemon.get_internal()->to_game(
+                                                     pkmn::e_game::COLOSSEUM
+                                                 );
+    ASSERT_NO_FATAL_FAILURE(
+        pkmntest::compare_pokemon(
+            pokemon_in_game.get_internal(),
+            native_pokemon_in_game
+        )
+    );
 }
 
 TEST(cpp_swig_wrapper_test, test_pokemon_party)
@@ -624,12 +647,12 @@ TEST(cpp_swig_wrapper_test, test_game_save)
      * gameSave.PokemonPC[5][20].IVs[PKMN.Stat.ATTACK] = 5;
      * gameSave.ItemBag["Items"][0].Item = PKMN.Item.REPEL;
      */
-    swig_game_save.get_pokemon_party().get_pokemon(1).get_EVs().set_EV(pkmn::e_stat::ATTACK, 20);
-    swig_game_save.get_pokemon_pc().get_box(5).get_pokemon(20).get_IVs().set_IV(pkmn::e_stat::HP, 5);
+    swig_game_save.get_pokemon_party().get_pokemon(1).get_EVs_helper().set_EV(pkmn::e_stat::ATTACK, 20);
+    swig_game_save.get_pokemon_pc().get_box(5).get_pokemon(20).get_IVs_helper().set_IV(pkmn::e_stat::HP, 5);
     swig_game_save.get_item_bag().get_pocket("Items").at(0).set_item(pkmn::e_item::REPEL);
 
-    EXPECT_EQ(20, swig_game_save.get_pokemon_party().get_pokemon(1).get_EVs().get_EV(pkmn::e_stat::ATTACK));
-    EXPECT_EQ(5, swig_game_save.get_pokemon_pc().get_box(5).get_pokemon(20).get_IVs().get_IV(pkmn::e_stat::HP));
+    EXPECT_EQ(20, swig_game_save.get_pokemon_party().get_pokemon(1).get_EVs_helper().get_EV(pkmn::e_stat::ATTACK));
+    EXPECT_EQ(5, swig_game_save.get_pokemon_pc().get_box(5).get_pokemon(20).get_IVs_helper().get_IV(pkmn::e_stat::HP));
     EXPECT_EQ(pkmn::e_item::REPEL, swig_game_save.get_item_bag().get_pocket("Items").at(0).get_item());
 }
 

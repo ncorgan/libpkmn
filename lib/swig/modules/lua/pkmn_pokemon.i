@@ -20,6 +20,11 @@
 %ignore pkmn::swig::pokemon::get_internal() const;
 %ignore pkmn::swig::pokemon::cptr();
 
+// Rename functions specific to SWIG class whose name were changed to remove
+// ambiguity from the base class.
+%rename(clone) pkmn::swig::pokemon::clone_swig;
+%rename(to_game) pkmn::swig::pokemon::to_game_swig;
+
 // Convert getter/setter functions into attributes for more idiomatic Lua.
 
 %attribute(pkmn::swig::pokemon, pkmn::e_species, species, get_species);
@@ -50,12 +55,12 @@
 %attribute(pkmn::swig::pokemon, int, experience, get_experience, set_experience);
 %attribute(pkmn::swig::pokemon, int, level, get_level, set_level);
 %attribute(pkmn::swig::pokemon, int, current_hp, get_current_hp, set_current_hp);
-%attributeval(pkmn::swig::pokemon, pkmn::swig::EV_map, EVs, get_EVs);
-%attributeval(pkmn::swig::pokemon, pkmn::swig::IV_map, IVs, get_IVs);
-%attributeval(pkmn::swig::pokemon, pkmn::swig::marking_map, markings, get_markings);
-%attributeval(pkmn::swig::pokemon, pkmn::swig::ribbon_map, ribbons, get_ribbons);
-%attributeval(pkmn::swig::pokemon, pkmn::swig::contest_stat_map, contest_stats, get_contest_stats);
-%attributeval(pkmn::swig::pokemon, pkmn::swig::move_slots, moves, get_moves);
+%attributeval(pkmn::swig::pokemon, pkmn::swig::EV_map, EVs, get_EVs_helper);
+%attributeval(pkmn::swig::pokemon, pkmn::swig::IV_map, IVs, get_IVs_helper);
+%attributeval(pkmn::swig::pokemon, pkmn::swig::marking_map, markings, get_markings_helper);
+%attributeval(pkmn::swig::pokemon, pkmn::swig::ribbon_map, ribbons, get_ribbons_helper);
+%attributeval(pkmn::swig::pokemon, pkmn::swig::contest_stat_map, contest_stats, get_contest_stats_helper);
+%attributeval(pkmn::swig::pokemon, pkmn::swig::move_slots, moves, get_moves_helper);
 %attributeval(pkmn::swig::pokemon, %arg(std::map<pkmn::e_stat, int>), stats, get_stats);
 %attributestring(pkmn::swig::pokemon, std::string, icon_filepath, get_icon_filepath);
 %attributestring(pkmn::swig::pokemon, std::string, sprite_filepath, get_sprite_filepath);
