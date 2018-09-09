@@ -7,6 +7,8 @@
 
 #include "enum_conversions.hpp"
 
+#include <pkmn/enums/enum_to_string.hpp>
+
 #include <boost/assign.hpp>
 #include <boost/bimap.hpp>
 

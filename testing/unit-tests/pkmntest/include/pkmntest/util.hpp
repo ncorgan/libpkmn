@@ -97,6 +97,19 @@ static const std::vector<pkmn::e_game> SUPPORTED_GAMES =
     pkmn::e_game::XD,
 };
 
+// Games whose LibPKMN implementation supports breeding
+static const std::vector<pkmn::e_game> BREEDING_SUPPORTED_GAMES =
+{
+    pkmn::e_game::RED,
+    pkmn::e_game::BLUE,
+    pkmn::e_game::YELLOW,
+    pkmn::e_game::GOLD,
+    pkmn::e_game::SILVER,
+    pkmn::e_game::CRYSTAL,
+    pkmn::e_game::COLOSSEUM,
+    pkmn::e_game::XD,
+};
+
 static const std::vector<pkmn::e_game> ALL_GAMES =
 {
     pkmn::e_game::RED,
