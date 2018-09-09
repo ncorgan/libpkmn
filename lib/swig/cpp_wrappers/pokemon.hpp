@@ -35,10 +35,18 @@ namespace pkmn { namespace swig {
     class pokemon
     {
         public:
+            pokemon():
+                _pokemon(nullptr),
+                _generation(0),
+                _is_from_libpkmn(false)
+            {
+            }
+
             explicit pokemon(
                 const pkmn::pokemon::sptr& cpp_pokemon
             ): _pokemon(cpp_pokemon),
-               _generation(pkmn::priv::game_enum_to_generation(cpp_pokemon->get_game()))
+               _generation(pkmn::priv::game_enum_to_generation(cpp_pokemon->get_game())),
+               _is_from_libpkmn(true)
             {
                 BOOST_ASSERT(_pokemon.get() != nullptr);
             }
@@ -49,14 +57,16 @@ namespace pkmn { namespace swig {
                 const std::string& form,
                 int level
             ): _pokemon(pkmn::pokemon::make(species, game, form, level)),
-               _generation(pkmn::priv::game_enum_to_generation(game))
+               _generation(pkmn::priv::game_enum_to_generation(game)),
+               _is_from_libpkmn(true)
             {
                 BOOST_ASSERT(_pokemon.get() != nullptr);
             }
 
             explicit pokemon(
                 const std::string& filepath
-            ): _pokemon(pkmn::pokemon::from_file(filepath))
+            ): _pokemon(pkmn::pokemon::from_file(filepath)),
+               _is_from_libpkmn(true)
             {
                 BOOST_ASSERT(_pokemon.get() != nullptr);
 
@@ -68,65 +78,134 @@ namespace pkmn { namespace swig {
 
             inline pokemon to_game(pkmn::e_game game)
             {
-                BOOST_ASSERT(_pokemon.get() != nullptr);
+                pokemon ret;
 
-                return pokemon(_pokemon->to_game(game));
+                if(_is_from_libpkmn)
+                {
+                    BOOST_ASSERT(_pokemon.get() != nullptr);
+                    ret = pokemon(_pokemon->to_game(game));
+                }
+                else
+                {
+                    throw pkmn::unimplemented_error();
+                }
+
+                return ret;
             }
 
             inline void export_to_file(
                 const std::string& filepath
             )
             {
-                BOOST_ASSERT(_pokemon.get() != nullptr);
-
-                _pokemon->export_to_file(filepath);
+                if(_is_from_libpkmn)
+                {
+                    BOOST_ASSERT(_pokemon.get() != nullptr);
+                    _pokemon->export_to_file(filepath);
+                }
+                else
+                {
+                    throw pkmn::unimplemented_error();
+                }
             }
 
             inline pkmn::e_species get_species()
             {
-                BOOST_ASSERT(_pokemon.get() != nullptr);
+                pkmn::e_species species = pkmn::e_species::NONE;
 
-                return _pokemon->get_species();
+                if(_is_from_libpkmn)
+                {
+                    BOOST_ASSERT(_pokemon.get() != nullptr);
+                    species = _pokemon->get_species();
+                }
+                else
+                {
+                    throw pkmn::unimplemented_error();
+                }
+
+                return species;
             }
 
             inline pkmn::e_game get_game()
             {
-                BOOST_ASSERT(_pokemon.get() != nullptr);
+                pkmn::e_game game = pkmn::e_game::NONE;
 
-                return _pokemon->get_game();
+                if(_is_from_libpkmn)
+                {
+                    BOOST_ASSERT(_pokemon.get() != nullptr);
+                    game = _pokemon->get_game();
+                }
+                else
+                {
+                    throw pkmn::unimplemented_error();
+                }
+
+                return game;
             }
 
             inline std::string get_form()
             {
-                BOOST_ASSERT(_pokemon.get() != nullptr);
+                std::string form;
 
-                return _pokemon->get_form();
+                if(_is_from_libpkmn)
+                {
+                    BOOST_ASSERT(_pokemon.get() != nullptr);
+                    form = _pokemon->get_form();
+                }
+                else
+                {
+                    throw pkmn::unimplemented_error();
+                }
+
+                return form;
             }
 
             inline void set_form(
                 const std::string& form
             )
             {
-                BOOST_ASSERT(_pokemon.get() != nullptr);
-
-                _pokemon->set_form(form);
+                if(_is_from_libpkmn)
+                {
+                    BOOST_ASSERT(_pokemon.get() != nullptr);
+                    _pokemon->set_form(form);
+                }
+                else
+                {
+                    throw pkmn::unimplemented_error();
+                }
             }
 
             inline bool is_egg()
             {
-                BOOST_ASSERT(_pokemon.get() != nullptr);
+                bool is_egg = false;
 
-                return _pokemon->is_egg();
+                if(_is_from_libpkmn)
+                {
+                    BOOST_ASSERT(_pokemon.get() != nullptr);
+                    is_egg = _pokemon->is_egg();
+                }
+                else
+                {
+                    throw pkmn::unimplemented_error();
+                }
+
+                return is_egg;
             }
 
             inline void set_is_egg(bool is_egg)
             {
-                BOOST_ASSERT(_pokemon.get() != nullptr);
-
-                _pokemon->set_is_egg(is_egg);
+                if(_is_from_libpkmn)
+                {
+                    BOOST_ASSERT(_pokemon.get() != nullptr);
+                    _pokemon->set_is_egg(is_egg);
+                }
+                else
+                {
+                    throw pkmn::unimplemented_error();
+                }
             }
 
             // Copy the entry, since the const in the reference is casted away.
+            // TODO: use base class's version when implemented
             inline pkmn::database::pokemon_entry get_database_entry()
             {
                 BOOST_ASSERT(_pokemon.get() != nullptr);
@@ -136,486 +215,886 @@ namespace pkmn { namespace swig {
 
             inline pkmn::e_condition get_condition()
             {
-                BOOST_ASSERT(_pokemon.get() != nullptr);
+                pkmn::e_condition condition;
 
-                return _pokemon->get_condition();
+                if(_is_from_libpkmn)
+                {
+                    BOOST_ASSERT(_pokemon.get() != nullptr);
+                    condition = _pokemon->get_condition();
+                }
+                else
+                {
+                    throw pkmn::unimplemented_error();
+                }
+
+                return condition;
             }
 
             inline void set_condition(
                 pkmn::e_condition condition
             )
             {
-                BOOST_ASSERT(_pokemon.get() != nullptr);
-
-                _pokemon->set_condition(condition);
+                if(_is_from_libpkmn)
+                {
+                    BOOST_ASSERT(_pokemon.get() != nullptr);
+                    _pokemon->set_condition(condition);
+                }
+                else
+                {
+                    throw pkmn::unimplemented_error();
+                }
             }
 
             inline std::string get_nickname()
             {
-                BOOST_ASSERT(_pokemon.get() != nullptr);
+                std::string nickname;
 
-                return _pokemon->get_nickname();
+                if(_is_from_libpkmn)
+                {
+                    BOOST_ASSERT(_pokemon.get() != nullptr);
+                    nickname = _pokemon->get_nickname();
+                }
+                else
+                {
+                    throw pkmn::unimplemented_error();
+                }
+
+                return nickname;
             }
 
             inline void set_nickname(
                 const std::string& nickname
             )
             {
-                BOOST_ASSERT(_pokemon.get() != nullptr);
-
-                _pokemon->set_nickname(nickname);
+                if(_is_from_libpkmn)
+                {
+                    BOOST_ASSERT(_pokemon.get() != nullptr);
+                    _pokemon->set_nickname(nickname);
+                }
+                else
+                {
+                    throw pkmn::unimplemented_error();
+                }
             }
 
             inline pkmn::e_gender get_gender()
             {
-                BOOST_ASSERT(_pokemon.get() != nullptr);
+                pkmn::e_gender gender;
 
-                if(_generation >= 2)
+                if(_is_from_libpkmn)
                 {
-                    return _pokemon->get_gender();
+                    BOOST_ASSERT(_pokemon.get() != nullptr);
+
+                    if(_generation >= 2)
+                    {
+                        gender = _pokemon->get_gender();
+                    }
+                    else
+                    {
+                        gender = pkmn::e_gender::NONE;
+                    }
                 }
                 else
                 {
-                    return pkmn::e_gender::NONE;
+                    throw pkmn::unimplemented_error();
                 }
+
+                return gender;
             }
 
             inline void set_gender(
                 pkmn::e_gender gender
             )
             {
-                BOOST_ASSERT(_pokemon.get() != nullptr);
-
-                _pokemon->set_gender(gender);
+                if(_is_from_libpkmn)
+                {
+                    BOOST_ASSERT(_pokemon.get() != nullptr);
+                    _pokemon->set_gender(gender);
+                }
+                else
+                {
+                    throw pkmn::unimplemented_error();
+                }
             }
 
             inline bool is_shiny()
             {
-                BOOST_ASSERT(_pokemon.get() != nullptr);
+                bool is_shiny = false;
 
-                if(_generation >= 2)
+                if(_is_from_libpkmn)
                 {
-                    return _pokemon->is_shiny();
+                    BOOST_ASSERT(_pokemon.get() != nullptr);
+
+                    if(_generation >= 2)
+                    {
+                        is_shiny = _pokemon->is_shiny();
+                    }
+                    else
+                    {
+                        is_shiny = false;
+                    }
                 }
                 else
                 {
-                    return false;
+                    throw pkmn::unimplemented_error();
                 }
+
+                return is_shiny;
             }
 
             inline void set_shininess(
                 bool value
             )
             {
-                BOOST_ASSERT(_pokemon.get() != nullptr);
-
-                _pokemon->set_shininess(value);
+                if(_is_from_libpkmn)
+                {
+                    BOOST_ASSERT(_pokemon.get() != nullptr);
+                    _pokemon->set_shininess(value);
+                }
+                else
+                {
+                    throw pkmn::unimplemented_error();
+                }
             }
 
             inline pkmn::e_item get_held_item()
             {
-                BOOST_ASSERT(_pokemon.get() != nullptr);
+                pkmn::e_item held_item;
 
-                if(_generation >= 2)
+                if(_is_from_libpkmn)
                 {
-                    return _pokemon->get_held_item();
+                    BOOST_ASSERT(_pokemon.get() != nullptr);
+
+                    if(_generation >= 2)
+                    {
+                        held_item = _pokemon->get_held_item();
+                    }
+                    else
+                    {
+                        held_item = pkmn::e_item::NONE;
+                    }
                 }
                 else
                 {
-                    return pkmn::e_item::NONE;
+                    throw pkmn::unimplemented_error();
                 }
+
+                return held_item;
             }
 
             inline void set_held_item(
                 pkmn::e_item held_item
             )
             {
-                BOOST_ASSERT(_pokemon.get() != nullptr);
-
-                _pokemon->set_held_item(held_item);
+                if(_is_from_libpkmn)
+                {
+                    BOOST_ASSERT(_pokemon.get() != nullptr);
+                    _pokemon->set_held_item(held_item);
+                }
+                else
+                {
+                    throw pkmn::unimplemented_error();
+                }
             }
 
             inline pkmn::e_nature get_nature()
             {
-                BOOST_ASSERT(_pokemon.get() != nullptr);
+                pkmn::e_nature nature;
 
-                if(_generation >= 3)
+                if(_is_from_libpkmn)
                 {
-                    return _pokemon->get_nature();
+                    BOOST_ASSERT(_pokemon.get() != nullptr);
+
+                    if(_generation >= 3)
+                    {
+                        nature = _pokemon->get_nature();
+                    }
+                    else
+                    {
+                        nature = pkmn::e_nature::NONE;
+                    }
                 }
                 else
                 {
-                    return pkmn::e_nature::NONE;
+                    throw pkmn::unimplemented_error();
                 }
+
+                return nature;
             }
 
             inline void set_nature(pkmn::e_nature nature)
             {
-                BOOST_ASSERT(_pokemon.get() != nullptr);
-
-                _pokemon->set_nature(nature);
+                if(_is_from_libpkmn)
+                {
+                    BOOST_ASSERT(_pokemon.get() != nullptr);
+                    _pokemon->set_nature(nature);
+                }
+                else
+                {
+                    throw pkmn::unimplemented_error();
+                }
             }
 
             inline int get_pokerus_duration()
             {
-                BOOST_ASSERT(_pokemon.get() != nullptr);
+                int pokerus_duration = 0;
 
-                if(_generation >= 2)
+                if(_is_from_libpkmn)
                 {
-                    return _pokemon->get_pokerus_duration();
+                    BOOST_ASSERT(_pokemon.get() != nullptr);
+
+                    if(_generation >= 2)
+                    {
+                        pokerus_duration = _pokemon->get_pokerus_duration();
+                    }
+                    else
+                    {
+                        pokerus_duration = 0;
+                    }
                 }
                 else
                 {
-                    return 0;
+                    throw pkmn::unimplemented_error();
                 }
+
+                return pokerus_duration;
             }
 
             inline void set_pokerus_duration(int duration)
             {
-                BOOST_ASSERT(_pokemon.get() != nullptr);
-
-                _pokemon->set_pokerus_duration(duration);
+                if(_is_from_libpkmn)
+                {
+                    BOOST_ASSERT(_pokemon.get() != nullptr);
+                    _pokemon->set_pokerus_duration(duration);
+                }
+                else
+                {
+                    throw pkmn::unimplemented_error();
+                }
             }
 
             inline std::string get_original_trainer_name()
             {
-                BOOST_ASSERT(_pokemon.get() != nullptr);
+                std::string original_trainer_name;
 
-                return _pokemon->get_original_trainer_name();
+                if(_is_from_libpkmn)
+                {
+                    BOOST_ASSERT(_pokemon.get() != nullptr);
+                    original_trainer_name = _pokemon->get_original_trainer_name();
+                }
+                else
+                {
+                    throw pkmn::unimplemented_error();
+                }
+
+                return original_trainer_name;
             }
 
             inline void set_original_trainer_name(
                 const std::string& trainer_name
             )
             {
-                BOOST_ASSERT(_pokemon.get() != nullptr);
-
-                _pokemon->set_original_trainer_name(trainer_name);
+                if(_is_from_libpkmn)
+                {
+                    BOOST_ASSERT(_pokemon.get() != nullptr);
+                    _pokemon->set_original_trainer_name(trainer_name);
+                }
+                else
+                {
+                    throw pkmn::unimplemented_error();
+                }
             }
 
             inline uint16_t get_original_trainer_public_id()
             {
-                BOOST_ASSERT(_pokemon.get() != nullptr);
+                uint16_t original_trainer_public_id = 0;
 
-                return _pokemon->get_original_trainer_public_id();
+                if(_is_from_libpkmn)
+                {
+                    BOOST_ASSERT(_pokemon.get() != nullptr);
+                    original_trainer_public_id = _pokemon->get_original_trainer_public_id();
+                }
+                else
+                {
+                    throw pkmn::unimplemented_error();
+                }
+
+                return original_trainer_public_id;
             }
 
             inline uint16_t get_original_trainer_secret_id()
             {
-                BOOST_ASSERT(_pokemon.get() != nullptr);
+                uint16_t original_trainer_secret_id = 0;
 
-                if(_generation >= 3)
+                if(_is_from_libpkmn)
                 {
-                    return _pokemon->get_original_trainer_secret_id();
+                    BOOST_ASSERT(_pokemon.get() != nullptr);
+
+                    if(_generation >= 3)
+                    {
+                        original_trainer_secret_id = _pokemon->get_original_trainer_secret_id();
+                    }
+                    else
+                    {
+                        original_trainer_secret_id = 0;
+                    }
                 }
                 else
                 {
-                    return 0;
+                    throw pkmn::unimplemented_error();
                 }
+
+                return original_trainer_secret_id;
             }
 
             inline uint32_t get_original_trainer_id()
             {
-                BOOST_ASSERT(_pokemon.get() != nullptr);
+                uint32_t original_trainer_id = 0;
 
-                return _pokemon->get_original_trainer_id();
+                if(_is_from_libpkmn)
+                {
+                    BOOST_ASSERT(_pokemon.get() != nullptr);
+                    original_trainer_id = _pokemon->get_original_trainer_id();
+                }
+                else
+                {
+                    throw pkmn::unimplemented_error();
+                }
+
+                return original_trainer_id;
             }
 
             inline void set_original_trainer_public_id(
                 uint16_t public_id
             )
             {
-                BOOST_ASSERT(_pokemon.get() != nullptr);
-
-                _pokemon->set_original_trainer_public_id(public_id);
+                if(_is_from_libpkmn)
+                {
+                    BOOST_ASSERT(_pokemon.get() != nullptr);
+                    _pokemon->set_original_trainer_public_id(public_id);
+                }
+                else
+                {
+                    throw pkmn::unimplemented_error();
+                }
             }
 
             inline void set_original_trainer_secret_id(
                 uint16_t secret_id
             )
             {
-                BOOST_ASSERT(_pokemon.get() != nullptr);
-
-                _pokemon->set_original_trainer_secret_id(secret_id);
+                if(_is_from_libpkmn)
+                {
+                    BOOST_ASSERT(_pokemon.get() != nullptr);
+                    _pokemon->set_original_trainer_secret_id(secret_id);
+                }
+                else
+                {
+                    throw pkmn::unimplemented_error();
+                }
             }
 
             inline void set_original_trainer_id(
                 uint32_t public_id
             )
             {
-                BOOST_ASSERT(_pokemon.get() != nullptr);
-
-                _pokemon->set_original_trainer_id(public_id);
+                if(_is_from_libpkmn)
+                {
+                    BOOST_ASSERT(_pokemon.get() != nullptr);
+                    _pokemon->set_original_trainer_id(public_id);
+                }
+                else
+                {
+                    throw pkmn::unimplemented_error();
+                }
             }
 
             inline pkmn::e_gender get_original_trainer_gender()
             {
-                BOOST_ASSERT(_pokemon.get() != nullptr);
+                pkmn::e_gender gender;
 
-                if(_generation >= 2)
+                if(_is_from_libpkmn)
                 {
-                    return _pokemon->get_original_trainer_gender();
+                    BOOST_ASSERT(_pokemon.get() != nullptr);
+
+                    if(_generation >= 2)
+                    {
+                        gender = _pokemon->get_original_trainer_gender();
+                    }
+                    else
+                    {
+                        gender = pkmn::e_gender::NONE;
+                    }
                 }
                 else
                 {
-                    return pkmn::e_gender::NONE;
+                    throw pkmn::unimplemented_error();
                 }
+
+                return gender;
             }
 
             inline void set_original_trainer_gender(
                 pkmn::e_gender trainer_gender
             )
             {
-                BOOST_ASSERT(_pokemon.get() != nullptr);
-
-                _pokemon->set_original_trainer_gender(trainer_gender);
+                if(_is_from_libpkmn)
+                {
+                    BOOST_ASSERT(_pokemon.get() != nullptr);
+                    _pokemon->set_original_trainer_gender(trainer_gender);
+                }
+                else
+                {
+                    throw pkmn::unimplemented_error();
+                }
             }
 
             inline pkmn::e_language get_language()
             {
-                BOOST_ASSERT(_pokemon.get() != nullptr);
+                pkmn::e_language language;
 
-                if(_generation >= 3)
+                if(_is_from_libpkmn)
                 {
-                    return _pokemon->get_language();
+                    BOOST_ASSERT(_pokemon.get() != nullptr);
+
+                    if(_generation >= 3)
+                    {
+                        language = _pokemon->get_language();
+                    }
+                    else
+                    {
+                        language = pkmn::e_language::NONE;
+                    }
                 }
                 else
                 {
-                    return pkmn::e_language::NONE;
+                    throw pkmn::unimplemented_error();
                 }
+
+                return language;
             }
 
             inline void set_language(pkmn::e_language language)
             {
-                BOOST_ASSERT(_pokemon.get() != nullptr);
-
-                _pokemon->set_language(language);
+                if(_is_from_libpkmn)
+                {
+                    BOOST_ASSERT(_pokemon.get() != nullptr);
+                    _pokemon->set_language(language);
+                }
+                else
+                {
+                    throw pkmn::unimplemented_error();
+                }
             }
 
             inline int get_current_trainer_friendship()
             {
-                BOOST_ASSERT(_pokemon.get() != nullptr);
+                int current_trainer_friendship = 0;
 
-                if(_generation >= 2)
+                if(_is_from_libpkmn)
                 {
-                    return _pokemon->get_current_trainer_friendship();
+                    BOOST_ASSERT(_pokemon.get() != nullptr);
+
+                    if(_generation >= 2)
+                    {
+                        current_trainer_friendship = _pokemon->get_current_trainer_friendship();
+                    }
+                    else
+                    {
+                        current_trainer_friendship = 0;
+                    }
                 }
                 else
                 {
-                    return 0;
+                    throw pkmn::unimplemented_error();
                 }
+
+                return current_trainer_friendship;
             }
 
             inline void set_current_trainer_friendship(
                 int friendship
             )
             {
-                BOOST_ASSERT(_pokemon.get() != nullptr);
-
-                _pokemon->set_current_trainer_friendship(friendship);
+                if(_is_from_libpkmn)
+                {
+                    BOOST_ASSERT(_pokemon.get() != nullptr);
+                    _pokemon->set_current_trainer_friendship(friendship);
+                }
+                else
+                {
+                    throw pkmn::unimplemented_error();
+                }
             }
 
             inline pkmn::e_ability get_ability()
             {
-                BOOST_ASSERT(_pokemon.get() != nullptr);
+                pkmn::e_ability ability;
 
-                if(_generation >= 3)
+                if(_is_from_libpkmn)
                 {
-                    return _pokemon->get_ability();
+                    BOOST_ASSERT(_pokemon.get() != nullptr);
+
+                    if(_generation >= 3)
+                    {
+                        ability = _pokemon->get_ability();
+                    }
+                    else
+                    {
+                        ability = pkmn::e_ability::NONE;
+                    }
                 }
                 else
                 {
-                    return pkmn::e_ability::NONE;
+                    throw pkmn::unimplemented_error();
                 }
+
+                return ability;
             }
 
             inline void set_ability(pkmn::e_ability ability)
             {
-                BOOST_ASSERT(_pokemon.get() != nullptr);
-
-                _pokemon->set_ability(ability);
+                if(_is_from_libpkmn)
+                {
+                    BOOST_ASSERT(_pokemon.get() != nullptr);
+                    _pokemon->set_ability(ability);
+                }
+                else
+                {
+                    throw pkmn::unimplemented_error();
+                }
             }
 
             inline pkmn::e_ball get_ball()
             {
-                BOOST_ASSERT(_pokemon.get() != nullptr);
+                pkmn::e_ball ball;
 
-                if(_generation >= 3)
+                if(_is_from_libpkmn)
                 {
-                    return _pokemon->get_ball();
+                    BOOST_ASSERT(_pokemon.get() != nullptr);
+
+                    if(_generation >= 3)
+                    {
+                        ball = _pokemon->get_ball();
+                    }
+                    else
+                    {
+                        ball = pkmn::e_ball::NONE;
+                    }
                 }
                 else
                 {
-                    return pkmn::e_ball::NONE;
+                    throw pkmn::unimplemented_error();
                 }
+
+                return ball;
             }
 
             inline void set_ball(
                 pkmn::e_ball ball
             )
             {
-                BOOST_ASSERT(_pokemon.get() != nullptr);
-
-                _pokemon->set_ball(ball);
+                if(_is_from_libpkmn)
+                {
+                    BOOST_ASSERT(_pokemon.get() != nullptr);
+                    _pokemon->set_ball(ball);
+                }
+                else
+                {
+                    throw pkmn::unimplemented_error();
+                }
             }
 
             inline int get_level_met()
             {
-                BOOST_ASSERT(_pokemon.get() != nullptr);
+                int level_met = 0;
 
-                if(_generation >= 2)
+                if(_is_from_libpkmn)
                 {
-                    return _pokemon->get_level_met();
+                    BOOST_ASSERT(_pokemon.get() != nullptr);
+
+                    if(_generation >= 2)
+                    {
+                        level_met = _pokemon->get_level_met();
+                    }
+                    else
+                    {
+                        level_met = 0;
+                    }
                 }
                 else
                 {
-                    return 0;
+                    throw pkmn::unimplemented_error();
                 }
+
+                return level_met;
             }
 
             inline void set_level_met(
                 int level_met
             )
             {
-                BOOST_ASSERT(_pokemon.get() != nullptr);
-
-                _pokemon->set_level_met(level_met);
+                if(_is_from_libpkmn)
+                {
+                    BOOST_ASSERT(_pokemon.get() != nullptr);
+                    _pokemon->set_level_met(level_met);
+                }
+                else
+                {
+                    throw pkmn::unimplemented_error();
+                }
             }
 
             inline std::string get_location_met()
             {
-                BOOST_ASSERT(_pokemon.get() != nullptr);
+                std::string location_met;
 
-                if(_generation >= 2)
+                if(_is_from_libpkmn)
                 {
-                    return _pokemon->get_location_met(false);
+                    BOOST_ASSERT(_pokemon.get() != nullptr);
+
+                    if(_generation >= 2)
+                    {
+                        location_met = _pokemon->get_location_met(false);
+                    }
+                    else
+                    {
+                        location_met = "";
+                    }
                 }
                 else
                 {
-                    return "";
+                    throw pkmn::unimplemented_error();
                 }
+
+                return location_met;
             }
 
             inline void set_location_met(
                 const std::string& location
             )
             {
-                BOOST_ASSERT(_pokemon.get() != nullptr);
-
-                _pokemon->set_location_met(location, false);
+                if(_is_from_libpkmn)
+                {
+                    BOOST_ASSERT(_pokemon.get() != nullptr);
+                    _pokemon->set_location_met(location, false);
+                }
+                else
+                {
+                    throw pkmn::unimplemented_error();
+                }
             }
 
             inline std::string get_location_met_as_egg()
             {
-                BOOST_ASSERT(_pokemon.get() != nullptr);
+                std::string location_met_as_egg;
 
-                if(_generation >= 4)
+                if(_is_from_libpkmn)
                 {
-                    return _pokemon->get_location_met(true);
+                    BOOST_ASSERT(_pokemon.get() != nullptr);
+
+                    if(_generation >= 4)
+                    {
+                        location_met_as_egg = _pokemon->get_location_met(true);
+                    }
+                    else
+                    {
+                        location_met_as_egg = "";
+                    }
                 }
                 else
                 {
-                    return "";
+                    throw pkmn::unimplemented_error();
                 }
+
+                return location_met_as_egg;
             }
 
             inline void set_location_met_as_egg(
                 const std::string& location
             )
             {
-                BOOST_ASSERT(_pokemon.get() != nullptr);
-
-                _pokemon->set_location_met(location, true);
+                if(_is_from_libpkmn)
+                {
+                    BOOST_ASSERT(_pokemon.get() != nullptr);
+                    _pokemon->set_location_met(location, true);
+                }
+                else
+                {
+                    throw pkmn::unimplemented_error();
+                }
             }
 
             inline pkmn::e_game get_original_game()
             {
-                BOOST_ASSERT(_pokemon.get() != nullptr);
+                pkmn::e_game game;
 
-                if(_generation >= 3)
+                if(_is_from_libpkmn)
                 {
-                    return _pokemon->get_original_game();
+                    BOOST_ASSERT(_pokemon.get() != nullptr);
+
+                    if(_generation >= 3)
+                    {
+                        game = _pokemon->get_original_game();
+                    }
+                    else
+                    {
+                        game = pkmn::e_game::NONE;
+                    }
                 }
                 else
                 {
-                    return pkmn::e_game::NONE;
+                    throw pkmn::unimplemented_error();
                 }
+
+                return game;
             }
 
             inline void set_original_game(pkmn::e_game original_game)
             {
-                BOOST_ASSERT(_pokemon.get() != nullptr);
-
-                _pokemon->set_original_game(original_game);
+                if(_is_from_libpkmn)
+                {
+                    BOOST_ASSERT(_pokemon.get() != nullptr);
+                    _pokemon->set_original_game(original_game);
+                }
+                else
+                {
+                    throw pkmn::unimplemented_error();
+                }
             }
 
             inline uint32_t get_personality()
             {
-                BOOST_ASSERT(_pokemon.get() != nullptr);
+                uint32_t personality = 0;
 
-                if(_generation >= 3)
+                if(_is_from_libpkmn)
                 {
-                    return _pokemon->get_personality();
+                    BOOST_ASSERT(_pokemon.get() != nullptr);
+
+                    if(_generation >= 3)
+                    {
+                        return _pokemon->get_personality();
+                    }
+                    else
+                    {
+                        return 0U;
+                    }
                 }
                 else
                 {
-                    return 0U;
+                    throw pkmn::unimplemented_error();
                 }
+
+                return personality;
             }
 
             inline void set_personality(
                 uint32_t personality
             )
             {
-                BOOST_ASSERT(_pokemon.get() != nullptr);
-
-                _pokemon->set_personality(personality);
+                if(_is_from_libpkmn)
+                {
+                    BOOST_ASSERT(_pokemon.get() != nullptr);
+                    _pokemon->set_personality(personality);
+                }
+                else
+                {
+                    throw pkmn::unimplemented_error();
+                }
             }
 
             inline int get_experience()
             {
-                BOOST_ASSERT(_pokemon.get() != nullptr);
+                int experience = 0;
 
-                return _pokemon->get_experience();
+                if(_is_from_libpkmn)
+                {
+                    BOOST_ASSERT(_pokemon.get() != nullptr);
+                    return _pokemon->get_experience();
+                }
+                else
+                {
+                    throw pkmn::unimplemented_error();
+                }
+
+                return experience;
             }
 
             inline void set_experience(
                 int experience
             )
             {
-                BOOST_ASSERT(_pokemon.get() != nullptr);
-
-                _pokemon->set_experience(experience);
+                if(_is_from_libpkmn)
+                {
+                    BOOST_ASSERT(_pokemon.get() != nullptr);
+                    _pokemon->set_experience(experience);
+                }
+                else
+                {
+                    throw pkmn::unimplemented_error();
+                }
             }
 
             inline int get_level()
             {
-                BOOST_ASSERT(_pokemon.get() != nullptr);
+                int level = 0;
 
-                return _pokemon->get_level();
+                if(_is_from_libpkmn)
+                {
+                    BOOST_ASSERT(_pokemon.get() != nullptr);
+                    return _pokemon->get_level();
+                }
+                else
+                {
+                    throw pkmn::unimplemented_error();
+                }
+
+                return level;
             }
 
             inline void set_level(
                 int level
             )
             {
-                BOOST_ASSERT(_pokemon.get() != nullptr);
-
-                _pokemon->set_level(level);
+                if(_is_from_libpkmn)
+                {
+                    BOOST_ASSERT(_pokemon.get() != nullptr);
+                    _pokemon->set_level(level);
+                }
+                else
+                {
+                    throw pkmn::unimplemented_error();
+                }
             }
 
             inline int get_current_hp()
             {
-                BOOST_ASSERT(_pokemon.get() != nullptr);
+                int current_hp = 0;
 
-                return _pokemon->get_current_hp();
+                if(_is_from_libpkmn)
+                {
+                    BOOST_ASSERT(_pokemon.get() != nullptr);
+                    return _pokemon->get_current_hp();
+                }
+                else
+                {
+                    throw pkmn::unimplemented_error();
+                }
+
+                return current_hp;
             }
 
             inline void set_current_hp(int hp)
             {
-                BOOST_ASSERT(_pokemon.get() != nullptr);
-
-                _pokemon->set_current_hp(hp);
+                if(_is_from_libpkmn)
+                {
+                    BOOST_ASSERT(_pokemon.get() != nullptr);
+                    _pokemon->set_current_hp(hp);
+                }
+                else
+                {
+                    throw pkmn::unimplemented_error();
+                }
             }
 
             inline EV_map get_EVs()
@@ -661,6 +1140,7 @@ namespace pkmn { namespace swig {
             }
 
             // Stats are read-only, so no need to wrap.
+            // TODO: call base class's function when implemented
             inline std::map<pkmn::e_stat, int> get_stats()
             {
                 BOOST_ASSERT(_pokemon.get() != nullptr);
@@ -670,16 +1150,36 @@ namespace pkmn { namespace swig {
 
             inline std::string get_icon_filepath()
             {
-                BOOST_ASSERT(_pokemon.get() != nullptr);
+                std::string icon_filepath;
 
-                return _pokemon->get_icon_filepath();
+                if(_is_from_libpkmn)
+                {
+                    BOOST_ASSERT(_pokemon.get() != nullptr);
+                    return _pokemon->get_icon_filepath();
+                }
+                else
+                {
+                    throw pkmn::unimplemented_error();
+                }
+
+                return icon_filepath;
             }
 
             inline std::string get_sprite_filepath()
             {
-                BOOST_ASSERT(_pokemon.get() != nullptr);
+                std::string sprite_filepath;
 
-                return _pokemon->get_sprite_filepath();
+                if(_is_from_libpkmn)
+                {
+                    BOOST_ASSERT(_pokemon.get() != nullptr);
+                    return _pokemon->get_sprite_filepath();
+                }
+                else
+                {
+                    throw pkmn::unimplemented_error();
+                }
+
+                return sprite_filepath;
             }
 
             numeric_attribute_map<pkmn::pokemon> get_numeric_attributes()
@@ -736,6 +1236,7 @@ namespace pkmn { namespace swig {
         private:
             pkmn::pokemon::sptr _pokemon;
             int _generation;
+            bool _is_from_libpkmn;
     };
 
     const uint32_t pokemon::DEFAULT_TRAINER_ID = pkmn::pokemon::DEFAULT_TRAINER_ID;
