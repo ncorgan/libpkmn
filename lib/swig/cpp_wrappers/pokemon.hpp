@@ -31,6 +31,9 @@ namespace pkmn { namespace swig {
      *
      * Per conventions, when used as attributes, these getters won't
      * throw exceptions and will instead return a default value.
+     *
+     * Note: "override" is specified by convention, but "virtual" is
+     *       necessary for SWIG to generate director functions.
      */
     class pokemon: public pkmn::pokemon
     {
@@ -73,10 +76,12 @@ namespace pkmn { namespace swig {
                 _generation = pkmn::priv::game_enum_to_generation(_pokemon->get_game());
             }
 
+            virtual ~pokemon() = default;
+
             static const uint32_t DEFAULT_TRAINER_ID;
             static const std::string DEFAULT_TRAINER_NAME;
 
-            pokemon to_game_swig(pkmn::e_game game)
+            virtual pokemon to_game_swig(pkmn::e_game game)
             {
                 pokemon ret;
 
@@ -93,7 +98,7 @@ namespace pkmn { namespace swig {
                 return ret;
             }
 
-            pokemon clone_swig() const
+            virtual pokemon clone_swig() const
             {
                 pokemon ret;
 
@@ -110,7 +115,7 @@ namespace pkmn { namespace swig {
                 return ret;
             }
 
-            void export_to_file(
+            virtual void export_to_file(
                 const std::string& filepath
             ) override
             {
@@ -125,7 +130,7 @@ namespace pkmn { namespace swig {
                 }
             }
 
-            pkmn::e_species get_species() const override
+            virtual pkmn::e_species get_species() const override
             {
                 pkmn::e_species species = pkmn::e_species::NONE;
 
@@ -142,7 +147,7 @@ namespace pkmn { namespace swig {
                 return species;
             }
 
-            pkmn::e_game get_game() const override
+            virtual pkmn::e_game get_game() const override
             {
                 pkmn::e_game game = pkmn::e_game::NONE;
 
@@ -159,7 +164,7 @@ namespace pkmn { namespace swig {
                 return game;
             }
 
-            std::string get_form() const override
+            virtual std::string get_form() const override
             {
                 std::string form;
 
@@ -176,7 +181,7 @@ namespace pkmn { namespace swig {
                 return form;
             }
 
-            void set_form(
+            virtual void set_form(
                 const std::string& form
             ) override
             {
@@ -191,7 +196,7 @@ namespace pkmn { namespace swig {
                 }
             }
 
-            bool is_egg() const override
+            virtual bool is_egg() const override
             {
                 bool is_egg = false;
 
@@ -208,7 +213,7 @@ namespace pkmn { namespace swig {
                 return is_egg;
             }
 
-            void set_is_egg(bool is_egg) override
+            virtual void set_is_egg(bool is_egg) override
             {
                 if(_is_from_libpkmn)
                 {
@@ -235,7 +240,7 @@ namespace pkmn { namespace swig {
                 }
             }
 
-            pkmn::e_condition get_condition() const override
+            virtual pkmn::e_condition get_condition() const override
             {
                 pkmn::e_condition condition;
 
@@ -252,7 +257,7 @@ namespace pkmn { namespace swig {
                 return condition;
             }
 
-            void set_condition(
+            virtual void set_condition(
                 pkmn::e_condition condition
             ) override
             {
@@ -267,7 +272,7 @@ namespace pkmn { namespace swig {
                 }
             }
 
-            std::string get_nickname() const override
+            virtual std::string get_nickname() const override
             {
                 std::string nickname;
 
@@ -284,7 +289,7 @@ namespace pkmn { namespace swig {
                 return nickname;
             }
 
-            void set_nickname(
+            virtual void set_nickname(
                 const std::string& nickname
             ) override
             {
@@ -299,7 +304,7 @@ namespace pkmn { namespace swig {
                 }
             }
 
-            pkmn::e_gender get_gender() const override
+            virtual pkmn::e_gender get_gender() const override
             {
                 pkmn::e_gender gender;
 
@@ -324,7 +329,7 @@ namespace pkmn { namespace swig {
                 return gender;
             }
 
-            void set_gender(
+            virtual void set_gender(
                 pkmn::e_gender gender
             ) override
             {
@@ -339,7 +344,7 @@ namespace pkmn { namespace swig {
                 }
             }
 
-            bool is_shiny() const override
+            virtual bool is_shiny() const override
             {
                 bool is_shiny = false;
 
@@ -364,7 +369,7 @@ namespace pkmn { namespace swig {
                 return is_shiny;
             }
 
-            void set_shininess(
+            virtual void set_shininess(
                 bool value
             ) override
             {
@@ -379,7 +384,7 @@ namespace pkmn { namespace swig {
                 }
             }
 
-            pkmn::e_item get_held_item() const override
+            virtual pkmn::e_item get_held_item() const override
             {
                 pkmn::e_item held_item;
 
@@ -404,7 +409,7 @@ namespace pkmn { namespace swig {
                 return held_item;
             }
 
-            void set_held_item(
+            virtual void set_held_item(
                 pkmn::e_item held_item
             ) override
             {
@@ -419,7 +424,7 @@ namespace pkmn { namespace swig {
                 }
             }
 
-            pkmn::e_nature get_nature() const override
+            virtual pkmn::e_nature get_nature() const override
             {
                 pkmn::e_nature nature;
 
@@ -444,7 +449,7 @@ namespace pkmn { namespace swig {
                 return nature;
             }
 
-            void set_nature(pkmn::e_nature nature) override
+            virtual void set_nature(pkmn::e_nature nature) override
             {
                 if(_is_from_libpkmn)
                 {
@@ -457,7 +462,7 @@ namespace pkmn { namespace swig {
                 }
             }
 
-            int get_pokerus_duration() const override
+            virtual int get_pokerus_duration() const override
             {
                 int pokerus_duration = 0;
 
@@ -482,7 +487,7 @@ namespace pkmn { namespace swig {
                 return pokerus_duration;
             }
 
-            void set_pokerus_duration(int duration) override
+            virtual void set_pokerus_duration(int duration) override
             {
                 if(_is_from_libpkmn)
                 {
@@ -495,7 +500,7 @@ namespace pkmn { namespace swig {
                 }
             }
 
-            std::string get_original_trainer_name() const override
+            virtual std::string get_original_trainer_name() const override
             {
                 std::string original_trainer_name;
 
@@ -512,7 +517,7 @@ namespace pkmn { namespace swig {
                 return original_trainer_name;
             }
 
-            void set_original_trainer_name(
+            virtual void set_original_trainer_name(
                 const std::string& trainer_name
             ) override
             {
@@ -527,7 +532,7 @@ namespace pkmn { namespace swig {
                 }
             }
 
-            uint16_t get_original_trainer_public_id() const override
+            virtual uint16_t get_original_trainer_public_id() const override
             {
                 uint16_t original_trainer_public_id = 0;
 
@@ -544,7 +549,7 @@ namespace pkmn { namespace swig {
                 return original_trainer_public_id;
             }
 
-            uint16_t get_original_trainer_secret_id() const override
+            virtual uint16_t get_original_trainer_secret_id() const override
             {
                 uint16_t original_trainer_secret_id = 0;
 
@@ -569,7 +574,7 @@ namespace pkmn { namespace swig {
                 return original_trainer_secret_id;
             }
 
-            uint32_t get_original_trainer_id() const override
+            virtual uint32_t get_original_trainer_id() const override
             {
                 uint32_t original_trainer_id = 0;
 
@@ -586,7 +591,7 @@ namespace pkmn { namespace swig {
                 return original_trainer_id;
             }
 
-            void set_original_trainer_public_id(
+            virtual void set_original_trainer_public_id(
                 uint16_t public_id
             ) override
             {
@@ -601,7 +606,7 @@ namespace pkmn { namespace swig {
                 }
             }
 
-            void set_original_trainer_secret_id(
+            virtual void set_original_trainer_secret_id(
                 uint16_t secret_id
             ) override
             {
@@ -616,7 +621,7 @@ namespace pkmn { namespace swig {
                 }
             }
 
-            void set_original_trainer_id(
+            virtual void set_original_trainer_id(
                 uint32_t public_id
             ) override
             {
@@ -631,7 +636,7 @@ namespace pkmn { namespace swig {
                 }
             }
 
-            pkmn::e_gender get_original_trainer_gender() const override
+            virtual pkmn::e_gender get_original_trainer_gender() const override
             {
                 pkmn::e_gender gender;
 
@@ -656,7 +661,7 @@ namespace pkmn { namespace swig {
                 return gender;
             }
 
-            void set_original_trainer_gender(
+            virtual void set_original_trainer_gender(
                 pkmn::e_gender trainer_gender
             ) override
             {
@@ -671,7 +676,7 @@ namespace pkmn { namespace swig {
                 }
             }
 
-            pkmn::e_language get_language() const override
+            virtual pkmn::e_language get_language() const override
             {
                 pkmn::e_language language;
 
@@ -696,7 +701,7 @@ namespace pkmn { namespace swig {
                 return language;
             }
 
-            void set_language(pkmn::e_language language) override
+            virtual void set_language(pkmn::e_language language) override
             {
                 if(_is_from_libpkmn)
                 {
@@ -709,7 +714,7 @@ namespace pkmn { namespace swig {
                 }
             }
 
-            int get_current_trainer_friendship() const override
+            virtual int get_current_trainer_friendship() const override
             {
                 int current_trainer_friendship = 0;
 
@@ -734,7 +739,7 @@ namespace pkmn { namespace swig {
                 return current_trainer_friendship;
             }
 
-            void set_current_trainer_friendship(
+            virtual void set_current_trainer_friendship(
                 int friendship
             ) override
             {
@@ -749,7 +754,7 @@ namespace pkmn { namespace swig {
                 }
             }
 
-            pkmn::e_ability get_ability() const override
+            virtual pkmn::e_ability get_ability() const override
             {
                 pkmn::e_ability ability;
 
@@ -774,7 +779,7 @@ namespace pkmn { namespace swig {
                 return ability;
             }
 
-            void set_ability(pkmn::e_ability ability) override
+            virtual void set_ability(pkmn::e_ability ability) override
             {
                 if(_is_from_libpkmn)
                 {
@@ -787,7 +792,7 @@ namespace pkmn { namespace swig {
                 }
             }
 
-            pkmn::e_ball get_ball() const override
+            virtual pkmn::e_ball get_ball() const override
             {
                 pkmn::e_ball ball;
 
@@ -812,7 +817,7 @@ namespace pkmn { namespace swig {
                 return ball;
             }
 
-            void set_ball(
+            virtual void set_ball(
                 pkmn::e_ball ball
             ) override
             {
@@ -827,7 +832,7 @@ namespace pkmn { namespace swig {
                 }
             }
 
-            int get_level_met() const override
+            virtual int get_level_met() const override
             {
                 int level_met = 0;
 
@@ -852,7 +857,7 @@ namespace pkmn { namespace swig {
                 return level_met;
             }
 
-            void set_level_met(
+            virtual void set_level_met(
                 int level_met
             ) override
             {
@@ -947,7 +952,7 @@ namespace pkmn { namespace swig {
                 }
             }
 
-            pkmn::e_game get_original_game() const override
+            virtual pkmn::e_game get_original_game() const override
             {
                 pkmn::e_game game;
 
@@ -972,7 +977,7 @@ namespace pkmn { namespace swig {
                 return game;
             }
 
-            void set_original_game(pkmn::e_game original_game) override
+            virtual void set_original_game(pkmn::e_game original_game) override
             {
                 if(_is_from_libpkmn)
                 {
@@ -985,7 +990,7 @@ namespace pkmn { namespace swig {
                 }
             }
 
-            uint32_t get_personality() const override
+            virtual uint32_t get_personality() const override
             {
                 uint32_t personality = 0;
 
@@ -1010,7 +1015,7 @@ namespace pkmn { namespace swig {
                 return personality;
             }
 
-            void set_personality(
+            virtual void set_personality(
                 uint32_t personality
             ) override
             {
@@ -1025,7 +1030,7 @@ namespace pkmn { namespace swig {
                 }
             }
 
-            int get_experience() const override
+            virtual int get_experience() const override
             {
                 int experience = 0;
 
@@ -1042,7 +1047,7 @@ namespace pkmn { namespace swig {
                 return experience;
             }
 
-            void set_experience(
+            virtual void set_experience(
                 int experience
             ) override
             {
@@ -1057,7 +1062,7 @@ namespace pkmn { namespace swig {
                 }
             }
 
-            int get_level() const override
+            virtual int get_level() const override
             {
                 int level = 0;
 
@@ -1074,7 +1079,7 @@ namespace pkmn { namespace swig {
                 return level;
             }
 
-            void set_level(
+            virtual void set_level(
                 int level
             ) override
             {
@@ -1089,7 +1094,7 @@ namespace pkmn { namespace swig {
                 }
             }
 
-            int get_current_hp() const override
+            virtual int get_current_hp() const override
             {
                 int current_hp = 0;
 
@@ -1106,7 +1111,7 @@ namespace pkmn { namespace swig {
                 return current_hp;
             }
 
-            void set_current_hp(int hp) override
+            virtual void set_current_hp(int hp) override
             {
                 if(_is_from_libpkmn)
                 {
@@ -1178,7 +1183,7 @@ namespace pkmn { namespace swig {
                 return stats;
             }
 
-            std::string get_icon_filepath() const override
+            virtual std::string get_icon_filepath() const override
             {
                 std::string icon_filepath;
 
@@ -1195,7 +1200,7 @@ namespace pkmn { namespace swig {
                 return icon_filepath;
             }
 
-            std::string get_sprite_filepath() const override
+            virtual std::string get_sprite_filepath() const override
             {
                 std::string sprite_filepath;
 
@@ -1275,7 +1280,7 @@ namespace pkmn { namespace swig {
         // necessary for the helper classes to call.
         protected:
 
-            void set_marking(
+            virtual void set_marking(
                 pkmn::e_marking marking,
                 bool value
             ) override
@@ -1291,7 +1296,7 @@ namespace pkmn { namespace swig {
                 }
             }
 
-            void set_ribbon(
+            virtual void set_ribbon(
                 const std::string& ribbon,
                 bool value
             ) override
@@ -1307,7 +1312,7 @@ namespace pkmn { namespace swig {
                 }
             }
 
-            void set_contest_stat(
+            virtual void set_contest_stat(
                 pkmn::e_contest_stat contest_stat,
                 int value
             ) override
@@ -1323,7 +1328,7 @@ namespace pkmn { namespace swig {
                 }
             }
 
-            void set_move(
+            virtual void set_move(
                 pkmn::e_move move,
                 int index
             ) override
@@ -1339,7 +1344,7 @@ namespace pkmn { namespace swig {
                 }
             }
 
-            void set_move_pp(
+            virtual void set_move_pp(
                 int index,
                 int pp
             ) override
@@ -1355,7 +1360,7 @@ namespace pkmn { namespace swig {
                 }
             }
 
-            void set_EV(
+            virtual void set_EV(
                 pkmn::e_stat EV,
                 int value
             ) override
@@ -1371,7 +1376,7 @@ namespace pkmn { namespace swig {
                 }
             }
 
-            void set_IV(
+            virtual void set_IV(
                 pkmn::e_stat IV,
                 int value
             ) override

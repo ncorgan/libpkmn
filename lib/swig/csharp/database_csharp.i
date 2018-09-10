@@ -5,6 +5,8 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
+%module(directors="0") Database
+
 %include <csharp/csharp_init.i>
 PKMN_CSHARP_INIT
 

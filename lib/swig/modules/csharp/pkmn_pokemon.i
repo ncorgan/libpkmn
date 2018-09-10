@@ -187,4 +187,5 @@ using Database;"
     }
 %}
 
+%feature("director", "1") pkmn::swig::pokemon;
 %include "cpp_wrappers/pokemon.hpp"

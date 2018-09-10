@@ -95,7 +95,7 @@ MACRO(SWIG_BUILD_CSHARP_MODULE swig_filename nativelib_name csharp_module_name c
     ELSE()
         SET(dllimport_name "lib${nativelib_name}")
     ENDIF()
-    SET(CMAKE_SWIG_FLAGS -module ${csharp_module_name} -dllimport ${dllimport_name} -namespace ${namespace} ${CMAKE_SWIG_GLOBAL_FLAGS} ${CMAKE_GLOBAL_FLAGS})
+    SET(CMAKE_SWIG_FLAGS -dllimport ${dllimport_name} -namespace ${namespace} ${CMAKE_SWIG_GLOBAL_FLAGS} ${CMAKE_GLOBAL_FLAGS})
     FOREACH(dir ${SWIG_INCLUDE_DIRS})
         LIST(APPEND CMAKE_SWIG_FLAGS "-I${dir}")
     ENDFOREACH(dir ${SWIG_INCLUDE_DIRS})
