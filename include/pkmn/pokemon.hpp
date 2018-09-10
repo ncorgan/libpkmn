@@ -96,7 +96,10 @@ namespace pkmn {
                 bool is_egg
             ) = 0;
 
-            virtual const pkmn::database::pokemon_entry& get_database_entry() const = 0;
+            virtual inline const pkmn::database::pokemon_entry& get_database_entry() const
+            {
+                return _database_entry;
+            }
 
             virtual pkmn::e_condition get_condition() const = 0;
 
@@ -229,28 +232,40 @@ namespace pkmn {
                 int level
             ) = 0;
 
-            virtual const std::map<pkmn::e_marking, bool>& get_markings() const = 0;
+            virtual inline const std::map<pkmn::e_marking, bool>& get_markings() const
+            {
+                return _markings;
+            }
 
             virtual void set_marking(
                 pkmn::e_marking marking,
                 bool value
             ) = 0;
 
-            virtual const std::map<std::string, bool>& get_ribbons() const = 0;
+            virtual inline const std::map<std::string, bool>& get_ribbons() const
+            {
+                return _ribbons;
+            }
 
             virtual void set_ribbon(
                 const std::string& ribbon,
                 bool value
             ) = 0;
 
-            virtual const std::map<pkmn::e_contest_stat, int>& get_contest_stats() const = 0;
+            virtual inline const std::map<pkmn::e_contest_stat, int>& get_contest_stats() const
+            {
+                return _contest_stats;
+            }
 
             virtual void set_contest_stat(
                 pkmn::e_contest_stat stat,
                 int value
             ) = 0;
 
-            virtual const pkmn::move_slots_t& get_moves() const = 0;
+            virtual const inline pkmn::move_slots_t& get_moves() const
+            {
+                return _moves;
+            }
 
             virtual void set_move(
                 pkmn::e_move move,
@@ -262,14 +277,20 @@ namespace pkmn {
                 int pp
             ) = 0;
 
-            virtual const std::map<pkmn::e_stat, int>& get_EVs() const = 0;
+            virtual inline const std::map<pkmn::e_stat, int>& get_EVs() const
+            {
+                return _EVs;
+            }
 
             virtual void set_EV(
                 pkmn::e_stat stat,
                 int value
             ) = 0;
 
-            virtual const std::map<pkmn::e_stat, int>& get_IVs() const = 0;
+            virtual inline const std::map<pkmn::e_stat, int>& get_IVs() const
+            {
+                return _IVs;
+            }
 
             virtual void set_IV(
                 pkmn::e_stat stat,
@@ -282,11 +303,14 @@ namespace pkmn {
                 int hp
             ) = 0;
 
-            virtual const std::map<pkmn::e_stat, int>& get_stats() const = 0;
+            virtual inline const std::map<pkmn::e_stat, int>& get_stats() const
+            {
+                return _stats;
+            }
 
-            virtual std::string get_icon_filepath() const = 0;
+            virtual std::string get_icon_filepath() const;
 
-            virtual std::string get_sprite_filepath() const = 0;
+            virtual std::string get_sprite_filepath() const;
 
             #ifndef __DOXYGEN__
             pokemon(): class_with_attributes() {}

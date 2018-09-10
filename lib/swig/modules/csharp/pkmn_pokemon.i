@@ -39,7 +39,7 @@ using Database;"
 %attributestring(pkmn::swig::pokemon, std::string, Form, get_form, set_form);
 %attribute(pkmn::swig::pokemon, bool, IsEgg, is_egg, set_is_egg);
 %attributestring(pkmn::swig::pokemon, std::string, Nickname, get_nickname, set_nickname);
-%attributeval(pkmn::swig::pokemon, pkmn::database::pokemon_entry, DatabaseEntry, get_database_entry);
+%attributeval(pkmn::swig::pokemon, pkmn::database::pokemon_entry, DatabaseEntry, get_database_entry_swig);
 %attributestring(pkmn::swig::pokemon, pkmn::e_condition, Condition, get_condition, set_condition);
 %attribute(pkmn::swig::pokemon, pkmn::e_gender, Gender, get_gender, set_gender);
 %attribute(pkmn::swig::pokemon, bool, IsShiny, is_shiny, set_shininess);
@@ -69,7 +69,7 @@ using Database;"
 %attributeval(pkmn::swig::pokemon, pkmn::swig::ribbon_map, Ribbons, get_ribbons_helper);
 %attributeval(pkmn::swig::pokemon, pkmn::swig::contest_stat_map, ContestStats, get_contest_stats_helper);
 %attributeval(pkmn::swig::pokemon, pkmn::swig::move_slots, Moves, get_moves_helper);
-%attributeval(pkmn::swig::pokemon, %arg(std::map<pkmn::e_stat, int>), Stats, get_stats);
+%attributeval(pkmn::swig::pokemon, %arg(std::map<pkmn::e_stat, int>), Stats, get_stats_swig);
 %attributestring(pkmn::swig::pokemon, std::string, IconFilepath, get_icon_filepath);
 %attributestring(pkmn::swig::pokemon, std::string, SpriteFilepath, get_sprite_filepath);
 %attributeval(pkmn::swig::pokemon, %arg(pkmn::swig::numeric_attribute_map<pkmn::pokemon>), NumericAttributes, get_numeric_attributes);

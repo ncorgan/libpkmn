@@ -32,7 +32,7 @@ namespace pkmn { namespace swig {
      * Per conventions, when used as attributes, these getters won't
      * throw exceptions and will instead return a default value.
      */
-    class pokemon
+    class pokemon: public pkmn::pokemon
     {
         public:
             pokemon():
@@ -76,7 +76,7 @@ namespace pkmn { namespace swig {
             static const uint32_t DEFAULT_TRAINER_ID;
             static const std::string DEFAULT_TRAINER_NAME;
 
-            inline pokemon to_game_swig(pkmn::e_game game)
+            pokemon to_game_swig(pkmn::e_game game)
             {
                 pokemon ret;
 
@@ -93,7 +93,7 @@ namespace pkmn { namespace swig {
                 return ret;
             }
 
-            inline pokemon clone_swig() const
+            pokemon clone_swig() const
             {
                 pokemon ret;
 
@@ -110,9 +110,9 @@ namespace pkmn { namespace swig {
                 return ret;
             }
 
-            inline void export_to_file(
+            void export_to_file(
                 const std::string& filepath
-            )
+            ) override
             {
                 if(_is_from_libpkmn)
                 {
@@ -125,7 +125,7 @@ namespace pkmn { namespace swig {
                 }
             }
 
-            inline pkmn::e_species get_species() const
+            pkmn::e_species get_species() const override
             {
                 pkmn::e_species species = pkmn::e_species::NONE;
 
@@ -142,7 +142,7 @@ namespace pkmn { namespace swig {
                 return species;
             }
 
-            inline pkmn::e_game get_game() const
+            pkmn::e_game get_game() const override
             {
                 pkmn::e_game game = pkmn::e_game::NONE;
 
@@ -159,7 +159,7 @@ namespace pkmn { namespace swig {
                 return game;
             }
 
-            inline std::string get_form() const
+            std::string get_form() const override
             {
                 std::string form;
 
@@ -176,9 +176,9 @@ namespace pkmn { namespace swig {
                 return form;
             }
 
-            inline void set_form(
+            void set_form(
                 const std::string& form
-            )
+            ) override
             {
                 if(_is_from_libpkmn)
                 {
@@ -191,7 +191,7 @@ namespace pkmn { namespace swig {
                 }
             }
 
-            inline bool is_egg() const
+            bool is_egg() const override
             {
                 bool is_egg = false;
 
@@ -208,7 +208,7 @@ namespace pkmn { namespace swig {
                 return is_egg;
             }
 
-            inline void set_is_egg(bool is_egg)
+            void set_is_egg(bool is_egg) override
             {
                 if(_is_from_libpkmn)
                 {
@@ -222,15 +222,20 @@ namespace pkmn { namespace swig {
             }
 
             // Copy the entry, since the const in the reference is casted away.
-            // TODO: use base class's version when implemented
-            inline pkmn::database::pokemon_entry get_database_entry()
+            pkmn::database::pokemon_entry get_database_entry_swig()
             {
-                BOOST_ASSERT(_pokemon.get() != nullptr);
-
-                return _pokemon->get_database_entry();
+                if(_is_from_libpkmn)
+                {
+                    BOOST_ASSERT(_pokemon.get() != nullptr);
+                    return _pokemon->get_database_entry();
+                }
+                else
+                {
+                    return pkmn::pokemon::get_database_entry();
+                }
             }
 
-            inline pkmn::e_condition get_condition() const
+            pkmn::e_condition get_condition() const override
             {
                 pkmn::e_condition condition;
 
@@ -247,9 +252,9 @@ namespace pkmn { namespace swig {
                 return condition;
             }
 
-            inline void set_condition(
+            void set_condition(
                 pkmn::e_condition condition
-            )
+            ) override
             {
                 if(_is_from_libpkmn)
                 {
@@ -262,7 +267,7 @@ namespace pkmn { namespace swig {
                 }
             }
 
-            inline std::string get_nickname() const
+            std::string get_nickname() const override
             {
                 std::string nickname;
 
@@ -279,9 +284,9 @@ namespace pkmn { namespace swig {
                 return nickname;
             }
 
-            inline void set_nickname(
+            void set_nickname(
                 const std::string& nickname
-            )
+            ) override
             {
                 if(_is_from_libpkmn)
                 {
@@ -294,7 +299,7 @@ namespace pkmn { namespace swig {
                 }
             }
 
-            inline pkmn::e_gender get_gender() const
+            pkmn::e_gender get_gender() const override
             {
                 pkmn::e_gender gender;
 
@@ -319,9 +324,9 @@ namespace pkmn { namespace swig {
                 return gender;
             }
 
-            inline void set_gender(
+            void set_gender(
                 pkmn::e_gender gender
-            )
+            ) override
             {
                 if(_is_from_libpkmn)
                 {
@@ -334,7 +339,7 @@ namespace pkmn { namespace swig {
                 }
             }
 
-            inline bool is_shiny() const
+            bool is_shiny() const override
             {
                 bool is_shiny = false;
 
@@ -359,9 +364,9 @@ namespace pkmn { namespace swig {
                 return is_shiny;
             }
 
-            inline void set_shininess(
+            void set_shininess(
                 bool value
-            )
+            ) override
             {
                 if(_is_from_libpkmn)
                 {
@@ -374,7 +379,7 @@ namespace pkmn { namespace swig {
                 }
             }
 
-            inline pkmn::e_item get_held_item() const
+            pkmn::e_item get_held_item() const override
             {
                 pkmn::e_item held_item;
 
@@ -399,9 +404,9 @@ namespace pkmn { namespace swig {
                 return held_item;
             }
 
-            inline void set_held_item(
+            void set_held_item(
                 pkmn::e_item held_item
-            )
+            ) override
             {
                 if(_is_from_libpkmn)
                 {
@@ -414,7 +419,7 @@ namespace pkmn { namespace swig {
                 }
             }
 
-            inline pkmn::e_nature get_nature() const
+            pkmn::e_nature get_nature() const override
             {
                 pkmn::e_nature nature;
 
@@ -439,7 +444,7 @@ namespace pkmn { namespace swig {
                 return nature;
             }
 
-            inline void set_nature(pkmn::e_nature nature)
+            void set_nature(pkmn::e_nature nature) override
             {
                 if(_is_from_libpkmn)
                 {
@@ -452,7 +457,7 @@ namespace pkmn { namespace swig {
                 }
             }
 
-            inline int get_pokerus_duration() const
+            int get_pokerus_duration() const override
             {
                 int pokerus_duration = 0;
 
@@ -477,7 +482,7 @@ namespace pkmn { namespace swig {
                 return pokerus_duration;
             }
 
-            inline void set_pokerus_duration(int duration)
+            void set_pokerus_duration(int duration) override
             {
                 if(_is_from_libpkmn)
                 {
@@ -490,7 +495,7 @@ namespace pkmn { namespace swig {
                 }
             }
 
-            inline std::string get_original_trainer_name() const
+            std::string get_original_trainer_name() const override
             {
                 std::string original_trainer_name;
 
@@ -507,9 +512,9 @@ namespace pkmn { namespace swig {
                 return original_trainer_name;
             }
 
-            inline void set_original_trainer_name(
+            void set_original_trainer_name(
                 const std::string& trainer_name
-            )
+            ) override
             {
                 if(_is_from_libpkmn)
                 {
@@ -522,7 +527,7 @@ namespace pkmn { namespace swig {
                 }
             }
 
-            inline uint16_t get_original_trainer_public_id() const
+            uint16_t get_original_trainer_public_id() const override
             {
                 uint16_t original_trainer_public_id = 0;
 
@@ -539,7 +544,7 @@ namespace pkmn { namespace swig {
                 return original_trainer_public_id;
             }
 
-            inline uint16_t get_original_trainer_secret_id() const
+            uint16_t get_original_trainer_secret_id() const override
             {
                 uint16_t original_trainer_secret_id = 0;
 
@@ -564,7 +569,7 @@ namespace pkmn { namespace swig {
                 return original_trainer_secret_id;
             }
 
-            inline uint32_t get_original_trainer_id() const
+            uint32_t get_original_trainer_id() const override
             {
                 uint32_t original_trainer_id = 0;
 
@@ -581,9 +586,9 @@ namespace pkmn { namespace swig {
                 return original_trainer_id;
             }
 
-            inline void set_original_trainer_public_id(
+            void set_original_trainer_public_id(
                 uint16_t public_id
-            )
+            ) override
             {
                 if(_is_from_libpkmn)
                 {
@@ -596,9 +601,9 @@ namespace pkmn { namespace swig {
                 }
             }
 
-            inline void set_original_trainer_secret_id(
+            void set_original_trainer_secret_id(
                 uint16_t secret_id
-            )
+            ) override
             {
                 if(_is_from_libpkmn)
                 {
@@ -611,9 +616,9 @@ namespace pkmn { namespace swig {
                 }
             }
 
-            inline void set_original_trainer_id(
+            void set_original_trainer_id(
                 uint32_t public_id
-            )
+            ) override
             {
                 if(_is_from_libpkmn)
                 {
@@ -626,7 +631,7 @@ namespace pkmn { namespace swig {
                 }
             }
 
-            inline pkmn::e_gender get_original_trainer_gender() const
+            pkmn::e_gender get_original_trainer_gender() const override
             {
                 pkmn::e_gender gender;
 
@@ -651,9 +656,9 @@ namespace pkmn { namespace swig {
                 return gender;
             }
 
-            inline void set_original_trainer_gender(
+            void set_original_trainer_gender(
                 pkmn::e_gender trainer_gender
-            )
+            ) override
             {
                 if(_is_from_libpkmn)
                 {
@@ -666,7 +671,7 @@ namespace pkmn { namespace swig {
                 }
             }
 
-            inline pkmn::e_language get_language() const
+            pkmn::e_language get_language() const override
             {
                 pkmn::e_language language;
 
@@ -691,7 +696,7 @@ namespace pkmn { namespace swig {
                 return language;
             }
 
-            inline void set_language(pkmn::e_language language)
+            void set_language(pkmn::e_language language) override
             {
                 if(_is_from_libpkmn)
                 {
@@ -704,7 +709,7 @@ namespace pkmn { namespace swig {
                 }
             }
 
-            inline int get_current_trainer_friendship() const
+            int get_current_trainer_friendship() const override
             {
                 int current_trainer_friendship = 0;
 
@@ -729,9 +734,9 @@ namespace pkmn { namespace swig {
                 return current_trainer_friendship;
             }
 
-            inline void set_current_trainer_friendship(
+            void set_current_trainer_friendship(
                 int friendship
-            )
+            ) override
             {
                 if(_is_from_libpkmn)
                 {
@@ -744,7 +749,7 @@ namespace pkmn { namespace swig {
                 }
             }
 
-            inline pkmn::e_ability get_ability() const
+            pkmn::e_ability get_ability() const override
             {
                 pkmn::e_ability ability;
 
@@ -769,7 +774,7 @@ namespace pkmn { namespace swig {
                 return ability;
             }
 
-            inline void set_ability(pkmn::e_ability ability)
+            void set_ability(pkmn::e_ability ability) override
             {
                 if(_is_from_libpkmn)
                 {
@@ -782,7 +787,7 @@ namespace pkmn { namespace swig {
                 }
             }
 
-            inline pkmn::e_ball get_ball() const
+            pkmn::e_ball get_ball() const override
             {
                 pkmn::e_ball ball;
 
@@ -807,9 +812,9 @@ namespace pkmn { namespace swig {
                 return ball;
             }
 
-            inline void set_ball(
+            void set_ball(
                 pkmn::e_ball ball
-            )
+            ) override
             {
                 if(_is_from_libpkmn)
                 {
@@ -822,7 +827,7 @@ namespace pkmn { namespace swig {
                 }
             }
 
-            inline int get_level_met() const
+            int get_level_met() const override
             {
                 int level_met = 0;
 
@@ -847,9 +852,9 @@ namespace pkmn { namespace swig {
                 return level_met;
             }
 
-            inline void set_level_met(
+            void set_level_met(
                 int level_met
-            )
+            ) override
             {
                 if(_is_from_libpkmn)
                 {
@@ -862,7 +867,7 @@ namespace pkmn { namespace swig {
                 }
             }
 
-            inline std::string get_location_met() const
+            virtual std::string get_location_met() const
             {
                 std::string location_met;
 
@@ -887,7 +892,7 @@ namespace pkmn { namespace swig {
                 return location_met;
             }
 
-            inline void set_location_met(
+            virtual void set_location_met(
                 const std::string& location
             )
             {
@@ -902,7 +907,7 @@ namespace pkmn { namespace swig {
                 }
             }
 
-            inline std::string get_location_met_as_egg() const
+            virtual std::string get_location_met_as_egg() const
             {
                 std::string location_met_as_egg;
 
@@ -927,7 +932,7 @@ namespace pkmn { namespace swig {
                 return location_met_as_egg;
             }
 
-            inline void set_location_met_as_egg(
+            virtual void set_location_met_as_egg(
                 const std::string& location
             )
             {
@@ -942,7 +947,7 @@ namespace pkmn { namespace swig {
                 }
             }
 
-            inline pkmn::e_game get_original_game() const
+            pkmn::e_game get_original_game() const override
             {
                 pkmn::e_game game;
 
@@ -967,7 +972,7 @@ namespace pkmn { namespace swig {
                 return game;
             }
 
-            inline void set_original_game(pkmn::e_game original_game)
+            void set_original_game(pkmn::e_game original_game) override
             {
                 if(_is_from_libpkmn)
                 {
@@ -980,7 +985,7 @@ namespace pkmn { namespace swig {
                 }
             }
 
-            inline uint32_t get_personality() const
+            uint32_t get_personality() const override
             {
                 uint32_t personality = 0;
 
@@ -1005,9 +1010,9 @@ namespace pkmn { namespace swig {
                 return personality;
             }
 
-            inline void set_personality(
+            void set_personality(
                 uint32_t personality
-            )
+            ) override
             {
                 if(_is_from_libpkmn)
                 {
@@ -1020,7 +1025,7 @@ namespace pkmn { namespace swig {
                 }
             }
 
-            inline int get_experience() const
+            int get_experience() const override
             {
                 int experience = 0;
 
@@ -1037,9 +1042,9 @@ namespace pkmn { namespace swig {
                 return experience;
             }
 
-            inline void set_experience(
+            void set_experience(
                 int experience
-            )
+            ) override
             {
                 if(_is_from_libpkmn)
                 {
@@ -1052,7 +1057,7 @@ namespace pkmn { namespace swig {
                 }
             }
 
-            inline int get_level() const
+            int get_level() const override
             {
                 int level = 0;
 
@@ -1069,9 +1074,9 @@ namespace pkmn { namespace swig {
                 return level;
             }
 
-            inline void set_level(
+            void set_level(
                 int level
-            )
+            ) override
             {
                 if(_is_from_libpkmn)
                 {
@@ -1084,7 +1089,7 @@ namespace pkmn { namespace swig {
                 }
             }
 
-            inline int get_current_hp() const
+            int get_current_hp() const override
             {
                 int current_hp = 0;
 
@@ -1101,7 +1106,7 @@ namespace pkmn { namespace swig {
                 return current_hp;
             }
 
-            inline void set_current_hp(int hp)
+            void set_current_hp(int hp) override
             {
                 if(_is_from_libpkmn)
                 {
@@ -1114,86 +1119,94 @@ namespace pkmn { namespace swig {
                 }
             }
 
-            inline EV_map get_EVs_helper()
+            EV_map get_EVs_helper()
             {
                 BOOST_ASSERT(_pokemon.get() != nullptr);
 
                 return EV_map(_pokemon);
             }
 
-            inline IV_map get_IVs_helper()
+            IV_map get_IVs_helper()
             {
                 BOOST_ASSERT(_pokemon.get() != nullptr);
 
                 return IV_map(_pokemon);
             }
 
-            inline marking_map get_markings_helper()
+            marking_map get_markings_helper()
             {
                 BOOST_ASSERT(_pokemon.get() != nullptr);
 
                 return marking_map(_pokemon);
             }
 
-            inline ribbon_map get_ribbons_helper()
+            ribbon_map get_ribbons_helper()
             {
                 BOOST_ASSERT(_pokemon.get() != nullptr);
 
                 return ribbon_map(_pokemon);
             }
 
-            inline contest_stat_map get_contest_stats_helper()
+            contest_stat_map get_contest_stats_helper()
             {
                 BOOST_ASSERT(_pokemon.get() != nullptr);
 
                 return contest_stat_map(_pokemon);
             }
 
-            inline move_slots get_moves_helper()
+            move_slots get_moves_helper()
             {
                 BOOST_ASSERT(_pokemon.get() != nullptr);
 
                 return move_slots(_pokemon);
             }
 
-            // Stats are read-only, so no need to wrap.
-            // TODO: call base class's function when implemented
-            inline std::map<pkmn::e_stat, int> get_stats()
+            std::map<pkmn::e_stat, int> get_stats_swig()
             {
-                BOOST_ASSERT(_pokemon.get() != nullptr);
+                std::map<pkmn::e_stat, int> stats;
 
-                return _pokemon->get_stats();
+                if(_is_from_libpkmn)
+                {
+                    BOOST_ASSERT(_pokemon.get() != nullptr);
+                    stats = _pokemon->get_stats();
+                }
+                else
+                {
+                    stats = pkmn::pokemon::get_stats();
+                }
+
+                return stats;
             }
 
-            inline std::string get_icon_filepath() const
+            std::string get_icon_filepath() const override
             {
                 std::string icon_filepath;
 
                 if(_is_from_libpkmn)
                 {
                     BOOST_ASSERT(_pokemon.get() != nullptr);
-                    return _pokemon->get_icon_filepath();
+                    icon_filepath = _pokemon->get_icon_filepath();
                 }
                 else
                 {
-                    throw pkmn::unimplemented_error();
+                    icon_filepath = pkmn::pokemon::get_icon_filepath();
                 }
 
                 return icon_filepath;
             }
 
-            inline std::string get_sprite_filepath() const
+            std::string get_sprite_filepath() const override
             {
                 std::string sprite_filepath;
 
                 if(_is_from_libpkmn)
                 {
                     BOOST_ASSERT(_pokemon.get() != nullptr);
-                    return _pokemon->get_sprite_filepath();
+                    sprite_filepath = _pokemon->get_sprite_filepath();
                 }
                 else
                 {
-                    throw pkmn::unimplemented_error();
+                    sprite_filepath = pkmn::pokemon::get_sprite_filepath();
                 }
 
                 return sprite_filepath;
@@ -1220,7 +1233,7 @@ namespace pkmn { namespace swig {
                 return boolean_attribute_map<pkmn::pokemon>(_pokemon);
             }
 
-            inline const pkmn::pokemon::sptr& get_internal() const
+            const pkmn::pokemon::sptr& get_internal() const
             {
                 BOOST_ASSERT(_pokemon.get() != nullptr);
 
@@ -1228,14 +1241,14 @@ namespace pkmn { namespace swig {
             }
 
 #ifdef SWIGCSHARP
-            inline uintmax_t cptr()
+            uintmax_t cptr()
             {
                 BOOST_ASSERT(_pokemon.get() != nullptr);
 
                 return uintmax_t(_pokemon.get());
             }
 #else
-            inline bool operator==(const pokemon& rhs) const
+            bool operator==(const pokemon& rhs) const
             {
                 bool ret = false;
 
@@ -1251,19 +1264,137 @@ namespace pkmn { namespace swig {
                 return ret;
             }
 
-            inline bool operator!=(const pokemon& rhs) const
+            bool operator!=(const pokemon& rhs) const
             {
                 return !operator==(rhs);
             }
 #endif
+
+        // The API for this functionality is intended to be different on the SWIG
+        // layer (using the helper classes), but this underlying functionality is
+        // necessary for the helper classes to call.
+        protected:
+
+            void set_marking(
+                pkmn::e_marking marking,
+                bool value
+            ) override
+            {
+                if(_is_from_libpkmn)
+                {
+                    BOOST_ASSERT(_pokemon.get() != nullptr);
+                    _pokemon->set_marking(marking, value);
+                }
+                else
+                {
+                    throw pkmn::unimplemented_error();
+                }
+            }
+
+            void set_ribbon(
+                const std::string& ribbon,
+                bool value
+            ) override
+            {
+                if(_is_from_libpkmn)
+                {
+                    BOOST_ASSERT(_pokemon.get() != nullptr);
+                    _pokemon->set_ribbon(ribbon, value);
+                }
+                else
+                {
+                    throw pkmn::unimplemented_error();
+                }
+            }
+
+            void set_contest_stat(
+                pkmn::e_contest_stat contest_stat,
+                int value
+            ) override
+            {
+                if(_is_from_libpkmn)
+                {
+                    BOOST_ASSERT(_pokemon.get() != nullptr);
+                    _pokemon->set_contest_stat(contest_stat, value);
+                }
+                else
+                {
+                    throw pkmn::unimplemented_error();
+                }
+            }
+
+            void set_move(
+                pkmn::e_move move,
+                int index
+            ) override
+            {
+                if(_is_from_libpkmn)
+                {
+                    BOOST_ASSERT(_pokemon.get() != nullptr);
+                    _pokemon->set_move(move, index);
+                }
+                else
+                {
+                    throw pkmn::unimplemented_error();
+                }
+            }
+
+            void set_move_pp(
+                int index,
+                int pp
+            ) override
+            {
+                if(_is_from_libpkmn)
+                {
+                    BOOST_ASSERT(_pokemon.get() != nullptr);
+                    _pokemon->set_move_pp(index, pp);
+                }
+                else
+                {
+                    throw pkmn::unimplemented_error();
+                }
+            }
+
+            void set_EV(
+                pkmn::e_stat EV,
+                int value
+            ) override
+            {
+                if(_is_from_libpkmn)
+                {
+                    BOOST_ASSERT(_pokemon.get() != nullptr);
+                    _pokemon->set_EV(EV, value);
+                }
+                else
+                {
+                    throw pkmn::unimplemented_error();
+                }
+            }
+
+            void set_IV(
+                pkmn::e_stat IV,
+                int value
+            ) override
+            {
+                if(_is_from_libpkmn)
+                {
+                    BOOST_ASSERT(_pokemon.get() != nullptr);
+                    _pokemon->set_IV(IV, value);
+                }
+                else
+                {
+                    throw pkmn::unimplemented_error();
+                }
+            }
 
         private:
             pkmn::pokemon::sptr _pokemon;
             int _generation;
             bool _is_from_libpkmn;
 
-            // Functions not to be exposed
-/*
+            // Functions not to be exposed, as the functionality is done
+            // differently on the SWIG layer.
+
             pkmn::pokemon::sptr to_game(pkmn::e_game) final
             {
                 return pkmn::pokemon::sptr();
@@ -1272,6 +1403,11 @@ namespace pkmn { namespace swig {
             pkmn::pokemon::sptr clone() const final
             {
                 return pkmn::pokemon::sptr();
+            }
+
+            const pkmn::database::pokemon_entry& get_database_entry() const final
+            {
+                return pkmn::pokemon::get_database_entry();
             }
 
             std::string get_location_met(bool) const final
@@ -1287,7 +1423,7 @@ namespace pkmn { namespace swig {
             {
                 return nullptr;
             }
-*/
+
     };
 
     const uint32_t pokemon::DEFAULT_TRAINER_ID = pkmn::pokemon::DEFAULT_TRAINER_ID;

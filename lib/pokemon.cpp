@@ -289,4 +289,25 @@ namespace pkmn
             }
         }
     }
+
+    std::string pokemon::get_icon_filepath() const
+    {
+        int generation = pkmn::database::game_enum_to_generation(get_game());
+
+        return _database_entry.get_icon_filepath(
+                    (generation == 1) ? false
+                                      : (get_gender() == pkmn::e_gender::FEMALE)
+               );
+    }
+
+    std::string pokemon::get_sprite_filepath() const
+    {
+        int generation = pkmn::database::game_enum_to_generation(get_game());
+
+        return _database_entry.get_sprite_filepath(
+                    (generation == 1) ? false
+                                      : (get_gender() == pkmn::e_gender::FEMALE),
+                    (generation == 1) ? false : is_shiny()
+               );
+    }
 }

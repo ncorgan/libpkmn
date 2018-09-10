@@ -323,19 +323,14 @@ namespace pkmn
     {
         pkmn::lock_guard<pokemon_impl> lock(*this);
 
-        return _database_entry.get_icon_filepath(
-                    (get_gender() == pkmn::e_gender::FEMALE)
-               );
+        return pokemon::get_icon_filepath();
     }
 
     std::string pokemon_impl::get_sprite_filepath() const
     {
         pkmn::lock_guard<pokemon_impl> lock(*this);
 
-        return _database_entry.get_sprite_filepath(
-                    (get_gender() == pkmn::e_gender::FEMALE),
-                    is_shiny()
-               );
+        return pokemon::get_sprite_filepath();
     }
 
     // Shared abstraction initializers
