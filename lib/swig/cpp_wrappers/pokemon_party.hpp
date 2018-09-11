@@ -78,6 +78,7 @@ namespace pkmn { namespace swig {
             {
                 BOOST_ASSERT(_pokemon_party.get() != nullptr);
 
+                // Lua arrays start at 1.
 #ifdef SWIGLUA
                 pkmn::enforce_bounds(
                     "Party index",
@@ -85,17 +86,27 @@ namespace pkmn { namespace swig {
                     1,
                     6
                 );
-
-                _pokemon_party->set_pokemon(
-                    index-1,
-                    pokemon.get_internal()
-                );
-#else
-                _pokemon_party->set_pokemon(
-                    index,
-                    pokemon.get_internal()
-                );
+                --index;
 #endif
+                const pkmn::pokemon::sptr& internal_pokemon = pokemon.get_internal();
+                if(internal_pokemon.get() != nullptr)
+                {
+                    // This Pokémon instance was created in LibPKMN, so just
+                    // pass in the underlying sptr.
+                    _pokemon_party->set_pokemon(
+                        index,
+                        pokemon.get_internal()
+                    );
+                }
+                else
+                {
+                    // This is a subclass of the SWIG class, so pass it
+                    // straight through.
+                    _pokemon_party->set_pokemon(
+                        index,
+                        pokemon
+                    );
+                }
             }
 
 #ifdef SWIGCSHARP
