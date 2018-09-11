@@ -196,7 +196,7 @@ namespace pkmn { namespace swig {
                 }
             }
 
-            virtual bool is_egg() const override
+            virtual bool get_is_egg() const
             {
                 bool is_egg = false;
 
@@ -227,7 +227,7 @@ namespace pkmn { namespace swig {
             }
 
             // Copy the entry, since the const in the reference is casted away.
-            pkmn::database::pokemon_entry get_database_entry_swig()
+            pkmn::database::pokemon_entry get_database_entry_swig() const
             {
                 if(_is_from_libpkmn)
                 {
@@ -344,7 +344,7 @@ namespace pkmn { namespace swig {
                 }
             }
 
-            virtual bool is_shiny() const override
+            virtual bool get_is_shiny() const
             {
                 bool is_shiny = false;
 
@@ -1399,6 +1399,16 @@ namespace pkmn { namespace swig {
 
             // Functions not to be exposed, as the functionality is done
             // differently on the SWIG layer.
+
+            bool is_egg() const final
+            {
+                return false;
+            }
+
+            bool is_shiny() const final
+            {
+                return false;
+            }
 
             pkmn::pokemon::sptr to_game(pkmn::e_game) final
             {

@@ -406,7 +406,7 @@ TEST(cpp_swig_wrapper_test, test_pokemon)
     EXPECT_EQ("Bulbasaur", swig_pokemon.get_database_entry_swig().get_species_name());
 
     swig_pokemon.set_is_egg(true);
-    EXPECT_TRUE(swig_pokemon.is_egg());
+    EXPECT_TRUE(swig_pokemon.get_is_egg());
 
     swig_pokemon.set_condition(pkmn::e_condition::FROZEN);
     EXPECT_EQ(pkmn::e_condition::FROZEN, swig_pokemon.get_condition());
@@ -418,7 +418,7 @@ TEST(cpp_swig_wrapper_test, test_pokemon)
     EXPECT_EQ(pkmn::e_gender::FEMALE, swig_pokemon.get_gender());
 
     swig_pokemon.set_shininess(true);
-    EXPECT_TRUE(swig_pokemon.is_shiny());
+    EXPECT_TRUE(swig_pokemon.get_is_shiny());
 
     swig_pokemon.set_held_item(pkmn::e_item::ORAN_BERRY);
     EXPECT_EQ(pkmn::e_item::ORAN_BERRY, swig_pokemon.get_held_item());
