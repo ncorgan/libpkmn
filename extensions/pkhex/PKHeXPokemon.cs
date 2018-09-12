@@ -19,9 +19,9 @@
 
 namespace PKMN.Extensions
 {
-    class PKHeXPokemon: Pokemon
+    public class PKHeXPokemon: Pokemon
     {
-        private static PKHeX.Core.GameStrings _gameStrings = PKHeX.Core.GameInfo.GetStrings("en");
+        protected static PKHeX.Core.GameStrings _gameStrings = PKHeX.Core.GameInfo.GetStrings("en");
 
         // Member variables
         private PKHeX.Core.PKM _pkm;
@@ -62,8 +62,6 @@ namespace PKMN.Extensions
         {
             _pkm.Nickname = nickname;
         }
-
-        // TODO: status, half-done in PKHeX
 
         override protected Gender GetGender()
         {
@@ -251,5 +249,7 @@ namespace PKMN.Extensions
         {
             _pkm.Stat_HPCurrent = currentHP;
         }
+
+        // TODO: setting EVs+IVs for Generation III+, override for I-II
     }
 }

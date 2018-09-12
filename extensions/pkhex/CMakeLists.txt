@@ -16,7 +16,8 @@ GET_FILENAME_COMPONENT(
 
 SET(pkmn_pkhex_sources
     # Actual sources
-    "${CMAKE_CURRENT_SOURCE_DIR}/PKHeXPokemon.cs"
+    PKHeXPokemon.cs
+    PK1Pokemon.cs
 
     # Search paths
     "${PKMN_BINARY_DIR}/testing/unit-tests/csharp"
@@ -26,9 +27,10 @@ SET(pkmn_pkhex_sources
     "PKMN.CSharp.dll"
     "PKHeX.Core.dll"
 )
-MESSAGE(STATUS "${assembly_paths}")
 
+SET(CSHARP_SOURCE_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 SET(CSHARP_BINARY_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
+
 CSHARP_ADD_LIBRARY(
     "PKMN.PKHeX"
     "${pkmn_pkhex_sources}"

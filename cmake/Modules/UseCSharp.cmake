@@ -22,7 +22,7 @@
 # This file is based on the work of GDCM:
 #   http://gdcm.svn.sf.net/viewvc/gdcm/trunk/CMake/UseCSharp.cmake
 # Copyright (c) 2006-2010 Mathieu Malaterre <mathieu.malaterre@gmail.com>
-#               2016-2017 Nicholas Corgan <n.corgan@gmail.com>
+#               2016-2018 Nicholas Corgan <n.corgan@gmail.com>
 #
 
 # TODO: ADD SUPPORT FOR LINK LIBRARIES
@@ -95,9 +95,9 @@ macro( CSHARP_ADD_PROJECT type name )
 
   # Add custom target and command
   if("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
-      SET(csharp_args /t:${type} /out:${name}.${output} /platform:${CSHARP_PLATFORM} -debug ${CSHARP_SDK} ${search_paths} ${refs} ${sources})
+      SET(csharp_args /t:${type} /out:${name}.${output} /platform:${CSHARP_PLATFORM} -debug ${CSHARP_SDK} ${search_paths} ${refs} ${sources_dep})
   else()
-      SET(csharp_args /t:${type} /out:${name}.${output} /platform:${CSHARP_PLATFORM} ${CSHARP_SDK} ${refs} ${search_paths} ${sources})
+      SET(csharp_args /t:${type} /out:${name}.${output} /platform:${CSHARP_PLATFORM} ${CSHARP_SDK} ${refs} ${search_paths} ${sources_dep})
   endif("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
   add_custom_command(
     COMMENT "Building C# ${nice_name} ${name}.${output}"
