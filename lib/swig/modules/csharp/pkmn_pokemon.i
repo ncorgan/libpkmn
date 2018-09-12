@@ -19,12 +19,12 @@ using System;
 using System.Runtime.InteropServices;
 using Database;"
 
-%ignore pkmn::swig::pokemon::pokemon();
 %ignore pkmn::swig::pokemon::pokemon(const pkmn::pokemon::sptr&);
 %ignore pkmn::swig::pokemon::pokemon(const pkmn::swig::pokemon&);
 %ignore pkmn::swig::pokemon::get_internal() const;
 
 // Modify these to limit access.
+%csmethodmodifiers pkmn::swig::pokemon::pokemon() "protected";
 %csmethodmodifiers pkmn::swig::pokemon::cptr() "private";
 %csmethodmodifiers pkmn::swig::pokemon::get_species() const "protected virtual";
 %csmethodmodifiers pkmn::swig::pokemon::get_game() const "protected virtual";

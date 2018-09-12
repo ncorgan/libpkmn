@@ -45,6 +45,7 @@ macro( CSHARP_ADD_PROJECT type name )
   set( refs "/reference:System.dll;/reference:System.Drawing.dll;/reference:System.Windows.Forms.dll" )
   set( sources )
   set( sources_dep )
+  set( search_paths )
 
   if( ${type} MATCHES "library" )
     set( nice_name "library" )
@@ -60,8 +61,10 @@ macro( CSHARP_ADD_PROJECT type name )
        # Argument is a dll, add reference
        list( APPEND refs /reference:${it} )
     else( )
-      # Argument is a source file
-      if( EXISTS ${it} )
+      if( IS_DIRECTORY ${it} )
+        list( APPEND search_paths_list ${it} )
+      elseif( EXISTS ${it} )
+        # Argument is a source file
         list( APPEND sources ${it} )
         list( APPEND sources_dep ${it} )
       elseif( EXISTS ${CSHARP_SOURCE_DIRECTORY}/${it} )
@@ -83,11 +86,18 @@ macro( CSHARP_ADD_PROJECT type name )
     string( REPLACE "\\" "/" sources ${sources} )
   endif (WIN32)
 
+  # Generate library search path
+  string(REPLACE ";" "," search_paths "${search_paths_list}")
+  string(LENGTH "${search_paths}" search_paths_string_length)
+  if(NOT ${search_paths_string_length} EQUAL 0)
+      set(search_paths "/lib:${search_paths}")
+  endif()
+
   # Add custom target and command
   if("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
-      SET(csharp_args /t:${type} /out:${name}.${output} /platform:${CSHARP_PLATFORM} -debug ${CSHARP_SDK} ${refs} ${sources})
+      SET(csharp_args /t:${type} /out:${name}.${output} /platform:${CSHARP_PLATFORM} -debug ${CSHARP_SDK} ${search_paths} ${refs} ${sources})
   else()
-      SET(csharp_args /t:${type} /out:${name}.${output} /platform:${CSHARP_PLATFORM} ${CSHARP_SDK} ${refs} ${sources})
+      SET(csharp_args /t:${type} /out:${name}.${output} /platform:${CSHARP_PLATFORM} ${CSHARP_SDK} ${refs} ${search_paths} ${sources})
   endif("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
   add_custom_command(
     COMMENT "Building C# ${nice_name} ${name}.${output}"
