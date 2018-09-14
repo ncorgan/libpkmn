@@ -1,9 +1,11 @@
 /*
- * Copyright (c) 2015-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2015-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
  */
+
+%module(directors="0", package="pkmn.calculations") calculations_python
 
 %include <python/python_init.i>
 PKMN_PYTHON_INIT

@@ -79,7 +79,7 @@ MACRO(SWIG_BUILD_PYTHON_MODULE_BUILD_ONLY module_name module_rc_name install_dir
     )
 
     # Set flags to pass into SWIG call
-    SET(CMAKE_SWIG_FLAGS -module ${module_name} ${SWIG_PYTHON_FLAGS})
+    SET(CMAKE_SWIG_FLAGS ${SWIG_PYTHON_FLAGS})
     FOREACH(dir ${SWIG_INCLUDE_DIRS})
         LIST(APPEND CMAKE_SWIG_FLAGS "-I${dir}")
     ENDFOREACH(dir ${SWIG_INCLUDE_DIRS})

@@ -68,4 +68,5 @@
 %attributeval(pkmn::swig::pokemon, %arg(pkmn::swig::string_attribute_map<pkmn::pokemon>), string_attributes, get_string_attributes);
 %attributeval(pkmn::swig::pokemon, %arg(pkmn::swig::boolean_attribute_map<pkmn::pokemon>), boolean_attributes, get_boolean_attributes);
 
+%feature("director", "1") pkmn::swig::pokemon;
 %include "cpp_wrappers/pokemon.hpp"

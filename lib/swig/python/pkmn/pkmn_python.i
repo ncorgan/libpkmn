@@ -5,6 +5,8 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
+%module(directors="1", package="pkmn") pkmn_python
+
 %include <python/python_init.i>
 PKMN_PYTHON_INIT
 
