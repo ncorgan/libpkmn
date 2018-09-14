@@ -181,7 +181,8 @@ namespace pkmn
 
     pokemon_impl::pokemon_impl(
         pkmn::database::pokemon_entry&& database_entry
-    ): pokemon()
+    ): pokemon(),
+       boost::basic_lockable_adapter<boost::recursive_mutex>()
     {
         _database_entry = std::move(database_entry);
         _generation = pkmn::database::game_id_to_generation(_database_entry.get_game_id());
@@ -195,7 +196,8 @@ namespace pkmn
     // It's also intentional to set fields in the constructor body itself so we
     // can lock the other's mutex before copying anything.
     pokemon_impl::pokemon_impl(const pokemon_impl& other):
-        pokemon()
+        pokemon(),
+        boost::basic_lockable_adapter<boost::recursive_mutex>()
     {
         pkmn::lock_guard<pokemon_impl> other_lock(other);
 
