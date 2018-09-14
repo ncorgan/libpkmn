@@ -8,18 +8,18 @@
 #define PKMN_DAYCARE_IMPL_HPP
 
 #include "pokemon_impl.hpp"
+#include "types/mutex_helpers.hpp"
 #include "utils/misc.hpp"
 
 #include <pkmn/daycare.hpp>
 
-#include <boost/thread/lockable_adapter.hpp>
 #include <boost/thread/recursive_mutex.hpp>
 
 namespace pkmn {
 
     class daycare_impl: public daycare,
                         private boost::noncopyable,
-                        public boost::basic_lockable_adapter<boost::recursive_mutex>
+                        public pkmn::basic_lockable_adapter<boost::recursive_mutex>
     {
         public:
             explicit daycare_impl(int game_id);

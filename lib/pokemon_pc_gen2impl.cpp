@@ -11,8 +11,6 @@
 
 #include <pkmn/exception.hpp>
 
-#include <boost/thread/lock_guard.hpp>
-
 #include <cstring>
 
 #define NATIVE_RCAST (reinterpret_cast<struct pksav_gen2_pokemon_storage*>(_native))

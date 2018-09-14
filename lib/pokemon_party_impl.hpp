@@ -7,14 +7,14 @@
 #ifndef PKMN_POKEMON_PARTY_IMPL_HPP
 #define PKMN_POKEMON_PARTY_IMPL_HPP
 
-#include "utils/misc.hpp"
-
 #include "pokemon_impl.hpp"
+
+#include "utils/misc.hpp"
+#include "types/mutex_helpers.hpp"
 
 #include <pkmn/pokedex.hpp>
 #include <pkmn/pokemon_party.hpp>
 
-#include <boost/thread/lockable_adapter.hpp>
 #include <boost/thread/recursive_mutex.hpp>
 
 #include <string>
@@ -24,7 +24,7 @@ namespace pkmn {
     BOOST_STATIC_CONSTEXPR int PARTY_SIZE = 6;
 
     class pokemon_party_impl: public pokemon_party,
-                              public boost::basic_lockable_adapter<boost::recursive_mutex>
+                              public pkmn::basic_lockable_adapter<boost::recursive_mutex>
     {
         public:
             pokemon_party_impl() {}

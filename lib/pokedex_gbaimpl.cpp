@@ -11,6 +11,7 @@
 #include "database/database_common.hpp"
 #include "database/id_to_string.hpp"
 #include "pksav/pksav_call.hpp"
+#include "types/mutex_helpers.hpp"
 
 #include <pkmn/exception.hpp>
 
@@ -18,7 +19,6 @@
 
 #include <boost/assert.hpp>
 #include <boost/format.hpp>
-#include <boost/thread/lock_guard.hpp>
 
 #include <cassert>
 
@@ -73,7 +73,7 @@ namespace pkmn
         pkmn::e_species species
     )
     {
-        boost::lock_guard<pokedex_gbaimpl> lock(*this);
+        pkmn::lock_guard<pokedex_gbaimpl> lock(*this);
 
         bool has_seen = false;
 
@@ -92,7 +92,7 @@ namespace pkmn
         pkmn::e_species species
     )
     {
-        boost::lock_guard<pokedex_gbaimpl> lock(*this);
+        pkmn::lock_guard<pokedex_gbaimpl> lock(*this);
 
         bool has_caught = false;
 

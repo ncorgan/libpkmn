@@ -8,10 +8,9 @@
 #include "exception_internal.hpp"
 #include "pokemon_gcnimpl.hpp"
 #include "pokemon_party_gcnimpl.hpp"
+#include "types/mutex_helpers.hpp"
 
 #include <pkmn/exception.hpp>
-
-#include <boost/thread/lock_guard.hpp>
 
 #include <cstring>
 #include <stdexcept>
@@ -62,7 +61,7 @@ namespace pkmn {
 
     int pokemon_party_gcnimpl::get_num_pokemon()
     {
-        boost::lock_guard<pokemon_party_gcnimpl> lock(*this);
+        pkmn::lock_guard<pokemon_party_gcnimpl> lock(*this);
 
         return _num_pokemon;
     }
@@ -82,14 +81,14 @@ namespace pkmn {
             throw std::invalid_argument("Parties store Pokémon contiguously.");
         }
 
-        boost::lock_guard<pokemon_party_gcnimpl> lock(*this);
+        pkmn::lock_guard<pokemon_party_gcnimpl> lock(*this);
 
         // Make sure no one else is using the new Pokémon variable.
         pokemon_gcnimpl* p_new_pokemon = dynamic_cast<pokemon_gcnimpl*>(
                                              new_pokemon.get()
                                          );
         BOOST_ASSERT(p_new_pokemon != nullptr);
-        boost::lock_guard<pokemon_gcnimpl> new_pokemon_lock(*p_new_pokemon);
+        pkmn::lock_guard<pokemon_gcnimpl> new_pokemon_lock(*p_new_pokemon);
 
         // Copy the underlying memory to the party. At the end of this process,
         // all existing variables will correspond to the same Pokémon, even if

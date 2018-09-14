@@ -27,7 +27,7 @@
 
 #include "pksav/lib/gba/checksum.h"
 
-#include "types/lock_guard.hpp"
+#include "types/mutex_helpers.hpp"
 #include "types/rng.hpp"
 
 #include <pkmn/exception.hpp>

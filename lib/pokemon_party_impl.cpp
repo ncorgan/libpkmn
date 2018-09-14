@@ -18,6 +18,8 @@
 #include "polymorphism/is_libpkmn_impl.hpp"
 #include "polymorphism/pokemon.hpp"
 
+#include "types/mutex_helpers.hpp"
+
 #include "utils/misc.hpp"
 
 #include <pkmn/exception.hpp>
@@ -79,7 +81,7 @@ namespace pkmn {
     {
         pkmn::enforce_bounds("Party index", index, 0, (PARTY_SIZE-1));
 
-        boost::lock_guard<pokemon_party_impl> lock(*this);
+        pkmn::lock_guard<pokemon_party_impl> lock(*this);
 
         return _pokemon_list.at(index);
     }
@@ -91,7 +93,7 @@ namespace pkmn {
     {
         pkmn::enforce_bounds("Party index", index, 0, (PARTY_SIZE-1));
 
-        boost::lock_guard<pokemon_party_impl> lock(*this);
+        pkmn::lock_guard<pokemon_party_impl> lock(*this);
 
         _set_pokemon(
             index,
@@ -109,7 +111,7 @@ namespace pkmn {
     {
         pkmn::enforce_bounds("Party index", index, 0, (PARTY_SIZE-1));
 
-        boost::lock_guard<pokemon_party_impl> lock(*this);
+        pkmn::lock_guard<pokemon_party_impl> lock(*this);
 
         _set_pokemon(
             index,
@@ -122,14 +124,14 @@ namespace pkmn {
 
     const pkmn::pokemon_list_t& pokemon_party_impl::as_vector()
     {
-        boost::lock_guard<pokemon_party_impl> lock(*this);
+        pkmn::lock_guard<pokemon_party_impl> lock(*this);
 
         return _pokemon_list;
     }
 
     void* pokemon_party_impl::get_native()
     {
-        boost::lock_guard<pokemon_party_impl> lock(*this);
+        pkmn::lock_guard<pokemon_party_impl> lock(*this);
 
         _to_native();
 

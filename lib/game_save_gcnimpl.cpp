@@ -14,6 +14,8 @@
 
 #include "io/read_write.hpp"
 
+#include "types/mutex_helpers.hpp"
+
 #include "utils/misc.hpp"
 
 #include <pkmn/config.hpp>
@@ -21,7 +23,6 @@
 
 #include <boost/algorithm/string.hpp>
 #include <boost/filesystem.hpp>
-#include <boost/thread/lock_guard.hpp>
 
 #include <fstream>
 #include <stdexcept>
@@ -96,7 +97,7 @@ namespace pkmn {
         const std::string& filepath
     )
     {
-        boost::lock_guard<game_save_gcnimpl> lock(*this);
+        pkmn::lock_guard<game_save_gcnimpl> lock(*this);
 
         const std::unique_ptr<LibPkmGC::GC::Pokemon>* p_libpkmgc_party_uptrs =
             static_cast<const std::unique_ptr<LibPkmGC::GC::Pokemon>*>(
@@ -157,7 +158,7 @@ namespace pkmn {
 
     std::string game_save_gcnimpl::get_trainer_name()
     {
-        boost::lock_guard<game_save_gcnimpl> lock(*this);
+        pkmn::lock_guard<game_save_gcnimpl> lock(*this);
 
         return std::string(_current_slot->player->trainer->trainerName->toUTF8());
     }
@@ -173,14 +174,14 @@ namespace pkmn {
             7
         );
 
-        boost::lock_guard<game_save_gcnimpl> lock(*this);
+        pkmn::lock_guard<game_save_gcnimpl> lock(*this);
 
         _current_slot->player->trainer->trainerName->fromUTF8(trainer_name.c_str());
     }
 
     uint32_t game_save_gcnimpl::get_trainer_id()
     {
-        boost::lock_guard<game_save_gcnimpl> lock(*this);
+        pkmn::lock_guard<game_save_gcnimpl> lock(*this);
 
         return _current_slot->player->trainer->TID | (uint32_t(_current_slot->player->trainer->SID) << 16);
     }
@@ -189,7 +190,7 @@ namespace pkmn {
         uint32_t trainer_id
     )
     {
-        boost::lock_guard<game_save_gcnimpl> lock(*this);
+        pkmn::lock_guard<game_save_gcnimpl> lock(*this);
 
         _current_slot->player->trainer->TID = LibPkmGC::u16(trainer_id & 0xFFFF);
         _current_slot->player->trainer->SID = LibPkmGC::u16(trainer_id >> 16);
@@ -197,7 +198,7 @@ namespace pkmn {
 
     uint16_t game_save_gcnimpl::get_trainer_public_id()
     {
-        boost::lock_guard<game_save_gcnimpl> lock(*this);
+        pkmn::lock_guard<game_save_gcnimpl> lock(*this);
 
         return _current_slot->player->trainer->TID;
     }
@@ -206,14 +207,14 @@ namespace pkmn {
         uint16_t trainer_public_id
     )
     {
-        boost::lock_guard<game_save_gcnimpl> lock(*this);
+        pkmn::lock_guard<game_save_gcnimpl> lock(*this);
 
         _current_slot->player->trainer->TID = trainer_public_id;
     }
 
     uint16_t game_save_gcnimpl::get_trainer_secret_id()
     {
-        boost::lock_guard<game_save_gcnimpl> lock(*this);
+        pkmn::lock_guard<game_save_gcnimpl> lock(*this);
 
         return _current_slot->player->trainer->SID;
     }
@@ -222,7 +223,7 @@ namespace pkmn {
         uint16_t trainer_secret_id
     )
     {
-        boost::lock_guard<game_save_gcnimpl> lock(*this);
+        pkmn::lock_guard<game_save_gcnimpl> lock(*this);
 
         _current_slot->player->trainer->SID = trainer_secret_id;
     }
@@ -230,7 +231,7 @@ namespace pkmn {
     // TODO: conversion enum
     pkmn::e_gender game_save_gcnimpl::get_trainer_gender()
     {
-        boost::lock_guard<game_save_gcnimpl> lock(*this);
+        pkmn::lock_guard<game_save_gcnimpl> lock(*this);
 
         return (_current_slot->player->trainerGender == LibPkmGC::Male) ? pkmn::e_gender::MALE
                                                                         : pkmn::e_gender::FEMALE;
@@ -255,7 +256,7 @@ namespace pkmn {
 
     int game_save_gcnimpl::get_money()
     {
-        boost::lock_guard<game_save_gcnimpl> lock(*this);
+        pkmn::lock_guard<game_save_gcnimpl> lock(*this);
 
         return int(_current_slot->player->pokeDollars);
     }
@@ -266,7 +267,7 @@ namespace pkmn {
     {
         pkmn::enforce_bounds("Money", money, 0, MONEY_MAX_VALUE);
 
-        boost::lock_guard<game_save_gcnimpl> lock(*this);
+        pkmn::lock_guard<game_save_gcnimpl> lock(*this);
 
         _current_slot->player->pokeDollars = LibPkmGC::u32(money);
     }

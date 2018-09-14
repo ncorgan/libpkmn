@@ -23,7 +23,7 @@
 #include "pkmgc/enum_maps.hpp"
 #include "pksav/enum_maps.hpp"
 
-#include "types/lock_guard.hpp"
+#include "types/mutex_helpers.hpp"
 #include "types/rng.hpp"
 
 #include <pkmn/exception.hpp>

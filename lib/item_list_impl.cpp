@@ -13,6 +13,8 @@
 #include "item_list_gcnimpl.hpp"
 #include "item_list_modernimpl.hpp"
 
+#include "types/mutex_helpers.hpp"
+
 #include "utils/misc.hpp"
 
 #include "database/database_common.hpp"
@@ -23,7 +25,6 @@
 
 #include <boost/config.hpp>
 #include <boost/format.hpp>
-#include <boost/thread/lock_guard.hpp>
 
 #include <stdexcept>
 
@@ -205,7 +206,7 @@ namespace pkmn {
 
     int item_list_impl::get_num_items()
     {
-        boost::lock_guard<item_list_impl> lock(*this);
+        pkmn::lock_guard<item_list_impl> lock(*this);
 
         return _num_items;
     }
@@ -222,7 +223,7 @@ namespace pkmn {
             (_capacity-1)
         );
 
-        boost::lock_guard<item_list_impl> lock(*this);
+        pkmn::lock_guard<item_list_impl> lock(*this);
 
         return _item_slots.at(position);
     }
@@ -235,7 +236,7 @@ namespace pkmn {
         // Input validation
         pkmn::enforce_bounds("Amount", amount, 1, 99);
 
-        boost::lock_guard<item_list_impl> lock(*this);
+        pkmn::lock_guard<item_list_impl> lock(*this);
 
         /*
          * Check if this item is already in the list. If so, add to
@@ -299,7 +300,7 @@ namespace pkmn {
         // Input validation
         pkmn::enforce_bounds("Amount", amount, 1, 99);
 
-        boost::lock_guard<item_list_impl> lock(*this);
+        pkmn::lock_guard<item_list_impl> lock(*this);
 
         /*
          * Check if this item is in the list. If so, remove that amount,
@@ -355,7 +356,7 @@ namespace pkmn {
             throw std::invalid_argument("Positions cannot match.");
         }
 
-        boost::lock_guard<item_list_impl> lock(*this);
+        pkmn::lock_guard<item_list_impl> lock(*this);
 
         pkmn::item_slot temp = _item_slots[old_position];
         _item_slots.erase(_item_slots.begin()+old_position);
@@ -373,7 +374,7 @@ namespace pkmn {
         int end_boundary = std::min<int>(_num_items, _capacity-1);
         pkmn::enforce_bounds("Position", position, 0, end_boundary);
 
-        boost::lock_guard<item_list_impl> lock(*this);
+        pkmn::lock_guard<item_list_impl> lock(*this);
 
         if(item == pkmn::e_item::NONE)
         {
@@ -427,7 +428,7 @@ namespace pkmn {
 
     const pkmn::item_slots_t& item_list_impl::as_vector()
     {
-        boost::lock_guard<item_list_impl> lock(*this);
+        pkmn::lock_guard<item_list_impl> lock(*this);
 
         return _item_slots;
     }
@@ -474,14 +475,14 @@ namespace pkmn {
 
     void* item_list_impl::get_native()
     {
-        boost::lock_guard<item_list_impl> lock(*this);
+        pkmn::lock_guard<item_list_impl> lock(*this);
 
         return _p_native;
     }
 
     void item_list_impl::_get_valid_item_lists()
     {
-        boost::lock_guard<item_list_impl> lock(*this);
+        pkmn::lock_guard<item_list_impl> lock(*this);
 
         BOOST_ASSERT(_valid_items.empty() == _valid_items.empty());
 

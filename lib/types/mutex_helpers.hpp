@@ -5,8 +5,13 @@
 // (C) Copyright 2011-2012 Vicente J. Botet Escriba
 // (C) Copyright 2018 Nicholas Corgan
 
-#ifndef BOOST_THREAD_LOCK_GUARD_HPP
-#define BOOST_THREAD_LOCK_GUARD_HPP
+/*
+ * These classes are adopted from <boost/thread/lockable_adapter.hpp> and
+ * <boost/thread/lock_guard.hpp>.
+ */
+
+#ifndef PKMN_TYPES_MUTEX_HELPERS_HPP
+#define PKMN_TYPES_MUTEX_HELPERS_HPP
 
 #include <boost/thread/detail/config.hpp>
 #include <boost/thread/detail/delete.hpp>
@@ -22,6 +27,38 @@
 
 namespace pkmn
 {
+  // Copied from Boost since lock() and unlock() weren't const in earlier
+  // versions, causing a compiler error when instantiating in a copy
+  // constructor.
+  template <typename BasicLockable>
+  class basic_lockable_adapter
+  {
+  public:
+    typedef BasicLockable mutex_type;
+
+  protected:
+    mutex_type& lockable() const
+    {
+      return lockable_;
+    }
+    mutable mutex_type lockable_; /*< mutable so that it can be modified by const functions >*/
+  public:
+
+    BOOST_THREAD_NO_COPYABLE( basic_lockable_adapter) /*< no copyable >*/
+
+    basic_lockable_adapter()
+    {}
+
+    void lock() const
+    {
+      lockable().lock();
+    }
+    void unlock() const
+    {
+      lockable().unlock();
+    }
+
+  };
 
   template <typename Mutex>
   class lock_guard
@@ -48,41 +85,11 @@ namespace pkmn
 #endif
     }
 
-#if ! defined BOOST_THREAD_NO_CXX11_HDR_INITIALIZER_LIST
-    lock_guard(std::initializer_list<boost::thread_detail::lockable_wrapper<Mutex> > l_) :
-      m(*(const_cast<boost::thread_detail::lockable_wrapper<Mutex>*>(l_.begin())->m))
-    {
-      m.lock();
-    }
-
-    lock_guard(std::initializer_list<boost::thread_detail::lockable_adopt_wrapper<Mutex> > l_) :
-      m(*(const_cast<boost::thread_detail::lockable_adopt_wrapper<Mutex>*>(l_.begin())->m))
-    {
-#if ! defined BOOST_THREAD_PROVIDES_NESTED_LOCKS
-      BOOST_ASSERT(is_locked_by_this_thread(m));
-#endif
-    }
-
-#endif
     ~lock_guard()
     {
       m.unlock();
     }
   };
-
-
-#if ! defined BOOST_THREAD_NO_MAKE_LOCK_GUARD
-  template <typename Lockable>
-  lock_guard<Lockable> make_lock_guard(Lockable& mtx)
-  {
-    return { boost::thread_detail::lockable_wrapper<Lockable>(mtx) };
-  }
-  template <typename Lockable>
-  lock_guard<Lockable> make_lock_guard(Lockable& mtx, boost::adopt_lock_t)
-  {
-    return { boost::thread_detail::lockable_adopt_wrapper<Lockable>(mtx) };
-  }
-#endif
 }
 
 #include <boost/config/abi_suffix.hpp>

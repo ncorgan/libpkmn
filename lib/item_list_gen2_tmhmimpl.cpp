@@ -8,12 +8,12 @@
 #include "exception_internal.hpp"
 #include "item_list_gen2_tmhmimpl.hpp"
 
+#include "types/mutex_helpers.hpp"
+
 #include <pksav/gen2/items.h>
 
 #include <pkmn/database/item_entry.hpp>
 #include <pkmn/exception.hpp>
-
-#include <boost/thread/lock_guard.hpp>
 
 #include <cstdio>
 #include <cstring>
@@ -75,7 +75,7 @@ namespace pkmn {
 
     int item_list_gen2_tmhmimpl::get_num_items()
     {
-        boost::lock_guard<item_list_gen2_tmhmimpl> lock(*this);
+        pkmn::lock_guard<item_list_gen2_tmhmimpl> lock(*this);
 
         int ret = 0;
         ret += int(std::count_if(
@@ -103,7 +103,7 @@ namespace pkmn {
     {
         pkmn::enforce_bounds("Amount", amount, 1, 99);
 
-        boost::lock_guard<item_list_gen2_tmhmimpl> lock(*this);
+        pkmn::lock_guard<item_list_gen2_tmhmimpl> lock(*this);
 
         pkmn::database::item_entry entry(item, get_game());
         if(entry.get_pocket() != get_name())
@@ -138,7 +138,7 @@ namespace pkmn {
     {
         pkmn::enforce_bounds("Amount", amount, 1, 99);
 
-        boost::lock_guard<item_list_gen2_tmhmimpl> lock(*this);
+        pkmn::lock_guard<item_list_gen2_tmhmimpl> lock(*this);
 
         pkmn::database::item_entry entry(item, get_game());
         if(entry.get_pocket() != get_name())
@@ -181,7 +181,7 @@ namespace pkmn {
         int end_boundary = std::min<int>(_num_items, _capacity-1);
         pkmn::enforce_bounds("Position", position, 0, end_boundary);
 
-        boost::lock_guard<item_list_gen2_tmhmimpl> lock(*this);
+        pkmn::lock_guard<item_list_gen2_tmhmimpl> lock(*this);
 
         pkmn::database::item_entry entry(item, get_game());
         if((item != pkmn::e_item::NONE) && (entry.get_pocket() != get_name()))

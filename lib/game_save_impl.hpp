@@ -7,11 +7,12 @@
 #ifndef PKMN_GAME_SAVE_IMPL_HPP
 #define PKMN_GAME_SAVE_IMPL_HPP
 
+#include "types/mutex_helpers.hpp"
+
 #include <pkmn/game_save.hpp>
 
 #include <boost/assert.hpp>
 #include <boost/noncopyable.hpp>
-#include <boost/thread/lockable_adapter.hpp>
 #include <boost/thread/recursive_mutex.hpp>
 
 #include <cstring>
@@ -23,7 +24,7 @@ namespace pkmn {
 
     class game_save_impl: public game_save,
                           private boost::noncopyable,
-                          public boost::basic_lockable_adapter<boost::recursive_mutex>
+                          public pkmn::basic_lockable_adapter<boost::recursive_mutex>
     {
         public:
             game_save_impl() {};

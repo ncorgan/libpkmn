@@ -8,14 +8,13 @@
 #include "exception_internal.hpp"
 #include "pokemon_gbaimpl.hpp"
 #include "pokemon_party_gbaimpl.hpp"
+#include "types/mutex_helpers.hpp"
 #include "utils/misc.hpp"
 
 #include <pkmn/exception.hpp>
 
 #include <pksav/gba/pokemon.h>
 #include <pksav/math/endian.h>
-
-#include <boost/thread/lock_guard.hpp>
 
 #include <cstring>
 #include <stdexcept>
@@ -47,7 +46,7 @@ namespace pkmn {
 
     int pokemon_party_gbaimpl::get_num_pokemon()
     {
-        boost::lock_guard<pokemon_party_gbaimpl> lock(*this);
+        pkmn::lock_guard<pokemon_party_gbaimpl> lock(*this);
 
         return int(pksav_littleendian32(_pksav_party.count));
     }
@@ -67,14 +66,14 @@ namespace pkmn {
             throw std::invalid_argument("Parties store Pokémon contiguously.");
         }
 
-        boost::lock_guard<pokemon_party_gbaimpl> lock(*this);
+        pkmn::lock_guard<pokemon_party_gbaimpl> lock(*this);
 
         // Make sure no one else is using the new Pokémon variable.
         pokemon_gbaimpl* p_new_pokemon = dynamic_cast<pokemon_gbaimpl*>(
                                              new_pokemon.get()
                                          );
         BOOST_ASSERT(p_new_pokemon != nullptr);
-        boost::lock_guard<pokemon_gbaimpl> new_pokemon_lock(*p_new_pokemon);
+        pkmn::lock_guard<pokemon_gbaimpl> new_pokemon_lock(*p_new_pokemon);
 
         // Copy the underlying memory to the party. At the end of this process,
         // all existing variables will correspond to the same Pokémon, even if

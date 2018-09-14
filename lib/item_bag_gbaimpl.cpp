@@ -13,7 +13,6 @@
 #include "utils/misc.hpp"
 
 #include <boost/assert.hpp>
-#include <boost/thread/lock_guard.hpp>
 
 #include <cstring>
 #include <stdexcept>

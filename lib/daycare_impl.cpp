@@ -19,8 +19,9 @@
 #include "polymorphism/is_libpkmn_impl.hpp"
 #include "polymorphism/pokemon.hpp"
 
+#include "types/mutex_helpers.hpp"
+
 #include <boost/assert.hpp>
-#include <boost/thread/lock_guard.hpp>
 
 // TODO: "None" Pokémon's game should match daycare's
 
@@ -112,7 +113,7 @@ namespace pkmn {
             );
         }
 
-        boost::lock_guard<daycare_impl> lock(*this);
+        pkmn::lock_guard<daycare_impl> lock(*this);
 
         return this->_get_levelup_pokemon_ref().at(index);
     }
@@ -145,7 +146,7 @@ namespace pkmn {
             );
         }
 
-        boost::lock_guard<daycare_impl> lock(*this);
+        pkmn::lock_guard<daycare_impl> lock(*this);
 
         _set_levelup_pokemon(
             index,
@@ -184,7 +185,7 @@ namespace pkmn {
             );
         }
 
-        boost::lock_guard<daycare_impl> lock(*this);
+        pkmn::lock_guard<daycare_impl> lock(*this);
 
         _set_levelup_pokemon(
             index,
@@ -197,7 +198,7 @@ namespace pkmn {
 
     const pkmn::pokemon_list_t& daycare_impl::get_levelup_pokemon_as_vector()
     {
-        boost::lock_guard<daycare_impl> lock(*this);
+        pkmn::lock_guard<daycare_impl> lock(*this);
 
         return this->_get_levelup_pokemon_ref();
     }
@@ -220,7 +221,7 @@ namespace pkmn {
             (this->get_breeding_pokemon_capacity() - 1)
         );
 
-        boost::lock_guard<daycare_impl> lock(*this);
+        pkmn::lock_guard<daycare_impl> lock(*this);
 
         return this->_breeding_pokemon.at(index);
     }
@@ -244,7 +245,7 @@ namespace pkmn {
             (this->get_breeding_pokemon_capacity() - 1)
         );
 
-        boost::lock_guard<daycare_impl> lock(*this);
+        pkmn::lock_guard<daycare_impl> lock(*this);
 
         _set_breeding_pokemon(
             index,
@@ -274,7 +275,7 @@ namespace pkmn {
             (this->get_breeding_pokemon_capacity() - 1)
         );
 
-        boost::lock_guard<daycare_impl> lock(*this);
+        pkmn::lock_guard<daycare_impl> lock(*this);
 
         _set_breeding_pokemon(
             index,
@@ -295,7 +296,7 @@ namespace pkmn {
                   );
         }
 
-        boost::lock_guard<daycare_impl> lock(*this);
+        pkmn::lock_guard<daycare_impl> lock(*this);
 
         return _breeding_pokemon;
     }
@@ -310,14 +311,14 @@ namespace pkmn {
                   );
         }
 
-        boost::lock_guard<daycare_impl> lock(*this);
+        pkmn::lock_guard<daycare_impl> lock(*this);
 
         return _egg;
     }
 
     void* daycare_impl::get_native()
     {
-        boost::lock_guard<daycare_impl> lock(*this);
+        pkmn::lock_guard<daycare_impl> lock(*this);
 
         _to_native_levelup();
         _to_native_breeding();

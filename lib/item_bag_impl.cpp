@@ -17,12 +17,13 @@
 
 #include "exception_internal.hpp"
 
+#include "types/mutex_helpers.hpp"
+
 #include "utils/misc.hpp"
 
 #include <pkmn/exception.hpp>
 
 #include <boost/config.hpp>
-#include <boost/thread/lock_guard.hpp>
 
 #include <stdexcept>
 
@@ -119,7 +120,7 @@ namespace pkmn {
         int amount
     )
     {
-        boost::lock_guard<item_bag_impl> lock(*this);
+        pkmn::lock_guard<item_bag_impl> lock(*this);
 
         std::string pocket_name = _get_pocket_name(item);
         _item_pockets.at(pocket_name)->add(item, amount);
@@ -132,7 +133,7 @@ namespace pkmn {
         int amount
     )
     {
-        boost::lock_guard<item_bag_impl> lock(*this);
+        pkmn::lock_guard<item_bag_impl> lock(*this);
 
         std::string pocket_name = _get_pocket_name(item);
         _item_pockets.at(pocket_name)->remove(item, amount);
@@ -142,7 +143,7 @@ namespace pkmn {
 
     void* item_bag_impl::get_native()
     {
-        boost::lock_guard<item_bag_impl> lock(*this);
+        pkmn::lock_guard<item_bag_impl> lock(*this);
 
         _to_native();
 

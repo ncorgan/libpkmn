@@ -10,8 +10,6 @@
 
 #include "utils/misc.hpp"
 
-#include <boost/thread/lock_guard.hpp>
-
 #define GCN_NUM_BOXES (_game_id == COLOSSEUM_ID ? COLOSSEUM_NUM_BOXES : XD_NUM_BOXES)
 
 namespace pkmn {

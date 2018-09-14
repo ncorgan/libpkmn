@@ -11,7 +11,6 @@
 #include "utils/misc.hpp"
 
 #include <boost/assert.hpp>
-#include <boost/thread/lock_guard.hpp>
 
 // To avoid copy+pasting the é
 static const std::string BALL_POCKET_NAME = "Poké Balls";

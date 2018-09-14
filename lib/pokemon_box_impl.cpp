@@ -18,6 +18,8 @@
 #include "polymorphism/is_libpkmn_impl.hpp"
 #include "polymorphism/pokemon.hpp"
 
+#include "types/mutex_helpers.hpp"
+
 #include "utils/misc.hpp"
 
 #include <pkmn/exception.hpp>
@@ -80,7 +82,7 @@ namespace pkmn {
         int capacity = get_capacity();
         pkmn::enforce_bounds("Box index", index, 0, (capacity-1));
 
-        boost::lock_guard<pokemon_box_impl> lock(*this);
+        pkmn::lock_guard<pokemon_box_impl> lock(*this);
 
         return _pokemon_list.at(index);
     }
@@ -93,7 +95,7 @@ namespace pkmn {
         int capacity = get_capacity();
         pkmn::enforce_bounds("Box index", index, 0, (capacity-1));
 
-        boost::lock_guard<pokemon_box_impl> lock(*this);
+        pkmn::lock_guard<pokemon_box_impl> lock(*this);
 
         _set_pokemon(
             index,
@@ -112,7 +114,7 @@ namespace pkmn {
         int capacity = get_capacity();
         pkmn::enforce_bounds("Box index", index, 0, (capacity-1));
 
-        boost::lock_guard<pokemon_box_impl> lock(*this);
+        pkmn::lock_guard<pokemon_box_impl> lock(*this);
 
         _set_pokemon(
             index,
@@ -125,14 +127,14 @@ namespace pkmn {
 
     const pkmn::pokemon_list_t& pokemon_box_impl::as_vector()
     {
-        boost::lock_guard<pokemon_box_impl> lock(*this);
+        pkmn::lock_guard<pokemon_box_impl> lock(*this);
 
         return _pokemon_list;
     }
 
     void* pokemon_box_impl::get_native()
     {
-        boost::lock_guard<pokemon_box_impl> lock(*this);
+        pkmn::lock_guard<pokemon_box_impl> lock(*this);
 
         _to_native();
 

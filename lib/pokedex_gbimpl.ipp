@@ -5,21 +5,20 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
+#ifndef PKMN_POKEDEX_GBIMPL_IPP
+#define PKMN_POKEDEX_GBIMPL_IPP
+
 #include "utils/misc.hpp"
 #include "pokedex_gbimpl.hpp"
 
 #include "database/database_common.hpp"
 #include "database/id_to_string.hpp"
 #include "pksav/pksav_call.hpp"
+#include "types/mutex_helpers.hpp"
 
 #include <pkmn/exception.hpp>
 
 #include <pksav/common/pokedex.h>
-
-#include <boost/thread/lock_guard.hpp>
-
-#ifndef PKMN_POKEDEX_GBIMPL_IPP
-#define PKMN_POKEDEX_GBIMPL_IPP
 
 namespace pkmn
 {
@@ -62,7 +61,7 @@ namespace pkmn
         pkmn::e_species species
     )
     {
-        boost::lock_guard<pokedex_gbimpl> lock(*this);
+        pkmn::lock_guard<pokedex_gbimpl> lock(*this);
 
         bool has_seen = false;
 
@@ -82,7 +81,7 @@ namespace pkmn
         pkmn::e_species species
     )
     {
-        boost::lock_guard<pokedex_gbimpl> lock(*this);
+        pkmn::lock_guard<pokedex_gbimpl> lock(*this);
 
         bool has_caught = false;
 

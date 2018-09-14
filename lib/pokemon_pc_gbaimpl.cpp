@@ -14,8 +14,6 @@
 #include <pksav/gba/pokemon.h>
 #include <pksav/gba/text.h>
 
-#include <boost/thread/lock_guard.hpp>
-
 #include <cstring>
 
 BOOST_STATIC_CONSTEXPR uint8_t GBA_TEXT_TERMINATOR = 0xFF;

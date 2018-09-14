@@ -16,12 +16,13 @@
 
 #include "pksav/pksav_call.hpp"
 
+#include "types/mutex_helpers.hpp"
+
 #include <pkmn/exception.hpp>
 
 #include <pksav/common/pokedex.h>
 
 #include <boost/assert.hpp>
-#include <boost/thread/lock_guard.hpp>
 
 namespace pkmn
 {
@@ -96,7 +97,7 @@ namespace pkmn
         bool has_seen_value
     )
     {
-        boost::lock_guard<pokedex_impl> lock(*this);
+        pkmn::lock_guard<pokedex_impl> lock(*this);
 
         _set_has_seen(
             static_cast<int>(species),
@@ -115,7 +116,7 @@ namespace pkmn
 
     const std::vector<pkmn::e_species>& pokedex_impl::get_all_seen()
     {
-        boost::lock_guard<pokedex_impl> lock(*this);
+        pkmn::lock_guard<pokedex_impl> lock(*this);
 
         if(_dirty_seen)
         {
@@ -128,7 +129,7 @@ namespace pkmn
 
     int pokedex_impl::get_num_seen()
     {
-        boost::lock_guard<pokedex_impl> lock(*this);
+        pkmn::lock_guard<pokedex_impl> lock(*this);
 
         if(_dirty_seen)
         {
@@ -144,7 +145,7 @@ namespace pkmn
         bool has_caught_value
     )
     {
-        boost::lock_guard<pokedex_impl> lock(*this);
+        pkmn::lock_guard<pokedex_impl> lock(*this);
 
         _set_has_caught(
             static_cast<int>(species),
@@ -163,7 +164,7 @@ namespace pkmn
 
     const std::vector<pkmn::e_species>& pokedex_impl::get_all_caught()
     {
-        boost::lock_guard<pokedex_impl> lock(*this);
+        pkmn::lock_guard<pokedex_impl> lock(*this);
 
         if(_dirty_caught)
         {
@@ -176,7 +177,7 @@ namespace pkmn
 
     int pokedex_impl::get_num_caught()
     {
-        boost::lock_guard<pokedex_impl> lock(*this);
+        pkmn::lock_guard<pokedex_impl> lock(*this);
 
         if(_dirty_caught)
         {
@@ -189,7 +190,7 @@ namespace pkmn
 
     void* pokedex_impl::get_native()
     {
-        boost::lock_guard<pokedex_impl> lock(*this);
+        pkmn::lock_guard<pokedex_impl> lock(*this);
 
         return _p_native;
     }

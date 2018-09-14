@@ -14,7 +14,6 @@
 #include <boost/assign.hpp>
 #include <boost/config.hpp>
 #include <boost/algorithm/string/compare.hpp>
-#include <boost/thread/lock_guard.hpp>
 
 #include <algorithm>
 #include <atomic>

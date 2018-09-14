@@ -19,6 +19,8 @@
 #include "pkmgc/includes.hpp"
 #include "pksav/pksav_call.hpp"
 
+#include "types/mutex_helpers.hpp"
+
 #include <pksav/gen1/save.h>
 #include <pksav/gen2/save.h>
 #include <pksav/gba/save.h>

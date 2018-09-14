@@ -10,11 +10,10 @@
 
 #include "exception_internal.hpp"
 #include "pksav/pksav_call.hpp"
+#include "types/mutex_helpers.hpp"
 
 #include <pksav/gen1/text.h>
 #include <pksav/gen2/text.h>
-
-#include <boost/thread/lock_guard.hpp>
 
 #include <cstring>
 #include <stdexcept>
@@ -58,7 +57,7 @@ namespace pkmn {
     POKEMON_PARTY_GBIMPL_TEMPLATE
     int POKEMON_PARTY_GBIMPL_CLASS::get_num_pokemon()
     {
-        boost::lock_guard<POKEMON_PARTY_GBIMPL_CLASS> lock(*this);
+        pkmn::lock_guard<POKEMON_PARTY_GBIMPL_CLASS> lock(*this);
 
         return int(_pksav_party.count);
     }
@@ -79,14 +78,14 @@ namespace pkmn {
             throw std::invalid_argument("Parties store Pokémon contiguously.");
         }
 
-        boost::lock_guard<POKEMON_PARTY_GBIMPL_CLASS> lock(*this);
+        pkmn::lock_guard<POKEMON_PARTY_GBIMPL_CLASS> lock(*this);
 
         // Make sure no one else is using the new Pokémon variable.
         libpkmn_pokemon_type* p_new_pokemon = dynamic_cast<libpkmn_pokemon_type*>(
                                                   new_pokemon.get()
                                               );
         BOOST_ASSERT(p_new_pokemon != nullptr);
-        boost::lock_guard<libpkmn_pokemon_type> new_pokemon_lock(*p_new_pokemon);
+        pkmn::lock_guard<libpkmn_pokemon_type> new_pokemon_lock(*p_new_pokemon);
 
         // Copy the underlying memory to the party. At the end of this process,
         // all existing variables will correspond to the same Pokémon, even if
@@ -190,7 +189,7 @@ namespace pkmn {
     POKEMON_PARTY_GBIMPL_TEMPLATE
     void POKEMON_PARTY_GBIMPL_CLASS::_from_native()
     {
-        boost::lock_guard<POKEMON_PARTY_GBIMPL_CLASS> lock(*this);
+        pkmn::lock_guard<POKEMON_PARTY_GBIMPL_CLASS> lock(*this);
 
         // This shouldn't resize if the vector is populated.
         _pokemon_list.resize(PARTY_SIZE);

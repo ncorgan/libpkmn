@@ -7,17 +7,18 @@
 #ifndef PKMN_ITEM_LIST_IMPL_HPP
 #define PKMN_ITEM_LIST_IMPL_HPP
 
+#include "types/mutex_helpers.hpp"
+
 #include <pkmn/item_list.hpp>
 
 #include <pkmn/enums/item.hpp>
 
-#include <boost/thread/lockable_adapter.hpp>
 #include <boost/thread/recursive_mutex.hpp>
 
 namespace pkmn {
 
     class item_list_impl: public item_list,
-                          public boost::basic_lockable_adapter<boost::recursive_mutex>
+                          public pkmn::basic_lockable_adapter<boost::recursive_mutex>
     {
         public:
             item_list_impl() {};

@@ -7,12 +7,13 @@
 #ifndef PKMN_POKEMON_IMPL_HPP
 #define PKMN_POKEMON_IMPL_HPP
 
+#include "types/mutex_helpers.hpp"
+
 #include <pkmn/pokemon.hpp>
 
 #include <pksav/common/contest_stats.h>
 #include <pksav/common/stats.h>
 
-#include <boost/thread/lockable_adapter.hpp>
 #include <boost/thread/recursive_mutex.hpp>
 
 #include <stdexcept>
@@ -26,7 +27,7 @@ namespace pkmn {
     class pokemon_party_impl;
 
     class pokemon_impl: public pokemon,
-                        public boost::basic_lockable_adapter<boost::recursive_mutex>
+                        public pkmn::basic_lockable_adapter<boost::recursive_mutex>
     {
         public:
             pokemon_impl(

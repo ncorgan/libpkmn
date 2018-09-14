@@ -12,12 +12,13 @@
 
 #include "pksav/pksav_call.hpp"
 
+#include "types/mutex_helpers.hpp"
+
 #include <pksav/gen2/daycare_data.h>
 #include <pksav/gen2/pokemon.h>
 #include <pksav/gen2/text.h>
 
 #include <boost/assert.hpp>
-#include <boost/thread/lock_guard.hpp>
 
 #define NATIVE_RCAST(ptr) (reinterpret_cast<struct pksav_gen2_daycare_data*>(ptr))
 
@@ -178,7 +179,7 @@ namespace pkmn {
             (LEVELUP_CAPACITY - 1)
         );
 
-        boost::lock_guard<daycare_gen2impl> lock(*this);
+        pkmn::lock_guard<daycare_gen2impl> lock(*this);
 
         pkmn::pokemon_list_t& r_levelup_pokemon = this->_get_levelup_pokemon_ref();
 
@@ -187,7 +188,7 @@ namespace pkmn {
                                               new_pokemon.get()
                                           );
         BOOST_ASSERT(p_new_pokemon != nullptr);
-        boost::lock_guard<pokemon_gen2impl> new_pokemon_lock(*p_new_pokemon);
+        pkmn::lock_guard<pokemon_gen2impl> new_pokemon_lock(*p_new_pokemon);
 
         // Copy the underlying memory.
         //

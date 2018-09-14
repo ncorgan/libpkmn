@@ -18,9 +18,9 @@
 #include "database/enum_conversions.hpp"
 #include "database/id_to_string.hpp"
 
-#include <pkmn/exception.hpp>
+#include "types/mutex_helpers.hpp"
 
-#include <boost/thread/lock_guard.hpp>
+#include <pkmn/exception.hpp>
 
 #include <stdexcept>
 
@@ -74,14 +74,14 @@ namespace pkmn {
         int num_boxes = get_num_boxes();
         pkmn::enforce_bounds("Box index", index, 0, (num_boxes-1));
 
-        boost::lock_guard<pokemon_pc_impl> lock(*this);
+        pkmn::lock_guard<pokemon_pc_impl> lock(*this);
 
         return _box_list.at(index);
     }
 
     const pkmn::pokemon_box_list_t& pokemon_pc_impl::as_vector()
     {
-        boost::lock_guard<pokemon_pc_impl> lock(*this);
+        pkmn::lock_guard<pokemon_pc_impl> lock(*this);
 
         return _box_list;
     }
@@ -93,7 +93,7 @@ namespace pkmn {
             throw pkmn::feature_not_in_game_error("Box names", "Generation I");
         }
 
-        boost::lock_guard<pokemon_pc_impl> lock(*this);
+        pkmn::lock_guard<pokemon_pc_impl> lock(*this);
 
         _update_box_names();
         return _box_names;
@@ -101,7 +101,7 @@ namespace pkmn {
 
     void* pokemon_pc_impl::get_native()
     {
-        boost::lock_guard<pokemon_pc_impl> lock(*this);
+        pkmn::lock_guard<pokemon_pc_impl> lock(*this);
 
         _to_native();
 

@@ -11,11 +11,11 @@
 
 #include "pksav/enum_maps.hpp"
 
+#include "types/mutex_helpers.hpp"
+
 #include <pkmn/exception.hpp>
 
 #include <pksav/math/endian.h>
-
-#include <boost/thread/lock_guard.hpp>
 
 #include <cstring>
 #include <stdexcept>
@@ -50,7 +50,7 @@ namespace pkmn {
 
     std::string pokemon_box_gbaimpl::get_name()
     {
-        boost::lock_guard<pokemon_box_gbaimpl> lock(*this);
+        pkmn::lock_guard<pokemon_box_gbaimpl> lock(*this);
 
         return _box_name;
     }
@@ -66,14 +66,14 @@ namespace pkmn {
             8
         );
 
-        boost::lock_guard<pokemon_box_gbaimpl> lock(*this);
+        pkmn::lock_guard<pokemon_box_gbaimpl> lock(*this);
 
         _box_name = name;
     }
 
     int pokemon_box_gbaimpl::get_num_pokemon()
     {
-        boost::lock_guard<pokemon_box_gbaimpl> lock(*this);
+        pkmn::lock_guard<pokemon_box_gbaimpl> lock(*this);
 
         int num_pokemon = 0;
         for(int i = 0; i < get_capacity(); ++i)
@@ -121,7 +121,7 @@ namespace pkmn {
 
     std::string pokemon_box_gbaimpl::get_wallpaper()
     {
-        boost::lock_guard<pokemon_box_gbaimpl> lock(*this);
+        pkmn::lock_guard<pokemon_box_gbaimpl> lock(*this);
 
         BOOST_ASSERT(pkmn::does_vector_contain_value(
             get_valid_gba_wallpaper_names(get_game()),
@@ -141,7 +141,7 @@ namespace pkmn {
             get_valid_gba_wallpaper_names(get_game())
         );
 
-        boost::lock_guard<pokemon_box_gbaimpl> lock(*this);
+        pkmn::lock_guard<pokemon_box_gbaimpl> lock(*this);
 
         _wallpaper = wallpaper;
     }
@@ -154,14 +154,14 @@ namespace pkmn {
         int max_index = get_capacity();
         pkmn::enforce_bounds("Box index", index, 0, max_index);
 
-        boost::lock_guard<pokemon_box_gbaimpl> lock(*this);
+        pkmn::lock_guard<pokemon_box_gbaimpl> lock(*this);
 
         // Make sure no one else is using the new Pokémon variable.
         pokemon_gbaimpl* p_new_pokemon = dynamic_cast<pokemon_gbaimpl*>(
                                              new_pokemon.get()
                                          );
         BOOST_ASSERT(p_new_pokemon != nullptr);
-        boost::lock_guard<pokemon_gbaimpl> new_pokemon_lock(*p_new_pokemon);
+        pkmn::lock_guard<pokemon_gbaimpl> new_pokemon_lock(*p_new_pokemon);
 
         // Copy the underlying memory to the party. At the end of this process,
         // all existing variables will correspond to the same Pokémon, even if

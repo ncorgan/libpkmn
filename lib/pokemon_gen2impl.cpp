@@ -31,7 +31,7 @@
 #include "pksav/party_data.hpp"
 #include "pksav/pksav_call.hpp"
 
-#include "types/lock_guard.hpp"
+#include "types/mutex_helpers.hpp"
 #include "types/rng.hpp"
 
 #include <pksav/common/stats.h>

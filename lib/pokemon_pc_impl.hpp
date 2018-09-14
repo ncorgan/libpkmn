@@ -9,11 +9,12 @@
 
 #include "pokemon_box_impl.hpp"
 
+#include "types/mutex_helpers.hpp"
+
 #include <pkmn/pokedex.hpp>
 #include <pkmn/pokemon_pc.hpp>
 
 #include <boost/assert.hpp>
-#include <boost/thread/lockable_adapter.hpp>
 #include <boost/thread/recursive_mutex.hpp>
 
 #include <string>
@@ -21,7 +22,7 @@
 namespace pkmn {
 
     class pokemon_pc_impl: public pokemon_pc,
-                           public boost::basic_lockable_adapter<boost::recursive_mutex>
+                           public pkmn::basic_lockable_adapter<boost::recursive_mutex>
     {
         public:
             pokemon_pc_impl() {}

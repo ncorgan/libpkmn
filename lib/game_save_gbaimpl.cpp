@@ -16,11 +16,12 @@
 #include "pksav/enum_maps.hpp"
 #include "pksav/pksav_call.hpp"
 
+#include "types/mutex_helpers.hpp"
+
 #include <pkmn/exception.hpp>
 
 #include <boost/algorithm/string.hpp>
 #include <boost/filesystem.hpp>
-#include <boost/thread/lock_guard.hpp>
 
 #include <cstring>
 #include <stdexcept>
@@ -183,7 +184,7 @@ namespace pkmn {
         const std::string& filepath
     )
     {
-        boost::lock_guard<game_save_gbaimpl> lock(*this);
+        pkmn::lock_guard<game_save_gbaimpl> lock(*this);
 
         // These get_native() calls will call the mutex for every subclass
         // it copies, so we don't need to worry about that here.
@@ -244,7 +245,7 @@ namespace pkmn {
 
     pkmn::time_duration game_save_gbaimpl::get_time_played()
     {
-        boost::lock_guard<game_save_gbaimpl> lock(*this);
+        pkmn::lock_guard<game_save_gbaimpl> lock(*this);
 
         BOOST_ASSERT(_pksav_save.p_time_played != nullptr);
 
@@ -285,7 +286,7 @@ namespace pkmn {
             59
         );
 
-        boost::lock_guard<game_save_gbaimpl> lock(*this);
+        pkmn::lock_guard<game_save_gbaimpl> lock(*this);
 
         BOOST_ASSERT(_pksav_save.p_time_played != nullptr);
 
@@ -299,7 +300,7 @@ namespace pkmn {
 
     std::string game_save_gbaimpl::get_trainer_name()
     {
-        boost::lock_guard<game_save_gbaimpl> lock(*this);
+        pkmn::lock_guard<game_save_gbaimpl> lock(*this);
 
         BOOST_ASSERT(_pksav_save.trainer_info.p_name != nullptr);
 
@@ -326,7 +327,7 @@ namespace pkmn {
             PKSAV_GBA_TRAINER_NAME_LENGTH
         );
 
-        boost::lock_guard<game_save_gbaimpl> lock(*this);
+        pkmn::lock_guard<game_save_gbaimpl> lock(*this);
 
         BOOST_ASSERT(_pksav_save.trainer_info.p_name != nullptr);
 
@@ -341,7 +342,7 @@ namespace pkmn {
 
     uint32_t game_save_gbaimpl::get_trainer_id()
     {
-        boost::lock_guard<game_save_gbaimpl> lock(*this);
+        pkmn::lock_guard<game_save_gbaimpl> lock(*this);
 
         BOOST_ASSERT(_pksav_save.trainer_info.p_id != nullptr);
 
@@ -352,7 +353,7 @@ namespace pkmn {
         uint32_t trainer_id
     )
     {
-        boost::lock_guard<game_save_gbaimpl> lock(*this);
+        pkmn::lock_guard<game_save_gbaimpl> lock(*this);
 
         BOOST_ASSERT(_pksav_save.trainer_info.p_id != nullptr);
 
@@ -361,7 +362,7 @@ namespace pkmn {
 
     uint16_t game_save_gbaimpl::get_trainer_public_id()
     {
-        boost::lock_guard<game_save_gbaimpl> lock(*this);
+        pkmn::lock_guard<game_save_gbaimpl> lock(*this);
 
         BOOST_ASSERT(_pksav_save.trainer_info.p_id != nullptr);
 
@@ -372,7 +373,7 @@ namespace pkmn {
         uint16_t trainer_public_id
     )
     {
-        boost::lock_guard<game_save_gbaimpl> lock(*this);
+        pkmn::lock_guard<game_save_gbaimpl> lock(*this);
 
         BOOST_ASSERT(_pksav_save.trainer_info.p_id != nullptr);
 
@@ -381,7 +382,7 @@ namespace pkmn {
 
     uint16_t game_save_gbaimpl::get_trainer_secret_id()
     {
-        boost::lock_guard<game_save_gbaimpl> lock(*this);
+        pkmn::lock_guard<game_save_gbaimpl> lock(*this);
 
         BOOST_ASSERT(_pksav_save.trainer_info.p_id != nullptr);
 
@@ -392,7 +393,7 @@ namespace pkmn {
         uint16_t trainer_secret_id
     )
     {
-        boost::lock_guard<game_save_gbaimpl> lock(*this);
+        pkmn::lock_guard<game_save_gbaimpl> lock(*this);
 
         BOOST_ASSERT(_pksav_save.trainer_info.p_id != nullptr);
 
@@ -402,7 +403,7 @@ namespace pkmn {
     // TODO: PKSav gender enum
     pkmn::e_gender game_save_gbaimpl::get_trainer_gender()
     {
-        boost::lock_guard<game_save_gbaimpl> lock(*this);
+        pkmn::lock_guard<game_save_gbaimpl> lock(*this);
 
         BOOST_ASSERT(_pksav_save.trainer_info.p_gender != nullptr);
 
@@ -415,7 +416,7 @@ namespace pkmn {
         pkmn::e_gender trainer_gender
     )
     {
-        boost::lock_guard<game_save_gbaimpl> lock(*this);
+        pkmn::lock_guard<game_save_gbaimpl> lock(*this);
 
         pkmn::enforce_value_in_vector(
             "Trainer gender",
@@ -437,7 +438,7 @@ namespace pkmn {
 
     std::string game_save_gbaimpl::get_rival_name()
     {
-        boost::lock_guard<game_save_gbaimpl> lock(*this);
+        pkmn::lock_guard<game_save_gbaimpl> lock(*this);
 
         std::string ret;
 
@@ -478,7 +479,7 @@ namespace pkmn {
                 PKSAV_GBA_TRAINER_NAME_LENGTH
             );
 
-            boost::lock_guard<game_save_gbaimpl> lock(*this);
+            pkmn::lock_guard<game_save_gbaimpl> lock(*this);
 
             BOOST_ASSERT(_pksav_save.misc_fields.p_rival_name != nullptr);
 
@@ -498,7 +499,7 @@ namespace pkmn {
 
     int game_save_gbaimpl::get_money()
     {
-        boost::lock_guard<game_save_gbaimpl> lock(*this);
+        pkmn::lock_guard<game_save_gbaimpl> lock(*this);
 
         BOOST_ASSERT(_pksav_save.trainer_info.p_money != nullptr);
 
@@ -511,7 +512,7 @@ namespace pkmn {
     {
         pkmn::enforce_bounds("Money", money, 0, MONEY_MAX_VALUE);
 
-        boost::lock_guard<game_save_gbaimpl> lock(*this);
+        pkmn::lock_guard<game_save_gbaimpl> lock(*this);
 
         BOOST_ASSERT(_pksav_save.trainer_info.p_money != nullptr);
 
@@ -522,7 +523,7 @@ namespace pkmn {
 
     int game_save_gbaimpl::get_casino_coins()
     {
-        boost::lock_guard<game_save_gbaimpl> lock(*this);
+        pkmn::lock_guard<game_save_gbaimpl> lock(*this);
 
         BOOST_ASSERT(_pksav_save.misc_fields.p_casino_coins != nullptr);
 
@@ -540,7 +541,7 @@ namespace pkmn {
             9999
         );
 
-        boost::lock_guard<game_save_gbaimpl> lock(*this);
+        pkmn::lock_guard<game_save_gbaimpl> lock(*this);
 
         BOOST_ASSERT(_pksav_save.misc_fields.p_casino_coins != nullptr);
 
@@ -549,7 +550,7 @@ namespace pkmn {
 
     bool game_save_gbaimpl::get_is_national_dex_unlocked()
     {
-        boost::lock_guard<game_save_gbaimpl> lock(*this);
+        pkmn::lock_guard<game_save_gbaimpl> lock(*this);
 
         BOOST_ASSERT(_pksav_save.pokedex.p_nat_pokedex_unlockedB != nullptr);
 
@@ -562,7 +563,7 @@ namespace pkmn {
         bool is_national_dex_unlocked
     )
     {
-        boost::lock_guard<game_save_gbaimpl> lock(*this);
+        pkmn::lock_guard<game_save_gbaimpl> lock(*this);
 
         if(_pksav_save.save_type == PKSAV_GBA_SAVE_TYPE_FRLG)
         {
@@ -588,7 +589,7 @@ namespace pkmn {
     {
         BOOST_ASSERT(_pksav_save.options.p_button_mode != nullptr);
 
-        boost::lock_guard<game_save_gbaimpl> lock(*this);
+        pkmn::lock_guard<game_save_gbaimpl> lock(*this);
 
         std::string button_mode;
 
@@ -647,7 +648,7 @@ namespace pkmn {
                 gba_frlg_button_mode_bimap.left
             );
 
-            boost::lock_guard<game_save_gbaimpl> lock(*this);
+            pkmn::lock_guard<game_save_gbaimpl> lock(*this);
 
             *_pksav_save.options.p_button_mode =
                 static_cast<uint8_t>(gba_frlg_button_mode_bimap.left.at(
@@ -665,7 +666,7 @@ namespace pkmn {
                 gba_rse_button_mode_bimap.left
             );
 
-            boost::lock_guard<game_save_gbaimpl> lock(*this);
+            pkmn::lock_guard<game_save_gbaimpl> lock(*this);
 
             *_pksav_save.options.p_button_mode =
                 static_cast<uint8_t>(gba_rse_button_mode_bimap.left.at(
@@ -678,7 +679,7 @@ namespace pkmn {
     {
         BOOST_ASSERT(_pksav_save.options.p_text_options != nullptr);
 
-        boost::lock_guard<game_save_gbaimpl> lock(*this);
+        pkmn::lock_guard<game_save_gbaimpl> lock(*this);
 
         // Sensible default in case of corrupted save
         std::string text_speed = "Medium";
@@ -715,7 +716,7 @@ namespace pkmn {
             gba_text_speed_bimap.left
         );
 
-        boost::lock_guard<game_save_gbaimpl> lock(*this);
+        pkmn::lock_guard<game_save_gbaimpl> lock(*this);
 
         *_pksav_save.options.p_text_options &= ~PKSAV_GBA_OPTIONS_TEXT_SPEED_MASK;
         *_pksav_save.options.p_text_options |= static_cast<uint8_t>(
@@ -729,7 +730,7 @@ namespace pkmn {
     {
         BOOST_ASSERT(_pksav_save.options.p_text_options != nullptr);
 
-        boost::lock_guard<game_save_gbaimpl> lock(*this);
+        pkmn::lock_guard<game_save_gbaimpl> lock(*this);
 
         return static_cast<int>(
                    PKSAV_GBA_OPTIONS_TEXTBOX_FRAME(*_pksav_save.options.p_text_options)
@@ -747,7 +748,7 @@ namespace pkmn {
             static_cast<int>(PKSAV_GBA_OPTIONS_TEXTBOX_MAX_FRAME + 1)
         );
 
-        boost::lock_guard<game_save_gbaimpl> lock(*this);
+        pkmn::lock_guard<game_save_gbaimpl> lock(*this);
 
         // The value is stored 0-based.
         uint8_t raw_textbox_frame_index = static_cast<uint8_t>(textbox_frame_index) - 1;
@@ -761,7 +762,7 @@ namespace pkmn {
     {
         BOOST_ASSERT(_pksav_save.options.p_sound_battle_options != nullptr);
 
-        boost::lock_guard<game_save_gbaimpl> lock(*this);
+        pkmn::lock_guard<game_save_gbaimpl> lock(*this);
 
         // Sensible default in the case of a corrupted save
         std::string sound_output = "Mono";
@@ -786,7 +787,7 @@ namespace pkmn {
             {"Stereo", "Mono"}
         );
 
-        boost::lock_guard<game_save_gbaimpl> lock(*this);
+        pkmn::lock_guard<game_save_gbaimpl> lock(*this);
 
         if(sound_output == "Stereo")
         {

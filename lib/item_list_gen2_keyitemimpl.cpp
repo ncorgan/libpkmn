@@ -8,10 +8,10 @@
 #include "exception_internal.hpp"
 #include "item_list_gen2_keyitemimpl.hpp"
 
+#include "types/mutex_helpers.hpp"
+
 #include <pkmn/database/item_entry.hpp>
 #include <pkmn/exception.hpp>
-
-#include <boost/thread/lock_guard.hpp>
 
 #include <cstdio>
 #include <cstring>
@@ -56,7 +56,7 @@ namespace pkmn {
             throw std::invalid_argument("This item is not valid for this list.");
         }
 
-        boost::lock_guard<item_list_gen2_keyitemimpl> lock(*this);
+        pkmn::lock_guard<item_list_gen2_keyitemimpl> lock(*this);
 
         /*
          * Check if this item is already in the list. If so, it cannot
@@ -99,7 +99,7 @@ namespace pkmn {
             throw std::invalid_argument("This item is not valid for this list.");
         }
 
-        boost::lock_guard<item_list_gen2_keyitemimpl> lock(*this);
+        pkmn::lock_guard<item_list_gen2_keyitemimpl> lock(*this);
 
         /*
          * Check if this item is in the list. If so, remove that amount,
@@ -130,7 +130,7 @@ namespace pkmn {
         int end_boundary = std::min<int>(_num_items, _capacity-1);
         pkmn::enforce_bounds("Position", position, 0, end_boundary);
 
-        boost::lock_guard<item_list_gen2_keyitemimpl> lock(*this);
+        pkmn::lock_guard<item_list_gen2_keyitemimpl> lock(*this);
 
         if(item == pkmn::e_item::NONE)
         {
@@ -190,7 +190,7 @@ namespace pkmn {
         int index
     )
     {
-        boost::lock_guard<item_list_gen2_keyitemimpl> lock(*this);
+        pkmn::lock_guard<item_list_gen2_keyitemimpl> lock(*this);
 
         if(index >= 0)
         {
@@ -219,7 +219,7 @@ namespace pkmn {
         int index
     )
     {
-        boost::lock_guard<item_list_gen2_keyitemimpl> lock(*this);
+        pkmn::lock_guard<item_list_gen2_keyitemimpl> lock(*this);
 
         if(index >= 0)
         {

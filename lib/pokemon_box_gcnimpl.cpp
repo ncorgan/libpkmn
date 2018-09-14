@@ -9,10 +9,11 @@
 #include "pokemon_box_gcnimpl.hpp"
 #include "pokemon_gcnimpl.hpp"
 
+#include "types/mutex_helpers.hpp"
+
 #include <pkmn/exception.hpp>
 
 #include <boost/assert.hpp>
-#include <boost/thread/lock_guard.hpp>
 
 #include <stdexcept>
 
@@ -47,7 +48,7 @@ namespace pkmn
 
     std::string pokemon_box_gcnimpl::get_name()
     {
-        boost::lock_guard<pokemon_box_gcnimpl> lock(*this);
+        pkmn::lock_guard<pokemon_box_gcnimpl> lock(*this);
 
         return _libpkmgc_box_uptr->name->toUTF8();
     }
@@ -63,14 +64,14 @@ namespace pkmn
             8
         );
 
-        boost::lock_guard<pokemon_box_gcnimpl> lock(*this);
+        pkmn::lock_guard<pokemon_box_gcnimpl> lock(*this);
 
         _libpkmgc_box_uptr->name->fromUTF8(name.c_str());
     }
 
     int pokemon_box_gcnimpl::get_num_pokemon()
     {
-        boost::lock_guard<pokemon_box_gcnimpl> lock(*this);
+        pkmn::lock_guard<pokemon_box_gcnimpl> lock(*this);
 
         int num_pokemon = 0;
         for(int i = 0; i < get_capacity(); ++i)
@@ -107,14 +108,14 @@ namespace pkmn
         int max_index = get_capacity();
         pkmn::enforce_bounds("Box index", index, 0, max_index);
 
-        boost::lock_guard<pokemon_box_gcnimpl> lock(*this);
+        pkmn::lock_guard<pokemon_box_gcnimpl> lock(*this);
 
         // Make sure no one else is using the new Pokémon variable.
         pokemon_gcnimpl* p_new_pokemon = dynamic_cast<pokemon_gcnimpl*>(
                                              new_pokemon.get()
                                          );
         BOOST_ASSERT(p_new_pokemon != nullptr);
-        boost::lock_guard<pokemon_gcnimpl> new_pokemon_lock(*p_new_pokemon);
+        pkmn::lock_guard<pokemon_gcnimpl> new_pokemon_lock(*p_new_pokemon);
 
         // Copy the underlying memory to the party. At the end of this process,
         // all existing variables will correspond to the same Pokémon, even if

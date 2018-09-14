@@ -7,15 +7,16 @@
 #ifndef PKMN_POKEDEX_IMPL_HPP
 #define PKMN_POKEDEX_IMPL_HPP
 
+#include "types/mutex_helpers.hpp"
+
 #include <pkmn/pokedex.hpp>
 
-#include <boost/thread/lockable_adapter.hpp>
 #include <boost/thread/recursive_mutex.hpp>
 
 namespace pkmn
 {
     class pokedex_impl: public pokedex,
-                        public boost::basic_lockable_adapter<boost::recursive_mutex>
+                        public pkmn::basic_lockable_adapter<boost::recursive_mutex>
     {
         public:
             pokedex_impl() {}

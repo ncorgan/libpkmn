@@ -12,13 +12,13 @@
 
 #include "pksav/pksav_call.hpp"
 
+#include "types/mutex_helpers.hpp"
+
 #include <pkmn/exception.hpp>
 
 #include <pksav/gen1/text.h>
 #include <pksav/gen2/text.h>
 #include <pksav/math/endian.h>
-
-#include <boost/thread/lock_guard.hpp>
 
 #include <cstring>
 #include <iostream>
@@ -72,7 +72,7 @@ namespace pkmn {
         }
         else
         {
-            boost::lock_guard<POKEMON_BOX_GBIMPL_CLASS> lock(*this);
+            pkmn::lock_guard<POKEMON_BOX_GBIMPL_CLASS> lock(*this);
 
             return _box_name;
         }
@@ -96,7 +96,7 @@ namespace pkmn {
                 PKSAV_GEN2_POKEMON_BOX_NAME_LENGTH
             );
 
-            boost::lock_guard<POKEMON_BOX_GBIMPL_CLASS> lock(*this);
+            pkmn::lock_guard<POKEMON_BOX_GBIMPL_CLASS> lock(*this);
 
             _box_name = name;
         }
@@ -105,7 +105,7 @@ namespace pkmn {
     POKEMON_BOX_GBIMPL_TEMPLATE
     int POKEMON_BOX_GBIMPL_CLASS::get_num_pokemon()
     {
-        boost::lock_guard<POKEMON_BOX_GBIMPL_CLASS> lock(*this);
+        pkmn::lock_guard<POKEMON_BOX_GBIMPL_CLASS> lock(*this);
 
         return int(_pksav_box.count);
     }
@@ -145,14 +145,14 @@ namespace pkmn {
             throw std::invalid_argument("Generation I-II boxes store Pokémon contiguously.");
         }
 
-        boost::lock_guard<POKEMON_BOX_GBIMPL_CLASS> lock(*this);
+        pkmn::lock_guard<POKEMON_BOX_GBIMPL_CLASS> lock(*this);
 
         // Make sure no one else is using the new Pokémon variable.
         libpkmn_pokemon_type* p_new_pokemon = dynamic_cast<libpkmn_pokemon_type*>(
                                                   new_pokemon.get()
                                               );
         BOOST_ASSERT(p_new_pokemon != nullptr);
-        boost::lock_guard<libpkmn_pokemon_type> new_pokemon_lock(*p_new_pokemon);
+        pkmn::lock_guard<libpkmn_pokemon_type> new_pokemon_lock(*p_new_pokemon);
 
         // Copy the underlying memory to the box. At the end of this process,
         // all existing variables will correspond to the same Pokémon, even if

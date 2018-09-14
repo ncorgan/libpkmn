@@ -16,6 +16,8 @@
 #include "pksav/enum_maps.hpp"
 #include "pksav/pksav_call.hpp"
 
+#include "types/mutex_helpers.hpp"
+
 #include <pkmn/exception.hpp>
 
 #include <pksav/gen2/palette.h>
@@ -26,7 +28,6 @@
 #include <boost/assign.hpp>
 #include <boost/bimap.hpp>
 #include <boost/filesystem.hpp>
-#include <boost/thread/lock_guard.hpp>
 
 #include <stdexcept>
 
@@ -147,7 +148,7 @@ namespace pkmn {
         const std::string& filepath
     )
     {
-        boost::lock_guard<game_save_gen2impl> lock(*this);
+        pkmn::lock_guard<game_save_gen2impl> lock(*this);
 
         // These get_native() calls will call the mutex for every subclass
         // it copies, so we don't need to worry about that here.
@@ -198,7 +199,7 @@ namespace pkmn {
 
     pkmn::time_duration game_save_gen2impl::get_time_played()
     {
-        boost::lock_guard<game_save_gen2impl> lock(*this);
+        pkmn::lock_guard<game_save_gen2impl> lock(*this);
 
         BOOST_ASSERT(_pksav_save.save_time.p_time_played != nullptr);
 
@@ -239,7 +240,7 @@ namespace pkmn {
             59
         );
 
-        boost::lock_guard<game_save_gen2impl> lock(*this);
+        pkmn::lock_guard<game_save_gen2impl> lock(*this);
 
         BOOST_ASSERT(_pksav_save.save_time.p_time_played != nullptr);
 
@@ -251,7 +252,7 @@ namespace pkmn {
 
     std::string game_save_gen2impl::get_trainer_name()
     {
-        boost::lock_guard<game_save_gen2impl> lock(*this);
+        pkmn::lock_guard<game_save_gen2impl> lock(*this);
 
         BOOST_ASSERT(_pksav_save.trainer_info.p_name != nullptr);
 
@@ -278,7 +279,7 @@ namespace pkmn {
             PKSAV_GEN2_TRAINER_NAME_LENGTH
         );
 
-        boost::lock_guard<game_save_gen2impl> lock(*this);
+        pkmn::lock_guard<game_save_gen2impl> lock(*this);
 
         BOOST_ASSERT(_pksav_save.trainer_info.p_name != nullptr);
 
@@ -293,7 +294,7 @@ namespace pkmn {
 
     uint32_t game_save_gen2impl::get_trainer_id()
     {
-        boost::lock_guard<game_save_gen2impl> lock(*this);
+        pkmn::lock_guard<game_save_gen2impl> lock(*this);
 
         BOOST_ASSERT(_pksav_save.trainer_info.p_id != nullptr);
 
@@ -306,7 +307,7 @@ namespace pkmn {
     {
         pkmn::enforce_gb_trainer_id_bounds(trainer_id);
 
-        boost::lock_guard<game_save_gen2impl> lock(*this);
+        pkmn::lock_guard<game_save_gen2impl> lock(*this);
 
         BOOST_ASSERT(_pksav_save.trainer_info.p_id != nullptr);
 
@@ -315,7 +316,7 @@ namespace pkmn {
 
     uint16_t game_save_gen2impl::get_trainer_public_id()
     {
-        boost::lock_guard<game_save_gen2impl> lock(*this);
+        pkmn::lock_guard<game_save_gen2impl> lock(*this);
 
         BOOST_ASSERT(_pksav_save.trainer_info.p_id != nullptr);
 
@@ -326,7 +327,7 @@ namespace pkmn {
         uint16_t trainer_public_id
     )
     {
-        boost::lock_guard<game_save_gen2impl> lock(*this);
+        pkmn::lock_guard<game_save_gen2impl> lock(*this);
 
         BOOST_ASSERT(_pksav_save.trainer_info.p_id != nullptr);
 
@@ -347,7 +348,7 @@ namespace pkmn {
 
     pkmn::e_gender game_save_gen2impl::get_trainer_gender()
     {
-        boost::lock_guard<game_save_gen2impl> lock(*this);
+        pkmn::lock_guard<game_save_gen2impl> lock(*this);
 
         pkmn::e_gender ret;
 
@@ -377,7 +378,7 @@ namespace pkmn {
                 gen2_gender_bimap.left
             );
 
-            boost::lock_guard<game_save_gen2impl> lock(*this);
+            pkmn::lock_guard<game_save_gen2impl> lock(*this);
 
             *_pksav_save.trainer_info.p_gender = uint8_t(gen2_gender_bimap.left.at(trainer_gender));
         }
@@ -389,7 +390,7 @@ namespace pkmn {
 
     std::string game_save_gen2impl::get_rival_name()
     {
-        boost::lock_guard<game_save_gen2impl> lock(*this);
+        pkmn::lock_guard<game_save_gen2impl> lock(*this);
 
         BOOST_ASSERT(_pksav_save.misc_fields.p_rival_name != nullptr);
 
@@ -416,7 +417,7 @@ namespace pkmn {
             PKSAV_GEN2_TRAINER_NAME_LENGTH
         );
 
-        boost::lock_guard<game_save_gen2impl> lock(*this);
+        pkmn::lock_guard<game_save_gen2impl> lock(*this);
 
         BOOST_ASSERT(_pksav_save.misc_fields.p_rival_name != nullptr);
 
@@ -431,7 +432,7 @@ namespace pkmn {
 
     int game_save_gen2impl::get_money()
     {
-        boost::lock_guard<game_save_gen2impl> lock(*this);
+        pkmn::lock_guard<game_save_gen2impl> lock(*this);
 
         BOOST_ASSERT(_pksav_save.trainer_info.p_money != nullptr);
 
@@ -453,7 +454,7 @@ namespace pkmn {
     {
         pkmn::enforce_bounds("Money", money, 0, MONEY_MAX_VALUE);
 
-        boost::lock_guard<game_save_gen2impl> lock(*this);
+        pkmn::lock_guard<game_save_gen2impl> lock(*this);
 
         BOOST_ASSERT(_pksav_save.trainer_info.p_money != nullptr);
 
@@ -470,7 +471,7 @@ namespace pkmn {
 
     bool game_save_gen2impl::get_is_daylight_savings()
     {
-        boost::lock_guard<game_save_gen2impl> lock(*this);
+        pkmn::lock_guard<game_save_gen2impl> lock(*this);
 
         return bool(*_pksav_save.save_time.p_daylight_savings &
                     PKSAV_GEN2_DAYLIGHT_SAVINGS_TIME_MASK);
@@ -478,7 +479,7 @@ namespace pkmn {
 
     void game_save_gen2impl::set_is_daylight_savings(bool is_daylight_savings)
     {
-        boost::lock_guard<game_save_gen2impl> lock(*this);
+        pkmn::lock_guard<game_save_gen2impl> lock(*this);
 
         if(is_daylight_savings)
         {
@@ -505,7 +506,7 @@ namespace pkmn {
 
     std::string game_save_gen2impl::get_palette()
     {
-        boost::lock_guard<game_save_gen2impl> lock(*this);
+        pkmn::lock_guard<game_save_gen2impl> lock(*this);
 
         // If the save file is screwed up enough, the palette may not be
         // valid, so just return something.
@@ -530,7 +531,7 @@ namespace pkmn {
             GEN2_PALETTE_BIMAP.left
         );
 
-        boost::lock_guard<game_save_gen2impl> lock(*this);
+        pkmn::lock_guard<game_save_gen2impl> lock(*this);
 
         *_pksav_save.trainer_info.p_palette = uint8_t(GEN2_PALETTE_BIMAP.left.at(palette));
     }
@@ -542,7 +543,7 @@ namespace pkmn {
     {
         BOOST_ASSERT(_pksav_save.options.p_misc_options != nullptr);
 
-        boost::lock_guard<game_save_gen2impl> lock(*this);
+        pkmn::lock_guard<game_save_gen2impl> lock(*this);
 
         // Sensible default in the case of a corrupted save
         std::string text_speed = "Normal";
@@ -580,7 +581,7 @@ namespace pkmn {
             gen2_text_speed_bimap.left
         );
 
-        boost::lock_guard<game_save_gen2impl> lock(*this);
+        pkmn::lock_guard<game_save_gen2impl> lock(*this);
 
         *_pksav_save.options.p_misc_options &= ~PKSAV_GEN2_OPTIONS_TEXT_SPEED_MASK;
         *_pksav_save.options.p_misc_options |= static_cast<uint8_t>(
@@ -592,7 +593,7 @@ namespace pkmn {
     {
         BOOST_ASSERT(_pksav_save.options.p_misc_options != nullptr);
 
-        boost::lock_guard<game_save_gen2impl> lock(*this);
+        pkmn::lock_guard<game_save_gen2impl> lock(*this);
 
         // Sensible default in the case of a corrupted save
         std::string sound_output = "Mono";
@@ -617,7 +618,7 @@ namespace pkmn {
             {"Stereo", "Mono"}
         );
 
-        boost::lock_guard<game_save_gen2impl> lock(*this);
+        pkmn::lock_guard<game_save_gen2impl> lock(*this);
 
         if(sound_output == "Stereo")
         {
@@ -696,7 +697,7 @@ namespace pkmn {
     {
         BOOST_ASSERT(_pksav_save.options.p_textbox_frame_index != nullptr);
 
-        boost::lock_guard<game_save_gen2impl> lock(*this);
+        pkmn::lock_guard<game_save_gen2impl> lock(*this);
 
         return (*_pksav_save.options.p_textbox_frame_index & PKSAV_GEN2_OPTIONS_TEXTBOX_FRAME_MASK);
     }
@@ -712,7 +713,7 @@ namespace pkmn {
             static_cast<int>(PKSAV_GEN2_OPTIONS_TEXTBOX_MAX_FRAME + 1)
         );
 
-        boost::lock_guard<game_save_gen2impl> lock(*this);
+        pkmn::lock_guard<game_save_gen2impl> lock(*this);
 
         // The value is stored 0-based.
         uint8_t raw_textbox_frame_index = static_cast<uint8_t>(textbox_frame_index) - 1;
@@ -725,7 +726,7 @@ namespace pkmn {
     {
         BOOST_ASSERT(_pksav_save.options.p_gbprinter_brightness != nullptr);
 
-        boost::lock_guard<game_save_gen2impl> lock(*this);
+        pkmn::lock_guard<game_save_gen2impl> lock(*this);
 
         // Sensible default in case of save corruption
         std::string gameboy_printer_brightness = "Normal";
@@ -764,7 +765,7 @@ namespace pkmn {
             gen2_gbprinter_brightness_bimap.left
         );
 
-        boost::lock_guard<game_save_gen2impl> lock(*this);
+        pkmn::lock_guard<game_save_gen2impl> lock(*this);
 
         *_pksav_save.options.p_gbprinter_brightness &= ~PKSAV_GEN2_GBPRINTER_BRIGHTNESS_MASK;
         *_pksav_save.options.p_gbprinter_brightness |=
@@ -777,7 +778,7 @@ namespace pkmn {
     {
         BOOST_ASSERT(_pksav_save.options.p_menu_account != nullptr);
 
-        boost::lock_guard<game_save_gen2impl> lock(*this);
+        pkmn::lock_guard<game_save_gen2impl> lock(*this);
 
         return bool(*_pksav_save.options.p_menu_account & PKSAV_GEN2_OPTIONS_MENU_ACCOUNT_MASK);
     }
@@ -786,7 +787,7 @@ namespace pkmn {
     {
         BOOST_ASSERT(_pksav_save.options.p_menu_account != nullptr);
 
-        boost::lock_guard<game_save_gen2impl> lock(*this);
+        pkmn::lock_guard<game_save_gen2impl> lock(*this);
 
         if(is_menu_account_enabled)
         {
@@ -802,7 +803,7 @@ namespace pkmn {
     {
         BOOST_ASSERT(_pksav_save.misc_fields.p_money_with_mom != nullptr);
 
-        boost::lock_guard<game_save_gen2impl> lock(*this);
+        pkmn::lock_guard<game_save_gen2impl> lock(*this);
 
         size_t money_with_mom;
         PKSAV_CALL(
@@ -827,7 +828,7 @@ namespace pkmn {
 
         BOOST_ASSERT(_pksav_save.misc_fields.p_money_with_mom != nullptr);
 
-        boost::lock_guard<game_save_gen2impl> lock(*this);
+        pkmn::lock_guard<game_save_gen2impl> lock(*this);
 
         PKSAV_CALL(
             pksav_export_bcd(
@@ -842,7 +843,7 @@ namespace pkmn {
     {
         BOOST_ASSERT(_pksav_save.misc_fields.p_mom_money_policy != nullptr);
 
-        boost::lock_guard<game_save_gen2impl> lock(*this);
+        pkmn::lock_guard<game_save_gen2impl> lock(*this);
 
         std::string mom_money_policy = "Not saving money";
 
@@ -886,7 +887,7 @@ namespace pkmn {
             gen2_mom_money_policy_bimap.left
         );
 
-        boost::lock_guard<game_save_gen2impl> lock(*this);
+        pkmn::lock_guard<game_save_gen2impl> lock(*this);
 
         auto mom_money_policy_iter = gen2_mom_money_policy_bimap.left.find(
                                          mom_money_policy
@@ -906,7 +907,7 @@ namespace pkmn {
 
     int game_save_gen2impl::get_casino_coins()
     {
-        boost::lock_guard<game_save_gen2impl> lock(*this);
+        pkmn::lock_guard<game_save_gen2impl> lock(*this);
 
         BOOST_ASSERT(_pksav_save.misc_fields.p_casino_coins != nullptr);
 
@@ -933,7 +934,7 @@ namespace pkmn {
             PKSAV_GEN2_SAVE_CASINO_COINS_MAX_VALUE
         );
 
-        boost::lock_guard<game_save_gen2impl> lock(*this);
+        pkmn::lock_guard<game_save_gen2impl> lock(*this);
 
         BOOST_ASSERT(_pksav_save.misc_fields.p_casino_coins != nullptr);
 

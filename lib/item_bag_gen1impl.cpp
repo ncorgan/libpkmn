@@ -10,8 +10,6 @@
 
 #include "utils/misc.hpp"
 
-#include <boost/thread/lock_guard.hpp>
-
 #include <cstring>
 
 namespace pkmn {

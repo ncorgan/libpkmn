@@ -12,12 +12,13 @@
 
 #include "pksav/pksav_call.hpp"
 
+#include "types/mutex_helpers.hpp"
+
 #include <LibPkmGC/Colosseum/Common/DaycareData.h>
 #include <LibPkmGC/GC/Common/DaycareData.h>
 #include <LibPkmGC/XD/Common/DaycareData.h>
 
 #include <boost/assert.hpp>
-#include <boost/thread/lock_guard.hpp>
 
 #include <string.h>
 
@@ -96,7 +97,7 @@ namespace pkmn {
             value_comparator::EQ
         );
 
-        boost::lock_guard<daycare_gcnimpl> lock(*this);
+        pkmn::lock_guard<daycare_gcnimpl> lock(*this);
 
         pkmn::pokemon_list_t& r_levelup_pokemon = this->_get_levelup_pokemon_ref();
 
@@ -105,7 +106,7 @@ namespace pkmn {
                                              new_pokemon.get()
                                          );
         BOOST_ASSERT(p_new_pokemon != nullptr);
-        boost::lock_guard<pokemon_gcnimpl> new_pokemon_lock(*p_new_pokemon);
+        pkmn::lock_guard<pokemon_gcnimpl> new_pokemon_lock(*p_new_pokemon);
 
         // Copy the underlying memory to the party. At the end of this process,
         // all existing variables will correspond to the same Pokémon, even if
