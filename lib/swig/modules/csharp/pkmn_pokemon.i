@@ -91,6 +91,16 @@ using Database;"
 %rename(GetDatabaseEntry) pkmn::swig::pokemon::get_database_entry_swig;
 %rename(GetStats) pkmn::swig::pokemon::get_stats_swig;
 
+// These functions are needed to access necessary internals for the abstraction.
+
+%csmethodmodifiers pkmn::swig::pokemon::get_EVs_map_internal() "protected";
+%csmethodmodifiers pkmn::swig::pokemon::get_IVs_map_internal() "protected";
+%csmethodmodifiers pkmn::swig::pokemon::get_stats_map_internal() "protected";
+
+%rename(GetEVsMapInternal) pkmn::swig::pokemon::get_EVs_map_internal;
+%rename(GetIVsMapInternal) pkmn::swig::pokemon::get_IVs_map_internal;
+%rename(GetStatsMapInternal) pkmn::swig::pokemon::get_stats_map_internal;
+
 // This will also prevent these from being overridden.
 %attributeval(pkmn::swig::pokemon, pkmn::swig::EV_map, EVs, get_EVs_helper);
 %attributeval(pkmn::swig::pokemon, pkmn::swig::IV_map, IVs, get_IVs_helper);

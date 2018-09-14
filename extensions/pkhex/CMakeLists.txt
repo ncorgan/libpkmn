@@ -16,8 +16,7 @@ GET_FILENAME_COMPONENT(
 
 SET(pkmn_pkhex_sources
     # Actual sources
-    PKHeXPokemon.cs
-    PK1Pokemon.cs
+    "${CMAKE_CURRENT_SOURCE_DIR}/*.cs"
 
     # Search paths
     "${PKMN_BINARY_DIR}/testing/unit-tests/csharp"

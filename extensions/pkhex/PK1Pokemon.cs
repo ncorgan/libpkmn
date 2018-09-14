@@ -34,6 +34,13 @@ namespace PKMN.Extensions
         // Override protected PKMN.Pokemon functions. These will be accessed via
         // PKMN.Pokemon's properties.
 
+        // Level is stored twice in Generation I.
+        override protected void SetLevel(int level)
+        {
+            _pk1.Stat_Level = level;
+            //_pk1.Stat_LevelBox = level;
+        }
+
         // TODO: port translation from PKSav
         override protected Condition GetCondition()
         {
@@ -89,11 +96,65 @@ namespace PKMN.Extensions
                     break;
             }
 
-            // TODO: recalculate stats
-            // TODO: set in abstraction dict once exposed
+            // This gets a reference to the abstraction map.
+            GetEVsMapInternal()[stat] = value;
+
+            CalculateStats();
         }
 
-        // TODO: port IVs logic from PKSav
+        // PKHeX doesn't expose setting individual IVs, so we need
+        // to implement that logic on our layer and pass the whole value.
+        override protected void SetIV(Stat stat, int value)
+        {
+            ushort DV16 = _pk1.DV16;
+
+            SetGBIV(stat, value, ref DV16);
+
+            _pk1.DV16 = DV16;
+
+            CalculateStats();
+        }
+
+        //
+        // Helpers
+        // TODO: does PKHeX have something like this?
+        //
+        private void CalculateStats()
+        {
+            int level = this.Level;
+            StatDict baseStats = this.DatabaseEntry.BaseStats;
+
+            // These are references to the internal abstraction dicts.
+            StatDict EVs = GetEVsMapInternal();
+            StatDict IVs = GetIVsMapInternal();
+            StatDict stats = GetStatsMapInternal();
+
+            Stat[] statList =
+            {
+                Stat.HP,
+                Stat.ATTACK,
+                Stat.DEFENSE,
+                Stat.SPEED,
+                Stat.SPECIAL
+            };
+            foreach(Stat stat in statList)
+            {
+                stats[stat] = Calculations.GetGBStat(
+                                  stat,
+                                  level,
+                                  baseStats[stat],
+                                  EVs[stat],
+                                  IVs[stat]
+                              );
+            }
+
+            _pk1.Stat_HPCurrent = stats[Stat.HP];
+            _pk1.Stat_HPMax = _pk1.Stat_HPCurrent;
+            _pk1.Stat_ATK = stats[Stat.ATTACK];
+            _pk1.Stat_DEF = stats[Stat.DEFENSE];
+            _pk1.Stat_SPD = stats[Stat.SPEED];
+            _pk1.Stat_SPC = stats[Stat.SPECIAL];
+        }
     }
 
 }

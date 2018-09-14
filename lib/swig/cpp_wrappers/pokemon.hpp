@@ -1275,6 +1275,24 @@ namespace pkmn { namespace swig {
             }
 #endif
 
+        // These are unfortunately needed for subclasses to access the
+        // abstraction maps.
+
+        std::map<pkmn::e_stat, int>& get_EVs_map_internal()
+        {
+            return _EVs;
+        }
+
+        std::map<pkmn::e_stat, int>& get_IVs_map_internal()
+        {
+            return _IVs;
+        }
+
+        std::map<pkmn::e_stat, int>& get_stats_map_internal()
+        {
+            return _stats;
+        }
+
         // The API for this functionality is intended to be different on the SWIG
         // layer (using the helper classes), but this underlying functionality is
         // necessary for the helper classes to call.

@@ -40,6 +40,74 @@ namespace PKMN.Extensions
             return new PKHeXPokemon(_pkm.Clone());
         }
 
+        // Utility functions
+
+        // See: https://github.com/ncorgan/pksav/blob/master/lib/common/stats.c
+        // TODO: upstream this functionality
+        protected void SetGBIV(Stat stat, int value, ref ushort rawIV)
+        {
+            ushort[] ivMasks =
+            {
+                0xFFFF, // None
+                0x1111, // HP
+                0xF000, // Attack
+                0x0F00, // Defense
+                0x00F0, // Speed
+                0x000F, // Special
+            };
+            ushort[] ivOffsets =
+            {
+                0,  // None
+                0,  // HP
+                12, // Attack
+                8,  // Defense
+                4,  // Speed
+                0,  // Special
+            };
+
+            // For some reason, ~ casts to int.
+            rawIV &= (ushort)(~ivMasks[(int)stat]);
+
+            // This is a reference to the abstraction dict.
+            StatDict IVs = GetIVsMapInternal();
+            IVs[stat] = value;
+
+            // The HP IV is formed taking a single bit on other stats' bitfields,
+            // so any change affects at least one other IV.
+            if(stat == Stat.HP)
+            {
+                rawIV = (ushort)((rawIV & ~ivMasks[(int)Stat.HP])
+                      | ((value & 0x08) << 9)
+                      | ((value & 0x04) << 6)
+                      | ((value & 0x02) << 3)
+                      |  (value & 0x01));
+
+                // Given that we know what stats there are, don't bother going
+                // into the C++ layer to get the map keys.
+                Stat[] ivStats =
+                {
+                    Stat.ATTACK,
+                    Stat.DEFENSE,
+                    Stat.SPEED,
+                    Stat.SPECIAL
+                };
+
+                foreach(Stat ivStat in ivStats)
+                {
+                    IVs[ivStat] = (rawIV & ivMasks[(int)ivStat]) >> ivOffsets[(int)ivStat];
+                }
+            }
+            else
+            {
+                rawIV |= (ushort)(value << ivMasks[(int)stat]);
+
+                IVs[Stat.HP] = (IVs[Stat.SPECIAL] & 0x01)
+                             | ((IVs[Stat.SPEED] & 0x01) << 1)
+                             | ((IVs[Stat.DEFENSE] & 0x01) << 2)
+                             | ((IVs[Stat.ATTACK] & 0x01) << 3);
+            }
+        }
+
         // Override protected PKMN.Pokemon functions. These will be accessed via
         // PKMN.Pokemon's properties.
 

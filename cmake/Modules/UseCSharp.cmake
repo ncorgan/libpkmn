@@ -95,9 +95,9 @@ macro( CSHARP_ADD_PROJECT type name )
 
   # Add custom target and command
   if("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
-      SET(csharp_args /t:${type} /out:${name}.${output} /platform:${CSHARP_PLATFORM} -debug ${CSHARP_SDK} ${search_paths} ${refs} ${sources_dep})
+      SET(csharp_args /t:${type} /out:${name}.${output} /platform:${CSHARP_PLATFORM} -debug ${CSHARP_SDK} ${search_paths} ${refs} ${sources})
   else()
-      SET(csharp_args /t:${type} /out:${name}.${output} /platform:${CSHARP_PLATFORM} ${CSHARP_SDK} ${refs} ${search_paths} ${sources_dep})
+      SET(csharp_args /t:${type} /out:${name}.${output} /platform:${CSHARP_PLATFORM} ${CSHARP_SDK} ${refs} ${search_paths} ${sources})
   endif("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
   add_custom_command(
     COMMENT "Building C# ${nice_name} ${name}.${output}"
