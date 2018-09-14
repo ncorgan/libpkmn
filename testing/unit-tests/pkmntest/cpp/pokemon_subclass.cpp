@@ -453,7 +453,7 @@ namespace pkmntest
         return "";
     }
 
-    void* pokemon_subclass::get_native() const
+    const void* pokemon_subclass::get_native() const
     {
         return nullptr;
     }

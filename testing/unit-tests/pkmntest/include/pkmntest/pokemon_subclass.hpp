@@ -206,7 +206,7 @@ namespace pkmntest
 
             std::string get_sprite_filepath() const;
 
-            void* get_native() const;
+            const void* get_native() const;
 
         private:
             pkmn::database::pokemon_entry _database_entry;
