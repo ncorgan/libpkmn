@@ -8,6 +8,7 @@
 #include "database/enum_conversions.hpp"
 #include "pksav/enum_maps.hpp"
 #include "types/rng.hpp"
+#include "utils/floating_point_comparison.hpp"
 #include "utils/misc.hpp"
 
 #include <pkmn/pokemon.hpp>
@@ -189,6 +190,34 @@ namespace pkmn
                 default_locations_met_for_version_groups.at(version_group),
                 false // as_egg
             );
+
+            const float chance_male = _database_entry.get_chance_male();
+            const float chance_female = _database_entry.get_chance_female();
+            const bool is_genderless = pkmn::fp_compare_equal(
+                                           (chance_male + chance_female),
+                                           0.0f
+                                       );
+            if(is_genderless)
+            {
+                set_gender(pkmn::e_gender::GENDERLESS);
+            }
+            else if(pkmn::fp_compare_equal(chance_male, 1.0f))
+            {
+                set_gender(pkmn::e_gender::MALE);
+            }
+            else if(pkmn::fp_compare_equal(chance_female, 1.0f))
+            {
+                set_gender(pkmn::e_gender::FEMALE);
+            }
+            else
+            {
+                pkmn::rng<float> float_rng;
+
+                set_gender(
+                    (float_rng.rand(0.0f, 1.0f) <= chance_male)
+                    ? pkmn::e_gender::MALE : pkmn::e_gender::FEMALE
+                );
+            }
         }
         if(generation >= 3)
         {

@@ -19,7 +19,9 @@ SET(pkmntest_cs_srcs
     PokemonConversionsTest.cs
     PokemonIOTests.cs
     PokemonPartyTests.cs
+    PokemonPolymorphismTest.cs
     PokemonPCTests.cs
+    PokemonSubclass.cs
     PokemonTestParams.cs
     PokemonTestCommon.cs
     UnownTests.cs

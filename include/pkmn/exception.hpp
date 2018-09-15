@@ -64,6 +64,9 @@ namespace pkmn {
             unimplemented_error():
                 std::runtime_error("Currently unimplemented.")
             {}
+            unimplemented_error(const std::string& feature):
+                std::runtime_error("Currently unimplemented: " + feature)
+            {}
     };
 }
 

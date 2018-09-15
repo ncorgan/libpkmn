@@ -93,13 +93,25 @@ using Database;"
 
 // These functions are needed to access necessary internals for the abstraction.
 
-%csmethodmodifiers pkmn::swig::pokemon::get_EVs_map_internal() "protected";
-%csmethodmodifiers pkmn::swig::pokemon::get_IVs_map_internal() "protected";
-%csmethodmodifiers pkmn::swig::pokemon::get_stats_map_internal() "protected";
+%csmethodmodifiers pkmn::swig::pokemon::get_database_entry_internal() "protected";
+%csmethodmodifiers pkmn::swig::pokemon::set_EVs_map_value_internal(pkmn::e_stat,int) "protected";
+%csmethodmodifiers pkmn::swig::pokemon::set_IVs_map_value_internal(pkmn::e_stat,int) "protected";
+%csmethodmodifiers pkmn::swig::pokemon::set_stats_map_value_internal(pkmn::e_stat,int) "protected";
+%csmethodmodifiers pkmn::swig::pokemon::set_moves_list_move_value_internal(int,pkmn::e_move) "protected";
+%csmethodmodifiers pkmn::swig::pokemon::set_moves_list_pp_value_internal(int,int) "protected";
+%csmethodmodifiers pkmn::swig::pokemon::set_contest_stats_map_value_internal(pkmn::e_contest_stat,int) "protected";
+%csmethodmodifiers pkmn::swig::pokemon::set_markings_map_value_internal(pkmn::e_marking,bool) "protected";
+%csmethodmodifiers pkmn::swig::pokemon::set_ribbons_map_value_internal(const std::string&,bool) "protected";
 
-%rename(GetEVsMapInternal) pkmn::swig::pokemon::get_EVs_map_internal;
-%rename(GetIVsMapInternal) pkmn::swig::pokemon::get_IVs_map_internal;
-%rename(GetStatsMapInternal) pkmn::swig::pokemon::get_stats_map_internal;
+%rename(GetDatabaseEntryInternal) pkmn::swig::pokemon::gt_database_entry_internal;
+%rename(SetEVsMapValueInternal) pkmn::swig::pokemon::set_EVs_map_value_internal;
+%rename(SetIVsMapValueInternal) pkmn::swig::pokemon::set_IVs_map_value_internal;
+%rename(SetStatsMapValueInternal) pkmn::swig::pokemon::set_stats_map_value_internal;
+%rename(SetMovesListMoveValueInternal) pkmn::swig::pokemon::set_moves_list_move_value_internal;
+%rename(SetMovesListPPValueInternal) pkmn::swig::pokemon::set_moves_list_pp_value_internal;
+%rename(SetContestStatsMapValueInternal) pkmn::swig::pokemon::set_contest_stats_map_value_internal;
+%rename(SetMarkingsMapValueInternal) pkmn::swig::pokemon::set_markings_map_value_internal;
+%rename(SetRibbonsMapValueInternal) pkmn::swig::pokemon::set_ribbons_map_value_internal;
 
 // This will also prevent these from being overridden.
 %attributeval(pkmn::swig::pokemon, pkmn::swig::EV_map, EVs, get_EVs_helper);

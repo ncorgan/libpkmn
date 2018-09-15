@@ -5,6 +5,8 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
+// TODO: remove director-specific functions
+
 %{
     #include "cpp_wrappers/pokemon.hpp"
     #include "cpp_wrappers/pokemon_helpers.hpp"

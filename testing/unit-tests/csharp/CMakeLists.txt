@@ -28,6 +28,7 @@ IF(NUNIT_FOUND)
         CSharpPokemonTest
         CSharpPokemonPartyTest
         CSharpPokemonPCTest
+        CSharpPolymorphismTest
         CSharpGUITest_GUI
     )
 
