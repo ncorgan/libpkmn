@@ -164,7 +164,6 @@ TEST_P(pokemon_polymorphism_test, setting_reference_in_libpkmn_daycare)
         if(daycare->can_breed_pokemon())
         {
             daycare->set_breeding_pokemon(0, outside_pokemon);
-            daycare->set_breeding_pokemon(1, outside_pokemon);
         }
     }
     else
