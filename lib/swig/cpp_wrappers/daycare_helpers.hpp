@@ -59,7 +59,7 @@ namespace pkmn { namespace swig {
 
             inline void set_pokemon(
                 int index,
-                const pkmn::swig::pokemon& new_pokemon
+                const pkmn::swig::pokemon& pokemon
             )
             {
                 BOOST_ASSERT(_daycare.get() != nullptr);
@@ -73,11 +73,25 @@ namespace pkmn { namespace swig {
 
                 --index;
 #endif
-
-                _daycare->set_levelup_pokemon(
-                    index,
-                    new_pokemon.get_internal()
-                );
+                const pkmn::pokemon::sptr& internal_pokemon = pokemon.get_internal();
+                if(internal_pokemon.get() != nullptr)
+                {
+                    // This Pokémon instance was created in LibPKMN, so just
+                    // pass in the underlying sptr.
+                    _daycare->set_levelup_pokemon(
+                        index,
+                        pokemon.get_internal()
+                    );
+                }
+                else
+                {
+                    // This is a subclass of the SWIG class, so pass it
+                    // straight through.
+                    _daycare->set_levelup_pokemon(
+                        index,
+                        pokemon
+                    );
+                }
             }
 
             inline int get_capacity()
@@ -147,7 +161,7 @@ namespace pkmn { namespace swig {
 
             inline void set_pokemon(
                 int index,
-                const pkmn::swig::pokemon& new_pokemon
+                const pkmn::swig::pokemon& pokemon
             )
             {
                 BOOST_ASSERT(_daycare.get() != nullptr);
@@ -161,11 +175,25 @@ namespace pkmn { namespace swig {
 
                 --index;
 #endif
-
-                _daycare->set_breeding_pokemon(
-                    index,
-                    new_pokemon.get_internal()
-                );
+                const pkmn::pokemon::sptr& internal_pokemon = pokemon.get_internal();
+                if(internal_pokemon.get() != nullptr)
+                {
+                    // This Pokémon instance was created in LibPKMN, so just
+                    // pass in the underlying sptr.
+                    _daycare->set_breeding_pokemon(
+                        index,
+                        pokemon.get_internal()
+                    );
+                }
+                else
+                {
+                    // This is a subclass of the SWIG class, so pass it
+                    // straight through.
+                    _daycare->set_breeding_pokemon(
+                        index,
+                        pokemon
+                    );
+                }
             }
 
             inline int get_capacity()

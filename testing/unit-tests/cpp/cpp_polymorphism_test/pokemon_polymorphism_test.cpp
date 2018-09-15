@@ -33,7 +33,7 @@ class pokemon_polymorphism_test: public ::testing::TestWithParam<pkmn::e_game>
                     game
                 );
             ASSERT_EQ(
-                pkmn::e_species::BULBASAUR,
+                species,
                 outside_pokemon_sptr->get_species()
             ) << pkmn::species_to_string(outside_pokemon_sptr->get_species());
             ASSERT_EQ(
@@ -55,7 +55,7 @@ class pokemon_polymorphism_test: public ::testing::TestWithParam<pkmn::e_game>
             pkmntest::pokemon_subclass outside_pokemon(species, game);
 
             ASSERT_EQ(
-                pkmn::e_species::BULBASAUR,
+                species,
                 outside_pokemon.get_species()
             ) << pkmn::species_to_string(outside_pokemon.get_species());
             ASSERT_EQ(
@@ -104,17 +104,18 @@ TEST_P(pokemon_polymorphism_test, setting_reference_in_libpkmn_pokemon_party)
 
 TEST_P(pokemon_polymorphism_test, setting_sptr_in_libpkmn_daycare)
 {
-    pkmn::e_game game = GetParam();
+    const pkmn::e_game game = GetParam();
+    const pkmn::e_species species = pkmn::e_species::BULBASAUR;
 
     if(pkmn::does_vector_contain_value(pkmntest::BREEDING_SUPPORTED_GAMES,game))
     {
         std::shared_ptr<pkmntest::pokemon_subclass> outside_pokemon_sptr =
             std::make_shared<pkmntest::pokemon_subclass>(
-                pkmn::e_species::BULBASAUR,
+                species,
                 game
             );
         ASSERT_EQ(
-            pkmn::e_species::BULBASAUR,
+            species,
             outside_pokemon_sptr->get_species()
         ) << pkmn::species_to_string(outside_pokemon_sptr->get_species());
         ASSERT_EQ(
@@ -128,6 +129,7 @@ TEST_P(pokemon_polymorphism_test, setting_sptr_in_libpkmn_daycare)
         if(daycare->can_breed_pokemon())
         {
             daycare->set_breeding_pokemon(0, outside_pokemon_sptr);
+            daycare->set_breeding_pokemon(1, outside_pokemon_sptr);
         }
     }
     else
@@ -138,7 +140,8 @@ TEST_P(pokemon_polymorphism_test, setting_sptr_in_libpkmn_daycare)
 
 TEST_P(pokemon_polymorphism_test, setting_reference_in_libpkmn_daycare)
 {
-    pkmn::e_game game = GetParam();
+    const pkmn::e_game game = GetParam();
+    const pkmn::e_species species = pkmn::e_species::BULBASAUR;
 
     if(pkmn::does_vector_contain_value(pkmntest::BREEDING_SUPPORTED_GAMES,game))
     {
@@ -147,7 +150,7 @@ TEST_P(pokemon_polymorphism_test, setting_reference_in_libpkmn_daycare)
                                        game
                                    );
         ASSERT_EQ(
-            pkmn::e_species::BULBASAUR,
+            species,
             outside_pokemon.get_species()
         ) << pkmn::species_to_string(outside_pokemon.get_species());
         ASSERT_EQ(
@@ -161,6 +164,7 @@ TEST_P(pokemon_polymorphism_test, setting_reference_in_libpkmn_daycare)
         if(daycare->can_breed_pokemon())
         {
             daycare->set_breeding_pokemon(0, outside_pokemon);
+            daycare->set_breeding_pokemon(1, outside_pokemon);
         }
     }
     else
