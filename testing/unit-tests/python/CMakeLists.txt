@@ -21,6 +21,7 @@ SET(python_tests
     python_pokemon_test
     python_pokemon_party_test
     python_pokemon_pc_test
+    python_polymorphism_test
     python_qt_test
 )
 

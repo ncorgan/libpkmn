@@ -18,6 +18,13 @@ ALL_GAME_NAMES = [pkmn.game_to_string(game) for game in ALL_GAMES]
 ALL_MAIN_SERIES_GAMES = [game for game in ALL_GAMES if game not in [pkmn.game.COLOSSEUM, pkmn.game.XD]]
 ALL_MAIN_SERIES_GAME_NAMES = [pkmn.game_to_string(game) for game in ALL_MAIN_SERIES_GAMES]
 
+DAYCARE_SUPPORTED_GAMES = [
+    pkmn.game.RED, pkmn.game.BLUE, pkmn.game.YELLOW,
+    pkmn.game.GOLD, pkmn.game.SILVER, pkmn.game.CRYSTAL,
+    pkmn.game.COLOSSEUM, pkmn.game.XD
+]
+DAYCARE_SUPPORTED_GAME_NAMES = [pkmn.game_to_string(game) for game in DAYCARE_SUPPORTED_GAMES]
+
 GAME_TO_GENERATION = {
     pkmn.game.RED: 1,
     pkmn.game.BLUE: 1,
@@ -47,3 +54,5 @@ from .pokemon_conversions_tests import *
 from .pokemon_io_tests import *
 from .pokemon_party_tests import *
 from .pokemon_pc_tests import *
+from .pokemon_polymorphism_test import *
+from .pokemon_subclass import *
