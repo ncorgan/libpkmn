@@ -232,7 +232,7 @@ namespace pkmn {
     )
     {
         // Same thing as levelup for Generation II
-        this->set_levelup_pokemon(position, new_pokemon);
+        this->_set_levelup_pokemon(position, new_pokemon);
     }
 
     void daycare_gen2impl::_from_native_levelup()
