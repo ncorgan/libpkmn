@@ -76,8 +76,6 @@ namespace pkmn {
                 int money
             ) final;
 
-            const pkmn::pokedex::sptr& get_pokedex() final;
-
         private:
             std::unique_ptr<LibPkmGC::GC::SaveEditing::Save> _libpkmgc_save_uptr;
             LibPkmGC::GC::SaveEditing::SaveSlot* _current_slot;

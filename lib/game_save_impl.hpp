@@ -40,7 +40,7 @@ namespace pkmn {
 
             pkmn::e_game get_game() final;
 
-            virtual const pkmn::pokedex::sptr& get_pokedex() override;
+            const pkmn::pokedex::sptr& get_pokedex() final;
 
             const pkmn::pokemon_party::sptr& get_pokemon_party() final;
 

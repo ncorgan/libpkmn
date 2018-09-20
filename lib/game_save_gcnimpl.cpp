@@ -9,6 +9,7 @@
 #include "game_save_gcnimpl.hpp"
 #include "item_bag_gcnimpl.hpp"
 #include "item_list_gcnimpl.hpp"
+#include "pokedex_unimplementedimpl.hpp"
 #include "pokemon_party_gcnimpl.hpp"
 #include "pokemon_pc_gcnimpl.hpp"
 
@@ -72,6 +73,8 @@ namespace pkmn {
         {
             throw std::invalid_argument("Could not find a save slot.");
         }
+
+        _pokedex = std::make_shared<pokedex_unimplementedimpl>(_game_id);
 
         _pokemon_party = std::make_shared<pokemon_party_gcnimpl>(
                              _game_id,
@@ -269,10 +272,5 @@ namespace pkmn {
         boost::lock_guard<game_save_gcnimpl> lock(*this);
 
         _current_slot->player->pokeDollars = LibPkmGC::u32(money);
-    }
-
-    const pkmn::pokedex::sptr& game_save_gcnimpl::get_pokedex()
-    {
-        throw pkmn::unimplemented_error();
     }
 }

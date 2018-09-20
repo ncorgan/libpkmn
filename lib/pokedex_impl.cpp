@@ -9,6 +9,7 @@
 #include "pokedex_impl.hpp"
 #include "pokedex_gbimpl.hpp"
 #include "pokedex_gbaimpl.hpp"
+#include "pokedex_unimplementedimpl.hpp"
 
 #include "database/database_common.hpp"
 #include "database/enum_conversions.hpp"
@@ -50,10 +51,11 @@ namespace pkmn
             case 3:
                 if(game_is_gamecube(game_id))
                 {
-                    throw pkmn::feature_not_in_game_error(
-                              "Pokédex",
-                              game
-                          );
+                    const std::string error_message = "Pokédex ("
+                                                    + pkmn::database::game_id_to_name(game_id)
+                                                    + ")";
+
+                    throw pkmn::unimplemented_error(error_message);
                 }
                 else
                 {
