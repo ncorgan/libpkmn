@@ -20,7 +20,22 @@
 
 #include <boost/assert.hpp>
 
+#include <iostream>
+
 namespace pkmn { namespace swig {
+
+    static inline void throw_unimplemented_error(const std::string& feature)
+    {
+#ifdef SWIGPYTHON
+        // Currently, when a Python SWIG director function throws an exception, SWIG's
+        // custom exception class doesn't save the message, instead only outputting
+        // "Error detected when calling 'foo'". While there's no guarantee this
+        // library will be used from the command line, this is the best we can
+        // do...
+        std::cerr << "Currently unimplemented: " << feature << std::endl;
+#endif
+        throw pkmn::unimplemented_error(feature);
+    }
 
     /*
      * This class is a thin wrapper around pkmn::pokemon::sptr and
@@ -105,7 +120,7 @@ namespace pkmn { namespace swig {
                 }
                 else
                 {
-                    throw pkmn::unimplemented_error("Game conversion");
+                    throw_unimplemented_error("Game conversion");
                 }
 
                 return ret;
@@ -122,7 +137,7 @@ namespace pkmn { namespace swig {
                 }
                 else
                 {
-                    throw pkmn::unimplemented_error("Clone");
+                    throw_unimplemented_error("Clone");
                 }
 
                 return ret;
@@ -139,7 +154,7 @@ namespace pkmn { namespace swig {
                 }
                 else
                 {
-                    throw pkmn::unimplemented_error("Exporting to file");
+                    throw_unimplemented_error("Exporting to file");
                 }
             }
 
@@ -154,7 +169,7 @@ namespace pkmn { namespace swig {
                 }
                 else
                 {
-                    throw pkmn::unimplemented_error("Getting species");
+                    throw_unimplemented_error("Getting species");
                 }
 
                 return species;
@@ -171,7 +186,7 @@ namespace pkmn { namespace swig {
                 }
                 else
                 {
-                    throw pkmn::unimplemented_error("Getting game");
+                    throw_unimplemented_error("Getting game");
                 }
 
                 return game;
@@ -188,7 +203,7 @@ namespace pkmn { namespace swig {
                 }
                 else
                 {
-                    throw pkmn::unimplemented_error("Getting form");
+                    throw_unimplemented_error("Getting form");
                 }
 
                 return form;
@@ -205,7 +220,7 @@ namespace pkmn { namespace swig {
                 }
                 else
                 {
-                    throw pkmn::unimplemented_error("Setting form");
+                    throw_unimplemented_error("Setting form");
                 }
             }
 
@@ -220,7 +235,7 @@ namespace pkmn { namespace swig {
                 }
                 else
                 {
-                    throw pkmn::unimplemented_error("Getting egg status");
+                    throw_unimplemented_error("Getting egg status");
                 }
 
                 return is_egg;
@@ -235,7 +250,7 @@ namespace pkmn { namespace swig {
                 }
                 else
                 {
-                    throw pkmn::unimplemented_error("Setting egg status");
+                    throw_unimplemented_error("Setting egg status");
                 }
             }
 
@@ -264,7 +279,7 @@ namespace pkmn { namespace swig {
                 }
                 else
                 {
-                    throw pkmn::unimplemented_error("Getting condition");
+                    throw_unimplemented_error("Getting condition");
                 }
 
                 return condition;
@@ -281,7 +296,7 @@ namespace pkmn { namespace swig {
                 }
                 else
                 {
-                    throw pkmn::unimplemented_error("Setting condition");
+                    throw_unimplemented_error("Setting condition");
                 }
             }
 
@@ -296,7 +311,7 @@ namespace pkmn { namespace swig {
                 }
                 else
                 {
-                    throw pkmn::unimplemented_error("Getting nickname");
+                    throw_unimplemented_error("Getting nickname");
                 }
 
                 return nickname;
@@ -313,7 +328,7 @@ namespace pkmn { namespace swig {
                 }
                 else
                 {
-                    throw pkmn::unimplemented_error("Setting nickname");
+                    throw_unimplemented_error("Setting nickname");
                 }
             }
 
@@ -336,7 +351,7 @@ namespace pkmn { namespace swig {
                 }
                 else
                 {
-                    throw pkmn::unimplemented_error("Getting gender");
+                    throw_unimplemented_error("Getting gender");
                 }
 
                 return gender;
@@ -353,7 +368,7 @@ namespace pkmn { namespace swig {
                 }
                 else
                 {
-                    throw pkmn::unimplemented_error("Setting gender");
+                    throw_unimplemented_error("Setting gender");
                 }
             }
 
@@ -376,7 +391,7 @@ namespace pkmn { namespace swig {
                 }
                 else
                 {
-                    throw pkmn::unimplemented_error("Getting shiny status");
+                    throw_unimplemented_error("Getting shiny status");
                 }
 
                 return is_shiny;
@@ -393,7 +408,7 @@ namespace pkmn { namespace swig {
                 }
                 else
                 {
-                    throw pkmn::unimplemented_error("Setting shininess");
+                    throw_unimplemented_error("Setting shininess");
                 }
             }
 
@@ -416,7 +431,7 @@ namespace pkmn { namespace swig {
                 }
                 else
                 {
-                    throw pkmn::unimplemented_error("Getting held item");
+                    throw_unimplemented_error("Getting held item");
                 }
 
                 return held_item;
@@ -433,7 +448,7 @@ namespace pkmn { namespace swig {
                 }
                 else
                 {
-                    throw pkmn::unimplemented_error("Setting held item");
+                    throw_unimplemented_error("Setting held item");
                 }
             }
 
@@ -456,7 +471,7 @@ namespace pkmn { namespace swig {
                 }
                 else
                 {
-                    throw pkmn::unimplemented_error("Getting nature");
+                    throw_unimplemented_error("Getting nature");
                 }
 
                 return nature;
@@ -471,7 +486,7 @@ namespace pkmn { namespace swig {
                 }
                 else
                 {
-                    throw pkmn::unimplemented_error("Setting nature");
+                    throw_unimplemented_error("Setting nature");
                 }
             }
 
@@ -494,7 +509,7 @@ namespace pkmn { namespace swig {
                 }
                 else
                 {
-                    throw pkmn::unimplemented_error("Getting Pokérus duration");
+                    throw_unimplemented_error("Getting Pokérus duration");
                 }
 
                 return pokerus_duration;
@@ -509,7 +524,7 @@ namespace pkmn { namespace swig {
                 }
                 else
                 {
-                    throw pkmn::unimplemented_error("Setting Pokérus duration");
+                    throw_unimplemented_error("Setting Pokérus duration");
                 }
             }
 
@@ -524,7 +539,7 @@ namespace pkmn { namespace swig {
                 }
                 else
                 {
-                    throw pkmn::unimplemented_error("Getting original trainer name");
+                    throw_unimplemented_error("Getting original trainer name");
                 }
 
                 return original_trainer_name;
@@ -541,7 +556,7 @@ namespace pkmn { namespace swig {
                 }
                 else
                 {
-                    throw pkmn::unimplemented_error("Setting original trainer name");
+                    throw_unimplemented_error("Setting original trainer name");
                 }
             }
 
@@ -556,7 +571,7 @@ namespace pkmn { namespace swig {
                 }
                 else
                 {
-                    throw pkmn::unimplemented_error("Getting original trainer public ID");
+                    throw_unimplemented_error("Getting original trainer public ID");
                 }
 
                 return original_trainer_public_id;
@@ -581,7 +596,7 @@ namespace pkmn { namespace swig {
                 }
                 else
                 {
-                    throw pkmn::unimplemented_error("Getting original trainer secret ID");
+                    throw_unimplemented_error("Getting original trainer secret ID");
                 }
 
                 return original_trainer_secret_id;
@@ -598,7 +613,7 @@ namespace pkmn { namespace swig {
                 }
                 else
                 {
-                    throw pkmn::unimplemented_error("Getting original trainer ID");
+                    throw_unimplemented_error("Getting original trainer ID");
                 }
 
                 return original_trainer_id;
@@ -615,7 +630,7 @@ namespace pkmn { namespace swig {
                 }
                 else
                 {
-                    throw pkmn::unimplemented_error("Setting original trainer public ID");
+                    throw_unimplemented_error("Setting original trainer public ID");
                 }
             }
 
@@ -630,7 +645,7 @@ namespace pkmn { namespace swig {
                 }
                 else
                 {
-                    throw pkmn::unimplemented_error("Setting original trainer secret ID");
+                    throw_unimplemented_error("Setting original trainer secret ID");
                 }
             }
 
@@ -645,7 +660,7 @@ namespace pkmn { namespace swig {
                 }
                 else
                 {
-                    throw pkmn::unimplemented_error("Setting original trainer ID");
+                    throw_unimplemented_error("Setting original trainer ID");
                 }
             }
 
@@ -668,7 +683,7 @@ namespace pkmn { namespace swig {
                 }
                 else
                 {
-                    throw pkmn::unimplemented_error("Getting original trainer gender");
+                    throw_unimplemented_error("Getting original trainer gender");
                 }
 
                 return gender;
@@ -685,7 +700,7 @@ namespace pkmn { namespace swig {
                 }
                 else
                 {
-                    throw pkmn::unimplemented_error("Setting original trainer gender");
+                    throw_unimplemented_error("Setting original trainer gender");
                 }
             }
 
@@ -708,7 +723,7 @@ namespace pkmn { namespace swig {
                 }
                 else
                 {
-                    throw pkmn::unimplemented_error("Getting language");
+                    throw_unimplemented_error("Getting language");
                 }
 
                 return language;
@@ -723,7 +738,7 @@ namespace pkmn { namespace swig {
                 }
                 else
                 {
-                    throw pkmn::unimplemented_error("Setting language");
+                    throw_unimplemented_error("Setting language");
                 }
             }
 
@@ -746,7 +761,7 @@ namespace pkmn { namespace swig {
                 }
                 else
                 {
-                    throw pkmn::unimplemented_error("Getting current trainer friendship");
+                    throw_unimplemented_error("Getting current trainer friendship");
                 }
 
                 return current_trainer_friendship;
@@ -763,7 +778,7 @@ namespace pkmn { namespace swig {
                 }
                 else
                 {
-                    throw pkmn::unimplemented_error("Setting original trainer friendship");
+                    throw_unimplemented_error("Setting original trainer friendship");
                 }
             }
 
@@ -786,7 +801,7 @@ namespace pkmn { namespace swig {
                 }
                 else
                 {
-                    throw pkmn::unimplemented_error("Getting ability");
+                    throw_unimplemented_error("Getting ability");
                 }
 
                 return ability;
@@ -801,7 +816,7 @@ namespace pkmn { namespace swig {
                 }
                 else
                 {
-                    throw pkmn::unimplemented_error("Setting ability");
+                    throw_unimplemented_error("Setting ability");
                 }
             }
 
@@ -824,7 +839,7 @@ namespace pkmn { namespace swig {
                 }
                 else
                 {
-                    throw pkmn::unimplemented_error("Getting ball");
+                    throw_unimplemented_error("Getting ball");
                 }
 
                 return ball;
@@ -841,7 +856,7 @@ namespace pkmn { namespace swig {
                 }
                 else
                 {
-                    throw pkmn::unimplemented_error("Setting ball");
+                    throw_unimplemented_error("Setting ball");
                 }
             }
 
@@ -864,7 +879,7 @@ namespace pkmn { namespace swig {
                 }
                 else
                 {
-                    throw pkmn::unimplemented_error("Getting level met");
+                    throw_unimplemented_error("Getting level met");
                 }
 
                 return level_met;
@@ -881,7 +896,7 @@ namespace pkmn { namespace swig {
                 }
                 else
                 {
-                    throw pkmn::unimplemented_error("Setting level met");
+                    throw_unimplemented_error("Setting level met");
                 }
             }
 
@@ -904,7 +919,7 @@ namespace pkmn { namespace swig {
                 }
                 else
                 {
-                    throw pkmn::unimplemented_error("Getting location met");
+                    throw_unimplemented_error("Getting location met");
                 }
 
                 return location_met;
@@ -921,7 +936,7 @@ namespace pkmn { namespace swig {
                 }
                 else
                 {
-                    throw pkmn::unimplemented_error("Setting location met");
+                    throw_unimplemented_error("Setting location met");
                 }
             }
 
@@ -944,7 +959,7 @@ namespace pkmn { namespace swig {
                 }
                 else
                 {
-                    throw pkmn::unimplemented_error("Getting location met as egg");
+                    throw_unimplemented_error("Getting location met as egg");
                 }
 
                 return location_met_as_egg;
@@ -961,7 +976,7 @@ namespace pkmn { namespace swig {
                 }
                 else
                 {
-                    throw pkmn::unimplemented_error("Setting location met as egg");
+                    throw_unimplemented_error("Setting location met as egg");
                 }
             }
 
@@ -984,7 +999,7 @@ namespace pkmn { namespace swig {
                 }
                 else
                 {
-                    throw pkmn::unimplemented_error("Getting original game");
+                    throw_unimplemented_error("Getting original game");
                 }
 
                 return game;
@@ -999,7 +1014,7 @@ namespace pkmn { namespace swig {
                 }
                 else
                 {
-                    throw pkmn::unimplemented_error("Setting original game");
+                    throw_unimplemented_error("Setting original game");
                 }
             }
 
@@ -1022,7 +1037,7 @@ namespace pkmn { namespace swig {
                 }
                 else
                 {
-                    throw pkmn::unimplemented_error("Getting personality");
+                    throw_unimplemented_error("Getting personality");
                 }
 
                 return personality;
@@ -1039,7 +1054,7 @@ namespace pkmn { namespace swig {
                 }
                 else
                 {
-                    throw pkmn::unimplemented_error("Setting personality");
+                    throw_unimplemented_error("Setting personality");
                 }
             }
 
@@ -1054,7 +1069,7 @@ namespace pkmn { namespace swig {
                 }
                 else
                 {
-                    throw pkmn::unimplemented_error("Getting experience");
+                    throw_unimplemented_error("Getting experience");
                 }
 
                 return experience;
@@ -1071,7 +1086,7 @@ namespace pkmn { namespace swig {
                 }
                 else
                 {
-                    throw pkmn::unimplemented_error("Setting experience");
+                    throw_unimplemented_error("Setting experience");
                 }
             }
 
@@ -1086,7 +1101,7 @@ namespace pkmn { namespace swig {
                 }
                 else
                 {
-                    throw pkmn::unimplemented_error("Getting level");
+                    throw_unimplemented_error("Getting level");
                 }
 
                 return level;
@@ -1103,7 +1118,7 @@ namespace pkmn { namespace swig {
                 }
                 else
                 {
-                    throw pkmn::unimplemented_error("Setting level");
+                    throw_unimplemented_error("Setting level");
                 }
             }
 
@@ -1118,7 +1133,7 @@ namespace pkmn { namespace swig {
                 }
                 else
                 {
-                    throw pkmn::unimplemented_error("Getting current HP");
+                    throw_unimplemented_error("Getting current HP");
                 }
 
                 return current_hp;
@@ -1133,7 +1148,7 @@ namespace pkmn { namespace swig {
                 }
                 else
                 {
-                    throw pkmn::unimplemented_error("Setting current HP");
+                    throw_unimplemented_error("Setting current HP");
                 }
             }
 
@@ -1369,7 +1384,7 @@ namespace pkmn { namespace swig {
                 }
                 else
                 {
-                    throw pkmn::unimplemented_error("Setting marking");
+                    throw_unimplemented_error("Setting marking");
                 }
             }
 
@@ -1385,7 +1400,7 @@ namespace pkmn { namespace swig {
                 }
                 else
                 {
-                    throw pkmn::unimplemented_error("Setting ribbon");
+                    throw_unimplemented_error("Setting ribbon");
                 }
             }
 
@@ -1401,7 +1416,7 @@ namespace pkmn { namespace swig {
                 }
                 else
                 {
-                    throw pkmn::unimplemented_error("Setting contest stat");
+                    throw_unimplemented_error("Setting contest stat");
                 }
             }
 
@@ -1417,7 +1432,7 @@ namespace pkmn { namespace swig {
                 }
                 else
                 {
-                    throw pkmn::unimplemented_error("Setting move");
+                    throw_unimplemented_error("Setting move");
                 }
             }
 
@@ -1433,7 +1448,7 @@ namespace pkmn { namespace swig {
                 }
                 else
                 {
-                    throw pkmn::unimplemented_error("Setting move PP");
+                    throw_unimplemented_error("Setting move PP");
                 }
             }
 
@@ -1449,7 +1464,7 @@ namespace pkmn { namespace swig {
                 }
                 else
                 {
-                    throw pkmn::unimplemented_error("Setting EV");
+                    throw_unimplemented_error("Setting EV");
                 }
             }
 
@@ -1465,7 +1480,7 @@ namespace pkmn { namespace swig {
                 }
                 else
                 {
-                    throw pkmn::unimplemented_error("Setting IV");
+                    throw_unimplemented_error("Setting IV");
                 }
             }
 

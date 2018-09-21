@@ -288,6 +288,7 @@ namespace pkmn {
         );
     }
 
+    // TODO: call levelup?
     void daycare_gen2impl::_from_native_breeding()
     {
         import_native_pokemon_data(
