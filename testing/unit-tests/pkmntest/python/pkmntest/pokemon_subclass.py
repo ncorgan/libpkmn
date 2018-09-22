@@ -101,7 +101,7 @@ class pokemon_subclass(pkmn.pokemon):
     def _get_is_shiny_internal(self):
         return self.__is_shiny
 
-    def _set_shininess_internal(self, is_shiny):
+    def _set_is_shiny_internal(self, is_shiny):
         self.__is_shiny = is_shiny
 
     def _get_held_item_internal(self):

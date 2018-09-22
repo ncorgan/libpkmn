@@ -19,65 +19,29 @@
 %ignore pkmn::swig::pokemon::get_internal() const;
 %ignore pkmn::swig::pokemon::cptr();
 
-// I'd like to change these to start with __, but then subclasses won't be able
-// to access them. Starting with _ should show the same effect.
-%rename(_get_species_internal) pkmn::swig::pokemon::get_species;
-%rename(_get_game_internal) pkmn::swig::pokemon::get_game;
-%rename(_get_form_internal) pkmn::swig::pokemon::get_form;
-%rename(_set_form_internal) pkmn::swig::pokemon::set_form;
-%rename(_get_is_egg_internal) pkmn::swig::pokemon::get_is_egg;
-%rename(_set_is_egg_internal) pkmn::swig::pokemon::set_is_egg;
-%rename(_get_condition_internal) pkmn::swig::pokemon::get_condition;
-%rename(_set_condition_internal) pkmn::swig::pokemon::set_condition;
-%rename(_get_nickname_internal) pkmn::swig::pokemon::get_nickname;
-%rename(_set_nickname_internal) pkmn::swig::pokemon::set_nickname;
-%rename(_get_gender_internal) pkmn::swig::pokemon::get_gender;
-%rename(_set_gender_internal) pkmn::swig::pokemon::set_gender;
-%rename(_get_is_shiny_internal) pkmn::swig::pokemon::get_is_shiny;
-%rename(_set_shininess_internal) pkmn::swig::pokemon::set_shininess;
-%rename(_get_held_item_internal) pkmn::swig::pokemon::get_held_item;
-%rename(_set_held_item_internal) pkmn::swig::pokemon::set_held_item;
-%rename(_get_nature_internal) pkmn::swig::pokemon::get_nature;
-%rename(_set_nature_internal) pkmn::swig::pokemon::set_nature;
-%rename(_get_pokerus_duration_internal) pkmn::swig::pokemon::get_pokerus_duration;
-%rename(_set_pokerus_duration_internal) pkmn::swig::pokemon::set_pokerus_duration;
-%rename(_get_original_trainer_name_internal) pkmn::swig::pokemon::get_original_trainer_name;
-%rename(_set_original_trainer_name_internal) pkmn::swig::pokemon::set_original_trainer_name;
-%rename(_get_original_trainer_public_id_internal) pkmn::swig::pokemon::get_original_trainer_public_id;
-%rename(_set_original_trainer_public_id_internal) pkmn::swig::pokemon::set_original_trainer_public_id;
-%rename(_get_original_trainer_secret_id_internal) pkmn::swig::pokemon::get_original_trainer_secret_id;
-%rename(_set_original_trainer_secret_id_internal) pkmn::swig::pokemon::set_original_trainer_secret_id;
-%rename(_get_original_trainer_id_internal) pkmn::swig::pokemon::get_original_trainer_id;
-%rename(_set_original_trainer_id_internal) pkmn::swig::pokemon::set_original_trainer_id;
-%rename(_get_original_trainer_gender_internal) pkmn::swig::pokemon::get_original_trainer_gender;
-%rename(_set_original_trainer_gender_internal) pkmn::swig::pokemon::set_original_trainer_gender;
-%rename(_get_language_internal) pkmn::swig::pokemon::get_language;
-%rename(_set_language_internal) pkmn::swig::pokemon::set_language;
-%rename(_get_current_trainer_friendship_internal) pkmn::swig::pokemon::get_current_trainer_friendship;
-%rename(_set_current_trainer_friendship_internal) pkmn::swig::pokemon::set_current_trainer_friendship;
-%rename(_get_ability_internal) pkmn::swig::pokemon::get_ability;
-%rename(_set_ability_internal) pkmn::swig::pokemon::set_ability;
-%rename(_get_ball_internal) pkmn::swig::pokemon::get_ball;
-%rename(_set_ball_internal) pkmn::swig::pokemon::set_ball;
-%rename(_get_level_met_internal) pkmn::swig::pokemon::get_level_met;
-%rename(_set_level_met_internal) pkmn::swig::pokemon::set_level_met;
-%rename(_get_location_met_internal) pkmn::swig::pokemon::get_location_met;
-%rename(_set_location_met_internal) pkmn::swig::pokemon::set_location_met;
-%rename(_get_location_met_as_egg_internal) pkmn::swig::pokemon::get_location_met_as_egg;
-%rename(_set_location_met_as_egg_internal) pkmn::swig::pokemon::set_location_met_as_egg;
-%rename(_get_original_game_internal) pkmn::swig::pokemon::get_original_game;
-%rename(_set_original_game_internal) pkmn::swig::pokemon::set_original_game;
-%rename(_get_personality_internal) pkmn::swig::pokemon::get_personality;
-%rename(_set_personality_internal) pkmn::swig::pokemon::set_personality;
-%rename(_get_experience_internal) pkmn::swig::pokemon::get_experience;
-%rename(_set_experience_internal) pkmn::swig::pokemon::set_experience;
-%rename(_get_level_internal) pkmn::swig::pokemon::get_level;
-%rename(_set_level_internal) pkmn::swig::pokemon::set_level;
-%rename(_get_current_hp_internal) pkmn::swig::pokemon::get_current_hp;
-%rename(_set_current_hp_internal) pkmn::swig::pokemon::set_current_hp;
-%rename(_get_icon_filepath_internal) pkmn::swig::pokemon::get_icon_filepath;
-%rename(_get_sprite_filepath_internal) pkmn::swig::pokemon::get_sprite_filepath;
-%rename(_get_database_entry_swig_internal) pkmn::swig::pokemon::get_database_entry_swig;
+// Rename functions specific to SWIG class whose name were changed to remove
+// ambiguity from the base class.
+%rename(clone) pkmn::swig::pokemon::clone_swig;
+%rename(to_game) pkmn::swig::pokemon::to_game_swig;
+
+// Since the C++ class name doesn't match the convention above, manually rename.
+%rename(_set_is_shiny_internal) pkmn::swig::pokemon::set_shininess;
+
+// Use SWIG's attribute functionality for getters not involved in directors and for getters whose
+// classes don't have default constructors.
+
+%attributeval(pkmn::swig::pokemon, pkmn::database::pokemon_entry, database_entry, get_database_entry_swig);
+%attributeval(pkmn::swig::pokemon, pkmn::swig::EV_map, EVs, get_EVs_helper);
+%attributeval(pkmn::swig::pokemon, pkmn::swig::IV_map, IVs, get_IVs_helper);
+%attributeval(pkmn::swig::pokemon, pkmn::swig::marking_map, markings, get_markings_helper);
+%attributeval(pkmn::swig::pokemon, pkmn::swig::ribbon_map, ribbons, get_ribbons_helper);
+%attributeval(pkmn::swig::pokemon, pkmn::swig::contest_stat_map, contest_stats, get_contest_stats_helper);
+%attributeval(pkmn::swig::pokemon, pkmn::swig::move_slots, moves, get_moves_helper);
+%attributeval(pkmn::swig::pokemon, %arg(std::map<pkmn::e_stat, int>), stats, get_stats_swig);
+%attributeval(pkmn::swig::pokemon, %arg(pkmn::swig::numeric_attribute_map<pkmn::pokemon>), numeric_attributes, get_numeric_attributes);
+%attributeval(pkmn::swig::pokemon, %arg(pkmn::swig::string_attribute_map<pkmn::pokemon>), string_attributes, get_string_attributes);
+%attributeval(pkmn::swig::pokemon, %arg(pkmn::swig::boolean_attribute_map<pkmn::pokemon>), boolean_attributes, get_boolean_attributes);
+
 %rename(_set_EV_internal) pkmn::swig::pokemon::set_EV;
 %rename(_set_IV_internal) pkmn::swig::pokemon::set_IV;
 %rename(_set_move_internal) pkmn::swig::pokemon::set_move;
@@ -96,23 +60,68 @@
 %rename(_set_markings_map_value_internal) pkmn::swig::pokemon::set_markings_map_value_internal;
 %rename(_set_ribbons_map_value_internal) pkmn::swig::pokemon::set_ribbons_map_value_internal;
 
-// Rename functions specific to SWIG class whose name were changed to remove
-// ambiguity from the base class.
-%rename(clone) pkmn::swig::pokemon::clone_swig;
-%rename(to_game) pkmn::swig::pokemon::to_game_swig;
+/*
+ * We can't use SWIG's attributes to create these properties because we need
+ * the get/set functions to support directors. I'd like the internal functions
+ * to start with __, but then subclasses won't be able to access them. Starting
+ * with _ should have the same effect.
+ */
+%define %pkmn_python_pokemon_readonly_property(prop_name)
+%rename(_get_ ## prop_name ## _internal) pkmn::swig::pokemon::get_ ## prop_name;
+%extend pkmn::swig::pokemon
+{
+%pythoncode %{
+    __swig_getmethods__["prop_name"] = _get_ ## prop_name ## _internal
+    if _newclass:
+        prop_name = _swig_property(_get_ ## prop_name ## _internal)
+%}
+}
+%enddef
 
-// Convert getter/setter functions into attributes for more idiomatic Python.
+%define %pkmn_python_pokemon_readwrite_property(prop_name)
+%rename(_get_ ## prop_name ## _internal) pkmn::swig::pokemon::get_ ## prop_name;
+%rename(_set_ ## prop_name ## _internal) pkmn::swig::pokemon::set_ ## prop_name;
+%extend pkmn::swig::pokemon
+{
+%pythoncode %{
+    __swig_getmethods__["prop_name"] = _get_ ## prop_name ## _internal
+    __swig_setmethods__["prop_name"] = _set_ ## prop_name ## _internal
+    if _newclass:
+        prop_name = _swig_property(_get_ ## prop_name ## _internal, _set_ ## prop_name ## _internal)
+%}
+}
+%enddef
 
-%attributeval(pkmn::swig::pokemon, pkmn::swig::EV_map, EVs, get_EVs_helper);
-%attributeval(pkmn::swig::pokemon, pkmn::swig::IV_map, IVs, get_IVs_helper);
-%attributeval(pkmn::swig::pokemon, pkmn::swig::marking_map, markings, get_markings_helper);
-%attributeval(pkmn::swig::pokemon, pkmn::swig::ribbon_map, ribbons, get_ribbons_helper);
-%attributeval(pkmn::swig::pokemon, pkmn::swig::contest_stat_map, contest_stats, get_contest_stats_helper);
-%attributeval(pkmn::swig::pokemon, pkmn::swig::move_slots, moves, get_moves_helper);
-%attributeval(pkmn::swig::pokemon, %arg(std::map<pkmn::e_stat, int>), stats, get_stats_swig);
-%attributeval(pkmn::swig::pokemon, %arg(pkmn::swig::numeric_attribute_map<pkmn::pokemon>), numeric_attributes, get_numeric_attributes);
-%attributeval(pkmn::swig::pokemon, %arg(pkmn::swig::string_attribute_map<pkmn::pokemon>), string_attributes, get_string_attributes);
-%attributeval(pkmn::swig::pokemon, %arg(pkmn::swig::boolean_attribute_map<pkmn::pokemon>), boolean_attributes, get_boolean_attributes);
+%pkmn_python_pokemon_readonly_property(species)
+%pkmn_python_pokemon_readonly_property(game)
+%pkmn_python_pokemon_readwrite_property(form)
+%pkmn_python_pokemon_readwrite_property(is_egg)
+%pkmn_python_pokemon_readwrite_property(condition)
+%pkmn_python_pokemon_readwrite_property(nickname)
+%pkmn_python_pokemon_readwrite_property(gender)
+%pkmn_python_pokemon_readwrite_property(is_shiny)
+%pkmn_python_pokemon_readwrite_property(held_item)
+%pkmn_python_pokemon_readwrite_property(nature)
+%pkmn_python_pokemon_readwrite_property(pokerus_duration)
+%pkmn_python_pokemon_readwrite_property(original_trainer_name)
+%pkmn_python_pokemon_readwrite_property(original_trainer_public_id)
+%pkmn_python_pokemon_readwrite_property(original_trainer_secret_id)
+%pkmn_python_pokemon_readwrite_property(original_trainer_id)
+%pkmn_python_pokemon_readwrite_property(original_trainer_gender)
+%pkmn_python_pokemon_readwrite_property(language)
+%pkmn_python_pokemon_readwrite_property(current_trainer_friendship)
+%pkmn_python_pokemon_readwrite_property(ability)
+%pkmn_python_pokemon_readwrite_property(ball)
+%pkmn_python_pokemon_readwrite_property(level_met)
+%pkmn_python_pokemon_readwrite_property(location_met)
+%pkmn_python_pokemon_readwrite_property(location_met_as_egg)
+%pkmn_python_pokemon_readwrite_property(original_game)
+%pkmn_python_pokemon_readwrite_property(personality)
+%pkmn_python_pokemon_readwrite_property(experience)
+%pkmn_python_pokemon_readwrite_property(level)
+%pkmn_python_pokemon_readwrite_property(current_hp)
+%pkmn_python_pokemon_readonly_property(icon_filepath)
+%pkmn_python_pokemon_readonly_property(sprite_filepath)
 
 %feature("director", "1") pkmn::swig::pokemon;
 %include "cpp_wrappers/pokemon.hpp"
