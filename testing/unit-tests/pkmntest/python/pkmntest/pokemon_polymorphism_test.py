@@ -49,4 +49,9 @@ class pokemon_polymorphism_test(base_test):
         testcase_func_name=test_name_func
     )
     def test_setting_pokemon_in_daycare(self, game_name):
-        daycare = pkmn.daycare(pkmn.string_to_game(game_name))
+        game = pkmn.string_to_game(game_name)
+        daycare = pkmn.daycare(game)
+
+        daycare.levelup_pokemon[0] = pokemon_subclass(self.SPECIES, game)
+        if daycare.can_breed_pokemon:
+            daycare.breeding_pokemon[0] = pokemon_subclass(self.SPECIES, game)
