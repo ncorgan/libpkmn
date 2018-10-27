@@ -227,6 +227,71 @@ const gba_frlg_box_wallpaper_bimap_t& get_gba_frlg_box_wallpaper_bimap()
     return GBA_FRLG_BOX_WALLPAPER_BIMAP;
 }
 
+// Ribbons
+
+const gba_ribbon_mask_bimap_t& get_gba_ribbon_mask_bimap()
+{
+    static const gba_ribbon_mask_bimap_t GBA_RIBBON_MASK_BIMAP =
+    boost::assign::list_of<gba_ribbon_mask_bimap_t::relation>
+        ("Champion", PKSAV_GBA_CHAMPION_RIBBON_MASK)
+        ("Winning",  PKSAV_GBA_WINNING_RIBBON_MASK)
+        ("Victory",  PKSAV_GBA_VICTORY_RIBBON_MASK)
+        ("Artist",   PKSAV_GBA_ARTIST_RIBBON_MASK)
+        ("Effort",   PKSAV_GBA_EFFORT_RIBBON_MASK)
+        ("Marine",   PKSAV_GBA_MARINE_RIBBON_MASK)
+        ("Land",     PKSAV_GBA_LAND_RIBBON_MASK)
+        ("Sky",      PKSAV_GBA_SKY_RIBBON_MASK)
+        ("Country",  PKSAV_GBA_COUNTRY_RIBBON_MASK)
+        ("National", PKSAV_GBA_NATIONAL_RIBBON_MASK)
+        ("Earth",    PKSAV_GBA_EARTH_RIBBON_MASK)
+        ("World",    PKSAV_GBA_WORLD_RIBBON_MASK)
+    ;
+
+    return GBA_RIBBON_MASK_BIMAP;
+}
+
+const gba_contest_ribbon_level_bimap_t& get_gba_contest_ribbon_level_bimap()
+{
+    static const gba_contest_ribbon_level_bimap_t& GBA_CONTEST_RIBBON_LEVEL_BIMAP =
+    boost::assign::list_of<gba_contest_ribbon_level_bimap_t::relation>
+        ("",       PKSAV_GBA_CONTEST_RIBBON_NONE)
+        ("Normal", PKSAV_GBA_CONTEST_RIBBON_NORMAL)
+        ("Super",  PKSAV_GBA_CONTEST_RIBBON_SUPER)
+        ("Hyper",  PKSAV_GBA_CONTEST_RIBBON_HYPER)
+        ("Master", PKSAV_GBA_CONTEST_RIBBON_MASTER)
+    ;
+
+    return GBA_CONTEST_RIBBON_LEVEL_BIMAP;
+}
+
+const gba_contest_ribbon_mask_bimap_t& get_gba_contest_ribbon_mask_bimap()
+{
+    static const gba_contest_ribbon_mask_bimap_t& GBA_CONTEST_RIBBON_MASK_BIMAP =
+    boost::assign::list_of<gba_contest_ribbon_mask_bimap_t::relation>
+        ("Cool",   PKSAV_GBA_COOL_RIBBONS_MASK)
+        ("Beauty", PKSAV_GBA_BEAUTY_RIBBONS_MASK)
+        ("Cute",   PKSAV_GBA_CUTE_RIBBONS_MASK)
+        ("Smart",  PKSAV_GBA_SMART_RIBBONS_MASK)
+        ("Tough",  PKSAV_GBA_TOUGH_RIBBONS_MASK)
+    ;
+
+    return GBA_CONTEST_RIBBON_MASK_BIMAP;
+}
+
+const gba_contest_ribbon_offset_bimap_t& get_gba_contest_ribbon_offset_bimap()
+{
+    static const gba_contest_ribbon_offset_bimap_t& GBA_CONTEST_RIBBON_OFFSET_BIMAP =
+    boost::assign::list_of<gba_contest_ribbon_offset_bimap_t::relation>
+        ("Cool",   PKSAV_GBA_COOL_RIBBONS_OFFSET)
+        ("Beauty", PKSAV_GBA_BEAUTY_RIBBONS_OFFSET)
+        ("Cute",   PKSAV_GBA_CUTE_RIBBONS_OFFSET)
+        ("Smart",  PKSAV_GBA_SMART_RIBBONS_OFFSET)
+        ("Tough",  PKSAV_GBA_TOUGH_RIBBONS_OFFSET)
+    ;
+
+    return GBA_CONTEST_RIBBON_OFFSET_BIMAP;
+}
+
 // Misc
 
 const gen1_type_bimap_t& get_gen1_type_bimap()

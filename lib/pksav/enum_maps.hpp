@@ -26,6 +26,7 @@
 #include <pksav/gba/box_wallpaper.h>
 #include <pksav/gba/language.h>
 #include <pksav/gba/options.h>
+#include <pksav/gba/ribbons.h>
 
 #include <pksav/common/condition.h>
 #include <pksav/common/nature.h>
@@ -39,25 +40,25 @@
 namespace pksav
 {
     // Stats
-    typedef boost::bimap<pkmn::e_stat, enum pksav_gb_IV> gb_IV_bimap_t;
-    typedef boost::bimap<pkmn::e_stat, enum pksav_IV> IV_bimap_t;
+    using gb_IV_bimap_t = boost::bimap<pkmn::e_stat, enum pksav_gb_IV>;
+    using IV_bimap_t = boost::bimap<pkmn::e_stat, enum pksav_IV>;
 
     const gb_IV_bimap_t& get_gb_IV_bimap();
     const IV_bimap_t& get_IV_bimap();
 
     // Genders
-    typedef boost::bimap<pkmn::e_gender, enum pksav_gen2_gender> gen2_gender_bimap_t;
+    using gen2_gender_bimap_t = boost::bimap<pkmn::e_gender, enum pksav_gen2_gender>;
 
     const gen2_gender_bimap_t& get_gen2_gender_bimap();
 
     // Options
-    typedef boost::bimap<std::string, enum pksav_gen1_rb_text_speed> gen1_rb_text_speed_bimap_t;
-    typedef boost::bimap<std::string, enum pksav_gen1_yellow_sound_option> gen1_yellow_sound_option_bimap_t;
-    typedef boost::bimap<std::string, enum pksav_gen2_text_speed> gen2_text_speed_bimap_t;
-    typedef boost::bimap<std::string, enum pksav_gen2_gbprinter_brightness> gen2_gbprinter_brightness_bimap_t;
-    typedef boost::bimap<std::string, enum pksav_gba_rse_button_mode> gba_rse_button_mode_bimap_t;
-    typedef boost::bimap<std::string, enum pksav_gba_frlg_button_mode> gba_frlg_button_mode_bimap_t;
-    typedef boost::bimap<std::string, enum pksav_gba_text_speed> gba_text_speed_bimap_t;
+    using gen1_rb_text_speed_bimap_t = boost::bimap<std::string, enum pksav_gen1_rb_text_speed>;
+    using gen1_yellow_sound_option_bimap_t = boost::bimap<std::string, enum pksav_gen1_yellow_sound_option>;
+    using gen2_text_speed_bimap_t = boost::bimap<std::string, enum pksav_gen2_text_speed>;
+    using gen2_gbprinter_brightness_bimap_t = boost::bimap<std::string, enum pksav_gen2_gbprinter_brightness>;
+    using gba_rse_button_mode_bimap_t = boost::bimap<std::string, enum pksav_gba_rse_button_mode>;
+    using gba_frlg_button_mode_bimap_t = boost::bimap<std::string, enum pksav_gba_frlg_button_mode>;
+    using gba_text_speed_bimap_t = boost::bimap<std::string, enum pksav_gba_text_speed>;
 
     const gen1_rb_text_speed_bimap_t& get_gen1_rb_text_speed_bimap();
     const gen1_yellow_sound_option_bimap_t& get_gen1_yellow_sound_option_bimap();
@@ -70,26 +71,37 @@ namespace pksav
     const gba_text_speed_bimap_t& get_gba_text_speed_bimap();
 
     // Status conditions
-    typedef boost::bimap<pkmn::e_condition, enum pksav_gb_condition> gb_condition_bimap_t;
-    typedef boost::bimap<pkmn::e_condition, enum pksav_condition_mask> condition_mask_bimap_t;
+    using gb_condition_bimap_t = boost::bimap<pkmn::e_condition, enum pksav_gb_condition>;
+    using condition_mask_bimap_t = boost::bimap<pkmn::e_condition, enum pksav_condition_mask>;
 
     const gb_condition_bimap_t& get_gb_condition_bimap();
     const condition_mask_bimap_t& get_condition_mask_bimap();
 
     // Box wallpapers
-    typedef boost::bimap<std::string, enum pksav_gba_box_wallpaper> gba_box_wallpaper_bimap_t;
-    typedef boost::bimap<std::string, enum pksav_gba_rse_box_wallpaper> gba_rse_box_wallpaper_bimap_t;
-    typedef boost::bimap<std::string, enum pksav_gba_frlg_box_wallpaper> gba_frlg_box_wallpaper_bimap_t;
+    using gba_box_wallpaper_bimap_t = boost::bimap<std::string, enum pksav_gba_box_wallpaper>;
+    using gba_rse_box_wallpaper_bimap_t = boost::bimap<std::string, enum pksav_gba_rse_box_wallpaper>;
+    using gba_frlg_box_wallpaper_bimap_t = boost::bimap<std::string, enum pksav_gba_frlg_box_wallpaper>;
 
     const gba_box_wallpaper_bimap_t& get_gba_box_wallpaper_bimap();
     const gba_rse_box_wallpaper_bimap_t& get_gba_rse_box_wallpaper_bimap();
     const gba_frlg_box_wallpaper_bimap_t& get_gba_frlg_box_wallpaper_bimap();
 
+    // Ribbons
+    using gba_ribbon_mask_bimap_t = boost::bimap<std::string, enum pksav_gba_ribbon_mask>;
+    using gba_contest_ribbon_level_bimap_t = boost::bimap<std::string, enum pksav_gba_contest_ribbon_level>;
+    using gba_contest_ribbon_mask_bimap_t = boost::bimap<std::string, enum pksav_gba_contest_ribbons_mask>;
+    using gba_contest_ribbon_offset_bimap_t = boost::bimap<std::string, enum pksav_gba_contest_ribbons_offset>;
+
+    const gba_ribbon_mask_bimap_t& get_gba_ribbon_mask_bimap();
+    const gba_contest_ribbon_level_bimap_t& get_gba_contest_ribbon_level_bimap();
+    const gba_contest_ribbon_mask_bimap_t& get_gba_contest_ribbon_mask_bimap();
+    const gba_contest_ribbon_offset_bimap_t& get_gba_contest_ribbon_offset_bimap();
+
     // Misc
-    typedef boost::bimap<pkmn::e_type, enum pksav_gen1_type> gen1_type_bimap_t;
-    typedef boost::bimap<std::string, enum pksav_gen2_mom_money_policy> gen2_mom_money_policy_bimap_t;
-    typedef boost::bimap<pkmn::e_language, enum pksav_gba_language> gba_language_bimap_t;
-    typedef boost::bimap<pkmn::e_nature, enum pksav_nature> nature_bimap_t;
+    using gen1_type_bimap_t = boost::bimap<pkmn::e_type, enum pksav_gen1_type>;
+    using gen2_mom_money_policy_bimap_t = boost::bimap<std::string, enum pksav_gen2_mom_money_policy>;
+    using gba_language_bimap_t = boost::bimap<pkmn::e_language, enum pksav_gba_language>;
+    using nature_bimap_t = boost::bimap<pkmn::e_nature, enum pksav_nature>;
 
     const gen1_type_bimap_t& get_gen1_type_bimap();
     const gen2_mom_money_policy_bimap_t& get_gen2_mom_money_policy_bimap();

@@ -1002,48 +1002,6 @@ namespace pkmn
         );
     }
 
-    // TODO: will these be needed in other files? Conversion to NDS perhaps?
-    // If so, move to pksav/enum_maps
-
-    static const std::unordered_map<std::string, enum pksav_gba_ribbon_mask> gba_ribbons = boost::assign::map_list_of
-        ("Champion", PKSAV_GBA_CHAMPION_RIBBON_MASK)
-        ("Winning",  PKSAV_GBA_WINNING_RIBBON_MASK)
-        ("Victory",  PKSAV_GBA_VICTORY_RIBBON_MASK)
-        ("Artist",   PKSAV_GBA_ARTIST_RIBBON_MASK)
-        ("Effort",   PKSAV_GBA_EFFORT_RIBBON_MASK)
-        ("Marine",   PKSAV_GBA_MARINE_RIBBON_MASK)
-        ("Land",     PKSAV_GBA_LAND_RIBBON_MASK)
-        ("Sky",      PKSAV_GBA_SKY_RIBBON_MASK)
-        ("Country",  PKSAV_GBA_COUNTRY_RIBBON_MASK)
-        ("National", PKSAV_GBA_NATIONAL_RIBBON_MASK)
-        ("Earth",    PKSAV_GBA_EARTH_RIBBON_MASK)
-        ("World",    PKSAV_GBA_WORLD_RIBBON_MASK)
-    ;
-
-    static const std::unordered_map<std::string, enum pksav_gba_contest_ribbon_level> gba_contest_ribbon_levels = boost::assign::map_list_of
-        ("",       PKSAV_GBA_CONTEST_RIBBON_NONE)
-        ("Normal", PKSAV_GBA_CONTEST_RIBBON_NORMAL)
-        ("Super",  PKSAV_GBA_CONTEST_RIBBON_SUPER)
-        ("Hyper",  PKSAV_GBA_CONTEST_RIBBON_HYPER)
-        ("Master", PKSAV_GBA_CONTEST_RIBBON_MASTER)
-    ;
-
-    static const std::unordered_map<std::string, enum pksav_gba_contest_ribbons_mask> gba_contest_ribbon_masks = boost::assign::map_list_of
-        ("Cool",   PKSAV_GBA_COOL_RIBBONS_MASK)
-        ("Beauty", PKSAV_GBA_BEAUTY_RIBBONS_MASK)
-        ("Cute",   PKSAV_GBA_CUTE_RIBBONS_MASK)
-        ("Smart",  PKSAV_GBA_SMART_RIBBONS_MASK)
-        ("Tough",  PKSAV_GBA_TOUGH_RIBBONS_MASK)
-    ;
-
-    static const std::unordered_map<std::string, enum pksav_gba_contest_ribbons_offset> gba_contest_ribbon_offsets = boost::assign::map_list_of
-        ("Cool",   PKSAV_GBA_COOL_RIBBONS_OFFSET)
-        ("Beauty", PKSAV_GBA_BEAUTY_RIBBONS_OFFSET)
-        ("Cute",   PKSAV_GBA_CUTE_RIBBONS_OFFSET)
-        ("Smart",  PKSAV_GBA_SMART_RIBBONS_OFFSET)
-        ("Tough",  PKSAV_GBA_TOUGH_RIBBONS_OFFSET)
-    ;
-
     void pokemon_gbaimpl::set_ribbon(
         const std::string& ribbon,
         bool value
@@ -1056,9 +1014,11 @@ namespace pkmn
             throw std::invalid_argument("Invalid ribbon.");
         }
 
+        const auto& gba_ribbons = pksav::get_gba_ribbon_mask_bimap().left;
+
         if(gba_ribbons.find(ribbon) != gba_ribbons.end())
         {
-            _set_ribbon<uint32_t, enum pksav_gba_ribbon_mask>(
+            _set_ribbon<uint32_t, decltype(gba_ribbons)>(
                 ribbon,
                 value,
                 &_p_misc_block->ribbons_obedience,
@@ -1278,14 +1238,19 @@ namespace pkmn
     void pokemon_gbaimpl::_set_contest_ribbon(
         const std::string& ribbon,
         bool value
-    ) {
+    )
+    {
         std::vector<std::string> ribbon_parts;
         boost::split(ribbon_parts, ribbon, boost::is_any_of(" "));
 
+        const auto& gba_contest_ribbon_masks = pksav::get_gba_contest_ribbon_mask_bimap().left;
+        const auto& gba_contest_ribbon_levels = pksav::get_gba_contest_ribbon_level_bimap().left;
+        const auto& gba_contest_ribbon_offsets = pksav::get_gba_contest_ribbon_offset_bimap().left;
+
         // Validate input (which should already have been validated)
-        if((ribbon_parts.size() == 0 or ribbon_parts.size() > 2) or
-           (gba_contest_ribbon_masks.count(ribbon_parts.at(0)) == 0) or
-           (ribbon_parts.size() == 2 and
+        if((ribbon_parts.size() == 0 || ribbon_parts.size() > 2) ||
+           (gba_contest_ribbon_masks.count(ribbon_parts.at(0)) == 0) ||
+           (ribbon_parts.size() == 2 &&
             gba_contest_ribbon_levels.count(ribbon_parts.at(1)) == 0)
           )
         {
@@ -1295,18 +1260,24 @@ namespace pkmn
         uint16_t mask = uint16_t(gba_contest_ribbon_masks.at(ribbon_parts.at(0)));
         uint16_t offset = uint16_t(gba_contest_ribbon_offsets.at(ribbon_parts.at(0)));
         uint16_t level = 0;
-        if(ribbon_parts.size() == 2) {
+        if(ribbon_parts.size() == 2)
+        {
             level = uint16_t(gba_contest_ribbon_levels.at(ribbon_parts.at(1)));
         }
 
         uint16_t current_level = (_p_misc_block->ribbons_obedience & mask) >> offset;
-        if(value) {
-            if(level == 0) {
+        if(value)
+        {
+            if(level == 0)
+            {
                 ++level;
             }
             level = std::max<uint16_t>(level, current_level);
-        } else {
-            if(level > 0) {
+        }
+        else
+        {
+            if(level > 0)
+            {
                 --level;
             }
             level = std::min<uint16_t>(level, current_level);
@@ -1318,7 +1289,8 @@ namespace pkmn
         _update_ribbons_map();
     }
 
-    void pokemon_gbaimpl::_populate_party_data() {
+    void pokemon_gbaimpl::_populate_party_data()
+    {
         pksav::gba_pc_pokemon_to_party_data(
             _database_entry,
             &_pksav_pokemon.pc_data,

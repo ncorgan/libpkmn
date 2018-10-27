@@ -189,14 +189,16 @@ namespace pkmn {
                 uint8_t* p_native
             );
 
-            template <typename native_type, typename mask_type>
+            template <typename native_type, typename map_type>
             void _set_ribbon(
                 const std::string& ribbon,
                 bool value,
                 native_type* native,
-                const std::unordered_map<std::string, mask_type> &masks
-            ) {
-                if(masks.find(ribbon) == masks.end()) {
+                const map_type& masks
+            )
+            {
+                if(masks.find(ribbon) == masks.end())
+                {
                     throw std::invalid_argument("Invalid ribbon.");
                 }
 
