@@ -16,6 +16,8 @@
 #include <pkmn/exception.hpp>
 #include <pkmn/database/lists.hpp>
 
+#include <pksav/enum_maps.hpp>
+
 #include <boost/algorithm/string/compare.hpp>
 #include <boost/assign.hpp>
 #include <boost/config.hpp>
@@ -787,12 +789,59 @@ namespace pkmn { namespace database {
         return ret;
     }
 
+    static std::vector<std::string> _get_gen3_ribbon_name_list()
+    {
+        std::vector<std::string> ret;
+
+        const auto& gba_ribbon_names_map = pksav::get_gba_ribbon_mask_bimap().left;
+        const auto& gba_contest_ribbon_levels_map = pksav::get_gba_contest_ribbon_level_bimap().left;
+        const auto& gba_contest_ribbon_masks_map = pksav::get_gba_contest_ribbon_mask_bimap().left;
+
+        ret = pkmn::map_keys_to_vector(gba_ribbon_names_map);
+        for(const auto& contest_ribbon_mask_map_pair: gba_contest_ribbon_masks_map)
+        {
+            const std::string& contest_type = contest_ribbon_mask_map_pair.first;
+
+            ret.emplace_back(contest_type);
+            for(const auto& contest_ribbon_level_map_pair: gba_contest_ribbon_levels_map)
+            {
+                const std::string& contest_level = contest_ribbon_level_map_pair.first;
+
+                if(!contest_level.empty() && (contest_level != "Normal"))
+                {
+                    std::string ribbon_name = contest_type + " " + contest_level;
+                    ret.emplace_back(std::move(ribbon_name));
+                }
+            }
+        }
+
+        return ret;
+    }
+
     std::vector<std::string> get_ribbon_name_list(
         int generation
     )
     {
-        (void)generation;
-        return std::vector<std::string>();
+        pkmn::enforce_bounds(
+            "Generation",
+            generation,
+            3,
+            6
+        );
+
+        std::vector<std::string> ret;
+
+        switch(generation)
+        {
+            case 3:
+                ret = _get_gen3_ribbon_name_list();
+                break;
+
+            default:
+                throw pkmn::unimplemented_error("Ribbons");
+        }
+
+        return ret;
     }
 
     std::vector<std::string> get_super_training_medal_name_list()

@@ -188,9 +188,15 @@ class lists_test(unittest.TestCase):
         self.assertEqual("Kanto", region_name_list[0])
         self.assertEqual("Kalos", region_name_list[-1])
 
-    @unittest.skip("Function not yet implemented")
     def test_ribbon_list(self):
-        pkmn.database.lists.get_ribbon_name_list(3)
+        # Make sure invalid generations are caught.
+        with self.assertRaises(IndexError):
+            pkmn.database.lists.get_ribbon_name_list(2)
+        with self.assertRaises(IndexError):
+            pkmn.database.lists.get_ribbon_name_list(7)
+
+        ribbon_name_list = pkmn.database.lists.get_ribbon_name_list(3)
+        self.assertEqual(32, len(ribbon_name_list))
 
     def test_super_training_medal_list(self):
         super_training_medal_name_list = pkmn.database.lists.get_super_training_medal_name_list()

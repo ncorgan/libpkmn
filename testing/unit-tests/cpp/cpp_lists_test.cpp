@@ -1380,9 +1380,18 @@ TEST(cpp_lists_test, region_lists_test)
     EXPECT_EQ("Kalos", regions.back());
 }
 
-TEST(cpp_lists_test, ribbon_lists_test) {
-    // TODO: make sure function checks for bad generation
-    //       test good cases
+TEST(cpp_lists_test, ribbon_lists_test)
+{
+    // Make sure invalid generations are caught.
+    EXPECT_THROW(
+        (void)pkmn::database::get_ribbon_name_list(2);
+    , std::out_of_range);
+    EXPECT_THROW(
+        (void)pkmn::database::get_ribbon_name_list(7);
+    , std::out_of_range);
+
+    std::vector<std::string> gen3_ribbons = pkmn::database::get_ribbon_name_list(3);
+    EXPECT_EQ(32ULL, gen3_ribbons.size());
 }
 
 TEST(cpp_lists_test, super_training_medal_lists_test) {

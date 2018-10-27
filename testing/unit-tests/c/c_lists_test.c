@@ -734,7 +734,34 @@ static void region_list_test()
 
 static void ribbon_list_test()
 {
-    // TODO
+    struct pkmn_string_list ribbons =
+    {
+        .pp_strings = NULL,
+        .length = 0
+    };
+    enum pkmn_error error = PKMN_ERROR_NONE;
+
+    // Make sure invalid generations are caught.
+    error = pkmn_database_ribbon_name_list(
+                2,
+                &ribbons
+            );
+    TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
+    error = pkmn_database_ribbon_name_list(
+                7,
+                &ribbons
+            );
+    TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
+
+    error = pkmn_database_ribbon_name_list(
+                3,
+                &ribbons
+            );
+    PKMN_TEST_ASSERT_SUCCESS(error);
+    TEST_ASSERT_EQUAL(32ULL, ribbons.length);
+
+    error = pkmn_string_list_free(&ribbons);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 }
 
 static void super_training_medal_list_test()

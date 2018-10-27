@@ -219,9 +219,14 @@ function test_region_list()
     luaunit.assertEquals(region_name_list[7], "Kalos")
 end
 
--- Unimplemented
--- function test_ribbon_list()
--- end
+function test_ribbon_list()
+    -- Make sure invalid generations are caught.
+    luaunit.assertError(pkmn.database.get_ribbon_name_list, 2)
+    luaunit.assertError(pkmn.database.get_ribbon_name_list, 7)
+
+    local ribbon_name_list = pkmn.database.get_ribbon_name_list(3)
+    luaunit.assertEquals(#ribbon_name_list, 32)
+end
 
 function test_super_training_medal_list()
     local super_training_medal_name_list = pkmn.database.get_super_training_medal_name_list()

@@ -311,9 +311,24 @@ public class CSharpListsTest
     }
 
     [Test]
-    [Ignore("Feature not implemented")]
     public void RibbonListTest()
     {
+        // Make sure invalid generations are caught.
+        Assert.Throws<IndexOutOfRangeException>(
+            delegate
+            {
+                PKMN.Database.Lists.RibbonNameList(2);
+            }
+        );
+        Assert.Throws<IndexOutOfRangeException>(
+            delegate
+            {
+                PKMN.Database.Lists.RibbonNameList(7);
+            }
+        );
+
+        PKMN.StringList ribbonList = PKMN.Database.Lists.RibbonNameList(3);
+        Assert.AreEqual(ribbonList.Count, 32);
     }
 
     [Test]
