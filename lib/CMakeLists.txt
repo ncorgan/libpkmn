@@ -5,6 +5,8 @@
 # or copy at http://opensource.org/licenses/MIT)
 #
 
+ADD_SUBDIRECTORY(SQLiteCpp)
+
 INCLUDE_DIRECTORIES(
     ${Boost_INCLUDE_DIRS}
     ${SQLITE3_INCLUDE_DIR}
@@ -25,14 +27,13 @@ SET(pkmn_libs
     ${Boost_LIBRARIES}
     pksav
     PkmGC
-    SQLiteCpp
+    ${sqlite3_libs}
 )
 
 #
 # Add sources included in all builds
 #
 
-ADD_SUBDIRECTORY(SQLiteCpp)
 ADD_SUBDIRECTORY(breeding)
 ADD_SUBDIRECTORY(calculations)
 ADD_SUBDIRECTORY(conversions)
@@ -147,8 +148,24 @@ ENDIF()
 SET_SOURCE_FILES_PROPERTIES(${pkmn_sources}
     PROPERTIES COMPILE_FLAGS "${PKMN_CXX_FLAGS}"
 )
+SET_SOURCE_FILES_PROPERTIES(${SQLiteCpp_sources}
+    PROPERTIES COMPILE_FLAGS "${SQLiteCpp_COMPILE_FLAGS}"
+)
+IF(USE_INTERNAL_SQLITE3)
+    SET_SOURCE_FILES_PROPERTIES(${sqlite3_sources}
+        PROPERTIES COMPILE_FLAGS "${sqlite3_COMPILE_FLAGS}"
+    )
+ELSE()
+    SET(sqlite3_sources "")
+    LIST(APPEND pkmn_libs ${SQLITE3_LIBRARY_RELEASE})
+ENDIF()
 
-ADD_LIBRARY(pkmn SHARED ${pkmn_sources} ${pkmn_rc})
+ADD_LIBRARY(pkmn SHARED
+    ${sqlite3_sources}
+    ${SQLiteCpp_sources}
+    ${pkmn_sources}
+    ${pkmn_rc}
+)
 TARGET_LINK_LIBRARIES(pkmn ${pkmn_libs})
 SET_TARGET_PROPERTIES(pkmn PROPERTIES DEFINE_SYMBOL "PKMN_DLL_EXPORTS")
 ADD_DEFINITIONS(-Dpkmn_EXPORTS)
