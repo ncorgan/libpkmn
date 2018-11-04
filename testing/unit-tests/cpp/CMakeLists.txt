@@ -68,7 +68,8 @@ PKMN_ADD_CPP_TEST(cpp_item_test "${item_test_srcs}")
 
 SET(pokemon_test_srcs
     ${PKMN_SOURCE_DIR}/lib/pkmgc/enum_maps.cpp
-    ${PKMN_SOURCE_DIR}/lib/pksav/enum_maps.cpp
+    ${PKMN_SOURCE_DIR}/lib/pksav/enum_maps1.cpp
+    ${PKMN_SOURCE_DIR}/lib/pksav/enum_maps2.cpp
     cpp_pokemon_test/conversions_test.cpp
     cpp_pokemon_test/form_test.cpp
     cpp_pokemon_test/gen1_pokemon_test.cpp

@@ -6,6 +6,7 @@
 #
 
 SET(pkmn_pksav_sources
-    ${CMAKE_CURRENT_SOURCE_DIR}/enum_maps.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/enum_maps1.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/enum_maps2.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/party_data.cpp
 PARENT_SCOPE)
