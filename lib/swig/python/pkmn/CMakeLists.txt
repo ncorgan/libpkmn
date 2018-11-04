@@ -18,7 +18,7 @@ EXECUTE_PROCESS(
     COMMAND ${PYTHON_EXECUTABLE} ${PKMN_SOURCE_DIR}/scripts/print_enum_names_for_cmake.py --enum-dir=${PKMN_SOURCE_DIR}/include/pkmn/enums --print-as-python-imports
     OUTPUT_VARIABLE ENUM_IMPORT OUTPUT_STRIP_TRAILING_WHITESPACE
 )
-SET(ENUM_IMPORT ${ENUM_IMPORT} CACHE STRING "Enum import")
+SET(ENUM_IMPORT "${ENUM_IMPORT}" CACHE STRING "Enum import")
 
 #
 # Set variables needed for CMake macros
